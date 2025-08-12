@@ -1,33 +1,36 @@
 ---
 title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+description: 'Orgo API documentation - Symfony/API Platform backend'
 ---
-
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
 
 ## Welcome
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+Welcome to the Orgo API documentation. This API is built with Symfony and API Platform, providing a comprehensive REST API for managing adhesions, applications, users, and more.
+
+The API follows REST conventions and supports JSON-LD, JSON, CSV, and multipart/form-data formats for most endpoints.
 
 <Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
+  title="Orgo API Specification"
+  icon="api"
+  href="/api-reference/openapi.json"
 >
-  View the OpenAPI specification file
+  View the complete OpenAPI specification
 </Card>
 
-## Authentication
+## Base URL
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+All API endpoints are prefixed with `/api/v1/`
 
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
-```
+## Content Types
+
+The API supports multiple content types:
+- `application/ld+json` (JSON-LD with Hydra)
+- `application/json` (Standard JSON)
+- `text/csv` (CSV format)
+- `multipart/form-data` (For file uploads)
+
+## Pagination
+
+Collection endpoints support pagination with the following parameters:
+- `page`: The collection page number (default: 1)
+- `pagination`: Enable or disable pagination (boolean)
