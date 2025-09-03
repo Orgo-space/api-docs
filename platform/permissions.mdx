@@ -6,27 +6,25 @@ The permission system in the Orgo SaaS Platform defines user access rights and c
 
 ## Quick Reference Table
 
-### Permission Matrix
-
-| Role | Scope | User Mgmt | HR Functions | Financial | Events | Communication | Inherits From |
-|------|-------|-----------|--------------|-----------|---------|---------------|---------------|
-| **Administrator (Orgo)** | Organization | Full | Full | Full | Full | Full | - |
-| **Admin** | Organization | DELETE, CREATE/UPDATE Groups | - | - | - | - | - |
-| **HR** | Organization | CREATE, UPDATE All | Full + Confidential | - | - | - | HR Assistant |
-| **HR Assistant** | Organization | - | VIEW Confidential, UPDATE Docs | - | - | - | - |
-| **Financial** | Organization | - | VIEW Confidential, UPDATE Docs | Full Payment/Products | - | - | HR Assistant |
-| **Event Manager** | Organization | - | - | - | CREATE/UPDATE | - | - |
-| **Communication Manager** | Organization | - | - | - | - | Full Newsletter/Moderation | - |
-| **Trainer** | Organization | - | - | - | CREATE Training | - | - |
-| **HR Parent Local** | Local Parent | CREATE, UPDATE All | Full + Confidential | - | - | - | HR Local, HR Assistant Local |
-| **HR Local** | Local | CREATE, UPDATE All | Full + Confidential | - | - | - | HR Assistant Local |
-| **HR Assistant Local** | Local | - | VIEW Confidential, UPDATE Docs | - | - | - | - |
-| **Financial Parent Local** | Local Parent | - | VIEW Confidential, UPDATE Docs | Full Payment/Products | - | - | Financial Local, HR Assistant Local/Parent |
-| **Financial Local** | Local | - | VIEW Confidential, UPDATE Docs | Full Payment/Products | - | - | HR Assistant Local |
-| **Communication Parent Local** | Local Parent | - | - | - | - | Full Newsletter/Moderation | Communication Local |
-| **Communication Local** | Local | - | - | - | - | Full Newsletter/Moderation | - |
-| **Event Parent Local** | Local Parent | - | - | - | CREATE/UPDATE | - | Event Local |
-| **Event Local** | Local | - | - | - | CREATE/UPDATE | - | - |
+| Role                       | Scope        | User Mgmt                    | HR Functions                   | Financial             | Events          | Communication              | Inherits From                              |
+| -------------------------- | ------------ | ---------------------------- | ------------------------------ | --------------------- | --------------- | -------------------------- | ------------------------------------------ |
+| **Administrator (Orgo)**   | Organization | Full                         | Full                           | Full                  | Full            | Full                       | -                                          |
+| **Admin**                  | Organization | DELETE, CREATE/UPDATE Groups | -                              | -                     | -               | -                          | -                                          |
+| **HR**                     | Organization | CREATE, UPDATE All           | Full \+ Confidential           | -                     | -               | -                          | HR Assistant                               |
+| **HR Assistant**           | Organization | -                            | VIEW Confidential, UPDATE Docs | -                     | -               | -                          | -                                          |
+| **Financial**              | Organization | -                            | VIEW Confidential, UPDATE Docs | Full Payment/Products | -               | -                          | HR Assistant                               |
+| **Event Manager**          | Organization | -                            | -                              | -                     | CREATE/UPDATE   | -                          | -                                          |
+| **Communication Manager**  | Organization | -                            | -                              | -                     | -               | Full Newsletter/Moderation | -                                          |
+| **Trainer**                | Organization | -                            | -                              | -                     | CREATE Training | -                          | -                                          |
+| **HR Parent Local**        | Local Parent | CREATE, UPDATE All           | Full \+ Confidential           | -                     | -               | -                          | HR Local, HR Assistant Local               |
+| **HR Local**               | Local        | CREATE, UPDATE All           | Full \+ Confidential           | -                     | -               | -                          | HR Assistant Local                         |
+| **HR Assistant Local**     | Local        | -                            | VIEW Confidential, UPDATE Docs | -                     | -               | -                          | -                                          |
+| **Financial Regional**     | Regional     | -                            | VIEW Confidential, UPDATE Docs | Full Payment/Products | -               | -                          | Financial Local, HR Assistant Local/Parent |
+| **Financial Local**        | Local        | -                            | VIEW Confidential, UPDATE Docs | Full Payment/Products | -               | -                          | HR Assistant Local                         |
+| **Communication Regional** | Regional     | -                            | -                              | -                     | -               | Full Newsletter/Moderation | Communication Local                        |
+| **Communication Local**    | Local        | -                            | -                              | -                     | -               | Full Newsletter/Moderation | -                                          |
+| **Event Regional**         | Regional     | -                            | -                              | -                     | CREATE/UPDATE   | -                          | Event Local                                |
+| **Event Local**            | Local        | -                            | -                              | -                     | CREATE/UPDATE   | -                          | -                                          |
 
 ### Inheritance Tree Structure
 
@@ -69,6 +67,7 @@ Local Hierarchy:
 ## Understanding Permission Hierarchy
 
 Permissions are structured in three tiers:
+
 - **Organizational**: Full access across the entire organization
 - **Regional**: Access limited to specific regional boundaries
 - **Local**: Access restricted to individual local groups
@@ -80,6 +79,7 @@ Permissions are structured in three tiers:
 The highest level of permissions with complete organizational control.
 
 **Allowed Actions:**
+
 - Update organizational settings for REPER
 - Manage roles, role groups, event types, badge types, and unit types
 - Full system administration capabilities
@@ -89,6 +89,7 @@ The highest level of permissions with complete organizational control.
 Administrative permissions for user and group management.
 
 **Allowed Actions:**
+
 - Delete user accounts
 - Create and update local groups
 - Manage organizational structure
@@ -98,18 +99,17 @@ Administrative permissions for user and group management.
 Comprehensive permissions for managing user profiles and organizational structure.
 
 **Allowed Actions:**
+
 1. **User Management**
    - Create new user accounts
-   - Update user's organizational roles via `Profile` -> `Roles`
-   - Update user's permission roles via `Profile` -> `Permissions`
-   - Update user's local group assignment via `Profile` -> `Permissions`
-   - Update user's status via `Profile` -> `Permissions`
-
+   - Update user's organizational roles via `Profile` -\> `Roles`
+   - Update user's permission roles via `Profile` -\> `Permissions`
+   - Update user's local group assignment via `Profile` -\> `Permissions`
+   - Update user's status via `Profile` -\> `Permissions`
 2. **Document Management**
    - Update and read confidential profile data
    - Update and approve user identity documents
    - Update and approve user adhesion requests
-
 3. **Additional Capabilities**
    - Full access to HR Assistant functions
 
@@ -118,6 +118,7 @@ Comprehensive permissions for managing user profiles and organizational structur
 Limited HR permissions focused on document and data management.
 
 **Allowed Actions:**
+
 - View confidential profile data
 - Update and approve user identity documents
 - Create and update gamifications/badges
@@ -127,18 +128,16 @@ Limited HR permissions focused on document and data management.
 Permissions for financial operations and payment processing.
 
 **Allowed Actions:**
+
 1. **Data Access**
    - View confidential profile data
    - View payment details
-
 2. **Financial Operations**
    - Approve payments
    - Update products
    - Generate CSV reports
-
 3. **Document Management**
    - Update and approve user identity documents
-
 4. **Additional Capabilities**
    - Full access to HR Assistant functions
 
@@ -147,6 +146,7 @@ Permissions for financial operations and payment processing.
 Content and communication management permissions.
 
 **Allowed Actions:**
+
 - Create and update newsletters
 - Create public discussions (when restricted for regular users)
 - Delete comments and discussions
@@ -157,6 +157,7 @@ Content and communication management permissions.
 Event creation and management permissions.
 
 **Allowed Actions:**
+
 - Create and update events
 - Manage event details and participants
 
@@ -165,6 +166,7 @@ Event creation and management permissions.
 Training and educational event management.
 
 **Allowed Actions:**
+
 - Create training events
 - Manage attendees in training events
 - Configure training-specific settings
@@ -174,6 +176,7 @@ Training and educational event management.
 Regional administrators have elevated permissions within their assigned geographic or organizational region.
 
 **Available Regional Roles:**
+
 - Admin Regional
 - HR Regional
 - Financial Regional
@@ -188,6 +191,7 @@ All organizational-level permissions apply, but are limited to local groups with
 Local administrators have permissions restricted to their specific local group.
 
 **Available Local Roles:**
+
 - Admin Local
 - HR Local
 - Financial Local
@@ -202,31 +206,38 @@ All organizational-level permissions apply, but are limited to the user's local 
 ### Core Actions
 
 **CREATE** - Generate new entities in the system:
+
 - Users, groups, events, newsletters, discussions
 
 **UPDATE** - Modify existing entities:
+
 - User profiles, settings, content, products
 
 **DELETE** - Remove entities from the system:
+
 - Users, comments, discussions (restricted to specific roles)
 
 **VIEW/READ** - Access and view information:
+
 - Confidential data, payment details, user profiles
 
 **APPROVE** - Authorize pending actions:
+
 - Identity documents, payments, adhesion requests
 
 **MANAGE** - Full control over specified entities:
+
 - Roles, events, attendees, organizational settings
 
 **MODERATE** - Review and flag content:
+
 - Comments and discussions (Communication Manager only)
 
 ## Implementation Guidelines
 
 ### Permission Assignment
 
-1. Navigate to `User Profile` -> `Permissions` to assign roles
+1. Navigate to `User Profile` -\> `Permissions` to assign roles
 2. Select appropriate permission level based on user responsibilities
 3. Configure regional or local scope if applicable
 4. Save changes and verify access levels
@@ -234,12 +245,14 @@ All organizational-level permissions apply, but are limited to the user's local 
 ### Best Practices
 
 **Security Considerations:**
+
 - Conduct regular permission audits
 - Log all permission changes for compliance
 - Require confirmation for sensitive operations (DELETE, APPROVE)
 - Implement geographic/organizational isolation through scoped permissions
 
 **Access Control:**
+
 - Confidential profile data restricted to HR, HR Assistant, and Financial roles
 - Identity document approval limited to HR, HR Assistant, and Financial roles
 - Content moderation exclusive to Communication Managers
@@ -248,6 +261,7 @@ All organizational-level permissions apply, but are limited to the user's local 
 ### Permission Inheritance
 
 Higher-level permissions typically include capabilities of lower levels:
+
 - Administrator (Orgo) has all system permissions
 - HR includes all HR Assistant capabilities
 - Financial includes HR Assistant functions
@@ -256,16 +270,19 @@ Higher-level permissions typically include capabilities of lower levels:
 ## Troubleshooting Common Issues
 
 **User Cannot Access Expected Features:**
-1. Verify permission level in `User Profile` -> `Permissions`
+
+1. Verify permission level in `User Profile` -\> `Permissions`
 2. Check if feature requires regional or local scope
-3. Confirm module is enabled in `Organisation Settings` -> `Modules`
+3. Confirm module is enabled in `Organisation Settings` -\> `Modules`
 
 **Permission Changes Not Taking Effect:**
+
 1. Have user log out and log back in
 2. Clear browser cache
 3. Verify changes were saved properly
 
 **Regional/Local Restrictions Not Working:**
+
 1. Confirm user's assigned region or local group
 2. Check organization hierarchy configuration
 3. Verify scope settings in permission assignment
