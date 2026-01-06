@@ -1,32 +1,305 @@
 ---
-title: 'Local groups'
+title: 'Local Centers'
+description: 'Geographic chapters and branches of your organization'
 ---
 
-Local Groups offer members the opportunity to connect and collaborate with others in their geographical area. These groups are designed to mirror the structure and autonomy of the Main Group but on a local scale, allowing for focused engagement and relevancy to members' specific locations.
+Local Centers (also called Local Groups or Chapters) represent geographic divisions of your organization. They allow members to connect and collaborate with others in their area while maintaining connection to the national organization.
 
-**Features of Local Groups:**
+## How to access
 
-* **Tailored Discussions:** Foster conversations about local issues, events, and interests that are relevant to group members in the same geographic region.
-* **Local Events:** Plan and participate in events that are convenient for members to attend, enhancing real-world community interaction.
-* **File Sharing:** Share documents and resources pertinent to local group activities, interests, or administrative needs.
-* **Autonomous Permissions:** Local Groups have their own set of permissions, allowing for a localized hierarchy and governance that reflect the organizational structure at the local level.
+**Sidebar** → **Local Centers**
 
-**Engagement in Local Groups:**
+Or: **Settings** → **Local Centers** → **Module Settings**
 
-* **Joining a Local Group:** Members can join local groups based on their registered location, ensuring they engage with the most relevant cohort of the community.
-* **Creating Local Content:** Members are encouraged to initiate discussions, share local news, and contribute to the community resource pool.
-* **Local Administration:** Designated local group administrators can manage the group, mirroring organizational permissions to maintain order and structure within the group.
+---
 
-**Benefits of Local Groups:**
+## What are Local Centers
 
-* **Community Relevance:** Ensures that discussions and initiatives are highly relevant to the members' local context.
-* **Resource Optimization:** Allows for efficient use of local resources by sharing within a specific geographical area.
-* **Enhanced Collaboration:** Promotes closer ties between members who may have the opportunity to meet and work together outside the digital platform.
+Local Centers provide:
 
-**Best Practices:**
+- **Geographic organization** - Divide your organization by location
+- **Local autonomy** - Each center has its own discussions, events, and files
+- **Local administration** - Dedicated admins manage local activities
+- **Member assignment** - Members belong to their local chapter
 
-* Regularly engage with your local group to stay informed about nearby events and initiatives.
-* Respect the localized nature of discussions and resources, and contribute constructively.
-* Utilize local group permissions to facilitate effective and orderly management of group activities.
+---
 
-**Note:** Local Groups are a critical feature for fostering localized engagement and ensuring that the benefits of the Orgo community extend into the physical spaces where members live and work.
+## Local Center Structure
+
+### Hierarchy
+
+```
+National Organization (Tenant)
+├── Region A
+│   ├── Local Center 1
+│   ├── Local Center 2
+│   └── Local Center 3
+└── Region B
+    ├── Local Center 4
+    └── Local Center 5
+```
+
+### Center Properties
+
+Each Local Center has:
+
+| Property | Description |
+|----------|-------------|
+| **Name** | Display name for the center |
+| **Town/Location** | Geographic location |
+| **Region** | Parent region (if regions enabled) |
+| **Status** | Active, Pending Close, Suspended, or Closed |
+| **Contact Info** | Email, phone, contact person |
+| **Address** | Office and postal addresses |
+| **Social Links** | Facebook, Instagram, Twitter |
+
+---
+
+## Creating a Local Center
+
+**Settings** → **Local Centers** → **Create Local Center**
+
+<Steps>
+  <Step title="Basic Information">
+    Enter name, select town/location, and choose region if applicable.
+  </Step>
+  <Step title="Contact Details">
+    Add contact email, phone, and contact person name.
+  </Step>
+  <Step title="Addresses">
+    Enter office address and postal address.
+  </Step>
+  <Step title="Additional Settings">
+    Configure bank details, social media links, and map location.
+  </Step>
+  <Step title="Save">
+    Save to create the Local Center.
+  </Step>
+</Steps>
+
+---
+
+## Local Center Settings
+
+### Basic Information
+
+<ParamField path="name" type="string" required>
+  Display name for the Local Center.
+</ParamField>
+
+<ParamField path="alias" type="string">
+  Short alias or abbreviation.
+</ParamField>
+
+<ParamField path="town" type="relation">
+  Geographic location (town/city).
+</ParamField>
+
+<ParamField path="region" type="relation">
+  Parent region for hierarchical organization.
+</ParamField>
+
+### Contact Information
+
+<ParamField path="contactEmail" type="email">
+  Public contact email for the center.
+</ParamField>
+
+<ParamField path="contactPhone" type="phone">
+  Public contact phone number.
+</ParamField>
+
+<ParamField path="contactFullName" type="string">
+  Name of primary contact person.
+</ParamField>
+
+### Addresses
+
+<ParamField path="officeAddress" type="string">
+  Physical office/meeting location.
+</ParamField>
+
+<ParamField path="postalAddress" type="text">
+  Mailing address for correspondence.
+</ParamField>
+
+<ParamField path="geoLocation" type="string">
+  GPS coordinates for map display.
+</ParamField>
+
+<ParamField path="mapDescription" type="text">
+  Description shown on public map.
+</ParamField>
+
+### Social Media
+
+<ParamField path="facebookUrl" type="url">
+  Facebook page URL.
+</ParamField>
+
+<ParamField path="instagramUrl" type="url">
+  Instagram profile URL.
+</ParamField>
+
+<ParamField path="twitterUrl" type="url">
+  Twitter/X profile URL.
+</ParamField>
+
+<ParamField path="website" type="url">
+  Local center's website.
+</ParamField>
+
+### Financial Settings
+
+<ParamField path="bankIbanNative" type="string">
+  Bank IBAN in local currency.
+</ParamField>
+
+<ParamField path="bankIbanEur" type="string">
+  Bank IBAN for EUR transactions.
+</ParamField>
+
+<ParamField path="stripeAccount" type="string">
+  Connected Stripe account ID (for local payments).
+</ParamField>
+
+<ParamField path="isStripeEligible" type="boolean">
+  Whether this center can accept Stripe payments.
+</ParamField>
+
+---
+
+## Local Center Statuses
+
+| Status | Description |
+|--------|-------------|
+| **Active** | Fully operational center |
+| **Pending Close** | Center scheduled for closure |
+| **Suspended** | Temporarily inactive |
+| **Closed** | Permanently closed |
+
+---
+
+## Local Center Features
+
+Each Local Center functions as a group with:
+
+### Discussions
+- Local announcements and conversations
+- Topics relevant to the geographic area
+- Local community engagement
+
+### Events
+- Local meetups and activities
+- Events specific to the area
+- Local calendar management
+
+### Files
+- Local documents and resources
+- Center-specific materials
+- Administrative documents
+
+### Members
+- Members assigned to this center
+- Local leadership and roles
+- Member management
+
+---
+
+## Local Administration
+
+### Local Admin Roles
+
+- **ADMIN_LOCAL** - Full administrative access to the local center
+- **HR_LOCAL** - Member management within the local center
+- **FINANCIAL_LOCAL** - Financial management for the local center
+
+### What Local Admins Can Do
+
+- Manage local discussions, events, and files
+- Edit center information
+- Manage local members
+- View local reports
+- Process local fees (if enabled)
+
+---
+
+## Waitlist Management
+
+Local Centers can have capacity limits:
+
+<ParamField path="waitlistCapacity" type="number">
+  Maximum members for this center. New registrations go to waitlist when full.
+</ParamField>
+
+<ParamField path="waitlistAutoApprove" type="boolean">
+  Automatically approve waitlist members when capacity opens.
+</ParamField>
+
+<ParamField path="waitlistProcessingRate" type="number">
+  Rate at which waitlist members are processed.
+</ParamField>
+
+---
+
+## Local Fees
+
+If local fee collection is enabled:
+
+<ParamField path="feeProduct" type="relation">
+  Product used for local membership fees.
+</ParamField>
+
+<ParamField path="feeDefaultProductPrice" type="relation">
+  Default price for local fees.
+</ParamField>
+
+<ParamField path="isOnlinePaymentFeeEligible" type="boolean">
+  Allow online payment of local fees.
+</ParamField>
+
+---
+
+## Public Map
+
+If enabled, Local Centers appear on a public map:
+
+- Shows location of all active centers
+- Displays contact information
+- Helps prospective members find local chapters
+- Customizable map descriptions
+
+---
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Consistent naming">
+    Use consistent naming conventions across Local Centers.
+  </Accordion>
+
+  <Accordion title="Complete profiles">
+    Fill in all contact information and addresses for each center.
+  </Accordion>
+
+  <Accordion title="Active local admins">
+    Ensure each center has active local administrators.
+  </Accordion>
+
+  <Accordion title="Regular updates">
+    Keep center information current, especially contact details.
+  </Accordion>
+
+  <Accordion title="Engage locally">
+    Encourage local discussions and events to build community.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related Features
+
+- [Groups Overview](/platform/groups/index) - All group types
+- [Local Group Fees](/platform/local-group-fees/create-local-fees) - Local fee collection
+- [Regions](/platform/regions) - Regional organization
+- [Events](/platform/events/index) - Event management

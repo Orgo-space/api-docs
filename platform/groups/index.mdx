@@ -1,0 +1,230 @@
+---
+title: 'Groups & Teams'
+description: 'Organize members into groups, teams, and organizational units'
+---
+
+Groups are collaborative spaces where members can work together, share files, discuss topics, and organize events. Orgo provides several types of groups to fit different organizational needs.
+
+## How to access
+
+**Sidebar** → **Groups** section
+
+Or: **Settings** → **Groups** → **Module Settings**
+
+---
+
+## Group Types Overview
+
+<CardGroup cols={2}>
+  <Card title="Main Group" icon="users" href="/platform/groups/main-group">
+    Central hub that includes all organization members automatically.
+  </Card>
+  <Card title="Local Centers" icon="map-marker-alt" href="/platform/groups/local-groups">
+    Geographic chapters or branches of your organization.
+  </Card>
+  <Card title="Role Groups" icon="user-tag" href="/platform/groups/role-groups">
+    Groups based on member roles, demographics, or criteria.
+  </Card>
+  <Card title="Private Groups" icon="lock" href="/platform/groups/private-groups">
+    Custom groups created by members for specific projects or interests.
+  </Card>
+</CardGroup>
+
+---
+
+## Prerequisites
+
+Groups module must be enabled in module settings:
+
+**Settings** → **Groups** → **Module Settings**:
+- **Enable Groups & Teams Module** - Master toggle
+
+---
+
+## Module Settings
+
+### Group Types & Organization
+
+<ParamField path="hasGroupCategories" type="boolean" default="false">
+  Allow categorizing groups by type (e.g., Working Group, Committee, Team). Categories help organize and filter groups.
+</ParamField>
+
+<ParamField path="hasRoleGroups" type="boolean" default="false">
+  Enable automatic groups based on user roles, age, gender, or other criteria.
+</ParamField>
+
+<ParamField path="hasUnits" type="boolean" default="false">
+  Enable organizational units for hierarchical structure.
+</ParamField>
+
+### Group Features
+
+<ParamField path="hasTasks" type="boolean" default="false">
+  Enable task/issue management within groups. Members can create, assign, and track tasks.
+</ParamField>
+
+<ParamField path="hasAllMembersGroup" type="boolean" default="true">
+  Automatically maintain a Main Group that includes all organization members.
+</ParamField>
+
+---
+
+## Group Features
+
+Each group can have different features enabled:
+
+| Feature | Description |
+|---------|-------------|
+| **Discussions** | Forum-style posts and conversations |
+| **Events** | Group-specific events and calendar |
+| **Files** | Shared document storage |
+| **Issues** | Task and issue tracking |
+| **Members** | Member list and management |
+
+---
+
+## Creating Groups
+
+### From Sidebar
+
+1. Click **+ New Group** in the sidebar
+2. Enter group name and description
+3. Choose visibility (public or private)
+4. Enable desired features (discussions, events, files, issues)
+5. Configure issue settings if enabled
+6. Click **Save**
+
+### Group Settings
+
+When creating or editing a group:
+
+<ParamField path="name" type="string" required>
+  Display name for the group.
+</ParamField>
+
+<ParamField path="description" type="text">
+  Description explaining the group's purpose.
+</ParamField>
+
+<ParamField path="isJoinable" type="boolean">
+  Allow members to join the group themselves without invitation.
+</ParamField>
+
+<ParamField path="includesAllMembers" type="boolean">
+  Automatically include all organization members in this group.
+</ParamField>
+
+<ParamField path="category" type="select">
+  Group category for organization (if categories enabled).
+</ParamField>
+
+---
+
+## Group Permissions
+
+Groups have granular permission controls:
+
+<ParamField path="onlyAdminsCanPost" type="boolean">
+  Restrict discussion posting to administrators only.
+</ParamField>
+
+<ParamField path="onlyAdminsCanCreateEvents" type="boolean">
+  Restrict event creation to administrators only.
+</ParamField>
+
+<ParamField path="onlyAdminsCanUploadFiles" type="boolean">
+  Restrict file uploads to administrators only.
+</ParamField>
+
+<ParamField path="onlyAdminsCanAddMembers" type="boolean">
+  Restrict member additions to administrators only.
+</ParamField>
+
+---
+
+## Group Categories
+
+If group categories are enabled, you can organize groups by type:
+
+### Creating Categories
+
+**Settings** → **Groups** → **Categories**
+
+1. Click **Create Category**
+2. Enter category name
+3. Choose color and icon (optional)
+4. Set creation permission level
+5. Save
+
+### Category Settings
+
+| Setting | Description |
+|---------|-------------|
+| **Name** | Category display name |
+| **Color** | Badge color for visual identification |
+| **Icon** | Icon displayed with the category |
+| **Creation Permission** | Who can create groups in this category |
+
+---
+
+## Issues & Tasks
+
+Groups can have built-in issue tracking:
+
+### Issue Settings Per Group
+
+<ParamField path="hasPriority" type="boolean" default="true">
+  Allow setting priority levels on issues.
+</ParamField>
+
+<ParamField path="hasDueDate" type="boolean" default="false">
+  Enable due dates for issues.
+</ParamField>
+
+<ParamField path="hasTypes" type="boolean" default="true">
+  Enable issue type categorization.
+</ParamField>
+
+<ParamField path="hasStatus" type="boolean" default="true">
+  Enable status tracking for issues.
+</ParamField>
+
+### Using Issues
+
+1. Navigate to group → **Issues** tab
+2. Click **Create Issue**
+3. Fill in title, description, type, priority
+4. Assign to a member (optional)
+5. Set due date (if enabled)
+6. Save
+
+---
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Use appropriate group types">
+    Use Main Group for organization-wide content, Local Centers for geographic divisions, Role Groups for functional teams, and Private Groups for temporary projects.
+  </Accordion>
+
+  <Accordion title="Set clear permissions">
+    Configure who can post, create events, and add members based on each group's purpose.
+  </Accordion>
+
+  <Accordion title="Enable only needed features">
+    Don't enable all features for every group. Match features to the group's actual needs.
+  </Accordion>
+
+  <Accordion title="Use categories for organization">
+    If you have many groups, use categories to help members find relevant ones.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related Features
+
+- [Discussion Namespaces](/platform/discussion/discussion-namespaces) - Categorize discussions
+- [Local Centers](/platform/groups/local-groups) - Geographic groups
+- [Issues](/platform/issues) - Task tracking
+- [Files](/platform/files) - Document management
