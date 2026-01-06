@@ -1,0 +1,193 @@
+---
+title: 'Roles & Permissions'
+description: 'Define organizational roles and manage system permissions'
+---
+
+Orgo has two types of roles: **Organizational Roles** (positions within your organization's structure) and **System Roles** (permission levels for platform administration).
+
+## How to access
+
+**Settings** → **Roles**
+
+---
+
+## Organizational Roles
+
+Organizational roles represent positions within your organization's structure. They don't automatically grant system permissions but help organize members and can be used for filtering and communication.
+
+### Examples of Organizational Roles
+
+- President, Vice President, Secretary
+- Team Leader, Project Manager
+- Committee Chair, Board Member
+- Regional Director, Local Coordinator
+
+### Creating Organizational Roles
+
+<Steps>
+  <Step title="Navigate to Roles">
+    Go to **Settings** → **Roles**
+  </Step>
+  <Step title="Click Create Role">
+    Start creating a new role
+  </Step>
+  <Step title="Configure settings">
+    Set name, description, and options
+  </Step>
+  <Step title="Leave 'Is User Type' off">
+    For organizational roles, keep this toggle disabled
+  </Step>
+  <Step title="Save">
+    Save the new role
+  </Step>
+</Steps>
+
+---
+
+## System Roles (Permission Levels)
+
+System roles control what actions users can perform in the platform. These are hierarchical permission levels:
+
+### Permission Hierarchy
+
+| Role | Description | Typical Users |
+|------|-------------|---------------|
+| **User** | Basic member access | All members |
+| **HR Local** | Member management for local center | Local HR staff |
+| **HR Tenant** | Member management for entire org | Central HR |
+| **Admin Local** | Full admin for local center | Local directors |
+| **Admin Tenant** | Full admin for entire organization | Executive team |
+| **Super Admin** | Platform-level access | Orgo staff only |
+
+### Permission Capabilities
+
+<AccordionGroup>
+  <Accordion title="User (ROLE_USER)">
+    - View own profile and edit allowed fields
+    - View other members (based on privacy settings)
+    - Register for events
+    - Participate in discussions
+    - Access enabled features
+  </Accordion>
+
+  <Accordion title="HR Local (HR_LOCAL)">
+    Everything in User, plus:
+    - View and edit members in their local center
+    - Export member lists
+    - Manage local event attendance
+    - View local reports
+  </Accordion>
+
+  <Accordion title="HR Tenant (HR_TENANT)">
+    Everything in HR Local, plus:
+    - View and edit all members
+    - Manage membership applications
+    - Send organization-wide communications
+    - Access full member reports
+  </Accordion>
+
+  <Accordion title="Admin Local (ADMIN_LOCAL)">
+    Everything in HR Local, plus:
+    - Configure local center settings
+    - Manage local payments
+    - Create local events
+    - Manage local groups
+  </Accordion>
+
+  <Accordion title="Admin Tenant (ADMIN_TENANT)">
+    Full administrative access:
+    - All organization settings
+    - All modules configuration
+    - User management and permissions
+    - Financial and payment settings
+    - Integrations and API access
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Assigning Roles
+
+### System Roles
+
+To assign a system role to a user:
+
+<Steps>
+  <Step title="Find the user">
+    Navigate to the user's profile or the Users list
+  </Step>
+  <Step title="Edit user">
+    Click Edit or access admin options
+  </Step>
+  <Step title="Modify roles">
+    Add or remove system roles
+  </Step>
+  <Step title="Save">
+    Save changes
+  </Step>
+</Steps>
+
+### Organizational Roles
+
+Organizational roles can be assigned through:
+- User profile editing
+- Role Groups (automatic assignment based on criteria)
+- Bulk import
+
+---
+
+## Role Groups
+
+Role Groups automatically assign organizational roles to members who meet certain criteria.
+
+**Example:** Automatically add "Active Volunteer" role to all users with 10+ volunteer hours.
+
+[Learn more about Role Groups →](/platform/groups/role-groups)
+
+---
+
+## Configuring Role Visibility
+
+Control who can see role information:
+
+<ParamField path="whoCanSeeUserType" type="select">
+  Configure in Users Module settings:
+  - **USER** - All members can see roles
+  - **HR_LOCAL** - Only local HR and above
+  - **HR_TENANT** - Only organization HR and above
+  - **ADMIN** - Only administrators
+</ParamField>
+
+---
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Use organizational roles for structure">
+    Create roles that match your organization chart. This helps with communication and reporting.
+  </Accordion>
+
+  <Accordion title="Keep system roles minimal">
+    Don't give Admin Tenant to everyone. Most users only need User or HR_LOCAL level.
+  </Accordion>
+
+  <Accordion title="Review permissions regularly">
+    Audit who has admin access periodically. Remove permissions when people change roles.
+  </Accordion>
+
+  <Accordion title="Document role responsibilities">
+    Use role descriptions to explain what each role is responsible for.
+  </Accordion>
+</AccordionGroup>
+
+<Warning>
+  Be careful when assigning Admin Tenant role. Users with this role have access to all organization settings, financial data, and member information.
+</Warning>
+
+---
+
+## Related Settings
+
+- [User Types](/platform/users/user-types) - Membership categories (not permission roles)
+- [Role Groups](/platform/groups/role-groups) - Automatic role assignment
+- [Permissions](/platform/permissions) - Detailed permission reference

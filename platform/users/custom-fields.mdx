@@ -1,0 +1,226 @@
+---
+title: 'Custom Fields'
+description: 'Create organization-specific data fields for user profiles and forms'
+---
+
+Custom Fields allow you to capture organization-specific information that isn't covered by standard profile fields. Create fields for any data you need to collect from members.
+
+## How to access
+
+**Settings** → **Custom Fields**
+
+---
+
+## Field Types
+
+Orgo supports various field types:
+
+| Type | Description | Example |
+|------|-------------|---------|
+| **Text** | Single-line text input | "Membership Number" |
+| **Textarea** | Multi-line text | "Bio" or "Skills" |
+| **Number** | Numeric values | "Years of Experience" |
+| **Date** | Date picker | "Join Date" |
+| **Select** | Dropdown with options | "Department" |
+| **Multi-select** | Multiple choice selection | "Interests" |
+| **Checkbox** | Yes/No toggle | "Newsletter Opt-in" |
+| **URL** | Website link | "Portfolio URL" |
+| **Email** | Email address | "Secondary Email" |
+
+---
+
+## Creating a Custom Field
+
+<Steps>
+  <Step title="Navigate to Custom Fields">
+    Go to **Settings** → **Custom Fields**
+  </Step>
+  <Step title="Click Create">
+    Click the **Create Custom Field** button
+  </Step>
+  <Step title="Configure the field">
+    Set name, type, and options (detailed below)
+  </Step>
+  <Step title="Add to forms">
+    Enable the field on Registration Form and/or Profile Fields
+  </Step>
+  <Step title="Save">
+    Save your new custom field
+  </Step>
+</Steps>
+
+---
+
+## Field Configuration
+
+### Basic Settings
+
+<ParamField path="name" type="string" required>
+  The label displayed to users (e.g., "T-Shirt Size", "Emergency Contact").
+</ParamField>
+
+<ParamField path="fieldType" type="select" required>
+  The type of input field (text, select, date, etc.).
+</ParamField>
+
+<ParamField path="description" type="string">
+  Help text displayed below the field to guide users.
+</ParamField>
+
+### Options (for Select/Multi-select)
+
+For dropdown and multi-select fields, define the available options:
+
+```
+Small
+Medium
+Large
+X-Large
+```
+
+Each option on a new line.
+
+### Visibility Settings
+
+<ParamField path="isOnlyAdmin" type="boolean">
+  When enabled, only administrators can see and edit this field. The field won't appear on user-facing forms.
+
+  **Use cases:**
+  - Internal notes
+  - Admin-assigned categories
+  - Sensitive information
+</ParamField>
+
+### Position
+
+<ParamField path="position" type="number">
+  Controls the display order of custom fields. Lower numbers appear first.
+</ParamField>
+
+---
+
+## Using Custom Fields
+
+### On Registration Form
+
+1. Go to **Settings** → **Users & Profiles** → **Registration Form**
+2. Find your custom field in the list
+3. Check the box to enable it
+4. Optionally mark as required
+
+### On Profile Fields
+
+1. Go to **Settings** → **Users & Profiles** → **Profile Fields**
+2. Find your custom field in the list
+3. Configure:
+   - **Enabled** - Show on profile
+   - **Required** - Must be filled
+   - **Immutable** - Cannot be changed after initial entry
+
+### In Adhesion Forms
+
+Custom fields can also be included in adhesion (membership application) forms for collecting data during the approval process.
+
+---
+
+## Admin-Only Fields
+
+Fields marked as **Admin Only** have special behavior:
+
+- Not visible to regular users
+- Only editable by administrators
+- Display a green "admin" tag in settings
+- Useful for internal tracking
+
+**Examples of admin-only fields:**
+- Approval notes
+- Verification status
+- Internal member ID
+- HR comments
+
+---
+
+## Field Behavior Options
+
+### Immutable Fields
+
+When a field is marked as immutable on profiles:
+- Users can set the value once
+- After saving, users cannot change it
+- Only administrators can modify immutable values
+
+**Use cases:**
+- Membership ID (assigned once)
+- Original registration date
+- Verified credentials
+
+### Required Fields
+
+Required custom fields work the same as standard required fields:
+- On registration: blocks form submission if empty
+- On profiles: triggers splash screen on login
+
+---
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Name fields clearly">
+    Use descriptive, user-friendly names. "Emergency Contact Phone" is better than "EC_Phone".
+  </Accordion>
+
+  <Accordion title="Add help text">
+    Use the description field to explain what information you need and why.
+  </Accordion>
+
+  <Accordion title="Choose the right type">
+    Use appropriate field types - dates for dates, numbers for numeric data. This enables better validation and filtering.
+  </Accordion>
+
+  <Accordion title="Consider privacy">
+    Think about who needs to see each field. Use admin-only for sensitive internal data.
+  </Accordion>
+
+  <Accordion title="Keep it minimal">
+    Only create fields you actually need. Too many fields overwhelm users and reduce form completion rates.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Examples
+
+### Scouting Organization
+
+| Field | Type | Purpose |
+|-------|------|---------|
+| Scout ID | Text (Admin, Immutable) | Official scout number |
+| Unit | Select | Scout unit assignment |
+| Badges Earned | Number | Track achievements |
+| Parent Contact | Text (Required) | Emergency contact |
+
+### Professional Association
+
+| Field | Type | Purpose |
+|-------|------|---------|
+| License Number | Text (Immutable) | Professional license |
+| Specialization | Multi-select | Areas of expertise |
+| Years in Practice | Number | Experience tracking |
+| Continuing Education | Checkbox | CPD compliance |
+
+### Alumni Network
+
+| Field | Type | Purpose |
+|-------|------|---------|
+| Graduation Year | Number | Class year |
+| Major/Degree | Select | Field of study |
+| Current Industry | Select | Career tracking |
+| Willing to Mentor | Checkbox | Mentorship program |
+
+---
+
+## Related Settings
+
+- [Registration Form](/platform/users/registration-form) - Add custom fields to sign-up
+- [Profile Fields](/platform/users/profile-fields) - Add custom fields to profiles
+- [Adhesion](/platform/users/adhesion) - Use custom fields in membership applications

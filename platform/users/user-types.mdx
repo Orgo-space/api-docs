@@ -1,0 +1,152 @@
+---
+title: 'User Types'
+description: 'Categorize members into different types for organization and filtering'
+---
+
+User Types allow you to categorize members into groups based on their membership category, status, or role in your organization. This is different from system permissions - user types are for organizational classification.
+
+## How to access
+
+**Settings** → **Users & Profiles** → **User Types**
+
+Or navigate to **Settings** → **Roles** and filter by "User Types"
+
+---
+
+## What are User Types?
+
+User Types are labels that help you organize members. Examples:
+
+- **Member** - Full members of your organization
+- **Volunteer** - Active volunteers
+- **Alumni** - Former members
+- **Honorary Member** - Special recognition members
+- **Student** - Student members (different fee structure)
+- **Supporting Member** - Non-voting supporters
+
+<Note>
+  User Types are organizational categories, not permission levels. A "Volunteer" user type doesn't automatically grant any special permissions - it's just a classification.
+</Note>
+
+---
+
+## Creating User Types
+
+<Steps>
+  <Step title="Navigate to Roles">
+    Go to **Settings** → **Roles**
+  </Step>
+  <Step title="Create new role">
+    Click **Create Role**
+  </Step>
+  <Step title="Mark as User Type">
+    Enable the **Is User Type** toggle
+  </Step>
+  <Step title="Configure details">
+    Set the name, description, and any additional options
+  </Step>
+  <Step title="Save">
+    Save the new user type
+  </Step>
+</Steps>
+
+---
+
+## User Type Settings
+
+When creating or editing a user type:
+
+<ParamField path="name" type="string" required>
+  The display name for this user type (e.g., "Full Member", "Volunteer").
+</ParamField>
+
+<ParamField path="description" type="string">
+  Optional description explaining this user type's purpose.
+</ParamField>
+
+<ParamField path="isUserType" type="boolean">
+  Must be enabled to make this role appear as a user type option.
+</ParamField>
+
+---
+
+## Using User Types
+
+### On Registration
+If enabled in your registration form settings, new members can select their user type during sign-up.
+
+### After Adhesion Approval
+When using the adhesion (membership application) workflow, you can automatically assign a user type when applications are approved.
+
+### Manual Assignment
+Administrators can manually change a member's user type from their profile.
+
+### Filtering and Reports
+Use user types to filter member lists, create targeted newsletters, or generate reports.
+
+---
+
+## User Type Visibility
+
+Control who can see user type information:
+
+<ParamField path="whoCanSeeUserType" type="select">
+  Configure visibility of user type labels:
+  - **USER** - All members can see user types
+  - **HR_LOCAL** - Only local HR and above
+  - **HR_TENANT** - Only organization HR and above
+  - **ADMIN_LOCAL** - Only local admins and above
+  - **ADMIN_TENANT** - Only organization admins
+
+  Configure in **Settings** → **Users & Profiles** → **Users Module**
+</ParamField>
+
+---
+
+## Use Cases
+
+<AccordionGroup>
+  <Accordion title="Tiered membership">
+    Create user types for different membership tiers: Basic, Premium, VIP. Use these to filter access to certain content or features.
+  </Accordion>
+
+  <Accordion title="Member lifecycle">
+    Track members through their journey: Applicant → Trial Member → Full Member → Alumni
+  </Accordion>
+
+  <Accordion title="Fee differentiation">
+    Different user types can have different fee structures. Students might pay less than regular members.
+  </Accordion>
+
+  <Accordion title="Communication targeting">
+    Send newsletters only to specific user types (e.g., all Volunteers for volunteer-specific updates).
+  </Accordion>
+
+  <Accordion title="Voting eligibility">
+    Some organizations restrict voting to certain user types (e.g., only Full Members can vote).
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Best Practices
+
+<Tip>
+  Keep user types simple. 3-5 types is usually enough. Too many types create confusion.
+</Tip>
+
+<Tip>
+  Use clear, self-explanatory names. "Active Member" is better than "Type A".
+</Tip>
+
+<Warning>
+  User types don't grant permissions automatically. If you want a user type to have special access, you need to configure permissions separately.
+</Warning>
+
+---
+
+## Related Settings
+
+- [Roles & Permissions](/platform/users/roles) - System permissions for administration
+- [Adhesion](/platform/users/adhesion) - Auto-assign user type after approval
+- [Registration Form](/platform/users/registration-form) - Allow user type selection at sign-up

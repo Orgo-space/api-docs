@@ -1,0 +1,181 @@
+---
+title: 'Registration Form'
+description: 'Configure which fields appear on your member registration form'
+---
+
+The Registration Form settings control what information new members provide when signing up for your organization. You can enable or disable fields and mark specific ones as required.
+
+## How to access
+
+**Settings** → **Users & Profiles** → **Registration Form**
+
+---
+
+## Available Fields
+
+### Basic Information
+
+| Field | Description |
+|-------|-------------|
+| **Email** | Always enabled and required (used for login) |
+| **First Name** | Member's first name |
+| **Last Name** | Member's last name |
+| **Birthday** | Date of birth |
+| **Gender** | Gender selection |
+| **Phone Number** | Contact phone number |
+
+### Location Fields
+
+| Field | Description |
+|-------|-------------|
+| **Town Born** | City/town of birth |
+| **Town Current** | Current city/town of residence |
+| **Address** | Street address |
+| **Postal Code** | ZIP/postal code |
+| **Location on Map** | Pin location on members map |
+| **Local Center** | Select affiliated local center |
+
+### Professional Fields
+
+| Field | Description |
+|-------|-------------|
+| **Profession Headline** | Job title or professional summary |
+| **Profession Industry** | Industry/sector |
+| **Current Company/Organization** | Employer name |
+| **Current Role** | Job position/title |
+| **Company Legal Name** | Official company name |
+| **Company Identifier** | Company tax/registration ID |
+| **Company Address** | Company address |
+| **Commerce Registry Number** | Business registration number |
+
+### Social Profiles
+
+| Field | Description |
+|-------|-------------|
+| **Website** | Personal website URL |
+| **Facebook** | Facebook profile URL |
+| **Twitter/X** | Twitter/X profile URL |
+| **LinkedIn** | LinkedIn profile URL |
+| **Instagram** | Instagram profile URL |
+| **Telegram** | Telegram username |
+| **TikTok** | TikTok profile URL |
+| **Signal** | Signal contact |
+| **Bluesky** | Bluesky profile |
+
+### Other Fields
+
+| Field | Description |
+|-------|-------------|
+| **ID Serial & Number** | National ID document number |
+| **Personal Number** | Personal identification number |
+| **User Type** | Allow selection of user type during registration |
+| **Register as Member** | Checkbox to confirm membership intent |
+| **Fee Level** | Select membership fee tier |
+
+---
+
+## Custom Fields
+
+In addition to standard fields, you can add **Custom Fields** to your registration form. Custom fields are created separately and can then be enabled on the registration form.
+
+Custom fields appear below the standard fields in the form.
+
+<Note>
+  Custom fields marked as **Admin Only** will only be visible to administrators, not to members filling out the form.
+</Note>
+
+[Learn more about Custom Fields →](/platform/users/custom-fields)
+
+---
+
+## Field Configuration
+
+For each field, you can configure:
+
+### Enable/Disable
+Toggle whether the field appears on the registration form.
+
+### Required
+Mark fields as mandatory. Users cannot complete registration without filling required fields.
+
+<Warning>
+  Be careful with required fields. Too many required fields can discourage registrations. Only require what's truly necessary.
+</Warning>
+
+---
+
+## Custom Text Options
+
+You can customize the registration page with additional text:
+
+<ParamField path="textTitle" type="string">
+  Custom title displayed at the top of the registration form. Leave empty to use the default.
+</ParamField>
+
+<ParamField path="textDisplayedBeforeForm" type="string">
+  Introductory text displayed above the form fields. Use this to welcome new members or provide instructions.
+</ParamField>
+
+<ParamField path="textDisplayedAfterForm" type="string">
+  Text displayed below the form, before the submit button. Use for terms acceptance reminders or additional notes.
+</ParamField>
+
+<ParamField path="textVolunteerOptIn" type="string">
+  Text displayed below the volunteer opt-in switch (if volunteer roles are enabled).
+</ParamField>
+
+---
+
+## Embedding the Registration Form
+
+You can embed your registration form on external websites using an iframe:
+
+1. Click the **Iframe URL** button to copy the embed link
+2. Add the iframe to your website:
+
+```html
+<iframe
+  src="https://app.orgo.space/register?iframe=true&workspace=your-slug&lang=en"
+  width="100%"
+  height="800"
+  frameborder="0">
+</iframe>
+```
+
+<Tip>
+  The iframe URL includes your workspace slug and default language. You can customize the `lang` parameter for different language versions.
+</Tip>
+
+---
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Start minimal">
+    Begin with just essential fields (name, email). Add more fields later as needed. Long forms discourage sign-ups.
+  </Accordion>
+
+  <Accordion title="Group related fields">
+    If you need professional information, group those fields together. Don't mix personal and professional fields.
+  </Accordion>
+
+  <Accordion title="Use custom fields strategically">
+    Custom fields are great for organization-specific data (e.g., "How did you hear about us?", "Membership category").
+  </Accordion>
+
+  <Accordion title="Consider mobile users">
+    Many users will register on mobile devices. Keep the form short and avoid fields that are difficult to fill on small screens.
+  </Accordion>
+
+  <Accordion title="Test the form">
+    After configuring, test the registration process yourself to ensure it works smoothly.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related Settings
+
+- [Profile Fields](/platform/users/profile-fields) - Configure what users can edit after registration
+- [Custom Fields](/platform/users/custom-fields) - Create organization-specific fields
+- [User Types](/platform/users/user-types) - Categories for organizing members

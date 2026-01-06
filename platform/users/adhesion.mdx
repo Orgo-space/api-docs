@@ -1,0 +1,230 @@
+---
+title: 'Adhesion (Membership Applications)'
+description: 'Configure a formal membership application and approval workflow'
+---
+
+Adhesion is Orgo's formal membership application system. When enabled, new members must submit an application that goes through an approval process before they gain full membership status.
+
+## How to access
+
+**Settings** → **Users & Profiles** → **Users Module** → **Adhesion & Membership**
+
+---
+
+## Enabling Adhesion
+
+<ParamField path="isActive" type="boolean">
+  Toggle to enable the adhesion module. When enabled, you can require users to complete a formal application process.
+</ParamField>
+
+<ParamField path="isMandatory" type="boolean">
+  When enabled, all new registrations must complete the adhesion process. Users cannot access full platform features until their application is approved.
+</ParamField>
+
+---
+
+## Configuration Options
+
+<ParamField path="successDefaultUserTypeId" type="select">
+  Automatically assign this user type when an adhesion is approved. This saves administrators from manually updating user types after approval.
+
+  **Example:** Set to "Full Member" to automatically promote approved applicants.
+</ParamField>
+
+<ParamField path="adminEmailAddress" type="email">
+  Email address that receives notifications for new adhesion submissions. Use a shared HR inbox or the person responsible for membership.
+</ParamField>
+
+<ParamField path="changeToDraftReasons" type="textarea">
+  Predefined reasons administrators can select when returning an application to draft status. Enter each reason on a new line:
+
+  ```
+  Incomplete information
+  Missing documents
+  Photo not acceptable
+  Address verification needed
+  Other
+  ```
+</ParamField>
+
+---
+
+## Adhesion Workflow
+
+### Application Status Flow
+
+```
+New → Pending → Approved
+         ↓
+       Draft (needs revision)
+         ↓
+       Rejected
+```
+
+<Steps>
+  <Step title="User submits application">
+    Member fills out the adhesion form with required information and documents.
+  </Step>
+  <Step title="Application is Pending">
+    HR receives notification and can review the application.
+  </Step>
+  <Step title="Review and decision">
+    Administrator can:
+    - **Approve** - Member gains full access
+    - **Return to Draft** - Request changes/corrections
+    - **Reject** - Deny membership
+  </Step>
+  <Step title="If Draft">
+    User receives notification and can update their application.
+  </Step>
+  <Step title="Final approval">
+    Once approved, user type is updated and member has full access.
+  </Step>
+</Steps>
+
+---
+
+## Adhesion Form Contents
+
+The adhesion form can include:
+
+### Standard Fields
+Configure which profile fields appear on the adhesion form.
+
+### Custom Fields
+Add organization-specific fields for membership applications.
+
+### Document Uploads
+- Profile photo
+- ID document
+- Supporting documents
+
+### Declarations
+- Terms acceptance
+- Code of conduct agreement
+- Privacy policy consent
+
+---
+
+## Managing Adhesions
+
+### Admin Interface
+
+Navigate to **Members** → **Adhesions** to:
+
+- View all pending applications
+- Filter by status (Pending, Draft, Approved, Rejected)
+- Review individual applications
+- Approve or reject applications
+- Send applications back for revision
+
+### Application Details
+
+When reviewing an application, administrators can see:
+- All submitted information
+- Uploaded documents
+- Application history (status changes)
+- Notes from previous reviews
+
+---
+
+## Interview Feature
+
+For organizations requiring interviews:
+
+<ParamField path="hasInterview" type="boolean">
+  Enable interview tracking. Applications can include an interview step before final approval.
+</ParamField>
+
+Interview workflow:
+1. Application submitted
+2. Interview scheduled
+3. Interview completed
+4. Final approval/rejection
+
+---
+
+## PDF Generation
+
+Generate PDF documents from approved adhesions:
+
+- Official membership application document
+- Includes all submitted data
+- Organization branding
+- Signature fields
+
+Useful for:
+- Record keeping
+- Member files
+- Official documentation
+
+[Learn more about Adhesion Templates →](/platform/users/adhesion-template)
+
+---
+
+## Combining with Identity Validation
+
+For additional verification, combine adhesion with identity validation:
+
+1. User submits adhesion form
+2. Identity documents uploaded
+3. OCR verification (if enabled)
+4. Manual review by administrator
+5. Approval with verified identity
+
+---
+
+## Use Cases
+
+<AccordionGroup>
+  <Accordion title="Professional associations">
+    Verify credentials and qualifications before granting membership.
+  </Accordion>
+
+  <Accordion title="Selective membership">
+    Organizations that don't accept all applicants can review and select members.
+  </Accordion>
+
+  <Accordion title="Compliance requirements">
+    Meet regulatory requirements for member verification and documentation.
+  </Accordion>
+
+  <Accordion title="Onboarding workflow">
+    Use adhesion as part of a structured onboarding process.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Set response time expectations">
+    Tell applicants how long review typically takes. Fast response improves member satisfaction.
+  </Accordion>
+
+  <Accordion title="Use draft status helpfully">
+    When returning applications to draft, provide clear feedback on what needs to be fixed.
+  </Accordion>
+
+  <Accordion title="Configure notifications">
+    Make sure the admin email is monitored so applications don't sit unreviewed.
+  </Accordion>
+
+  <Accordion title="Document reasons for rejection">
+    Keep records of why applications are rejected for compliance and consistency.
+  </Accordion>
+</AccordionGroup>
+
+<Warning>
+  When adhesion is mandatory, users who haven't completed the process will have limited platform access. Make sure your application process isn't a barrier to legitimate members.
+</Warning>
+
+---
+
+## Related Settings
+
+- [Adhesion Template](/platform/users/adhesion-template) - PDF document templates
+- [Identity Validation](/platform/identity-validation) - Document verification
+- [User Types](/platform/users/user-types) - Auto-assign type on approval
+- [Custom Fields](/platform/users/custom-fields) - Additional application fields

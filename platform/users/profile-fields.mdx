@@ -1,0 +1,147 @@
+---
+title: 'Profile Fields'
+description: 'Configure which fields users can view and edit on their profiles'
+---
+
+Profile Fields settings control what information members can add to their profiles after registration. This is separate from the registration form - you can have different fields available for profiles than for sign-up.
+
+## How to access
+
+**Settings** → **Users & Profiles** → **Profile Fields**
+
+---
+
+## Available Fields
+
+The same fields available for registration can be enabled for profiles:
+
+### Personal Information
+- First Name, Last Name
+- Birthday, Gender
+- Phone Number
+- Address, Postal Code
+- Town (birth and current)
+- Location on members map
+
+### Professional Information
+- Profession headline
+- Industry/sector
+- Company details
+- Current organization and role
+
+### Social Profiles
+- Website, Facebook, Twitter/X, LinkedIn
+- Instagram, Telegram, TikTok
+- Signal, Bluesky
+
+---
+
+## Field Configuration Options
+
+For each field, you can configure:
+
+### Enable/Disable
+Toggle whether the field appears on user profiles.
+
+### Required
+Mark fields as mandatory. When a field is required:
+
+<Warning>
+  **Important**: Required profile fields trigger a **splash screen** when users log in. Users must fill all required fields before they can access the platform.
+</Warning>
+
+This is useful for collecting information that wasn't required at registration but is needed later.
+
+### Immutable (Custom Fields Only)
+For custom fields, you can mark them as **immutable**. Once a user sets an immutable field value, they cannot change it themselves - only administrators can modify it.
+
+Use cases for immutable fields:
+- Membership number (assigned once)
+- Original join date
+- Verified credentials
+
+---
+
+## Custom Fields on Profiles
+
+Custom fields created for your organization can also be added to user profiles.
+
+| Option | Description |
+|--------|-------------|
+| **Enabled** | Field appears on the profile edit form |
+| **Required** | User must fill this field |
+| **Immutable** | User cannot change after initial entry |
+| **Admin Only** | Only visible to administrators (marked with green "admin" tag) |
+
+---
+
+## Required Fields Workflow
+
+When you mark a field as required:
+
+<Steps>
+  <Step title="User logs in">
+    Member authenticates with email/password or SSO.
+  </Step>
+  <Step title="System checks profile">
+    Orgo checks if all required fields are filled.
+  </Step>
+  <Step title="Splash screen appears">
+    If any required fields are empty, a modal form appears.
+  </Step>
+  <Step title="User completes fields">
+    User must fill all required fields to proceed.
+  </Step>
+  <Step title="Access granted">
+    Once complete, user can access the full platform.
+  </Step>
+</Steps>
+
+<Tip>
+  This workflow is great for collecting updated information from existing members or enforcing data completeness over time.
+</Tip>
+
+---
+
+## Profile vs Registration Fields
+
+| Aspect | Registration Form | Profile Fields |
+|--------|------------------|----------------|
+| **When shown** | During sign-up | After login, on profile page |
+| **Purpose** | Initial data collection | Ongoing profile management |
+| **Required fields** | Block registration | Trigger splash screen on login |
+| **Immutable option** | Not available | Available for custom fields |
+
+<Note>
+  A field can be on both forms with different settings. For example, phone might be optional at registration but required on profiles.
+</Note>
+
+---
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Don't require too many fields">
+    Every required field adds friction. Only require fields that are truly essential for your organization's operations.
+  </Accordion>
+
+  <Accordion title="Use required fields for compliance">
+    If you need certain data for legal or organizational compliance, make those fields required on profiles to ensure collection.
+  </Accordion>
+
+  <Accordion title="Consider progressive profiling">
+    Start with minimal required fields at registration, then use profile requirements to collect additional data over time.
+  </Accordion>
+
+  <Accordion title="Use immutable fields carefully">
+    Only make fields immutable when there's a clear reason (e.g., membership ID, verified data).
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related Settings
+
+- [Registration Form](/platform/users/registration-form) - Fields shown during sign-up
+- [Custom Fields](/platform/users/custom-fields) - Create organization-specific fields
+- [Privacy Settings](/platform/users/privacy-settings) - Control who can see profile data
