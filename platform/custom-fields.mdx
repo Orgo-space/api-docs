@@ -1,35 +1,169 @@
 ---
-title: 'Invite members'
+title: 'Custom Fields'
+description: 'Create organization-specific data fields for user profiles and forms'
 ---
 
-The Invite System provides a streamlined method for expanding your community by inviting new members. This feature is accessible through the side menu under "Invite Members." It allows for an efficient way to grow your organization by directly reaching out to potential members via email.
+Custom Fields allow you to capture organization-specific information that isn't covered by standard profile fields. Create fields for any data you need to collect from members.
 
-**Accessing the Invite System**
+## How to access
 
-1. Navigate to the side menu of the Platform interface.
-2. Locate and select "Invite Members," found towards the lower part of the menu.
+**Settings** → **Custom Fields**
 
-![Image](/images/platform/Screenshot-2024-03-01-at-10.55.20.png)
+---
 
-**Inviting Members**
+## Field Types
 
-1. **Input Email Addresses:** In the provided text area, enter the email addresses of the individuals you wish to invite. You can input up to 20 email addresses at a time. Ensure that each email address is separated by a comma.
-2. **Send Invitation:** Once you have entered the desired email addresses, click the "Send Invitation" button. This will dispatch an email invitation to each listed address, inviting the recipient to join the platform.
+Orgo supports various field types:
 
-![Image](/images/platform/Screenshot-2024-03-01-at-10.55.32.png)
+| Type | Description | Example |
+|------|-------------|---------|
+| **Text** | Single-line text input | "Membership Number" |
+| **Textarea** | Multi-line text | "Bio" or "Skills" |
+| **Number** | Numeric values | "Years of Experience" |
+| **Date** | Date picker | "Join Date" |
+| **Select** | Dropdown with options | "Department" |
+| **Multi-select** | Multiple choice selection | "Interests" |
+| **Checkbox** | Yes/No toggle | "Newsletter Opt-in" |
+| **URL** | Website link | "Portfolio URL" |
+| **Email** | Email address | "Secondary Email" |
 
-**Key Features**
+---
 
-* **Bulk Invitations:** Invite up to 20 new members in a single action, making it easier to grow your community efficiently.
-* **Simplified Process:** With just a few clicks, you can send out multiple invitations, streamlining the onboarding process for new members.
-* **Direct Engagement:** Invitations are sent directly to potential members' email inboxes, ensuring they are informed and have a straightforward path to joining the platform.
+## Creating a Custom Field
 
-**Best Practices**
+<Steps>
+  <Step title="Navigate to Custom Fields">
+    Go to **Settings** → **Custom Fields**.
+  </Step>
+  <Step title="Click Create">
+    Click the **Create Custom Field** button.
+  </Step>
+  <Step title="Configure the field">
+    Set name, type, and options.
+  </Step>
+  <Step title="Add to forms">
+    Enable the field on Registration Form and/or Profile Fields.
+  </Step>
+  <Step title="Save">
+    Save your new custom field.
+  </Step>
+</Steps>
 
-* **Verify Email Addresses:** Ensure that the email addresses entered are correct to prevent any invitation delivery issues.
-* **Personalize Invitations:** Consider following up with a personalized message to highlight the benefits of joining your community and to foster a welcoming environment.
-* **Monitor Invitations:** Keep track of who has been invited and follow up if necessary to encourage engagement and participation.
+---
 
-**Conclusion**
+## Field Configuration
 
-The Invite System is a powerful tool for expanding your community within the Orgo SaaS Platform. By following the steps outlined above, you can efficiently invite new members, fostering growth and increased engagement in your organization.
+### Basic Settings
+
+<ParamField path="name" type="string" required>
+  The label displayed to users (e.g., "T-Shirt Size", "Emergency Contact").
+</ParamField>
+
+<ParamField path="fieldType" type="select" required>
+  The type of input field (text, select, date, etc.).
+</ParamField>
+
+<ParamField path="description" type="string">
+  Help text displayed below the field to guide users.
+</ParamField>
+
+### Options (for Select/Multi-select)
+
+For dropdown and multi-select fields, define the available options:
+
+```
+Small
+Medium
+Large
+X-Large
+```
+
+Each option on a new line.
+
+### Visibility Settings
+
+<ParamField path="isOnlyAdmin" type="boolean">
+  When enabled, only administrators can see and edit this field. The field won't appear on user-facing forms.
+
+  **Use cases:**
+  - Internal notes
+  - Admin-assigned categories
+  - Sensitive information
+</ParamField>
+
+### Position
+
+<ParamField path="position" type="number">
+  Controls the display order of custom fields. Lower numbers appear first.
+</ParamField>
+
+---
+
+## Using Custom Fields
+
+### On Registration Form
+
+1. Go to **Settings** → **Users & Profiles** → **Registration Form**
+2. Find your custom field in the list
+3. Check the box to enable it
+4. Optionally mark as required
+
+### On Profile Fields
+
+1. Go to **Settings** → **Users & Profiles** → **Profile Fields**
+2. Find your custom field in the list
+3. Configure:
+   - **Enabled** - Show on profile
+   - **Required** - Must be filled
+   - **Immutable** - Cannot be changed after initial entry
+
+### In Adhesion Forms
+
+Custom fields can also be included in adhesion (membership application) forms for collecting data during the approval process.
+
+---
+
+## Admin-Only Fields
+
+Fields marked as **Admin Only** have special behavior:
+
+- Not visible to regular users
+- Only editable by administrators
+- Display a green "admin" tag in settings
+- Useful for internal tracking
+
+**Examples of admin-only fields:**
+- Approval notes
+- Verification status
+- Internal member ID
+- HR comments
+
+---
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Name fields clearly">
+    Use descriptive, user-friendly names. "Emergency Contact Phone" is better than "EC_Phone".
+  </Accordion>
+
+  <Accordion title="Add help text">
+    Use the description field to explain what information you need and why.
+  </Accordion>
+
+  <Accordion title="Choose the right type">
+    Use appropriate field types - dates for dates, numbers for numeric data. This enables better validation and filtering.
+  </Accordion>
+
+  <Accordion title="Consider privacy">
+    Think about who needs to see each field. Use admin-only for sensitive internal data.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related Features
+
+- [Registration Form](/platform/users/registration-form) - Add custom fields to sign-up
+- [Profile Fields](/platform/users/profile-fields) - Add custom fields to profiles
+- [Adhesion](/platform/users/adhesion) - Use custom fields in membership applications
