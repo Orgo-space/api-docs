@@ -1,0 +1,246 @@
+---
+title: 'Newsletter'
+description: 'Send email updates and campaigns to your members'
+---
+
+The Newsletter module enables you to communicate with members through email campaigns. Create beautiful newsletters, segment your audience, and track engagement.
+
+## How to access
+
+**Menu** → **Newsletter**
+
+Admin: **Settings** → **Modules** → Enable **Newsletter**
+
+---
+
+## Prerequisites
+
+- Newsletter module must be enabled
+- Email sending configured (AWS SES)
+- At least one member with valid email
+
+---
+
+## Newsletter Features
+
+| Feature | Description |
+|---------|-------------|
+| **Email campaigns** | Create and send mass emails |
+| **Templates** | Reusable email designs |
+| **Segmentation** | Target specific member groups |
+| **Scheduling** | Send at optimal times |
+| **Analytics** | Track opens and clicks |
+
+---
+
+## Creating a Newsletter
+
+<Steps>
+  <Step title="Navigate to Newsletter">
+    Go to **Newsletter** → **Create Campaign**.
+  </Step>
+  <Step title="Choose template">
+    Select a template or start from scratch.
+  </Step>
+  <Step title="Design content">
+    Add text, images, and formatting.
+  </Step>
+  <Step title="Select recipients">
+    Choose target audience segments.
+  </Step>
+  <Step title="Preview and send">
+    Review and send or schedule.
+  </Step>
+</Steps>
+
+---
+
+## Campaign Settings
+
+<ParamField path="subject" type="string" required>
+  Email subject line. Keep it concise and engaging.
+</ParamField>
+
+<ParamField path="preheader" type="string">
+  Preview text shown in email clients after subject.
+</ParamField>
+
+<ParamField path="senderName" type="string">
+  Name displayed as the sender.
+</ParamField>
+
+<ParamField path="replyTo" type="email">
+  Email address for replies.
+</ParamField>
+
+---
+
+## Email Editor
+
+### Content Blocks
+
+Build emails with drag-and-drop blocks:
+
+| Block | Description |
+|-------|-------------|
+| **Text** | Rich text content |
+| **Image** | Photos and graphics |
+| **Button** | Call-to-action buttons |
+| **Divider** | Visual separators |
+| **Spacer** | Empty space |
+| **Social** | Social media links |
+
+### Personalization
+
+Insert dynamic content:
+- `{{firstName}}` - Member's first name
+- `{{lastName}}` - Member's last name
+- `{{email}}` - Member's email
+- `{{localCenter}}` - Member's local center
+
+---
+
+## Audience Segmentation
+
+### Target Options
+
+| Segment | Description |
+|---------|-------------|
+| **All members** | Everyone with newsletter enabled |
+| **Local center** | Members of specific centers |
+| **User type** | By membership category |
+| **Role** | By assigned roles |
+| **Custom filter** | Advanced filtering |
+
+### Exclusions
+
+Automatically excluded:
+- Members who unsubscribed
+- Bounced email addresses
+- Inactive accounts (optional)
+
+---
+
+## Templates
+
+### Creating Templates
+
+1. Design your newsletter
+2. Click **Save as Template**
+3. Name the template
+4. Use for future campaigns
+
+### Template Categories
+
+Organize templates by purpose:
+- Announcements
+- Event promotions
+- Monthly updates
+- Welcome emails
+
+---
+
+## Scheduling
+
+### Send Options
+
+| Option | Description |
+|--------|-------------|
+| **Send now** | Immediate delivery |
+| **Schedule** | Set specific date/time |
+| **Optimal time** | AI-suggested best time |
+
+### Time Zones
+
+Campaigns respect member time zones when scheduling for optimal delivery.
+
+---
+
+## Analytics
+
+### Campaign Metrics
+
+| Metric | Description |
+|--------|-------------|
+| **Sent** | Total emails sent |
+| **Delivered** | Successfully delivered |
+| **Opens** | Unique opens |
+| **Clicks** | Link clicks |
+| **Bounces** | Failed deliveries |
+| **Unsubscribes** | Opt-outs from campaign |
+
+### Tracking
+
+- Open tracking via pixel
+- Click tracking on links
+- Engagement over time
+- Device and client stats
+
+---
+
+## Subscriber Management
+
+### Subscription Preferences
+
+Members control their preferences:
+- Newsletter opt-in/opt-out
+- Frequency preferences
+- Topic interests
+
+### Managing Unsubscribes
+
+- Automatic unsubscribe link in footer
+- One-click unsubscribe
+- Compliance with email regulations
+
+---
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Write compelling subjects">
+    Keep subject lines under 50 characters. Be clear about content.
+  </Accordion>
+
+  <Accordion title="Optimize for mobile">
+    Most emails are read on mobile. Use responsive templates.
+  </Accordion>
+
+  <Accordion title="Segment your audience">
+    Targeted emails have higher engagement than mass sends.
+  </Accordion>
+
+  <Accordion title="Test before sending">
+    Send test emails to verify formatting and links.
+  </Accordion>
+
+  <Accordion title="Respect preferences">
+    Honor unsubscribe requests promptly.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Low open rates">
+    Improve subject lines. Check if emails land in spam.
+  </Accordion>
+
+  <Accordion title="High bounce rate">
+    Clean your email list. Remove invalid addresses.
+  </Accordion>
+
+  <Accordion title="Emails in spam">
+    Verify domain authentication (SPF, DKIM). Avoid spam trigger words.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related Features
+
+- [Notifications](/platform/notifications) - Member notifications
+- [Groups](/platform/groups/index) - Audience segmentation
+- [Users](/platform/users/index) - Member management

@@ -1,0 +1,229 @@
+---
+title: 'Data Import'
+description: 'Import members and data in bulk from external sources'
+---
+
+The Data Import feature allows you to migrate existing member data into Orgo. Upload CSV files to bulk-create members, update profiles, and import historical data.
+
+## How to access
+
+**Settings** → **Customization** → **Import Data**
+
+---
+
+## Prerequisites
+
+- Administrator access required
+- CSV file properly formatted
+- Required fields populated
+
+---
+
+## Import Features
+
+| Feature | Description |
+|---------|-------------|
+| **Bulk member import** | Create many members at once |
+| **Field mapping** | Map CSV columns to fields |
+| **Validation** | Check data before import |
+| **Error handling** | Report import issues |
+| **Update existing** | Update or skip duplicates |
+
+---
+
+## Preparing Your Data
+
+### CSV Format
+
+Your file should be in CSV (Comma-Separated Values) format:
+
+```csv
+firstName,lastName,email,phone,localCenter
+John,Doe,john@example.com,+1234567890,Downtown
+Jane,Smith,jane@example.com,+0987654321,Uptown
+```
+
+### Required Fields
+
+| Field | Description |
+|-------|-------------|
+| **email** | Unique email address (required) |
+| **firstName** | Member's first name |
+| **lastName** | Member's last name |
+
+### Optional Fields
+
+| Field | Description |
+|-------|-------------|
+| **phone** | Phone number |
+| **localCenter** | Local center name |
+| **userType** | Membership type |
+| **birthDate** | Date of birth |
+| **address** | Street address |
+| **city** | City name |
+| **country** | Country code |
+
+---
+
+## Import Process
+
+<Steps>
+  <Step title="Prepare CSV file">
+    Format your data according to requirements.
+  </Step>
+  <Step title="Navigate to Import">
+    Go to **Settings** → **Customization** → **Import Data**.
+  </Step>
+  <Step title="Upload file">
+    Select and upload your CSV file.
+  </Step>
+  <Step title="Map fields">
+    Match CSV columns to Orgo fields.
+  </Step>
+  <Step title="Preview">
+    Review data before importing.
+  </Step>
+  <Step title="Import">
+    Execute the import process.
+  </Step>
+  <Step title="Review results">
+    Check for errors and confirm success.
+  </Step>
+</Steps>
+
+---
+
+## Field Mapping
+
+### Automatic Mapping
+
+The system attempts to match columns by name:
+- `email` → Email field
+- `first_name` or `firstName` → First Name
+- `last_name` or `lastName` → Last Name
+
+### Manual Mapping
+
+For unrecognized columns:
+1. Select the CSV column
+2. Choose the corresponding Orgo field
+3. Repeat for all columns
+
+---
+
+## Import Options
+
+<ParamField path="skipDuplicates" type="boolean">
+  Skip rows with existing email addresses.
+</ParamField>
+
+<ParamField path="updateExisting" type="boolean">
+  Update existing members with new data.
+</ParamField>
+
+<ParamField path="sendWelcomeEmail" type="boolean">
+  Send invitation emails to new members.
+</ParamField>
+
+<ParamField path="setPassword" type="boolean">
+  Generate temporary passwords for new accounts.
+</ParamField>
+
+---
+
+## Validation
+
+### Pre-Import Checks
+
+Before importing, the system validates:
+- Email format correctness
+- Required fields present
+- Data type compatibility
+- Duplicate detection
+
+### Validation Results
+
+| Status | Meaning |
+|--------|---------|
+| ✓ Valid | Ready to import |
+| ⚠ Warning | Will import with notes |
+| ✗ Error | Will be skipped |
+
+---
+
+## Handling Errors
+
+### Common Issues
+
+| Error | Solution |
+|-------|----------|
+| **Invalid email** | Fix email format |
+| **Missing required field** | Add missing data |
+| **Duplicate email** | Remove or enable update |
+| **Unknown local center** | Create center first |
+
+### Error Report
+
+After import, download error report:
+- List of failed rows
+- Reason for failure
+- Original data for correction
+
+---
+
+## Import Types
+
+### Member Import
+
+Import user accounts with profile data.
+
+### Local Center Import
+
+Bulk create local centers before member import.
+
+### Event Attendees
+
+Import registrations for specific events.
+
+---
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Clean data first">
+    Remove duplicates and fix errors before uploading.
+  </Accordion>
+
+  <Accordion title="Test with sample">
+    Import a small sample first to verify mapping.
+  </Accordion>
+
+  <Accordion title="Backup existing data">
+    Export current data before large imports.
+  </Accordion>
+
+  <Accordion title="Create dependencies first">
+    Import local centers before members that reference them.
+  </Accordion>
+
+  <Accordion title="Use consistent formatting">
+    Standardize date formats, phone numbers, etc.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Sample Templates
+
+Download templates for common imports:
+- Member import template
+- Local center template
+- Event attendee template
+
+---
+
+## Related Features
+
+- [Users](/platform/users/index) - Member management
+- [Local Groups](/platform/groups/local-groups) - Local centers
+- [Invitations](/platform/users/invitations) - Invite members

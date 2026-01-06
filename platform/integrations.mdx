@@ -1,0 +1,364 @@
+---
+title: 'Integrations'
+description: 'Connect Orgo with your favorite tools and platforms'
+---
+
+Orgo integrates with popular third-party services to extend functionality. Connect authentication providers, analytics tools, marketing platforms, and automation services.
+
+## How to access
+
+**Settings** → **Developers** → **Integrations**
+
+---
+
+## Prerequisites
+
+- Administrator access required
+- Third-party account credentials
+
+---
+
+## Available Integrations
+
+<CardGroup cols={2}>
+  <Card title="SSO Authentication" icon="key">
+    Single sign-on with OAuth providers
+  </Card>
+  <Card title="Stripe" icon="credit-card">
+    Payment processing
+  </Card>
+  <Card title="n8n" icon="diagram-project">
+    Workflow automation
+  </Card>
+  <Card title="HubSpot" icon="hubspot">
+    CRM integration
+  </Card>
+  <Card title="Facebook Pixel" icon="facebook">
+    Conversion tracking
+  </Card>
+  <Card title="Google Analytics" icon="chart-line">
+    Website analytics
+  </Card>
+  <Card title="Google Tag Manager" icon="tags">
+    Tag management
+  </Card>
+</CardGroup>
+
+---
+
+## SSO Authentication
+
+Enable members to log in with their existing accounts.
+
+### Supported Providers
+
+| Provider | Description |
+|----------|-------------|
+| **Google** | Google Workspace accounts |
+| **Facebook** | Facebook login |
+| **Apple** | Sign in with Apple |
+| **LinkedIn** | Professional profiles |
+| **Microsoft** | Azure AD / Microsoft accounts |
+
+### Setup Steps
+
+<Steps>
+  <Step title="Enable SSO provider">
+    Go to **Settings** → **Authentication** → **SSO**.
+  </Step>
+  <Step title="Create OAuth app">
+    Register an app in the provider's developer console.
+  </Step>
+  <Step title="Enter credentials">
+    Add Client ID and Client Secret to Orgo.
+  </Step>
+  <Step title="Test connection">
+    Verify login works correctly.
+  </Step>
+</Steps>
+
+### Configuration
+
+<ParamField path="clientId" type="string" required>
+  OAuth Client ID from the provider.
+</ParamField>
+
+<ParamField path="clientSecret" type="string" required>
+  OAuth Client Secret from the provider.
+</ParamField>
+
+<ParamField path="allowedDomains" type="array">
+  Restrict login to specific email domains.
+</ParamField>
+
+---
+
+## Stripe
+
+Process payments, subscriptions, and donations.
+
+### Features
+
+| Feature | Description |
+|---------|-------------|
+| **Payments** | One-time and recurring |
+| **Subscriptions** | Membership billing |
+| **Invoices** | Automatic invoicing |
+| **Refunds** | Process refunds |
+
+### Setup Steps
+
+<Steps>
+  <Step title="Create Stripe account">
+    Sign up at stripe.com.
+  </Step>
+  <Step title="Get API keys">
+    Find keys in Stripe Dashboard → Developers.
+  </Step>
+  <Step title="Connect to Orgo">
+    Go to **Settings** → **Payments** → **Stripe**.
+  </Step>
+  <Step title="Enter credentials">
+    Add Publishable Key and Secret Key.
+  </Step>
+</Steps>
+
+### Configuration
+
+<ParamField path="publishableKey" type="string" required>
+  Stripe publishable API key.
+</ParamField>
+
+<ParamField path="secretKey" type="string" required>
+  Stripe secret API key.
+</ParamField>
+
+<ParamField path="webhookSecret" type="string">
+  Webhook signing secret for events.
+</ParamField>
+
+---
+
+## n8n
+
+Automate workflows between Orgo and other apps.
+
+### Use Cases
+
+- Sync members to external CRM
+- Trigger emails on events
+- Update spreadsheets automatically
+- Send Slack notifications
+
+### Setup Steps
+
+<Steps>
+  <Step title="Install n8n">
+    Set up n8n instance (cloud or self-hosted).
+  </Step>
+  <Step title="Create Orgo credentials">
+    Generate API key in Orgo.
+  </Step>
+  <Step title="Add to n8n">
+    Configure Orgo node with API credentials.
+  </Step>
+  <Step title="Build workflows">
+    Create automation workflows.
+  </Step>
+</Steps>
+
+### Available Triggers
+
+- New member registered
+- Event created
+- Payment completed
+- Discussion posted
+
+---
+
+## HubSpot
+
+Sync member data with HubSpot CRM.
+
+### Features
+
+| Feature | Description |
+|---------|-------------|
+| **Contact sync** | Members → HubSpot contacts |
+| **Properties** | Map custom fields |
+| **Lists** | Sync group memberships |
+| **Activities** | Track engagement |
+
+### Setup Steps
+
+<Steps>
+  <Step title="Create HubSpot app">
+    Register in HubSpot developer portal.
+  </Step>
+  <Step title="Get API key">
+    Generate private app access token.
+  </Step>
+  <Step title="Connect in Orgo">
+    Go to **Settings** → **Integrations** → **HubSpot**.
+  </Step>
+  <Step title="Configure sync">
+    Map fields and enable sync direction.
+  </Step>
+</Steps>
+
+---
+
+## Facebook Pixel
+
+Track conversions and build audiences for advertising.
+
+### Tracked Events
+
+| Event | Description |
+|-------|-------------|
+| **PageView** | Page visits |
+| **Lead** | Registration started |
+| **CompleteRegistration** | Registration completed |
+| **Purchase** | Payment completed |
+
+### Setup Steps
+
+<Steps>
+  <Step title="Create Facebook Pixel">
+    In Facebook Events Manager, create a new pixel.
+  </Step>
+  <Step title="Copy Pixel ID">
+    Get your Pixel ID.
+  </Step>
+  <Step title="Add to Orgo">
+    Go to **Settings** → **Integrations** → **Facebook Pixel**.
+  </Step>
+  <Step title="Enter Pixel ID">
+    Paste the ID and save.
+  </Step>
+</Steps>
+
+<ParamField path="pixelId" type="string" required>
+  Facebook Pixel ID.
+</ParamField>
+
+---
+
+## Google Analytics
+
+Track visitor behavior and website performance.
+
+### Tracked Data
+
+- Page views
+- User sessions
+- Event tracking
+- Conversion goals
+
+### Setup Steps
+
+<Steps>
+  <Step title="Create GA4 property">
+    In Google Analytics, create a new property.
+  </Step>
+  <Step title="Get Measurement ID">
+    Find your G-XXXXXXX ID.
+  </Step>
+  <Step title="Add to Orgo">
+    Go to **Settings** → **Integrations** → **Google Analytics**.
+  </Step>
+  <Step title="Enter Measurement ID">
+    Paste the ID and save.
+  </Step>
+</Steps>
+
+<ParamField path="measurementId" type="string" required>
+  Google Analytics 4 Measurement ID (G-XXXXXXX).
+</ParamField>
+
+---
+
+## Google Tag Manager
+
+Manage all tracking tags in one place.
+
+### Benefits
+
+- Centralized tag management
+- No code changes needed
+- Version control
+- Preview and debug
+
+### Setup Steps
+
+<Steps>
+  <Step title="Create GTM container">
+    In Google Tag Manager, create a container.
+  </Step>
+  <Step title="Get Container ID">
+    Find your GTM-XXXXXXX ID.
+  </Step>
+  <Step title="Add to Orgo">
+    Go to **Settings** → **Integrations** → **Google Tag Manager**.
+  </Step>
+  <Step title="Enter Container ID">
+    Paste the ID and save.
+  </Step>
+</Steps>
+
+<ParamField path="containerId" type="string" required>
+  Google Tag Manager Container ID (GTM-XXXXXXX).
+</ParamField>
+
+---
+
+## Webhooks
+
+Send real-time notifications to external systems.
+
+### Available Events
+
+| Event | Trigger |
+|-------|---------|
+| `user.created` | New member registered |
+| `user.updated` | Profile updated |
+| `payment.completed` | Payment successful |
+| `event.created` | New event created |
+
+### Setup
+
+1. Go to **Settings** → **Developers** → **Webhooks**
+2. Click **Add Webhook**
+3. Enter your endpoint URL
+4. Select events to subscribe
+5. Save
+
+---
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Use test mode first">
+    Test integrations in sandbox/test mode before going live.
+  </Accordion>
+
+  <Accordion title="Secure credentials">
+    Keep API keys and secrets secure. Never share publicly.
+  </Accordion>
+
+  <Accordion title="Monitor integrations">
+    Check integration health regularly for errors.
+  </Accordion>
+
+  <Accordion title="Document configurations">
+    Keep records of integration settings for reference.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related Features
+
+- [API Access](/platform/api) - REST API
+- [OAuth Server](/platform/oauth) - OAuth provider
+- [Stripe Integration](/platform/fees/stripe-integration) - Payment details
