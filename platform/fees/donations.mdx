@@ -1,4 +1,334 @@
 ---
 title: 'Donations'
+description: 'Accept donations and run fundraising campaigns'
 ---
 
+The Donations feature allows you to accept one-time and recurring donations from members and the public. Create fundraising campaigns with goals, track progress, and engage donors.
+
+## How to access
+
+**Resources** → **Donations**
+
+Or create donation products: **Settings** → **Fees** → **Products**
+
+---
+
+## Prerequisites
+
+1. **Stripe connected**: **Settings** → **Fees** → **Stripe Integration**
+2. **Create donation product**: Set type to "Donation"
+
+---
+
+## Creating a Donation Campaign
+
+<Steps>
+  <Step title="Create donation product">
+    Go to **Settings** → **Fees** → **Products** → **Create Product**.
+  </Step>
+  <Step title="Select Donation type">
+    Choose "Donation" as the product type.
+  </Step>
+  <Step title="Configure campaign">
+    Add name, description, and campaign image.
+  </Step>
+  <Step title="Set up pricing">
+    Configure suggested amounts or custom amounts.
+  </Step>
+  <Step title="Enable public access">
+    Set **isExternal** to true for public donations.
+  </Step>
+  <Step title="Publish">
+    Save and share the donation page URL.
+  </Step>
+</Steps>
+
+---
+
+## Donation Settings
+
+### Basic Settings
+
+<ParamField path="name" type="string" required>
+  Campaign name displayed to donors.
+</ParamField>
+
+<ParamField path="description" type="richtext">
+  Campaign story and purpose. Explain why you're fundraising.
+</ParamField>
+
+<ParamField path="logo" type="image">
+  Campaign image displayed on donation page.
+</ParamField>
+
+### Pricing Options
+
+<ParamField path="hasCustomPriceValue" type="boolean">
+  Allow donors to enter any amount.
+</ParamField>
+
+<ParamField path="customMinPrice" type="number">
+  Minimum donation amount.
+</ParamField>
+
+<ParamField path="customMaxPrice" type="number">
+  Maximum donation amount (optional).
+</ParamField>
+
+<ParamField path="productPrices" type="array">
+  Pre-defined donation amounts (e.g., $25, $50, $100, $250).
+</ParamField>
+
+### Recurring Donations
+
+<ParamField path="hasSubscription" type="boolean">
+  Enable monthly recurring donations.
+</ParamField>
+
+<ParamField path="hasOneTimePayment" type="boolean">
+  Enable one-time donations.
+</ParamField>
+
+<ParamField path="monthPeriod" type="number">
+  Recurring donation frequency in months.
+</ParamField>
+
+---
+
+## Donation Goals
+
+Track progress toward fundraising targets:
+
+<ParamField path="goalValue" type="number">
+  Target amount for one-time donations.
+</ParamField>
+
+<ParamField path="goalValueSubscription" type="number">
+  Target number of recurring donors or monthly amount.
+</ParamField>
+
+The donation page displays:
+- Progress bar toward goal
+- Amount raised / goal amount
+- Number of donors
+
+---
+
+## Public Donation Page
+
+### Page URL
+
+Share the donation page:
+- `https://app.orgo.space/public/product/{slug}`
+- Or use a custom short URL
+
+### Page Features
+
+The public donation page shows:
+- Campaign name and description
+- Hero image/video
+- Donation amount options
+- Payment form
+- Progress toward goal
+- Recent donors (if enabled)
+- Top donors (if enabled)
+
+### Page Customization
+
+<ParamField path="settings.tenantLogo" type="boolean">
+  Show organization logo.
+</ParamField>
+
+<ParamField path="settings.colorSelection" type="color">
+  Accent color for the page.
+</ParamField>
+
+<ParamField path="settings.colorButton" type="color">
+  Donation button color.
+</ParamField>
+
+<ParamField path="settings.commentSection" type="boolean">
+  Allow donors to leave messages.
+</ParamField>
+
+<ParamField path="settings.newestAndTopDonationSection" type="boolean">
+  Show recent and top donors.
+</ParamField>
+
+<ParamField path="heroVideoUrl" type="url">
+  Campaign video URL (YouTube, Vimeo).
+</ParamField>
+
+---
+
+## Donor Experience
+
+### Making a Donation
+
+1. Visitor opens donation page
+2. Selects amount (preset or custom)
+3. Chooses one-time or monthly
+4. Enters payment details
+5. Optionally leaves a message
+6. Completes payment
+7. Receives confirmation email
+
+### Donor Information
+
+Collect from donors:
+- Name
+- Email
+- Optional message
+- Address (if required)
+
+<ParamField path="hasConfidentialityEnabled" type="boolean">
+  Allow donors to donate anonymously.
+</ParamField>
+
+---
+
+## Donor Messages
+
+If comment section enabled:
+
+- Donors can leave messages with their donation
+- Messages require approval before displaying
+- Filter inappropriate content
+- Feature the best messages
+
+### Message Moderation
+
+<ParamField path="commentStatus" type="select">
+  Message status: pending, approved, rejected.
+</ParamField>
+
+1. View pending messages in donation dashboard
+2. Approve or reject each message
+3. Approved messages appear on donation page
+
+---
+
+## Donation Reports
+
+### Tracking Donations
+
+View all donations:
+- **Resources** → **Donations** → **Payments**
+
+Filter by:
+- Date range
+- Amount
+- One-time vs. recurring
+- Donor name/email
+
+### Export Data
+
+Export donations for:
+- Accounting
+- Tax receipts
+- Donor acknowledgment
+- Grant reporting
+
+---
+
+## Recurring Donations
+
+### Managing Subscriptions
+
+View recurring donors:
+- Monthly amount
+- Start date
+- Payment history
+- Next billing date
+
+### Donor Self-Service
+
+Recurring donors can:
+- Update payment method
+- Change donation amount
+- Cancel subscription
+- View history
+
+---
+
+## Use Cases
+
+<AccordionGroup>
+  <Accordion title="Annual fundraising campaign">
+    Time-limited campaign with specific goal for yearly appeal.
+  </Accordion>
+
+  <Accordion title="Emergency relief fund">
+    Quick-response campaign for urgent needs.
+  </Accordion>
+
+  <Accordion title="Monthly giving program">
+    Encourage sustained giving with recurring donations.
+  </Accordion>
+
+  <Accordion title="Project funding">
+    Raise funds for specific projects or initiatives.
+  </Accordion>
+
+  <Accordion title="Memorial/tribute gifts">
+    Allow donations in honor or memory of someone.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Tell a compelling story">
+    Explain the impact of donations. Use specific examples and outcomes.
+  </Accordion>
+
+  <Accordion title="Use images and video">
+    Visual content increases donation conversion. Show the people and impact.
+  </Accordion>
+
+  <Accordion title="Set realistic goals">
+    Achievable goals motivate donors. Update goals if exceeded.
+  </Accordion>
+
+  <Accordion title="Thank donors promptly">
+    Send immediate confirmation and personal thank-you messages.
+  </Accordion>
+
+  <Accordion title="Share progress updates">
+    Keep donors informed about campaign progress and impact.
+  </Accordion>
+
+  <Accordion title="Offer multiple amounts">
+    Preset amounts guide donors. Include options for different giving levels.
+  </Accordion>
+
+  <Accordion title="Encourage recurring">
+    Monthly donors provide sustainable funding. Highlight the option.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Tax Receipts
+
+For tax-deductible donations:
+
+1. Configure organization tax ID in settings
+2. Enable receipt generation
+3. Receipts sent automatically or on request
+4. Include required legal language
+
+<Note>
+Tax receipt requirements vary by country. Consult with your accountant for compliance.
+</Note>
+
+---
+
+## Related Features
+
+- [Products](/platform/fees/products) - Create donation products
+- [Stripe Integration](/platform/fees/stripe-integration) - Payment processing
+- [Fees](/platform/fees/fees) - Payment management
+- [Contacts](/platform/contacts) - Donor relationship management

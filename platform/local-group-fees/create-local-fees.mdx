@@ -1,25 +1,276 @@
 ---
-title: 'Create Local Fees'
+title: 'Local Center Fees'
+description: 'Set up fee collection for local centers and chapters'
 ---
 
-1. Link or create a Stripe account (Sidebar -> Resources -> Local group settings)
+Local Centers can collect their own membership fees separate from the national organization. Each center can connect their own Stripe account and manage local payments.
 
-![Image](/images/platform/Screenshot-2025-03-26-at-11.27.39.png)
+## How to access
 
-![Image](/images/platform/Screenshot-2025-03-26-at-11.26.52.png)
+**Local Center** → **Settings** → **Fee Settings**
 
-2. Create a Fee/Membership product under 'Fees settings'
+Or: **Sidebar** → **Resources** → **Local Group Settings**
 
-![Image](/images/platform/Screenshot-2025-03-26-at-11.29.57.png)
+---
 
-3. Configure your product's settings
+## Prerequisites
 
-![Image](/images/platform/Screenshot-2025-03-26-at-11.31.48.png)
+1. **Local Centers enabled**: Your organization must have Local Centers module active
+2. **Be a Local Center admin**: You need local admin permissions
+3. **Stripe account**: Create a Stripe account for the Local Center
 
-4. Add prices (membership tiers) to your product
+---
 
-![Image](/images/platform/Screenshot-2025-03-26-at-11.33.42.png)
+## Setting Up Local Center Payments
 
-5. Back to Local group settings, under Fees settings you will notice the the product and default membership tier was set. You can change them at anytime using the dropdown selector
+<Steps>
+  <Step title="Navigate to Local Group Settings">
+    Go to **Sidebar** → **Resources** → **Local Group Settings**.
+  </Step>
+  <Step title="Connect Stripe Account">
+    Click **Connect Stripe** and complete the Stripe onboarding flow.
+  </Step>
+  <Step title="Create Fee Product">
+    Go to **Fee Settings** and create a membership product.
+  </Step>
+  <Step title="Configure Pricing">
+    Add price tiers for different membership levels.
+  </Step>
+  <Step title="Set Default Tier">
+    Select the default membership tier for your center.
+  </Step>
+</Steps>
 
-![Image](/images/platform/Screenshot-2025-03-26-at-11.35.26.png)
+---
+
+## Connecting Local Center Stripe
+
+### Step 1: Access Local Group Settings
+
+Navigate to your Local Center's settings page.
+
+### Step 2: Connect with Stripe
+
+1. Find the **Stripe Integration** section
+2. Click **Connect with Stripe**
+3. Log in or create a Stripe account
+4. Complete identity verification
+5. Return to Orgo
+
+### Step 3: Verify Connection
+
+After connecting:
+- Status shows "Connected"
+- Stripe account ID displayed
+- Ready to accept payments
+
+---
+
+## Creating Local Fee Products
+
+### Step 1: Navigate to Fee Settings
+
+In Local Group Settings, find **Fee Settings** section.
+
+### Step 2: Create Product
+
+1. Click **Create Product**
+2. Enter product name (e.g., "Local Center Membership 2024")
+3. Add description
+4. Set type as "Fee"
+5. Save
+
+### Step 3: Add Price Tiers
+
+Create pricing options:
+
+1. Open the product
+2. Go to **Prices** tab
+3. Click **Add Price**
+4. Enter:
+   - Tier name
+   - Amount
+   - Currency
+5. Save
+
+Example tiers:
+- Student - €25/year
+- Regular - €50/year
+- Family - €75/year
+
+---
+
+## Configuring Default Membership
+
+Set which product and tier is used by default:
+
+1. Go to **Local Group Settings** → **Fee Settings**
+2. Under **Default Fee Product**, select your fee product
+3. Under **Default Price Tier**, select the default tier
+4. Save changes
+
+New members registering to your Local Center will see these defaults.
+
+---
+
+## Local Fee Settings
+
+### Product Settings
+
+<ParamField path="feeProduct" type="relation">
+  The fee product used for local membership.
+</ParamField>
+
+<ParamField path="feeDefaultProductPrice" type="relation">
+  Default price tier for new members.
+</ParamField>
+
+### Payment Settings
+
+<ParamField path="isOnlinePaymentFeeEligible" type="boolean">
+  Allow members to pay fees online via Stripe.
+</ParamField>
+
+<ParamField path="stripeAccount" type="string">
+  Connected Stripe account ID.
+</ParamField>
+
+<ParamField path="isStripeEligible" type="boolean">
+  Whether this center is approved for Stripe payments.
+</ParamField>
+
+---
+
+## Payment Flow
+
+When a member pays local fees:
+
+1. Member selects Local Center membership
+2. Payment processed through Local Center's Stripe
+3. Funds deposited to Local Center's bank account
+4. Payment recorded in both local and national systems
+
+---
+
+## Viewing Local Payments
+
+### For Local Admins
+
+**Local Center** → **Fees** → **Payments**
+
+View:
+- All payments to this center
+- Payment status
+- Member details
+- Amount and date
+
+### For National Admins
+
+National admins can view all Local Center payments from the main Fees dashboard with Local Center filter.
+
+---
+
+## Bank Account Details
+
+Configure bank details for manual payments:
+
+<ParamField path="bankIbanNative" type="string">
+  IBAN for local currency payments.
+</ParamField>
+
+<ParamField path="bankIbanEur" type="string">
+  IBAN for EUR payments (if different).
+</ParamField>
+
+Display these on invoices and for members who prefer bank transfer.
+
+---
+
+## Fee Distribution
+
+### 100% Local
+
+Most common: All payment goes to Local Center.
+
+### Split with National
+
+Some organizations split fees:
+- e.g., 70% local, 30% national
+- Configured at national level
+- Automatic distribution via Stripe Connect
+
+### National Collects
+
+Alternative: National collects all fees, distributes to locals manually.
+
+---
+
+## Reporting
+
+### Local Reports
+
+Generate reports for your Local Center:
+- Total collected
+- By period
+- By member
+- Outstanding fees
+
+### Export
+
+Export payment data for:
+- Local accounting
+- Bank reconciliation
+- Member records
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Can't connect Stripe">
+    Ensure you have local admin permissions. Try a different browser if popup is blocked.
+  </Accordion>
+
+  <Accordion title="Product not showing for members">
+    Check that the product is not archived and is set as the default fee product.
+  </Accordion>
+
+  <Accordion title="Payments not arriving">
+    Verify Stripe account status. Check payout schedule in Stripe Dashboard.
+  </Accordion>
+
+  <Accordion title="Members seeing wrong center">
+    Ensure members are properly assigned to your Local Center.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Complete Stripe setup early">
+    Connect and verify Stripe before you need to collect fees.
+  </Accordion>
+
+  <Accordion title="Clear product naming">
+    Include year and center name in product titles.
+  </Accordion>
+
+  <Accordion title="Match national tiers">
+    If applicable, align local tiers with national membership structure.
+  </Accordion>
+
+  <Accordion title="Regular reconciliation">
+    Regularly reconcile Orgo records with your bank statements.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related Features
+
+- [Local Centers](/platform/groups/local-groups) - Local Center management
+- [Stripe Integration](/platform/fees/stripe-integration) - Payment setup
+- [Products](/platform/fees/products) - Product configuration
+- [Fees](/platform/fees/fees) - Fee management
