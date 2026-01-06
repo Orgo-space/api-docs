@@ -1,32 +1,339 @@
 ---
 title: 'Contacts'
+description: 'Manage external contacts and non-member relationships'
 ---
 
-The Contacts section is dedicated to managing individuals who are not platform members but wish to maintain a relationship with the organization. This is often for purposes like receiving newsletters or other updates via email.
+The Contacts module manages individuals who aren't platform members but have a relationship with your organization. Track donors, newsletter subscribers, event attendees, and other external contacts.
 
-![Image](/images/platform/Screenshot-2024-02-29-at-21.57.10.png)
+## How to access
 
-**Adding and Managing Contacts:**
+**Sidebar** → **Contacts**
 
-* **Creating a New Contact:**
-  * Use the '+Create Contact' button to manually enter contact information.
-  * Fill in details such as name, country, town, email, and phone number.
-* **Newsletter Subscription:**
-  * Specify if the contact has opted in to receive newsletters from the organization.
-* **Editing Contact Information:**
-  * Contacts can be edited at any time by clicking the 'Edit' option associated with their entry.
+Or: **Resources** → **Contacts**
 
-**Importing and Exporting Contacts:**
+---
 
-* **Importing Contacts:**
-  * Import contact details in bulk by using the CSV import feature. This is particularly useful when migrating contacts from another system or after events such as conferences where new contacts are acquired.
-* **Exporting Contacts:**
-  * For external use or backup purposes, contacts can be exported as a CSV file. This export function allows for easy data manipulation and integration with other marketing or CRM tools.
+## What are Contacts
 
-**Best Practices:**
+Contacts are external individuals who:
 
-* Always obtain and record consent before adding new contacts or sending out newsletters.
-* Regularly update contact details to ensure communication channels are current and accurate.
-* Utilize import and export functions to streamline contact management and ensure consistency across platforms.
+- Subscribe to newsletters
+- Donate without creating accounts
+- Attend public events
+- Have business relationships with your organization
+- Are potential future members
 
-**Note:** The Contacts section is a strategic tool for organizations to broaden their outreach and maintain connections with non-members. Proper utilization of the import and export features can greatly enhance the efficiency and effectiveness of this outreach.
+<Note>
+Contacts are different from Members. Members have accounts and can log in. Contacts are external records.
+</Note>
+
+---
+
+## Contact Information
+
+### Basic Fields
+
+<ParamField path="name" type="string">
+  Contact's full name.
+</ParamField>
+
+<ParamField path="email" type="email">
+  Primary email address for communication.
+</ParamField>
+
+<ParamField path="phone" type="phone">
+  Phone number.
+</ParamField>
+
+<ParamField path="address" type="text">
+  Physical address.
+</ParamField>
+
+### Location
+
+<ParamField path="country" type="relation">
+  Contact's country.
+</ParamField>
+
+<ParamField path="town" type="relation">
+  Contact's city/town.
+</ParamField>
+
+<ParamField path="localCenter" type="relation">
+  Associated Local Center (if applicable).
+</ParamField>
+
+### Professional Information
+
+<ParamField path="organisation" type="string">
+  Contact's company or organization.
+</ParamField>
+
+<ParamField path="role" type="string">
+  Job title or role.
+</ParamField>
+
+<ParamField path="professionOrganisationRole" type="string">
+  Role within their organization.
+</ParamField>
+
+### Company Details
+
+<ParamField path="companyName" type="string">
+  Company name (for business contacts).
+</ParamField>
+
+<ParamField path="companyIdentifier" type="string">
+  Company tax ID or registration number.
+</ParamField>
+
+<ParamField path="companyRegNo" type="string">
+  Company registration number.
+</ParamField>
+
+<ParamField path="companyAddress" type="string">
+  Company address.
+</ParamField>
+
+### Social Media
+
+<ParamField path="linkedin" type="url">
+  LinkedIn profile URL.
+</ParamField>
+
+<ParamField path="twitter" type="string">
+  Twitter/X handle.
+</ParamField>
+
+<ParamField path="instagram" type="string">
+  Instagram handle.
+</ParamField>
+
+---
+
+## Creating Contacts
+
+### Manual Creation
+
+<Steps>
+  <Step title="Navigate to Contacts">
+    Go to **Contacts** in the sidebar.
+  </Step>
+  <Step title="Click Create Contact">
+    Click the **+ Create Contact** button.
+  </Step>
+  <Step title="Fill in details">
+    Enter name, email, and other relevant information.
+  </Step>
+  <Step title="Set preferences">
+    Configure newsletter subscription and status.
+  </Step>
+  <Step title="Save">
+    Click **Save** to create the contact.
+  </Step>
+</Steps>
+
+### Automatic Creation
+
+Contacts are automatically created when:
+- Someone donates without an account
+- Someone subscribes to your newsletter
+- Someone registers for a public event
+- Imported from external systems
+
+---
+
+## Newsletter Management
+
+### Subscription Status
+
+<ParamField path="isNewsletterSubscribed" type="boolean">
+  Whether the contact is subscribed to newsletters.
+</ParamField>
+
+### Subscribing Contacts
+
+1. Edit the contact
+2. Toggle **Newsletter Subscription** on
+3. Save
+
+### Unsubscribing
+
+Contacts can unsubscribe via:
+- Link in newsletter emails
+- Contact preferences
+- Admin manually updating
+
+<Warning>
+Always honor unsubscribe requests promptly. This is legally required in most jurisdictions.
+</Warning>
+
+---
+
+## Contact Status & Tags
+
+### Status Tracking
+
+<ParamField path="status" type="relation">
+  Current status of the contact (Lead, Active, Inactive, etc.).
+</ParamField>
+
+<ParamField path="lastStatusUpdate" type="datetime">
+  When the status was last changed.
+</ParamField>
+
+### Tags
+
+Add tags to categorize contacts:
+- Donor
+- Newsletter
+- Event Attendee
+- Partner
+- Vendor
+- (Custom tags)
+
+---
+
+## Import & Export
+
+### Importing Contacts
+
+Import contacts from CSV files:
+
+<Steps>
+  <Step title="Prepare CSV">
+    Create CSV with columns: name, email, phone, country, town, etc.
+  </Step>
+  <Step title="Navigate to Import">
+    Go to **Contacts** → **Import**.
+  </Step>
+  <Step title="Upload CSV">
+    Select your CSV file.
+  </Step>
+  <Step title="Map fields">
+    Match CSV columns to contact fields.
+  </Step>
+  <Step title="Review and import">
+    Preview the import and confirm.
+  </Step>
+</Steps>
+
+### Exporting Contacts
+
+Export contacts for external use:
+
+1. Go to **Contacts**
+2. Apply filters if needed
+3. Click **Export**
+4. Download CSV file
+
+---
+
+## Custom Fields
+
+Add custom fields to track additional information:
+
+1. Go to **Settings** → **Custom Fields**
+2. Create fields for Contacts
+3. Fields appear on contact forms
+
+See [Custom Fields](/platform/custom-fields) for details.
+
+---
+
+## Identity Verification
+
+For donations requiring identity verification:
+
+<ParamField path="identity" type="relation">
+  Linked identity verification record.
+</ParamField>
+
+Contacts can be prompted to verify their identity for:
+- Large donations
+- Regulatory compliance
+- Event registration
+
+---
+
+## Converting Contacts to Members
+
+When a contact wants to become a member:
+
+<Steps>
+  <Step title="Find the contact">
+    Search for the contact in the Contacts list.
+  </Step>
+  <Step title="Click Create Account">
+    Use the **Create Account** action.
+  </Step>
+  <Step title="Complete registration">
+    Fill in additional member details.
+  </Step>
+  <Step title="Invite">
+    Send invitation to complete account setup.
+  </Step>
+</Steps>
+
+The contact record links to the new member account.
+
+---
+
+## Use Cases
+
+<AccordionGroup>
+  <Accordion title="Newsletter subscribers">
+    Track people who subscribed through your website or events.
+  </Accordion>
+
+  <Accordion title="Donor management">
+    Maintain records of external donors for acknowledgment and tax receipts.
+  </Accordion>
+
+  <Accordion title="Event attendees">
+    Keep records of non-member event participants.
+  </Accordion>
+
+  <Accordion title="Partner organizations">
+    Track contacts at partner organizations for collaboration.
+  </Accordion>
+
+  <Accordion title="Lead nurturing">
+    Track potential members before they join.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Obtain consent">
+    Always get consent before adding contacts or sending communications.
+  </Accordion>
+
+  <Accordion title="Keep data current">
+    Regularly update contact information and remove outdated records.
+  </Accordion>
+
+  <Accordion title="Use tags consistently">
+    Develop a tagging strategy and apply tags consistently.
+  </Accordion>
+
+  <Accordion title="Honor preferences">
+    Respect communication preferences and unsubscribe requests.
+  </Accordion>
+
+  <Accordion title="Regular cleanup">
+    Remove bounced emails and inactive contacts periodically.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related Features
+
+- [Donations](/platform/fees/donations) - Donation tracking
+- [Newsletter](/platform/notifications) - Email campaigns
+- [Events](/platform/events/index) - Event registration
+- [Custom Fields](/platform/custom-fields) - Additional contact fields

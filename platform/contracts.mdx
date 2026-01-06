@@ -1,42 +1,201 @@
 ---
-title: 'E-documents'
+title: 'E-Documents'
+description: 'Digital document signing and contract management'
 ---
 
-The E-Documents allows for the creation, customization, and management of essential organizational documents. This module facilitates the digital handling of contracts, membership cards, and more.
+The E-Documents module enables digital document creation, signing, and management. Create contracts, membership agreements, and other documents that members can sign electronically.
 
-**Features**
+## How to access
 
-* **Create and Customize**: Administrators can create and tailor documents to meet the needs of different roles within the organization.
-* **Online Signing**: Members can sign contracts digitally, streamlining the process and ensuring efficient record-keeping.
-* **Account Linking**: Signed documents are associated with individual member profiles for easy access and reference.
-* **Download and Upload**: Members can download documents for review and upload signed copies or necessary documentation.
+**Settings** → **Features** → **E-Documents**
 
-![Image](/images/platform/Screenshot-2024-03-01-at-17.42.29.png)
+Members access via: **Profile** → **E-Documents** tab
 
-**Management**
+---
 
-* Located in `Organisation Settings` -> `E-Documents` (under the Forms section).
-* Administrators can manage document templates, set permissions, and oversee the signing process.
+## Prerequisites
 
-![Image](/images/platform/Screenshot-2024-03-01-at-17.47.52.png)
+E-Documents must be enabled:
 
-**Access**
+**Settings** → **Modules** → Enable **E-Documents**
 
-* Members access their documents through the `e-Documents` tab in their profile.
-* Permissions can be set to control who can view, sign, or upload documents.
+---
 
-**Use Case**
+## Document Types
 
-* Ideal for new member onboarding, contract renewals, and updating membership information.
-* Reduces the need for paper-based processes, aligning with sustainability goals.
+| Type | Description |
+|------|-------------|
+| **Contracts** | Agreements requiring member signature |
+| **Membership Cards** | Auto-generated membership documentation |
+| **Policies** | Documents requiring acknowledgment |
+| **Certificates** | Training or achievement certificates |
 
-**Workflow**
+---
 
-1. **Document Creation**: Admin sets up document templates.
-2. **Member Interaction**: Members receive notifications to sign or upload documents.
-3. **Document Management**: Admins monitor the completion and storage of documents.
+## Creating Document Templates
 
-**Customization Example**
+<Steps>
+  <Step title="Navigate to E-Documents">
+    Go to **Settings** → **Features** → **E-Documents**.
+  </Step>
+  <Step title="Click Create Template">
+    Click **Create Document Template**.
+  </Step>
+  <Step title="Design the document">
+    Use the editor to create your document with placeholders for member data.
+  </Step>
+  <Step title="Configure settings">
+    Set who should sign, deadlines, and notifications.
+  </Step>
+  <Step title="Save">
+    Save the template for use.
+  </Step>
+</Steps>
 
-* A volunteer contract can be set up with fields specific to volunteer information and terms.
-* Membership cards can be auto-generated with member details and branding elements.
+---
+
+## Template Placeholders
+
+Insert dynamic content using placeholders:
+
+| Placeholder | Description |
+|-------------|-------------|
+| `{{member.fullName}}` | Member's full name |
+| `{{member.email}}` | Member's email |
+| `{{member.localCenter}}` | Member's Local Center |
+| `{{tenant.name}}` | Organization name |
+| `{{date.today}}` | Current date |
+| `{{date.year}}` | Current year |
+
+---
+
+## Document Workflow
+
+### Administrator Side
+
+1. **Create template** - Design the document
+2. **Assign to members** - Select who needs to sign
+3. **Send notifications** - Members are notified
+4. **Track completion** - Monitor who has signed
+5. **Archive** - Store completed documents
+
+### Member Side
+
+1. **Receive notification** - Email or in-app notification
+2. **Review document** - Read the full document
+3. **Sign electronically** - Click to sign
+4. **Download copy** - Get a copy for records
+
+---
+
+## Electronic Signatures
+
+### Signing Process
+
+1. Member opens the document
+2. Reviews the content
+3. Clicks **Sign** button
+4. Signature is recorded with timestamp
+5. Document status updates to "Signed"
+
+### Signature Record
+
+Each signature captures:
+- Member identity
+- Date and time
+- IP address
+- Device information
+
+---
+
+## Document Status
+
+| Status | Description |
+|--------|-------------|
+| **Pending** | Awaiting member action |
+| **Signed** | Member has signed |
+| **Expired** | Signing deadline passed |
+| **Cancelled** | Document cancelled by admin |
+
+---
+
+## Member Document Access
+
+Members access their documents via:
+
+**Profile** → **E-Documents**
+
+Shows:
+- Documents pending signature
+- Completed documents
+- Download options
+
+---
+
+## Notifications
+
+### Automatic Notifications
+
+- Document assigned notification
+- Reminder before deadline
+- Confirmation after signing
+
+### Manual Reminders
+
+Administrators can send reminders to members with pending documents.
+
+---
+
+## Use Cases
+
+<AccordionGroup>
+  <Accordion title="Membership agreements">
+    New members sign membership terms and conditions.
+  </Accordion>
+
+  <Accordion title="Volunteer contracts">
+    Volunteers sign agreements before starting service.
+  </Accordion>
+
+  <Accordion title="Photo releases">
+    Collect consent for using member photos.
+  </Accordion>
+
+  <Accordion title="Code of conduct">
+    Members acknowledge understanding of rules.
+  </Accordion>
+
+  <Accordion title="Training completion">
+    Issue certificates for completed training.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Clear language">
+    Write documents in plain language that members can understand.
+  </Accordion>
+
+  <Accordion title="Reasonable deadlines">
+    Give members enough time to review and sign.
+  </Accordion>
+
+  <Accordion title="Send reminders">
+    Use automatic reminders before deadlines.
+  </Accordion>
+
+  <Accordion title="Keep records">
+    Maintain signed documents for legal and compliance purposes.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related Features
+
+- [Files](/platform/files) - Document storage
+- [Users](/platform/users/index) - Member management
+- [Notifications](/platform/notifications) - Document reminders

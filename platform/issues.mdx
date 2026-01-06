@@ -1,46 +1,269 @@
 ---
-title: 'Task management'
+title: 'Issues & Tasks'
+description: 'Track tasks, issues, and work items within groups'
 ---
 
-The Task Management feature allows for efficient tracking and organization of tasks within any group that has the Issues/Tasks options enabled. Users can create tasks, assign them to team members, and manage their progress through different statuses.
+The Issues module provides task management capabilities within groups. Create, assign, and track tasks through their lifecycle using backlog or kanban views.
 
-**Creating Tasks**
+## How to access
 
-1. Within your group, navigate to the Issues/Tasks section.
-2. Click on "Add issue" to open the task creation interface (refer to the third image).
-3. Fill in the task details:
-   * **Subject:** Brief title of the task.
-   * **Description:** More detailed information about the task.
-   * **Attachments:** Optionally, add images, videos, or files relevant to the task.
-4. **Type application:** Select the type of task (e.g., Research, Marketing).
-5. **Status:** Assign a status (e.g., To do, In progress, In Review).
-6. **Assignee:** Select a team member to assign the task to; they will be notified accordingly.
+**Group** → **Issues** tab (if enabled for the group)
 
-![Image](/images/platform/Screenshot-2024-03-01-at-11.24.18.png)
+---
 
-**Sorting and Filtering Tasks**
+## Prerequisites
 
-1. Tasks can be sorted and filtered using the options available in the first image, such as by date created, type, author, assignee, and status.
-2. Use the "Search by text" function to quickly find specific tasks.
+Issues must be enabled for a group:
 
-**Task Viewing Modes**
+1. Edit the group settings
+2. Enable **Issues/Tasks** feature
+3. Configure issue settings
 
-&#x20;**Backlog View :** This is default view lists all tasks in a linear format.
+---
 
-![Image](/images/platform/Screenshot-2024-03-01-at-11.20.21.png)
+## Issue Properties
 
-**Kanban View :** This board view allows for a visual representation of tasks in columns based on their status.
+### Basic Fields
 
-![Image](/images/platform/Screenshot-2024-03-01-at-11.22.03.png)
+<ParamField path="subject" type="string" required>
+  Brief title describing the issue or task.
+</ParamField>
 
-* Tasks can be dragged and dropped between columns to update their status, enhancing the ease of task management.
+<ParamField path="description" type="richtext">
+  Detailed description of the task, requirements, or problem.
+</ParamField>
 
-**Best Practices**
+<ParamField path="attachments" type="array">
+  Images, documents, or files related to the issue.
+</ParamField>
 
-* **Regular Updates:** Keep task statuses updated to reflect real-time progress.
-* **Clarity in Assignments:** Ensure that each task has a clear assignee to prevent confusion.
-* **Consistent Monitoring:** Regularly review the Kanban board to ensure tasks are progressing as expected.
+### Classification
 
-**Conclusion**
+<ParamField path="type" type="relation">
+  Issue type (e.g., Task, Bug, Feature, Research).
+</ParamField>
 
-The Task Management section is a versatile tool that streamlines the process of managing tasks, ensuring clarity and efficiency in team collaborations. By utilizing the available features to create, assign, sort, filter, and visually manage tasks, teams can enhance productivity and ensure that all tasks are moving toward completion.
+<ParamField path="status" type="relation">
+  Current status (e.g., To Do, In Progress, Done).
+</ParamField>
+
+<ParamField path="priority" type="select">
+  Priority level (High, Medium, Low).
+</ParamField>
+
+### Assignment
+
+<ParamField path="assignee" type="relation">
+  Team member responsible for the issue.
+</ParamField>
+
+<ParamField path="dueDate" type="date">
+  Target completion date (if enabled).
+</ParamField>
+
+---
+
+## Creating Issues
+
+<Steps>
+  <Step title="Navigate to Issues">
+    Go to the group's **Issues** tab.
+  </Step>
+  <Step title="Click Add Issue">
+    Click **Add Issue** or **+** button.
+  </Step>
+  <Step title="Fill in details">
+    Enter subject, description, and select type.
+  </Step>
+  <Step title="Set attributes">
+    Assign to a member, set priority and status.
+  </Step>
+  <Step title="Add attachments">
+    Upload any relevant files or screenshots.
+  </Step>
+  <Step title="Save">
+    Click **Save** to create the issue.
+  </Step>
+</Steps>
+
+---
+
+## Issue Settings Per Group
+
+Configure what issue features are available:
+
+<ParamField path="hasPriority" type="boolean" default="true">
+  Enable priority levels on issues.
+</ParamField>
+
+<ParamField path="hasDueDate" type="boolean" default="false">
+  Enable due date field for issues.
+</ParamField>
+
+<ParamField path="hasTypes" type="boolean" default="true">
+  Enable issue type categorization.
+</ParamField>
+
+<ParamField path="hasStatus" type="boolean" default="true">
+  Enable status tracking workflow.
+</ParamField>
+
+---
+
+## View Modes
+
+### Backlog View
+
+Default list view showing all issues:
+- Linear list of all issues
+- Sort by date, priority, status, or assignee
+- Filter by various criteria
+- Search by text
+
+### Kanban View
+
+Visual board organized by status columns:
+- Drag and drop between columns
+- Visual status overview
+- Quick status updates
+- Progress at a glance
+
+---
+
+## Issue Statuses
+
+Configure custom statuses for your workflow:
+
+### Default Statuses
+
+| Status | Description |
+|--------|-------------|
+| **To Do** | Not yet started |
+| **In Progress** | Currently being worked on |
+| **In Review** | Awaiting review or approval |
+| **Done** | Completed |
+
+### Custom Statuses
+
+Create statuses matching your workflow:
+
+1. Go to group settings
+2. Navigate to **Issue Statuses**
+3. Add, edit, or reorder statuses
+4. Set status colors for visual identification
+
+---
+
+## Issue Types
+
+Categorize issues by type:
+
+### Default Types
+
+| Type | Description |
+|------|-------------|
+| **Task** | General work item |
+| **Bug** | Problem to fix |
+| **Feature** | New functionality |
+| **Research** | Investigation or analysis |
+
+### Custom Types
+
+Create types for your organization:
+
+1. Go to group settings
+2. Navigate to **Issue Types**
+3. Add custom types
+4. Optionally assign default assignees per type
+
+---
+
+## Filtering and Search
+
+### Filter Options
+
+Filter issues by:
+- Status
+- Assignee
+- Type
+- Priority
+- Due date
+- Author
+- Date created
+
+### Text Search
+
+Search issues by:
+- Subject text
+- Description content
+- Comments
+
+---
+
+## Notifications
+
+Issue-related notifications:
+- Assigned to an issue
+- Issue status changed
+- Comment added
+- Due date approaching
+
+---
+
+## Use Cases
+
+<AccordionGroup>
+  <Accordion title="Project management">
+    Track tasks for a specific project from start to completion.
+  </Accordion>
+
+  <Accordion title="Bug tracking">
+    Log and track bugs or problems that need fixing.
+  </Accordion>
+
+  <Accordion title="Action items">
+    Track action items from meetings with assignees and due dates.
+  </Accordion>
+
+  <Accordion title="Content calendar">
+    Manage content creation tasks with status workflow.
+  </Accordion>
+
+  <Accordion title="Event planning">
+    Track tasks needed to organize an event.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Clear subjects">
+    Write descriptive subjects that explain the task at a glance.
+  </Accordion>
+
+  <Accordion title="Always assign">
+    Ensure every issue has an assignee for accountability.
+  </Accordion>
+
+  <Accordion title="Update status regularly">
+    Keep statuses current so the team knows actual progress.
+  </Accordion>
+
+  <Accordion title="Use priorities appropriately">
+    Not everything is high priority. Use levels meaningfully.
+  </Accordion>
+
+  <Accordion title="Close completed issues">
+    Move finished issues to Done to keep backlogs clean.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related Features
+
+- [Groups](/platform/groups/index) - Where issues live
+- [Help Desk](/platform/help-desk) - Support ticket system
+- [Files](/platform/files) - Attach files to issues
