@@ -1,0 +1,258 @@
+---
+title: 'Create Event'
+description: 'Step-by-step guide to creating and publishing events'
+---
+
+Learn how to create events in Orgo, from simple meetings to complex multi-day conferences with ticketing.
+
+## How to access
+
+**Events** → **Create Event** button
+
+Or from the Dashboard quick actions.
+
+---
+
+## Basic Event Information
+
+### Required Fields
+
+<ParamField path="title" type="string" required>
+  The event name. Keep it clear and descriptive.
+</ParamField>
+
+<ParamField path="startDate" type="datetime" required>
+  When the event starts. Includes date and time.
+</ParamField>
+
+<ParamField path="endDate" type="datetime" required>
+  When the event ends.
+</ParamField>
+
+<ParamField path="group" type="select" required>
+  Which group is organizing this event. You must have posting permissions in the selected group.
+</ParamField>
+
+### Optional Fields
+
+<ParamField path="description" type="richtext">
+  Full event description. Supports rich text formatting, images, and links.
+</ParamField>
+
+<ParamField path="location" type="string">
+  Physical address or venue name.
+</ParamField>
+
+<ParamField path="onlineLink" type="url">
+  Link for virtual events (Zoom, Teams, etc.)
+</ParamField>
+
+<ParamField path="eventType" type="select">
+  Category of event. Create event types first in Settings.
+</ParamField>
+
+<ParamField path="timezone" type="select">
+  Event timezone. Defaults to your profile timezone.
+</ParamField>
+
+---
+
+## Visibility Settings
+
+### Public vs Private
+
+<ParamField path="isPublic" type="boolean">
+  - **Public**: Anyone can view the event page (even without an account)
+  - **Private**: Only members can see the event
+</ParamField>
+
+<ParamField path="isAttendable" type="boolean">
+  When enabled, people can register/RSVP to the event. Disable for informational events.
+</ParamField>
+
+---
+
+## Registration Settings
+
+### Capacity
+
+<ParamField path="maxAttendees" type="number">
+  Maximum number of attendees. Leave empty for unlimited.
+</ParamField>
+
+<ParamField path="waitlistEnabled" type="boolean">
+  When capacity is reached, allow people to join a waitlist.
+</ParamField>
+
+### Registration Fields
+
+Configure which fields to collect during registration:
+
+| Field | Description |
+|-------|-------------|
+| **Name** | Attendee name (usually required) |
+| **Email** | Contact email (usually required) |
+| **Phone** | Phone number |
+| **Organisation** | Company/organization name |
+| **Role** | Job title |
+| **Town** | City/location |
+| **LinkedIn** | LinkedIn profile URL |
+| **X (Twitter)** | X profile URL |
+| **Instagram** | Instagram handle |
+
+### Registration Deadlines
+
+<ParamField path="registrationDeadline" type="datetime">
+  Last date/time to register. After this, registration closes automatically.
+</ParamField>
+
+---
+
+## Event Page Customization
+
+Customize how the public event page looks:
+
+### Visual Settings
+
+<ParamField path="settings.tenantLogo" type="boolean">
+  Show organization logo on event page.
+</ParamField>
+
+<ParamField path="settings.showTitle" type="boolean">
+  Display event title prominently.
+</ParamField>
+
+<ParamField path="settings.heroRadius" type="select">
+  Border radius for the hero image (rounded corners).
+</ParamField>
+
+<ParamField path="settings.colorSelection" type="color">
+  Accent color for the event page.
+</ParamField>
+
+<ParamField path="settings.colorButton" type="color">
+  Button color on the registration form.
+</ParamField>
+
+<ParamField path="settings.lightThemeOnly" type="boolean">
+  Force light theme on public page (ignore visitor's dark mode preference).
+</ParamField>
+
+### Registration Options
+
+<ParamField path="settings.disableSubscribe" type="boolean">
+  Hide the newsletter subscription checkbox.
+</ParamField>
+
+<ParamField path="settings.disableRegister" type="boolean">
+  Disable registration completely (show info only).
+</ParamField>
+
+---
+
+## Adding Media
+
+### Hero Image
+
+Upload a cover image for your event. This appears at the top of the event page and in event listings.
+
+**Recommendations:**
+- Aspect ratio: 16:9 (landscape)
+- Minimum size: 1200x675 pixels
+- Format: JPG or PNG
+- Keep important content centered (edges may be cropped on mobile)
+
+### Gallery
+
+Add additional photos or promotional images to the event gallery.
+
+---
+
+## SDG Tagging
+
+If enabled in your module settings, tag events with UN Sustainable Development Goals:
+
+<ParamField path="sdg" type="multiselect">
+  Select applicable SDGs (1-17). This helps track your organization's impact alignment.
+</ParamField>
+
+---
+
+## Publishing the Event
+
+### Draft vs Published
+
+Events start as **drafts**. While in draft:
+- Only you and admins can see it
+- You can make changes freely
+- No notifications are sent
+
+When you **publish**:
+- Event becomes visible (based on public/private setting)
+- Members may receive notifications
+- Event appears in calendars and listings
+
+### Publishing Steps
+
+<Steps>
+  <Step title="Review all details">
+    Check title, dates, location, and description.
+  </Step>
+  <Step title="Set up registration">
+    Configure tickets if needed, set capacity.
+  </Step>
+  <Step title="Add media">
+    Upload hero image and any gallery photos.
+  </Step>
+  <Step title="Click Publish">
+    Make the event live.
+  </Step>
+</Steps>
+
+---
+
+## After Publishing
+
+Once published, you can:
+
+- **Edit details** - Most fields can still be updated
+- **Send invitations** - Invite specific members or groups
+- **Track registrations** - See who signed up
+- **Send updates** - Notify registered attendees of changes
+- **Manage waitlist** - If capacity is full
+- **Cancel event** - If needed (notifies registrants)
+
+---
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Write compelling descriptions">
+    Include: what the event is about, who should attend, what they'll get out of it, and any practical details.
+  </Accordion>
+
+  <Accordion title="Use high-quality images">
+    A good hero image dramatically increases event registrations.
+  </Accordion>
+
+  <Accordion title="Set realistic capacity">
+    Consider your venue size, budget, and management capacity.
+  </Accordion>
+
+  <Accordion title="Publish early">
+    Give people time to plan. Major events should be published 4-8 weeks in advance.
+  </Accordion>
+
+  <Accordion title="Send reminders">
+    Use the event communication tools to remind attendees as the date approaches.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related Features
+
+- [Event Types](/platform/events/event-types) - Categorize your events
+- [Ticketing](/platform/events/ticketing) - Set up paid tickets
+- [Public Page](/platform/events/public-page) - Customize event pages
+- [Attendance](/platform/events/attendance) - Track who shows up

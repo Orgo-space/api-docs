@@ -1,0 +1,202 @@
+---
+title: 'Public Event Page'
+description: 'Customize how your events appear to the public and share them online'
+---
+
+Every event in Orgo can have a public page - a shareable link that anyone can access to view event details and register, even without an Orgo account.
+
+## How to access
+
+**Event** → **Public URL** button
+
+Or construct the URL: `https://app.orgo.space/public/event/{event-uuid}`
+
+---
+
+## What's on the Public Page
+
+The public event page displays:
+
+- **Hero image** - Event cover photo
+- **Event title and description**
+- **Date and time** - With timezone
+- **Location** - Address or online link
+- **Organizer info** - Group/organization name
+- **Registration form** - If ticketing is enabled
+- **Ticket options** - Available tickets with prices
+
+---
+
+## Customization Options
+
+When editing an event, access page settings to customize appearance:
+
+### Visual Settings
+
+<ParamField path="settings.tenantLogo" type="boolean" default="true">
+  Show your organization's logo on the event page.
+</ParamField>
+
+<ParamField path="settings.showTitle" type="boolean" default="true">
+  Display the event title prominently.
+</ParamField>
+
+<ParamField path="settings.heroRadius" type="select">
+  Border radius for the hero image:
+  - None (square corners)
+  - Small
+  - Medium
+  - Large (rounded)
+</ParamField>
+
+<ParamField path="settings.colorSelection" type="color">
+  Accent color for the page. Affects buttons, links, and highlights.
+</ParamField>
+
+<ParamField path="settings.colorButton" type="color">
+  Specific color for the registration/purchase button.
+</ParamField>
+
+<ParamField path="settings.lightThemeOnly" type="boolean">
+  Force light theme on the public page, ignoring visitor's dark mode preference.
+</ParamField>
+
+### Registration Form Fields
+
+Choose which fields to collect from registrants:
+
+| Field | Description |
+|-------|-------------|
+| **Name** | Full name (usually required) |
+| **Email** | Contact email (usually required) |
+| **Phone** | Phone number |
+| **Organisation** | Company/organization |
+| **Role** | Job title |
+| **Town** | City/location |
+| **LinkedIn** | LinkedIn profile URL |
+| **X (Twitter)** | X handle |
+| **Instagram** | Instagram handle |
+
+### Registration Behavior
+
+<ParamField path="settings.disableSubscribe" type="boolean">
+  Hide the "Subscribe to newsletter" checkbox from the form.
+</ParamField>
+
+<ParamField path="settings.disableRegister" type="boolean">
+  Disable registration completely. Shows event info only (no form).
+</ParamField>
+
+<ParamField path="settings.isThankYouSingular" type="boolean">
+  Use singular thank-you message ("Thank you" vs "Thank you all").
+</ParamField>
+
+---
+
+## Sharing the Event
+
+### Getting the Public URL
+
+1. Open the event
+2. Click **Public URL** button
+3. Copy the link
+
+### Where to Share
+
+- **Social media** - Facebook, LinkedIn, X/Twitter, Instagram
+- **Email campaigns** - Include in newsletters
+- **Website** - Link from your organization's website
+- **QR codes** - Generate QR codes for posters/flyers
+
+### Embedding Events
+
+You can embed the registration form on external websites:
+
+```html
+<iframe
+  src="https://app.orgo.space/public/event/{uuid}?embed=true"
+  width="100%"
+  height="800"
+  frameborder="0">
+</iframe>
+```
+
+---
+
+## Public vs Members-Only
+
+### Public Events
+
+- Accessible to anyone with the link
+- No login required to view
+- Can register as guest
+- Appears in public event listings (if enabled)
+
+### Members-Only Events
+
+- Requires login to view full details
+- Public page may show limited info
+- Registration requires membership
+- Can still have a public URL (redirects to login)
+
+---
+
+## SEO and Social Sharing
+
+Public event pages are optimized for sharing:
+
+### Open Graph Tags
+
+When shared on social media, your event shows:
+- Event title
+- Description preview
+- Hero image
+- Event date
+
+### Search Engines
+
+Public events can be indexed by search engines (Google, Bing) based on your settings.
+
+---
+
+## Mobile Experience
+
+Public event pages are fully responsive:
+- Adapts to any screen size
+- Easy registration on mobile
+- Touch-friendly ticket selection
+- Mobile payment support (Apple Pay, Google Pay)
+
+---
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Use compelling hero images">
+    The hero image is the first thing visitors see. Use high-quality, relevant images.
+  </Accordion>
+
+  <Accordion title="Write clear descriptions">
+    Include: what, when, where, who should attend, and what they'll get from it.
+  </Accordion>
+
+  <Accordion title="Keep forms short">
+    Only require fields you actually need. More fields = fewer registrations.
+  </Accordion>
+
+  <Accordion title="Test before sharing">
+    Open the public URL in an incognito/private window to see what visitors see.
+  </Accordion>
+
+  <Accordion title="Match your brand colors">
+    Use color customization to match your organization's branding.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related Features
+
+- [Create Event](/platform/events/create-event) - Event creation basics
+- [Ticketing](/platform/events/ticketing) - Set up tickets and prices
+- [Attendance](/platform/events/attendance) - Track registrations

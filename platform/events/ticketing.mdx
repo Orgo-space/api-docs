@@ -1,53 +1,293 @@
 ---
-title: 'Ticketing'
+title: 'Event Ticketing'
+description: 'Set up free or paid tickets with multiple price tiers for your events'
 ---
 
-Event Ticketing on the Orgo platform equips event organizers with tools to manage attendance through a ticketing system. This system can accommodate both members of the platform and the public, offering a range of ticketing options and pricing.
+Event Ticketing allows you to manage attendance through ticket types, prices, and capacity limits. Support both free and paid events with integrated Stripe payments.
 
-![Image](/images/platform/Screenshot-2024-02-29-at-21.30.17.png)
+## How to access
 
-**Enabling Ticketing and Public Accessibility:**
+When editing an event: **Event** → **Ticket Settings** tab
 
-* **Ticketing Activation:**
-  * During event creation, toggle on 'Ticket payment' to activate the ticketing feature.
-  * If the event is to be accessible to the public, enable 'Publicly accessible on the internet'.
+---
 
-**Configuring Ticket Settings:**
+## Prerequisites
 
-* After enabling ticketing, 'Ticket Settings' will appear in the event's settings bar.
+<Warning>
+  To enable paid tickets, you must first set up Stripe in **Settings** → **Payments** → **Online Payments**.
+</Warning>
 
-![Image](/images/platform/Screenshot-2024-02-29-at-21.30.48.png)
+Also ensure:
+- **Online Payments** module is enabled
+- **Event Ticket Payments** is enabled in Events module settings
 
-* **Ticket Types:**
-  * Create various ticket types, such as 'General Access', 'Premium Access', or 'Partner', each with specific pricing and descriptions.
-* **Member-Exclusive Tickets:**
-  * Set availability for different tickets, allowing some to be exclusive to platform members, while others are available to the public.
-* **Ticket Management:**
-  * Edit or remove ticket types as needed based on the evolving requirements of the event.
+---
 
-![Image](/images/platform/Screenshot-2024-02-29-at-21.32.33.png)
+## Enabling Ticketing
 
-**Inviting Participants:**
+### During Event Creation
 
-* **Participant Section:**
-  * Access the 'Participants' section to invite individuals to the event.
-* **Member and External Invitations:**
-  * Choose to invite 'Member' for platform community members or 'External' for non-members.
-* **Invited Status:**
-  * Those invited will receive an 'invited' status, allowing them to participate in the event for free, bypassing the need for ticket purchase.
+<Steps>
+  <Step title="Create or edit event">
+    Open the event creation form or edit an existing event.
+  </Step>
+  <Step title="Enable ticketing">
+    Toggle on "Enable Ticket Payment" in the event settings.
+  </Step>
+  <Step title="Configure tickets">
+    Access "Ticket Settings" to create ticket types.
+  </Step>
+</Steps>
 
-![Image](/images/platform/Screenshot-2024-02-29-at-21.48.08.png)
+---
 
-**Public URL and Payment Page:**
+## Creating Ticket Types
 
-* The 'Public URL' button directs to the payment page, which can be shared publicly for ticket purchase.
-* **Payment Page Preview:**
-  * Use this feature to review the payment page layout and ensure all details are correct before sharing.
+Each event can have multiple ticket types. Common examples:
 
-**Best Practices:**
+| Ticket Type | Description | Use Case |
+|-------------|-------------|----------|
+| **General Admission** | Standard entry | Most attendees |
+| **Early Bird** | Discounted early purchase | Incentivize early registration |
+| **Member** | Members-only pricing | Benefit for members |
+| **Student** | Reduced price | Students with valid ID |
+| **VIP/Premium** | Enhanced experience | Special access/perks |
+| **Free** | No charge | Open events, invited guests |
 
-* Clearly define ticket categories and prices to avoid confusion and ensure a smooth purchasing experience.
-* Regularly update ticket availability based on sales and capacity limits.
-* Utilize the invitation feature to extend complimentary access to selected participants and manage attendance effectively.
+### Ticket Settings
 
-**Note:** The Ticketing feature is a valuable addition for organizers to manage event finances, control attendance, and offer a variety of entry options for different types of participants. Proper setup and management of this feature are crucial for the successful execution of events within the Orgo community.
+<ParamField path="name" type="string" required>
+  Ticket type name (e.g., "General Admission", "VIP Pass").
+</ParamField>
+
+<ParamField path="description" type="string">
+  Description of what's included with this ticket.
+</ParamField>
+
+<ParamField path="price" type="number" required>
+  Ticket price in your organization's currency. Set to 0 for free tickets.
+</ParamField>
+
+<ParamField path="quantity" type="number">
+  Maximum number of tickets available for this type. Leave empty for unlimited.
+</ParamField>
+
+<ParamField path="membersOnly" type="boolean">
+  When enabled, only logged-in members can purchase this ticket type.
+</ParamField>
+
+<ParamField path="startDate" type="datetime">
+  When this ticket becomes available for purchase.
+</ParamField>
+
+<ParamField path="endDate" type="datetime">
+  When this ticket stops being available.
+</ParamField>
+
+---
+
+## Member vs Public Tickets
+
+### Members-Only Tickets
+
+Toggle "Members Only" to restrict purchase:
+- Requires login to purchase
+- Verifies membership status
+- Can be combined with member pricing
+
+### Public Tickets
+
+Available to anyone:
+- No login required
+- Guest checkout supported
+- Collects contact information at purchase
+
+---
+
+## Ticket Pricing Strategies
+
+<AccordionGroup>
+  <Accordion title="Early Bird Pricing">
+    Create a discounted ticket with an end date before your regular tickets become available.
+
+    Example:
+    - Early Bird: $50 (available until March 1)
+    - Regular: $75 (available from March 1)
+  </Accordion>
+
+  <Accordion title="Tiered Member Pricing">
+    Create separate tickets for members and non-members:
+
+    - Member Ticket: $40 (members only)
+    - Public Ticket: $60
+  </Accordion>
+
+  <Accordion title="VIP Upgrades">
+    Offer premium options with added benefits:
+
+    - General: $50 (standard entry)
+    - VIP: $100 (front row, meet & greet, swag bag)
+  </Accordion>
+
+  <Accordion title="Free with Registration">
+    Set price to $0 for free events that still need registration:
+
+    - Free Ticket: $0 (tracks attendance, sends confirmations)
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Managing Capacity
+
+### Per-Ticket Limits
+
+Set quantity limits on individual ticket types:
+- Limit VIP tickets to 50
+- Unlimited general admission
+
+### Event-Level Capacity
+
+Set overall event capacity in event settings:
+- Across all ticket types combined
+- Enables waitlist when full
+
+### Sold Out Handling
+
+When tickets sell out:
+- Ticket type shows "Sold Out"
+- Waitlist option (if enabled)
+- Other available tickets still purchasable
+
+---
+
+## Invitations & Complimentary Tickets
+
+### Inviting Members
+
+<Steps>
+  <Step title="Go to Participants">
+    Open the event's Participants section.
+  </Step>
+  <Step title="Click Invite">
+    Select "Invite Member" or "Invite External".
+  </Step>
+  <Step title="Select invitees">
+    Choose members or enter external email addresses.
+  </Step>
+  <Step title="Send invitations">
+    Invitees receive email with RSVP link.
+  </Step>
+</Steps>
+
+Invited guests:
+- Bypass ticket purchase
+- Marked as "Invited" status
+- Can attend for free
+
+### External Invitations
+
+For non-members:
+- Enter email address
+- They receive invitation email
+- Can register without account
+
+---
+
+## Payment Processing
+
+### Checkout Flow
+
+<Steps>
+  <Step title="Select tickets">
+    Customer chooses ticket type and quantity.
+  </Step>
+  <Step title="Enter details">
+    Provide name, email, and any required fields.
+  </Step>
+  <Step title="Payment">
+    Secure payment via Stripe.
+  </Step>
+  <Step title="Confirmation">
+    Email with ticket/QR code sent.
+  </Step>
+</Steps>
+
+### Payment Methods
+
+Depending on your Stripe configuration:
+- Credit/debit cards
+- Apple Pay / Google Pay
+- Local payment methods (varies by country)
+
+### Refunds
+
+Process refunds through:
+- Event participant management
+- Stripe dashboard
+
+---
+
+## Public Event Page
+
+When ticketing is enabled, your event gets a public URL:
+
+```
+https://app.orgo.space/public/event/{event-uuid}
+```
+
+This page shows:
+- Event details
+- Available tickets with prices
+- Purchase/registration form
+
+Share this URL on social media, email campaigns, or your website.
+
+---
+
+## Checking Attendees In
+
+After purchase, attendees receive:
+- Confirmation email
+- Ticket with QR code
+
+At the event:
+- Scan QR codes with the Orgo mobile app
+- Or check in manually from participant list
+
+[Learn more about Attendance →](/platform/events/attendance)
+
+---
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Name tickets clearly">
+    "General Admission - $50" is clearer than "Type A".
+  </Accordion>
+
+  <Accordion title="Set realistic quantities">
+    Consider your venue capacity and expected demand.
+  </Accordion>
+
+  <Accordion title="Use early bird strategically">
+    End early bird 2-4 weeks before the event to create urgency.
+  </Accordion>
+
+  <Accordion title="Test the purchase flow">
+    Buy a ticket yourself to verify everything works.
+  </Accordion>
+
+  <Accordion title="Monitor sales">
+    Track ticket sales and adjust availability as needed.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related Features
+
+- [Create Event](/platform/events/create-event) - Event creation basics
+- [Public Page](/platform/events/public-page) - Customize event pages
+- [Attendance](/platform/events/attendance) - Check-in and tracking
+- [Stripe Setup](/platform/payments/stripe-setup) - Payment configuration

@@ -1,41 +1,174 @@
 ---
-title: 'Event types'
+title: 'Event Types'
+description: 'Create categories to organize different kinds of events'
 ---
 
-The Event Types section in Organisation Settings is a feature that allows administrators to define and manage custom event types. These custom event types help categorize events and provide clarity to participants regarding the nature of the event they are attending or interested in.
+Event Types help you categorize and organize your events. Create types like "Meeting", "Training", "Social Event", "Conference" to make filtering and reporting easier.
 
-![Image](/images/platform/Screenshot-2024-02-29-at-21.26.16.png)
+## How to access
 
-**Creating Custom Event Types:**
+**Settings** → **Events** → **Event Types**
 
-1. **Accessing Event Types:**
-   * Navigate to 'Organisation Settings'.
-   * Select 'Event types' located under the 'Features' section.
-2. **Adding a New Event Type:**
-   * Click '+Create Event type' to define a new category.
-   * Enter a name for the event type that accurately reflects the nature of the event, such as 'Workshop', 'Webinar', 'Board Meeting', etc.
-3. **Customization:**
-   * Customize the event type with specific attributes or descriptions if needed.
+Or: **Events** → **Event Types** (admin view)
 
-**Utilizing Event Types:**
+---
 
-* **Event Planning:**
-  * When creating an event, organizers can attribute one of these custom event types to their event.
-  * This categorization aids members in identifying the type of event and its purpose.
-* **Organization:**
-  * Events can be filtered and searched by these types, allowing members to quickly find events that match their interests or needs.
+## Why Use Event Types?
 
-**Editing and Deleting Event Types:**
+Event types help you:
 
-* **Modifications:**
-  * Administrators can edit existing event types to update their names or attributes.
-  * If an event type is no longer needed or was created in error, it can be deleted. However, ensure that no upcoming or past events are associated with the event type before deletion.
+- **Organize events** - Filter event lists by type
+- **Generate reports** - See statistics per event type
+- **Set defaults** - Auto-select types for specific workflows
+- **Communicate clearly** - Members know what kind of event they're registering for
 
-**Best Practices:**
+---
 
-* Create meaningful and distinct event types that are recognizable and relevant to your organization's activities.
-* Regularly review your list of event types to keep it up-to-date and aligned with the organization's evolving needs.
+## Creating Event Types
 
-**Note:** Custom event types are integral to the event management process within Orgo, providing structure and clarity. Well-defined event types enhance the user experience by making it easier to navigate the events calendar and engage with relevant events.
+<Steps>
+  <Step title="Navigate to Event Types">
+    Go to Settings → Events → Event Types
+  </Step>
+  <Step title="Click Create">
+    Click the "Create Event Type" button
+  </Step>
+  <Step title="Configure the type">
+    Set name, description, and options
+  </Step>
+  <Step title="Save">
+    Save the new event type
+  </Step>
+</Steps>
 
-\
+---
+
+## Event Type Settings
+
+<ParamField path="name" type="string" required>
+  The display name for this event type (e.g., "Workshop", "General Assembly").
+</ParamField>
+
+<ParamField path="description" type="string">
+  Optional description explaining what kind of events belong in this category.
+</ParamField>
+
+<ParamField path="color" type="color">
+  Accent color for events of this type. Helps visually distinguish types in calendars and lists.
+</ParamField>
+
+<ParamField path="icon" type="icon">
+  Icon to display alongside the event type name.
+</ParamField>
+
+---
+
+## Common Event Types
+
+Here are examples of event types you might create:
+
+| Type | Description | Use Case |
+|------|-------------|----------|
+| **Meeting** | Regular organizational meetings | Board meetings, team syncs |
+| **Training** | Educational sessions | Workshops, courses, seminars |
+| **Social Event** | Informal gatherings | Parties, networking, outings |
+| **Conference** | Large formal events | Annual conferences, summits |
+| **Volunteer Activity** | Service activities | Community service, projects |
+| **General Assembly** | Formal member meetings | AGM, voting sessions |
+| **Webinar** | Online presentations | Virtual training, info sessions |
+| **Camp** | Multi-day residential events | Youth camps, retreats |
+
+---
+
+## Special Event Types
+
+### Training Event Type
+
+In module settings, you can designate one event type as the "Training Event Type":
+
+- Events of this type are tracked for training statistics
+- May integrate with the Courses module
+- Appears in training-specific reports
+
+### General Meeting Event Type
+
+Similarly, you can designate a "General Meeting Event Type":
+
+- Used for formal organizational meetings
+- May have special attendance tracking
+- Appears in governance reports
+
+Configure these in **Settings** → **Events** → **Module Settings**.
+
+---
+
+## Using Event Types
+
+### When Creating Events
+
+Select the event type from the dropdown when creating a new event. This categorizes the event immediately.
+
+### Filtering Events
+
+On the events list:
+- Use the type filter to show only specific categories
+- Combine with date and status filters
+
+### In Reports
+
+Event reports can be filtered and grouped by type:
+- See how many events of each type you held
+- Track attendance patterns per type
+- Compare engagement across categories
+
+---
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Keep types broad">
+    5-10 event types is usually enough. Too many types create confusion. Think categories, not individual events.
+  </Accordion>
+
+  <Accordion title="Use consistent naming">
+    Choose clear, self-explanatory names. "Team Meeting" is better than "Type A".
+  </Accordion>
+
+  <Accordion title="Assign colors thoughtfully">
+    Use colors that are visually distinct. This helps in calendar views where events are color-coded.
+  </Accordion>
+
+  <Accordion title="Document your types">
+    Use the description field to explain what qualifies as each type, so event creators categorize consistently.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Managing Event Types
+
+### Editing Types
+
+You can edit event types at any time. Changes affect:
+- How the type appears in dropdowns
+- Display in event listings
+- Future reports
+
+Existing events keep their assigned type.
+
+### Deleting Types
+
+Before deleting an event type:
+- Reassign events to another type, or
+- Events will show "Uncategorized"
+
+<Warning>
+  Deleting a type that's set as Training or General Meeting type will clear that setting.
+</Warning>
+
+---
+
+## Related Features
+
+- [Create Event](/platform/events/create-event) - Use types when creating events
+- [Annual Report](/platform/events/annual-report) - Reports grouped by type
