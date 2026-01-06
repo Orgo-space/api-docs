@@ -1,4 +1,179 @@
 ---
-title: 'API'
+title: 'API Access'
+description: 'Integrate with Orgo using the REST API'
 ---
 
+Orgo provides a comprehensive REST API for integrating with external systems. Access member data, manage events, process payments, and automate workflows programmatically.
+
+## How to access
+
+**Settings** → **Developers** → **API Access**
+
+Full API documentation: [API Reference](/api-reference)
+
+---
+
+## Prerequisites
+
+- Administrator access required
+- API access must be enabled for your organization
+
+---
+
+## API Authentication
+
+### API Keys
+
+Generate API keys for server-to-server integration:
+
+<Steps>
+  <Step title="Navigate to API Settings">
+    Go to **Settings** → **Developers** → **API Access**.
+  </Step>
+  <Step title="Generate API Key">
+    Click **Generate New API Key**.
+  </Step>
+  <Step title="Copy and secure">
+    Copy the key immediately. It won't be shown again.
+  </Step>
+  <Step title="Set permissions">
+    Configure what the key can access.
+  </Step>
+</Steps>
+
+### Using API Keys
+
+Include in request headers:
+
+```
+Authorization: Bearer YOUR_API_KEY
+```
+
+---
+
+## API Endpoints
+
+Common endpoints:
+
+| Endpoint | Description |
+|----------|-------------|
+| `/api/v1/users` | Member data |
+| `/api/v1/events` | Event management |
+| `/api/v1/payments` | Payment records |
+| `/api/v1/groups` | Group information |
+| `/api/v1/adhesions` | Membership applications |
+
+See [API Reference](/api-reference) for complete documentation.
+
+---
+
+## Rate Limits
+
+API requests are rate-limited:
+
+| Plan | Requests/minute |
+|------|-----------------|
+| Standard | 60 |
+| Professional | 300 |
+| Enterprise | Custom |
+
+Exceeding limits returns `429 Too Many Requests`.
+
+---
+
+## Webhooks
+
+Receive real-time notifications when events occur:
+
+### Setting Up Webhooks
+
+1. Go to **Settings** → **Developers** → **Webhooks**
+2. Click **Add Webhook**
+3. Enter your endpoint URL
+4. Select events to subscribe to
+5. Save
+
+### Webhook Events
+
+| Event | Description |
+|-------|-------------|
+| `user.created` | New member registered |
+| `user.updated` | Member profile updated |
+| `payment.completed` | Payment successful |
+| `event.created` | New event created |
+| `adhesion.submitted` | New membership application |
+
+### Webhook Payload
+
+```json
+{
+  "event": "user.created",
+  "timestamp": "2024-01-15T10:30:00Z",
+  "data": {
+    "id": "abc123",
+    "email": "member@example.com"
+  }
+}
+```
+
+---
+
+## Security
+
+### Best Practices
+
+<AccordionGroup>
+  <Accordion title="Secure your keys">
+    Never expose API keys in client-side code or public repositories.
+  </Accordion>
+
+  <Accordion title="Use HTTPS">
+    All API requests must use HTTPS.
+  </Accordion>
+
+  <Accordion title="Rotate keys regularly">
+    Generate new keys periodically and revoke old ones.
+  </Accordion>
+
+  <Accordion title="Minimal permissions">
+    Grant only the permissions each integration needs.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Common Integrations
+
+<AccordionGroup>
+  <Accordion title="CRM systems">
+    Sync member data with Salesforce, HubSpot, or other CRMs.
+  </Accordion>
+
+  <Accordion title="Email marketing">
+    Keep Mailchimp, Sendinblue, or other email lists updated.
+  </Accordion>
+
+  <Accordion title="Accounting software">
+    Export payment data to QuickBooks or Xero.
+  </Accordion>
+
+  <Accordion title="Custom dashboards">
+    Build internal reporting tools with your data.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Getting Help
+
+- [API Reference](/api-reference) - Complete endpoint documentation
+- [OAuth Integration](/platform/oauth) - OAuth server setup
+- Contact support for enterprise integrations
+
+---
+
+## Related Features
+
+- [OAuth](/platform/oauth) - OAuth authentication
+- [Custom Queries](/platform/analitycs/custom-db-queries) - Data analysis
+- [Webhooks](#webhooks) - Real-time notifications

@@ -1,3 +1,213 @@
 ---
-title: "OAuth"
+title: 'OAuth Server'
+description: 'Use Orgo as an OAuth provider for single sign-on'
 ---
+
+Orgo can act as an OAuth 2.0 provider, allowing members to use their Orgo credentials to log in to external applications. Implement single sign-on (SSO) for your organization's tools and services.
+
+## How to access
+
+**Settings** → **Developers** → **OAuth Applications**
+
+---
+
+## Prerequisites
+
+- Administrator access required
+- OAuth module enabled for your organization
+
+---
+
+## How OAuth Works
+
+```
+1. User clicks "Login with Orgo" on your app
+   ↓
+2. User redirected to Orgo login
+   ↓
+3. User authenticates and approves
+   ↓
+4. Orgo redirects back with authorization code
+   ↓
+5. Your app exchanges code for access token
+   ↓
+6. Your app uses token to access user data
+```
+
+---
+
+## Creating an OAuth Application
+
+<Steps>
+  <Step title="Navigate to OAuth settings">
+    Go to **Settings** → **Developers** → **OAuth Applications**.
+  </Step>
+  <Step title="Click Create Application">
+    Start creating a new OAuth app.
+  </Step>
+  <Step title="Enter application details">
+    Provide name, description, and redirect URIs.
+  </Step>
+  <Step title="Copy credentials">
+    Save your Client ID and Client Secret securely.
+  </Step>
+</Steps>
+
+---
+
+## Application Settings
+
+<ParamField path="name" type="string" required>
+  Application name shown to users during authorization.
+</ParamField>
+
+<ParamField path="description" type="text">
+  Description of what the app does.
+</ParamField>
+
+<ParamField path="redirectUris" type="array" required>
+  Allowed callback URLs after authorization.
+</ParamField>
+
+<ParamField path="scopes" type="array">
+  Permissions the app can request.
+</ParamField>
+
+---
+
+## OAuth Endpoints
+
+| Endpoint | Description |
+|----------|-------------|
+| `/oauth/authorize` | Authorization endpoint |
+| `/oauth/token` | Token exchange endpoint |
+| `/oauth/userinfo` | User info endpoint |
+
+---
+
+## Authorization Flow
+
+### Step 1: Redirect to Authorization
+
+```
+GET /oauth/authorize?
+  client_id=YOUR_CLIENT_ID&
+  redirect_uri=YOUR_REDIRECT_URI&
+  response_type=code&
+  scope=profile email
+```
+
+### Step 2: Exchange Code for Token
+
+```
+POST /oauth/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=authorization_code&
+code=AUTHORIZATION_CODE&
+client_id=YOUR_CLIENT_ID&
+client_secret=YOUR_CLIENT_SECRET&
+redirect_uri=YOUR_REDIRECT_URI
+```
+
+### Step 3: Get User Info
+
+```
+GET /oauth/userinfo
+Authorization: Bearer ACCESS_TOKEN
+```
+
+---
+
+## Available Scopes
+
+| Scope | Data Accessible |
+|-------|-----------------|
+| `profile` | Name, profile picture |
+| `email` | Email address |
+| `groups` | Group memberships |
+| `roles` | User roles and permissions |
+
+---
+
+## User Info Response
+
+```json
+{
+  "sub": "user-uuid",
+  "name": "John Doe",
+  "email": "john@example.com",
+  "picture": "https://...",
+  "groups": ["main-group", "local-center"],
+  "roles": ["ROLE_USER"]
+}
+```
+
+---
+
+## Use Cases
+
+<AccordionGroup>
+  <Accordion title="Internal tools">
+    Allow members to log in to internal tools with their Orgo account.
+  </Accordion>
+
+  <Accordion title="Partner applications">
+    Provide SSO for partner services your members use.
+  </Accordion>
+
+  <Accordion title="Custom websites">
+    Add "Login with Orgo" to your organization's website.
+  </Accordion>
+
+  <Accordion title="Mobile apps">
+    Authenticate users in custom mobile applications.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Security Best Practices
+
+<AccordionGroup>
+  <Accordion title="Keep secrets secure">
+    Never expose Client Secret in client-side code.
+  </Accordion>
+
+  <Accordion title="Validate redirect URIs">
+    Only whitelist specific, known redirect URIs.
+  </Accordion>
+
+  <Accordion title="Use HTTPS">
+    All OAuth endpoints require HTTPS.
+  </Accordion>
+
+  <Accordion title="Request minimal scopes">
+    Only request the permissions your app actually needs.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Invalid redirect URI">
+    Ensure the redirect URI exactly matches what's registered in the app settings.
+  </Accordion>
+
+  <Accordion title="Token expired">
+    Access tokens expire. Use refresh tokens or re-authenticate.
+  </Accordion>
+
+  <Accordion title="Insufficient scope">
+    Request the necessary scopes during authorization.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related Features
+
+- [API Access](/platform/api) - REST API integration
+- [Users](/platform/users/index) - User management
