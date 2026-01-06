@@ -1,4 +1,383 @@
 ---
-title: 'E-voting'
+title: 'E-Voting'
+description: 'Secure voting and polling for your organization'
 ---
 
+The E-Voting module provides secure, anonymous voting and polling functionality for your organization. Run elections, gather member opinions through polls, and ensure democratic decision-making with transparent results.
+
+## How to access
+
+**Sidebar** → **Voting**
+
+Or: **Settings** → **Voting** → **Module Settings**
+
+---
+
+## Prerequisites
+
+The Voting module must be enabled:
+
+**Settings** → **Voting** → **Module Settings**:
+- **Enable Voting Module** - Master toggle
+
+---
+
+## Voting vs. Polls
+
+Orgo supports two types of voting:
+
+| Type | Description | Use Case |
+|------|-------------|----------|
+| **Voting** | Formal elections with eligibility rules | Board elections, AGM decisions |
+| **Polls** | Quick opinion gathering | Scheduling, preferences, feedback |
+
+---
+
+## Vote Statuses
+
+Each vote progresses through statuses:
+
+| Status | Description |
+|--------|-------------|
+| **Draft** | Being created, not yet visible to voters |
+| **Upcoming** | Scheduled but voting hasn't started |
+| **Live** | Currently accepting votes |
+| **Closed** | Voting period ended, results available |
+| **Empty** | Closed with no votes cast |
+
+---
+
+## Creating a Vote
+
+<Steps>
+  <Step title="Navigate to Voting">
+    Go to **Voting** in the sidebar and click **Create Vote** or **Create Poll**.
+  </Step>
+  <Step title="Basic Information">
+    Enter the vote/poll title and description.
+  </Step>
+  <Step title="Set Schedule">
+    Define start and end dates/times for the voting period.
+  </Step>
+  <Step title="Add Options">
+    Add the choices voters can select from.
+  </Step>
+  <Step title="Configure Settings">
+    Set visibility, eligibility, and result options.
+  </Step>
+  <Step title="Publish or Save Draft">
+    Save as draft for later or publish immediately.
+  </Step>
+</Steps>
+
+---
+
+## Vote Settings
+
+### Basic Information
+
+<ParamField path="title" type="string" required>
+  The question or title of the vote (e.g., "Board Member Election 2024").
+</ParamField>
+
+<ParamField path="description" type="text">
+  Additional context or instructions for voters.
+</ParamField>
+
+### Schedule
+
+<ParamField path="dateStart" type="datetime" required>
+  When voting opens. Votes cannot be cast before this time.
+</ParamField>
+
+<ParamField path="dateEnd" type="datetime" required>
+  When voting closes. Votes cannot be cast after this time.
+</ParamField>
+
+<ParamField path="timezone" type="string">
+  Timezone for the voting schedule. Defaults to organization timezone.
+</ParamField>
+
+### Options
+
+<ParamField path="voteOptions" type="array" required>
+  List of choices voters can select from. Each option has a title.
+</ParamField>
+
+### Behavior
+
+<ParamField path="isPoll" type="boolean" default="false">
+  Mark as poll (informal) rather than formal vote.
+</ParamField>
+
+<ParamField path="isGeneral" type="boolean" default="true">
+  Organization-wide vote. If false, linked to specific group or event.
+</ParamField>
+
+<ParamField path="hasPreliminaryResults" type="boolean" default="false">
+  Allow viewing results while voting is still live.
+</ParamField>
+
+<ParamField path="isDraft" type="boolean" default="true">
+  Save as draft (not visible to voters until published).
+</ParamField>
+
+---
+
+## Vote Collections
+
+Vote Collections group multiple related votes together, useful for:
+
+- Elections with multiple positions
+- Multi-question referendums
+- Sequential decision-making
+
+### Creating a Collection
+
+1. Go to **Voting** → **Create Collection**
+2. Add name and description
+3. Set overall start/end dates
+4. Add individual votes to the collection
+5. Publish
+
+Members see the collection as a unified voting experience.
+
+---
+
+## Eligibility
+
+### Organization-wide Votes
+
+By default, all active members can vote in organization-wide votes.
+
+### Group-specific Votes
+
+Link a vote to a specific group:
+
+<ParamField path="unit" type="relation">
+  The group where this vote is held. Only group members can vote.
+</ParamField>
+
+### Event-linked Votes
+
+Link a vote to an event:
+
+<ParamField path="event" type="relation">
+  The event this vote is associated with. Typically only event attendees can vote.
+</ParamField>
+
+---
+
+## Voter Experience
+
+### Viewing Available Votes
+
+1. Go to **Voting** in sidebar
+2. See list of votes:
+   - **Active Votes** - Currently open for voting
+   - **Upcoming** - Scheduled to open
+   - **Past Votes** - Closed with results
+
+### Casting a Vote
+
+1. Open the vote
+2. Review options and any descriptions
+3. Select your choice
+4. Confirm your vote
+5. Receive confirmation
+
+<Note>
+Once cast, votes typically cannot be changed. Some configurations may allow vote modification while the vote is open.
+</Note>
+
+### Viewing Results
+
+Results are visible when:
+- Vote is closed (always)
+- Vote is live AND preliminary results enabled
+- You're an administrator
+
+---
+
+## Results & Reporting
+
+### Result Display
+
+After voting closes:
+
+- Total votes cast
+- Votes per option
+- Percentage breakdown
+- Participation rate (votes cast / eligible voters)
+
+### Winner Determination
+
+Results show all options ranked by vote count. Orgo doesn't automatically declare winners - administrators interpret results based on organization rules.
+
+### Participation Statistics
+
+Track engagement:
+- **Total Eligible** - Members who could vote
+- **Total Voted** - Members who cast a vote
+- **Participation Rate** - Percentage who voted
+
+---
+
+## Vote Administration
+
+### Managing Active Votes
+
+As an administrator:
+
+- **Edit** - Modify vote settings (limited once votes cast)
+- **Extend** - Change end date
+- **Close Early** - End voting before scheduled time
+- **Delete** - Remove vote (careful with data)
+
+<Warning>
+Votes with cast votes cannot be edited significantly. Create a new vote if major changes needed.
+</Warning>
+
+### Vote Locking
+
+Votes automatically lock when:
+- End date/time is reached
+- All eligible members have voted (early close)
+
+Locked votes cannot accept new votes.
+
+### Monitoring
+
+During live voting:
+- View participation count (not individual votes)
+- Send reminders to non-voters
+- Monitor for issues
+
+---
+
+## Security & Anonymity
+
+### Vote Security
+
+- **Anonymous voting** - Individual votes not linked to voters
+- **One vote per person** - System prevents duplicate voting
+- **Audit trail** - System tracks that a member voted, not what they voted
+- **Time-bound** - Votes only accepted during designated period
+
+### What Administrators Can See
+
+- Who has voted (but not their choice)
+- Who hasn't voted
+- Aggregate results
+
+### What Administrators Cannot See
+
+- Individual vote choices
+- How specific members voted
+
+---
+
+## Event Integration
+
+Link votes to events for:
+
+- **AGM voting** - Formal decisions during annual general meetings
+- **Conference sessions** - Real-time polling during presentations
+- **Workshop feedback** - Quick polls for session preferences
+
+### Creating Event-linked Votes
+
+1. Create or edit an event
+2. Go to **Voting** tab
+3. Create vote linked to this event
+4. Attendees can vote from event page
+
+---
+
+## Use Cases
+
+<AccordionGroup>
+  <Accordion title="Board elections">
+    Run formal elections for board positions with multiple candidates per seat.
+  </Accordion>
+
+  <Accordion title="AGM resolutions">
+    Put motions to member vote with Yes/No/Abstain options.
+  </Accordion>
+
+  <Accordion title="Policy decisions">
+    Gather member input on proposed policy changes.
+  </Accordion>
+
+  <Accordion title="Event scheduling">
+    Poll members on preferred dates or times for events.
+  </Accordion>
+
+  <Accordion title="Quick feedback">
+    Get instant member opinions on current topics.
+  </Accordion>
+
+  <Accordion title="Constitutional changes">
+    Formal voting on bylaw or constitution amendments.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Clear question wording">
+    Write unambiguous questions so voters understand exactly what they're deciding.
+  </Accordion>
+
+  <Accordion title="Adequate voting time">
+    Allow enough time for all eligible members to participate. Consider time zones.
+  </Accordion>
+
+  <Accordion title="Communicate beforehand">
+    Announce votes in advance so members can prepare and participate.
+  </Accordion>
+
+  <Accordion title="Test with drafts">
+    Use draft mode to review votes before publishing.
+  </Accordion>
+
+  <Accordion title="Document results">
+    Record vote results in meeting minutes or official records.
+  </Accordion>
+
+  <Accordion title="Follow your bylaws">
+    Ensure voting procedures comply with your organization's governing documents.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Member can't vote">
+    Check: Is the member active? Are they eligible for this vote? Is the voting period open? Have they already voted?
+  </Accordion>
+
+  <Accordion title="Results not showing">
+    Check: Is the vote closed? Is preliminary results enabled? Are you an admin?
+  </Accordion>
+
+  <Accordion title="Vote ended too early">
+    All eligible members may have voted, triggering automatic close. Check participation stats.
+  </Accordion>
+
+  <Accordion title="Need to change a live vote">
+    Once voting starts, changes are limited. For significant changes, close the current vote and create a new one.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related Features
+
+- [Events](/platform/events/index) - Event-linked voting
+- [Groups](/platform/groups/index) - Group-specific voting
+- [Notifications](/platform/notifications) - Vote reminders
