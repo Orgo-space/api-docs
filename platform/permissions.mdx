@@ -1,0 +1,405 @@
+---
+title: 'Permissions'
+description: 'Comprehensive guide to the permission system and access levels'
+---
+
+Permissions control what users can do in the platform. Unlike [organizational roles](/platform/users/roles), permissions directly grant access to features and data.
+
+<Info>
+  Looking for how to create positions like "President" or "Secretary"? See [Roles](/platform/users/roles) for organizational structure.
+</Info>
+
+---
+
+## Permission Domains Overview
+
+Orgo has **6 permission domains**, each controlling a specific area of the platform:
+
+| Domain | Purpose | Key Capabilities |
+|--------|---------|------------------|
+| **ADMIN** | Full platform control | All settings, billing, integrations, user management |
+| **HR** | Member management | Profiles, adhesions, resignations, imports, badges |
+| **HR_ASSISTANT** | Support tasks | Identity validation, GDPR requests, gamification |
+| **FINANCIAL** | Money matters | Products, fees, payments, financial reports |
+| **EVENT** | Event management | Create events, manage attendance, reports |
+| **COMMUNICATION** | Messaging | Newsletters, discussion moderation |
+
+<Note>
+  **ADMIN** is the highest permission - users with ADMIN have access to everything, including all other domains.
+</Note>
+
+---
+
+## Domain Comparison
+
+### What Can Each Permission Do?
+
+This table shows which features each permission domain controls:
+
+| Feature | ADMIN | HR | HR_ASSISTANT | FINANCIAL | EVENT | COMMUNICATION |
+|---------|:-----:|:--:|:------------:|:---------:|:-----:|:-------------:|
+| **Organization Settings** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Billing & Subscription** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Module Configuration** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **API & Integrations** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Local Center Settings** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **User Permission Management** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| | | | | | | |
+| **View/Edit Member Profiles** | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| **Process Adhesions** | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| **Handle Resignations** | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| **Member Imports** | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| **Manage Badges** | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| **Official Gazette** | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| **Export Members** | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| | | | | | | |
+| **Identity Validation** | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
+| **GDPR Data Requests** | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
+| **Gamification / Hours** | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
+| | | | | | | |
+| **Manage Products** | ✅ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| **Configure Fees** | ✅ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| **Process Payments** | ✅ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| **Financial Reports** | ✅ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| **Stripe Configuration** | ✅ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| | | | | | | |
+| **Create/Edit Events** | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ |
+| **Manage Attendees** | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ |
+| **Event Check-in (QR)** | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ |
+| **Event Reports** | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ |
+| **Courses** | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ |
+| | | | | | | |
+| **Create Newsletters** | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| **Moderate Discussions** | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| **Manage Discussion Categories** | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ |
+
+---
+
+## Detailed Domain Descriptions
+
+<AccordionGroup>
+  <Accordion title="ADMIN - Full Platform Control" icon="shield-halved">
+    **Who needs it:** Executive team, IT administrators, platform managers
+
+    **What it controls:**
+    - All organization settings and configuration
+    - Billing, subscription, and payment gateway setup
+    - Feature flags and module activation
+    - API access and integrations
+    - User permission assignment
+    - Local center creation and settings
+
+    **Important:** ADMIN permission grants access to **everything**. Users with ADMIN can do anything that HR, FINANCIAL, EVENT, or COMMUNICATION can do.
+
+    <Warning>
+      Be careful assigning ADMIN. These users have access to all organization data, financial information, and can modify any settings.
+    </Warning>
+  </Accordion>
+
+  <Accordion title="HR - Member Management" icon="users">
+    **Who needs it:** HR staff, membership officers, secretaries
+
+    **What it controls:**
+    - View and edit member profiles
+    - Process membership adhesions (applications)
+    - Handle member resignations
+    - Import members in bulk
+    - Manage badges and gamification
+    - Access Official Gazette
+    - Export member data
+    - View birth dates and personal information
+
+    **Includes:** HR permission automatically includes HR_ASSISTANT capabilities.
+  </Accordion>
+
+  <Accordion title="HR_ASSISTANT - Support Tasks" icon="user-check">
+    **Who needs it:** Volunteers helping with membership, identity validators
+
+    **What it controls:**
+    - Identity document validation
+    - GDPR data requests processing
+    - Gamification and training hours tracking
+    - View (not edit) member information
+
+    **Note:** This is a lighter permission for users who need to help with specific HR tasks without full member management access.
+  </Accordion>
+
+  <Accordion title="FINANCIAL - Money Matters" icon="coins">
+    **Who needs it:** Treasurers, finance officers, accountants
+
+    **What it controls:**
+    - Create and manage products
+    - Configure membership fees
+    - Process payments and refunds
+    - View financial reports and statistics
+    - Manage Stripe integration
+    - Export financial data
+
+    **Includes:** FINANCIAL permission automatically includes HR_ASSISTANT capabilities (for viewing member info related to payments).
+  </Accordion>
+
+  <Accordion title="EVENT - Event Management" icon="calendar">
+    **Who needs it:** Event coordinators, activity managers
+
+    **What it controls:**
+    - Create and edit events
+    - Manage event attendees
+    - Check-in participants (QR scanning)
+    - Generate event reports
+    - Manage courses and training sessions
+    - Configure event ticketing
+
+    **Does NOT include:** Financial event settings (ticket pricing) require FINANCIAL permission.
+  </Accordion>
+
+  <Accordion title="COMMUNICATION - Messaging" icon="megaphone">
+    **Who needs it:** Communications officers, community managers
+
+    **What it controls:**
+    - Create and send newsletters
+    - Moderate discussion forums
+    - Manage discussion categories
+    - Pin/delete discussion posts
+    - Send announcements
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Permission Hierarchy
+
+Permissions have a hierarchy where higher permissions include lower ones:
+
+```
+ADMIN ─────────────────────────────────────────────────
+   │                                         (highest)
+   ├── HR ──────────────┬── HR_ASSISTANT
+   │                    │
+   ├── FINANCIAL ───────┘
+   │
+   ├── EVENT
+   │
+   └── COMMUNICATION
+```
+
+### Automatic Inclusions
+
+| If user has... | They automatically get... |
+|----------------|---------------------------|
+| **ADMIN** | All permissions (HR, FINANCIAL, EVENT, COMMUNICATION, HR_ASSISTANT) |
+| **HR** | HR_ASSISTANT |
+| **FINANCIAL** | HR_ASSISTANT |
+
+<Info>
+  **Example:** A user with HR permission can also validate identities and manage gamification (HR_ASSISTANT features) without needing a separate assignment.
+</Info>
+
+---
+
+## Scope Levels (TENANT / PARENT_LOCAL / LOCAL)
+
+Each permission domain can be assigned at different **scope levels** that control what data the user can access:
+
+| Scope | Suffix | What data can they access? |
+|-------|--------|---------------------------|
+| **Organization** | `_TENANT` | All data across the entire organization |
+| **Regional** | `_PARENT_LOCAL` | Parent local center + all its child centers |
+| **Local** | `_LOCAL` | Only their assigned local center |
+
+### How it works
+
+The same permission at different scopes gives access to the same features, but limited to different data:
+
+| Permission | Features | Data Access |
+|------------|----------|-------------|
+| `HR_TENANT` | Member management | All members in organization |
+| `HR_PARENT_LOCAL` | Member management | Members in parent center + children |
+| `HR_LOCAL` | Member management | Members in own local center only |
+
+<Note>
+  **Key principle:** `_TENANT` permission automatically covers all `_PARENT_LOCAL` and `_LOCAL` data within that domain.
+</Note>
+
+### Visual Example
+
+```
+National Organization (TENANT)
+├── Region North (PARENT_LOCAL)
+│   ├── Branch A (LOCAL)
+│   ├── Branch B (LOCAL)
+│   └── Branch C (LOCAL)
+└── Region South (PARENT_LOCAL)
+    ├── Branch D (LOCAL)
+    └── Branch E (LOCAL)
+
+HR_TENANT      → Can manage members in ALL branches
+HR_PARENT_LOCAL (Region North) → Can manage members in A, B, C only
+HR_LOCAL (Branch A) → Can manage members in Branch A only
+```
+
+---
+
+## Recommended Permission Assignments
+
+### By Organizational Position
+
+| Position | Recommended Permission | Why |
+|----------|------------------------|-----|
+| **President / CEO** | ADMIN_TENANT | Full organizational control |
+| **Vice President** | ADMIN_TENANT or HR_TENANT | Depends on responsibilities |
+| **Secretary General** | HR_TENANT | Organization-wide member management |
+| **Treasurer** | FINANCIAL_TENANT | Organization-wide financial access |
+| **Communications Director** | COMMUNICATION_TENANT | Newsletters, announcements |
+| **Regional Director** | ADMIN_PARENT_LOCAL | Full control of their region |
+| **Regional HR Manager** | HR_PARENT_LOCAL | Member management for region |
+| **Branch President** | ADMIN_LOCAL | Full control of their branch |
+| **Branch Secretary** | HR_LOCAL | Local member management |
+| **Branch Treasurer** | FINANCIAL_LOCAL | Local financial operations |
+| **Event Coordinator** | EVENT_LOCAL or EVENT_TENANT | Based on event scope |
+| **Membership Assistant** | HR_ASSISTANT_LOCAL | Identity validation, gamification |
+| **Regular Member** | (none) | Basic member access |
+
+### Quick Decision Guide
+
+<CardGroup cols={2}>
+  <Card title="Need full control?" icon="crown">
+    **Use ADMIN**
+
+    For executives and IT administrators who need access to everything.
+  </Card>
+  <Card title="Managing members?" icon="users">
+    **Use HR**
+
+    For HR staff, secretaries, and membership officers.
+  </Card>
+  <Card title="Handling money?" icon="wallet">
+    **Use FINANCIAL**
+
+    For treasurers and finance officers.
+  </Card>
+  <Card title="Running events?" icon="calendar-days">
+    **Use EVENT**
+
+    For event coordinators and activity managers.
+  </Card>
+  <Card title="Sending communications?" icon="envelope">
+    **Use COMMUNICATION**
+
+    For communications officers and community managers.
+  </Card>
+  <Card title="Helping with validation?" icon="clipboard-check">
+    **Use HR_ASSISTANT**
+
+    For volunteers helping with identity checks and gamification.
+  </Card>
+</CardGroup>
+
+---
+
+## Complete Permission Reference
+
+### All Available Permissions
+
+| Permission | Domain | Scope | Level |
+|------------|--------|-------|-------|
+| `ADMIN_TENANT` | Admin | Organization | 100 |
+| `ADMIN_PARENT_LOCAL` | Admin | Regional | 95 |
+| `ADMIN_LOCAL` | Admin | Local | 90 |
+| `HR_TENANT` | HR | Organization | 83 |
+| `HR_PARENT_LOCAL` | HR | Regional | 75 |
+| `HR_LOCAL` | HR | Local | 70 |
+| `FINANCIAL_TENANT` | Financial | Organization | 82 |
+| `FINANCIAL_PARENT_LOCAL` | Financial | Regional | 55 |
+| `FINANCIAL_LOCAL` | Financial | Local | 50 |
+| `HR_ASSISTANT_TENANT` | HR Assistant | Organization | 81 |
+| `HR_ASSISTANT_PARENT_LOCAL` | HR Assistant | Regional | 35 |
+| `HR_ASSISTANT_LOCAL` | HR Assistant | Local | 30 |
+| `EVENT_TENANT` | Event | Organization | 80 |
+| `EVENT_PARENT_LOCAL` | Event | Regional | 50 |
+| `EVENT_LOCAL` | Event | Local | 10 |
+| `COMMUNICATION_TENANT` | Communication | Organization | 80 |
+| `COMMUNICATION_PARENT_LOCAL` | Communication | Regional | 50 |
+| `COMMUNICATION_LOCAL` | Communication | Local | 10 |
+
+<Info>
+  **Level** indicates permission strength. Higher level permissions can assign lower level permissions to other users.
+</Info>
+
+---
+
+## Assigning Permissions
+
+### Via Roles (Recommended)
+
+Attach permissions to roles, then assign roles to users:
+
+<Steps>
+  <Step title="Create or edit a Role">
+    Go to **Settings** → **Roles**
+  </Step>
+  <Step title="Attach permissions">
+    Select which permissions this role grants
+  </Step>
+  <Step title="Assign role to users">
+    Users with this role automatically get the attached permissions
+  </Step>
+</Steps>
+
+### Direct Assignment
+
+For exceptions, assign permissions directly to a user's profile.
+
+<Warning>
+  Direct assignment is harder to audit. Use roles whenever possible.
+</Warning>
+
+---
+
+## Testing Permissions (Impersonation)
+
+Administrators can test the platform with different permissions:
+
+<Steps>
+  <Step title="Click impersonation icon">
+    Shield icon in the header
+  </Step>
+  <Step title="Select permissions to test">
+    Choose which permission level to simulate
+  </Step>
+  <Step title="Browse as that user">
+    See exactly what users with those permissions see
+  </Step>
+  <Step title="Exit impersonation">
+    Click the badge to return to normal
+  </Step>
+</Steps>
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="User can't access a feature">
+    Check if they have the correct **domain** permission. Use the [Domain Comparison](#domain-comparison) table to find which permission controls that feature.
+  </Accordion>
+
+  <Accordion title="User sees too much data">
+    They probably have `_TENANT` scope instead of `_LOCAL`. Change to the appropriate scope level.
+  </Accordion>
+
+  <Accordion title="Permission seems to not work">
+    Check if it's automatically included by another permission. For example, HR already includes HR_ASSISTANT.
+  </Accordion>
+
+  <Accordion title="Can't find LOCAL/PARENT_LOCAL options">
+    Local center features might be disabled. Enable in **Settings** → **Modules** → **Local Centers**.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related Documentation
+
+- [Roles](/platform/users/roles) - Organizational positions and role management
+- [User Types](/platform/users/user-types) - Membership categories
+- [Role Groups](/platform/groups/role-groups) - Automatic role assignment
