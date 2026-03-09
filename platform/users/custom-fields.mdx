@@ -1,226 +1,169 @@
 ---
 title: 'Custom Fields'
-description: 'Create organization-specific data fields for user profiles and forms'
+description: 'Create organization-specific data fields for profiles, registration, and applications'
 ---
 
-Custom Fields allow you to capture organization-specific information that isn't covered by standard profile fields. Create fields for any data you need to collect from members.
+Custom Fields let you capture information that doesn't exist in Orgo's standard field set. Emergency contact, T-shirt size, license number, dietary restrictions — whatever your organization needs to track about members.
+
+<img src="/images/platform/users/custom-fields-list.png" alt="Custom Fields settings showing six fields — Troop Number, Years in Scouting, Current Rank, Areas of Interest, Emergency Contact Phone, Dietary Restrictions — with field types and edit buttons" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
 
 ## How to access
 
-**Settings** → **Custom Fields**
+**Settings** → **Users & Profiles** → **Custom Fields**
 
 ---
 
-## Field Types
-
-Orgo supports various field types:
-
-| Type | Description | Example |
-|------|-------------|---------|
-| **Text** | Single-line text input | "Membership Number" |
-| **Textarea** | Multi-line text | "Bio" or "Skills" |
-| **Number** | Numeric values | "Years of Experience" |
-| **Date** | Date picker | "Join Date" |
-| **Select** | Dropdown with options | "Department" |
-| **Multi-select** | Multiple choice selection | "Interests" |
-| **Checkbox** | Yes/No toggle | "Newsletter Opt-in" |
-| **URL** | Website link | "Portfolio URL" |
-| **Email** | Email address | "Secondary Email" |
-
----
-
-## Creating a Custom Field
+## Creating a custom field
 
 <Steps>
-  <Step title="Navigate to Custom Fields">
-    Go to **Settings** → **Custom Fields**
+  <Step title="Click Create Custom Field">
+    Go to **Settings** → **Custom Fields** → **Create Custom Field**.
   </Step>
-  <Step title="Click Create">
-    Click the **Create Custom Field** button
+  <Step title="Choose the field type">
+    Pick the type that matches your data. See the field types table below.
   </Step>
-  <Step title="Configure the field">
-    Set name, type, and options (detailed below)
+  <Step title="Set the name and description">
+    **Name** is what members see as the label. **Description** appears as help text below the field — use it to explain what you're asking for.
   </Step>
-  <Step title="Add to forms">
-    Enable the field on Registration Form and/or Profile Fields
+  <Step title="Add options (for dropdowns and multi-select)">
+    Enter each option on a new line.
   </Step>
-  <Step title="Save">
-    Save your new custom field
+  <Step title="Set visibility">
+    Toggle **Admin only** if this field should be hidden from members and only visible to administrators.
+  </Step>
+  <Step title="Save, then enable on forms">
+    After creating the field, go to [Registration Form](/platform/users/registration-form) and/or [Profile Fields](/platform/users/profile-fields) to enable it where you need it.
   </Step>
 </Steps>
 
 ---
 
-## Field Configuration
+## Field types
 
-### Basic Settings
-
-<ParamField path="name" type="string" required>
-  The label displayed to users (e.g., "T-Shirt Size", "Emergency Contact").
-</ParamField>
-
-<ParamField path="fieldType" type="select" required>
-  The type of input field (text, select, date, etc.).
-</ParamField>
-
-<ParamField path="description" type="string">
-  Help text displayed below the field to guide users.
-</ParamField>
-
-### Options (for Select/Multi-select)
-
-For dropdown and multi-select fields, define the available options:
-
-```
-Small
-Medium
-Large
-X-Large
-```
-
-Each option on a new line.
-
-### Visibility Settings
-
-<ParamField path="isOnlyAdmin" type="boolean">
-  When enabled, only administrators can see and edit this field. The field won't appear on user-facing forms.
-
-  **Use cases:**
-  - Internal notes
-  - Admin-assigned categories
-  - Sensitive information
-</ParamField>
-
-### Position
-
-<ParamField path="position" type="number">
-  Controls the display order of custom fields. Lower numbers appear first.
-</ParamField>
+| Type | Best for | Example |
+|------|----------|---------|
+| **Text** | Short single-line values | Membership Number, Emergency Contact |
+| **Textarea** | Longer text, descriptions | Skills, Bio, Medical Notes |
+| **Number** | Numeric values you might sum or filter | Years of Experience, Age at Joining |
+| **Date** | Calendar dates | Certification Expiry, Join Date |
+| **Select** | One option from a list | Department, Region, Skill Level |
+| **Multi-select** | Multiple options from a list | Interests, Languages Spoken, Committees |
+| **Checkbox** | Yes/No | Newsletter Opt-in, Volunteer Availability |
+| **URL** | Web links | Portfolio, Personal Website |
+| **Email** | Email addresses | Secondary Email, Work Email |
 
 ---
 
-## Using Custom Fields
+## Where custom fields appear
 
-### On Registration Form
+After creating a field, you choose where it's used:
 
-1. Go to **Settings** → **Users & Profiles** → **Registration Form**
-2. Find your custom field in the list
-3. Check the box to enable it
-4. Optionally mark as required
+| Location | How to enable | What happens |
+|----------|--------------|-------------|
+| **Registration Form** | Go to [Registration Form](/platform/users/registration-form) → find the field → toggle on | New members see it during sign-up |
+| **Profile Fields** | Go to [Profile Fields](/platform/users/profile-fields) → find the field → toggle on | Members can fill it on their profile page |
+| **Adhesion Form** | Go to [Adhesion](/platform/users/adhesion) form builder → find the field → toggle on | Applicants see it on the membership application |
 
-### On Profile Fields
-
-1. Go to **Settings** → **Users & Profiles** → **Profile Fields**
-2. Find your custom field in the list
-3. Configure:
-   - **Enabled** - Show on profile
-   - **Required** - Must be filled
-   - **Immutable** - Cannot be changed after initial entry
-
-### In Adhesion Forms
-
-Custom fields can also be included in adhesion (membership application) forms for collecting data during the approval process.
+On profile fields, you get additional options:
+- **Required** — Triggers the [splash screen](/platform/users/profile-fields) on login if empty
+- **Immutable** — Members can set it once, then only admins can change it
 
 ---
 
-## Admin-Only Fields
+## Admin-only fields
 
-Fields marked as **Admin Only** have special behavior:
+Fields marked as **Admin Only** are invisible to members. Only administrators can see and edit them.
 
-- Not visible to regular users
-- Only editable by administrators
-- Display a green "admin" tag in settings
-- Useful for internal tracking
-
-**Examples of admin-only fields:**
-- Approval notes
-- Verification status
-- Internal member ID
-- HR comments
+**Use admin-only fields for:**
+- Internal notes about a member
+- Admin-assigned categories or scores
+- Verification status or approval notes
+- Sensitive information that members shouldn't edit
 
 ---
 
-## Field Behavior Options
+## The Interest Custom Field
 
-### Immutable Fields
+At the bottom of the custom fields list, you'll find the **Interest Custom Field** dropdown. Selecting a multi-select field here makes it the source for Orgo's interest-matching feature — members with overlapping interests are suggested as connections.
 
-When a field is marked as immutable on profiles:
-- Users can set the value once
-- After saving, users cannot change it
-- Only administrators can modify immutable values
-
-**Use cases:**
-- Membership ID (assigned once)
-- Original registration date
-- Verified credentials
-
-### Required Fields
-
-Required custom fields work the same as standard required fields:
-- On registration: blocks form submission if empty
-- On profiles: triggers splash screen on login
+To set this up:
+1. Create a multi-select custom field (e.g., "Interests" with options like Hiking, Photography, Cooking, etc.)
+2. Enable it on Profile Fields so members can select their interests
+3. Select it as the Interest Custom Field
 
 ---
 
-## Best Practices
+## Tags
+
+Tags are simpler than custom fields — they're labels that admins apply to member profiles for filtering and segmentation. Members don't see or edit tags themselves.
+
+![Tags management page showing organization tags with edit options](/images/platform/users/tags-list.png)
+
+The tags management page shows all tags as a simple list. Each tag has a name and a color indicator. You can create, edit, or delete tags from this page. Tags are applied to user profiles by administrators and can be used to filter and segment the member directory.
+
+Manage tags at **Settings** → **Users & Profiles** → **Tags**.
+
+**Tags vs custom fields:** Use tags when admins need to categorize members (e.g., "VIP", "Needs Follow-up", "Founding Member"). Use custom fields when members need to provide information themselves (e.g., "T-Shirt Size", "Emergency Contact").
+
+---
+
+## Real-world examples
+
+### Youth scouting organization
+
+| Field | Type | Settings | Purpose |
+|-------|------|----------|---------|
+| Scout ID | Text | Admin-only, Immutable | Official scout number assigned by HQ |
+| Current Rank | Select | Required on profile | Eagle Scout, Star, Life, etc. |
+| Parent Contact | Text | Required on registration | Emergency contact for minors |
+| Allergies/Medical | Textarea | Admin-only | Medical information for events |
+
+### Professional association
+
+| Field | Type | Settings | Purpose |
+|-------|------|----------|---------|
+| License Number | Text | Required, Immutable | Professional license verification |
+| Specializations | Multi-select | Required on profile | Areas of expertise for directory search |
+| CPD Hours | Number | Admin-only | Continuing education tracking |
+| Firm Name | Text | On registration | Current employer |
+
+### Community group
+
+| Field | Type | Settings | Purpose |
+|-------|------|----------|---------|
+| How did you hear about us? | Select | On registration only | Track acquisition channels |
+| Dietary Restrictions | Multi-select | On profile | Event catering planning |
+| T-Shirt Size | Select | On profile | Merchandise orders |
+| Volunteer Availability | Checkbox | On profile | Who's available to help |
+
+---
+
+## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Name fields clearly">
-    Use descriptive, user-friendly names. "Emergency Contact Phone" is better than "EC_Phone".
+  <Accordion title="I need to collect something from all existing members">
+    Create the custom field, enable it on [Profile Fields](/platform/users/profile-fields), and mark it as **Required**. Every member will see a splash screen on their next login prompting them to fill it out.
   </Accordion>
 
-  <Accordion title="Add help text">
-    Use the description field to explain what information you need and why.
+  <Accordion title="I want a dropdown but the options might change">
+    Create a **Select** field. You can edit the options at any time — go to Custom Fields, click Edit on the field, and modify the options list. Existing values aren't affected when you add or remove options.
   </Accordion>
 
-  <Accordion title="Choose the right type">
-    Use appropriate field types - dates for dates, numbers for numeric data. This enables better validation and filtering.
+  <Accordion title="I need a field that only certain user types see">
+    Custom fields are either visible to all members or admin-only. If you need per-type visibility, the workaround is: create the field as admin-only, then have admins fill it out for the relevant members. Alternatively, use per-type [Registration Forms](/platform/users/registration-form) to collect type-specific data at sign-up.
   </Accordion>
 
-  <Accordion title="Consider privacy">
-    Think about who needs to see each field. Use admin-only for sensitive internal data.
-  </Accordion>
-
-  <Accordion title="Keep it minimal">
-    Only create fields you actually need. Too many fields overwhelm users and reduce form completion rates.
+  <Accordion title="Can I reorder the fields?">
+    Yes — use the drag handles in the custom fields list to reorder. The order here determines the display order on forms and profiles.
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Examples
+## Related
 
-### Scouting Organization
-
-| Field | Type | Purpose |
-|-------|------|---------|
-| Scout ID | Text (Admin, Immutable) | Official scout number |
-| Unit | Select | Scout unit assignment |
-| Badges Earned | Number | Track achievements |
-| Parent Contact | Text (Required) | Emergency contact |
-
-### Professional Association
-
-| Field | Type | Purpose |
-|-------|------|---------|
-| License Number | Text (Immutable) | Professional license |
-| Specialization | Multi-select | Areas of expertise |
-| Years in Practice | Number | Experience tracking |
-| Continuing Education | Checkbox | CPD compliance |
-
-### Alumni Network
-
-| Field | Type | Purpose |
-|-------|------|---------|
-| Graduation Year | Number | Class year |
-| Major/Degree | Select | Field of study |
-| Current Industry | Select | Career tracking |
-| Willing to Mentor | Checkbox | Mentorship program |
-
----
-
-## Related Settings
-
-- [Registration Form](/platform/users/registration-form) - Add custom fields to sign-up
-- [Profile Fields](/platform/users/profile-fields) - Add custom fields to profiles
-- [Adhesion](/platform/users/adhesion) - Use custom fields in membership applications
+- [Registration Form](/platform/users/registration-form) — Enable custom fields on the sign-up form
+- [Profile Fields](/platform/users/profile-fields) — Enable custom fields on member profiles
+- [Adhesion](/platform/users/adhesion) — Include custom fields in membership applications

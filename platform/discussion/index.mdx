@@ -1,241 +1,168 @@
 ---
 title: 'Discussions'
-description: 'Foster collaboration and communication among members'
+description: 'Forum-style posts and conversations within every group'
 ---
 
-The Discussions module provides a forum-style communication platform for your organization. Members can share ideas, ask questions, and collaborate in organized discussion spaces.
+Discussions are the conversation layer inside every group. Members create posts, others reply, react, and share files — like a forum built into each group. The Main Group has org-wide discussions, Local Centers have local conversations, and Private Groups have team-specific threads.
 
-## How to access
-
-**Menu** → **Discussions**
-
-Admin: **Settings** → **Modules** → Enable **Discussions**
+<img src="/images/platform/communication/discussion-feed.png" alt="Discussions feed showing posts with embedded images, reactions, comments, and view counts" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Prerequisites
+## How discussions work
 
-- Discussions module must be enabled
-- Members must have discussion access permissions
+Every group (Main Group, Local Centers, Role Groups, Private Groups) can have discussions enabled. When a member creates a post in a group:
 
----
-
-## Discussion Features
-
-| Feature | Description |
-|---------|-------------|
-| **Discussion threads** | Organized conversations |
-| **Namespaces** | Categories for topics |
-| **Replies** | Threaded responses |
-| **Reactions** | Emoji reactions to posts |
-| **Mentions** | Tag other members |
-| **Attachments** | Share files in discussions |
-| **Moderation** | Content management tools |
+1. It appears in that group's **Discussions** tab
+2. Group members receive notifications (based on their preferences)
+3. Members can reply, react with emojis, or share the post
+4. Admins can pin important posts, lock threads, or moderate content
 
 ---
 
-## Discussion Structure
+## Creating a post
 
-### Hierarchy
+Go to any group → **Discussions** tab → **Create Post**
 
-```
-Organization
-└── Namespace (Category)
-    └── Discussion (Thread)
-        └── Replies (Comments)
-```
+| Field | What to enter |
+|-------|-------------|
+| **Title** | Clear headline — "Q4 Planning Meeting Notes" is better than "Update" |
+| **Body** | Rich text content with formatting, images, links, and embedded media |
+| **Category** | If [Discussion Namespaces](/platform/discussion/discussion-namespaces) are enabled, select a category |
+| **Topics** | Tag your post with one or more topics for filtering and organization |
 
-### Components
+### Media and attachments
 
-| Component | Description |
+Posts support rich media — not just text:
+
+| Media type | How it works |
 |-----------|-------------|
-| **Namespace** | Category grouping related discussions |
-| **Discussion** | Individual conversation thread |
-| **Reply** | Response to a discussion |
-| **Reaction** | Quick emoji feedback |
+| **Images** | Embed directly in the post body. Displayed inline with lightbox preview. |
+| **Videos** | Upload MP4/WebM videos that play directly in the feed. |
+| **Files** | Attach PDFs, documents, spreadsheets — members download from the post. |
+| **Link previews** | Paste a URL and it generates an OpenGraph preview card with title, image, and description. |
+| **@Mentions** | Type `@` to mention a member by name. They receive a notification and the mention links to their profile. |
 
----
+### Rich text features
 
-## Creating a Discussion
-
-<Steps>
-  <Step title="Navigate to Discussions">
-    Go to **Discussions** or a specific namespace.
-  </Step>
-  <Step title="Click New Discussion">
-    Start a new conversation thread.
-  </Step>
-  <Step title="Select namespace">
-    Choose the appropriate category.
-  </Step>
-  <Step title="Write content">
-    Add title and body with rich formatting.
-  </Step>
-  <Step title="Publish">
-    Post the discussion for others to see.
-  </Step>
-</Steps>
-
----
-
-## Discussion Settings
-
-<ParamField path="title" type="string" required>
-  Discussion headline (clear and descriptive).
-</ParamField>
-
-<ParamField path="namespace" type="relation" required>
-  Category where the discussion belongs.
-</ParamField>
-
-<ParamField path="body" type="richtext" required>
-  Main content with formatting support.
-</ParamField>
-
-<ParamField path="attachments" type="files">
-  Files to share with the discussion.
-</ParamField>
-
-<ParamField path="isPinned" type="boolean">
-  Keep discussion at top of list.
-</ParamField>
-
-<ParamField path="isLocked" type="boolean">
-  Prevent new replies.
-</ParamField>
-
----
-
-## Rich Content
-
-### Formatting Options
-
+The editor supports:
 - **Bold**, *italic*, ~~strikethrough~~
-- Headings and lists
-- Links and embeds
-- Code blocks
-- Quotes
-
-### Attachments
-
-Attach files to discussions:
-- Images (inline display)
-- Documents (PDF, Word)
-- Spreadsheets
-- Other files
+- Headings, bullet lists, numbered lists
+- Links and inline images
+- Code blocks and block quotes
+- File and media attachments
 
 ---
 
-## Interactions
+## Comments and reactions
 
-### Replies
+<img src="/images/platform/communication/discussion-post-detail.png" alt="Discussion post with embedded image, emoji reactions, view count, and comment count" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-- Respond to discussions
-- Quote previous replies
-- Threaded conversations
+Every post has a comment thread below it. Comments support the same rich text and media as posts — images, videos, files, and mentions.
 
-### Reactions
+<img src="/images/platform/communication/discussion-post-comments.png" alt="Comment thread showing multiple replies from different members with Like and Reply buttons" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-Quick feedback with emoji reactions:
-- 👍 Like
-- ❤️ Love
-- 🎉 Celebrate
-- Custom reactions
+| Action | How |
+|--------|-----|
+| **Comment** | Write a response below the post. Comments appear in chronological order. |
+| **Reply to a comment** | Click reply on a specific comment to create a threaded response under it (one level of nesting). |
+| **React** | Click an emoji reaction on the post or any comment. Reactions are visible with counts. |
+| **Mention** | Type `@name` to notify and link to a specific member in your comment. |
 
-### Mentions
-
-Tag members with `@username`:
-- Notifies mentioned user
-- Links to their profile
+Posts track their **comment count**, **view count**, and **reaction count** — giving you a quick sense of engagement without opening each thread.
 
 ---
 
 ## Moderation
 
-### Moderator Actions
+Admins and group owners can manage discussions:
 
-| Action | Description |
+| Action | What it does |
 |--------|-------------|
-| **Pin** | Keep at top of namespace |
-| **Lock** | Prevent new replies |
-| **Hide** | Remove from public view |
-| **Delete** | Permanently remove |
-| **Move** | Change namespace |
+| **Pin** | Keep a post at the top of the discussion list — use for announcements or important resources |
+| **Lock** | Prevent new replies — useful for resolved topics or closed decisions |
+| **Hide** | Remove from the feed without deleting — content preserved but not visible |
+| **Delete** | Permanently remove the post and all replies |
+| **Move** | Change the post to a different namespace/category |
 
-### Reporting
+Members can **report** inappropriate content, which goes to the moderation queue for admin review.
 
-Members can report inappropriate content:
-1. Click report button
-2. Select reason
-3. Moderators review
+---
+
+## Discussions in different groups
+
+| Group | Discussion character |
+|-------|---------------------|
+| **Main Group** | Org-wide announcements, general conversation. Often restricted to admin-only posting with open replies. |
+| **Local Centers** | Local news, community conversations, area-specific topics. Usually open to all local members. |
+| **Role Groups** | Segment-specific coordination — leaders sharing practices, youth peer discussion. |
+| **Private Groups** | Team communication — project updates, decisions, meeting notes. |
+
+Each group's discussions are separate. A post in the New York Local Center isn't visible to members of the London branch.
+
+---
+
+## Search and filtering
+
+| Filter | What it does |
+|--------|-------------|
+| **Namespace/category** | Show only posts in a specific category (if namespaces enabled) |
+| **Author** | Find posts by a specific member |
+| **Date** | Sort by newest, oldest, or most recent activity |
+| **Full-text search** | Find posts containing specific words |
+
+---
+
+## Setting up discussions
+
+<img src="/images/platform/communication/discussion-module-config.png" alt="Discussions module settings with public discussions permission and namespaces toggle" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+**Settings** → **Discussions**
+
+| Setting | What it does |
+|---------|-------------|
+| **Who can create public discussions** | Permission level required to create discussions visible to all. Default: All Users. |
+| **Enable Discussion Namespaces** | Organize posts into categories/namespaces. See [Discussion Namespaces](/platform/discussion/discussion-namespaces). |
 
 ---
 
 ## Notifications
 
 Members receive notifications for:
-- Replies to their discussions
-- Mentions in discussions
-- New discussions in followed namespaces
-- Moderator actions
+- New posts in groups they belong to
+- Replies to their posts
+- @mentions
+- Moderator actions on their content
 
-### Notification Preferences
-
-Configure per namespace:
-- All activity
-- Only mentions
-- None
+Members can adjust discussion notification frequency in their [notification settings](/platform/notifications) — all activity, mentions only, or none.
 
 ---
 
-## Search
-
-### Finding Discussions
-
-- Full-text search
-- Filter by namespace
-- Filter by author
-- Sort by date or activity
-
----
-
-## Group Discussions
-
-Each group can have its own discussion space:
-
-| Group Type | Discussion Access |
-|------------|-------------------|
-| **Main group** | All members |
-| **Local centers** | Local members only |
-| **Private groups** | Group members only |
-| **Role groups** | Role holders only |
-
----
-
-## Best Practices
+## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Use clear titles">
-    Descriptive titles help others find relevant discussions.
+  <Accordion title="The Main Group feed is cluttered — too many random posts">
+    Enable "Only admins can post" on the Main Group. It becomes an announcement channel where admins post and members read. Direct open discussion to Local Centers or Private Groups. Members can still reply to admin posts if needed.
   </Accordion>
 
-  <Accordion title="Choose correct namespace">
-    Post in the appropriate category for better organization.
+  <Accordion title="I want organized topics instead of one flat feed">
+    Enable [Discussion Namespaces](/platform/discussion/discussion-namespaces). Create categories like "Announcements", "Questions", "Ideas", "Events". Members tag their posts, and everyone can filter by category.
   </Accordion>
 
-  <Accordion title="Be constructive">
-    Foster positive, productive conversations.
+  <Accordion title="How do discussions differ from the newsletter?">
+    Discussions are **two-way** — members see posts in-app, reply, react, and have conversations. Newsletter is **one-way** — an email campaign that goes to inboxes. Use discussions for engagement and conversation. Use newsletter for announcements that must reach inboxes.
   </Accordion>
 
-  <Accordion title="Search before posting">
-    Check if a similar discussion already exists.
+  <Accordion title="Can members delete their own posts?">
+    Typically yes, within a time window. After that, only moderators/admins can delete. This prevents accidental loss of threaded conversations where others have already replied.
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Related Features
+## Related
 
-- [Discussion Namespaces](/platform/discussion/discussion-namespaces) - Category management
-- [Groups](/platform/groups/index) - Group discussions
-- [Notifications](/platform/notifications) - Discussion alerts
+- [Discussion Namespaces](/platform/discussion/discussion-namespaces) — Organize posts by category
+- [Groups](/platform/groups) — Where discussions live
+- [Notifications](/platform/notifications) — Discussion notification settings
+- [Newsletter](/platform/newsletter) — For one-way email communication

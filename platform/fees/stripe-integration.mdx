@@ -1,286 +1,180 @@
 ---
 title: 'Stripe Integration'
-description: 'Connect Stripe to accept online payments'
+description: 'Connect Stripe to accept online payments for fees, donations, tickets, and merchandise'
 ---
 
-Orgo uses Stripe to process all online payments. Connect your Stripe account to start accepting credit cards, bank transfers, and other payment methods.
-
-## How to access
-
-**Settings** → **Fees** → **Stripe Integration**
-
----
-
-## Prerequisites
-
-Before connecting Stripe:
-
-1. Create a Stripe account at [stripe.com](https://stripe.com)
-2. Complete Stripe's identity verification process
-3. Have your organization's banking details ready
+Orgo uses Stripe to process all online payments. Members pay with credit cards, bank transfers, Apple Pay, Google Pay, and other local payment methods. You need a Stripe account — everything else (card handling, security, PCI compliance) is managed for you.
 
 ---
 
 ## Connecting Stripe
 
+**Settings** → **Fees** → **Stripe Integration**
+
 <Steps>
-  <Step title="Navigate to Stripe settings">
-    Go to **Settings** → **Fees** → **Stripe Integration**.
+  <Step title="Create a Stripe account">
+    If you don't have one, go to [stripe.com](https://stripe.com) and sign up. Complete their identity verification and add your organization's banking details.
   </Step>
-  <Step title="Click Connect Stripe">
-    Click the **Connect with Stripe** button.
+  <Step title="Click Connect with Stripe">
+    In Orgo, click the connect button. You'll be redirected to Stripe.
   </Step>
-  <Step title="Log in to Stripe">
-    You'll be redirected to Stripe. Log in or create an account.
-  </Step>
-  <Step title="Authorize connection">
-    Authorize Orgo to connect to your Stripe account.
-  </Step>
-  <Step title="Complete verification">
-    Complete any required verification steps in Stripe.
+  <Step title="Authorize the connection">
+    Log in to Stripe and authorize Orgo to connect to your account.
   </Step>
   <Step title="Return to Orgo">
-    You'll be redirected back to Orgo with Stripe connected.
+    You'll be redirected back. The status should show "Connected" and "Active".
   </Step>
 </Steps>
 
----
+### Account status
 
-## Stripe Connect Modes
-
-Orgo uses Stripe Connect, which supports different account types:
-
-| Mode | Description | Best For |
-|------|-------------|----------|
-| **Standard** | Member creates their own Stripe account | Organizations that want full Stripe dashboard access |
-| **Express** | Simplified onboarding through Orgo | Quick setup with less administrative overhead |
-
----
-
-## What's Connected
-
-When you connect Stripe, Orgo can:
-
-- Create payment intents and process charges
-- Create and manage subscriptions
-- Issue refunds
-- Create products and prices in Stripe
-- Access payment history and reports
-
----
-
-## Stripe Account Status
-
-After connecting, check your account status:
-
-| Status | Description |
+| Status | What it means |
 |--------|-------------|
 | **Active** | Ready to accept payments |
-| **Pending** | Awaiting verification completion |
-| **Restricted** | Some features limited - complete verification |
-| **Disabled** | Account disabled - contact Stripe support |
+| **Pending** | Stripe is still verifying your identity — complete any open requirements |
+| **Restricted** | Some features limited — check Stripe dashboard for required actions |
+| **Disabled** | Account disabled — contact Stripe support |
 
 ---
 
-## Currency Settings
+## What Stripe powers
 
-Configure accepted currencies:
+Once connected, Stripe handles:
 
-<ParamField path="currency" type="string" default="EUR">
-  Primary currency for payments. Set in organization settings.
-</ParamField>
-
-Supported currencies depend on your Stripe account configuration.
-
----
-
-## Payment Methods
-
-Stripe supports various payment methods:
-
-### Credit/Debit Cards
-- Visa
-- Mastercard
-- American Express
-- Other local cards
-
-### Bank Payments
-- SEPA Direct Debit (Europe)
-- Bank transfers
-- iDEAL (Netherlands)
-- Bancontact (Belgium)
-
-### Digital Wallets
-- Apple Pay
-- Google Pay
-- Link (Stripe's one-click checkout)
-
-<Note>
-Available payment methods depend on your Stripe account country and settings.
-</Note>
+| Feature | Stripe's role |
+|---------|-------------|
+| **Membership fees** | Online payment and recurring subscriptions |
+| **Event tickets** | Checkout for paid events |
+| **Donations** | One-time and recurring giving |
+| **Commerce** | Merchandise purchases |
+| **Refunds** | Returns processed through Stripe |
 
 ---
 
-## Fees and Pricing
+## Accepted payment methods
 
-### Stripe Fees
+What your members can pay with depends on your Stripe account's country:
 
-Stripe charges per transaction:
-- ~2.9% + €0.25 for card payments (varies by country)
-- Lower fees for SEPA/bank payments
-- See [Stripe Pricing](https://stripe.com/pricing) for current rates
+| Method | Availability |
+|--------|-------------|
+| **Credit/debit cards** (Visa, Mastercard, Amex) | Worldwide |
+| **Apple Pay / Google Pay** | Most countries |
+| **SEPA Direct Debit** | Europe |
+| **iDEAL** | Netherlands |
+| **Bancontact** | Belgium |
+| **Bank transfers** | Varies by country |
+| **Link** (Stripe's one-click checkout) | Stripe-supported countries |
 
-### Orgo Platform Fee
+---
 
-Depending on your Orgo plan:
-- Additional platform fee may apply
-- Check your subscription agreement for details
+## Transaction fees
+
+Stripe charges per transaction — you don't pay Orgo for payment processing:
+
+| Method | Typical fee |
+|--------|------------|
+| Cards (EU) | ~1.4% + €0.25 |
+| Cards (non-EU) | ~2.9% + €0.25 |
+| SEPA Direct Debit | ~0.35% (capped at €5) |
+| Apple Pay / Google Pay | Same as card rates |
+
+Exact rates depend on your Stripe account configuration and country. See [stripe.com/pricing](https://stripe.com/pricing) for current rates.
 
 ---
 
 ## Payouts
 
-Stripe transfers funds to your bank account:
+Stripe transfers collected funds to your bank account:
 
-### Payout Schedule
+| Setting | Options |
+|---------|---------|
+| **Frequency** | Daily (default), weekly, monthly, or manual |
+| **Timing** | Typically 2 business days after payment (7+ days for new accounts) |
 
-Configure in Stripe Dashboard:
-- Daily (default in most countries)
-- Weekly
-- Monthly
-- Manual
-
-### Payout Timing
-
-Funds are typically available:
-- 2 business days (most countries)
-- 7+ days for new accounts or high-risk transactions
+Configure payout schedule in the Stripe Dashboard. Orgo doesn't control payout timing — that's between Stripe and your bank.
 
 ---
 
-## Testing with Stripe
+## Local Center Stripe accounts
 
-### Test Mode
+For organizations where branches collect their own fees:
 
-Use Stripe's test mode for development:
+Each Local Center can connect its own Stripe account separately. When a member pays a local fee, the payment goes directly to the local center's bank account — not through the national organization.
 
-1. Enable test mode in Stripe Dashboard
-2. Use test card numbers:
-   - `4242 4242 4242 4242` - Successful payment
-   - `4000 0000 0000 0002` - Card declined
-3. Test subscriptions and refunds safely
+Fee distribution options:
+- **100% local** — all payment goes to the Local Center
+- **Split** — automatic division between national and local (e.g., 70/30)
+- **National collects** — national org receives everything, distributes manually
 
-<Warning>
-Never use real card numbers in test mode or test cards in live mode.
-</Warning>
-
----
-
-## Local Center Stripe Accounts
-
-For multi-location organizations:
-
-### Connected Accounts
-
-Each Local Center can have its own Stripe account:
-
-1. Local Center admin connects their Stripe account
-2. Payments for local products go to local account
-3. National organization can track all payments
-
-### Fee Distribution
-
-Configure how fees are split:
-- 100% to Local Center
-- Split between national and local
-- National collects, distributes to local
-
----
-
-## Troubleshooting
-
-<AccordionGroup>
-  <Accordion title="Stripe not connecting">
-    Check that your browser allows popups. Try a different browser if issues persist.
-  </Accordion>
-
-  <Accordion title="Payments failing">
-    Check Stripe Dashboard for error details. Common issues:
-    - Card declined by bank
-    - 3D Secure authentication failed
-    - Insufficient funds
-  </Accordion>
-
-  <Accordion title="Payouts not arriving">
-    Verify bank details in Stripe Dashboard. Check payout schedule settings.
-  </Accordion>
-
-  <Accordion title="Account restricted">
-    Complete verification in Stripe Dashboard. Respond to any information requests.
-  </Accordion>
-
-  <Accordion title="Webhook errors">
-    Contact Orgo support if webhook events aren't processing correctly.
-  </Accordion>
-</AccordionGroup>
+See [Local Center Fees](/platform/local-group-fees/create-local-fees) for the full setup.
 
 ---
 
 ## Security
 
-Stripe integration follows security best practices:
+| Protection | How it works |
+|-----------|-------------|
+| **PCI compliance** | Card data never touches Orgo's servers — Stripe handles all card processing |
+| **Encryption** | All communication encrypted with TLS |
+| **Tokenization** | Card details stored as secure tokens, not raw numbers |
+| **3D Secure** | Strong customer authentication for EU regulations (SCA/PSD2) |
 
-- **PCI Compliance** - Card data never touches Orgo servers
-- **Encryption** - All communications encrypted with TLS
-- **Tokenization** - Card details stored as secure tokens
-- **3D Secure** - Strong customer authentication supported
+You don't need to worry about payment security compliance — Stripe is a certified PCI Level 1 Service Provider.
+
+---
+
+## Testing before going live
+
+Use Stripe's test mode to verify everything works:
+
+1. Enable test mode in the Stripe Dashboard
+2. Use test card numbers:
+   - `4242 4242 4242 4242` — successful payment
+   - `4000 0000 0000 0002` — card declined
+3. Test subscriptions, refunds, and checkout flows safely
+4. When ready, switch to live mode
+
+<Warning>
+  Never use real card numbers in test mode, and never use test cards in live mode.
+</Warning>
 
 ---
 
 ## Disconnecting Stripe
 
-To disconnect your Stripe account:
-
-1. Go to **Settings** → **Fees** → **Stripe Integration**
-2. Click **Disconnect**
-3. Confirm disconnection
+**Settings** → **Fees** → **Stripe Integration** → **Disconnect**
 
 <Warning>
-Disconnecting will:
-- Stop all payment processing
-- Cancel active subscriptions
-- Remove payment methods
-
-Export any needed data before disconnecting.
+  Disconnecting immediately stops all payment processing, cancels active subscriptions, and removes stored payment methods. Export any needed data before disconnecting. This is not reversible without reconnecting.
 </Warning>
 
 ---
 
-## Best Practices
+## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Complete verification early">
-    Complete Stripe's verification before you need to accept payments.
+  <Accordion title="Stripe connect button doesn't work / popup blocked">
+    Ensure your browser allows popups from stripe.com. Try a different browser. Clear cookies if the redirect loop fails.
   </Accordion>
 
-  <Accordion title="Monitor your dashboard">
-    Regularly check Stripe Dashboard for failed payments and disputes.
+  <Accordion title="Payments are failing for members">
+    Check the Stripe Dashboard → Payments for specific error details. Common causes: card declined by bank, 3D Secure authentication not completed, insufficient funds, expired card.
   </Accordion>
 
-  <Accordion title="Set up notifications">
-    Enable Stripe email notifications for payment events.
+  <Accordion title="Payouts aren't arriving in my bank">
+    Check the Stripe Dashboard → Payouts. Verify bank details are correct. New Stripe accounts have a longer payout delay (7+ days). Check if Stripe has flagged any issues requiring your response.
   </Accordion>
 
-  <Accordion title="Keep bank details current">
-    Update bank details promptly if they change.
+  <Accordion title="Account shows 'Restricted' status">
+    Stripe needs more information from you. Check the Stripe Dashboard for outstanding requirements — usually identity documents, business information, or website URL. Complete them to remove restrictions.
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Related Features
+## Related
 
-- [Products](/platform/fees/products) - Create payment products
-- [Fees](/platform/fees/fees) - Manage payments
-- [Donations](/platform/fees/donations) - Donation campaigns
-- [Local Center Fees](/platform/local-group-fees/create-local-fees) - Multi-account setup
+- [Products](/platform/fees/products) — Creating fee products that use Stripe
+- [Membership Fees](/platform/fees/fees) — Fee collection and management
+- [Donations](/platform/fees/donations) — Fundraising campaigns
+- [Local Center Fees](/platform/local-group-fees/create-local-fees) — Multi-account setup for branches

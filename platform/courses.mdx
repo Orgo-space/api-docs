@@ -1,274 +1,160 @@
 ---
 title: 'Courses & LMS'
-description: 'Create and manage learning experiences for your members'
+description: 'Build online courses for your members — lessons, quizzes, progress tracking, and certificates'
 ---
 
-The Courses module provides a Learning Management System (LMS) for creating educational content. Build courses, track progress, and certify completion with badges.
-
-## How to access
-
-**Menu** → **Courses**
-
-Admin: **Settings** → **Modules** → Enable **Courses**
+The Courses module is a built-in Learning Management System. Create structured learning paths with text, video, and quizzes. Track who's progressing, who's completed, and award badges or certificates automatically.
 
 ---
 
-## Prerequisites
+## Do I need Courses?
 
-- Courses module must be enabled
-- Administrator or trainer access for course creation
+| You want to... | Courses? |
+|----------------|---------|
+| Train new members on organization basics | Yes — onboarding course |
+| Certify members in specific skills | Yes — courses with quizzes and certificates |
+| Offer optional learning for professional development | Yes — open enrollment courses |
+| Ensure everyone completes compliance training | Yes — mandatory enrollment with tracking |
+| Share a few training videos | Maybe — a discussion post or Files section might be simpler |
+| Run in-person-only workshops | No — use [Events](/platform/events) to manage registration and attendance |
 
 ---
 
-## LMS Features
+## Course structure
 
-| Feature | Description |
+A course is organized into **modules** containing **lessons**:
+
+```
+Course: First Aid Basics
+├── Module 1: Introduction
+│   ├── Lesson: What is First Aid?  (text)
+│   ├── Lesson: Legal Considerations  (text)
+│   └── Lesson: Knowledge Check  (quiz)
+├── Module 2: Emergency Response
+│   ├── Lesson: Assessing the Scene  (video)
+│   ├── Lesson: Calling for Help  (text)
+│   └── Lesson: Practical Exercise  (assignment)
+└── Module 3: Final Assessment
+    └── Lesson: Final Quiz  (quiz)
+```
+
+### Lesson types
+
+| Type | What it is | Use for |
+|------|-----------|---------|
+| **Text** | Rich text with images, formatting, links | Explanations, procedures, guidelines |
+| **Video** | YouTube, Vimeo, or uploaded video | Demonstrations, lectures, walkthroughs |
+| **Document** | Downloadable PDF or file | Reference materials, handouts |
+| **Quiz** | Multiple choice, true/false, short answer, matching | Knowledge checks and assessments |
+| **Assignment** | Practical exercise with submission | Hands-on tasks members complete |
+
+---
+
+## Creating a course
+
+**Courses** → **Create Course**
+
+| Setting | What it does |
 |---------|-------------|
-| **Course builder** | Create structured learning paths |
-| **Lessons** | Individual content units |
-| **Progress tracking** | Monitor learner advancement |
-| **Quizzes** | Test knowledge retention |
-| **Certificates** | Award completion badges |
-| **Enrollment** | Manage course access |
+| **Title** | Course name displayed to learners |
+| **Description** | Overview — what they'll learn and why it matters |
+| **Cover image** | Visual for the course catalog |
+| **Duration** | Estimated time to complete |
+| **Difficulty** | Beginner, Intermediate, or Advanced |
+| **Category** | For organizing courses in the catalog |
 
----
-
-## Creating a Course
-
-<Steps>
-  <Step title="Navigate to Courses">
-    Go to **Courses** → **Create Course**.
-  </Step>
-  <Step title="Enter course details">
-    Add title, description, and cover image.
-  </Step>
-  <Step title="Add lessons">
-    Create content modules and lessons.
-  </Step>
-  <Step title="Configure settings">
-    Set enrollment rules and completion criteria.
-  </Step>
-  <Step title="Publish">
-    Make the course available to members.
-  </Step>
-</Steps>
-
----
-
-## Course Settings
-
-<ParamField path="title" type="string" required>
-  Course name displayed to learners.
-</ParamField>
-
-<ParamField path="description" type="richtext">
-  Overview of course content and objectives.
-</ParamField>
-
-<ParamField path="coverImage" type="image">
-  Visual representation of the course.
-</ParamField>
-
-<ParamField path="duration" type="string">
-  Estimated time to complete.
-</ParamField>
-
-<ParamField path="difficulty" type="select">
-  Level: Beginner, Intermediate, Advanced.
-</ParamField>
-
-<ParamField path="category" type="select">
-  Course category for organization.
-</ParamField>
-
----
-
-## Course Structure
-
-### Modules
-
-Organize content into logical sections:
-- Module 1: Introduction
-- Module 2: Core Concepts
-- Module 3: Advanced Topics
-
-### Lessons
-
-Each module contains lessons:
-
-| Lesson Type | Description |
-|-------------|-------------|
-| **Text** | Written content with formatting |
-| **Video** | Embedded video content |
-| **Document** | PDF or downloadable files |
-| **Quiz** | Knowledge assessment |
-| **Assignment** | Practical exercises |
-
----
-
-## Lesson Content
-
-### Text Lessons
-
-Rich text editor with:
-- Headings and formatting
-- Images and media
-- Links and embeds
-- Code blocks
-
-### Video Lessons
-
-Embed videos from:
-- YouTube
-- Vimeo
-- Uploaded files
-
-### Quizzes
-
-Question types:
-- Multiple choice
-- True/False
-- Short answer
-- Matching
+After creating the course, add modules and lessons using the course builder.
 
 ---
 
 ## Enrollment
 
-### Enrollment Options
-
-| Type | Description |
-|------|-------------|
-| **Open** | Anyone can enroll |
-| **Approval** | Requires admin approval |
-| **Invite only** | By invitation |
-| **Automatic** | Based on user type or group |
+| Enrollment type | How it works | Use when |
+|----------------|-------------|----------|
+| **Open** | Anyone can self-enroll | Optional learning, professional development |
+| **Approval required** | Admin approves enrollment requests | Limited spots, selective programs |
+| **Invite only** | Admin enrolls specific members | Mandatory training, targeted programs |
+| **Automatic** | Based on user type or group | Onboarding courses for new members |
 
 ### Prerequisites
 
-Set requirements before enrollment:
-- Complete other courses first
-- Specific user type
-- Group membership
+Require members to complete other courses before enrolling. This creates structured learning paths — e.g., "Level 2" requires completing "Level 1" first.
 
 ---
 
-## Progress Tracking
+## Progress tracking
 
-### Learner Progress
+### What's tracked per learner
 
-Track individual advancement:
-- Lessons completed
-- Quiz scores
-- Time spent
-- Last activity
+| Metric | Description |
+|--------|-------------|
+| **Lessons completed** | Which lessons they've finished |
+| **Quiz scores** | Results from assessments |
+| **Time spent** | How long they've engaged |
+| **Last activity** | When they last accessed the course |
 
-### Completion Criteria
+### Completion criteria
 
-Define what completes a course:
+Define what "complete" means for your course:
+
 - All lessons viewed
-- Minimum quiz score
+- Minimum quiz score achieved (e.g., 80%)
 - Assignments submitted
 
 ---
 
-## Certificates & Badges
-
-### Automatic Awards
+## Certificates and badges
 
 When a learner completes a course:
-1. Completion recorded
-2. Certificate generated (if enabled)
-3. Badge awarded (if linked)
 
-### Certificate Customization
+1. **Completion is recorded** in their profile
+2. **Certificate is generated** (if enabled) — branded with your org name, the course title, learner name, and date
+3. **Badge is awarded** (if linked) — appears on their profile
 
-- Organization branding
-- Course name and date
-- Learner name
-- Digital signature
+Certificates can include your organization's branding and a digital signature.
 
 ---
 
-## Course Analytics
+## Course analytics
 
-### Metrics
-
-| Metric | Description |
-|--------|-------------|
-| **Enrollments** | Total enrolled learners |
-| **Completion rate** | Percentage who finished |
-| **Average score** | Quiz performance |
-| **Time to complete** | Average duration |
-| **Drop-off points** | Where learners stop |
+| Metric | What it tells you |
+|--------|------------------|
+| **Total enrollments** | Interest level in the course |
+| **Completion rate** | Whether learners finish (low = course may be too long or too hard) |
+| **Average quiz score** | Whether content is being understood |
+| **Time to complete** | Whether your duration estimate is accurate |
+| **Drop-off points** | Where learners stop — helps identify problem areas |
 
 ---
 
-## Managing Learners
-
-### Enrollment Management
-
-- View all enrolled members
-- Track individual progress
-- Send reminders
-- Remove enrollments
-
-### Notifications
-
-Automatic notifications for:
-- Course enrollment confirmation
-- Lesson reminders
-- Quiz results
-- Completion congratulations
-
----
-
-## Use Cases
+## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Onboarding training">
-    Create mandatory courses for new members covering organization basics.
+  <Accordion title="How do I make a course mandatory for all new members?">
+    Set enrollment to **Automatic** based on user type. New members are enrolled when they join. Track completion in the analytics view and follow up with members who haven't started.
   </Accordion>
 
-  <Accordion title="Certification programs">
-    Build multi-course paths leading to certifications.
+  <Accordion title="Members start courses but don't finish">
+    Check where they drop off using analytics. Shorten lessons — 5-10 minutes each is ideal. Mix content types (text, video, quiz) to maintain engagement. Send completion reminders.
   </Accordion>
 
-  <Accordion title="Skill development">
-    Offer optional courses for member growth.
+  <Accordion title="Can I reuse a course each year?">
+    Yes. You can reset completions and re-enroll members. Or duplicate the course and update content for the new year.
   </Accordion>
 
-  <Accordion title="Compliance training">
-    Ensure members complete required training with tracking.
+  <Accordion title="How are quizzes graded?">
+    Multiple choice and true/false are auto-graded immediately. Short answer and assignments may need manual review by the course administrator.
+  </Accordion>
+
+  <Accordion title="Can members retake a quiz?">
+    This depends on your quiz settings. You can allow unlimited retakes, set a maximum number, or allow only one attempt.
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Best Practices
+## Related
 
-<AccordionGroup>
-  <Accordion title="Keep lessons focused">
-    Short, focused lessons are more effective than long ones.
-  </Accordion>
-
-  <Accordion title="Mix content types">
-    Combine text, video, and interactive elements.
-  </Accordion>
-
-  <Accordion title="Include assessments">
-    Quizzes reinforce learning and verify understanding.
-  </Accordion>
-
-  <Accordion title="Provide feedback">
-    Give immediate feedback on quiz answers.
-  </Accordion>
-</AccordionGroup>
-
----
-
-## Related Features
-
-- [Badges](/platform/badges) - Award completion badges
-- [Events](/platform/events/index) - In-person training events
-- [Groups](/platform/groups/index) - Course access by group
+- [Badges](/platform/badges) — Award badges for course completion
+- [Events](/platform/events) — For in-person training sessions
+- [Groups](/platform/groups) — Control course access by group membership

@@ -1,274 +1,169 @@
 ---
 title: 'Identity Validation'
-description: 'Verify member identities with document scanning and OCR'
+description: 'Verify member identities with document scanning, OCR, and admin review'
 ---
 
-Identity Validation ensures your members are who they claim to be. Use automated document scanning, OCR data extraction, and manual verification to maintain membership integrity.
+Identity Validation ensures your members are who they say they are. Members upload an ID document, the system extracts data via OCR, and an admin verifies everything matches. Verified members get a badge on their profile.
 
-## How to access
+**When to enable this:**
+- Professional associations that need to verify credentials or qualifications
+- Organizations handling sensitive activities (working with children, financial services)
+
+<img src="/images/platform/users/identity-validation-settings.png" alt="Identity validation module settings" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+- Regulatory requirements for member identification
+- Any situation where you need to confirm someone's real identity
+
+**When you don't need it:**
+- Casual communities, hobby groups, or social clubs where identity verification is overkill
+
+---
+
+## How to enable
 
 **Settings** → **Modules** → **Identity Validation**
 
-Member view: **Profile** → **Identity Documents**
-
----
-
-## Prerequisites
-
-- Identity Validation module must be enabled
-- OCR processing requires AWS Lambda configuration
-- Storage for document uploads (S3)
-
----
-
-## Validation Features
-
-| Feature | Description |
+| Setting | What it does |
 |---------|-------------|
-| **Document upload** | Members upload ID documents |
-| **OCR extraction** | Automatic data reading |
-| **Photo matching** | Compare profile to ID photo |
-| **Manual review** | Admin verification workflow |
-| **Status tracking** | Verification state management |
+| **Require ID validation** | Make identity verification mandatory for all members |
+| **Accepted document types** | Choose which documents you accept: national ID, passport, driver's license, residence permit |
+| **Require selfie** | Members must take a selfie that's compared against their document photo |
+| **Auto-expire reminder** | Days before document expiry to notify the member (e.g., 30 days) |
 
 ---
 
-## How It Works
+## What the member does
 
-```
-1. Member uploads ID document
-   ↓
-2. System extracts data via OCR
-   ↓
-3. Auto-populates profile fields
-   ↓
-4. Admin reviews and verifies
-   ↓
-5. Member marked as verified
-```
+**Path:** Profile → Identity Documents
 
----
+![User-facing identity upload page with document scan option](/images/platform/users/identity-upload.png)
 
-## Document Types
-
-Supported identity documents:
-
-| Document | Fields Extracted |
-|----------|-----------------|
-| **National ID Card** | Name, DOB, ID number, address |
-| **Passport** | Name, DOB, passport number, nationality |
-| **Driver's License** | Name, DOB, license number |
-| **Residence Permit** | Name, DOB, permit number |
-
----
-
-## Member Upload Process
+The member-facing upload page presents a clean form with upload areas for the front and back of their ID document, plus a separate area for a profile photo or selfie. Each upload area shows a drag-and-drop zone or file picker button. Below the uploads, any OCR-extracted data appears in editable form fields (first name, last name, date of birth, document number) so the member can review and correct before submitting.
 
 <Steps>
-  <Step title="Access profile">
-    Member goes to **Profile** → **Identity**.
+  <Step title="Upload document">
+    Member uploads photos of the front and back of their ID document (national ID, passport, or driver's license).
   </Step>
-  <Step title="Upload documents">
-    Upload front and back of ID document.
+  <Step title="Upload profile photo">
+    If a selfie is required, they also upload a current photo for comparison.
   </Step>
-  <Step title="Upload photo">
-    Provide a current profile photo.
+  <Step title="Review OCR data">
+    The system automatically extracts data from the document: name, date of birth, document number, expiry date. The member reviews and corrects any OCR errors.
   </Step>
-  <Step title="Review extracted data">
-    Verify OCR-extracted information is correct.
-  </Step>
-  <Step title="Submit for verification">
-    Send to admin for review.
+  <Step title="Submit">
+    The verification request is sent to the admin queue.
   </Step>
 </Steps>
 
----
+### What OCR extracts
 
-## OCR Data Extraction
+| Field | Source |
+|-------|--------|
+| **First name, Last name** | From the document |
+| **Date of birth** | From the document |
+| **Document number** | ID or passport number |
+| **Expiry date** | Document expiration |
+| **Address** | If present on the document |
 
-### Automatic Fields
-
-The system can extract:
-
-<ParamField path="firstName" type="string">
-  First name from document.
-</ParamField>
-
-<ParamField path="lastName" type="string">
-  Last name from document.
-</ParamField>
-
-<ParamField path="dateOfBirth" type="date">
-  Birth date from document.
-</ParamField>
-
-<ParamField path="documentNumber" type="string">
-  ID/passport number.
-</ParamField>
-
-<ParamField path="expiryDate" type="date">
-  Document expiration date.
-</ParamField>
-
-<ParamField path="address" type="string">
-  Address if present on document.
-</ParamField>
-
-### Manual Correction
-
-If OCR misreads data:
-1. Member reviews extracted data
-2. Corrects any errors
-3. Submits corrected information
+If OCR misreads anything (it's not perfect), the member can correct the values before submitting.
 
 ---
 
-## Admin Verification
+## What the admin does
 
-### Review Queue
+### Review queue
 
-Administrators see pending verifications:
+Admins see pending verifications in their review queue. Each entry shows the member's name, submission date, document type, and status.
 
-| Column | Description |
-|--------|-------------|
-| **Member** | Name and email |
-| **Submitted** | Submission date |
-| **Document type** | Type of ID uploaded |
-| **Status** | Current verification state |
+### Verification process
 
-### Verification Actions
+When reviewing a submission:
 
-| Action | Description |
-|--------|-------------|
-| **Approve** | Mark as verified |
-| **Reject** | Decline with reason |
-| **Request resubmit** | Ask for better documents |
+1. **Check the document** — Is it clear, readable, and appears authentic?
+2. **Compare photos** — Does the profile photo match the document photo?
+3. **Review extracted data** — Does the OCR data match what's visible on the document?
+4. **Take action:**
 
----
+| Action | When to use |
+|--------|------------|
+| **Approve** | Document is valid, photos match, data is correct. Member gets a verified badge. |
+| **Reject** | Document is invalid, expired, or photos don't match. Provide a reason — the member can resubmit. |
+| **Request resubmit** | Images are blurry or partially obscured. Asks for better quality without rejecting outright. |
 
-## Verification Status
+### Verification statuses
 
-| Status | Description |
-|--------|-------------|
-| **Not submitted** | No documents uploaded |
-| **Pending** | Awaiting review |
-| **Verified** | Identity confirmed |
-| **Rejected** | Verification failed |
-| **Expired** | Document has expired |
+| Status | What it means |
+|--------|--------------|
+| **Not submitted** | Member hasn't uploaded documents yet |
+| **Pending** | Submitted, awaiting admin review |
+| **Verified** | Identity confirmed — badge displayed on profile |
+| **Rejected** | Verification failed — member can resubmit |
+| **Expired** | Document has passed its expiry date — member needs to resubmit |
 
 ---
 
-## Photo Comparison
+## Combining with adhesion
 
-### Profile Photo Requirements
+For maximum vetting, combine identity validation with [Adhesion](/platform/users/adhesion):
 
-- Clear, front-facing photo
-- Recent (within 6 months)
-- Good lighting
-- No filters or heavy editing
-
-### Matching Process
-
-Administrators compare:
-1. Profile photo
-2. Photo on ID document
-3. Selfie (if required)
+1. Applicant submits a membership application (adhesion)
+2. As part of the application, they upload identity documents
+3. OCR pre-fills form fields from the document data
+4. Admin verifies identity as part of the application review
+5. Approval confirms both the application and the identity
 
 ---
 
-## Document Requirements
+## Document expiry management
 
-### Quality Standards
-
-- High resolution scan or photo
-- All corners visible
-- No glare or shadows
-- Text clearly readable
-
-### Security Features
-
-System checks for:
-- Document authenticity indicators
-- Expiration dates
-- Tampering signs
+When you set an **auto-expire reminder** (e.g., 30 days), the system:
+- Tracks document expiry dates
+- Sends reminders to members before expiry
+- Changes status to **Expired** when the document expires
+- The member must upload a new document to regain verified status
 
 ---
 
-## Integration with Adhesion
+## Privacy and security
 
-Identity validation can be required during membership application:
-
-1. Applicant submits adhesion
-2. Uploads identity documents
-3. OCR pre-fills form data
-4. Admin verifies before approval
+- Uploaded documents are encrypted at rest
+- Access is restricted to administrators only
+- You can configure retention policies (delete after verification, keep for X months/years, or manual deletion only)
+- Members can delete their own documents from their profile
 
 ---
 
-## Privacy & Security
-
-### Data Protection
-
-- Documents encrypted at rest
-- Access restricted to admins
-- Automatic deletion options
-- GDPR compliance tools
-
-### Retention Policy
-
-Configure how long to keep documents:
-- Delete after verification
-- Keep for X months/years
-- Manual deletion only
-
----
-
-## Configuration
-
-### Module Settings
-
-<ParamField path="requireIdValidation" type="boolean">
-  Make identity validation mandatory.
-</ParamField>
-
-<ParamField path="documentTypes" type="array">
-  Accepted document types.
-</ParamField>
-
-<ParamField path="requireSelfie" type="boolean">
-  Require selfie for comparison.
-</ParamField>
-
-<ParamField path="autoExpireReminder" type="number">
-  Days before expiry to notify.
-</ParamField>
-
----
-
-## Best Practices
+## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Set clear requirements">
-    Communicate what documents are accepted and quality needed.
+  <Accordion title="A member's verification was rejected — what should I tell them?">
+    When rejecting, provide a clear reason: "Document expired", "Photo doesn't match profile", "Image too blurry to read". The member receives a notification with your reason and can resubmit. Specific feedback prevents repeated failures.
   </Accordion>
 
-  <Accordion title="Process promptly">
-    Review verifications quickly to avoid member frustration.
+  <Accordion title="OCR extracted the wrong name from a document">
+    OCR isn't perfect, especially with non-Latin scripts or damaged documents. The member can correct OCR errors before submitting. If they missed an error, reject with "Name doesn't match document" and ask them to resubmit with corrected data.
   </Accordion>
 
-  <Accordion title="Handle rejections professionally">
-    Provide clear reasons and guidance for resubmission.
+  <Accordion title="Should I require selfies?">
+    Require selfies if you need to verify that the person uploading the document is actually the person on the document. Skip it for lower-stakes verification where the document itself is sufficient (e.g., confirming they have a valid professional license, regardless of who uploaded it).
   </Accordion>
 
-  <Accordion title="Monitor expirations">
-    Set up reminders for expiring documents.
+  <Accordion title="A member's document expired — do they lose access?">
+    That depends on your configuration. If identity validation is mandatory, an expired document may restrict their access until they resubmit. If it's optional, expiry just removes the verified badge but doesn't affect access.
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Related Features
+## Technical requirements
 
-- [Adhesion](/platform/users/adhesion) - Membership applications
-- [Profile Fields](/platform/users/profile-fields) - User data
-- [Privacy Settings](/platform/users/privacy-settings) - Data protection
+- **OCR processing:** Requires AWS Lambda configuration
+- **Document storage:** AWS S3 for uploaded files
+- Both are part of the standard Orgo cloud setup — no additional services needed.
+
+---
+
+## Related
+
+- [Adhesion](/platform/users/adhesion) — Combine identity verification with membership applications
+- [Profile Fields](/platform/users/profile-fields) — Additional member data
+- [Privacy Settings](/platform/users/privacy-settings) — Data visibility controls

@@ -1,60 +1,123 @@
 ---
-title: 'Organisation Settings'
-description: 'Configure your organization identity, branding, and platform modules'
+title: 'Organization Settings'
+description: 'Your workspace identity, branding, forms, and emails — all in one place.'
 ---
 
-The Organisation section is your starting point for setting up Orgo. Here you define your organization's identity, visual branding, and which platform features are available to your members.
+Everything that makes your Orgo workspace *yours* lives in Settings. Your organization's name, logos, registration forms, email templates — it's all here.
 
-## What you can configure
+<Note>
+  Requires **Tenant Admin** permissions. Don't see the gear icon? Ask your admin.
+</Note>
 
-<CardGroup cols={3}>
-  <Card title="Organisation Info" icon="building" href="/platform/organisation/organisation-info">
-    Set your organization name, contact details, location, currency, and legal information
+## The Settings page
+
+Open **Settings** from the gear icon in the sidebar. Four sections, each with a clear purpose:
+
+![Settings page showing the sidebar with ORGANIZATION, MODULES, CUSTOMIZATION, and DEVELOPERS sections alongside the module configuration area](/images/platform/organisation/settings-full-page.png)
+
+<CardGroup cols={2}>
+  <Card title="Organization" icon="building">
+    Your profile info and branding
   </Card>
-  <Card title="Branding" icon="palette" href="/platform/organisation/branding">
-    Upload logos for light and dark themes, and customize the login page background
+  <Card title="Modules" icon="puzzle-piece" href="/platform/organisation/modules">
+    Enable features and configure how they behave
   </Card>
-  <Card title="Modules" icon="grid-2" href="/platform/organisation/modules">
-    Enable or disable platform features like Events, Payments, Discussions, and more
+  <Card title="Customization" icon="paintbrush" href="/platform/customization">
+    Workflows, templates, languages, menu layout
+  </Card>
+  <Card title="Developers" icon="code">
+    API tokens, OAuth apps, webhooks
   </Card>
 </CardGroup>
 
-## Getting started
+---
 
-When you first create your Orgo workspace, we recommend completing these steps in order:
+## What's in Organization
 
-<Steps>
-  <Step title="Set Organisation Info">
-    Add your organization name, country, timezone, and contact details. This information appears across the platform and in communications with members.
-  </Step>
-  <Step title="Upload your logos">
-    Add your organization logo in both light and dark versions. A square icon version is also recommended for mobile apps and favicons.
-  </Step>
-  <Step title="Configure modules">
-    Review the available modules and enable only the features your organization needs. You can always enable more modules later.
-  </Step>
-  <Step title="Invite your first members">
-    Once your basic setup is complete, start inviting administrators and members to join your workspace.
-  </Step>
-</Steps>
+<CardGroup cols={2}>
+  <Card title="Organization Info" icon="id-card" href="/platform/organisation/organisation-info">
+    Name, country, contact details, legal info, currency, social links — the identity that appears on invoices, emails, and registration pages.
+  </Card>
+  <Card title="Branding" icon="palette" href="/platform/organisation/branding">
+    Logos (light, dark, squared, icon) and login background image. Make the platform look like yours.
+  </Card>
+</CardGroup>
 
-## Quick tips
+### Quick look at the profile
 
-<Tip>
-  Keep your organisation info up to date. Changes to your organization name and logo will be reflected across the entire platform, including emails sent to members.
-</Tip>
+![Basic details card showing organization name, country, timezone, and language](/images/platform/organisation/org-info-basic-details.png)
+
+The form is split into cards — basic info, contact, legal URLs, social media, financials. Fill in what applies, skip what doesn't, hit **Save**.
+
+### Quick look at branding
+
+![Logo upload grid with light theme, dark theme, squared, and icon variants](/images/platform/organisation/branding-logo-grid.png)
+
+Four logo slots, one background URL. The result:
+
+![Branded login page with custom background and logo](/images/platform/organisation/branding-login-page.png)
+
+---
+
+## Forms
+
+Forms are configured inside the **Users & Profiles** module. Three form types, same drag-and-drop builder:
+
+<CardGroup cols={3}>
+  <Card title="Registration Form" icon="user-plus">
+    What new members fill in when they sign up
+  </Card>
+  <Card title="Profile Form" icon="address-card">
+    What appears on a member's profile after registration
+  </Card>
+  <Card title="Adhesion Form" icon="file-signature">
+    A separate application form for prospective members
+  </Card>
+</CardGroup>
+
+**Settings → Modules → Users & Profiles → Registration Form**
+
+![Registration form builder with available fields on the left and form layout on the right](/images/platform/organisation/registration-form-fields.png)
+
+Drag fields from the left panel into your form on the right. Mark which ones are required. Reorder however you like.
+
+- **Email** is always included — can't remove it
+- Switch between **System Fields** and **Custom Fields** tabs
+- Add a title and intro text in **Form Settings** below the fields
+- Click **Iframe** to get an embeddable link for your website
 
 <Note>
-  Only users with the **Admin Tenant** role can access Organisation settings. Make sure you have the appropriate permissions before trying to access these pages.
+  File upload fields only appear on the profile form — they require authentication, so they're excluded from registration.
 </Note>
 
-## Navigation
+---
 
-In the Orgo platform, you can access Organisation settings from:
+## Email templates
 
-**Settings menu** (gear icon) → **Organisation**
+**Settings → Modules → Emails & Notifications → Templates**
 
-From there, you'll find:
-- Info Organisatie
-- Branding
-- Module
+Every automated email — welcome messages, event reminders, payment receipts — has a customizable template, organized by category.
+
+![Email templates page with category sidebar and template cards](/images/platform/organisation/email-templates-grid.png)
+
+Click any card to open the editor. Yellow **Disabled** tag = that email won't be sent until you enable it.
+
+<Tip>
+  Missing a category? It means the related module isn't active. Enable it under **Modules** and the category appears.
+</Tip>
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="I can't see Organization Settings">
+    You need the **Tenant Admin** role. Ask your organization's admin to grant it.
+  </Accordion>
+  <Accordion title="Some email template categories are missing">
+    Categories are tied to active modules. Enable the module, come back — the category appears.
+  </Accordion>
+  <Accordion title="Required profile fields aren't prompting members">
+    The prompt triggers after login, not during registration. Check both the **visible** and **required** columns on the Profile Form page.
+  </Accordion>
+</AccordionGroup>

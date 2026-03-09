@@ -1,276 +1,137 @@
 ---
 title: 'Local Center Fees'
-description: 'Set up fee collection for local centers and chapters'
+description: 'Collect branch-level membership fees with separate Stripe accounts'
 ---
 
-Local Centers can collect their own membership fees separate from the national organization. Each center can connect their own Stripe account and manage local payments.
+Local Centers can collect their own membership fees independently from the national organization. Each center connects its own Stripe account, sets its own pricing, and receives payments directly into its own bank account. National admins can still see all payments across all centers.
 
-## How to access
+<img src="/images/platform/fees/products-list.png" alt="Fee products list for local center fees" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-**Local Center** → **Settings** → **Fee Settings**
+---
 
-Or: **Sidebar** → **Resources** → **Local Group Settings**
+## When to use Local Center fees
+
+| Your situation | Recommendation |
+|---------------|----------------|
+| Each branch charges its own membership fee in addition to national dues | Set up local fee products per center |
+| Local branches are financially independent | Each center needs its own Stripe account |
+| National org collects everything and distributes | Don't use local fees — use one national product and distribute manually |
+| Fees are the same everywhere, only collected nationally | Don't use local fees |
 
 ---
 
 ## Prerequisites
 
-1. **Local Centers enabled**: Your organization must have Local Centers module active
-2. **Be a Local Center admin**: You need local admin permissions
-3. **Stripe account**: Create a Stripe account for the Local Center
+1. **[Local Centers](/platform/groups/local-groups) enabled** — you need geographic branches set up
+2. **Local admin permissions** — the person setting this up needs ADMIN_LOCAL or FINANCIAL_LOCAL
+3. **Stripe account for the center** — separate from the national Stripe account
 
 ---
 
-## Setting Up Local Center Payments
+## Setting up local fee collection
 
 <Steps>
-  <Step title="Navigate to Local Group Settings">
-    Go to **Sidebar** → **Resources** → **Local Group Settings**.
+  <Step title="Go to Local Group Settings">
+    **Sidebar** → **Resources** → **Local Group Settings** (as a local admin).
   </Step>
-  <Step title="Connect Stripe Account">
-    Click **Connect Stripe** and complete the Stripe onboarding flow.
+  <Step title="Connect the center's Stripe account">
+    Click **Connect with Stripe**. Log in to (or create) a Stripe account for this center. Complete identity verification. Return to Orgo.
   </Step>
-  <Step title="Create Fee Product">
-    Go to **Fee Settings** and create a membership product.
+  <Step title="Create a fee product">
+    In **Fee Settings**, create a fee product for the center (e.g., "Berlin Chapter Membership 2026").
   </Step>
-  <Step title="Configure Pricing">
-    Add price tiers for different membership levels.
+  <Step title="Add price tiers">
+    Open the product → **Prices** tab → add tiers for different membership levels:
+    - Student — €25/year
+    - Regular — €50/year
+    - Family — €75/year
   </Step>
-  <Step title="Set Default Tier">
-    Select the default membership tier for your center.
+  <Step title="Set the default">
+    Select the product and default price tier in **Fee Settings**. This is what new members see when registering for this center.
   </Step>
 </Steps>
 
 ---
 
-## Connecting Local Center Stripe
+## How payments flow
 
-### Step 1: Access Local Group Settings
+When a member pays their local fee:
 
-Navigate to your Local Center's settings page.
+1. Member selects the local membership product
+2. Payment is processed through the **Local Center's Stripe account** (not national)
+3. Funds are deposited to the **Local Center's bank account**
+4. Payment is recorded in both the local and national systems
 
-### Step 2: Connect with Stripe
-
-1. Find the **Stripe Integration** section
-2. Click **Connect with Stripe**
-3. Log in or create a Stripe account
-4. Complete identity verification
-5. Return to Orgo
-
-### Step 3: Verify Connection
-
-After connecting:
-- Status shows "Connected"
-- Stripe account ID displayed
-- Ready to accept payments
+National admins can view all payments across all centers from the main Fees dashboard using the Local Center filter.
 
 ---
 
-## Creating Local Fee Products
+## Fee distribution models
 
-### Step 1: Navigate to Fee Settings
+| Model | How it works | Best for |
+|-------|-------------|----------|
+| **100% local** | All payment goes to the Local Center's account | Financially independent branches |
+| **Split** | Automatic division — e.g., 70% local, 30% national — via Stripe Connect | Federated organizations sharing costs |
+| **National collects** | National org receives all payments, distributes to centers manually | Centrally managed finances |
 
-In Local Group Settings, find **Fee Settings** section.
-
-### Step 2: Create Product
-
-1. Click **Create Product**
-2. Enter product name (e.g., "Local Center Membership 2024")
-3. Add description
-4. Set type as "Fee"
-5. Save
-
-### Step 3: Add Price Tiers
-
-Create pricing options:
-
-1. Open the product
-2. Go to **Prices** tab
-3. Click **Add Price**
-4. Enter:
-   - Tier name
-   - Amount
-   - Currency
-5. Save
-
-Example tiers:
-- Student - €25/year
-- Regular - €50/year
-- Family - €75/year
+The split model is configured at the national level and happens automatically through Stripe Connect.
 
 ---
 
-## Configuring Default Membership
+## Bank details for manual payments
 
-Set which product and tier is used by default:
+For members who pay by bank transfer:
 
-1. Go to **Local Group Settings** → **Fee Settings**
-2. Under **Default Fee Product**, select your fee product
-3. Under **Default Price Tier**, select the default tier
-4. Save changes
+| Setting | What it does |
+|---------|-------------|
+| **IBAN (local currency)** | Bank account for local currency transfers |
+| **IBAN (EUR)** | Separate account for EUR transfers (if different) |
 
-New members registering to your Local Center will see these defaults.
-
----
-
-## Local Fee Settings
-
-### Product Settings
-
-<ParamField path="feeProduct" type="relation">
-  The fee product used for local membership.
-</ParamField>
-
-<ParamField path="feeDefaultProductPrice" type="relation">
-  Default price tier for new members.
-</ParamField>
-
-### Payment Settings
-
-<ParamField path="isOnlinePaymentFeeEligible" type="boolean">
-  Allow members to pay fees online via Stripe.
-</ParamField>
-
-<ParamField path="stripeAccount" type="string">
-  Connected Stripe account ID.
-</ParamField>
-
-<ParamField path="isStripeEligible" type="boolean">
-  Whether this center is approved for Stripe payments.
-</ParamField>
+These details can be displayed on invoices and payment pages so members know where to send transfers.
 
 ---
 
-## Payment Flow
+## Viewing and managing payments
 
-When a member pays local fees:
-
-1. Member selects Local Center membership
-2. Payment processed through Local Center's Stripe
-3. Funds deposited to Local Center's bank account
-4. Payment recorded in both local and national systems
-
----
-
-## Viewing Local Payments
-
-### For Local Admins
+### As a Local Admin
 
 **Local Center** → **Fees** → **Payments**
 
-View:
-- All payments to this center
-- Payment status
-- Member details
-- Amount and date
+See all payments made to your center — filter by status, member, date, amount. Send reminders to unpaid members. Export for local accounting.
 
-### For National Admins
+### As a National Admin
 
-National admins can view all Local Center payments from the main Fees dashboard with Local Center filter.
+**Fees** → **Payments** → filter by **Local Center**
+
+See all payments across all centers. Compare collection rates between branches. Export organization-wide financial reports.
 
 ---
 
-## Bank Account Details
-
-Configure bank details for manual payments:
-
-<ParamField path="bankIbanNative" type="string">
-  IBAN for local currency payments.
-</ParamField>
-
-<ParamField path="bankIbanEur" type="string">
-  IBAN for EUR payments (if different).
-</ParamField>
-
-Display these on invoices and for members who prefer bank transfer.
-
----
-
-## Fee Distribution
-
-### 100% Local
-
-Most common: All payment goes to Local Center.
-
-### Split with National
-
-Some organizations split fees:
-- e.g., 70% local, 30% national
-- Configured at national level
-- Automatic distribution via Stripe Connect
-
-### National Collects
-
-Alternative: National collects all fees, distributes to locals manually.
-
----
-
-## Reporting
-
-### Local Reports
-
-Generate reports for your Local Center:
-- Total collected
-- By period
-- By member
-- Outstanding fees
-
-### Export
-
-Export payment data for:
-- Local accounting
-- Bank reconciliation
-- Member records
-
----
-
-## Troubleshooting
+## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Can't connect Stripe">
-    Ensure you have local admin permissions. Try a different browser if popup is blocked.
+  <Accordion title="Can one member pay both national and local fees?">
+    Yes. National and local fee products are independent. A member might pay $100/year national + €50/year local. Each payment goes to the respective Stripe account.
   </Accordion>
 
-  <Accordion title="Product not showing for members">
-    Check that the product is not archived and is set as the default fee product.
+  <Accordion title="All our branches charge the same fee — do I need separate products?">
+    You can either create one product at the national level with a Local Center option (members choose their branch at checkout), or create identical products per center. The first approach is simpler; the second gives branches more autonomy.
   </Accordion>
 
-  <Accordion title="Payments not arriving">
-    Verify Stripe account status. Check payout schedule in Stripe Dashboard.
+  <Accordion title="A branch can't set up Stripe — they don't have a bank account">
+    The national organization can collect on their behalf. Don't connect a local Stripe account — instead, use the national fee product and track which center the payment is for. Distribute funds to the branch manually.
   </Accordion>
 
-  <Accordion title="Members seeing wrong center">
-    Ensure members are properly assigned to your Local Center.
+  <Accordion title="The fee product isn't showing for members of my center">
+    Check that: (1) the product isn't archived, (2) it's set as the default fee product in Local Group Settings, (3) the member is actually assigned to your Local Center.
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Best Practices
+## Related
 
-<AccordionGroup>
-  <Accordion title="Complete Stripe setup early">
-    Connect and verify Stripe before you need to collect fees.
-  </Accordion>
-
-  <Accordion title="Clear product naming">
-    Include year and center name in product titles.
-  </Accordion>
-
-  <Accordion title="Match national tiers">
-    If applicable, align local tiers with national membership structure.
-  </Accordion>
-
-  <Accordion title="Regular reconciliation">
-    Regularly reconcile Orgo records with your bank statements.
-  </Accordion>
-</AccordionGroup>
-
----
-
-## Related Features
-
-- [Local Centers](/platform/groups/local-groups) - Local Center management
-- [Stripe Integration](/platform/fees/stripe-integration) - Payment setup
-- [Products](/platform/fees/products) - Product configuration
-- [Fees](/platform/fees/fees) - Fee management
+- [Local Centers](/platform/groups/local-groups) — Setting up geographic branches
+- [Products](/platform/fees/products) — Creating fee products and price tiers
+- [Stripe Integration](/platform/fees/stripe-integration) — Connecting payment processing
+- [Membership Fees](/platform/fees/fees) — National fee collection and management

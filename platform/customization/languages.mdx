@@ -1,37 +1,31 @@
 ---
 title: 'Languages'
-description: 'Configure multi-language support for your organization'
+description: 'Enable multiple languages so members use Orgo in their preferred language'
 ---
 
-Orgo supports multiple languages, allowing members to use the platform in their preferred language. Configure available languages and manage translations.
+Orgo's interface is available in multiple languages. You choose which languages are available, set a default, and members pick their preference. The entire interface — menus, buttons, labels, system messages — switches to their language.
 
-## How to access
+---
+
+## Setting up languages
 
 **Settings** → **Customization** → **Languages**
 
----
-
-## Prerequisites
-
-- Administrator access required
-- Languages module must be enabled
-
----
-
-## Language Features
-
-| Feature | Description |
-|---------|-------------|
-| **Multiple languages** | Support for various languages |
-| **Default language** | Organization's primary language |
-| **Member preference** | Users choose their language |
-| **Content translation** | Translate custom content |
+<Steps>
+  <Step title="Choose available languages">
+    Enable the languages your members need from the supported list.
+  </Step>
+  <Step title="Set the default">
+    Choose the primary language for your organization. New members see this until they change their preference.
+  </Step>
+  <Step title="Show the language switcher">
+    Enable the language selector in the interface so members can switch easily.
+  </Step>
+</Steps>
 
 ---
 
-## Available Languages
-
-Orgo supports:
+## Supported languages
 
 | Language | Code |
 |----------|------|
@@ -43,99 +37,57 @@ Orgo supports:
 | Italian | it |
 | Portuguese | pt |
 
----
-
-## Configuring Languages
-
-### Enable Languages
-
-<Steps>
-  <Step title="Navigate to Languages">
-    Go to **Settings** → **Customization** → **Languages**.
-  </Step>
-  <Step title="Select languages">
-    Enable the languages your organization needs.
-  </Step>
-  <Step title="Set default">
-    Choose the primary language for your organization.
-  </Step>
-  <Step title="Save">
-    Save your language configuration.
-  </Step>
-</Steps>
-
-### Language Settings
-
-<ParamField path="defaultLanguage" type="select" required>
-  The primary language for new members and fallback.
-</ParamField>
-
-<ParamField path="enabledLanguages" type="array">
-  Languages available for members to select.
-</ParamField>
-
-<ParamField path="showLanguageSwitcher" type="boolean">
-  Display language selector in the interface.
-</ParamField>
+The platform interface (menus, buttons, system messages) is fully translated in all supported languages. User-generated content (discussion posts, event descriptions) stays in the language it was written in.
 
 ---
 
-## Member Language Selection
+## How members choose their language
 
-### How Members Change Language
+Members can change their language from their profile menu. The interface updates immediately — no logout required.
 
-1. Click profile menu
-2. Select **Language** or **Settings**
-3. Choose preferred language
-4. Interface updates immediately
-
-### Automatic Detection
-
-Optionally detect language from:
-- Browser settings
-- Previous selection
-- Geographic location
+For first-time visitors, the system can automatically detect language from:
+- Browser language settings
+- Previous selection (if they've visited before)
 
 ---
 
-## Content Translation
+## What gets translated
 
-### System Interface
-
-The platform interface is translated in all supported languages.
-
-### Custom Content
-
-For organization-specific content:
-
-| Content Type | Translation |
-|--------------|-------------|
-| **Labels** | Use Labels tool |
-| **Emails** | Create per-language versions |
-| **Pages** | Duplicate for each language |
-| **Forms** | Field labels can be translated |
+| Content | Translated? |
+|---------|------------|
+| **Platform interface** (menus, buttons, labels, forms) | Yes — fully translated |
+| **System emails** (notifications, confirmations) | Yes — sent in the member's language |
+| **User-generated content** (posts, events, files) | No — stays in the original language |
+| **Custom labels** (your terminology overrides) | Per-language — you provide translations |
+| **Welcome message** | You write separate versions per language |
 
 ---
 
-## Best Practices
+## Multi-language labels
+
+If you've customized labels (e.g., "Members" → "Scouts"), you need to provide translations for each enabled language. See [Labels](/platform/customization/labels) for details.
+
+---
+
+## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Limit languages">
-    Enable only languages your members actually need.
+  <Accordion title="Our organization operates in two languages (e.g., French and German)">
+    Enable both languages and set the one with more members as default. Members choose their preference. System emails go out in each member's chosen language. For user content, you may need to post in both languages or use one common language.
   </Accordion>
 
-  <Accordion title="Translate key content">
-    Prioritize translating welcome messages and important announcements.
+  <Accordion title="Should I enable all supported languages?">
+    Only enable languages your members actually speak. Extra languages just clutter the language picker. You can always add more later.
   </Accordion>
 
-  <Accordion title="Set appropriate default">
-    Choose the language most members understand.
+  <Accordion title="A member sees the wrong language">
+    They can change it from their profile menu. If new members consistently get the wrong default, check that your default language setting is correct.
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Related Features
+## Related
 
-- [Labels](/platform/customization/labels) - Custom text translations
-- [Branding](/platform/organisation/branding) - Visual customization
+- [Labels](/platform/customization/labels) — Custom terminology with per-language translations
+- [Branding](/platform/organisation/branding) — Visual customization

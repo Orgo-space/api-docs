@@ -1,116 +1,103 @@
 ---
 title: 'Public Event Page'
-description: 'Customize how your events appear to the public and share them online'
+description: 'Shareable, branded event pages for promoting events outside your organization'
 ---
 
-Every event in Orgo can have a public page - a shareable link that anyone can access to view event details and register, even without an Orgo account.
+Every event in Orgo can have a public page — a standalone, branded URL that anyone can access without an Orgo account. Share it on social media, embed it on your website, or include it in email campaigns. Visitors see the event details and can register or buy tickets directly.
 
-## How to access
-
-**Event** → **Public URL** button
-
-Or construct the URL: `https://app.orgo.space/public/event/{event-uuid}`
+<img src="/images/platform/events/event-public-page.png" alt="Public event page showing event title, date, location, ticket types with prices and quantity selectors, Continue button, and event description" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## What's on the Public Page
+## How it works
 
-The public event page displays:
+When you create a **public** event, it gets a URL:
 
-- **Hero image** - Event cover photo
-- **Event title and description**
-- **Date and time** - With timezone
-- **Location** - Address or online link
-- **Organizer info** - Group/organization name
-- **Registration form** - If ticketing is enabled
-- **Ticket options** - Available tickets with prices
+```
+https://app.orgo.space/public/event/{event-uuid}
+```
 
----
-
-## Customization Options
-
-When editing an event, access page settings to customize appearance:
-
-### Visual Settings
-
-<ParamField path="settings.tenantLogo" type="boolean" default="true">
-  Show your organization's logo on the event page.
-</ParamField>
-
-<ParamField path="settings.showTitle" type="boolean" default="true">
-  Display the event title prominently.
-</ParamField>
-
-<ParamField path="settings.heroRadius" type="select">
-  Border radius for the hero image:
-  - None (square corners)
-  - Small
-  - Medium
-  - Large (rounded)
-</ParamField>
-
-<ParamField path="settings.colorSelection" type="color">
-  Accent color for the page. Affects buttons, links, and highlights.
-</ParamField>
-
-<ParamField path="settings.colorButton" type="color">
-  Specific color for the registration/purchase button.
-</ParamField>
-
-<ParamField path="settings.lightThemeOnly" type="boolean">
-  Force light theme on the public page, ignoring visitor's dark mode preference.
-</ParamField>
-
-### Registration Form Fields
-
-Choose which fields to collect from registrants:
-
-| Field | Description |
-|-------|-------------|
-| **Name** | Full name (usually required) |
-| **Email** | Contact email (usually required) |
-| **Phone** | Phone number |
-| **Organisation** | Company/organization |
-| **Role** | Job title |
-| **Town** | City/location |
-| **LinkedIn** | LinkedIn profile URL |
-| **X (Twitter)** | X handle |
-| **Instagram** | Instagram handle |
-
-### Registration Behavior
-
-<ParamField path="settings.disableSubscribe" type="boolean">
-  Hide the "Subscribe to newsletter" checkbox from the form.
-</ParamField>
-
-<ParamField path="settings.disableRegister" type="boolean">
-  Disable registration completely. Shows event info only (no form).
-</ParamField>
-
-<ParamField path="settings.isThankYouSingular" type="boolean">
-  Use singular thank-you message ("Thank you" vs "Thank you all").
-</ParamField>
+This page is:
+- Accessible without login
+- Mobile-friendly and responsive
+- Optimized for social sharing (Open Graph tags for Facebook, X, LinkedIn)
+- Brandable with your colors and logo
 
 ---
 
-## Sharing the Event
+## What the page shows
 
-### Getting the Public URL
+| Section | Content |
+|---------|---------|
+| **Hero image** | Your event's cover photo — full-width at the top |
+| **Title and dates** | Event name, start/end times with timezone |
+| **Location** | Physical address and/or online meeting link |
+| **Description** | Full rich text description |
+| **Organizer** | Your organization name and logo |
+| **Tickets** | Available ticket types with prices (if ticketing enabled) |
+| **Registration form** | Name, email, and any custom fields you've configured |
 
-1. Open the event
-2. Click **Public URL** button
-3. Copy the link
+---
 
-### Where to Share
+## Customizing the appearance
 
-- **Social media** - Facebook, LinkedIn, X/Twitter, Instagram
-- **Email campaigns** - Include in newsletters
-- **Website** - Link from your organization's website
-- **QR codes** - Generate QR codes for posters/flyers
+When editing an event, access the page settings to match your brand:
 
-### Embedding Events
+| Setting | What it controls |
+|---------|-----------------|
+| **Organization logo** | Show/hide your logo at the top of the page |
+| **Show title** | Display the event title over the hero image |
+| **Hero image corners** | Square, slightly rounded, or fully rounded corners |
+| **Accent color** | Buttons, links, and highlights throughout the page |
+| **Button color** | The register/purchase button specifically |
+| **Light theme only** | Force light theme even if the visitor uses dark mode — useful for maintaining consistent branding |
 
-You can embed the registration form on external websites:
+---
+
+## Registration form customization
+
+Choose which fields to show on the registration form:
+
+| Field | Show when |
+|-------|----------|
+| **Name** | Always (usually required) |
+| **Email** | Always (usually required) |
+| **Phone** | You need to call or text attendees |
+| **Organisation** | Attendees come from different companies |
+| **Role/Title** | Professional networking events |
+| **Town** | You want to know where attendees are coming from |
+| **LinkedIn / X / Instagram** | Networking events where social profiles matter |
+
+Additional form controls:
+
+| Setting | What it does |
+|---------|-------------|
+| **Hide newsletter checkbox** | Removes the "subscribe to updates" checkbox — use if you don't want to grow your mailing list from event registrations |
+| **Disable registration** | Shows event info only, no form — use for past events or announcements |
+
+<Tip>
+  Keep forms short. Every additional field reduces registrations. Only ask for what you'll actually use — you can always collect more at check-in.
+</Tip>
+
+---
+
+## Sharing the event
+
+### Social media
+
+Copy the public URL and share it on Facebook, LinkedIn, X, Instagram, etc. The page includes Open Graph meta tags, so platforms show a preview with:
+- Event title
+- Description preview
+- Hero image
+- Event date
+
+### Email campaigns
+
+Include the public URL in your newsletters or marketing emails. The link goes directly to the event page with registration.
+
+### Website embedding
+
+Embed the registration form on your own website:
 
 ```html
 <iframe
@@ -121,82 +108,51 @@ You can embed the registration form on external websites:
 </iframe>
 ```
 
----
+This shows the event page within your site — visitors don't leave your domain to register.
 
-## Public vs Members-Only
+### QR codes
 
-### Public Events
+Generate a QR code from the public URL for posters, flyers, and printed materials. Any QR code generator works — just paste the URL.
 
-- Accessible to anyone with the link
-- No login required to view
-- Can register as guest
-- Appears in public event listings (if enabled)
-
-### Members-Only Events
-
-- Requires login to view full details
-- Public page may show limited info
-- Registration requires membership
-- Can still have a public URL (redirects to login)
+Once someone registers (and pays, if ticketed), they see a unique QR code on the event page that serves as their ticket. See [QR code check-in](/platform/events/ticketing#qr-code-check-in) for details.
 
 ---
 
-## SEO and Social Sharing
+## Public vs. members-only
 
-Public event pages are optimized for sharing:
+| Setting | Who can see | Registration |
+|---------|-----------|-------------|
+| **Public** | Anyone with the link | Guest checkout — no account needed |
+| **Members-only** | Only logged-in members | Redirects to login, then shows event details |
 
-### Open Graph Tags
-
-When shared on social media, your event shows:
-- Event title
-- Description preview
-- Hero image
-- Event date
-
-### Search Engines
-
-Public events can be indexed by search engines (Google, Bing) based on your settings.
+Members-only events still have a URL, but it redirects non-members to the login page. Useful for internal events where you want a shareable link within the organization but not publicly.
 
 ---
 
-## Mobile Experience
-
-Public event pages are fully responsive:
-- Adapts to any screen size
-- Easy registration on mobile
-- Touch-friendly ticket selection
-- Mobile payment support (Apple Pay, Google Pay)
-
----
-
-## Best Practices
+## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Use compelling hero images">
-    The hero image is the first thing visitors see. Use high-quality, relevant images.
+  <Accordion title="I shared the link but the social media preview looks wrong">
+    Make sure your event has a hero image and description — those feed the Open Graph tags. If you updated them recently, social platforms may have cached the old preview. Use Facebook's Sharing Debugger or X's Card Validator to force a refresh.
   </Accordion>
 
-  <Accordion title="Write clear descriptions">
-    Include: what, when, where, who should attend, and what they'll get from it.
+  <Accordion title="Can I use a custom domain for event pages?">
+    Not natively — event pages are hosted on `app.orgo.space`. You can embed the page on your website using the iframe approach, which shows the registration form within your domain.
   </Accordion>
 
-  <Accordion title="Keep forms short">
-    Only require fields you actually need. More fields = fewer registrations.
+  <Accordion title="I want to show past events as an archive">
+    Past public events remain accessible at their URL. Disable registration (toggle "Disable registration") so the page shows details and photos but no form. This turns it into a record of the event.
   </Accordion>
 
-  <Accordion title="Test before sharing">
-    Open the public URL in an incognito/private window to see what visitors see.
-  </Accordion>
-
-  <Accordion title="Match your brand colors">
-    Use color customization to match your organization's branding.
+  <Accordion title="The registration form is too long — attendees are dropping off">
+    Remove optional fields. Name and email are usually enough for registration. Collect additional information at check-in or via a follow-up email after registration.
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Related Features
+## Related
 
-- [Create Event](/platform/events/create-event) - Event creation basics
-- [Ticketing](/platform/events/ticketing) - Set up tickets and prices
-- [Attendance](/platform/events/attendance) - Track registrations
+- [Create Event](/platform/events/create-event) — Setting up event details and page
+- [Ticketing](/platform/events/ticketing) — Ticket types displayed on the page
+- [Attendance](/platform/events/attendance) — What happens after registration

@@ -1,305 +1,256 @@
 ---
 title: 'Local Centers'
-description: 'Geographic chapters and branches of your organization'
+description: 'Geographic chapters and branches with their own admins, events, and member communities'
 ---
 
-Local Centers (also called Local Groups or Chapters) represent geographic divisions of your organization. They allow members to connect and collaborate with others in their area while maintaining connection to the national organization.
+Local Centers are your organization's geographic branches — cities, regions, chapters, districts. Each center has its own discussions, events, files, members, and local administrators, while staying connected to the national organization.
 
-## How to access
+If your organization has geographic structure of any kind, Local Centers are how you model it.
 
-**Sidebar** → **Local Centers**
+<img src="/images/platform/groups/local-centers-list.png" alt="Local Centers list with interactive map showing pins across the US, member counts, towns, and action buttons" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-Or: **Settings** → **Local Centers** → **Module Settings**
+Click on any center to open its detail view with quick actions for Members, Fees, Events, and Discussions:
 
----
-
-## What are Local Centers
-
-Local Centers provide:
-
-- **Geographic organization** - Divide your organization by location
-- **Local autonomy** - Each center has its own discussions, events, and files
-- **Local administration** - Dedicated admins manage local activities
-- **Member assignment** - Members belong to their local chapter
+<img src="/images/platform/groups/local-center-detail.png" alt="Local Center detail page showing center name, location, founding date, quick actions for Members, Fees, Events, and Discussions" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Local Center Structure
+## Do I need Local Centers?
 
-### Hierarchy
+| Your situation | Recommendation |
+|---------------|----------------|
+| Members are spread across cities or regions | Yes — Local Centers let each area run independently |
+| You have chapters, branches, or districts | Yes — each becomes a Local Center |
+| You want local events alongside national ones | Yes — each center has its own event calendar |
+| Your organization is a single location | No — use Private Groups for teams instead |
+| You're a fully online community with no geographic structure | No — use Role Groups or Private Groups |
+
+---
+
+## How Local Centers fit in
+
+Local Centers sit between the Main Group (everyone) and Private Groups (manual teams):
 
 ```
-National Organization (Tenant)
-├── Region A
-│   ├── Local Center 1
-│   ├── Local Center 2
-│   └── Local Center 3
-└── Region B
-    ├── Local Center 4
-    └── Local Center 5
+National Organization
+├── Main Group (all members, org-wide announcements)
+├── Local Centers (geographic — assigned per member)
+│   ├── New York Chapter
+│   │   ├── Discussions, Events, Files
+│   │   └── Local admins manage independently
+│   ├── London Branch
+│   └── Berlin Division
+├── Role Groups (automatic — by criteria)
+└── Private Groups (manual — project teams)
 ```
 
-### Center Properties
-
-Each Local Center has:
-
-| Property | Description |
-|----------|-------------|
-| **Name** | Display name for the center |
-| **Town/Location** | Geographic location |
-| **Region** | Parent region (if regions enabled) |
-| **Status** | Active, Pending Close, Suspended, or Closed |
-| **Contact Info** | Email, phone, contact person |
-| **Address** | Office and postal addresses |
-| **Social Links** | Facebook, Instagram, Twitter |
+Each member belongs to **one** Local Center (assigned during registration or by an admin). They see their center's content in the sidebar alongside the Main Group.
 
 ---
 
-## Creating a Local Center
+## Setting up Local Centers
+
+### Enable the module
+
+**Settings** → **Groups** → **Module Settings** → enable **Groups & Teams**
+
+Local Centers are available by default when Groups are enabled.
+
+### Create a center
 
 **Settings** → **Local Centers** → **Create Local Center**
 
 <Steps>
-  <Step title="Basic Information">
-    Enter name, select town/location, and choose region if applicable.
+  <Step title="Name and location">
+    Enter the center name and select the town/city. If you've enabled regions, assign the center to its parent region.
   </Step>
-  <Step title="Contact Details">
-    Add contact email, phone, and contact person name.
+  <Step title="Contact details">
+    Add the center's contact email, phone, and contact person. This information is visible to members and on the public map (if enabled).
   </Step>
-  <Step title="Addresses">
-    Enter office address and postal address.
+  <Step title="Address">
+    Enter the office address and postal address. Add GPS coordinates if you want the center to appear on the public map.
   </Step>
-  <Step title="Additional Settings">
-    Configure bank details, social media links, and map location.
-  </Step>
-  <Step title="Save">
-    Save to create the Local Center.
+  <Step title="Optional: social links and banking">
+    Add Facebook, Instagram, website URLs. If the center collects fees, configure bank details and Stripe account.
   </Step>
 </Steps>
 
----
+### Organize with regions (optional)
 
-## Local Center Settings
+For organizations with many centers, group them under regions:
 
-### Basic Information
+```
+National Organization
+├── Northeast Region
+│   ├── New York
+│   ├── Boston
+│   └── Philadelphia
+├── Southeast Region
+│   ├── Atlanta
+│   ├── Miami
+│   └── Charlotte
+└── West Region
+    ├── Los Angeles
+    ├── San Francisco
+    └── Seattle
+```
 
-<ParamField path="name" type="string" required>
-  Display name for the Local Center.
-</ParamField>
+Enable regions in **Settings** → **Groups** → **Module Settings** → **Units**. Then assign each Local Center to a region when creating it.
 
-<ParamField path="alias" type="string">
-  Short alias or abbreviation.
-</ParamField>
-
-<ParamField path="town" type="relation">
-  Geographic location (town/city).
-</ParamField>
-
-<ParamField path="region" type="relation">
-  Parent region for hierarchical organization.
-</ParamField>
-
-### Contact Information
-
-<ParamField path="contactEmail" type="email">
-  Public contact email for the center.
-</ParamField>
-
-<ParamField path="contactPhone" type="phone">
-  Public contact phone number.
-</ParamField>
-
-<ParamField path="contactFullName" type="string">
-  Name of primary contact person.
-</ParamField>
-
-### Addresses
-
-<ParamField path="officeAddress" type="string">
-  Physical office/meeting location.
-</ParamField>
-
-<ParamField path="postalAddress" type="text">
-  Mailing address for correspondence.
-</ParamField>
-
-<ParamField path="geoLocation" type="string">
-  GPS coordinates for map display.
-</ParamField>
-
-<ParamField path="mapDescription" type="text">
-  Description shown on public map.
-</ParamField>
-
-### Social Media
-
-<ParamField path="facebookUrl" type="url">
-  Facebook page URL.
-</ParamField>
-
-<ParamField path="instagramUrl" type="url">
-  Instagram profile URL.
-</ParamField>
-
-<ParamField path="twitterUrl" type="url">
-  Twitter/X profile URL.
-</ParamField>
-
-<ParamField path="website" type="url">
-  Local center's website.
-</ParamField>
-
-### Financial Settings
-
-<ParamField path="bankIbanNative" type="string">
-  Bank IBAN in local currency.
-</ParamField>
-
-<ParamField path="bankIbanEur" type="string">
-  Bank IBAN for EUR transactions.
-</ParamField>
-
-<ParamField path="stripeAccount" type="string">
-  Connected Stripe account ID (for local payments).
-</ParamField>
-
-<ParamField path="isStripeEligible" type="boolean">
-  Whether this center can accept Stripe payments.
-</ParamField>
+Regional grouping gives you **Parent Local** admin roles — admins who oversee all centers in their region without needing national-level permissions.
 
 ---
 
-## Local Center Statuses
+## How members get assigned
 
-| Status | Description |
+| Method | How it works |
 |--------|-------------|
-| **Active** | Fully operational center |
-| **Pending Close** | Center scheduled for closure |
-| **Suspended** | Temporarily inactive |
-| **Closed** | Permanently closed |
+| **During registration** | The registration form includes a Local Center field. Members select their branch when signing up. |
+| **Admin assignment** | An admin edits the member's profile and assigns them to a center. |
+| **Transfer** | An admin moves a member from one center to another. The member's content stays in the original center. |
+
+Members can only belong to **one** Local Center at a time. If they need access to multiple geographic communities, use Private Groups for the cross-center collaboration.
 
 ---
 
-## Local Center Features
+## What each center can do
 
-Each Local Center functions as a group with:
+Every Local Center functions as a full group with these features:
 
-### Discussions
-- Local announcements and conversations
-- Topics relevant to the geographic area
-- Local community engagement
+| Feature | Local use case |
+|---------|---------------|
+| **Discussions** | Local announcements, community conversations, area-specific topics |
+| **Events** | Local meetups, chapter meetings, regional activities |
+| **Files** | Local documents, meeting minutes, branch-specific resources |
+| **Members** | Browse and search members in this center |
+| **Issues** | Track local tasks and action items (if enabled) |
 
-### Events
-- Local meetups and activities
-- Events specific to the area
-- Local calendar management
-
-### Files
-- Local documents and resources
-- Center-specific materials
-- Administrative documents
-
-### Members
-- Members assigned to this center
-- Local leadership and roles
-- Member management
+Each center's content is separate from other centers. Members only see discussions, events, and files from their own center (and the Main Group).
 
 ---
 
-## Local Administration
+## Local administration
 
-### Local Admin Roles
+One of the most powerful aspects of Local Centers is **delegated administration**. You don't need national admins managing every branch — each center can have its own team.
 
-- **ADMIN_LOCAL** - Full administrative access to the local center
-- **HR_LOCAL** - Member management within the local center
-- **FINANCIAL_LOCAL** - Financial management for the local center
+### Local admin roles
 
-### What Local Admins Can Do
+| Role | What they can do |
+|------|-----------------|
+| **ADMIN_LOCAL** | Full control of the center — manage members, settings, content, events, files |
+| **HR_LOCAL** | Member management within the center — edit profiles, manage assignments |
+| **FINANCIAL_LOCAL** | Financial management — process local fees, view payment reports |
 
-- Manage local discussions, events, and files
-- Edit center information
-- Manage local members
-- View local reports
-- Process local fees (if enabled)
+### Parent Local roles (for regions)
 
----
+If you use regions, you also get:
 
-## Waitlist Management
+| Role | What they can do |
+|------|-----------------|
+| **ADMIN_PARENT_LOCAL** | Oversee all centers in a region |
+| **HR_PARENT_LOCAL** | Member management across a region |
+| **FINANCIAL_PARENT_LOCAL** | Financial oversight for a region |
 
-Local Centers can have capacity limits:
-
-<ParamField path="waitlistCapacity" type="number">
-  Maximum members for this center. New registrations go to waitlist when full.
-</ParamField>
-
-<ParamField path="waitlistAutoApprove" type="boolean">
-  Automatically approve waitlist members when capacity opens.
-</ParamField>
-
-<ParamField path="waitlistProcessingRate" type="number">
-  Rate at which waitlist members are processed.
-</ParamField>
+To assign local roles: go to **Members** → select a member → **Permissions** tab → assign the role scoped to their center.
 
 ---
 
-## Local Fees
+## Center statuses
 
-If local fee collection is enabled:
-
-<ParamField path="feeProduct" type="relation">
-  Product used for local membership fees.
-</ParamField>
-
-<ParamField path="feeDefaultProductPrice" type="relation">
-  Default price for local fees.
-</ParamField>
-
-<ParamField path="isOnlinePaymentFeeEligible" type="boolean">
-  Allow online payment of local fees.
-</ParamField>
+| Status | What it means |
+|--------|-------------|
+| **Active** | Fully operational — members can see and interact with the center |
+| **Pending Close** | Center is being wound down — visible but marked for closure |
+| **Suspended** | Temporarily inactive — hidden from members but data preserved |
+| **Closed** | Permanently closed — archived, no longer visible |
 
 ---
 
-## Public Map
+## Local fees
 
-If enabled, Local Centers appear on a public map:
+If your organization collects fees at the branch level (local membership dues, chapter fees), each center can have its own fee configuration:
 
-- Shows location of all active centers
-- Displays contact information
-- Helps prospective members find local chapters
-- Customizable map descriptions
+- Assign a fee product to the center
+- Set a default price (can differ from national fees)
+- Enable online payment via Stripe (requires a connected Stripe account for the center)
+- Local financial admins can process and track payments
+
+See [Local Group Fees](/platform/local-group-fees/create-local-fees) for the full setup.
 
 ---
 
-## Best Practices
+## Waitlist per center
+
+Popular centers can become full. Enable capacity limits to manage this:
+
+| Setting | What it does |
+|---------|-------------|
+| **Capacity** | Maximum number of members for this center. New registrations go to the waitlist when full. |
+| **Auto-approve** | Automatically approve waitlisted members when a spot opens |
+| **Processing rate** | How many waitlisted members to process at once |
+
+This works with the [Waitlist](/platform/users/waitlist) feature — the center-level waitlist feeds into the same admin management interface.
+
+---
+
+## Public map
+
+If you enable the public map, active centers appear on an interactive map that prospective members can browse — helping them find the nearest branch before joining.
+
+Each center shows its location, contact information, and a map description. Configure GPS coordinates and the map description when editing the center.
+
+---
+
+## Controlling who can post
+
+Same as other groups, each center has permission controls:
+
+| Setting | Recommended for |
+|---------|----------------|
+| **Only admins can post** — ON | Centers where local admins control announcements |
+| **Only admins can post** — OFF | Centers where members freely discuss and share |
+| **Only admins can create events** — ON | When event planning should be coordinated centrally |
+| **Only admins can upload files** — ON | When document management needs oversight |
+
+<Tip>
+  Most organizations let members post freely in their Local Center while restricting the Main Group to admin-only announcements. This gives members a local community for discussion while keeping org-wide communications clean.
+</Tip>
+
+---
+
+## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Consistent naming">
-    Use consistent naming conventions across Local Centers.
+  <Accordion title="A member moved to a different city — how do I transfer them?">
+    Go to the member's profile → edit → change their Local Center assignment. Their discussions and contributions stay in the original center. They'll now see content from their new center.
   </Accordion>
 
-  <Accordion title="Complete profiles">
-    Fill in all contact information and addresses for each center.
+  <Accordion title="I need someone to admin multiple Local Centers">
+    Assign them the **ADMIN_PARENT_LOCAL** role scoped to the region containing those centers. Or, if they only need access to 2-3 specific centers, assign **ADMIN_LOCAL** separately for each center.
   </Accordion>
 
-  <Accordion title="Active local admins">
-    Ensure each center has active local administrators.
+  <Accordion title="Can a member be in two Local Centers?">
+    No — members belong to one Local Center. If they need to collaborate across centers, create a Private Group with members from multiple centers. Or use a Role Group that spans all centers.
   </Accordion>
 
-  <Accordion title="Regular updates">
-    Keep center information current, especially contact details.
+  <Accordion title="A center is closing down — what happens to the members?">
+    Set the center status to **Pending Close** first to signal the upcoming change. Transfer members to other centers. Once all members are transferred, set the status to **Closed**. The center's content is archived.
   </Accordion>
 
-  <Accordion title="Engage locally">
-    Encourage local discussions and events to build community.
+  <Accordion title="How do I set up a new region?">
+    Enable **Units** in **Settings** → **Groups** → **Module Settings**. Then create regions at **Settings** → **Local Centers** → **Regions**. Assign existing centers to their region.
+  </Accordion>
+
+  <Accordion title="Members don't engage with their Local Center">
+    Ensure each center has active local admins posting regularly. Start with events — a local meetup is the easiest way to build engagement. Keep the Main Group for announcements only, pushing discussion into Local Centers.
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Related Features
+## Related
 
-- [Groups Overview](/platform/groups/index) - All group types
-- [Local Group Fees](/platform/local-group-fees/create-local-fees) - Local fee collection
-- [Regions](/platform/regions) - Regional organization
-- [Events](/platform/events/index) - Event management
+- [Groups Overview](/platform/groups) — All group types and when to use each
+- [Main Group](/platform/groups/main-group) — The org-wide hub
+- [Local Group Fees](/platform/local-group-fees/create-local-fees) — Fee collection at the branch level
+- [User Types & Roles](/platform/users/user-types) — Setting up local admin roles

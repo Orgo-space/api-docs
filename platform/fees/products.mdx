@@ -1,332 +1,180 @@
 ---
 title: 'Products'
-description: 'Create and manage products, fees, and donations'
+description: 'Create fee products, donation campaigns, and payment pages'
 ---
 
-Products are the foundation of all payments in Orgo. Whether you're collecting membership fees, accepting donations, or selling merchandise, everything starts with creating a product.
+Products are the foundation of all payments in Orgo. Every payment — membership fees, donations, event tickets, merchandise — starts with creating a product. A product defines what you're selling, how much it costs, and who can buy it.
 
-## How to access
-
-**Settings** → **Fees** → **Products**
-
-Or: **Resources** → **Products**
+<img src="/images/platform/fees/products-list.png" alt="Products list with membership fees and pricing" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Product Types
+## Product types
 
-Orgo supports different product types for different payment scenarios:
+| Type | What it's for | Example |
+|------|-------------|---------|
+| **Fee** | Membership dues, subscriptions | "Annual Membership 2026", "Monthly Dues" |
+| **Donation** | Fundraising campaigns, charitable giving | "Building Fund", "Scholarship Program" |
+| **Commerce** | Physical or digital goods | "Organization T-Shirt", "Yearbook" |
+| **Event** | Event tickets (usually created through the [Events](/platform/events) module) | "Conference 2026 Registration" |
+| **Manual Invoice** | Custom charges, one-off invoices | "Special Assessment", "Reimbursement" |
 
-| Type | Description | Use Case |
-|------|-------------|----------|
-| **Fee** | Membership/subscription fees | Annual membership, monthly dues |
-| **Donation** | Charitable contributions | Fundraising campaigns |
-| **Commerce** | Physical/digital goods | Merchandise, books, gear |
-| **Event** | Event tickets | Conference registration, workshops |
-| **Manual Invoice** | Custom invoicing | Special charges, reimbursements |
-
----
-
-## Creating a Product
-
-<Steps>
-  <Step title="Navigate to Products">
-    Go to **Settings** → **Fees** → **Products**.
-  </Step>
-  <Step title="Click Create Product">
-    Select the type of product to create.
-  </Step>
-  <Step title="Enter basic information">
-    Fill in name, description, and upload a logo/image.
-  </Step>
-  <Step title="Configure payment options">
-    Set up pricing, subscriptions, and billing cycles.
-  </Step>
-  <Step title="Save">
-    Save to create the product.
-  </Step>
-</Steps>
+Most organizations use **Fee** products for membership and optionally **Donation** products for fundraising. Commerce and Manual Invoice are for specific needs.
 
 ---
 
-## Product Settings
+## Creating a product
 
-### Basic Information
+**Settings** → **Fees** → **Products** → **Create Product**
 
-<ParamField path="name" type="string" required>
-  Product display name shown to members and on payment pages.
-</ParamField>
+<img src="/images/platform/fees/product-create.png" alt="Create Product form with product type selector (Donation or Membership Fee), title, frequency (Recurring or One-off), custom amount toggle, and campaign settings" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-<ParamField path="nameEn" type="string">
-  English name for multilingual organizations.
-</ParamField>
+The create product form walks you through all settings:
 
-<ParamField path="description" type="richtext">
-  Detailed description explaining what the product is and what members get.
-</ParamField>
+| Field | What it does |
+|-------|-------------|
+| **Product type** | **Donation** (one-time or recurring donations) or **Membership Fee** (recurring member subscriptions) |
+| **Title** | Product name shown to members — "Annual Membership Fee", "Support Our Mission" |
+| **Frequency** | **Recurring** (ongoing subscription charged on a cycle) or **One-off** (single charge) — or both |
+| **Custom amount** | Toggle to let payers enter their own amount. Set optional min/max values. Common for donation products. |
+| **Campaign** | For donations: set a **Total goal** or **Monthly goal** with a target amount. The public page shows a progress bar. |
 
-<ParamField path="descriptionInternal" type="text">
-  Internal notes for administrators (not shown to members).
-</ParamField>
+For membership fee products, additional fields appear after saving:
 
-<ParamField path="logo" type="image">
-  Product image/logo displayed on payment pages.
-</ParamField>
+| Field | What it does |
+|-------|-------------|
+| **Billing period** | How many months per cycle — 1 (monthly), 3 (quarterly), 12 (annual) |
+| **Cycle month** | Month the annual cycle starts — January (1) or September (9) for fiscal years |
+| **Proration** | Charge a fair partial amount when someone joins mid-cycle |
+| **Starting date** | When the fee product becomes active |
 
-<ParamField path="type" type="select" required>
-  Product type (fee, donation, commerce, event, manual_invoice).
-</ParamField>
-
-### Pricing
-
-<ParamField path="productPrices" type="array">
-  List of price tiers for this product. Create multiple tiers for different membership levels or amounts.
-</ParamField>
-
-<ParamField path="hasCustomPriceValue" type="boolean">
-  Allow payers to enter a custom amount (useful for donations).
-</ParamField>
-
-<ParamField path="customMinPrice" type="number">
-  Minimum amount when custom pricing is enabled.
-</ParamField>
-
-<ParamField path="customMaxPrice" type="number">
-  Maximum amount when custom pricing is enabled.
-</ParamField>
-
-### Payment Options
-
-<ParamField path="hasSubscription" type="boolean">
-  Enable recurring subscription payments.
-</ParamField>
-
-<ParamField path="hasOneTimePayment" type="boolean">
-  Enable one-time payments.
-</ParamField>
-
-<ParamField path="monthPeriod" type="number" default="1">
-  Billing period in months (1 = monthly, 12 = yearly).
-</ParamField>
-
-### Billing Cycle
-
-<ParamField path="cycleDay" type="number">
-  Day of month when billing cycles start (1-28).
-</ParamField>
-
-<ParamField path="cycleMonth" type="number">
-  Month when annual cycle starts (1-12).
-</ParamField>
-
-<ParamField path="cycleHasProratio" type="boolean">
-  Enable prorated billing for mid-cycle subscriptions.
-</ParamField>
-
-<ParamField path="proratioMinMonthsEnabler" type="number">
-  Minimum months remaining to enable proration.
-</ParamField>
-
-<ParamField path="cycleRecurrences" type="number">
-  Number of billing cycles before subscription ends (null = indefinite).
-</ParamField>
-
-### Dates
-
-<ParamField path="startingDate" type="date">
-  When the product becomes available.
-</ParamField>
-
-<ParamField path="maxDate" type="date">
-  When the product expires/closes.
-</ParamField>
-
-### Visibility
-
-<ParamField path="isExternal" type="boolean" default="false">
-  Make product available to non-members (public page).
-</ParamField>
-
-<ParamField path="isInternal" type="boolean" default="true">
-  Make product available to organization members.
-</ParamField>
-
-<ParamField path="displayOnProfile" type="boolean">
-  Show product on member profile pages.
-</ParamField>
-
-<ParamField path="isArchived" type="boolean">
-  Archive product (hides from public but keeps data).
-</ParamField>
+After creating the product, add **price tiers** for different membership levels and configure the **payment page** appearance.
 
 ---
 
-## Price Tiers
+## Price tiers
 
-Each product can have multiple price tiers:
+Each product can have multiple price tiers for different membership levels or giving amounts:
 
-### Creating Price Tiers
+### Example: Membership fee
 
-1. Open the product
-2. Go to **Prices** tab
-3. Click **Add Price**
-4. Enter:
-   - Tier name (e.g., "Student", "Regular", "Family")
-   - Amount
-   - Currency
-5. Save
+| Tier | Amount | Who it's for |
+|------|--------|-------------|
+| Student | $50/year | Members in education |
+| Regular | $100/year | Standard membership |
+| Family | $150/year | Household membership |
+| Lifetime | $1,000 one-time | Permanent membership |
 
-### Example Tier Structure
+### Example: Donation campaign
+
+| Tier | Amount |
+|------|--------|
+| Supporter | $25 |
+| Champion | $100 |
+| Patron | $500 |
+| Custom amount | Donor enters their own |
+
+To create tiers: open the product → **Prices** tab → **Add Price** → enter tier name, amount, and currency.
+
+### Custom amounts
+
+For donations, enable **custom price value** to let payers enter any amount. Set optional min/max to keep it reasonable.
+
+---
+
+## Payment options
+
+| Setting | What it does |
+|---------|-------------|
+| **One-time payment** | Payer pays once — no recurring billing |
+| **Subscription** | Automatic recurring charges via Stripe |
+| **Billing period** | How often subscriptions renew: monthly (1), quarterly (3), yearly (12) |
+| **Cycle day** | Day of month when billing starts (1-28) |
+| **Cycle month** | Month when annual cycle starts (1-12) |
+| **Proration** | Charge a partial amount when someone joins mid-cycle |
+| **Recurrences** | Number of billing cycles before subscription ends (empty = indefinite) |
+
+<Tip>
+  Most membership organizations use a yearly subscription starting January 1. Enable proration so members who join mid-year pay a fair partial amount for the remaining months.
+</Tip>
+
+---
+
+## Product visibility
+
+| Setting | What it means |
+|---------|-------------|
+| **Internal** | Only organization members can see and purchase |
+| **External** | Anyone can access via the public payment page — no login needed |
+| **Display on profile** | The product appears on member profile pages for easy purchase |
+| **Archived** | Hidden from everyone but data preserved — use for expired products |
+
+### Public payment pages
+
+External products get a shareable URL:
 
 ```
-Membership Fee Product
-├── Student Tier - $50/year
-├── Regular Tier - $100/year
-├── Family Tier - $150/year
-└── Lifetime Tier - $1,000 one-time
+https://app.orgo.space/public/product/{slug}
 ```
 
----
-
-## Product Options
-
-Add customizable options to products:
-
-1. Open the product
-2. Go to **Options** tab
-3. Create options like:
-   - T-shirt size
-   - Meal preference
-   - Workshop selection
-
-Options allow members to customize their purchase.
+Customize the page with your brand colors, logo, and button styling. For donation products, you can also show recent donors, top donors, and a progress bar toward your goal.
 
 ---
 
-## Public Payment Pages
+## Product options
 
-Each product can have a public page for accepting payments:
+Add customizable choices to products — useful for merchandise or events with preferences:
 
-### URL Structure
+- T-shirt size (S, M, L, XL)
+- Meal preference (Vegetarian, Standard)
+- Workshop selection
 
-- By slug: `https://app.orgo.space/public/product/{slug}`
-- By UUID: `https://app.orgo.space/public/product/{uuid}`
-
-### Page Customization
-
-Configure how the public page looks:
-
-<ParamField path="settings.tenantLogo" type="boolean" default="true">
-  Show organization logo on payment page.
-</ParamField>
-
-<ParamField path="settings.showTitle" type="boolean" default="true">
-  Display product title prominently.
-</ParamField>
-
-<ParamField path="settings.colorSelection" type="color">
-  Accent color for the page.
-</ParamField>
-
-<ParamField path="settings.colorButton" type="color">
-  Payment button color.
-</ParamField>
-
-<ParamField path="settings.lightThemeOnly" type="boolean">
-  Force light theme regardless of user preference.
-</ParamField>
-
-<ParamField path="settings.commentSection" type="boolean">
-  Enable comment/message section (useful for donations).
-</ParamField>
-
-<ParamField path="settings.newestAndTopDonationSection" type="boolean">
-  Show recent and top donations (for donation campaigns).
-</ParamField>
+Options are configured in the product's **Options** tab.
 
 ---
 
-## Goal Tracking
+## Goal tracking (donations)
 
-For donation campaigns or fundraising:
+For fundraising campaigns, set a target amount:
 
-<ParamField path="goalValue" type="number">
-  Target amount for one-time donations.
-</ParamField>
+| Setting | What it does |
+|---------|-------------|
+| **Goal value** | Target for one-time donations — progress bar on the public page |
+| **Goal value (subscription)** | Target for recurring donations |
 
-<ParamField path="goalValueSubscription" type="number">
-  Target amount for subscription donations.
-</ParamField>
-
-Progress toward goals is displayed on public pages.
+The public donation page shows a live progress bar toward your goal.
 
 ---
 
-## Local Center Products
-
-Products can be created at the Local Center level:
-
-<ParamField path="localCenter" type="relation">
-  Link product to a specific Local Center.
-</ParamField>
-
-<ParamField path="hasLocalCenterOption" type="boolean">
-  Allow payers to select which Local Center receives funds.
-</ParamField>
-
----
-
-## Use Cases
+## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Annual membership fee">
-    Create a fee product with yearly billing cycle and multiple tiers for different member types.
+  <Accordion title="I need different membership fees for different member types">
+    Create one fee product with multiple price tiers (Student, Regular, Family, etc.). When members pay, they select the tier that applies to them. You can also assign default tiers per user type.
   </Accordion>
 
-  <Accordion title="Monthly subscription">
-    Set up a fee with monthly period and automatic recurring billing.
+  <Accordion title="Our fiscal year starts in September, not January">
+    Set the **cycle month** to 9 (September) and **cycle day** to 1. Subscriptions will renew every September 1st.
   </Accordion>
 
-  <Accordion title="Fundraising campaign">
-    Create a donation product with custom amounts, goal tracking, and public display of donors.
+  <Accordion title="A member joined in March but our fee year runs January-December">
+    Enable **proration**. The system calculates the partial amount for March-December. From the following January, they pay the full annual amount.
   </Accordion>
 
-  <Accordion title="Event registration">
-    Use event-type product with multiple price tiers for different ticket types.
+  <Accordion title="I want to stop offering a product but keep the payment history">
+    **Archive** the product instead of deleting it. Archived products are hidden from members but all payment records are preserved. Never delete a product with payment history.
   </Accordion>
 
-  <Accordion title="Merchandise store">
-    Set up commerce products with options for sizes/colors.
+  <Accordion title="How do local center fees work?">
+    Each Local Center can have its own fee products linked to their own Stripe account. See [Local Center Fees](/platform/local-group-fees/create-local-fees).
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Best Practices
+## Related
 
-<AccordionGroup>
-  <Accordion title="Clear naming">
-    Use descriptive names that clearly indicate what the product is and what period it covers.
-  </Accordion>
-
-  <Accordion title="Comprehensive descriptions">
-    Include all relevant details about what's included and any terms.
-  </Accordion>
-
-  <Accordion title="Appropriate tiers">
-    Create price tiers that match your organization's membership structure.
-  </Accordion>
-
-  <Accordion title="Archive, don't delete">
-    Archive old products instead of deleting to preserve payment history.
-  </Accordion>
-</AccordionGroup>
-
----
-
-## Related Features
-
-- [Fees](/platform/fees/fees) - Fee management
-- [Stripe Integration](/platform/fees/stripe-integration) - Payment processing
-- [Donations](/platform/fees/donations) - Donation campaigns
-- [Local Center Fees](/platform/local-group-fees/create-local-fees) - Local payments
+- [Membership Fees](/platform/fees/fees) — Managing fee collection and tracking payments
+- [Stripe Integration](/platform/fees/stripe-integration) — Connecting payment processing
+- [Donations](/platform/fees/donations) — Running fundraising campaigns
+- [Local Center Fees](/platform/local-group-fees/create-local-fees) — Branch-level fee collection

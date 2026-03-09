@@ -1,185 +1,101 @@
 ---
-title: 'Organisation Info'
-description: 'Configure your organization name, location, contacts, and legal details'
+title: 'Organization Info'
+description: 'Your name, contact details, legal info, currency, and social links.'
 ---
 
-The Organisation Info page is where you define the core identity of your organization in Orgo. This information is used throughout the platform - in headers, footers, emails, and member communications.
+This is your organization's identity card. Everything here — name, country, contact info, financial details — flows into invoices, emails, registration pages, and the mobile app.
 
-## How to access
+**Settings → Organization → Organization Info**
 
-**Settings** → **Organisation** → **Info Organisatie**
-
-## Basic Information
-
-### Organisation Name
-
-<ParamField path="name" type="string" required>
-  The full official name of your organization. This appears in the platform header, emails, and official documents.
-</ParamField>
-
-<ParamField path="shortName" type="string">
-  A shortened version of your organization name. Used in places where space is limited, such as mobile navigation or compact headers.
-</ParamField>
-
-**Example:**
-- Name: "International Scout Federation of Romania"
-- Short Name: "ISFR"
-
-### Location Settings
-
-<ParamField path="country" type="select" required>
-  Select the country where your organization is headquartered. This affects default timezone suggestions and regional formatting.
-</ParamField>
-
-<ParamField path="timezone" type="select" required>
-  Your organization's primary timezone. All event times, scheduled emails, and date displays will use this timezone by default.
-</ParamField>
-
-<ParamField path="isInternational" type="boolean">
-  Enable this if your organization operates across multiple countries. When enabled, the country field label changes to "Country Headquarter" to indicate it's the primary location.
-</ParamField>
-
-### Default Language
-
-<ParamField path="language" type="select" required>
-  The default language for your Orgo workspace. New members will see the platform in this language by default.
-
-  **Available languages:** English, Romanian, French, German, Italian, Portuguese, Ukrainian, Bulgarian, Dutch
-</ParamField>
+<img src="/images/platform/organisation/org-info-basic-details.png" alt="Organization info form with name, country, and details" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 <Note>
-  Members can change their personal language preference in their profile settings. The default language applies to new members and public pages.
+  Requires **Tenant Admin** permissions.
 </Note>
 
 ---
 
-## Contact Information
+## Basic details
 
-### Office Contact
+<CardGroup cols={2}>
+  <Card title="Name & Short Name" icon="text">
+    **Name** is your display name (required). **Short Name** is the abbreviated version for mobile headers and compact UI.
+  </Card>
+  <Card title="Country & Timezone" icon="globe">
+    Sets regional defaults and how dates/times display. Toggle **Is international** if you operate across multiple countries.
+  </Card>
+</CardGroup>
 
-<ParamField path="contactEmail" type="email" required>
-  The primary email address for your organization. This is displayed to members and used as the reply-to address for automated emails.
-</ParamField>
-
-<ParamField path="contactPhone" type="phone">
-  Your organization's phone number. Select the country code first, then enter the phone number.
-</ParamField>
-
-<ParamField path="officeAddress" type="string">
-  The physical address of your organization's office. Displayed in the footer and on contact pages.
-</ParamField>
-
----
-
-## Legal & Compliance
-
-### Compliance URLs
-
-<ParamField path="urlGDPR" type="url">
-  Link to your organization's Privacy Policy or GDPR compliance page. This link is displayed in the platform footer and during user registration.
-</ParamField>
-
-<ParamField path="urlTerms" type="url">
-  Link to your Terms of Service for members. Displayed during registration and in the platform footer.
-</ParamField>
-
-<Warning>
-  If you collect personal data from EU residents, you are required to have a Privacy Policy. Make sure these URLs point to valid, accessible pages.
-</Warning>
-
-### Legal Information
-
-<ParamField path="legalNumber" type="string">
-  Your organization's legal registration number (e.g., company registration number, nonprofit ID, VAT number).
-</ParamField>
-
----
-
-## Financial Settings
-
-### Currency
-
-<ParamField path="currency" type="select" required>
-  The default currency for your organization. Used for membership fees, event tickets, products, and all financial transactions.
-
-  Orgo supports 100+ currencies including EUR, USD, GBP, RON, CHF, and more.
-</ParamField>
-
-<ParamField path="currencySymbol" type="string">
-  The symbol displayed alongside prices (e.g., €, $, £, RON). This is automatically set when you select a currency but can be customized.
-</ParamField>
-
-### Bank Account Details
-
-If you accept bank transfers for payments, add your IBAN details:
-
-<ParamField path="bankIbanNative" type="string">
-  Your bank account IBAN in your native currency.
-</ParamField>
-
-<ParamField path="bankIbanEur" type="string">
-  Your EUR bank account IBAN (if different from native currency).
-</ParamField>
-
-<ParamField path="bankIbanUsd" type="string">
-  Your USD bank account IBAN (if applicable).
-</ParamField>
-
-<ParamField path="bankIbanChf" type="string">
-  Your CHF bank account IBAN (if applicable).
-</ParamField>
+Choose a **Default language** — this sets the platform language for new members and public pages. Available: English, French, German, Italian, Portuguese, Romanian, Slovak, Ukrainian, Bulgarian.
 
 <Tip>
-  Bank details are displayed to members when they choose to pay via bank transfer. Make sure these are accurate to avoid payment issues.
+  Your workspace identifier appears as a badge next to the save button (e.g., `myorg-42`). The slug is auto-generated from your organization name.
 </Tip>
 
 ---
 
-## Social Media
+## Contact information
 
-Connect your organization's social media profiles. These links are displayed in the platform footer and can be used in newsletters.
+![Contact information card with office email, phone, and address fields](/images/platform/organisation/org-info-contact.png)
 
-| Field | Description |
-|-------|-------------|
-| **Facebook** | Your Facebook page URL |
-| **X.com (Twitter)** | Your X/Twitter profile URL |
-| **YouTube** | Your YouTube channel URL |
-| **LinkedIn** | Your LinkedIn company page URL |
-| **Instagram** | Your Instagram profile URL |
-| **TikTok** | Your TikTok profile URL |
+| Field | Details |
+|-------|---------|
+| **Office Email** | Required. Used in automated communications |
+| **Office Phone** | Select country code first, then enter the number |
+| **Office Address** | Your physical office location |
 
----
-
-## Saving Changes
-
-After making changes:
-
-1. Click the **Save** button in the top right corner
-2. Wait for the confirmation message
-3. Changes take effect immediately across the platform
-
-<Check>
-  Your organization information has been saved successfully!
-</Check>
+Below the contact card: **Privacy/GDPR URL** and **Terms of Service URL**. Both are shown during registration — make sure they're publicly accessible.
 
 ---
 
-## Best Practices
+## Social media
+
+![Social media URLs card with fields for Facebook, X.com, Youtube, LinkedIn, Instagram, and TikTok](/images/platform/organisation/org-info-social-media.png)
+
+Paste the full URL for each platform you use. Leave the rest blank. These appear on your organization's public profile.
+
+---
+
+## Financial details
+
+![Financial details card with currency, legal name, registration number, VAT, and IBAN fields](/images/platform/organisation/org-info-financial.png)
+
+<CardGroup cols={2}>
+  <Card title="Currency & Legal" icon="building-columns">
+    **Currency** auto-fills the symbol. Add your **Legal Name**, **Registration Number**, and **VAT Number** for invoices and receipts.
+  </Card>
+  <Card title="Bank IBANs" icon="money-bill-transfer">
+    One IBAN field for your primary currency, plus optional fields for **EUR**, **USD**, and **CHF** to accept multi-currency transfers.
+  </Card>
+</CardGroup>
+
+<Warning>
+  Get these right before enabling payments or membership fees — they appear on every invoice and donation receipt.
+</Warning>
+
+---
+
+## Saving
+
+![Save button with organization name and slug identifier](/images/platform/organisation/org-info-save-button.png)
+
+The **Save** button sits in a sticky panel on the right — it follows you as you scroll. Hit it when you're done.
+
+---
+
+## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="Keep contact info current">
-    Members may reach out using the contact details you provide. Make sure the email and phone are actively monitored.
+  <Accordion title="Phone number field is disabled">
+    Select a country code from the dropdown first. The phone input activates once a country is selected.
   </Accordion>
-
-  <Accordion title="Use consistent branding">
-    Your organization name should match what appears on your official documents and website for recognition and trust.
+  <Accordion title="Currency symbol didn't update">
+    It auto-updates when you change the currency dropdown. You can manually override it in the **Symbol** field if needed.
   </Accordion>
-
-  <Accordion title="Set the right timezone">
-    All scheduled events and communications use your organization's timezone. Choose the timezone where most of your members are located.
+  <Accordion title="Changes aren't saving">
+    **Name** and **Office Email** are required. Make sure both are filled in.
   </Accordion>
-
-  <Accordion title="Complete legal URLs">
-    Privacy Policy and Terms of Service links build trust with members and are required for legal compliance in many jurisdictions.
+  <Accordion title="Missing IBAN fields for certain currencies">
+    IBAN fields appear dynamically based on your primary currency, plus EUR, USD, and CHF.
   </Accordion>
 </AccordionGroup>

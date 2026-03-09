@@ -1,37 +1,129 @@
 ---
-title: 'Deletion of account'
+title: 'Deletion of Account'
+description: 'Permanently remove a member account and personal data'
 ---
 
----
+Account deletion permanently removes a member's profile, activity history, and personal data. This is irreversible — once deleted, the account cannot be recovered. Only the legal minimum (name and payment records) is retained.
+
+This feature exists primarily for **GDPR compliance** — the right to erasure (Article 17). Members should be able to request that their data be removed.
+
+<img src="/images/platform/users/delete-account.png" alt="Account deletion page with confirmation" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 <Warning>
-**Note:** Account deletion is irreversible. Ensure that you have backed up any necessary information or data before proceeding with this action. The option to delete the account is a final step following the resignation approval, if applicable.
+  Account deletion is **permanent and irreversible**. If you just need to block access, [change the member's status](/platform/users/statuses) to Inactive or Suspended instead — their data stays intact and the action can be undone.
 </Warning>
 
-Account deletion is a critical feature allowing users to remove their profiles from the Orgo platform. This process ensures the user’s privacy and data rights are respected in accordance with legal standards.
+---
 
-**Deleting Your Account:**
+## How to enable
 
-1. Navigate to 'Profile' on the main dashboard.
-2. Click 'Update Profile'.
-3. Select the 'Settings & Privacy' tab.
-4. In the right menu, find and click 'Close account'.
-5. Choose 'Delete account' to initiate the deletion process.
+Account deletion is available from the **Close account** page in member profiles. There is no separate toggle — if you want to prevent deletions, enable the [Resignation module](/platform/users/resignation), which adds an approval gate before deletion becomes available.
 
-![Image](/images/platform/Screenshot-2024-02-29-at-19.06.44.png)
+---
 
-**Conditions for Account Deletion:**
+## What the member sees
 
-* If the Resignation feature is activated within the platform:
-  * Submit a resignation request and provide the mandatory resignation reason.
-  * Your resignation must be approved by the administration team before you can delete your account.
+**Path:** Profile → Settings & Privacy → Close account
 
-**Post-Deletion Data Retention:**
+---
 
-* On account deletion, the platform will remove your profile from the organization's member search results.
-* Orgo retains only the necessary legal data, such as your name and record of paid membership fees.
+## How deletion works (with and without resignation)
 
-**Administration Notification:**
+### If Resignation is enabled (recommended)
 
-* The administration team will receive a notification about the deletion request.
-* They will process the request according to the organization’s protocols and user's resignation status.
+Members must resign and get approved **before** the delete option becomes available. This gives you two safeguards:
+
+<Steps>
+  <Step title="Member submits resignation">
+    They provide a reason for leaving. This goes to admin review.
+  </Step>
+  <Step title="Admin approves resignation">
+    The resignation is processed. The member's reason is recorded.
+  </Step>
+  <Step title="Member can now delete their account">
+    The Delete account button becomes active. They click it and confirm.
+  </Step>
+  <Step title="Account permanently removed">
+    Profile, activity, and personal data are erased. Only name and payment records remain for legal compliance.
+  </Step>
+</Steps>
+
+### If Resignation is not enabled
+
+Members can delete their account directly — one click and confirm. No admin approval, no reason captured, no opportunity to intervene.
+
+<Tip>
+  Enable [Resignation](/platform/users/resignation) even if you don't think you need it. It gives you visibility into why members leave before their data disappears. Without it, people vanish and you never know why.
+</Tip>
+
+---
+
+## What data is kept vs removed
+
+| Data | After deletion |
+|------|---------------|
+| **Profile information** (bio, photo, custom fields) | Permanently removed |
+| **Member directory listing** | Removed — they no longer appear in search |
+| **Activity history** (posts, comments, event attendance) | Removed or anonymized |
+| **Roles and permissions** | Removed |
+| **Group and event memberships** | Removed — their slot is freed |
+| **Name** | Retained for legal records |
+| **Payment/transaction records** | Retained for financial compliance |
+
+---
+
+## Admin notifications
+
+When a member deletes their account:
+- Administrators receive a notification
+- The deletion is logged for compliance records
+- The member's slot in any groups, events, or waitlists is automatically freed
+
+Admins **cannot** block or undo a deletion once confirmed. The only way to require approval is by enabling the Resignation module as a prerequisite.
+
+---
+
+## Common scenarios
+
+<AccordionGroup>
+  <Accordion title="A member deleted their account by mistake — can I restore it?">
+    No. Deletion is permanent and irreversible. The member will need to register again from scratch. This is why the confirmation step exists — and why enabling Resignation as a prerequisite is recommended (it adds a cooling-off period).
+  </Accordion>
+
+  <Accordion title="A member wants to leave but keep their data">
+    They should [resign](/platform/users/resignation) without toggling "Close my account", or ask an admin to set their status to Inactive. Both options preserve their data while formally recording the departure.
+  </Accordion>
+
+  <Accordion title="I need to delete a member's account on their behalf (GDPR request)">
+    If a member contacts you requesting data deletion but can't do it themselves, an admin can access their profile and process the deletion. Document the request for your compliance records.
+  </Accordion>
+
+  <Accordion title="What if a member has unpaid fees?">
+    Their payment records are retained after deletion for financial compliance. Outstanding fees should be resolved through your normal billing process — account deletion doesn't cancel debts.
+  </Accordion>
+
+  <Accordion title="Should I use deletion or just set them to Inactive?">
+    Use **Inactive** when the member might come back, or when you want to keep their history for reporting. Use **Deletion** when the member explicitly wants their data removed (GDPR), or when you're cleaning up abandoned accounts. When in doubt, use Inactive — it's reversible.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## GDPR compliance
+
+Account deletion directly supports the **right to erasure** (GDPR Article 17):
+
+| GDPR requirement | How Orgo handles it |
+|-------------------|-------------------|
+| Members can request data removal | Self-service Delete account button |
+| Data minimization after deletion | Only legally required data retained (name, payment records) |
+| Admins are informed | Notification sent on deletion |
+| Audit trail | Deletion event logged for compliance |
+
+---
+
+## Related
+
+- [Resignation](/platform/users/resignation) — Formal departure process (recommended prerequisite)
+- [User Statuses](/platform/users/statuses) — Reversible alternative: Inactive or Suspended
+- [Privacy Settings](/platform/users/privacy-settings) — Control data visibility (less extreme than deletion)

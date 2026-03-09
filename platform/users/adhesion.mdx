@@ -1,57 +1,40 @@
 ---
 title: 'Adhesion (Membership Applications)'
-description: 'Configure a formal membership application and approval workflow'
+description: 'Require a formal application and approval process before granting membership'
 ---
 
-Adhesion is Orgo's formal membership application system. When enabled, new members must submit an application that goes through an approval process before they gain full membership status.
+Adhesion adds a formal application step to joining your organization. Instead of "register and you're in," members must submit an application that administrators review and approve, return for revision, or reject.
 
-## How to access
+**When to use Adhesion:**
+- You need to vet applicants (professional associations, selective clubs)
+- You require documents or qualifications before granting membership
 
-**Settings** → **Users & Profiles** → **Users Module** → **Adhesion & Membership**
+<img src="/images/platform/users/adhesion-form-builder.png" alt="Adhesion form builder for membership applications" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+- You need a paper trail for who was accepted and why
+- Regulatory requirements demand a formal application process
 
----
-
-## Enabling Adhesion
-
-<ParamField path="isActive" type="boolean">
-  Toggle to enable the adhesion module. When enabled, you can require users to complete a formal application process.
-</ParamField>
-
-<ParamField path="isMandatory" type="boolean">
-  When enabled, all new registrations must complete the adhesion process. Users cannot access full platform features until their application is approved.
-</ParamField>
+**When you don't need it:**
+- Open communities where anyone can join
+- Casual groups with no vetting requirements
+- If you just need a simple approval gate, use [Status After Register → Unapproved](/platform/users/statuses) instead — it's lighter weight
 
 ---
 
-## Configuration Options
+## How to enable
 
-<ParamField path="successDefaultUserTypeId" type="select">
-  Automatically assign this user type when an adhesion is approved. This saves administrators from manually updating user types after approval.
+**Settings** → **Users & Profiles** → **Adhesion** → toggle **Active**
 
-  **Example:** Set to "Full Member" to automatically promote approved applicants.
-</ParamField>
-
-<ParamField path="adminEmailAddress" type="email">
-  Email address that receives notifications for new adhesion submissions. Use a shared HR inbox or the person responsible for membership.
-</ParamField>
-
-<ParamField path="changeToDraftReasons" type="textarea">
-  Predefined reasons administrators can select when returning an application to draft status. Enter each reason on a new line:
-
-  ```
-  Incomplete information
-  Missing documents
-  Photo not acceptable
-  Address verification needed
-  Other
-  ```
-</ParamField>
+| Setting | What it does |
+|---------|-------------|
+| **Active** | Turns on the adhesion module |
+| **Mandatory** | When on, all new registrations must complete adhesion. Members can't access the platform until approved. When off, adhesion is available but optional. |
+| **User type after approval** | Automatically assign a [User Type](/platform/users/user-types) when an application is approved. Example: auto-assign "Full Member" to approved applicants. |
+| **Admin email** | Email that receives notifications for new submissions. Use a shared HR inbox. |
+| **Change-to-draft reasons** | Predefined reasons admins can select when returning an application. Enter each on a new line (e.g., "Incomplete information", "Missing documents", "Photo not acceptable"). |
 
 ---
 
-## Adhesion Workflow
-
-### Application Status Flow
+## The application workflow
 
 ```
 New → Pending → Approved
@@ -62,169 +45,163 @@ New → Pending → Approved
 ```
 
 <Steps>
-  <Step title="User submits application">
-    Member fills out the adhesion form with required information and documents.
+  <Step title="Member submits application">
+    After registering (or as part of registration if mandatory), the member fills out the adhesion form — which can include profile fields, custom fields, document uploads, and declarations.
   </Step>
-  <Step title="Application is Pending">
-    HR receives notification and can review the application.
+  <Step title="Application goes to Pending">
+    The admin email receives a notification. The application appears in the **Adhesions** admin queue.
+
+    <img src="/images/platform/users/adhesion-admin-list.png" alt="Adhesions admin list showing applications with status badges, filters by status, member details, and action buttons" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
   </Step>
-  <Step title="Review and decision">
-    Administrator can:
-    - **Approve** - Member gains full access
-    - **Return to Draft** - Request changes/corrections
-    - **Reject** - Deny membership
+  <Step title="Admin reviews">
+    Open the application to see all submitted information, uploaded documents, and history. Then choose an action:
+
+    - **Approve** — Member gains full access. User type is auto-assigned (if configured).
+    - **Return to Draft** — Select a reason (from your predefined list). The member is notified and can revise their application.
+    - **Reject** — Deny membership. The member is notified.
   </Step>
-  <Step title="If Draft">
-    User receives notification and can update their application.
+  <Step title="If returned to Draft">
+    The member receives a notification with the reason. They update their application and resubmit. It goes back to Pending.
   </Step>
-  <Step title="Final approval">
-    Once approved, user type is updated and member has full access.
+  <Step title="After approval">
+    The member's status becomes Active (if it wasn't already). Their user type is set. They have full platform access.
   </Step>
 </Steps>
 
 ---
 
-## Adhesion Form Contents
+## Building the adhesion form
 
-The adhesion form can include:
+**Settings** → **Users & Profiles** → **Adhesion Form**
 
-### Standard Fields
-Configure which profile fields appear on the adhesion form.
-
-### Custom Fields
-Add organization-specific fields for membership applications.
-
-### Document Uploads
-- Profile photo
-- ID document
-- Supporting documents
-
-### Declarations
-- Terms acceptance
-- Code of conduct agreement
-- Privacy policy consent
+The form can include:
+- **Standard profile fields** — Name, address, phone, etc.
+- **Custom fields** — Organization-specific data like license numbers or qualifications
+- **Document uploads** — Profile photo, ID document, supporting documents
+- **Declarations** — Terms acceptance, code of conduct, privacy policy consent
 
 ---
 
-## Managing Adhesions
+## Managing applications
 
-### Admin Interface
+Navigate to **Members** → **Adhesions** in the sidebar to see the queue.
 
-Navigate to **Members** → **Adhesions** to:
+### Finding applications
 
-- View all pending applications
-- Filter by status (Pending, Draft, Approved, Rejected)
-- Review individual applications
-- Approve or reject applications
-- Send applications back for revision
+| Method | How |
+|--------|-----|
+| **By status** | Filter by Pending, Draft, Approved, or Rejected — Pending is your work queue |
+| **By Local Center** | See applications for a specific branch |
+| **By user type** | Filter by what membership type they applied for |
+| **By date range** | Find applications from a specific period |
+| **Search** | Search by name or email to find a specific application |
 
-### Application Details
+### Reviewing an application
 
-When reviewing an application, administrators can see:
-- All submitted information
-- Uploaded documents
-- Application history (status changes)
-- Notes from previous reviews
+When you open an application, you see:
+
+| Section | What to check |
+|---------|--------------|
+| **Personal information** | Name, email, phone, address — verify completeness |
+| **Custom fields** | Answers to your organization-specific questions |
+| **Documents** | Uploaded ID (front/back), profile photo, supporting files |
+| **Local Center** | Which center they selected (if applicable) |
+| **Payment** | Fee payment status (if membership requires payment) |
+| **History** | Every status change with timestamps and notes from previous reviews |
+
+If [Identity Validation](/platform/identity-validation) is enabled, you can compare the profile photo to the ID photo, check document authenticity, and auto-extract data from scanned IDs.
+
+### Taking action
+
+**Approve** — Click Approve. The applicant becomes an active member and is notified. User type is auto-assigned (if configured).
+
+**Return to Draft** — Select a reason from your predefined list. The member is notified and can revise their application. When they resubmit, it returns to Pending.
+
+**Reject** — Deny membership with a reason. The member is notified.
+
+**Bulk approve** — Select multiple applications → **Bulk Actions** → **Approve Selected**. Useful during enrollment periods with many straightforward applications.
 
 ---
 
-## Interview Feature
+## The adhesion template (PDF generation)
 
-For organizations requiring interviews:
+You can generate a PDF from approved applications — useful for official records, member files, or physical signatures.
 
-<ParamField path="hasInterview" type="boolean">
-  Enable interview tracking. Applications can include an interview step before final approval.
-</ParamField>
+![Adhesion template editor for customizing the PDF output](/images/platform/users/adhesion-template.png)
 
-Interview workflow:
+The template editor provides a rich text editor where you can design the PDF layout. Use placeholders like `{{firstName}}`, `{{lastName}}`, `{{dateCreated}}` to dynamically insert member data. The template supports organization branding (logo, colors) and signature fields.
+
+Configure the template at **Settings** → **Users & Profiles** → **Adhesion Template**.
+
+---
+
+## Interview tracking
+
+For organizations that require interviews before final approval:
+
+Enable interview tracking to add a step between application submission and approval. The workflow becomes:
+
 1. Application submitted
-2. Interview scheduled
-3. Interview completed
-4. Final approval/rejection
+2. Interview scheduled (admin sets date/time)
+3. Interview completed (admin records notes)
+4. Final approval or rejection
+
+This is common for professional associations, leadership positions, and selective membership programs.
 
 ---
 
-## PDF Generation
+## Adhesion vs other joining methods
 
-Generate PDF documents from approved adhesions:
-
-- Official membership application document
-- Includes all submitted data
-- Organization branding
-- Signature fields
-
-Useful for:
-- Record keeping
-- Member files
-- Official documentation
-
-[Learn more about Adhesion Templates →](/platform/users/adhesion-template)
+| Method | Process | Best for |
+|--------|---------|----------|
+| **Open registration** | Register → immediately Active | Communities, hobby groups |
+| **Registration + Unapproved status** | Register → admin clicks Approve | Simple gate, no forms needed |
+| **Adhesion** | Register → fill application → admin reviews → approve/reject/revise | Formal membership, documentation required |
+| **Waitlist + Adhesion** | Join waitlist → invited → fill application → admin reviews | Limited capacity + formal membership |
 
 ---
 
-## Combining with Identity Validation
+## Combining with other features
 
-For additional verification, combine adhesion with identity validation:
-
-1. User submits adhesion form
-2. Identity documents uploaded
-3. OCR verification (if enabled)
-4. Manual review by administrator
-5. Approval with verified identity
+| Feature | How it works with Adhesion |
+|---------|--------------------------|
+| [Identity Validation](/platform/identity-validation) | Require ID documents as part of the application. OCR pre-fills form data from uploaded documents. |
+| [User Types](/platform/users/user-types) | Auto-assign a type when application is approved. Different types can have different adhesion forms. |
+| [Custom Fields](/platform/users/custom-fields) | Add organization-specific fields to the application form. |
+| [Waitlist](/platform/users/waitlist) | Members wait in queue first, then go through adhesion when invited. |
+| [User Statuses](/platform/users/statuses) | Approved applicants become Active. Pending applicants may have limited access. |
 
 ---
 
-## Use Cases
+## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Professional associations">
-    Verify credentials and qualifications before granting membership.
+  <Accordion title="An applicant submitted incomplete information">
+    Use **Return to Draft** with a clear reason (e.g., "Missing proof of qualification"). The member is notified and can update their application. When they resubmit, it comes back to your queue as Pending.
   </Accordion>
 
-  <Accordion title="Selective membership">
-    Organizations that don't accept all applicants can review and select members.
+  <Accordion title="I have a backlog of applications to process">
+    Check if your admin email is being monitored. If you're the only reviewer, consider giving another admin HR Tenant permissions so they can help. Process applications in order — first come, first served is fairest.
   </Accordion>
 
-  <Accordion title="Compliance requirements">
-    Meet regulatory requirements for member verification and documentation.
+  <Accordion title="An application was rejected but the person wants to reapply">
+    They'll need to submit a new application. The old rejection stays in the system as a record. If there were specific issues, communicate what needs to change before reapplying.
   </Accordion>
 
-  <Accordion title="Onboarding workflow">
-    Use adhesion as part of a structured onboarding process.
-  </Accordion>
-</AccordionGroup>
-
----
-
-## Best Practices
-
-<AccordionGroup>
-  <Accordion title="Set response time expectations">
-    Tell applicants how long review typically takes. Fast response improves member satisfaction.
-  </Accordion>
-
-  <Accordion title="Use draft status helpfully">
-    When returning applications to draft, provide clear feedback on what needs to be fixed.
-  </Accordion>
-
-  <Accordion title="Configure notifications">
-    Make sure the admin email is monitored so applications don't sit unreviewed.
-  </Accordion>
-
-  <Accordion title="Document reasons for rejection">
-    Keep records of why applications are rejected for compliance and consistency.
+  <Accordion title="I want adhesion only for certain member types, not all registrations">
+    Set Adhesion to Active but **not** Mandatory. Then use the registration form to route applicants: include the User Type field so members self-select, and only require adhesion for types that need vetting. Members who select types that don't require adhesion go through normal registration.
   </Accordion>
 </AccordionGroup>
 
 <Warning>
-  When adhesion is mandatory, users who haven't completed the process will have limited platform access. Make sure your application process isn't a barrier to legitimate members.
+  When adhesion is mandatory, members who haven't completed the process have limited platform access. Make sure your review process is fast enough that legitimate applicants aren't stuck waiting.
 </Warning>
 
 ---
 
-## Related Settings
+## Related
 
-- [Adhesion Template](/platform/users/adhesion-template) - PDF document templates
-- [Identity Validation](/platform/identity-validation) - Document verification
-- [User Types](/platform/users/user-types) - Auto-assign type on approval
-- [Custom Fields](/platform/users/custom-fields) - Additional application fields
+- [Registration Form](/platform/users/registration-form) — What members fill out before or alongside adhesion
+- [Waitlist](/platform/users/waitlist) — Queue before adhesion for capacity-limited organizations
+- [Identity Validation](/platform/identity-validation) — Document verification as part of the application
+- [User Types](/platform/users/user-types) — Auto-assign on approval

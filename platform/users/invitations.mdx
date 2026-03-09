@@ -1,152 +1,115 @@
 ---
 title: 'Member Invitations'
-description: 'Allow members to invite others to join your organization'
+description: 'Let existing members invite new people to join your organization'
 ---
 
-The invitation system lets existing members invite new people to join your organization. You can control who can send invitations and track referral sources.
+The invitation system lets your existing members bring in new people by email. It's the simplest growth mechanism — a member enters someone's email, they get an invitation, they click the link and register. The referral is tracked so you know who brought who.
 
-## How to access
-
-**Settings** → **Users & Profiles** → **Users Module** → **User Invitations**
-
----
-
-## Enabling Invitations
-
-<ParamField path="hasUserInvitation" type="boolean">
-  Toggle to enable or disable the invitation feature. When enabled, members can access the "Invite" functionality from their dashboard or profile menu.
-</ParamField>
+<img src="/images/platform/users/users-config-page.png" alt="Users module settings with invitation configuration" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Who Can Send Invitations
+## How to enable
 
-<ParamField path="whoCanSendUserInvitation" type="select">
-  Control which permission level is required to send invitations:
+**Settings** → **Users & Profiles** → **Configuration** → **User Invitations** section
 
-  | Value | Who Can Invite |
-  |-------|----------------|
-  | **USER** | All members can invite |
-  | **HR_LOCAL** | Only local HR and above |
-  | **HR_TENANT** | Only organization HR and above |
-  | **ADMIN_LOCAL** | Only local admins and above |
-  | **ADMIN_TENANT** | Only organization admins |
-</ParamField>
+Two settings to configure:
 
----
+| Setting | What it does |
+|---------|-------------|
+| **User Invitations** | Toggle on to enable. Members get access to an "Invite" button. |
+| **Minimum permission to invite** | Who can send invitations. Set to "User" to let everyone invite, or restrict to HR/Admin roles. |
 
-## How Invitations Work
+### Who should be able to invite?
 
-### For the Inviter
-
-<Steps>
-  <Step title="Access invite feature">
-    Member clicks "Invite" from their menu or dashboard
-  </Step>
-  <Step title="Enter details">
-    Enters invitee's email and optional personal message
-  </Step>
-  <Step title="Send invitation">
-    Clicks send to deliver the invitation email
-  </Step>
-  <Step title="Track status">
-    Can see pending and accepted invitations
-  </Step>
-</Steps>
-
-### For the Invitee
-
-<Steps>
-  <Step title="Receive email">
-    Gets invitation email with personalized message
-  </Step>
-  <Step title="Click link">
-    Clicks the registration link in the email
-  </Step>
-  <Step title="Complete registration">
-    Fills out the registration form (linked to inviter)
-  </Step>
-  <Step title="Join organization">
-    Becomes a member with invitation tracked
-  </Step>
-</Steps>
+| Setting | Best for |
+|---------|----------|
+| **User** (everyone) | Communities growing through word-of-mouth. Maximum reach. |
+| **HR Local** | Local chapter leaders control who gets invited to their branch. |
+| **HR Tenant** | Central HR manages all new member intake. |
+| **Admin Tenant** | Only top-level admins can invite. Maximum control. |
 
 ---
 
-## Invitation Tracking
+## How it works
 
-All invitations are tracked in the system:
+### For the member sending an invite
 
-- **Pending invitations** - Sent but not yet accepted
-- **Accepted invitations** - Invitee completed registration
-- **Expired invitations** - Link expired without registration
+1. Click **Invite** from their dashboard or profile menu
+2. Enter the invitee's email address
+3. Optionally add a personal message
+4. Click Send
 
-Administrators can view invitation statistics and who invited whom.
+### For the person receiving the invitation
 
----
+1. They get an email from the organization (not a personal email — it's branded)
+2. The email includes the inviter's name, any personal message, and a registration link
+3. They click the link and land on the registration form with the invitation context pre-loaded
+4. They complete registration normally
+5. The referral is recorded — the system links them to their inviter
 
-## Invitation Email
+### What gets tracked
 
-The invitation email includes:
-
-- Organization name and branding
-- Inviter's name
-- Personal message (if provided)
-- Direct registration link
-- Organization description
-
-<Tip>
-  Personalized invitations with a message from the inviter have higher conversion rates than generic invites.
-</Tip>
+- Who invited who (referral chain)
+- Date the invitation was sent
+- Whether it was accepted, pending, or expired
+- The inviter can see their invitation status
 
 ---
 
-## Use Cases
+## Invitations + referral program
+
+Invitations provide the mechanism (sending emails). The [Referral Program](/platform/users/referral) provides the tracking and incentive layer.
+
+When both are enabled:
+- Every accepted invitation counts as a referral
+- Referral stats are tracked per member
+- You can see who your best recruiters are
+- If you have [Gamification](/platform/badges), you can award points/badges for referrals
+
+If you also set "Referrals needed for signup" to 1 in [Referral settings](/platform/users/referral), registration becomes **invite-only** — new users can only register if they received an invitation.
+
+---
+
+## Invitations + adhesion
+
+If [Adhesion](/platform/users/adhesion) is mandatory, invited members still need to complete the application process:
+
+1. Existing member sends invitation
+2. Invitee receives email and clicks the link
+3. They complete registration
+4. They're prompted to fill out the adhesion form
+5. Admin reviews and approves the application
+6. They become active members
+
+The invitation gets them to registration faster, but adhesion still gates full access.
+
+---
+
+## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Membership growth">
-    Enable all members to invite, encouraging organic growth through personal networks.
+  <Accordion title="I want to grow through member referrals but don't need formal tracking">
+    Just enable Invitations with the permission set to "User". Every member can invite by email. If you later want to track who's bringing in the most people, enable the [Referral Program](/platform/users/referral) too.
   </Accordion>
 
-  <Accordion title="Controlled recruitment">
-    Limit invitations to HR or admins when you want to carefully manage new member intake.
+  <Accordion title="I want invite-only registration">
+    Enable Invitations, then go to [Referral Program](/platform/users/referral) settings and set "Referrals needed for signup" to 1. Public registration is disabled — only people with invitation links can register.
   </Accordion>
 
-  <Accordion title="Referral programs">
-    Track who invites whom to recognize top recruiters or reward successful referrals.
+  <Accordion title="Invitations are being misused — too many low-quality sign-ups">
+    Restrict the permission level. Change from "User" to "HR Local" or higher. This limits who can invite without disabling the feature entirely. You can also enable [Adhesion](/platform/users/adhesion) to add a review step for all new members regardless of how they found you.
   </Accordion>
 
-  <Accordion title="Event-based invitations">
-    Allow members to invite guests to specific events (separate from full membership).
+  <Accordion title="A member invited someone but the invitation email didn't arrive">
+    Check the invitee's spam/junk folder first. The email comes from the organization (not the member's personal address), so it may be filtered. If the invitation was sent, it appears in the member's invitation list. You can also invite the person directly using an admin account.
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Best Practices
+## Related
 
-<AccordionGroup>
-  <Accordion title="Set appropriate permissions">
-    If your organization requires vetting of new members, restrict invitations to HR or admins.
-  </Accordion>
-
-  <Accordion title="Encourage personal messages">
-    Remind members that personal messages increase acceptance rates.
-  </Accordion>
-
-  <Accordion title="Monitor invitation quality">
-    If you're getting low-quality registrations, consider restricting who can invite.
-  </Accordion>
-
-  <Accordion title="Combine with adhesion">
-    Even if members can invite anyone, you can still require an adhesion (application) process for formal membership.
-  </Accordion>
-</AccordionGroup>
-
----
-
-## Related Settings
-
-- [Registration Form](/platform/users/registration-form) - What invitees see when they register
-- [Adhesion](/platform/users/adhesion) - Formal application process (can be combined with invitations)
-- [Referral Program](/platform/users/referral) - Track and reward referrals
+- [Referral Program](/platform/users/referral) — Track referrals and enable invite-only mode
+- [Registration Form](/platform/users/registration-form) — What invitees see when they register
+- [Adhesion](/platform/users/adhesion) — Application review (still applies to invited members)

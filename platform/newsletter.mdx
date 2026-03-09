@@ -1,246 +1,154 @@
 ---
 title: 'Newsletter'
-description: 'Send email updates and campaigns to your members'
+description: 'Send email campaigns to your members with segmentation, templates, and analytics'
 ---
 
-The Newsletter module enables you to communicate with members through email campaigns. Create beautiful newsletters, segment your audience, and track engagement.
+The Newsletter module lets you send email campaigns to your members — announcements, monthly updates, event promotions, or anything else you want in their inbox. Segment by Local Center, user type, or role so the right people get the right message.
 
-## How to access
-
-**Menu** → **Newsletter**
-
-Admin: **Settings** → **Modules** → Enable **Newsletter**
+<img src="/images/platform/communication/newsletter-list.png" alt="Newsletter campaigns list" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Prerequisites
+## Setting up newsletters
 
-- Newsletter module must be enabled
-- Email sending configured (AWS SES)
-- At least one member with valid email
+**Settings** → **Modules** → enable **Newsletter**
 
----
-
-## Newsletter Features
-
-| Feature | Description |
-|---------|-------------|
-| **Email campaigns** | Create and send mass emails |
-| **Templates** | Reusable email designs |
-| **Segmentation** | Target specific member groups |
-| **Scheduling** | Send at optimal times |
-| **Analytics** | Track opens and clicks |
+Email sending uses AWS SES (configured as part of your Orgo cloud setup — no additional setup needed).
 
 ---
 
-## Creating a Newsletter
+## Creating a campaign
+
+**Newsletter** → **Create Campaign**
+
+Start by picking a template — Blank, Daily News, Event Info, or one of your saved designs. Then fill out the campaign details.
+
+<img src="/images/platform/communication/newsletter-create.png" alt="New Campaign creation flow showing template selection carousel and campaign form with title, subject, and audience targeting" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 <Steps>
-  <Step title="Navigate to Newsletter">
-    Go to **Newsletter** → **Create Campaign**.
+  <Step title="Pick a template">
+    Choose a starting design from your template library. Start from scratch with Blank, or use a pre-built layout.
   </Step>
-  <Step title="Choose template">
-    Select a template or start from scratch.
+  <Step title="Set up the campaign">
+    Add a campaign title (internal), email subject (what recipients see), and select your audience. The sidebar gives you quick access to Campaign details, Content editor, Settings, Send, and Schedule.
   </Step>
-  <Step title="Design content">
-    Add text, images, and formatting.
+  <Step title="Build the email">
+    Use the drag-and-drop editor to design your email with text, images, buttons, dividers, and social links.
   </Step>
-  <Step title="Select recipients">
-    Choose target audience segments.
+  <Step title="Preview and test">
+    Send a test email to yourself to verify formatting, links, and personalization before sending to everyone.
   </Step>
-  <Step title="Preview and send">
-    Review and send or schedule.
+  <Step title="Send or schedule">
+    Send immediately or schedule for a specific date/time.
   </Step>
 </Steps>
 
----
-
-## Campaign Settings
-
-<ParamField path="subject" type="string" required>
-  Email subject line. Keep it concise and engaging.
-</ParamField>
-
-<ParamField path="preheader" type="string">
-  Preview text shown in email clients after subject.
-</ParamField>
-
-<ParamField path="senderName" type="string">
-  Name displayed as the sender.
-</ParamField>
-
-<ParamField path="replyTo" type="email">
-  Email address for replies.
-</ParamField>
+<img src="/images/platform/communication/newsletter-edit.png" alt="Campaign editor showing title, email subject, audience targeting with 5 options (All members, Members from a group, All contacts, List, Event attendees), and sidebar navigation" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Email Editor
+## The email editor
 
-### Content Blocks
+The drag-and-drop editor lets you build professional emails visually. The left sidebar shows placeholders and actions, the center is your email canvas, and the right panel has content blocks you can drag in.
 
-Build emails with drag-and-drop blocks:
+<img src="/images/platform/communication/newsletter-builder.png" alt="Newsletter email builder showing drag-and-drop editor with USSF Summer Camp 2026 email, content blocks panel on right (Columns, Button, Divider, Heading, Paragraph, Image), and placeholders sidebar on left" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-| Block | Description |
+Available content blocks:
+
+| Block | What it does |
 |-------|-------------|
-| **Text** | Rich text content |
-| **Image** | Photos and graphics |
-| **Button** | Call-to-action buttons |
-| **Divider** | Visual separators |
-| **Spacer** | Empty space |
-| **Social** | Social media links |
+| **Text** | Rich text content with formatting |
+| **Image** | Photos, graphics, logos |
+| **Button** | Call-to-action buttons (register, donate, read more) |
+| **Divider** | Visual separators between sections |
+| **Spacer** | Empty space for layout |
+| **Social** | Social media icon links |
 
 ### Personalization
 
-Insert dynamic content:
-- `{{firstName}}` - Member's first name
-- `{{lastName}}` - Member's last name
-- `{{email}}` - Member's email
-- `{{localCenter}}` - Member's local center
+Insert dynamic fields that resolve to each recipient's data:
+
+| Variable | Output |
+|----------|--------|
+| `{{firstName}}` | Member's first name |
+| `{{lastName}}` | Member's last name |
+| `{{email}}` | Member's email address |
+| `{{localCenter}}` | Member's Local Center name |
+
+### Templates
+
+Save any email design as a template for reuse. Organize templates by purpose: Announcements, Event Promotions, Monthly Updates, Welcome Emails.
+
+<img src="/images/platform/communication/newsletter-templates.png" alt="Email templates page showing 4 templates (Blank, Daily News, Event info, Newsletter Short) with preview thumbnails and Create button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Audience Segmentation
+## Audience segmentation
 
-### Target Options
+| Segment | Use when |
+|---------|---------|
+| **All members** | Org-wide announcements everyone should see |
+| **Local Center** | News relevant to one branch |
+| **User type** | Content specific to leaders, volunteers, youth, etc. |
+| **Role** | Communication to board members, financial admins, etc. |
+| **Custom filter** | Advanced criteria combining multiple attributes |
 
-| Segment | Description |
-|---------|-------------|
-| **All members** | Everyone with newsletter enabled |
-| **Local center** | Members of specific centers |
-| **User type** | By membership category |
-| **Role** | By assigned roles |
-| **Custom filter** | Advanced filtering |
-
-### Exclusions
-
-Automatically excluded:
-- Members who unsubscribed
-- Bounced email addresses
-- Inactive accounts (optional)
+Members who have unsubscribed or have bounced email addresses are automatically excluded.
 
 ---
 
-## Templates
+## Campaign analytics
 
-### Creating Templates
+After sending, track performance:
 
-1. Design your newsletter
-2. Click **Save as Template**
-3. Name the template
-4. Use for future campaigns
+| Metric | What it tells you |
+|--------|------------------|
+| **Sent** | Total emails dispatched |
+| **Delivered** | Successfully reached inboxes |
+| **Opens** | How many people opened the email |
+| **Clicks** | How many clicked a link |
+| **Bounces** | Failed deliveries (invalid addresses) |
+| **Unsubscribes** | People who opted out from this campaign |
 
-### Template Categories
-
-Organize templates by purpose:
-- Announcements
-- Event promotions
-- Monthly updates
-- Welcome emails
+Use open and click rates to understand what content resonates. Typical benchmarks: 20-30% open rate, 2-5% click rate for membership organizations.
 
 ---
 
-## Scheduling
+## Subscriber management
 
-### Send Options
+Members control their own email preferences:
+- Newsletter opt-in/opt-out from their profile settings
+- One-click unsubscribe link in every email footer (required for compliance)
+- Frequency preferences (if configured)
 
-| Option | Description |
-|--------|-------------|
-| **Send now** | Immediate delivery |
-| **Schedule** | Set specific date/time |
-| **Optimal time** | AI-suggested best time |
-
-### Time Zones
-
-Campaigns respect member time zones when scheduling for optimal delivery.
+As an admin, you cannot override a member's unsubscribe — this is required by email regulations (GDPR, CAN-SPAM).
 
 ---
 
-## Analytics
-
-### Campaign Metrics
-
-| Metric | Description |
-|--------|-------------|
-| **Sent** | Total emails sent |
-| **Delivered** | Successfully delivered |
-| **Opens** | Unique opens |
-| **Clicks** | Link clicks |
-| **Bounces** | Failed deliveries |
-| **Unsubscribes** | Opt-outs from campaign |
-
-### Tracking
-
-- Open tracking via pixel
-- Click tracking on links
-- Engagement over time
-- Device and client stats
-
----
-
-## Subscriber Management
-
-### Subscription Preferences
-
-Members control their preferences:
-- Newsletter opt-in/opt-out
-- Frequency preferences
-- Topic interests
-
-### Managing Unsubscribes
-
-- Automatic unsubscribe link in footer
-- One-click unsubscribe
-- Compliance with email regulations
-
----
-
-## Best Practices
+## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Write compelling subjects">
-    Keep subject lines under 50 characters. Be clear about content.
+  <Accordion title="Low open rates — emails might be going to spam">
+    Check that your sending domain has proper authentication set up (SPF, DKIM, DMARC). Avoid spam trigger words in subject lines. Send consistently — irregular sending patterns trigger spam filters. Ask members to add your sender address to their contacts.
   </Accordion>
 
-  <Accordion title="Optimize for mobile">
-    Most emails are read on mobile. Use responsive templates.
+  <Accordion title="I want to send different content to different branches">
+    Use audience segmentation. Create one campaign per Local Center, or use the Local Center segment to send the same template with localized content. Personalization variables like `{{localCenter}}` can tailor the content.
   </Accordion>
 
-  <Accordion title="Segment your audience">
-    Targeted emails have higher engagement than mass sends.
+  <Accordion title="A member says they didn't receive the newsletter">
+    Check: (1) are they unsubscribed? (2) was the email bounced? (3) check their spam/junk folder. In the campaign analytics, search for their email to see the delivery status.
   </Accordion>
 
-  <Accordion title="Test before sending">
-    Send test emails to verify formatting and links.
-  </Accordion>
-
-  <Accordion title="Respect preferences">
-    Honor unsubscribe requests promptly.
+  <Accordion title="When should I use newsletter vs. discussion post?">
+    Use **newsletter** for one-way communication that should reach inboxes — announcements, updates, campaigns. Use **discussion posts** for conversations where you want replies, reactions, and interaction. Many organizations post the content in both: a discussion post for engagement and a newsletter for reach.
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Troubleshooting
+## Related
 
-<AccordionGroup>
-  <Accordion title="Low open rates">
-    Improve subject lines. Check if emails land in spam.
-  </Accordion>
-
-  <Accordion title="High bounce rate">
-    Clean your email list. Remove invalid addresses.
-  </Accordion>
-
-  <Accordion title="Emails in spam">
-    Verify domain authentication (SPF, DKIM). Avoid spam trigger words.
-  </Accordion>
-</AccordionGroup>
-
----
-
-## Related Features
-
-- [Notifications](/platform/notifications) - Member notifications
-- [Groups](/platform/groups/index) - Audience segmentation
-- [Users](/platform/users/index) - Member management
+- [Notifications](/platform/notifications) — In-app and push notifications
+- [Discussions](/platform/discussion) — Forum-style communication
+- [Groups](/platform/groups) — Audience structure for segmentation

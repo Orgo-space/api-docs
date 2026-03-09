@@ -1,146 +1,92 @@
 ---
 title: 'Menu Organizer'
-description: 'Customize the navigation menu structure'
+description: 'Rearrange, hide, and rename sidebar navigation items'
 ---
 
-The Menu Organizer allows you to customize the navigation menu layout. Rearrange items, hide unused features, and create a streamlined experience for your members.
+The Menu Organizer lets you control what members see in the sidebar. Hide features you don't use, move important items to the top, and rename menu entries to match your terminology.
 
-## How to access
+---
+
+## How to use it
 
 **Settings** → **Customization** → **Menu Organizer**
 
----
+The organizer shows all menu items with drag handles and visibility toggles:
 
-## Prerequisites
+- **Drag** items up or down to reorder
+- **Toggle visibility** to show or hide items
+- **Rename** items with custom labels
+- **Save** to apply changes
 
-- Administrator access required
-
----
-
-## Menu Features
-
-| Feature | Description |
-|---------|-------------|
-| **Reorder items** | Drag and drop to rearrange |
-| **Hide items** | Remove items from menu |
-| **Custom labels** | Rename menu items |
-| **Role-based** | Different menus per role |
+Changes apply to all members immediately.
 
 ---
 
-## Menu Structure
+## Default menu items
 
-### Default Menu Items
-
-| Item | Description |
-|------|-------------|
-| **Dashboard** | Home page |
+| Item | What it links to |
+|------|-----------------|
+| **Dashboard** | Home page with widgets |
 | **Members** | Member directory |
 | **Groups** | Group listings |
 | **Events** | Event calendar |
-| **Discussions** | Forum |
+| **Discussions** | Discussion forum |
 | **Files** | Document storage |
-| **Settings** | Configuration (admin) |
+| **Fees** | Payment and fee management |
+| **Newsletter** | Email campaigns |
+| **Settings** | Configuration (admin only) |
+
+Not all items appear — only enabled modules show in the menu.
 
 ---
 
-## Customizing the Menu
+## Common customizations
 
-<Steps>
-  <Step title="Navigate to Menu Organizer">
-    Go to **Settings** → **Customization** → **Menu Organizer**.
-  </Step>
-  <Step title="View current menu">
-    See the current menu structure.
-  </Step>
-  <Step title="Drag to reorder">
-    Click and drag items to new positions.
-  </Step>
-  <Step title="Toggle visibility">
-    Show/hide items using the toggle.
-  </Step>
-  <Step title="Save layout">
-    Save your customized menu.
-  </Step>
-</Steps>
+### Minimal menu (simple community)
+
+Show only what members need:
+- Dashboard, Members, Events, Discussions
+- **Hide:** Files, Fees, Newsletter, Contacts, Issues
+
+### Events-focused (activity-heavy organization)
+
+Move Events to the top of the menu since it's the most-used feature.
+
+### Renamed menu (scouting organization)
+
+If you've customized [Labels](/platform/customization/labels), the menu automatically reflects those changes. "Members" becomes "Scouts", "Groups" becomes "Patrols".
 
 ---
 
-## Menu Options
+## Role-based visibility
 
-### Visibility
+Different roles see different menus:
 
-<ParamField path="isVisible" type="boolean">
-  Show or hide the menu item.
-</ParamField>
-
-### Position
-
-<ParamField path="position" type="number">
-  Order in the menu (lower = higher).
-</ParamField>
-
-### Custom Label
-
-<ParamField path="customLabel" type="string">
-  Override the default menu text.
-</ParamField>
-
----
-
-## Role-Based Menus
-
-Different user roles can see different menus:
-
-| Role | Menu Access |
+| Role | What they see |
 |------|-------------|
-| **Admin** | Full menu with settings |
-| **Moderator** | Extended menu without settings |
-| **Member** | Standard member menu |
-| **Guest** | Limited public menu |
+| **Admin** | Full menu including Settings |
+| **Member** | Standard menu without admin items |
+
+The Menu Organizer controls the member-facing menu. Admin-only items (like Settings) are always visible to admins regardless of menu configuration.
 
 ---
 
-## Common Customizations
-
-### Minimal Menu
-
-Hide rarely used items to simplify navigation:
-- Hide: Files, Contacts, Issues
-- Show: Dashboard, Members, Events, Discussions
-
-### Events-Focused
-
-Prioritize events for activity-heavy organizations:
-- Move Events to top
-- Show Calendar prominently
-- Hide unused features
-
----
-
-## Best Practices
+## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Prioritize common actions">
-    Put frequently used items at the top.
+  <Accordion title="Members are confused by too many menu items">
+    Hide modules you're not actively using. A clean sidebar with 5-6 items is easier to navigate than 12. You can always show hidden items later when you enable those features.
   </Accordion>
 
-  <Accordion title="Hide unused features">
-    Remove clutter by hiding modules you don't use.
-  </Accordion>
-
-  <Accordion title="Consider mobile">
-    Mobile menu space is limited, prioritize essentials.
-  </Accordion>
-
-  <Accordion title="Test with users">
-    Get feedback from members on navigation ease.
+  <Accordion title="I want different menus for different member types">
+    The Menu Organizer creates one menu for all members. For role-based differences, the system automatically hides items the member doesn't have access to. Admins see Settings; regular members don't.
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Related Features
+## Related
 
-- [Dashboard Organizer](/platform/customization/dashboard-organizer) - Dashboard layout
-- [Modules](/platform/organisation/modules) - Enable/disable features
+- [Dashboard Organizer](/platform/customization/dashboard-organizer) — Customize the dashboard layout
+- [Labels](/platform/customization/labels) — Rename menu items
+- [Modules](/platform/organisation/modules) — Enable/disable features (which also controls menu visibility)

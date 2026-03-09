@@ -1,155 +1,107 @@
 ---
 title: 'Referral Program'
-description: 'Track member referrals and encourage word-of-mouth growth'
+description: 'Track which members bring in new people — and optionally make registration invite-only'
 ---
 
-The Referral Program tracks which members bring in new registrations, helping you recognize top advocates and measure organic growth.
+The Referral Program tracks which members bring in new registrations through [Invitations](/platform/users/invitations). It answers "who brought this member?" and "who are our best recruiters?" — and can optionally make your organization invite-only.
 
-## How to access
+**Referrals build on Invitations.** The [Invitations](/platform/users/invitations) feature lets members send invitation emails. The Referral Program adds the tracking and statistics layer on top. Enable both for the full picture.
 
-**Settings** → **Users & Profiles** → **Users Module** → **Referral Settings**
-
----
-
-## Enabling Referrals
-
-The referral system is integrated with the invitation feature. When members invite others and those invitations are accepted, the referral is tracked.
-
-<ParamField path="isActive" type="boolean">
-  Enable referral tracking. When on, the system records who referred each new member.
-</ParamField>
+<img src="/images/platform/users/referral-settings.png" alt="Referral Program settings with enable toggle, number of referrals needed, and customizable referral questions" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Configuration
+## How to enable
 
-<ParamField path="numberOfReferralsNeededForSignup" type="number">
-  If set, new users must be referred by an existing member to register. This creates an invite-only membership model.
+**Settings** → **Users & Profiles** → **Referral Program**
 
-  - Set to `1` - Requires one referral to register
-  - Set to `0` or leave empty - Open registration (referrals tracked but not required)
-</ParamField>
-
----
-
-## How Referrals Work
-
-### Tracking Flow
-
-<Steps>
-  <Step title="Member sends invitation">
-    Existing member invites someone using the invitation feature.
-  </Step>
-  <Step title="Invitee registers">
-    New user clicks the invitation link and completes registration.
-  </Step>
-  <Step title="Referral recorded">
-    The system links the new member to their referrer.
-  </Step>
-  <Step title="Stats updated">
-    Referrer's count increases and appears in their referral stats.
-  </Step>
-</Steps>
-
-### What's Tracked
-
-- Referrer (who sent the invitation)
-- Referee (who joined)
-- Date of referral
-- Status (pending, completed)
+| Setting | What it does |
+|---------|-------------|
+| **Referral Program** | Toggle on to start tracking who refers who |
+| **Referrals needed for signup** | Set to **0** (or empty): Open registration, referrals tracked in the background. Set to **1+**: **Invite-only mode** — public registration is disabled, new users must receive an invitation to register. |
 
 ---
 
-## Viewing Referral Data
+## Open tracking vs invite-only
 
-### For Administrators
+### Open registration with tracking (recommended to start)
 
-Access referral reports to see:
-- Top referrers
-- Referral trends over time
-- Conversion rates (invites sent vs. accepted)
+Set "Referrals needed for signup" to **0**.
 
-### For Members
+- Anyone can register normally
+- If they came through a member's invitation link, the referral is recorded
+- If they registered on their own, no referral is recorded
+- You get data on organic vs referred growth
 
-Members can see their own referral activity:
-- Number of successful referrals
-- Status of pending invitations
-- Who they've referred
+### Invite-only mode
 
----
+Set "Referrals needed for signup" to **1**.
 
-## Invite-Only Mode
-
-When `numberOfReferralsNeededForSignup` is set to 1 or more:
-
-- Public registration is disabled
-- Users must receive an invitation to register
-- The registration page shows a message explaining the invite-only policy
-- Invited users can register normally
+- Public registration page shows a message that membership is by invitation only
+- Only people who received an invitation link can register
+- Every new member is tracked to their referrer
+- Growth is entirely controlled by existing members
 
 <Warning>
-  Invite-only mode significantly limits growth. Only use it if your organization specifically requires controlled membership.
+  Invite-only mode significantly limits growth. Only use it if your organization specifically requires controlled, member-vetted membership. Most organizations are better served by open registration with referral tracking.
 </Warning>
 
 ---
 
-## Use Cases
+## What gets tracked
+
+| Data point | Description |
+|-----------|-------------|
+| **Referrer** | Who sent the invitation |
+| **Referee** | Who registered through the link |
+| **Date** | When the referral was completed |
+| **Status** | Pending (invited but not registered) or Completed (registered) |
+
+### For admins
+
+View organization-wide referral stats:
+- Top referrers — who's bringing in the most members
+- Referral trends — growth over time from referrals vs direct registration
+- Conversion rates — invitations sent vs accepted
+
+### For members
+
+Members can see their own referral activity:
+- How many people they've successfully referred
+- Status of pending invitations
+
+---
+
+## Combining with gamification
+
+If you have the Gamification module enabled, reward your best recruiters:
+- Award points for each successful referral
+- Create badges for referral milestones (5 referrals, 10 referrals, etc.)
+- Display a leaderboard of top referrers
+
+[Learn more about Gamification →](/platform/badges)
+
+---
+
+## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Growth tracking">
-    Understand how your organization grows. Identify whether growth comes from referrals, marketing, or other channels.
+  <Accordion title="I want to know how members are finding us, but I don't want to restrict registration">
+    Enable the Referral Program with "Referrals needed" set to 0. Registration stays open. You'll see which members came through referrals vs found you on their own.
   </Accordion>
 
-  <Accordion title="Recognizing advocates">
-    Identify members who actively bring in new people. Recognize them with badges or acknowledgment.
+  <Accordion title="I want to create an exclusive, invite-only community">
+    Enable Referral with "Referrals needed" set to 1. Enable [Invitations](/platform/users/invitations) so existing members can send invites. Consider also enabling [Adhesion](/platform/users/adhesion) so you can review invited applicants before they're admitted.
   </Accordion>
 
-  <Accordion title="Exclusive communities">
-    Create invite-only membership for exclusive groups or beta programs.
-  </Accordion>
-
-  <Accordion title="Quality control">
-    Referrals tend to bring higher-quality members. Members refer people similar to themselves.
+  <Accordion title="A member's invitation count seems wrong">
+    Referrals are only counted when the invited person completes registration. If someone was invited but never registered, it stays as "pending" and doesn't count toward the referrer's total.
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Combining with Gamification
+## Related
 
-If you have the Gamification module enabled, you can:
-
-- Award points for successful referrals
-- Create badges for referral milestones
-- Display leaderboards of top referrers
-
-[Learn more about Gamification →](/platform/gamification)
-
----
-
-## Best Practices
-
-<AccordionGroup>
-  <Accordion title="Make inviting easy">
-    Ensure the invitation feature is easily accessible and the process is simple.
-  </Accordion>
-
-  <Accordion title="Acknowledge referrers">
-    Publicly recognize or thank members who bring in new people.
-  </Accordion>
-
-  <Accordion title="Track quality, not just quantity">
-    A member who refers 5 active participants is more valuable than one who refers 20 inactive accounts.
-  </Accordion>
-
-  <Accordion title="Consider incentives carefully">
-    If you offer rewards for referrals, ensure they don't encourage gaming the system.
-  </Accordion>
-</AccordionGroup>
-
----
-
-## Related Settings
-
-- [Invitations](/platform/users/invitations) - Enable and configure member invitations
-- [Gamification](/platform/gamification/badges) - Award points/badges for referrals
+- [Invitations](/platform/users/invitations) — The mechanism for sending invitations (referral tracks them)
+- [Gamification](/platform/badges) — Reward referrers with points and badges

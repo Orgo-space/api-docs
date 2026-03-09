@@ -1,293 +1,298 @@
 ---
 title: 'Event Ticketing'
-description: 'Set up free or paid tickets with multiple price tiers for your events'
+description: 'Sell tickets with multiple price tiers, member discounts, and Stripe checkout'
 ---
 
-Event Ticketing allows you to manage attendance through ticket types, prices, and capacity limits. Support both free and paid events with integrated Stripe payments.
+Ticketing lets you charge for events, offer multiple price tiers, and manage capacity per ticket type. Attendees pay via Stripe, receive a QR code ticket by email, and check in at the door by scanning it.
 
-## How to access
+Even for free events, ticketing is useful when you need different registration categories (e.g., "Member" vs "Guest" vs "Speaker").
 
-When editing an event: **Event** → **Ticket Settings** tab
+<img src="/images/platform/events/event-tickets.png" alt="Ticket types showing Scout Registration ($150, 350 seats), Adult Leader ($100, 100 seats), and Staff/Volunteer (Free, 50 seats)" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
 ## Prerequisites
 
 <Warning>
-  To enable paid tickets, you must first set up Stripe in **Settings** → **Payments** → **Online Payments**.
+  Paid tickets require Stripe. Set up your payment integration first at **Settings** → **Payments** → **Online Payments**. See [Stripe Setup](/platform/fees/stripe-integration).
 </Warning>
 
 Also ensure:
 - **Online Payments** module is enabled
-- **Event Ticket Payments** is enabled in Events module settings
+- **Event Ticket Payments** is enabled in **Settings** → **Events**
+
+For free-only ticketing (multiple registration categories without payment), you don't need Stripe.
 
 ---
 
-## Enabling Ticketing
+## Setting up tickets
 
-### During Event Creation
+When creating or editing an event, go to the **Ticket Settings** tab.
 
 <Steps>
-  <Step title="Create or edit event">
-    Open the event creation form or edit an existing event.
-  </Step>
   <Step title="Enable ticketing">
     Toggle on "Enable Ticket Payment" in the event settings.
   </Step>
-  <Step title="Configure tickets">
-    Access "Ticket Settings" to create ticket types.
+  <Step title="Create ticket types">
+    Add one or more ticket types with name, price, and optional quantity limits.
+  </Step>
+  <Step title="Configure availability">
+    Set start/end dates for each ticket type to control when they're purchasable.
+  </Step>
+  <Step title="Save">
+    Tickets appear on the event page immediately.
   </Step>
 </Steps>
 
 ---
 
-## Creating Ticket Types
+## Ticket type settings
 
-Each event can have multiple ticket types. Common examples:
+Each ticket type has these options:
 
-| Ticket Type | Description | Use Case |
-|-------------|-------------|----------|
-| **General Admission** | Standard entry | Most attendees |
-| **Early Bird** | Discounted early purchase | Incentivize early registration |
-| **Member** | Members-only pricing | Benefit for members |
-| **Student** | Reduced price | Students with valid ID |
-| **VIP/Premium** | Enhanced experience | Special access/perks |
-| **Free** | No charge | Open events, invited guests |
-
-### Ticket Settings
-
-<ParamField path="name" type="string" required>
-  Ticket type name (e.g., "General Admission", "VIP Pass").
-</ParamField>
-
-<ParamField path="description" type="string">
-  Description of what's included with this ticket.
-</ParamField>
-
-<ParamField path="price" type="number" required>
-  Ticket price in your organization's currency. Set to 0 for free tickets.
-</ParamField>
-
-<ParamField path="quantity" type="number">
-  Maximum number of tickets available for this type. Leave empty for unlimited.
-</ParamField>
-
-<ParamField path="membersOnly" type="boolean">
-  When enabled, only logged-in members can purchase this ticket type.
-</ParamField>
-
-<ParamField path="startDate" type="datetime">
-  When this ticket becomes available for purchase.
-</ParamField>
-
-<ParamField path="endDate" type="datetime">
-  When this ticket stops being available.
-</ParamField>
+| Setting | What it does |
+|---------|-------------|
+| **Name** | What attendees see: "General Admission", "Early Bird", "VIP" |
+| **Description** | What's included: "Includes lunch and networking session" |
+| **Price** | Amount in your currency. Set to 0 for free registration categories. |
+| **Max seats** | Maximum tickets available for this type. Leave empty for unlimited. When sold out, the ticket shows "Sold Out" while other types remain available. |
+| **Members only** | Only logged-in members can purchase. Non-members won't see this ticket. |
+| **Start date** | When this ticket becomes available for purchase. |
+| **End date** | When this ticket stops being available. |
 
 ---
 
-## Member vs Public Tickets
+## Common pricing strategies
 
-### Members-Only Tickets
+### Early bird + regular pricing
 
-Toggle "Members Only" to restrict purchase:
-- Requires login to purchase
-- Verifies membership status
-- Can be combined with member pricing
+Create two tickets with overlapping availability:
 
-### Public Tickets
+| Ticket | Price | Available |
+|--------|-------|-----------|
+| Early Bird | $50 | Now → March 1 |
+| Regular | $75 | March 1 → Event date |
 
-Available to anyone:
-- No login required
-- Guest checkout supported
-- Collects contact information at purchase
+The early bird sells out or expires, then regular pricing kicks in. This creates urgency and rewards early commitment.
 
----
+### Member vs. non-member pricing
 
-## Ticket Pricing Strategies
+| Ticket | Price | Members only? |
+|--------|-------|--------------|
+| Member | $40 | Yes |
+| Non-Member | $60 | No |
 
-<AccordionGroup>
-  <Accordion title="Early Bird Pricing">
-    Create a discounted ticket with an end date before your regular tickets become available.
+Members see both options but the member price is clearly a benefit. Non-members only see the public price.
 
-    Example:
-    - Early Bird: $50 (available until March 1)
-    - Regular: $75 (available from March 1)
-  </Accordion>
+### Tiered access
 
-  <Accordion title="Tiered Member Pricing">
-    Create separate tickets for members and non-members:
+| Ticket | Price | Quantity | Includes |
+|--------|-------|----------|----------|
+| General | $50 | Unlimited | Standard entry |
+| VIP | $100 | 50 | Front row, meet & greet, swag bag |
+| Speaker | $0 | 20 | Complimentary for speakers |
 
-    - Member Ticket: $40 (members only)
-    - Public Ticket: $60
-  </Accordion>
+### Free event with categories
 
-  <Accordion title="VIP Upgrades">
-    Offer premium options with added benefits:
+| Ticket | Price | Members only? |
+|--------|-------|--------------|
+| Member | $0 | Yes |
+| Guest | $0 | No |
 
-    - General: $50 (standard entry)
-    - VIP: $100 (front row, meet & greet, swag bag)
-  </Accordion>
-
-  <Accordion title="Free with Registration">
-    Set price to $0 for free events that still need registration:
-
-    - Free Ticket: $0 (tracks attendance, sends confirmations)
-  </Accordion>
-</AccordionGroup>
+No money changes hands, but you track who's a member and who's an external guest. Useful for networking events.
 
 ---
 
-## Managing Capacity
+## Managing capacity
 
-### Per-Ticket Limits
+### Per-ticket limits
 
-Set quantity limits on individual ticket types:
-- Limit VIP tickets to 50
-- Unlimited general admission
+Limit individual ticket types independently:
+- VIP: 50 available
+- General: Unlimited
 
-### Event-Level Capacity
+When a ticket type sells out, it shows "Sold Out" on the event page. Other types remain available.
 
-Set overall event capacity in event settings:
-- Across all ticket types combined
-- Enables waitlist when full
+### Event-level capacity
 
-### Sold Out Handling
-
-When tickets sell out:
-- Ticket type shows "Sold Out"
-- Waitlist option (if enabled)
-- Other available tickets still purchasable
+Set an overall maximum in the event settings. This caps total registrations across all ticket types combined. When the event is full:
+- All tickets show "Sold Out"
+- If waitlist is enabled, new registrants join the waitlist
+- When someone cancels, the next waitlisted person is notified
 
 ---
 
-## Invitations & Complimentary Tickets
+## Orders and payments
 
-### Inviting Members
+Once tickets start selling, track all orders from the event sidebar → **Payments**.
 
-<Steps>
-  <Step title="Go to Participants">
-    Open the event's Participants section.
-  </Step>
-  <Step title="Click Invite">
-    Select "Invite Member" or "Invite External".
-  </Step>
-  <Step title="Select invitees">
-    Choose members or enter external email addresses.
-  </Step>
-  <Step title="Send invitations">
-    Invitees receive email with RSVP link.
-  </Step>
-</Steps>
+<img src="/images/platform/events/event-payments.png" alt="Event orders list showing 31 orders with paid and refunded statuses, amounts, and dates" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-Invited guests:
-- Bypass ticket purchase
-- Marked as "Invited" status
-- Can attend for free
-
-### External Invitations
-
-For non-members:
-- Enter email address
-- They receive invitation email
-- Can register without account
+Each order shows the attendee's name, status (Paid, Refunded), ticket type, amount, and date. Filter by name, email, or status to find specific orders. Refunds can be processed directly from this view.
 
 ---
 
-## Payment Processing
+## The purchase flow
 
-### Checkout Flow
+What your attendees experience:
 
 <Steps>
   <Step title="Select tickets">
-    Customer chooses ticket type and quantity.
+    Choose ticket type and quantity on the event page.
   </Step>
   <Step title="Enter details">
-    Provide name, email, and any required fields.
+    Provide name, email, and any required registration fields.
   </Step>
-  <Step title="Payment">
-    Secure payment via Stripe.
+  <Step title="Pay">
+    Secure checkout via Stripe — credit/debit cards, Apple Pay, Google Pay, and local payment methods depending on your Stripe configuration.
   </Step>
-  <Step title="Confirmation">
-    Email with ticket/QR code sent.
+  <Step title="Receive ticket">
+    Confirmation email with event details and a QR code for check-in.
   </Step>
 </Steps>
 
-### Payment Methods
+<img src="/images/platform/events/event-checkout.png" alt="Checkout form showing email, full name, order summary with ticket selection, GDPR privacy policy checkbox, terms and conditions checkbox, and Complete Registration button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-Depending on your Stripe configuration:
-- Credit/debit cards
-- Apple Pay / Google Pay
-- Local payment methods (varies by country)
+---
 
-### Refunds
+## Addons
+
+Addons are optional extras that attendees can purchase alongside their ticket — lunch, a workshop session, parking, a +1 guest, merchandise. Each addon has its own price and capacity, independent of the ticket.
+
+| Setting | What it does |
+|---------|-------------|
+| **Name** | What attendees see: "Lunch Package", "Workshop: Advanced Track", "Parking Pass" |
+| **Description** | What's included |
+| **Price** | Cost per unit. Set to 0 for free extras. |
+| **Max quantity per ticket** | How many of this addon a single attendee can buy (default: 10) |
+| **Max total** | Overall capacity for this addon across all attendees. When sold out, it's no longer available. Leave empty for unlimited. |
+| **Creates attendee** | If enabled, purchasing this addon creates a child attendee record — useful for "+1 Guest" addons where the extra person needs their own QR code and check-in. |
+
+Addons are linked to specific ticket types, so you can offer different extras for VIP vs. General Admission.
+
+### Example: Conference with addons
+
+| Addon | Price | Max per ticket | Max total | Creates attendee? |
+|-------|-------|---------------|-----------|-------------------|
+| Lunch (Day 1) | $25 | 1 | 200 | No |
+| Lunch (Day 2) | $25 | 1 | 200 | No |
+| Workshop: AI Track | $50 | 1 | 40 | No |
+| Workshop: Leadership | $50 | 1 | 40 | No |
+| +1 Guest | $30 | 1 | 100 | Yes |
+| Parking Pass | $15 | 1 | 50 | No |
+| Event T-Shirt | $20 | 3 | — | No |
+
+The workshop addons have a max total of 40, so once 40 people across all ticket types select that workshop, it shows as sold out.
+
+---
+
+## QR code check-in
+
+Every registered attendee receives a unique QR code — visible on their event page and sent in their confirmation email. On event day, check people in by scanning it.
+
+<img src="/images/platform/events/event-qr-ticket.png" alt="Event page showing ticket confirmation with QR code, 'Registration confirmed' status, and Download button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+### How it works
+
+1. Attendee shows their QR code (on phone or printed)
+2. An admin opens the **QR Scanner** from the event's participant list
+3. Scan the code — the system instantly shows:
+   - Attendee name and profile photo
+   - Ticket type and price paid
+   - Payment status (paid, pending, invited)
+   - Addon purchases
+   - Whether they've already checked in
+4. Confirm check-in with one tap
+
+The QR code is a SHA-256 hash unique to each registration — it can't be guessed or duplicated.
+
+<Note>
+  QR scanning requires **HR Tenant** permissions or higher. Any admin with event management access can check people in.
+</Note>
+
+### Manual check-in
+
+For walk-ins or when QR scanning isn't practical, open the **Participants** tab and mark attendees as "Attended" manually. You can also record walk-ins who weren't pre-registered.
+
+---
+
+## Ticket holds
+
+When an attendee starts the checkout process, their seats are temporarily held for **8 minutes**. This prevents overselling — if someone is filling in payment details, those seats aren't available to others.
+
+- Holds expire automatically if checkout isn't completed
+- Maximum 10 holds per session to prevent abuse
+
+---
+
+## Speakers
+
+Add speakers to your event to display them on the event page. Speakers can be existing members or external contacts.
+
+<img src="/images/platform/events/event-speakers.png" alt="Event speakers tab showing three speakers with profile photos, names, and bios" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+| Setting | What it does |
+|---------|-------------|
+| **Internal speaker** | Select an existing Orgo member — their name, bio, and photo are pulled from their profile |
+| **External speaker** | Select from your contacts list — name and bio from the contact record |
+
+Speakers appear on the public event page with their photo, name, and headline. This is useful for conferences, webinars, and panel events.
+
+---
+
+## Invitations and complimentary tickets
+
+Not everyone pays. For speakers, sponsors, VIPs, or staff:
+
+1. Go to the event → **Participants** tab
+2. Click **Invite Member** (for Orgo members) or **Invite External** (for non-members)
+3. Select people or enter email addresses
+4. They receive an invitation email with an RSVP link
+5. Invited guests bypass ticket purchase entirely
+
+Invited attendees are marked as "Invited" in the participant list — easy to distinguish from paying attendees.
+
+---
+
+## Refunds
 
 Process refunds through:
-- Event participant management
-- Stripe dashboard
+- **Event participant management** — find the attendee and process a refund
+- **Stripe dashboard** — for more complex refund scenarios
+
+Refunded attendees have their registration cancelled and the spot opens up (or goes to the waitlist).
 
 ---
 
-## Public Event Page
-
-When ticketing is enabled, your event gets a public URL:
-
-```
-https://app.orgo.space/public/event/{event-uuid}
-```
-
-This page shows:
-- Event details
-- Available tickets with prices
-- Purchase/registration form
-
-Share this URL on social media, email campaigns, or your website.
-
----
-
-## Checking Attendees In
-
-After purchase, attendees receive:
-- Confirmation email
-- Ticket with QR code
-
-At the event:
-- Scan QR codes with the Orgo mobile app
-- Or check in manually from participant list
-
-[Learn more about Attendance →](/platform/events/attendance)
-
----
-
-## Best Practices
+## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Name tickets clearly">
-    "General Admission - $50" is clearer than "Type A".
+  <Accordion title="I want different prices for different user types (students, seniors)">
+    Create separate ticket types for each price tier. Use the "Members only" toggle if some tiers should only be visible to logged-in members. For honor-system tiers (like "Student"), add a note in the description saying verification may be required at check-in.
   </Accordion>
 
-  <Accordion title="Set realistic quantities">
-    Consider your venue capacity and expected demand.
+  <Accordion title="How do I offer a group discount?">
+    Orgo doesn't have built-in group discount pricing. Workarounds: (1) create a "Group of 5" ticket at a discounted total, (2) share a promo code manually, or (3) handle group registrations offline and invite the group as complimentary attendees.
   </Accordion>
 
-  <Accordion title="Use early bird strategically">
-    End early bird 2-4 weeks before the event to create urgency.
+  <Accordion title="Someone bought a ticket but can't attend — can they transfer it?">
+    There's no self-service transfer. An admin can cancel the original registration (and refund if needed), then invite the replacement person as a complimentary attendee or have them purchase a new ticket.
   </Accordion>
 
-  <Accordion title="Test the purchase flow">
-    Buy a ticket yourself to verify everything works.
+  <Accordion title="I want to test the purchase flow before going live">
+    Create the event as a draft, enable ticketing, and test using Stripe's test mode. Once you've verified everything works, switch Stripe to live mode and publish the event.
   </Accordion>
 
-  <Accordion title="Monitor sales">
-    Track ticket sales and adjust availability as needed.
+  <Accordion title="Tickets are selling slowly — what can I do?">
+    Share the public event URL on social media and in newsletters. Consider extending the early bird deadline. Send reminders to members who haven't registered. Ask group admins to promote the event in their Local Center discussions.
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Related Features
+## Related
 
-- [Create Event](/platform/events/create-event) - Event creation basics
-- [Public Page](/platform/events/public-page) - Customize event pages
-- [Attendance](/platform/events/attendance) - Check-in and tracking
-- [Stripe Setup](/platform/payments/stripe-setup) - Payment configuration
+- [Create Event](/platform/events/create-event) — Event creation basics
+- [Public Event Pages](/platform/events/public-page) — The page where tickets are sold
+- [Attendance](/platform/events/attendance) — QR code check-in at the event
+- [Stripe Setup](/platform/fees/stripe-integration) — Payment configuration

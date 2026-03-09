@@ -1,245 +1,190 @@
 ---
 title: 'Role Groups'
-description: 'Groups based on member roles, demographics, or criteria'
+description: 'Automatically populated groups based on user type, age, gender, or custom fields'
 ---
 
-Role Groups are specialized segments that automatically organize members based on specific roles, demographics, or criteria such as age, gender, user type, or custom fields. They provide focused spaces for members who share similar responsibilities or characteristics.
+Role Groups create themselves. You define criteria — "all Leaders", "members aged 18-25", "everyone with Certification Level = Advanced" — and the system automatically adds every matching member. When a member's profile changes, their Role Group memberships update too.
 
-## How to access
+Use Role Groups when you need a collaborative space for a segment of your organization that's defined by **who members are**, not where they are (that's Local Centers) or what project they're on (that's Private Groups).
 
-**Settings** → **Groups** → **Role Groups**
-
-Or: **Sidebar** → **Groups** → View role-based groups
-
----
-
-## What are Role Groups
-
-Role Groups provide:
-
-- **Automatic membership** - Members are assigned based on matching criteria
-- **Targeted collaboration** - Focused discussions for specific roles or demographics
-- **Role-based resources** - Share documents relevant to specific groups
-- **Efficient communication** - Reach specific segments of your organization
+<img src="/images/platform/groups/role-groups-settings.png" alt="Role groups configuration showing automated groups with criteria for Youth Scouts, Adult Leaders, and Eagle Scout Candidates" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## How Role Groups Work
+## Do I need Role Groups?
 
-Unlike regular groups where members join manually, Role Groups automatically include members based on defined criteria:
+| Your situation | Recommendation |
+|---------------|----------------|
+| You want a space for all Leaders to coordinate | Yes — create a Role Group with criteria "User Type = Leader" |
+| You need age-specific content (youth program, seniors group) | Yes — create a Role Group with an age range |
+| You want to reach all members of a specific profession | Yes — criteria based on a custom field |
+| You need a project team with hand-picked members | No — use a [Private Group](/platform/groups/private-groups) instead |
+| You want to send announcements to everyone | No — use the [Main Group](/platform/groups/main-group) |
+
+---
+
+## How Role Groups work
 
 ```
-Criteria: User Type = "Leader"
-    ↓
-System automatically adds all Leaders to the group
-    ↓
-New Leaders are added automatically
-    ↓
-Members losing Leader status are removed
+You define criteria:    User Type = "Leader"
+                                ↓
+System scans all members and adds matches
+                                ↓
+Maria gets promoted to Leader → automatically added
+                                ↓
+Tom steps down from Leader → automatically removed
 ```
+
+There is no manual membership management. The system keeps the group in sync with your member data. When someone's profile changes — they get a new user type, turn 18, update a custom field — their Role Group memberships adjust automatically.
 
 ---
 
-## Creating Role Groups
+## Enable Role Groups
+
+**Settings** → **Groups** → **Module Settings** → toggle **Role Groups** on.
+
+---
+
+## Creating a Role Group
 
 **Settings** → **Groups** → **Role Groups** → **Create Role Group**
 
 <Steps>
-  <Step title="Define criteria">
-    Select the criteria for automatic membership (user type, age range, gender, etc.).
-  </Step>
   <Step title="Name the group">
-    Give the group a descriptive name reflecting its purpose.
+    Give it a clear name that reflects the membership: "All Leaders", "Youth Members (13-17)", "Board of Directors".
+  </Step>
+  <Step title="Define criteria">
+    Select the criteria that determines membership. You can combine multiple criteria.
   </Step>
   <Step title="Enable features">
-    Choose which features to enable (discussions, events, files).
+    Choose which features the group needs: Discussions, Events, Files, Issues.
   </Step>
-  <Step title="Configure permissions">
-    Set who can post, create events, and upload files.
+  <Step title="Set permissions">
+    Configure who can post, create events, and upload files.
   </Step>
   <Step title="Save">
-    Save to create the Role Group and automatically populate membership.
+    The system immediately populates the group with all matching members.
   </Step>
 </Steps>
 
 ---
 
-## Criteria Types
+## Criteria types
 
-Role Groups can be based on:
+You can base Role Groups on any of these member attributes:
 
-### User Type
+| Criteria | Example groups |
+|----------|---------------|
+| **User Type** | "All Leaders", "All Volunteers", "Staff Members" |
+| **Age range** | "Youth (13-17)", "Young Adults (18-30)", "Seniors (60+)" |
+| **Gender** | "Women's Network", "Men's Group" |
+| **Custom fields** | "Certification Level = Advanced", "Department = Engineering", "Years of Membership > 5" |
 
-Groups based on member's user type classification:
+### Combining criteria
 
-- Leaders
-- Volunteers
-- Board Members
-- Staff
-- Youth members
-- (Custom user types)
+You can combine multiple criteria for more specific groups:
 
-### Age Range
+- User Type = "Leader" **AND** Age > 18 → "Adult Leaders"
+- Custom Field "Department" = "Engineering" **AND** User Type = "Staff" → "Engineering Staff"
 
-Groups based on member age:
-
-- Youth (under 18)
-- Young Adults (18-30)
-- Adults (30+)
-- Seniors (60+)
-- Custom age ranges
-
-### Gender
-
-Groups based on gender if specified:
-
-- Female members
-- Male members
-- Non-binary members
-
-### Custom Fields
-
-Groups based on custom profile field values:
-
-- Department
-- Profession
-- Certification level
-- Years of membership
-- (Any custom field)
+<Warning>
+  Be careful not to over-segment. A Role Group with criteria so specific that only 2-3 people qualify isn't useful — you'd be better off with a Private Group. Role Groups work best for meaningful segments with 10+ members.
+</Warning>
 
 ---
 
-## Role Group Features
+## What happens inside a Role Group
 
-Each Role Group can include:
+Each Role Group is a full collaborative space, the same as any other group:
 
-### Discussions
-
-- Role-specific conversations
-- Share expertise and best practices
-- Mentoring and support
-- Announcements for the role
-
-### Events
-
-- Training sessions
-- Role-specific meetings
-- Networking events
-- Professional development
-
-### Files
-
-- Training materials
-- Role-specific documentation
-- Templates and resources
-- Guidelines and policies
+| Feature | Use it for |
+|---------|-----------|
+| **Discussions** | Coordination between all members of this segment — training updates, best practice sharing, role-specific announcements |
+| **Events** | Role-specific meetings, training sessions, professional development |
+| **Files** | Training materials, handbooks, templates relevant to this role |
+| **Issues** | Track tasks and action items for this segment |
 
 ---
 
-## Use Cases
+## Practical examples
 
-<AccordionGroup>
-  <Accordion title="Leadership groups">
-    Connect all leaders for sharing best practices, training resources, and coordination.
-  </Accordion>
+### Youth scouting organization
 
-  <Accordion title="Youth programs">
-    Create age-appropriate spaces for younger members with relevant content and activities.
-  </Accordion>
+| Role Group | Criteria | Purpose |
+|-----------|----------|---------|
+| All Leaders | User Type = Leader | Leadership coordination, training resources |
+| Youth Members | Age 10-17 | Age-appropriate activities and discussions |
+| Young Adults | Age 18-25 | Transition support, young leader development |
+| Board Members | User Type = Board Member | Board governance, meeting documents |
+| Parents | User Type = Parent | Parent communication, volunteer coordination |
 
-  <Accordion title="Professional development">
-    Group members by profession or skill level for targeted learning opportunities.
-  </Accordion>
+### Professional association
 
-  <Accordion title="Committee coordination">
-    Automatically group committee members for efficient communication.
-  </Accordion>
-
-  <Accordion title="New member onboarding">
-    Create a group for new members in their first year with onboarding resources.
-  </Accordion>
-
-  <Accordion title="Regional coordination">
-    Group members by geographic area for regional planning and coordination.
-  </Accordion>
-</AccordionGroup>
+| Role Group | Criteria | Purpose |
+|-----------|----------|---------|
+| Certified Members | Custom Field "Certification" = Yes | CPD tracking, certification renewals |
+| New Members (< 1 year) | Custom Field "Join Year" = current | Onboarding resources, mentorship matching |
+| Committee Chairs | User Type = Committee Chair | Cross-committee coordination |
 
 ---
 
-## Managing Role Groups
+## How membership stays current
 
-### Membership Updates
+- When you **change a member's user type**, their Role Group memberships update automatically
+- When a member's **birthday** crosses an age threshold, age-based groups update
+- When an admin **updates a custom field** value on a member's profile, relevant groups adjust
+- The system syncs regularly — changes are reflected within minutes, not days
 
-- Membership is **automatic** - no manual management needed
-- System syncs daily to add/remove members based on criteria
-- Changes to member profiles trigger membership recalculation
-- Administrators cannot manually add members (criteria-based only)
-
-### Viewing Members
-
-1. Navigate to the Role Group
-2. Go to **Members** tab
-3. View all qualifying members
-4. Filter and search as needed
-
-### Archiving Role Groups
-
-If a Role Group is no longer needed:
-
-1. Go to group settings
-2. Archive the group
-3. Content is preserved but group is hidden
-4. Members are removed from active roster
+<Info>
+  You cannot manually add or remove members from a Role Group. Membership is 100% criteria-driven. If someone needs to be in the group, adjust their profile to match the criteria. If they shouldn't be in the group, change the attribute that qualifies them.
+</Info>
 
 ---
 
 ## Permissions
 
-Role Groups have the same permission options as regular groups:
+Like all groups, Role Groups have posting controls:
 
-<ParamField path="onlyAdminsCanPost" type="boolean">
-  Restrict discussion posting to administrators only.
-</ParamField>
+| Setting | When to use |
+|---------|------------|
+| **Only admins can post** — ON | When the group is primarily for admin-to-segment announcements (e.g., "All Leaders" gets leadership updates) |
+| **Only admins can post** — OFF | When members should discuss among themselves (e.g., "Youth Members" has peer conversations) |
+| **Only admins can create events** | When events should be coordinated centrally |
+| **Only admins can upload files** | When documents should be curated by admins |
 
-<ParamField path="onlyAdminsCanCreateEvents" type="boolean">
-  Restrict event creation to administrators.
-</ParamField>
-
-<ParamField path="onlyAdminsCanUploadFiles" type="boolean">
-  Restrict file uploads to administrators.
-</ParamField>
+Assign a group administrator from within the matching segment so they understand the audience.
 
 ---
 
-## Best Practices
+## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Clear criteria">
-    Define specific, unambiguous criteria for each Role Group.
+  <Accordion title="A member got promoted — do I need to manually move them to the Leaders group?">
+    No. Change their user type to "Leader" and the system automatically adds them to any Role Group with criteria "User Type = Leader". They'll also be removed from groups they no longer qualify for (e.g., "Volunteers" if that was their old type).
   </Accordion>
 
-  <Accordion title="Meaningful names">
-    Name groups clearly to reflect their purpose and membership.
+  <Accordion title="I want a Role Group but also need to add a few extra people manually">
+    Role Groups don't support manual additions. Two options: (1) Adjust the criteria to include those people — perhaps add a custom field value they share. (2) Use a Private Group instead if the membership doesn't map cleanly to profile data.
   </Accordion>
 
-  <Accordion title="Don't over-segment">
-    Avoid creating too many Role Groups. Each should have a clear purpose.
+  <Accordion title="The Role Group has too many members — discussions are noisy">
+    Either narrow the criteria (add an additional condition) or enable "Only admins can post" to make it an announcement channel. Direct discussion to smaller Private Groups for sub-topics.
   </Accordion>
 
-  <Accordion title="Active moderation">
-    Assign group administrators to keep content relevant and engaging.
+  <Accordion title="Can I create a Role Group based on Local Center membership?">
+    No — that's what Local Centers already provide. Each Local Center is itself a group with discussions, events, and files. Role Groups are for cross-cutting segments that span all locations (e.g., "All Leaders" regardless of which center they belong to).
   </Accordion>
 
-  <Accordion title="Regular review">
-    Periodically review Role Groups to ensure they're still useful.
+  <Accordion title="A Role Group is no longer needed">
+    Archive the group. Content is preserved for reference but the group is hidden from the sidebar. If you're sure it's not needed, you can delete it entirely.
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Related Features
+## Related
 
-- [Groups Overview](/platform/groups/index) - All group types
-- [User Types](/platform/users/user-types) - Member categorization
-- [Custom Fields](/platform/users/custom-fields) - Profile fields for criteria
-- [Roles & Permissions](/platform/users/roles) - System roles
+- [Groups Overview](/platform/groups) — All group types and when to use each
+- [User Types](/platform/users/user-types) — The most common criteria for Role Groups
+- [Custom Fields](/platform/users/custom-fields) — Create profile fields to use as Role Group criteria
+- [Private Groups](/platform/groups/private-groups) — For manually controlled membership

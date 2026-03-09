@@ -1,171 +1,71 @@
 ---
 title: 'Branding'
-description: 'Upload your organization logos and customize visual identity'
+description: 'Your logos and login screen — make the platform look like yours.'
 ---
 
-The Branding page allows you to upload your organization's logos and customize the visual appearance of your Orgo workspace. Your logos appear in the navigation header, emails, and throughout the platform.
+Branding is the first thing your members see. A custom logo and login background turn a generic platform into *your* platform.
 
-## How to access
+**Settings → Organization → Branding**
 
-**Settings** → **Organisation** → **Branding**
-
----
-
-## Logo Types
-
-Orgo requires multiple logo versions to ensure your brand looks great in all contexts:
-
-### Main Logo (Light Theme)
-
-<ParamField path="logo" type="image">
-  Your primary logo for light backgrounds. This appears in the main navigation when users have the light theme enabled.
-</ParamField>
-
-**Specifications:**
-- Format: PNG with transparent background (recommended)
-- Orientation: Horizontal/landscape preferred
-- Max height: 60px (will be scaled automatically)
-
-### Main Logo (Dark Theme)
-
-<ParamField path="logoDark" type="image">
-  Your logo optimized for dark backgrounds. Use a light-colored version of your logo or add a white outline.
-</ParamField>
-
-**Specifications:**
-- Format: PNG with transparent background
-- Should be visible on dark backgrounds
-- Same dimensions as light theme logo
-
-<Tip>
-  If your logo works well on both light and dark backgrounds, you can upload the same image for both. Test by switching themes in your profile settings.
-</Tip>
-
-### Icon Logo (Square)
-
-<ParamField path="logoSquare" type="image">
-  A square version of your logo, typically just the icon or symbol without text. Used for:
-  - Browser favicon
-  - Mobile app icon
-  - Notifications
-  - Small UI elements
-</ParamField>
-
-**Specifications:**
-- Format: PNG with transparent background
-- Dimensions: Square (1:1 ratio)
-- Recommended size: 512x512 px minimum
-
-### Icon Logo (Square Dark)
-
-<ParamField path="logoSquareDark" type="image">
-  Square icon optimized for dark backgrounds.
-</ParamField>
-
----
-
-## Login Page Background
-
-<ParamField path="authImage" type="url">
-  A URL to an image that appears as the background on your login and registration pages. This helps create a branded experience for members signing in.
-</ParamField>
-
-**Recommendations:**
-- Use a high-resolution image (1920x1080 or larger)
-- Choose an image that works well with text overlaid
-- Avoid busy images that make the login form hard to read
-- Consider using a branded photo or abstract pattern
-
-**Example:**
-```
-https://your-cdn.com/images/login-background.jpg
-```
+<img src="/images/platform/organisation/branding-logo-grid.png" alt="Branding page with logo upload areas" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 <Note>
-  The image URL must be publicly accessible. We recommend hosting on a CDN or image hosting service for fast loading.
+  Requires **Tenant Admin** permissions.
 </Note>
 
 ---
 
-## Uploading Logos
+## Logos
 
-### Step-by-step
+Upload four logo variants so your brand looks sharp everywhere:
 
-<Steps>
-  <Step title="Click the upload area">
-    Click on the logo upload box for the type you want to upload (light, dark, square, etc.)
-  </Step>
-  <Step title="Select your file">
-    Choose a PNG file from your computer. For best results, use transparent backgrounds.
-  </Step>
-  <Step title="Wait for upload">
-    The logo will upload and preview automatically.
-  </Step>
-  <Step title="Save your changes">
-    Click **Save** to apply the new logo across the platform.
-  </Step>
-</Steps>
+<CardGroup cols={2}>
+  <Card title="Logo light theme" icon="sun">
+    Your main logo for sidebar, headers, and emails on light backgrounds. Use a horizontal PNG with transparent background.
+  </Card>
+  <Card title="Logo dark theme" icon="moon">
+    A lighter version that pops on dark backgrounds. Same spots as the light logo, but in dark mode.
+  </Card>
+  <Card title="Squared logo" icon="square">
+    Square crop for the collapsed sidebar, mobile app icon, and browser favicon.
+  </Card>
+  <Card title="Icon logo dark" icon="circle-half-stroke">
+    Square crop for compact displays in dark mode.
+  </Card>
+</CardGroup>
 
-### Replacing a Logo
-
-To replace an existing logo:
-1. Click on the current logo
-2. Select a new file
-3. The new logo will replace the old one
-4. Click **Save** to confirm
+<Tip>
+  PNG with transparent background works best for all four slots. It keeps logos clean on both light and dark themes.
+</Tip>
 
 ---
 
-## Design Best Practices
+## Login background
 
-<AccordionGroup>
-  <Accordion title="Use transparent backgrounds">
-    PNG files with transparent backgrounds adapt better to both light and dark themes. Avoid JPGs with solid white backgrounds.
-  </Accordion>
+![Auth background image URL field](/images/platform/organisation/branding-auth-background.png)
 
-  <Accordion title="Test both themes">
-    After uploading, switch between light and dark themes to ensure your logos look good in both contexts.
-  </Accordion>
+Paste a URL for the image you want behind your login, registration, and password reset screens. Use something that represents your organization — a team photo, an event shot, a branded graphic.
 
-  <Accordion title="Keep it simple for square icons">
-    Square icons appear at small sizes. Use a simplified version of your logo - typically just the symbol without text.
-  </Accordion>
+The result:
 
-  <Accordion title="Maintain brand consistency">
-    Use the same logo files you use on your website and other materials for consistent brand recognition.
-  </Accordion>
+![Branded login page with custom background and logo](/images/platform/organisation/branding-login-page.png)
 
-  <Accordion title="Consider mobile users">
-    Test how your logo looks on mobile devices where the header is smaller.
-  </Accordion>
-</AccordionGroup>
-
----
-
-## Where Your Logos Appear
-
-| Location | Logo Used |
-|----------|-----------|
-| Navigation header | Main logo (light or dark based on theme) |
-| Login/Register pages | Main logo + background image |
-| Emails to members | Main logo (light version) |
-| Browser tab (favicon) | Square icon |
-| Mobile app | Square icon |
-| PDF documents | Main logo |
-| Newsletter templates | Main logo |
+<Tip>
+  Aim for at least **1920x1080px** resolution. The image URL must be publicly accessible over HTTPS.
+</Tip>
 
 ---
 
 ## Troubleshooting
 
-<Warning>
-  **Logo not appearing?** Make sure you clicked Save after uploading. Changes won't apply until saved.
-</Warning>
-
-<Warning>
-  **Logo looks pixelated?** Upload a higher resolution image. Logos are scaled down for display but should be high quality source files.
-</Warning>
-
-<Warning>
-  **Background image not loading?** Verify the URL is publicly accessible and not blocked by authentication. Test by opening the URL directly in a browser.
-</Warning>
+<AccordionGroup>
+  <Accordion title="Logo looks cropped or stretched">
+    Use PNG with transparent background. Main logos should be horizontal. Icon logos should be perfectly square. Avoid excessive padding in the file itself.
+  </Accordion>
+  <Accordion title="Background image isn't showing">
+    Confirm the URL is publicly accessible over HTTPS. Try the login page in a private/incognito window to rule out browser cache.
+  </Accordion>
+  <Accordion title="Dark theme logo isn't appearing">
+    Check you uploaded to the right slot — **Logo dark theme** (top-right) for the full logo, **Icon logo dark** (bottom-right) for the square version.
+  </Accordion>
+</AccordionGroup>

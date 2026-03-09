@@ -1,14 +1,179 @@
 ---
-title: 'Statuses'
+title: 'User Statuses'
+description: 'Control member access with Active, Inactive, Suspended, and Unapproved statuses'
 ---
 
+A user's status is the single most important field on their account. It determines whether they can log in, what they can see, and how they appear to other members. If a member is having access problems, their status is the first thing to check.
+
+<img src="/images/platform/users/statuses-dropdown.png" alt="User status field on the admin edit page" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
 ---
 
-The "Status" field in the Profile section is a critical feature for managing the engagement levels and accessibility of a community member within Orgo. This field allows administrators  to set their current operational status within the organization. Here are the default options available:
+## The four statuses
 
-1. **Active:** Select this status to indicate that the member is currently active and fully engaged in the community. An active member has access to all their permitted features and functionalities within the platform.
-2. **Inactive:** This status should be chosen if the member is temporarily not participating in community activities or taking a break. Inactive members will be prompted to reactivate their accounts upon logging into the platform.
-3. **Suspended:** Use this status for members who have been temporarily barred from participating in the community due to disciplinary actions or other significant reasons. Suspended members cannot access the platform during the suspension period.
-4. **Unapproved:** This status is automatically assigned to users that crate an account and is kept until the account confirmation is complete. It can be modified in the **Organisation Settings -> Modules -> Users -> Status After Register**.&#x20;
+| Status | Can log in? | Platform access | When to use |
+|--------|------------|-----------------|-------------|
+| **Active** | Yes | Full access to all permitted features | This is the normal state for participating members. |
+| **Unapproved** | Depends on config | Limited — may see a "pending approval" screen | New registrations awaiting admin review. Automatically set when **Status After Register** is Unapproved. |
+| **Inactive** | Yes, but prompted to reactivate | Restricted — prompted to update profile or renew | Members who've lapsed, are on a break, or haven't renewed. Non-punitive. |
+| **Suspended** | No | Blocked completely | Disciplinary action. The member did something wrong. This locks them out immediately. |
 
-These statuses are the default ones and can be modified / altered by contacting Orgo support.\
+<Warning>
+  Changing a user to **Suspended** takes effect immediately — they're logged out and blocked. Make sure you've communicated the reason before doing this.
+</Warning>
+
+---
+
+## How statuses change
+
+Statuses change either automatically (during registration) or manually (by an admin). Here's the full picture:
+
+### Automatic changes
+
+| Event | Status change |
+|-------|-------------|
+| New user registers (Status After Register = Active) | → **Active** |
+| New user registers (Status After Register = Unapproved) | → **Unapproved** |
+| Admin approves unapproved user | Unapproved → **Active** |
+| Adhesion application approved | May change to **Active** (depends on adhesion settings) |
+| User resigns and admin approves | May change to **Inactive** (if member chose "Close my account") |
+
+### Manual changes
+
+Admins can change any user's status at any time. This is how you handle:
+- Approving new registrations (Unapproved → Active)
+- Lapsed memberships (Active → Inactive)
+- Disciplinary action (Active → Suspended)
+- Reinstating a member (Inactive/Suspended → Active)
+
+---
+
+## How to change a user's status
+
+<Steps>
+  <Step title="Find the user">
+    Go to the member directory and search for the user, or navigate directly to their profile.
+  </Step>
+  <Step title="Open their profile for editing">
+    Click **Edit profile** on their profile page.
+  </Step>
+  <Step title="Go to the Permissions tab">
+    The status dropdown is on the **Permissions** tab — not the Profile tab.
+  </Step>
+  <Step title="Change the Status dropdown">
+    Select the new status: Active, Inactive, Suspended, or Unapproved.
+  </Step>
+  <Step title="Save">
+    Click **Save**. The change takes effect immediately.
+  </Step>
+</Steps>
+
+<Note>
+  Only users with **HR Tenant** or **Admin Tenant** permissions can change member statuses.
+</Note>
+
+---
+
+## Configuring the default status for new members
+
+When someone registers, what status do they get? This is one of the first things to configure.
+
+Go to **Settings** → **Users & Profiles** → **Configuration** → **Status After Register**.
+
+![Users module configuration page showing registration, membership, and status settings](/images/platform/users/users-config-page.png)
+
+The configuration page includes a **Status After Register** dropdown that determines what status newly registered users receive (Active, Unapproved, or Inactive). Below it, a **Manual Approval** toggle controls whether admin review is needed before new users become Active.
+
+| Setting | What happens | Best for |
+|---------|-------------|----------|
+| **Active** | Members can use the platform immediately after registering | Open communities, social clubs, hobby groups — where you want zero friction |
+| **Unapproved** | Members see a "pending" screen until an admin approves them | Organizations that need to vet new members but don't need a full application process |
+| **Inactive** | Members are registered but can't do much until activated | Pre-launch setups, seasonal organizations collecting registrations before a start date |
+
+<Tip>
+  If you want a full application process (not just approve/reject but with forms, documents, and interviews), use the [Adhesion module](/platform/users/adhesion) instead of Unapproved status. Adhesion gives you a proper workflow; Unapproved is just a gate.
+</Tip>
+
+---
+
+## Statuses on a profile
+
+A user's status appears as a colored badge on their profile page:
+
+<img src="/images/platform/users/user-profile-overview.png" alt="Member profile page showing Active status badge, user type, and member information" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+The badge colors are: green for Active, gray for Inactive, red for Suspended, and yellow for Unapproved.
+
+---
+
+## Common scenarios
+
+<AccordionGroup>
+  <Accordion title="Member can't log in — what do I check first?">
+    Go to their profile → Edit → **Permissions** tab. Check the **Status** dropdown.
+
+    - **Suspended**: They're locked out. Was this intentional? If not, change to Active.
+    - **Unapproved**: They never got approved after registration. Approve them by changing to Active.
+    - **Inactive**: They can technically log in but may see a reactivation prompt. Change to Active if they should be participating.
+
+    If status is Active and they still can't log in, the problem is elsewhere (password, email, account deletion).
+  </Accordion>
+
+  <Accordion title="A member needs to be suspended for misconduct">
+    1. Go to their profile → Edit → **Permissions** tab
+    2. Change Status to **Suspended**
+    3. Save — they're immediately locked out
+
+    Before doing this, consider reaching out to the member. If you want a paper trail, ask them to [resign](/platform/users/resignation) instead, which records a reason. Suspension is for situations where you need immediate action.
+  </Accordion>
+
+  <Accordion title="A lapsed member wants to come back">
+    If they were set to **Inactive**: Go to their profile → Edit → Permissions → change to **Active**.
+
+    If their account was **deleted**: It can't be restored. They'll need to register again.
+
+    If they **resigned** and it was processed: Their account may still exist (resignation doesn't delete data). Change their status back to Active.
+  </Accordion>
+
+  <Accordion title="I have 200 new registrations to approve">
+    If you're using **Unapproved** status and getting overwhelmed, consider:
+    - Switching to **Active** as the default (if you trust your registration process)
+    - Using [Adhesion](/platform/users/adhesion) instead, which has bulk management tools
+    - Asking another admin to help — anyone with HR Tenant or Admin Tenant permissions can approve users
+  </Accordion>
+
+  <Accordion title="What's the difference between Inactive and Suspended?">
+    **Inactive** is non-punitive. The member stepped away, their membership lapsed, or they're taking a break. They can still log in and may be prompted to reactivate.
+
+    **Suspended** is punitive. The member violated rules or needs to be blocked. They cannot log in at all. Think of it as "banned."
+
+    Use Inactive for natural departures, Suspended for enforcement.
+  </Accordion>
+
+  <Accordion title="What happens to a member's data when I change their status?">
+    Nothing. Status changes don't affect data. Their profile, activity history, roles, and everything else stays exactly the same. Status only controls access.
+
+    To remove data, the member must [delete their account](/platform/users/deletion-of-account). To formally record a departure, use [resignation](/platform/users/resignation).
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## How statuses connect to other features
+
+| Feature | How it interacts with statuses |
+|---------|-------------------------------|
+| [Adhesion](/platform/users/adhesion) | Approved applications can auto-change status to Active |
+| [Resignation](/platform/users/resignation) | Approved resignations can set status to Inactive (if member chose "Close my account") |
+| [Account Deletion](/platform/users/deletion-of-account) | Removes the account entirely — status no longer applies |
+| [Registration Form](/platform/users/registration-form) | **Status After Register** determines initial status |
+| [User Types & Roles](/platform/users/user-types) | Roles and permissions still exist regardless of status, but Suspended/Inactive users can't exercise them |
+
+---
+
+## Related
+
+- [Resignation](/platform/users/resignation) — Formal departure with reason tracking
+- [Account Deletion](/platform/users/deletion-of-account) — Permanent data removal
+- [Adhesion](/platform/users/adhesion) — Application-based membership approval
+- [Permissions](/platform/permissions) — Who can change statuses and other access control

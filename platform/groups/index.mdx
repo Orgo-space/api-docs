@@ -1,230 +1,165 @@
 ---
 title: 'Groups & Teams'
-description: 'Organize members into groups, teams, and organizational units'
+description: 'Organize members into collaborative spaces — from org-wide to project-specific'
 ---
 
-Groups are collaborative spaces where members can work together, share files, discuss topics, and organize events. Orgo provides several types of groups to fit different organizational needs.
+Groups are where your members actually collaborate. They're spaces with discussions, events, shared files, and task tracking — scoped to the right audience. Orgo gives you four types of groups, each for a different purpose.
 
-## How to access
-
-**Sidebar** → **Groups** section
-
-Or: **Settings** → **Groups** → **Module Settings**
+<img src="/images/platform/groups/groups-browse.png" alt="Groups browse page showing available groups" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Group Types Overview
+## The four group types
 
-<CardGroup cols={2}>
-  <Card title="Main Group" icon="users" href="/platform/groups/main-group">
-    Central hub that includes all organization members automatically.
-  </Card>
-  <Card title="Local Centers" icon="map-marker-alt" href="/platform/groups/local-groups">
-    Geographic chapters or branches of your organization.
-  </Card>
-  <Card title="Role Groups" icon="user-tag" href="/platform/groups/role-groups">
-    Groups based on member roles, demographics, or criteria.
-  </Card>
-  <Card title="Private Groups" icon="lock" href="/platform/groups/private-groups">
-    Custom groups created by members for specific projects or interests.
-  </Card>
-</CardGroup>
+| Type | Who's in it | How members join | Best for |
+|------|------------|-----------------|----------|
+| [**Main Group**](/platform/groups/main-group) | Everyone | **Automatic** — every member is included by default, can't leave | Organization-wide announcements, shared resources, full member directory |
+| [**Local Centers**](/platform/groups/local-groups) | Members of a geographic branch | **Assigned** — during registration or by admin | Chapters, branches, regional divisions with their own admins and Stripe accounts |
+| [**Role Groups**](/platform/groups/role-groups) | Members matching specific criteria | **Automatic** — system adds/removes based on user type, age, gender, or region | "All Leaders", "Youth 13-17", "Board members" — always up to date |
+| [**Private Groups**](/platform/groups/private-groups) | Selected members | **Invited** by group owner, or **self-join** if the group is set to "joinable" | Project teams, committees, interest groups, working groups |
 
----
+### Private vs. Joinable groups
 
-## Prerequisites
+Private Groups have two join modes that fundamentally change how they work:
 
-Groups module must be enabled in module settings:
+| Mode | How members join | Visibility | Best for |
+|------|-----------------|-----------|----------|
+| **Private** (default) | Admin or owner invites them — no self-service | Only members can see the group exists | Boards, committees, confidential projects |
+| **Joinable** | Any member can discover and join on their own | Listed in the groups browse page | Interest communities (Photography Club, Book Club), open working groups |
 
-**Settings** → **Groups** → **Module Settings**:
-- **Enable Groups & Teams Module** - Master toggle
+You can switch between modes at any time. Starting private and opening up later is safer than the reverse.
+
+<Tip>
+  **Start simple.** You don't need all four types on day one. Most organizations start with just the Main Group and Local Centers, then add Role Groups and Private Groups as needs arise.
+</Tip>
 
 ---
 
-## Module Settings
+## Which group type should I use?
 
-### Group Types & Organization
-
-<ParamField path="hasGroupCategories" type="boolean" default="false">
-  Allow categorizing groups by type (e.g., Working Group, Committee, Team). Categories help organize and filter groups.
-</ParamField>
-
-<ParamField path="hasRoleGroups" type="boolean" default="false">
-  Enable automatic groups based on user roles, age, gender, or other criteria.
-</ParamField>
-
-<ParamField path="hasUnits" type="boolean" default="false">
-  Enable organizational units for hierarchical structure.
-</ParamField>
-
-### Group Features
-
-<ParamField path="hasTasks" type="boolean" default="false">
-  Enable task/issue management within groups. Members can create, assign, and track tasks.
-</ParamField>
-
-<ParamField path="hasAllMembersGroup" type="boolean" default="true">
-  Automatically maintain a Main Group that includes all organization members.
-</ParamField>
+| I need a space for... | Use |
+|----------------------|-----|
+| Announcements to everyone | **Main Group** — every member sees it |
+| A city or regional chapter | **Local Center** — geographic division with its own admins and events |
+| All members of a specific type (all Leaders, all Volunteers) | **Role Group** — auto-populates based on criteria |
+| A project team or committee | **Private Group** — manually controlled membership |
+| An interest-based community (Photography Club, Hiking Group) | **Private Group** with "joinable" enabled — members can self-join |
+| A temporary working group for an initiative | **Private Group** — archive it when done |
 
 ---
 
-## Group Features
+## What every group can do
 
-Each group can have different features enabled:
+Each group — regardless of type — can have these features enabled:
 
-| Feature | Description |
-|---------|-------------|
+| Feature | What it provides |
+|---------|-----------------|
 | **Discussions** | Forum-style posts and conversations |
 | **Events** | Group-specific events and calendar |
-| **Files** | Shared document storage |
-| **Issues** | Task and issue tracking |
-| **Members** | Member list and management |
+| **Files** | Shared document storage with folders |
+| **Issues** | Task and issue tracking with priorities, assignees, and due dates |
+| **Members** | Member list with search and filtering |
+
+You choose which features to enable per group. A project team might need Discussions + Issues. A local chapter might need Discussions + Events + Files. The Main Group might have everything.
 
 ---
 
-## Creating Groups
+## Enabling the Groups module
 
-### From Sidebar
+**Settings** → **Groups** → **Module Settings**
 
-1. Click **+ New Group** in the sidebar
-2. Enter group name and description
-3. Choose visibility (public or private)
-4. Enable desired features (discussions, events, files, issues)
-5. Configure issue settings if enabled
-6. Click **Save**
+<img src="/images/platform/groups/groups-module-config.png" alt="Groups module settings showing toggles for group categories, role groups, organizational units, tasks, and all members group" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-### Group Settings
-
-When creating or editing a group:
-
-<ParamField path="name" type="string" required>
-  Display name for the group.
-</ParamField>
-
-<ParamField path="description" type="text">
-  Description explaining the group's purpose.
-</ParamField>
-
-<ParamField path="isJoinable" type="boolean">
-  Allow members to join the group themselves without invitation.
-</ParamField>
-
-<ParamField path="includesAllMembers" type="boolean">
-  Automatically include all organization members in this group.
-</ParamField>
-
-<ParamField path="category" type="select">
-  Group category for organization (if categories enabled).
-</ParamField>
-
----
-
-## Group Permissions
-
-Groups have granular permission controls:
-
-<ParamField path="onlyAdminsCanPost" type="boolean">
-  Restrict discussion posting to administrators only.
-</ParamField>
-
-<ParamField path="onlyAdminsCanCreateEvents" type="boolean">
-  Restrict event creation to administrators only.
-</ParamField>
-
-<ParamField path="onlyAdminsCanUploadFiles" type="boolean">
-  Restrict file uploads to administrators only.
-</ParamField>
-
-<ParamField path="onlyAdminsCanAddMembers" type="boolean">
-  Restrict member additions to administrators only.
-</ParamField>
-
----
-
-## Group Categories
-
-If group categories are enabled, you can organize groups by type:
-
-### Creating Categories
-
-**Settings** → **Groups** → **Categories**
-
-1. Click **Create Category**
-2. Enter category name
-3. Choose color and icon (optional)
-4. Set creation permission level
-5. Save
-
-### Category Settings
-
-| Setting | Description |
+| Setting | What it does |
 |---------|-------------|
-| **Name** | Category display name |
-| **Color** | Badge color for visual identification |
-| **Icon** | Icon displayed with the category |
-| **Creation Permission** | Who can create groups in this category |
+| **Enable Groups & Teams** | Master toggle for the entire groups feature |
+| **Group Categories** | Organize groups by type (Working Group, Committee, Team). Useful when you have many groups. |
+| **Role Groups** | Enable automatic groups based on member criteria |
+| **Units** | Enable sub-units within local centers for hierarchical structure |
+| **Tasks/Issues** | Enable task tracking within groups |
+| **All Members Group** | Maintain the Main Group that includes everyone |
 
 ---
 
-## Issues & Tasks
+## Group permissions
 
-Groups can have built-in issue tracking:
+Every group has granular controls for who can do what:
 
-### Issue Settings Per Group
-
-<ParamField path="hasPriority" type="boolean" default="true">
-  Allow setting priority levels on issues.
-</ParamField>
-
-<ParamField path="hasDueDate" type="boolean" default="false">
-  Enable due dates for issues.
-</ParamField>
-
-<ParamField path="hasTypes" type="boolean" default="true">
-  Enable issue type categorization.
-</ParamField>
-
-<ParamField path="hasStatus" type="boolean" default="true">
-  Enable status tracking for issues.
-</ParamField>
-
-### Using Issues
-
-1. Navigate to group → **Issues** tab
-2. Click **Create Issue**
-3. Fill in title, description, type, priority
-4. Assign to a member (optional)
-5. Set due date (if enabled)
-6. Save
+| Permission | What it controls |
+|-----------|-----------------|
+| **Only admins can post** | Restrict discussions to administrators. Good for announcement-only groups. |
+| **Only admins can create events** | Restrict event creation to group admins |
+| **Only admins can upload files** | Restrict file uploads to group admins |
+| **Only admins can add members** | Restrict member management to group admins |
 
 ---
 
-## Best Practices
+## Group categories
+
+If you have many groups, categories help members find the right ones. Enable categories in module settings, then create them at **Settings** → **Groups** → **Categories**.
+
+Each category has a name, color, and icon — plus a permission setting controlling who can create groups in that category.
+
+**Example categories:** Working Group, Committee, Interest Group, Project Team, Advisory Board
+
+---
+
+## Structuring your organization with groups
+
+### Small community (50 members)
+
+- **Main Group** for announcements and general discussion
+- 2-3 **Private Groups** for committees (Board, Events Committee, etc.)
+- That's it — keep it simple
+
+### Regional organization (500 members, 5 branches)
+
+- **Main Group** for org-wide announcements
+- 5 **Local Centers** for geographic chapters, each with their own events and discussions
+- 2-3 **Role Groups** (All Leaders, All Volunteers)
+- Private Groups as needed for projects
+
+### Large federation (10,000+ members, 50+ branches)
+
+- **Main Group** for national-level announcements (admins-only posting)
+- 50+ **Local Centers** organized under regional parent groups
+- Multiple **Role Groups** by user type, age, profession
+- Many **Private Groups** for committees, working groups, projects
+- **Group categories** to help members navigate
+
+---
+
+## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Use appropriate group types">
-    Use Main Group for organization-wide content, Local Centers for geographic divisions, Role Groups for functional teams, and Private Groups for temporary projects.
+  <Accordion title="Members can't find the right group">
+    Enable **Group Categories** to organize groups by type. Also make sure group names are descriptive — "Q4 Planning" is better than "Group 7".
   </Accordion>
 
-  <Accordion title="Set clear permissions">
-    Configure who can post, create events, and add members based on each group's purpose.
+  <Accordion title="I want announcements that everyone sees but only admins can post">
+    Use the **Main Group** with "Only admins can post" enabled. All members see the content, but only administrators can create posts.
   </Accordion>
 
-  <Accordion title="Enable only needed features">
-    Don't enable all features for every group. Match features to the group's actual needs.
+  <Accordion title="I need a group that automatically includes all Leaders">
+    Create a **Role Group** with criteria "User Type = Leader". The system automatically adds all members with that user type and keeps it updated as user types change.
   </Accordion>
 
-  <Accordion title="Use categories for organization">
-    If you have many groups, use categories to help members find relevant ones.
+  <Accordion title="A project is finished — what do I do with the group?">
+    **Archive** the Private Group. Content is preserved for reference but the group is hidden from the sidebar. Members are removed from the active roster.
+  </Accordion>
+
+  <Accordion title="Can a member be in multiple groups?">
+    Yes. Members are in the Main Group (automatic), their Local Center (assigned), any matching Role Groups (automatic), and any Private Groups they've joined or been invited to. There's no limit.
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Related Features
+## Related
 
-- [Discussion Namespaces](/platform/discussion/discussion-namespaces) - Categorize discussions
-- [Local Centers](/platform/groups/local-groups) - Geographic groups
-- [Issues](/platform/issues) - Task tracking
-- [Files](/platform/files) - Document management
+- [Main Group](/platform/groups/main-group) — The org-wide hub
+- [Local Centers](/platform/groups/local-groups) — Geographic branches
+- [Role Groups](/platform/groups/role-groups) — Criteria-based automatic groups
+- [Private Groups](/platform/groups/private-groups) — Project teams and interest groups
+- [Discussions](/platform/discussion) — Forum features within groups
+- [Issues](/platform/issues) — Task tracking within groups

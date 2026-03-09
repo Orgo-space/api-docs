@@ -1,172 +1,129 @@
 ---
 title: 'Waitlist'
-description: 'Manage a waitlist for organizations with limited membership capacity'
+description: 'Queue interested people when membership is full or closed'
 ---
 
-The Waitlist feature helps you manage overflow when your organization has limited membership capacity or wants to control new member intake.
+The Waitlist lets you manage overflow when your organization has limited capacity or wants to control when new members join. Instead of turning people away, you queue them — and invite from the list when spots open.
 
-## How to access
+<img src="/images/platform/users/waitlist-settings.png" alt="Registration Waitlist settings showing enable toggle, self-removal options, and priority levels per user type" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-**Settings** → **Users & Profiles** → **Users Module** → **Waitlist Settings**
+**When to use a waitlist:**
+- Your organization has a membership cap (physical space, legal limit, charter restriction)
+- You accept members in batches or cohorts (seasonal enrollment, academic terms)
+- You want to gauge demand before expanding capacity
+- You're creating exclusivity or scarcity intentionally
 
----
-
-## Enabling Waitlist
-
-<ParamField path="isActive" type="boolean">
-  Enable the waitlist module. When active, users can join a waitlist when membership is full or closed.
-</ParamField>
-
----
-
-## Configuration Options
-
-<ParamField path="allowSelfRemoval" type="boolean">
-  When enabled, users can remove themselves from the waitlist. When disabled, only administrators can remove entries.
-</ParamField>
-
-<ParamField path="notifyAdminsOnNew" type="boolean">
-  Send email notifications to administrators when someone joins the waitlist.
-</ParamField>
+**When you don't need it:**
+- Registration is always open and there's no capacity limit
+- You already use [Adhesion](/platform/users/adhesion) and it handles your intake pace
 
 ---
 
-## How the Waitlist Works
+## How to enable
 
-### User Experience
+**Settings** → **Users & Profiles** → **Registration Waitlist**
+
+| Setting | What it does |
+|---------|-------------|
+| **Waitlist** | Toggle to enable. When active, visitors can join the waitlist when registration is closed or full. |
+| **Allow self-removal** | When on, users can remove themselves from the waitlist. When off, only admins can remove entries. Keep it on — it keeps the list accurate. |
+| **Notify admins on new entry** | Email notification when someone joins the waitlist. Useful if you want to track demand in real time. |
+
+---
+
+## What happens when someone joins the waitlist
 
 <Steps>
-  <Step title="User attempts to register">
-    When membership is closed or full, user sees waitlist option.
+  <Step title="Visitor tries to register">
+    When membership is closed or the waitlist is active, the registration page shows a waitlist option instead of (or alongside) the regular form.
   </Step>
-  <Step title="Joins waitlist">
-    User provides their email and basic info to join the waitlist.
+  <Step title="They join the queue">
+    They provide basic information (name, email) and are added to the waitlist.
   </Step>
-  <Step title="Confirmation">
-    User receives confirmation that they're on the waitlist.
+  <Step title="They wait">
+    They receive a confirmation that they're on the list. They can check their position if self-removal is enabled.
   </Step>
-  <Step title="Notification when spot opens">
-    When space becomes available, waitlisted users are notified.
+  <Step title="You invite them">
+    When a spot opens, you approve entries from the waitlist. They receive an invitation to complete registration.
   </Step>
-  <Step title="Complete registration">
-    User can then complete full registration.
-  </Step>
-</Steps>
-
-### Administrator Experience
-
-<Steps>
-  <Step title="View waitlist">
-    Access the waitlist from the admin dashboard.
-  </Step>
-  <Step title="Manage entries">
-    Review, prioritize, or remove waitlist entries.
-  </Step>
-  <Step title="Invite from waitlist">
-    When spots open, invite people from the waitlist.
-  </Step>
-  <Step title="Track conversions">
-    Monitor how many waitlist members convert to full members.
+  <Step title="They register">
+    They complete the full registration process (and adhesion, if enabled). They become active members.
   </Step>
 </Steps>
 
 ---
 
-## Waitlist Priority
+## Managing the waitlist
 
-Administrators can manage waitlist priority:
+Navigate to **Waitlist** in the sidebar to view and process entries.
 
-- **First come, first served** - Default order by signup date
-- **Manual prioritization** - Reorder entries based on criteria
-- **Priority settings** - Configure rules for automatic prioritization
+### Admin actions
+
+| Action | What it does |
+|--------|-------------|
+| **Approve** | Sends the person an invitation to register. Can select individual entries or use **Approve Selected** for bulk processing. |
+| **Reject** | Removes from the waitlist. The person is notified. |
+| **Change Priority** | Move entries to High, Normal, or Low priority. High-priority entries are surfaced at the top. |
+| **Send Notifications** | Send a bulk notification to waitlisted people (e.g., "spots opening soon"). |
+| **Export CSV** | Download the waitlist for external analysis or communication. |
+
+### Priority system
+
+The default order is first come, first served. Use priority to adjust:
+
+- **High** — Move to the top of the queue (e.g., returning members, VIP referrals)
+- **Normal** — Standard queue position
+- **Low** — Deprioritized (e.g., incomplete information, questionable entries)
 
 ---
 
-## Use Cases
+## Waitlist + adhesion (the full pipeline)
+
+For organizations that need both capacity management and application review:
+
+1. **Waitlist** handles demand — people queue when membership is full
+2. When spots open, you invite from the waitlist
+3. **Adhesion** handles vetting — invited people fill out a full application
+4. Admins review and approve/reject the application
+5. Approved applicants become active members
+
+This gives you two control points: who gets invited (waitlist) and who gets approved (adhesion).
+
+---
+
+## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Capacity limits">
-    Organizations with physical or legal membership limits can manage overflow.
+  <Accordion title="How do I process people from the waitlist?">
+    Go to **Waitlist** in the sidebar. Select the entries you want to invite (use the checkboxes), then click **Approve Selected**. They'll receive an invitation email with a link to complete registration.
   </Accordion>
 
-  <Accordion title="Cohort-based membership">
-    Organizations that accept new members in batches can collect interest between cohorts.
+  <Accordion title="The waitlist is getting stale — people signed up months ago">
+    Export the list to CSV and review. Send a bulk notification asking if they're still interested. Remove entries that don't respond after a reasonable time. If self-removal is enabled, some will remove themselves naturally.
   </Accordion>
 
-  <Accordion title="Exclusive membership">
-    Create scarcity and exclusivity by maintaining a waitlist.
+  <Accordion title="I want to open registration temporarily without the waitlist">
+    Disable the waitlist toggle in settings. Registration returns to normal. When you want to close it again, re-enable the waitlist. Existing waitlist entries are preserved.
   </Accordion>
 
-  <Accordion title="Seasonal registration">
-    Collect signups during off-seasons for next enrollment period.
+  <Accordion title="Can someone on the waitlist access the platform?">
+    No. Waitlist entries are not registered users — they've expressed interest but haven't gone through registration. They become users only after being invited and completing registration.
   </Accordion>
 
-  <Accordion title="Demand measurement">
-    Gauge interest before expanding capacity or opening registration.
+  <Accordion title="What's the difference between the waitlist and setting Status After Register to Unapproved?">
+    The **waitlist** is for pre-registration — people can't even create an account yet. They're in a queue.
+
+    **Unapproved status** is post-registration — people have accounts but can't do much until approved.
+
+    Use the waitlist when you want to control the total number of members. Use Unapproved when you want everyone to register but need to review them before granting access.
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Waitlist vs. Adhesion
+## Related
 
-| Feature | Waitlist | Adhesion |
-|---------|----------|----------|
-| **Purpose** | Manage capacity | Approve applicants |
-| **When used** | Registration closed | Registration open |
-| **Process** | Wait for spot | Application review |
-| **User action** | Wait | Submit application |
-| **Admin action** | Invite when ready | Approve/reject |
-
-You can use both:
-1. Waitlist when capacity is full
-2. Adhesion process for those invited from waitlist
-
----
-
-## Notifications
-
-### For Users
-
-- Confirmation of waitlist signup
-- Position updates (optional)
-- Invitation to register when spot opens
-
-### For Administrators
-
-- New waitlist entry (if enabled)
-- Waitlist size alerts (configurable)
-
----
-
-## Best Practices
-
-<AccordionGroup>
-  <Accordion title="Communicate wait times">
-    Let waitlisted users know approximately how long they might wait.
-  </Accordion>
-
-  <Accordion title="Keep waitlist engaged">
-    Periodically email waitlisted users with updates or content to maintain interest.
-  </Accordion>
-
-  <Accordion title="Set expectations">
-    Be clear that being on the waitlist doesn't guarantee membership.
-  </Accordion>
-
-  <Accordion title="Clean up periodically">
-    Remove entries that have been waiting too long without conversion.
-  </Accordion>
-
-  <Accordion title="Consider self-removal">
-    Allowing self-removal keeps the list accurate and reduces admin work.
-  </Accordion>
-</AccordionGroup>
-
----
-
-## Related Settings
-
-- [Registration Form](/platform/users/registration-form) - Configure what waitlist users provide
-- [Adhesion](/platform/users/adhesion) - Membership application process
-- [Invitations](/platform/users/invitations) - Invite from waitlist
+- [Adhesion](/platform/users/adhesion) — Application review after waitlist invitation
+- [Registration Form](/platform/users/registration-form) — What members fill out after being invited
+- [Invitations](/platform/users/invitations) — Manual invitation system (separate from waitlist)
+- [User Statuses](/platform/users/statuses) — Alternative: Unapproved status for post-registration gating

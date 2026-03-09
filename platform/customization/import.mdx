@@ -1,229 +1,151 @@
 ---
 title: 'Data Import'
-description: 'Import members and data in bulk from external sources'
+description: 'Import members, local centers, and data from CSV files'
 ---
 
-The Data Import feature allows you to migrate existing member data into Orgo. Upload CSV files to bulk-create members, update profiles, and import historical data.
-
-## How to access
-
-**Settings** → **Customization** → **Import Data**
+When migrating to Orgo from another system (or from spreadsheets), the Data Import tool lets you bulk-create members from a CSV file. Upload your member database, map columns to Orgo fields, preview the import, and go.
 
 ---
 
-## Prerequisites
+## When to use data import
 
-- Administrator access required
-- CSV file properly formatted
-- Required fields populated
-
----
-
-## Import Features
-
-| Feature | Description |
-|---------|-------------|
-| **Bulk member import** | Create many members at once |
-| **Field mapping** | Map CSV columns to fields |
-| **Validation** | Check data before import |
-| **Error handling** | Report import issues |
-| **Update existing** | Update or skip duplicates |
+| Situation | Action |
+|-----------|--------|
+| Migrating from another membership platform | Export as CSV from the old system, import into Orgo |
+| Your member database is in a spreadsheet | Save as CSV and import |
+| Adding a large batch of new members at once | Import rather than creating one by one |
+| Updating existing member data in bulk | Import with "update existing" enabled |
+| Setting up Local Centers before launch | Import centers from CSV first, then import members |
 
 ---
 
-## Preparing Your Data
+## Preparing your CSV file
 
-### CSV Format
+Your file must be in CSV format (comma-separated values). Most spreadsheet apps export to CSV.
 
-Your file should be in CSV (Comma-Separated Values) format:
-
-```csv
-firstName,lastName,email,phone,localCenter
-John,Doe,john@example.com,+1234567890,Downtown
-Jane,Smith,jane@example.com,+0987654321,Uptown
-```
-
-### Required Fields
+### Required fields
 
 | Field | Description |
 |-------|-------------|
-| **email** | Unique email address (required) |
+| **email** | Unique email address — this is how Orgo identifies each member |
 | **firstName** | Member's first name |
 | **lastName** | Member's last name |
 
-### Optional Fields
+### Optional fields
 
 | Field | Description |
 |-------|-------------|
 | **phone** | Phone number |
-| **localCenter** | Local center name |
-| **userType** | Membership type |
-| **birthDate** | Date of birth |
+| **birthDate** | Date of birth (format: YYYY-MM-DD) |
+| **localCenter** | Local Center name (must already exist in Orgo) |
+| **userType** | User type name (must already exist in Orgo) |
 | **address** | Street address |
 | **city** | City name |
-| **country** | Country code |
+| **country** | Country code (e.g., US, DE, FR) |
+
+### Example CSV
+
+```csv
+firstName,lastName,email,phone,localCenter,userType
+John,Doe,john@example.com,+1234567890,New York,Regular Member
+Jane,Smith,jane@example.com,+0987654321,Chicago,Leader
+```
 
 ---
 
-## Import Process
+## The import process
+
+**Settings** → **Customization** → **Import Data**
 
 <Steps>
-  <Step title="Prepare CSV file">
-    Format your data according to requirements.
+  <Step title="Upload the CSV file">
+    Select your prepared file.
   </Step>
-  <Step title="Navigate to Import">
-    Go to **Settings** → **Customization** → **Import Data**.
+  <Step title="Map columns to fields">
+    The system auto-matches common column names (email, firstName, lastName). For unrecognized columns, manually map each CSV column to the corresponding Orgo field.
   </Step>
-  <Step title="Upload file">
-    Select and upload your CSV file.
-  </Step>
-  <Step title="Map fields">
-    Match CSV columns to Orgo fields.
+  <Step title="Configure import options">
+    Choose what to do with duplicates, whether to send welcome emails, etc.
   </Step>
   <Step title="Preview">
-    Review data before importing.
+    Review the first few rows to verify everything maps correctly. The system validates data and flags issues.
   </Step>
   <Step title="Import">
-    Execute the import process.
+    Run the import. Large files may take a few minutes.
   </Step>
   <Step title="Review results">
-    Check for errors and confirm success.
+    Check the summary: how many succeeded, how many failed, download the error report for any issues.
   </Step>
 </Steps>
 
 ---
 
-## Field Mapping
+## Import options
 
-### Automatic Mapping
-
-The system attempts to match columns by name:
-- `email` → Email field
-- `first_name` or `firstName` → First Name
-- `last_name` or `lastName` → Last Name
-
-### Manual Mapping
-
-For unrecognized columns:
-1. Select the CSV column
-2. Choose the corresponding Orgo field
-3. Repeat for all columns
-
----
-
-## Import Options
-
-<ParamField path="skipDuplicates" type="boolean">
-  Skip rows with existing email addresses.
-</ParamField>
-
-<ParamField path="updateExisting" type="boolean">
-  Update existing members with new data.
-</ParamField>
-
-<ParamField path="sendWelcomeEmail" type="boolean">
-  Send invitation emails to new members.
-</ParamField>
-
-<ParamField path="setPassword" type="boolean">
-  Generate temporary passwords for new accounts.
-</ParamField>
+| Option | What it does |
+|--------|-------------|
+| **Skip duplicates** | If an email already exists, skip that row (don't create a duplicate) |
+| **Update existing** | If an email already exists, update the member's data with the new values |
+| **Send welcome email** | Send an invitation email to each newly created member |
+| **Generate passwords** | Create temporary passwords for new accounts (members reset on first login) |
 
 ---
 
 ## Validation
 
-### Pre-Import Checks
+Before importing, the system checks each row:
 
-Before importing, the system validates:
-- Email format correctness
-- Required fields present
-- Data type compatibility
-- Duplicate detection
+| Check | What it catches |
+|-------|----------------|
+| **Email format** | Invalid email addresses |
+| **Required fields** | Missing first name, last name, or email |
+| **Duplicates** | Emails that already exist in Orgo |
+| **References** | Local Center or user type names that don't exist in Orgo |
 
-### Validation Results
-
-| Status | Meaning |
-|--------|---------|
-| ✓ Valid | Ready to import |
-| ⚠ Warning | Will import with notes |
-| ✗ Error | Will be skipped |
+Rows with errors are skipped and included in the error report. Valid rows are imported.
 
 ---
 
-## Handling Errors
+## Import order matters
 
-### Common Issues
+If your data references Local Centers or user types:
 
-| Error | Solution |
-|-------|----------|
-| **Invalid email** | Fix email format |
-| **Missing required field** | Add missing data |
-| **Duplicate email** | Remove or enable update |
-| **Unknown local center** | Create center first |
+1. **First:** Create Local Centers in Orgo (or import them)
+2. **Second:** Create user types in Settings
+3. **Third:** Import members — their Local Center and user type references will resolve correctly
 
-### Error Report
-
-After import, download error report:
-- List of failed rows
-- Reason for failure
-- Original data for correction
+If a member's CSV row references a Local Center that doesn't exist, that row will fail.
 
 ---
 
-## Import Types
-
-### Member Import
-
-Import user accounts with profile data.
-
-### Local Center Import
-
-Bulk create local centers before member import.
-
-### Event Attendees
-
-Import registrations for specific events.
-
----
-
-## Best Practices
+## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Clean data first">
-    Remove duplicates and fix errors before uploading.
+  <Accordion title="The import failed for many rows — what went wrong?">
+    Download the error report. Common issues: invalid email format, missing required fields, referencing Local Centers or user types that don't exist yet. Fix the CSV and re-import just the failed rows.
   </Accordion>
 
-  <Accordion title="Test with sample">
-    Import a small sample first to verify mapping.
+  <Accordion title="I imported members but they can't log in">
+    Check whether you enabled "Send welcome email" during import. If not, members don't have credentials. You can send invitation emails after the fact from the Members list, or have them use the "Forgot password" flow.
   </Accordion>
 
-  <Accordion title="Backup existing data">
-    Export current data before large imports.
+  <Accordion title="I want to import custom field values too">
+    Map CSV columns to custom fields during the field mapping step. Custom fields must already exist in Orgo before import. Create them in **Settings** → **Users & Profiles** → **Custom Fields** first.
   </Accordion>
 
-  <Accordion title="Create dependencies first">
-    Import local centers before members that reference them.
+  <Accordion title="Can I undo an import?">
+    There's no automatic undo. For large imports, test with a small sample (10-20 rows) first to verify everything works correctly. If something goes wrong with a full import, you'll need to manually clean up or contact support.
   </Accordion>
 
-  <Accordion title="Use consistent formatting">
-    Standardize date formats, phone numbers, etc.
+  <Accordion title="I have 10,000+ members to import — will it handle that?">
+    Yes. Large imports are processed in batches. It may take several minutes, but the system handles large datasets. Break it into multiple files if you encounter timeout issues.
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Sample Templates
+## Related
 
-Download templates for common imports:
-- Member import template
-- Local center template
-- Event attendee template
-
----
-
-## Related Features
-
-- [Users](/platform/users/index) - Member management
-- [Local Groups](/platform/groups/local-groups) - Local centers
-- [Invitations](/platform/users/invitations) - Invite members
+- [Users & Profiles](/platform/users) — Member management after import
+- [Local Centers](/platform/groups/local-groups) — Set up centers before importing members
+- [Invitations](/platform/users/invitations) — Alternative: invite members one by one or in small batches

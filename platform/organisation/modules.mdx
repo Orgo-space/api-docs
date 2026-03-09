@@ -1,377 +1,127 @@
 ---
 title: 'Modules'
-description: 'Enable or disable platform features to customize your Orgo workspace'
+description: 'Turn features on and off. Configure exactly how each one behaves.'
 ---
 
-The Modules page is your control center for enabling or disabling features in your Orgo workspace. Only activate the modules your organization needs to keep the platform focused and user-friendly.
+Modules control what your platform can do. Events, payments, discussions, local centers — each is a module you can turn on, turn off, and fine-tune.
 
-## How to access
+Only enable what you need. Fewer modules = cleaner interface for everyone.
 
-**Settings** → **Organisation** → **Module**
-
----
-
-## How Modules Work
-
-Each module in Orgo can be:
-
-- **Enabled** (toggle on) - The feature is available to users based on their permissions
-- **Disabled** (toggle off) - The feature is completely hidden from all users
-
-When you enable a module, an **Options** button appears allowing you to configure that module's specific settings.
+<img src="/images/platform/organisation/module-settings-page.png" alt="Module settings page with feature toggles" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 <Note>
-  The **Users** module cannot be disabled as it's the foundation of the platform.
+  Requires **Tenant Admin** permissions.
 </Note>
 
 ---
 
-## Available Modules
+## Finding modules
 
-### Core Modules
+Every module has its own page in the Settings sidebar under **MODULES**. Click one to open it.
 
-<AccordionGroup>
-  <Accordion title="Users" icon="users">
-    **Always enabled** - Core user management functionality.
+---
 
-    **Options:**
-    - `hasUserTypes` - Enable different user type categories
-    - `hasRoles` - Enable organizational roles
-    - `hasFamilyMembers` - Allow family member accounts
-    - `hasRegistrationForm` - Enable public registration
-    - `hasFollowing` - Allow users to follow each other
-    - `hasOrganisationalChart` - Display org chart
-    - `hasCardId` - Enable member card IDs
-    - `hasManualApprove` - Require admin approval for new registrations
-    - `hasUserInvitation` - Allow members to invite others
-    - `whoCanSendUserInvitation` - Permission level for sending invitations
-    - `adminCanChangeProfileImage` - Allow admins to change user photos
-    - `sendWelcomeMessageOnStatusActive` - Send welcome email when user is activated
-    - `canReactivateAccountOnLogin` - Allow reactivation of deleted accounts
-    - `privatizeUserProfiles` - Hide user profiles from other members by default
-  </Accordion>
+## How module pages work
 
-  <Accordion title="Adhesion (Membership Applications)" icon="file-signature">
-    Enable a formal membership application process.
+All module pages follow the same layout — learn one, you know them all.
 
-    **Options:**
-    - `isMandatory` - Require all new members to complete the adhesion form
-    - `successDefaultUserTypeId` - User type assigned after approval
-    - `adminEmailAddress` - Email notified of new applications
-    - `changeToDraftReasons` - Predefined reasons for returning applications to draft
-  </Accordion>
+<CardGroup cols={3}>
+  <Card title="Header" icon="toggle-on">
+    Enable/disable toggle and **Save All Settings** button. Always pinned at the top.
+  </Card>
+  <Card title="Sub-navigation" icon="list">
+    Tabs specific to the module — Configuration, Custom Fields, Tags, Roles, Forms, and more.
+  </Card>
+  <Card title="Settings sections" icon="sliders">
+    Grouped options with toggles, dropdowns, and inputs under clear headings.
+  </Card>
+</CardGroup>
 
-  <Accordion title="Identity Validation" icon="id-card">
-    Verify member identities through document upload.
+---
 
-    **Options:**
-    - `hideAddressFields` - Hide address fields in identity form
-    - `users` - Enable identity validation for user profiles
-    - `onlinePayments` - Require identity validation for payments
-    - `automatedIdentityValidation` - Use OCR for automatic document verification
-    - `cancelSubscriptionsWithoutIdentityReconfirmation` - Cancel subscriptions if identity expires
-  </Accordion>
-</AccordionGroup>
-
-### Communication Modules
+## Available modules
 
 <AccordionGroup>
-  <Accordion title="Discussions" icon="comments">
-    Forum-style discussions for your community.
-
-    **Options:**
-    - `whoCanPostPublic` - Permission level required to post publicly
-    - `hasNamespaces` - Enable discussion categories/namespaces
+  <Accordion title="Core">
+    | Module | What it unlocks |
+    |--------|----------------|
+    | **Users & Profiles** | Member management, registration, family members, user types, roles. *Always active.* |
+    | **Contacts** | External contact management with custom statuses |
+    | **Local Centers** | Regional chapters with their own admins, bank accounts, maps |
   </Accordion>
-
-  <Accordion title="Newsletter" icon="envelope">
-    Email campaign tools for member communication.
-
-    **Options:**
-    - `defaultNewsletterWidgetUuid` - Default template widget for new newsletters
+  <Accordion title="Engagement">
+    | Module | What it unlocks |
+    |--------|----------------|
+    | **Events** | Event creation, ticketing, attendance tracking, reports |
+    | **Discussions** | Community discussions with namespaces and posting controls |
+    | **Groups & Teams** | Member groups, units, role-based groups, tasks, categories |
+    | **Voting** | Polls and elections within groups |
+    | **Gamification & Courses** | Points, tiers, badges, learning courses |
   </Accordion>
-
-  <Accordion title="Notifications" icon="bell">
-    Configure default notification preferences.
-
-    **Options:**
-    - `defaultNewsletter` - Subscribe new users to newsletters by default
-    - `defaultPush` - Enable push notifications by default
-    - `defaultEmailComment` - Email notification setting for comments (`instant` or disabled)
-    - `defaultEmailDiscussion` - Email notification for new discussions
-    - `defaultEmailEvent` - Email notification for events
-    - `defaultEmailAnnouncement` - Email notification for announcements
+  <Accordion title="Operations">
+    | Module | What it unlocks |
+    |--------|----------------|
+    | **Payments & Fees** | Membership fees, Stripe payments, donations, invoicing |
+    | **Emails & Notifications** | Notification defaults, email templates, campaigns |
+    | **Files & eDocuments** | Drive storage, personal drives, electronic document templates |
+    | **Helpdesk** | Member support tickets |
+    | **Analytics** | Dashboards for registration, membership, geography trends |
   </Accordion>
-</AccordionGroup>
-
-### Events & Activities
-
-<AccordionGroup>
-  <Accordion title="Events" icon="calendar">
-    Event creation and management system.
-
-    **Options:**
-    - `hasEventReport` - Enable event reports after completion
-    - `hasAnnualReport` - Enable annual reporting
-    - `whoCanPostPublic` - Permission to create public events
-    - `hasTicketOnlinePayments` - Enable paid tickets via Stripe
-    - `hasSDG` - Enable SDG (Sustainable Development Goals) tagging
-    - `sendBulkInvites` - Allow sending bulk event invitations
-    - `attendConfirmation` - Require attendance confirmation
-    - `hasCustomStatuses` - Enable custom event statuses
-    - `sendAttendanceReminder` - Send automatic reminders before events
+  <Accordion title="Membership & Onboarding">
+    | Module | What it unlocks |
+    |--------|----------------|
+    | **Adhesion** | Public join forms for prospective members |
+    | **Waitlist** | Waiting lists with notifications and self-removal |
+    | **Referrals** | Referral workflows with configurable approval steps |
+    | **Identity Validation** | Document-based identity verification |
+    | **Professions** | Industry, job title, and expertise fields |
+    | **Companies** | Company profiles linked to members, company-level fees |
+    | **Form Builder** | Custom forms for structured data collection |
   </Accordion>
-
-  <Accordion title="Voting" icon="check-to-slot">
-    Secure electronic voting system.
-
-    **Options:**
-    - `inGroupSidebarMenu` - Show voting in group sidebar menu
-  </Accordion>
-</AccordionGroup>
-
-### Financial Modules
-
-<AccordionGroup>
-  <Accordion title="Online Payments" icon="credit-card">
-    Stripe-powered payment processing.
-
-    **Options:**
-    - `eventTickets` - Enable paid event tickets
-    - `isLocalActive` - Allow local centers to have their own Stripe accounts
-    - `productsWithLocalCenterOption` - Enable local center selection for products
-    - `donationProductUuid` - UUID of the default donation product
-    - `fees` - Enable membership fee payments
-    - `checkoutCollectPhone` - Collect phone number during checkout
-    - `checkoutRequirePhone` - Make phone number required
-    - `checkoutCollectBirthdate` - Collect birthdate during checkout
-    - `collectBillingAddress` - Collect billing address
-  </Accordion>
-
-  <Accordion title="Fees (Membership Dues)" icon="receipt">
-    Membership fee collection and tracking.
-
-    **Options:**
-    - `productUuid` - Product used for membership fees
-    - `hasPaymentIban` - Show IBAN for bank transfer payments
-    - `feeLocalExists` - Enable local center fees
-    - `hasLifeTime` - Enable lifetime membership option
-    - `canPayNextYear` - Allow paying for next year in advance
-    - `continuityMandatory` - Require continuous membership
-    - `isMandatory` - Make fee payment mandatory
-  </Accordion>
-
-  <Accordion title="Invoices" icon="file-invoice">
-    Invoice generation and management.
-
-    **Options:**
-    - `productId` - Default product for invoices
-  </Accordion>
-</AccordionGroup>
-
-### Organization Structure
-
-<AccordionGroup>
-  <Accordion title="Groups" icon="users-rectangle">
-    Team and group management.
-
-    **Options:**
-    - `hasUnits` - Enable organizational units
-    - `hasRoleGroups` - Enable role-based automatic groups
-    - `whoCanCreate` - Permission level to create groups
-    - `hasAllMembersGroup` - Create automatic "all members" group
-    - `hasGroupCategories` - Enable group categories
-    - `hasTasks` - Enable task management in groups
-  </Accordion>
-
-  <Accordion title="Local Centers" icon="location-dot">
-    Geographic chapters or local branches.
-
-    **Options:**
-    - `hasRegions` - Enable regional grouping of local centers
-    - `hasParent` - Allow parent-child relationships between centers
-    - `multiLocalCenterAccess` - Allow users to belong to multiple centers
-    - `hasPublicInfoPage` - Enable public pages for local centers
-    - `localCenterUserMandatory` - Require users to select a local center
-  </Accordion>
-
-  <Accordion title="Professions" icon="briefcase">
-    Professional network and expertise tracking.
-
-    **Options:**
-    - `hasIndustry` - Enable industry categories
-    - `hasJob` - Enable job title fields
-    - `hasExpertise` - Enable expertise/skills
-  </Accordion>
-</AccordionGroup>
-
-### Content & Documents
-
-<AccordionGroup>
-  <Accordion title="Drive (Files)" icon="folder">
-    File storage and sharing.
-
-    **Options:**
-    - `hasUserPersonalDrive` - Give each user a personal file storage
-    - `whoCanPostPublic` - Permission to share files publicly
-  </Accordion>
-
-  <Accordion title="E-Documents (Contracts)" icon="file-contract">
-    Digital document signing and contracts.
-
-    **Options:**
-    - `membershipCardContractId` - Contract ID for membership cards
-  </Accordion>
-
-  <Accordion title="Official Gazette" icon="newspaper">
-    Official announcements and publications.
-  </Accordion>
-</AccordionGroup>
-
-### Gamification & Learning
-
-<AccordionGroup>
-  <Accordion title="Gamification (Badges)" icon="medal">
-    Achievement badges and recognition system.
-
-    **Options:**
-    - `hasType` - Enable badge types/categories
-    - `hasHours` - Track volunteer hours
-    - `hasTiers` - Enable tier levels for badges
-    - `hasEventBadge` - Award badges for event attendance
-    - `pointRules` - Configure point values for activities
-  </Accordion>
-
-  <Accordion title="Courses (LMS)" icon="graduation-cap">
-    Learning management and online courses.
-
-    **Options:**
-    - `hasEnforcingOnboarding` - Require course completion during onboarding
-  </Accordion>
-</AccordionGroup>
-
-### Support & Utilities
-
-<AccordionGroup>
-  <Accordion title="Contacts (CRM)" icon="address-book">
-    Contact management and lead tracking.
-
-    **Options:**
-    - `hasStatuses` - Enable contact statuses
-  </Accordion>
-
-  <Accordion title="Support (Helpdesk)" icon="headset">
-    Internal helpdesk and ticket system.
-  </Accordion>
-
-  <Accordion title="API & OAuth" icon="code">
-    Developer access and third-party integrations.
-  </Accordion>
-
-  <Accordion title="Analytics" icon="chart-line">
-    Custom reports and database queries.
-
-    **Options:**
-    - `hasQuery` - Enable custom SQL queries
-    - Permission settings for different report types
-  </Accordion>
-</AccordionGroup>
-
-### Other Modules
-
-<AccordionGroup>
-  <Accordion title="Referral Program" icon="user-plus">
-    Member referral tracking.
-
-    **Options:**
-    - `numberOfReferralsNeededForSignup` - Required referrals for certain benefits
-  </Accordion>
-
-  <Accordion title="Waitlist" icon="clock">
-    Waitlist management for limited capacity.
-
-    **Options:**
-    - `allowSelfRemoval` - Allow users to remove themselves
-    - `notifyAdminsOnNew` - Notify admins of new waitlist entries
-  </Accordion>
-
-  <Accordion title="Resignation" icon="door-open">
-    Member resignation workflow.
-
-    **Options:**
-    - `autoCloseAccountsThatResign` - Automatically close accounts upon resignation
-  </Accordion>
-
-  <Accordion title="Multi-Factor Authentication" icon="shield-check">
-    Enhanced security with 2FA.
+  <Accordion title="Security & Integrations">
+    | Module | What it unlocks |
+    |--------|----------------|
+    | **Multi-Factor Authentication** | Require MFA for member logins |
+    | **API & OAuth** | API token access and OAuth integrations |
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Configuring Module Options
+## Enabling and disabling
 
-When a module is enabled, click the **Options** button to access its specific settings:
+Open any module from the sidebar. Toggle it on or off in the header. Hit **Save**.
 
-<Steps>
-  <Step title="Enable the module">
-    Toggle the module switch to the ON position.
-  </Step>
-  <Step title="Click Options">
-    The Options button appears next to enabled modules.
-  </Step>
-  <Step title="Configure settings">
-    Adjust the module-specific options as needed.
-  </Step>
-  <Step title="Save">
-    Click Save to apply your changes.
-  </Step>
-</Steps>
-
----
-
-## JSON Mode
-
-For advanced users, Orgo provides a JSON editor to view and modify all module settings at once:
-
-1. Click **View JSON Mode** button
-2. Edit the JSON configuration directly
-3. Click **Save** to apply changes
+Disabling a module hides its features for everyone. Enable it again and everything comes back exactly as it was.
 
 <Warning>
-  JSON Mode is for advanced users. Invalid JSON will prevent saving. Always backup your settings before making bulk changes.
+  **Users & Profiles** can't be disabled — every other module depends on it.
 </Warning>
 
 ---
 
-## Best Practices
+## Permission levels
 
-<Tip>
-  **Start minimal** - Enable only the modules you need right now. You can always add more later as your organization grows.
-</Tip>
+Some module settings use permission dropdowns to control who can perform certain actions. These range from **User** (any logged-in member) to **Admin Tenant** (full organization control), with specialized roles for HR, finance, events, and communications at both organization and local center levels.
 
-<Tip>
-  **Test with a small group** - Before rolling out a new module to all members, test it with administrators first.
-</Tip>
+For the full permission hierarchy and role reference, see [Permissions](/platform/permissions).
 
-<Tip>
-  **Document your choices** - Keep notes on why certain modules are enabled or disabled for future administrators.
-</Tip>
+<Note>
+  Local-level roles (e.g., **Admin Local**, **HR Local**) only appear in dropdowns when the **Local Centers** module is enabled.
+</Note>
 
 ---
 
-## Module Dependencies
+## Troubleshooting
 
-Some modules work together or depend on each other:
-
-| Module | Related Modules |
-|--------|-----------------|
-| Online Payments | Events (for tickets), Fees (for membership) |
-| Local Centers | Fees (for local fees), Groups |
-| Adhesion | Identity Validation, Users |
-| Gamification | Events (for badges), Courses |
-| Newsletter | Notifications |
-
-<Note>
-  Enabling a module doesn't automatically enable its related modules. Configure each one separately based on your needs.
-</Note>
+<AccordionGroup>
+  <Accordion title="I disabled a module but it still shows up">
+    Refresh the page. Also check you toggled the right one — "Files & eDocuments" controls both Drive and eDocuments, for example.
+  </Accordion>
+  <Accordion title="Local permissions are missing from dropdowns">
+    Enable the **Local Centers** module first. Local-level roles only appear when it's active.
+  </Accordion>
+  <Accordion title="I can't find the Settings menu">
+    You need **Tenant Admin** permissions. Ask your organization's admin to grant the role.
+  </Accordion>
+</AccordionGroup>

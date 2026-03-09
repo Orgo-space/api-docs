@@ -1,258 +1,205 @@
 ---
 title: 'Create Event'
-description: 'Step-by-step guide to creating and publishing events'
+description: 'Step-by-step guide to creating events, from simple meetings to ticketed conferences'
 ---
 
-Learn how to create events in Orgo, from simple meetings to complex multi-day conferences with ticketing.
+Creating an event in Orgo covers everything from a 10-person committee meeting to a 500-person ticketed conference. This guide walks through every option so you know what to use and what to skip.
 
-## How to access
-
-**Events** → **Create Event** button
-
-Or from the Dashboard quick actions.
+<img src="/images/platform/events/event-create.png" alt="Create Event form with group selector, event type, title, location, dates, access (Free/Paid), audience (Members only/Public), and description" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Basic Event Information
+## How to create an event
 
-### Required Fields
-
-<ParamField path="title" type="string" required>
-  The event name. Keep it clear and descriptive.
-</ParamField>
-
-<ParamField path="startDate" type="datetime" required>
-  When the event starts. Includes date and time.
-</ParamField>
-
-<ParamField path="endDate" type="datetime" required>
-  When the event ends.
-</ParamField>
-
-<ParamField path="group" type="select" required>
-  Which group is organizing this event. You must have posting permissions in the selected group.
-</ParamField>
-
-### Optional Fields
-
-<ParamField path="description" type="richtext">
-  Full event description. Supports rich text formatting, images, and links.
-</ParamField>
-
-<ParamField path="location" type="string">
-  Physical address or venue name.
-</ParamField>
-
-<ParamField path="onlineLink" type="url">
-  Link for virtual events (Zoom, Teams, etc.)
-</ParamField>
-
-<ParamField path="eventType" type="select">
-  Category of event. Create event types first in Settings.
-</ParamField>
-
-<ParamField path="timezone" type="select">
-  Event timezone. Defaults to your profile timezone.
-</ParamField>
-
----
-
-## Visibility Settings
-
-### Public vs Private
-
-<ParamField path="isPublic" type="boolean">
-  - **Public**: Anyone can view the event page (even without an account)
-  - **Private**: Only members can see the event
-</ParamField>
-
-<ParamField path="isAttendable" type="boolean">
-  When enabled, people can register/RSVP to the event. Disable for informational events.
-</ParamField>
-
----
-
-## Registration Settings
-
-### Capacity
-
-<ParamField path="maxAttendees" type="number">
-  Maximum number of attendees. Leave empty for unlimited.
-</ParamField>
-
-<ParamField path="waitlistEnabled" type="boolean">
-  When capacity is reached, allow people to join a waitlist.
-</ParamField>
-
-### Registration Fields
-
-Configure which fields to collect during registration:
-
-| Field | Description |
-|-------|-------------|
-| **Name** | Attendee name (usually required) |
-| **Email** | Contact email (usually required) |
-| **Phone** | Phone number |
-| **Organisation** | Company/organization name |
-| **Role** | Job title |
-| **Town** | City/location |
-| **LinkedIn** | LinkedIn profile URL |
-| **X (Twitter)** | X profile URL |
-| **Instagram** | Instagram handle |
-
-### Registration Deadlines
-
-<ParamField path="registrationDeadline" type="datetime">
-  Last date/time to register. After this, registration closes automatically.
-</ParamField>
-
----
-
-## Event Page Customization
-
-Customize how the public event page looks:
-
-### Visual Settings
-
-<ParamField path="settings.tenantLogo" type="boolean">
-  Show organization logo on event page.
-</ParamField>
-
-<ParamField path="settings.showTitle" type="boolean">
-  Display event title prominently.
-</ParamField>
-
-<ParamField path="settings.heroRadius" type="select">
-  Border radius for the hero image (rounded corners).
-</ParamField>
-
-<ParamField path="settings.colorSelection" type="color">
-  Accent color for the event page.
-</ParamField>
-
-<ParamField path="settings.colorButton" type="color">
-  Button color on the registration form.
-</ParamField>
-
-<ParamField path="settings.lightThemeOnly" type="boolean">
-  Force light theme on public page (ignore visitor's dark mode preference).
-</ParamField>
-
-### Registration Options
-
-<ParamField path="settings.disableSubscribe" type="boolean">
-  Hide the newsletter subscription checkbox.
-</ParamField>
-
-<ParamField path="settings.disableRegister" type="boolean">
-  Disable registration completely (show info only).
-</ParamField>
-
----
-
-## Adding Media
-
-### Hero Image
-
-Upload a cover image for your event. This appears at the top of the event page and in event listings.
-
-**Recommendations:**
-- Aspect ratio: 16:9 (landscape)
-- Minimum size: 1200x675 pixels
-- Format: JPG or PNG
-- Keep important content centered (edges may be cropped on mobile)
-
-### Gallery
-
-Add additional photos or promotional images to the event gallery.
-
----
-
-## SDG Tagging
-
-If enabled in your module settings, tag events with UN Sustainable Development Goals:
-
-<ParamField path="sdg" type="multiselect">
-  Select applicable SDGs (1-17). This helps track your organization's impact alignment.
-</ParamField>
-
----
-
-## Publishing the Event
-
-### Draft vs Published
-
-Events start as **drafts**. While in draft:
-- Only you and admins can see it
-- You can make changes freely
-- No notifications are sent
-
-When you **publish**:
-- Event becomes visible (based on public/private setting)
-- Members may receive notifications
-- Event appears in calendars and listings
-
-### Publishing Steps
+**Events** → **Create Event**, or from the Dashboard quick actions.
 
 <Steps>
-  <Step title="Review all details">
-    Check title, dates, location, and description.
+  <Step title="Basic details">
+    Enter the event title, start/end dates and times, and select the hosting group.
   </Step>
-  <Step title="Set up registration">
-    Configure tickets if needed, set capacity.
+  <Step title="Description and location">
+    Write the event description (rich text with images and links). Add a physical address, an online meeting link, or both.
   </Step>
-  <Step title="Add media">
-    Upload hero image and any gallery photos.
+  <Step title="Registration settings">
+    Decide whether people can register, set capacity, configure ticket types, and choose which fields to collect.
   </Step>
-  <Step title="Click Publish">
-    Make the event live.
+  <Step title="Visual customization">
+    Upload a hero image, set accent colors, and configure the public page appearance.
+  </Step>
+  <Step title="Publish">
+    Review everything, then publish. The event goes live and members are notified.
   </Step>
 </Steps>
 
 ---
 
-## After Publishing
+## Event details
 
-Once published, you can:
+### Required fields
 
-- **Edit details** - Most fields can still be updated
-- **Send invitations** - Invite specific members or groups
-- **Track registrations** - See who signed up
-- **Send updates** - Notify registered attendees of changes
-- **Manage waitlist** - If capacity is full
-- **Cancel event** - If needed (notifies registrants)
+| Field | What to enter |
+|-------|-------------|
+| **Title** | Clear, descriptive name — "Annual Leadership Conference 2026" not "Event" |
+| **Start date/time** | When the event begins, including time and timezone |
+| **End date/time** | When the event ends |
+| **Group** | Which group is hosting — this determines who sees it in their calendar. You must have posting permissions in the selected group. |
+
+### Optional but recommended
+
+| Field | When to use |
+|-------|------------|
+| **Description** | Always — this is your event's sales pitch. Rich text formatting, images, and links supported. |
+| **Location** | Physical events — enter the venue name and address |
+| **Online link** | Virtual events — paste your Zoom, Teams, or Meet link |
+| **Event type** | Always, if you've set up [Event Types](/platform/events/event-types) — enables filtering and reporting |
+| **Hero image** | Public events and any event you want to look polished. Recommended: 1200x675px, 16:9 ratio. |
+| **Timezone** | Multi-timezone organizations — defaults to your profile timezone |
 
 ---
 
-## Best Practices
+## Visibility: public vs. private
+
+This is a key decision:
+
+| Setting | What it means |
+|---------|-------------|
+| **Public** | Anyone can view the event page — even without an Orgo account. The event gets a shareable URL. Use for open events you want to promote externally. |
+| **Private** (default) | Only members of the hosting group can see the event. Use for internal meetings, member-only activities. |
+
+### Attendable vs. informational
+
+| Setting | What it means |
+|---------|-------------|
+| **Attendable** — ON | People can register or RSVP. Enables capacity, tickets, waitlist. |
+| **Attendable** — OFF | The event is informational only — it shows on the calendar but nobody registers. Use for holidays, deadlines, or reminders. |
+
+---
+
+## Registration settings
+
+When "Attendable" is enabled, configure how registration works:
+
+### Capacity
+
+| Setting | What it does |
+|---------|-------------|
+| **Max attendees** | Hard limit on registrations. Leave empty for unlimited. |
+| **Waitlist** | When capacity is reached, new registrants join a waitlist instead of being rejected. |
+
+### Registration deadline
+
+Set a date/time after which registration closes automatically. Useful for events with preparation requirements (name badges, catering headcount, etc.).
+
+### Registration fields
+
+Choose what information to collect when someone registers:
+
+| Field | Collect when |
+|-------|-------------|
+| **Name** | Always (usually required) |
+| **Email** | Always (usually required) |
+| **Phone** | You need to contact attendees directly |
+| **Organisation** | External attendees from various companies |
+| **Role/Title** | Networking events, professional conferences |
+| **Town** | Geographic spread matters |
+| **LinkedIn / X / Instagram** | Networking events where social connections matter |
+
+<Tip>
+  Fewer registration fields = more registrations. Only ask for what you'll actually use. You can always collect more information at check-in.
+</Tip>
+
+---
+
+## Ticketing
+
+For paid events or events with multiple registration tiers, enable ticketing. This is a deep topic — see [Ticketing](/platform/events/ticketing) for the full guide.
+
+Quick overview: you create ticket types (General Admission, Early Bird, VIP, Member, Student), set prices, and optionally limit quantities. Attendees pay via Stripe checkout and receive a QR code ticket.
+
+<Warning>
+  Paid tickets require [Stripe setup](/platform/fees/stripe-integration). Without Stripe configured, you can only create free ticket types.
+</Warning>
+
+---
+
+## Event page customization
+
+Every event has a page — for public events, this is what the world sees. Customize it to match your brand:
+
+| Setting | What it controls |
+|---------|-----------------|
+| **Organization logo** | Show/hide your org logo on the event page |
+| **Show title** | Display event title prominently over the hero image |
+| **Hero image corners** | None, Small, Medium, or Large border radius |
+| **Accent color** | Affects buttons, links, and highlights throughout the page |
+| **Button color** | Specific color for the register/purchase button |
+| **Light theme only** | Force light theme even if the visitor uses dark mode |
+| **Hide newsletter checkbox** | Remove the "subscribe to updates" checkbox from the form |
+| **Disable registration** | Show event info but no registration form (info-only mode) |
+
+---
+
+## SDG tagging
+
+If your organization tracks impact against the UN Sustainable Development Goals (common for NGOs and civil society organizations), you can tag each event with the relevant SDGs (1-17). These tags feed into [Annual Reports](/platform/events/annual-report) for impact reporting.
+
+---
+
+## Draft vs. published
+
+Events start as **drafts**:
+
+| State | Visibility | Notifications |
+|-------|-----------|---------------|
+| **Draft** | Only you and admins can see it | None sent |
+| **Published** | Visible based on public/private setting | Members notified, event appears in calendars |
+
+Work on drafts until everything looks right, then publish. You can still edit most fields after publishing — dates, description, location, tickets.
+
+---
+
+## After publishing
+
+Once live, you can:
+
+- **Track registrations** — see who signed up in the Participants tab
+- **Send invitations** — invite specific members or entire groups
+- **Send updates** — notify registered attendees of changes
+- **Manage waitlist** — approve waitlisted people when spots open
+- **Cancel the event** — registrants are notified automatically
+
+---
+
+## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Write compelling descriptions">
-    Include: what the event is about, who should attend, what they'll get out of it, and any practical details.
+  <Accordion title="How do I create a recurring weekly meeting?">
+    Orgo doesn't have a built-in recurrence feature. Create each instance individually, or create the first one and duplicate it for future dates. For recurring meetings, some organizations create a Private Group with the meeting info pinned as a discussion post, and only create formal events for special sessions.
   </Accordion>
 
-  <Accordion title="Use high-quality images">
-    A good hero image dramatically increases event registrations.
+  <Accordion title="Can I edit an event after people have registered?">
+    Yes. You can update the title, description, location, times, and hero image. Registered attendees won't be automatically notified of changes — use the "Send update" feature to notify them explicitly.
   </Accordion>
 
-  <Accordion title="Set realistic capacity">
-    Consider your venue size, budget, and management capacity.
+  <Accordion title="How do I create a hybrid event (in-person + online)?">
+    Add both a physical location and an online meeting link. The event page shows both. You might create separate ticket types: "In-Person" and "Online" to track attendance mode.
   </Accordion>
 
-  <Accordion title="Publish early">
-    Give people time to plan. Major events should be published 4-8 weeks in advance.
+  <Accordion title="I want to create an event on behalf of a local center">
+    You need posting permissions in that Local Center. Select the center as the hosting group when creating the event. Or have the local admin create it — they have the permissions by default.
   </Accordion>
 
-  <Accordion title="Send reminders">
-    Use the event communication tools to remind attendees as the date approaches.
+  <Accordion title="Can non-members register for events?">
+    Yes, if the event is **public**. Non-members register as guests — they provide their name, email, and any required fields. They receive a ticket/QR code by email. They don't need an Orgo account.
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Related Features
+## Related
 
-- [Event Types](/platform/events/event-types) - Categorize your events
-- [Ticketing](/platform/events/ticketing) - Set up paid tickets
-- [Public Page](/platform/events/public-page) - Customize event pages
-- [Attendance](/platform/events/attendance) - Track who shows up
+- [Events Overview](/platform/events) — Module setup and configuration
+- [Event Types](/platform/events/event-types) — Categorize your events
+- [Ticketing](/platform/events/ticketing) — Paid tickets and pricing strategies
+- [Public Event Pages](/platform/events/public-page) — Shareable branded event pages
+- [Attendance](/platform/events/attendance) — Check-in and tracking

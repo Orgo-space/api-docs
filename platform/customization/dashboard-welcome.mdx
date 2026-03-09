@@ -1,172 +1,94 @@
 ---
 title: 'Dashboard Welcome'
-description: 'Customize the welcome message for members'
+description: 'A personalized welcome message on the dashboard — with dynamic fields and conditional display'
 ---
 
-The Dashboard Welcome allows you to create a personalized greeting for members when they log in. Set up welcome messages, announcements, and onboarding guidance.
+The Dashboard Welcome widget shows a greeting message at the top of the dashboard. Use it to welcome new members, announce important news, or guide people to take action. It supports rich text, images, buttons, and dynamic personalization fields.
 
-## How to access
+<img src="/images/platform/customization/dashboard-organizer.png" alt="Dashboard configuration with welcome widget" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Setting up the welcome message
 
 **Settings** → **Customization** → **Dashboard Welcome**
 
----
-
-## Prerequisites
-
-- Administrator access required
-
----
-
-## Welcome Features
-
-| Feature | Description |
-|---------|-------------|
-| **Welcome message** | Personalized greeting text |
-| **Rich content** | Formatted text and media |
-| **Dynamic fields** | Insert member name, etc. |
-| **Conditional display** | Show based on criteria |
-
----
-
-## Creating a Welcome Message
-
 <Steps>
-  <Step title="Navigate to Dashboard Welcome">
-    Go to **Settings** → **Customization** → **Dashboard Welcome**.
-  </Step>
-  <Step title="Enable welcome message">
+  <Step title="Enable the widget">
     Toggle the welcome message on.
   </Step>
-  <Step title="Write content">
-    Create your welcome message with rich formatting.
+  <Step title="Write your message">
+    Create the content with the rich text editor. Add a title, body text, images, and buttons.
   </Step>
   <Step title="Add personalization">
-    Insert dynamic fields like member name.
+    Insert dynamic fields so the message feels personal to each member.
   </Step>
   <Step title="Save and preview">
-    Save and test how it appears.
+    Check how it looks on the dashboard.
   </Step>
 </Steps>
 
 ---
 
-## Message Settings
+## Personalization fields
 
-<ParamField path="enabled" type="boolean">
-  Show/hide the welcome message.
-</ParamField>
+Insert dynamic content that resolves to each member's data:
 
-<ParamField path="title" type="string">
-  Heading for the welcome section.
-</ParamField>
-
-<ParamField path="content" type="richtext">
-  Main welcome message body.
-</ParamField>
-
-<ParamField path="showOnlyOnce" type="boolean">
-  Display only on first login.
-</ParamField>
-
----
-
-## Personalization Tags
-
-Insert dynamic content:
-
-| Tag | Output |
-|-----|--------|
+| Field | Output |
+|-------|--------|
 | `{{firstName}}` | Member's first name |
 | `{{lastName}}` | Member's last name |
-| `{{localCenter}}` | Their local center |
-| `{{memberSince}}` | Join date |
-| `{{userType}}` | Membership type |
+| `{{localCenter}}` | Their Local Center name |
+| `{{memberSince}}` | Their join date |
+| `{{userType}}` | Their membership type |
 
-### Example
+### Example message
 
 ```
 Welcome back, {{firstName}}!
 
 You've been a valued member of {{localCenter}} since {{memberSince}}.
+Check out the upcoming events below, or head to your group to join the discussion.
 ```
 
 ---
 
-## Rich Content Options
+## Display options
 
-### Formatting
+| Setting | What it does |
+|---------|-------------|
+| **Show only once** | Display the message on first login only — good for onboarding instructions |
+| **Always show** | Display every time — good for ongoing announcements |
 
-- Headings
-- Bold and italic text
-- Bullet lists
-- Links
-
-### Media
-
-- Images
-- Embedded videos
-- Buttons with links
-
----
-
-## Conditional Display
+### Conditional display
 
 Show different messages based on:
 
-| Condition | Use Case |
-|-----------|----------|
-| **New member** | Onboarding guidance |
-| **User type** | Type-specific info |
-| **Local center** | Location-based messages |
-| **First login** | Initial welcome only |
+| Condition | Use for |
+|-----------|---------|
+| **New member** | Onboarding steps: "Complete your profile", "Join a group" |
+| **User type** | Type-specific info: leaders see leadership resources, volunteers see volunteer info |
+| **Local Center** | Location-specific announcements |
 
 ---
 
-## Use Cases
+## What to put in the welcome message
 
-<AccordionGroup>
-  <Accordion title="New member onboarding">
-    Guide new members through their first steps.
-  </Accordion>
+| Situation | Content |
+|-----------|---------|
+| **Launching Orgo for the first time** | "Welcome to our new platform! Here's how to get started..." with steps |
+| **Onboarding new members** | "Complete your profile, join your local center, check upcoming events" |
+| **Seasonal announcement** | "Registration for Summer Camp is now open — register by March 15" |
+| **Fee reminder** | "Annual dues are due by January 31 — click here to pay" |
+| **Nothing specific** | Keep it simple: "Welcome back, {{firstName}}!" with a link to upcoming events |
 
-  <Accordion title="Announcements">
-    Highlight important news or upcoming events.
-  </Accordion>
-
-  <Accordion title="Seasonal messages">
-    Update for holidays or special periods.
-  </Accordion>
-
-  <Accordion title="Call to action">
-    Encourage specific actions like completing profiles.
-  </Accordion>
-</AccordionGroup>
+<Tip>
+  Update the welcome message regularly. A stale "Welcome to 2024!" message in 2026 tells members no one is paying attention. Either keep it current or use generic content that's always relevant.
+</Tip>
 
 ---
 
-## Best Practices
+## Related
 
-<AccordionGroup>
-  <Accordion title="Keep it brief">
-    Welcome messages should be concise and actionable.
-  </Accordion>
-
-  <Accordion title="Update regularly">
-    Refresh content to keep it relevant.
-  </Accordion>
-
-  <Accordion title="Include next steps">
-    Guide members on what to do next.
-  </Accordion>
-
-  <Accordion title="Use personalization">
-    Personal touches increase engagement.
-  </Accordion>
-</AccordionGroup>
-
----
-
-## Related Features
-
-- [Dashboard Organizer](/platform/customization/dashboard-organizer) - Dashboard layout
-- [Notifications](/platform/notifications) - Member communications
+- [Dashboard Organizer](/platform/customization/dashboard-organizer) — Position the welcome widget on the dashboard
+- [Notifications](/platform/notifications) — For time-sensitive member communication

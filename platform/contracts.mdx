@@ -1,201 +1,165 @@
 ---
 title: 'E-Documents'
-description: 'Digital document signing and contract management'
+description: 'Create documents members sign electronically — contracts, waivers, policies, certificates'
 ---
 
-The E-Documents module enables digital document creation, signing, and management. Create contracts, membership agreements, and other documents that members can sign electronically.
-
-## How to access
-
-**Settings** → **Features** → **E-Documents**
-
-Members access via: **Profile** → **E-Documents** tab
+E-Documents replaces paper forms with digital ones. Create a document template once, send it to members, and collect electronic signatures — membership agreements, volunteer contracts, photo releases, codes of conduct.
 
 ---
 
-## Prerequisites
+## Do I need E-Documents?
 
-E-Documents must be enabled:
-
-**Settings** → **Modules** → Enable **E-Documents**
-
----
-
-## Document Types
-
-| Type | Description |
-|------|-------------|
-| **Contracts** | Agreements requiring member signature |
-| **Membership Cards** | Auto-generated membership documentation |
-| **Policies** | Documents requiring acknowledgment |
-| **Certificates** | Training or achievement certificates |
+| You want to... | E-Documents? |
+|----------------|-------------|
+| Have new members sign a membership agreement | Yes |
+| Collect photo/video release consent | Yes |
+| Get volunteers to sign a contract before starting | Yes |
+| Have members acknowledge a code of conduct | Yes |
+| Issue completion certificates | Yes |
+| Store and share general documents | No — use [Files](/platform/files) |
+| Send contracts requiring legally binding e-signatures | Depends — Orgo signatures capture identity and timestamp, but check your jurisdiction's requirements |
 
 ---
 
-## Creating Document Templates
+## How it works
+
+### Admin workflow
 
 <Steps>
-  <Step title="Navigate to E-Documents">
-    Go to **Settings** → **Features** → **E-Documents**.
+  <Step title="Create a template">
+    Design the document with placeholders for member data.
   </Step>
-  <Step title="Click Create Template">
-    Click **Create Document Template**.
+  <Step title="Assign to members">
+    Select who needs to sign — individually, by group, by user type, or all members.
   </Step>
-  <Step title="Design the document">
-    Use the editor to create your document with placeholders for member data.
+  <Step title="Members are notified">
+    They receive an email and in-app notification.
   </Step>
-  <Step title="Configure settings">
-    Set who should sign, deadlines, and notifications.
+  <Step title="Track completion">
+    Monitor who has signed and send reminders to those who haven't.
   </Step>
-  <Step title="Save">
-    Save the template for use.
+  <Step title="Archive">
+    Signed documents are stored permanently.
   </Step>
 </Steps>
 
+### Member experience
+
+1. Receive notification about a document to sign
+2. Open and read the full document
+3. Click **Sign** to sign electronically
+4. Download a copy for their records
+
 ---
 
-## Template Placeholders
+## Creating a template
 
-Insert dynamic content using placeholders:
+**Settings** → **Features** → **E-Documents** → **Create Document Template**
 
-| Placeholder | Description |
-|-------------|-------------|
+### Placeholders
+
+Insert dynamic content that fills in automatically per member:
+
+| Placeholder | Output |
+|-------------|--------|
 | `{{member.fullName}}` | Member's full name |
 | `{{member.email}}` | Member's email |
-| `{{member.localCenter}}` | Member's Local Center |
-| `{{tenant.name}}` | Organization name |
-| `{{date.today}}` | Current date |
+| `{{member.localCenter}}` | Their Local Center |
+| `{{tenant.name}}` | Your organization name |
+| `{{date.today}}` | Today's date |
 | `{{date.year}}` | Current year |
 
----
+### Example template
 
-## Document Workflow
+```
+MEMBERSHIP AGREEMENT — {{date.year}}
 
-### Administrator Side
+I, {{member.fullName}}, agree to the terms and conditions
+of membership in {{tenant.name}}.
 
-1. **Create template** - Design the document
-2. **Assign to members** - Select who needs to sign
-3. **Send notifications** - Members are notified
-4. **Track completion** - Monitor who has signed
-5. **Archive** - Store completed documents
+By signing below, I acknowledge that I have read and
+understood the organization's code of conduct and agree
+to abide by its terms.
 
-### Member Side
-
-1. **Receive notification** - Email or in-app notification
-2. **Review document** - Read the full document
-3. **Sign electronically** - Click to sign
-4. **Download copy** - Get a copy for records
+Date: {{date.today}}
+```
 
 ---
 
-## Electronic Signatures
+## Document types
 
-### Signing Process
-
-1. Member opens the document
-2. Reviews the content
-3. Clicks **Sign** button
-4. Signature is recorded with timestamp
-5. Document status updates to "Signed"
-
-### Signature Record
-
-Each signature captures:
-- Member identity
-- Date and time
-- IP address
-- Device information
+| Type | Use for |
+|------|---------|
+| **Contracts** | Membership agreements, volunteer contracts — require signature |
+| **Policies** | Code of conduct, privacy policy — require acknowledgment |
+| **Certificates** | Training completion, achievement — issued to members |
+| **Membership cards** | Auto-generated membership documentation |
 
 ---
 
-## Document Status
+## Document statuses
 
-| Status | Description |
-|--------|-------------|
-| **Pending** | Awaiting member action |
+| Status | What it means |
+|--------|--------------|
+| **Pending** | Assigned to member, waiting for their action |
 | **Signed** | Member has signed |
-| **Expired** | Signing deadline passed |
-| **Cancelled** | Document cancelled by admin |
+| **Expired** | Signing deadline passed without signature |
+| **Cancelled** | Admin cancelled the document |
 
 ---
 
-## Member Document Access
+## Signature records
 
-Members access their documents via:
+Each electronic signature captures:
+- **Who** signed (member identity)
+- **When** they signed (date and time)
+- **From where** (IP address)
+- **How** (device information)
 
-**Profile** → **E-Documents**
-
-Shows:
-- Documents pending signature
-- Completed documents
-- Download options
-
----
-
-## Notifications
-
-### Automatic Notifications
-
-- Document assigned notification
-- Reminder before deadline
-- Confirmation after signing
-
-### Manual Reminders
-
-Administrators can send reminders to members with pending documents.
+This creates an audit trail for each signed document.
 
 ---
 
-## Use Cases
+## Managing documents
+
+### Sending reminders
+
+For members with pending documents, send manual reminders or configure automatic reminders before the deadline.
+
+### Members access their documents
+
+Members find their documents at **Profile** → **E-Documents** — both pending and completed.
+
+---
+
+## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Membership agreements">
-    New members sign membership terms and conditions.
+  <Accordion title="How do I get all members to sign a new policy?">
+    Create the document template, then assign it to all members (or filter by user type, group, etc.). Everyone gets notified. Use the tracking view to see who hasn't signed and send reminders.
   </Accordion>
 
-  <Accordion title="Volunteer contracts">
-    Volunteers sign agreements before starting service.
+  <Accordion title="A member signed the wrong document version">
+    Cancel the old document and create a new one with the correct content. Assign it to the affected member(s). They'll receive a new signing request.
   </Accordion>
 
-  <Accordion title="Photo releases">
-    Collect consent for using member photos.
+  <Accordion title="Are these signatures legally binding?">
+    Orgo captures identity, timestamp, and IP address with each signature. In many jurisdictions this meets electronic signature requirements, but legal standards vary. Check your local regulations or consult legal counsel for high-stakes documents.
   </Accordion>
 
-  <Accordion title="Code of conduct">
-    Members acknowledge understanding of rules.
+  <Accordion title="Can I require signing during registration?">
+    E-Documents are assigned after account creation. For pre-registration agreements, include terms acceptance in the registration or adhesion form instead.
   </Accordion>
 
-  <Accordion title="Training completion">
-    Issue certificates for completed training.
+  <Accordion title="Members aren't signing their documents">
+    Send reminders. Set reasonable deadlines. Keep documents short and clear — a 20-page legal document gets less engagement than a 1-page acknowledgment. Consider making it required before accessing certain features.
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Best Practices
+## Related
 
-<AccordionGroup>
-  <Accordion title="Clear language">
-    Write documents in plain language that members can understand.
-  </Accordion>
-
-  <Accordion title="Reasonable deadlines">
-    Give members enough time to review and sign.
-  </Accordion>
-
-  <Accordion title="Send reminders">
-    Use automatic reminders before deadlines.
-  </Accordion>
-
-  <Accordion title="Keep records">
-    Maintain signed documents for legal and compliance purposes.
-  </Accordion>
-</AccordionGroup>
-
----
-
-## Related Features
-
-- [Files](/platform/files) - Document storage
-- [Users](/platform/users/index) - Member management
-- [Notifications](/platform/notifications) - Document reminders
+- [Files](/platform/files) — General document storage
+- [Members](/platform/users) — Member management
+- [Notifications](/platform/notifications) — Document reminder settings

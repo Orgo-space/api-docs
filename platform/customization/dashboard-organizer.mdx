@@ -1,168 +1,94 @@
 ---
 title: 'Dashboard Organizer'
-description: 'Customize the dashboard layout and widgets'
+description: 'Choose which widgets appear on the member dashboard and in what order'
 ---
 
-The Dashboard Organizer lets you configure what members see on their home page. Arrange widgets, enable statistics, and create an informative landing experience.
+The dashboard is the first thing members see after logging in. The Dashboard Organizer lets you decide what's on it — upcoming events, recent discussions, statistics, quick links — and arrange the layout so the most important information is front and center.
 
-## How to access
+<img src="/images/platform/customization/dashboard-organizer.png" alt="Dashboard organizer with widget toggles and drag ordering" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## How to use it
 
 **Settings** → **Customization** → **Dashboard Organizer**
 
----
-
-## Prerequisites
-
-- Administrator access required
+Toggle widgets on/off and drag them to set the display order. Save to apply changes to all members.
 
 ---
 
-## Dashboard Features
+## Available widgets
 
-| Feature | Description |
-|---------|-------------|
-| **Widget layout** | Arrange dashboard components |
-| **Show/hide widgets** | Control visible elements |
-| **Statistics cards** | Display key metrics |
-| **Quick actions** | Shortcut buttons |
-
----
-
-## Available Widgets
-
-| Widget | Description |
-|--------|-------------|
-| **Welcome Message** | Customizable greeting |
-| **Upcoming Events** | Next scheduled events |
-| **Recent Discussions** | Latest forum activity |
-| **Statistics** | Member/event counts |
-| **Quick Links** | Shortcut buttons |
-| **Announcements** | Important notices |
-| **Calendar** | Event calendar view |
-| **My Groups** | User's group memberships |
+| Widget | What it shows | Enable when |
+|--------|-------------|-------------|
+| **Welcome Message** | Customizable greeting (see [Dashboard Welcome](/platform/customization/dashboard-welcome)) | You want to communicate something to members on every login |
+| **Upcoming Events** | Next scheduled events from the member's groups | Your org runs regular events |
+| **Recent Discussions** | Latest posts from the member's groups | Active discussion community |
+| **Statistics** | Key numbers — total members, events, active discussions | Admins want a quick pulse check |
+| **Quick Links / Actions** | Shortcut buttons (Create Event, View Members, etc.) | Reduce clicks to common actions |
+| **Announcements** | Important notices pinned to the dashboard | You have urgent or time-sensitive announcements |
+| **Calendar** | Calendar view of upcoming events | Events are a primary feature |
+| **My Groups** | List of the member's group memberships | Members are in multiple groups |
 
 ---
 
-## Customizing the Dashboard
+## Recommended setups
 
-<Steps>
-  <Step title="Navigate to Dashboard Organizer">
-    Go to **Settings** → **Customization** → **Dashboard Organizer**.
-  </Step>
-  <Step title="View available widgets">
-    See all widgets that can be displayed.
-  </Step>
-  <Step title="Toggle widgets">
-    Enable or disable each widget.
-  </Step>
-  <Step title="Arrange layout">
-    Drag widgets to arrange their position.
-  </Step>
-  <Step title="Save configuration">
-    Save your dashboard layout.
-  </Step>
-</Steps>
+### Activity-focused organization (events, meetups)
 
----
-
-## Widget Settings
-
-### Welcome Widget
-
-<ParamField path="showWelcome" type="boolean">
-  Display the welcome message widget.
-</ParamField>
-
-### Events Widget
-
-<ParamField path="showUpcomingEvents" type="boolean">
-  Display upcoming events list.
-</ParamField>
-
-<ParamField path="eventsCount" type="number">
-  Number of events to show.
-</ParamField>
-
-### Statistics Widget
-
-<ParamField path="showStatistics" type="boolean">
-  Display statistics cards.
-</ParamField>
-
-<ParamField path="statistics" type="array">
-  Which statistics to include.
-</ParamField>
-
----
-
-## Statistics Options
-
-| Statistic | Description |
-|-----------|-------------|
-| **Total Members** | Active member count |
-| **New Members** | Recent signups |
-| **Upcoming Events** | Event count |
-| **Active Discussions** | Recent posts |
-| **Local Centers** | Center count |
-
----
-
-## Role-Based Dashboards
-
-Different roles can see different dashboards:
-
-| Role | Dashboard Content |
-|------|-------------------|
-| **Admin** | Full statistics, admin tools |
-| **Moderator** | Moderation queue, activity |
-| **Member** | Personal info, events |
-| **New Member** | Onboarding guidance |
-
----
-
-## Layout Options
-
-### Grid Layout
-
-Arrange widgets in a responsive grid:
-- 2 columns on desktop
-- 1 column on mobile
-- Drag to reorder
-
-### Priority Order
-
-Widgets appear in order of importance:
-1. Welcome/Announcements
+1. Welcome Message (if needed)
 2. Upcoming Events
-3. Quick Actions
-4. Recent Activity
-5. Statistics
+3. Calendar
+4. Recent Discussions
+
+### Communication-focused organization (forums, updates)
+
+1. Announcements
+2. Recent Discussions
+3. Upcoming Events
+4. Quick Links
+
+### Simple community
+
+1. Welcome Message
+2. Upcoming Events
+3. My Groups
+
+<Tip>
+  Less is more. 3-5 widgets is plenty. An overloaded dashboard is as useless as an empty one — members don't know where to look.
+</Tip>
 
 ---
 
-## Best Practices
+## Layout
+
+Widgets arrange in a responsive grid:
+- **Desktop:** 2-column layout
+- **Mobile:** Single column, stacked vertically
+
+The order you set determines priority — top widgets appear first on both desktop and mobile. On mobile, this matters most since members scroll vertically.
+
+---
+
+## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Prioritize action items">
-    Show upcoming events and tasks prominently.
+  <Accordion title="Members skip the dashboard and go straight to events">
+    That's fine — it means they know where they're going. Keep the dashboard useful for members who don't yet have a specific task. Upcoming Events and Recent Discussions are good default widgets for this purpose.
   </Accordion>
 
-  <Accordion title="Keep it clean">
-    Don't overload with too many widgets.
+  <Accordion title="I want different dashboards for admins and members">
+    The Dashboard Organizer creates one layout for everyone. However, some widgets (like Statistics) are only visible to admins by default. The system adapts what each role sees.
   </Accordion>
 
-  <Accordion title="Mobile-first">
-    Ensure important content is visible on mobile.
-  </Accordion>
-
-  <Accordion title="Update seasonally">
-    Adjust dashboard for different periods (events, renewals).
+  <Accordion title="The dashboard feels stale — nothing changes">
+    That means your widgets are showing static content. Enable dynamic widgets: Upcoming Events (changes as events approach), Recent Discussions (changes as people post), and update the Welcome Message regularly.
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Related Features
+## Related
 
-- [Dashboard Welcome](/platform/customization/dashboard-welcome) - Welcome message
-- [Menu Organizer](/platform/customization/menu-organizer) - Navigation layout
+- [Dashboard Welcome](/platform/customization/dashboard-welcome) — The welcome message widget
+- [Menu Organizer](/platform/customization/menu-organizer) — Sidebar navigation

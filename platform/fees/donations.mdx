@@ -1,334 +1,335 @@
 ---
 title: 'Donations'
-description: 'Accept donations and run fundraising campaigns'
+description: 'Run fundraising campaigns with public pages, donation goals, A/B testing, donor comments, and embeddable widgets'
 ---
 
-The Donations feature allows you to accept one-time and recurring donations from members and the public. Create fundraising campaigns with goals, track progress, and engage donors.
+The Donations module turns your organization into a fundraising platform. Create campaigns with public pages, track progress toward goals, collect donor messages, and embed donation widgets on any website — all backed by Stripe.
 
-## How to access
-
-**Resources** → **Donations**
-
-Or create donation products: **Settings** → **Fees** → **Products**
+<img src="/images/platform/fees/donation-public-page.png" alt="Public donation page showing hero image, 67% progress bar toward $35,000 goal, 30 donations totaling $23,650, campaign description" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Prerequisites
+## Donations vs. fees
 
-1. **Stripe connected**: **Settings** → **Fees** → **Stripe Integration**
-2. **Create donation product**: Set type to "Donation"
+| Use **Donations** when | Use **[Fees](/platform/fees/fees)** when |
+|----------------------|--------------------------------------|
+| Contributions are voluntary | Payment is required for membership |
+| Amount is flexible (donor chooses) | Amount is fixed per tier |
+| Open to the public (non-members too) | Only for existing members |
+| Goal-based (raise $35,000 for a project) | Period-based (annual dues) |
+| Tax-deductible charitable giving | Membership subscription |
+
+Many organizations use both: fees for membership dues, donations for fundraising on top.
 
 ---
 
-## Creating a Donation Campaign
+## Creating a donation campaign
+
+**Finance** → **Products** → **Create Product** → type: **Donation**
+
+<img src="/images/platform/fees/product-create.png" alt="Create Product form showing Donation type selected, title field, Recurring and One-off frequency options, custom amount toggle with min/max, and campaign goal settings" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 <Steps>
-  <Step title="Create donation product">
-    Go to **Settings** → **Fees** → **Products** → **Create Product**.
+  <Step title="Choose Donation type">
+    Select **Donation** as the product type. This unlocks campaign features like goals, public pages, donor comments, and widgets.
   </Step>
-  <Step title="Select Donation type">
-    Choose "Donation" as the product type.
+  <Step title="Name and frequency">
+    Give the campaign a title. Choose **Recurring** (monthly subscription), **One-off** (single payment), or both.
   </Step>
-  <Step title="Configure campaign">
-    Add name, description, and campaign image.
+  <Step title="Custom amounts">
+    Toggle on **Custom amount** to let donors enter any value. Set optional minimum and maximum to keep it reasonable.
   </Step>
-  <Step title="Set up pricing">
-    Configure suggested amounts or custom amounts.
+  <Step title="Set a goal">
+    Choose **Total goal** or **Monthly goal** and enter a target amount. The public page shows a live progress bar.
   </Step>
-  <Step title="Enable public access">
-    Set **isExternal** to true for public donations.
-  </Step>
-  <Step title="Publish">
-    Save and share the donation page URL.
+  <Step title="Save and configure">
+    After saving, the product detail page opens with tabs for **Prices & Options**, **Landing page**, **Widgets**, and **Stats**.
   </Step>
 </Steps>
 
 ---
 
-## Donation Settings
+## Prices & options
 
-### Basic Settings
+Each donation campaign can have preset price tiers and product options. The **Prices & Options** tab manages both.
 
-<ParamField path="name" type="string" required>
-  Campaign name displayed to donors.
-</ParamField>
+<img src="/images/platform/fees/donation-product-detail.png" alt="Donation product detail showing Prices & Options tab with seven tiers from Starter $10 to Legacy $1,000, A/B Testing toggle enabled, and Product options panel" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-<ParamField path="description" type="richtext">
-  Campaign story and purpose. Explain why you're fundraising.
-</ParamField>
+### Price tiers
 
-<ParamField path="logo" type="image">
-  Campaign image displayed on donation page.
-</ParamField>
+Create suggested donation amounts that appear as quick-select buttons on the public page:
 
-### Pricing Options
+| Tier | Amount | Purpose |
+|------|--------|---------|
+| Starter | $10 | Low-barrier entry |
+| Friend | $25 | Entry-level giving |
+| Supporter | $50 | Mid-range contribution |
+| Champion | $100 | Major donor level |
+| Patron | $250 | Sustainer |
+| Benefactor | $500 | Leadership giving |
+| Legacy | $1,000 | Top-tier gift |
+| Custom | Donor enters | For any amount outside presets |
 
-<ParamField path="hasCustomPriceValue" type="boolean">
-  Allow donors to enter any amount.
-</ParamField>
+One tier is marked as the **Default price** — it's pre-selected when the page loads. You can also enable **custom price value** so donors can type any amount (with optional min/max).
 
-<ParamField path="customMinPrice" type="number">
-  Minimum donation amount.
-</ParamField>
+### A/B testing
 
-<ParamField path="customMaxPrice" type="number">
-  Maximum donation amount (optional).
-</ParamField>
+Toggle **Pricing A/B Testing** to experiment with different price tier configurations. Each variation shows a different set of preset amounts to donors, and Orgo tracks performance metrics per variation so you can see what works.
 
-<ParamField path="productPrices" type="array">
-  Pre-defined donation amounts (e.g., $25, $50, $100, $250).
-</ParamField>
+<img src="/images/platform/fees/donation-ab-testing.png" alt="A/B Testing section showing two enabled variations — Variation A with lower tiers ($10, $25, $50, $100) showing 18 transactions and $592 average, and Variation B with higher tiers ($50, $100, $250, $500) showing 12 transactions and $1,083 average" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-### Recurring Donations
+Each variation tracks:
+- **Total revenue** collected through that variation
+- **Average donation** amount
+- **Transaction count** (number of completed donations)
 
-<ParamField path="hasSubscription" type="boolean">
-  Enable monthly recurring donations.
-</ParamField>
+In this example, Variation A (lower tiers) drives more conversions (18 vs. 12), while Variation B (higher tiers) produces a higher average donation ($1,083 vs. $592). Use these insights to optimize your pricing strategy.
 
-<ParamField path="hasOneTimePayment" type="boolean">
-  Enable one-time donations.
-</ParamField>
+### Product options
 
-<ParamField path="monthPeriod" type="number">
-  Recurring donation frequency in months.
-</ParamField>
+Add optional choices for donors — like designating their gift to a specific program, selecting a thank-you gift tier, or choosing which project to support.
 
 ---
 
-## Donation Goals
+## Landing page
 
-Track progress toward fundraising targets:
+The **Landing page** tab controls how your public donation page looks and feels. A live preview updates as you make changes.
 
-<ParamField path="goalValue" type="number">
-  Target amount for one-time donations.
-</ParamField>
+<img src="/images/platform/fees/donation-landing-page-tab.png" alt="Landing page configuration with hero media upload, YouTube video URL field, appearance settings for logo and title display, color pickers, and live preview showing the public donation page" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-<ParamField path="goalValueSubscription" type="number">
-  Target number of recurring donors or monthly amount.
-</ParamField>
+### Hero media
 
-The donation page displays:
-- Progress bar toward goal
-- Amount raised / goal amount
-- Number of donors
+| Setting | What it does |
+|---------|-------------|
+| **Hero image** | Upload a campaign photo — displayed full-width at the top of the donation page |
+| **Hero video** | Paste a YouTube URL to embed a video above the donation form |
 
----
+### Appearance
 
-## Public Donation Page
+| Setting | What it controls |
+|---------|-----------------|
+| **Display organization logo** | Show/hide your org logo at the top of the page |
+| **Display title** | Show/hide the campaign name |
+| **Selection color** | Accent color for selected amounts and interactive elements |
+| **Button color** | Color of the donate button |
+| **Light theme only** | Force light mode regardless of visitor's device settings |
 
-### Page URL
+### Campaign content
 
-Share the donation page:
-- `https://app.orgo.space/public/product/{slug}`
-- Or use a custom short URL
+Write a compelling description explaining what the money funds and why it matters. The description supports rich text and appears below the hero section. You can also set a custom **thank you message** shown after a successful donation.
 
-### Page Features
-
-The public donation page shows:
-- Campaign name and description
-- Hero image/video
-- Donation amount options
-- Payment form
-- Progress toward goal
-- Recent donors (if enabled)
-- Top donors (if enabled)
-
-### Page Customization
-
-<ParamField path="settings.tenantLogo" type="boolean">
-  Show organization logo.
-</ParamField>
-
-<ParamField path="settings.colorSelection" type="color">
-  Accent color for the page.
-</ParamField>
-
-<ParamField path="settings.colorButton" type="color">
-  Donation button color.
-</ParamField>
-
-<ParamField path="settings.commentSection" type="boolean">
-  Allow donors to leave messages.
-</ParamField>
-
-<ParamField path="settings.newestAndTopDonationSection" type="boolean">
-  Show recent and top donors.
-</ParamField>
-
-<ParamField path="heroVideoUrl" type="url">
-  Campaign video URL (YouTube, Vimeo).
-</ParamField>
+<Tip>
+  Use the live preview on the right to see exactly how donors will experience the page. Every change you make updates the preview in real time.
+</Tip>
 
 ---
 
-## Donor Experience
+## The public donation page
 
-### Making a Donation
+Each campaign gets a shareable URL. Enable **External** visibility to let anyone donate — no login required.
 
-1. Visitor opens donation page
-2. Selects amount (preset or custom)
+The public page combines everything you've configured:
+
+- **Hero image or video** at the top
+- **Progress bar** showing amount raised vs. goal
+- **Donation count** and total raised
+- **Campaign description** with your story
+- **Price tier buttons** for quick selection
+- **Custom amount** input (if enabled)
+- **One-time or monthly** toggle
+- **Donor comments** section (if enabled)
+- **Recent and top donors** (if enabled)
+- **Payment form** powered by Stripe
+
+### Donor experience
+
+1. Donor opens the campaign link
+2. Selects a preset amount or enters a custom one
 3. Chooses one-time or monthly
-4. Enters payment details
-5. Optionally leaves a message
-6. Completes payment
-7. Receives confirmation email
+4. Enters name, email, and optionally a message
+5. Pays via Stripe (cards, Apple Pay, Google Pay, bank transfers)
+6. Sees your custom thank-you message
+7. Receives a confirmation email
 
-### Donor Information
+### Confidentiality
 
-Collect from donors:
-- Name
-- Email
-- Optional message
-- Address (if required)
+Enable **confidentiality** to let donors give anonymously. Their name won't appear on the public donor list — it shows as "Anonymous" instead.
 
-<ParamField path="hasConfidentialityEnabled" type="boolean">
-  Allow donors to donate anonymously.
-</ParamField>
+### Local center selection
+
+Enable **local center option** to let donors choose which branch or chapter receives their gift. This is useful for federated organizations where donors want to support their local unit.
 
 ---
 
-## Donor Messages
+## Donor comments (words of support)
 
-If comment section enabled:
+When the **comment section** is enabled, donors can leave a message with their gift. These messages create powerful social proof on your public page.
 
-- Donors can leave messages with their donation
-- Messages require approval before displaying
-- Filter inappropriate content
-- Feature the best messages
+<img src="/images/platform/fees/donation-comments.png" alt="Donor comments management showing a list of approved messages with donor names, amounts, dates, and comment text like 'Matching gift from Johnson & Associates. Investing in youth!' and 'Thank you for making the world a better place.'" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-### Message Moderation
+### Moderation workflow
 
-<ParamField path="commentStatus" type="select">
-  Message status: pending, approved, rejected.
-</ParamField>
+All donor comments go through moderation before appearing publicly:
 
-1. View pending messages in donation dashboard
-2. Approve or reject each message
-3. Approved messages appear on donation page
+| Status | What it means |
+|--------|-------------|
+| **Pending** | New comment waiting for review |
+| **Approved** | Visible on the public donation page |
+| **Rejected** | Hidden from public view |
+
+Filter comments by status and use the **Refresh** button to check for new ones. Approved comments appear on the public page with the donor's name (or "Anonymous") and their message.
 
 ---
 
-## Donation Reports
+## Donation widgets
 
-### Tracking Donations
+Embed donation forms directly on your website or any external page. The **Widgets** tab lets you create and manage embeddable donation widgets.
 
-View all donations:
-- **Resources** → **Donations** → **Payments**
+<img src="/images/platform/fees/donation-widgets-tab.png" alt="Widgets tab showing two donation widgets — 'Donation Page' (Embed type, 15 total donations, $11,325) and 'Quick Donate' (Popup type, 15 total donations, $12,325) — each with one-time and recurring breakdowns" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-Filter by:
-- Date range
-- Amount
-- One-time vs. recurring
-- Donor name/email
+### Widget types
 
-### Export Data
+<CardGroup cols={2}>
+  <Card title="Embed" icon="code">
+    A full donation form that renders inline on your page. Visitors fill out the form without leaving your website.
+  </Card>
+  <Card title="Popup" icon="window-maximize">
+    A floating button that opens a donation modal on click. Less intrusive — ideal for sidebars, footers, or blog posts.
+  </Card>
+</CardGroup>
 
-Export donations for:
-- Accounting
-- Tax receipts
-- Donor acknowledgment
+### Widget configuration
+
+Each widget has its own set of options:
+
+| Setting | What it controls |
+|---------|-----------------|
+| **Preset amounts** | Quick-select amounts for one-time and monthly (e.g., $5, $10, $25, $50) |
+| **Default donation type** | Pre-select "once" or "monthly" |
+| **Button text & colors** | Customize the CTA button appearance |
+| **Primary / background / text colors** | Full color theming |
+| **Position** | For popup widgets: bottom-right, bottom-left, top-right, or top-left |
+| **Language** | Widget language (English, German, French, Spanish, Italian, Romanian) |
+| **Show monthly upsell** | Prompt one-time donors to consider monthly giving |
+| **Require address** | Collect full address from donors |
+
+### Widget analytics
+
+Each widget tracks its own performance:
+- **Total** donations and revenue
+- **One-time** donations and revenue
+- **Recurring** subscriptions and revenue
+
+This lets you compare which widget placement drives the most donations.
+
+### Embedding on your site
+
+Click **Configure Widget** to get the embed code. Paste it into your website's HTML — the widget handles everything from amount selection to Stripe checkout.
+
+---
+
+## Goal tracking
+
+Set a fundraising target and donors see a live progress bar on the public page.
+
+| Setting | What it does |
+|---------|-------------|
+| **Total goal** | Target for cumulative one-time donations |
+| **Monthly goal** | Target for recurring monthly revenue |
+| **Goal value** | The dollar amount to reach |
+
+The progress bar shows:
+- Amount raised vs. goal (e.g., "$23,650 of $35,000")
+- Number of donations
+- Percentage complete with visual fill
+
+When you hit 100%, the bar fills completely — but donations don't stop. Donors can still give beyond the goal.
+
+<Tip>
+  Set a realistic goal you can achieve. An 80%-funded campaign creates urgency ("almost there!"). A 5%-funded campaign feels discouraging. If you exceed your goal, celebrate publicly and consider a stretch goal.
+</Tip>
+
+---
+
+## Payments & tracking
+
+The **Payments** view shows every donation with full details.
+
+<img src="/images/platform/fees/donation-payments.png" alt="Donation payments list showing 30 payments with donor names, local center affiliations, amounts ranging from $100 to $5,000, payment dates, and one-time/recurring type indicators" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+Filter by date range, amount, donor name, payment type (one-time vs. recurring), or local center.
+
+### Stats
+
+The **Stats** tab shows donation trends over time with a payments chart and all-time totals.
+
+<img src="/images/platform/fees/donation-stats-tab.png" alt="Stats tab showing payment amount chart over last 90 days with trend line and moving average, and all-time stats summary" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+### Export
+
+Export donation data as CSV for:
+- Accounting and bookkeeping
+- Tax receipt generation
+- Donor acknowledgment letters
 - Grant reporting
 
 ---
 
-## Recurring Donations
+## Covering processing fees
 
-### Managing Subscriptions
+Donors can optionally cover Stripe's processing fees so 100% of their intended amount goes to your organization. When enabled, the checkout shows the fee amount and lets the donor add it to their total.
 
-View recurring donors:
-- Monthly amount
-- Start date
-- Payment history
-- Next billing date
-
-### Donor Self-Service
-
-Recurring donors can:
-- Update payment method
-- Change donation amount
-- Cancel subscription
-- View history
+Processing fee formula: **(amount x 2.9%) + fixed fee** (varies by currency).
 
 ---
 
-## Use Cases
+## Supported currencies
+
+Donations support 19 currencies:
+
+USD, EUR, GBP, CAD, AUD, CHF, DKK, NOK, SEK, PLN, CZK, HUF, BGN, RON, HRK, JPY, MXN, SGD, HKD
+
+The currency is set per product and determines the payment processing.
+
+---
+
+## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Annual fundraising campaign">
-    Time-limited campaign with specific goal for yearly appeal.
+  <Accordion title="I want to run a time-limited fundraiser">
+    Create the donation product, set a **max date** (expiry), share the URL, and promote it. When the date passes, the page stops accepting donations. Combine with a goal to create urgency.
   </Accordion>
 
-  <Accordion title="Emergency relief fund">
-    Quick-response campaign for urgent needs.
+  <Accordion title="How do I encourage monthly giving over one-time?">
+    Enable both options but set the **default donation type** to "monthly" in your widget settings. Use lower suggested amounts for monthly ($10, $25, $50) vs. one-time ($50, $100, $250). Enable the **monthly upsell** feature to prompt one-time donors to consider recurring.
   </Accordion>
 
-  <Accordion title="Monthly giving program">
-    Encourage sustained giving with recurring donations.
+  <Accordion title="I want to embed donations on our existing website">
+    Create a donation **widget** (embed or popup type) from the Widgets tab. Copy the embed code and paste it into your site's HTML. The widget handles the entire checkout flow. Track performance per widget to see which placements work best.
   </Accordion>
 
-  <Accordion title="Project funding">
-    Raise funds for specific projects or initiatives.
+  <Accordion title="A donor wants a refund">
+    Find the donation in the payments list and process a refund through Stripe. The refund returns to the donor's original payment method.
   </Accordion>
 
-  <Accordion title="Memorial/tribute gifts">
-    Allow donations in honor or memory of someone.
+  <Accordion title="Can I accept donations without Stripe?">
+    The public donation page and widgets require Stripe for online checkout. For offline donations (cash, check, wire transfer), record them manually in the payments module.
+  </Accordion>
+
+  <Accordion title="How do I moderate donor comments?">
+    Go to the donation product's comments view. All new comments start as **Pending**. Review each one and approve or reject. Only approved comments appear on the public page. Use the filter to quickly find pending comments.
+  </Accordion>
+
+  <Accordion title="I want donors to support specific local branches">
+    Enable **local center option** on the donation product. The public page and widgets will show a dropdown where donors select which branch receives their gift.
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Best Practices
+## Related
 
-<AccordionGroup>
-  <Accordion title="Tell a compelling story">
-    Explain the impact of donations. Use specific examples and outcomes.
-  </Accordion>
-
-  <Accordion title="Use images and video">
-    Visual content increases donation conversion. Show the people and impact.
-  </Accordion>
-
-  <Accordion title="Set realistic goals">
-    Achievable goals motivate donors. Update goals if exceeded.
-  </Accordion>
-
-  <Accordion title="Thank donors promptly">
-    Send immediate confirmation and personal thank-you messages.
-  </Accordion>
-
-  <Accordion title="Share progress updates">
-    Keep donors informed about campaign progress and impact.
-  </Accordion>
-
-  <Accordion title="Offer multiple amounts">
-    Preset amounts guide donors. Include options for different giving levels.
-  </Accordion>
-
-  <Accordion title="Encourage recurring">
-    Monthly donors provide sustainable funding. Highlight the option.
-  </Accordion>
-</AccordionGroup>
-
----
-
-## Tax Receipts
-
-For tax-deductible donations:
-
-1. Configure organization tax ID in settings
-2. Enable receipt generation
-3. Receipts sent automatically or on request
-4. Include required legal language
-
-<Note>
-Tax receipt requirements vary by country. Consult with your accountant for compliance.
-</Note>
-
----
-
-## Related Features
-
-- [Products](/platform/fees/products) - Create donation products
-- [Stripe Integration](/platform/fees/stripe-integration) - Payment processing
-- [Fees](/platform/fees/fees) - Payment management
-- [Contacts](/platform/contacts) - Donor relationship management
+- [Products](/platform/fees/products) — Product types, pricing, and payment settings
+- [Stripe Integration](/platform/fees/stripe-integration) — Connecting payment processing
+- [Membership Fees](/platform/fees/fees) — For required (non-voluntary) payments
+- [Local Center Fees](/platform/local-group-fees/create-local-fees) — Branch-level fee collection

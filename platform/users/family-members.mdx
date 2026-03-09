@@ -1,146 +1,126 @@
 ---
 title: 'Family Members'
-description: 'Enable family account connections and manage age restrictions'
+description: 'Link parent-child accounts, manage minors, and enable family memberships'
 ---
 
-The Family Members feature allows you to link related accounts (parent-child, spouses, siblings) and configure age-based restrictions for minors.
+The Family Members feature lets you link related accounts — parents and children, spouses, siblings. This is essential for organizations that serve families, especially those working with minors who need parental oversight.
 
-## How to access
+**When to enable this:**
+- Your organization includes minors (youth groups, scouting, sports clubs)
+- You offer family memberships or pricing
 
-**Settings** → **Users & Profiles** → **Users Module** → **Family & Relationships**
-
----
-
-## Enabling Family Members
-
-<ParamField path="hasFamilyMembers" type="boolean">
-  Toggle to enable family connections between accounts. When enabled, users can link their accounts to family members.
-</ParamField>
+<img src="/images/platform/users/family-members-tab.png" alt="Family members tab on user profile" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+- Parents need to manage children's accounts
+- You need parental consent for minors' activities
 
 ---
 
-## How Family Connections Work
+## How to enable
 
-### Linking Family Members
+**Settings** → **Users & Profiles** → **Configuration** → **Family & Relationships** section → toggle **Family Members** on.
+
+---
+
+## What members see
+
+Members manage family connections from **Profile** → **Update Profile** → **Family** tab.
+
+---
+
+## Linking family members
 
 <Steps>
-  <Step title="Access family settings">
-    User goes to their profile or family settings section
+  <Step title="Go to the Family tab">
+    **Profile** → **Update Profile** → **Family** tab.
   </Step>
-  <Step title="Add family member">
-    Enter the email of an existing member OR invite a new family member
+  <Step title="Click Add Family Member">
+    Choose to link an existing member (by email) or create a new child account.
   </Step>
-  <Step title="Confirm relationship">
-    Select the relationship type (parent, child, spouse, sibling)
+  <Step title="Select the relationship">
+    Choose: **Parent**, **Child**, **Spouse**, or **Sibling**.
   </Step>
-  <Step title="Both parties confirm">
-    The other person accepts the family connection request
+  <Step title="The other person confirms">
+    If linking an existing member, they receive a request and must accept the connection. Child accounts created by parents are linked automatically.
   </Step>
 </Steps>
 
-### Family Dashboard
+### What parents can do for children
 
-Linked family members can:
-- See each other's basic profile info
-- Manage shared memberships (depending on settings)
-- Parents can manage children's accounts
-
----
-
-## Age Restrictions
-
-Configure age-based access controls for minors:
-
-<ParamField path="childrenAuthRestrictionAge" type="number">
-  Age below which users have restricted authentication. Children under this age may require parental consent or have limited platform access.
-
-  **Example:** Set to 16 to require parental oversight for users under 16.
-</ParamField>
-
-<ParamField path="childrenMinRegistrationAge" type="number">
-  Minimum age for registration. Users below this age cannot create accounts themselves.
-
-  **Example:** Set to 13 to comply with COPPA or similar regulations.
-</ParamField>
+When a parent account is linked to a child:
+- **Create the child's account** — Parents can register children who are under the minimum self-registration age
+- **Edit the child's profile** — Manage their information
+- **Receive copies of communications** — Important emails may be CC'd to the parent
+- **Approve event registrations** — Parents may need to consent to activities
+- **Handle payments** — Parents manage payments for minors
 
 ---
 
-## Parental Controls
+## Age restrictions
 
-When a child account is linked to a parent:
+These are the most important settings for organizations working with minors:
 
-- **Account creation** - Parents can create accounts for children
-- **Profile management** - Parents can edit children's profiles
-- **Communication** - Important emails may be copied to parents
-- **Event registration** - Parents may need to approve event sign-ups
-- **Payment** - Parents handle payments for minors
-
-<Note>
-  The specific controls depend on your module configuration and the child's age relative to your restriction settings.
-</Note>
-
----
-
-## Use Cases
-
-<AccordionGroup>
-  <Accordion title="Youth organizations">
-    Scout groups, youth clubs, and sports teams often have parent accounts linked to child members.
-  </Accordion>
-
-  <Accordion title="Family memberships">
-    Organizations offering family membership packages can track and manage family units.
-  </Accordion>
-
-  <Accordion title="Parental consent">
-    For organizations working with minors, family linking ensures proper parental oversight.
-  </Accordion>
-
-  <Accordion title="Billing consolidation">
-    Families can manage payments from a single parent account.
-  </Accordion>
-</AccordionGroup>
-
----
-
-## Privacy Considerations
-
-Family connections involve sharing data between accounts:
-
-- Linked family members can see basic profile information
-- Parents have elevated access to children's accounts
-- Email notifications may include family members
+| Setting | What it does | Example |
+|---------|-------------|---------|
+| **Minimum registration age** | Users below this age cannot create their own accounts — a parent must do it | Set to **13** for COPPA compliance, or **16** for stricter policies |
+| **Auth restriction age** | Users below this age have restricted authentication and may need parental oversight for certain actions | Set to **16** — minors under 16 need parental consent for events, purchases, etc. |
 
 <Warning>
-  Make sure your privacy policy covers family data sharing. Inform users what information is shared when they link accounts.
+  Configure age restrictions based on your legal jurisdiction. GDPR requires parental consent for children under 16 in most EU countries (some allow 13). COPPA applies to children under 13 in the US.
 </Warning>
 
 ---
 
-## Best Practices
+## How it works in practice
+
+### Youth scouting organization
+
+1. **Enable Family Members** with min registration age 13, auth restriction 16
+2. Parents register and create accounts for their children (under 13)
+3. Teens 13-15 can self-register but are linked to parent accounts
+4. Parents receive copies of event communications
+5. Parents approve event sign-ups for minors
+6. When a child turns 16, restrictions lift and they manage their own account
+
+### Family sports club
+
+1. **Enable Family Members** with no age restrictions
+2. Members link their spouse and children
+3. Family units are visible for billing purposes
+4. Family membership pricing can be applied
+5. Event registration can include family members
+
+---
+
+## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Set appropriate age limits">
-    Configure age restrictions based on your organization's policies and applicable regulations (GDPR, COPPA, etc.).
+  <Accordion title="A parent wants to register their 10-year-old">
+    The parent must register themselves first, then go to their Family tab and click "Add Family Member" → create a new child account. The child's account is automatically linked to the parent. If the minimum registration age is set to 13, the child cannot self-register.
   </Accordion>
 
-  <Accordion title="Communicate clearly">
-    Explain to members how family linking works and what data is shared.
+  <Accordion title="A teen turned 16 — do their restrictions automatically lift?">
+    Yes. Age-based restrictions are evaluated dynamically based on the member's birthday. When they cross the auth restriction age threshold, their restrictions are automatically adjusted on their next login.
   </Accordion>
 
-  <Accordion title="Support different family structures">
-    The system supports various relationships - don't assume traditional family structures.
+  <Accordion title="Two divorced parents both want access to a child's account">
+    Both parents can be linked to the child. Link the child to both accounts using the Parent relationship type. Both parents will have parental access.
   </Accordion>
 
-  <Accordion title="Review linked accounts">
-    Periodically audit family connections to ensure they're legitimate.
+  <Accordion title="A member wants to remove a family connection">
+    Either party can unlink the connection from their Family tab. Unlinking a child from a parent doesn't delete the child's account — it just removes the parental oversight link.
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Related Settings
+## Privacy note
 
-- [Registration Form](/platform/users/registration-form) - Age-related fields at sign-up
-- [Profile Fields](/platform/users/profile-fields) - Birthday field configuration
-- [Privacy Settings](/platform/users/privacy-settings) - Data visibility controls
+Family connections involve sharing data between accounts. Linked family members can see each other's basic profile information, and parents have elevated access to children's accounts. Make sure your privacy policy covers family data sharing — inform members what information is shared when they link accounts.
+
+---
+
+## Related
+
+- [Registration Form](/platform/users/registration-form) — Birthday field enables age-based restrictions
+- [Profile Fields](/platform/users/profile-fields) — Birthday configuration
+- [Privacy Settings](/platform/users/privacy-settings) — Data visibility controls

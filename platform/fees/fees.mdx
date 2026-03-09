@@ -1,317 +1,290 @@
 ---
 title: 'Membership Fees'
-description: 'Manage membership fees and collect payments from members'
+description: 'Collect membership dues, track who has paid, send reminders, and manage subscriptions'
 ---
 
-The Fees module handles collection and tracking of membership fees, subscriptions, and payments. Track who has paid, manage renewals, and maintain financial records.
+The Fees module is where you track and collect money from members — annual dues, monthly subscriptions, or one-time payments. It handles online payments via Stripe, manual payment recording for cash/bank transfers, and gives you a dashboard showing who's paid and who hasn't.
 
-## How to access
-
-**Sidebar** → **Fees**
-
-Or: **Settings** → **Fees** → **Module Settings**
+<img src="/images/platform/fees/product-detail.png" alt="Fee payments list showing 43 member payments with statuses, amounts, and local centers" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Prerequisites
+## Setting up fees
 
-Fees must be enabled and Stripe connected:
+<img src="/images/platform/fees/fees-module-config.png" alt="Fees module settings showing toggles for membership fees, event ticket sales, and local center payments" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-1. **Enable Fees module**: **Settings** → **Fees** → **Module Settings**
-2. **Connect Stripe**: **Settings** → **Fees** → **Stripe Integration**
-3. **Create fee product**: **Settings** → **Fees** → **Products**
-
----
-
-## Fee Dashboard
-
-The Fees dashboard shows:
-
-- **Overview** - Payment statistics and totals
-- **Payment List** - All payments with filters
-- **Pending** - Payments awaiting action
-- **Subscriptions** - Active recurring subscriptions
-
----
-
-## Payment Statuses
-
-| Status | Description |
-|--------|-------------|
-| **Open** | Payment initiated but not completed |
-| **Success** | Payment completed successfully |
-| **Pending Accept** | Manual payment awaiting admin approval |
-| **Refunded** | Payment has been refunded |
-| **Canceled** | Payment was canceled |
-
----
-
-## Viewing Payments
-
-### All Payments
-
-**Fees** → **Payments**
-
-View all payments with filters:
-- Status (success, pending, etc.)
-- Product/fee type
-- Member
-- Local Center
-- Date range
-- Amount range
-
-### Member Payment History
-
-**Members** → Select member → **Payments** tab
-
-View a specific member's complete payment history.
-
----
-
-## Manual Fee Recording
-
-For payments received outside Stripe (cash, bank transfer):
+Three things need to be in place before you can collect:
 
 <Steps>
-  <Step title="Navigate to Fees">
-    Go to **Fees** in the sidebar.
+  <Step title="Connect Stripe">
+    **Settings** → **Fees** → **Stripe Integration**. Follow the setup wizard to link your Stripe account. See [Stripe Integration](/platform/fees/stripe-integration).
   </Step>
-  <Step title="Click Record Payment">
-    Select **Record Manual Payment**.
+  <Step title="Create a fee product">
+    **Settings** → **Fees** → **Products** → create a product of type "Fee". Add price tiers for different membership levels. See [Products](/platform/fees/products).
   </Step>
-  <Step title="Select member">
-    Choose the member the payment is for.
-  </Step>
-  <Step title="Enter details">
-    Select fee product, enter amount, and add notes.
-  </Step>
-  <Step title="Save">
-    Payment is recorded and member's fee status updates.
+  <Step title="Enable the Fees module">
+    **Settings** → **Fees** → **Module Settings**. Turn on the module and optionally make fees mandatory for membership.
   </Step>
 </Steps>
 
 ---
 
-## Fee Periods
+## The fees dashboard
 
-Fees can be tracked by period:
+**Sidebar** → **Fees**
 
-<ParamField path="periodStart" type="datetime">
-  Start of the membership period this payment covers.
-</ParamField>
+<img src="/images/platform/fees/products-fee-list.png" alt="Products list showing annual membership fee, donation fund, and local center membership products" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-<ParamField path="periodEnd" type="datetime">
-  End of the membership period this payment covers.
-</ParamField>
+The dashboard gives you a complete picture:
 
-This allows tracking fee status for specific periods (e.g., "Paid for 2024").
+| Section | What it shows |
+|---------|-------------|
+| **Overview** | Total collected, collection rate, breakdown by method |
+| **Payments** | All payments — filterable by status, product, member, date, amount, Local Center |
+| **Pending** | Payments awaiting admin action (manual payments to approve) |
+| **Subscriptions** | Active recurring subscriptions with next billing dates |
+| **Unpaid** | Members who haven't paid for the current period |
 
 ---
 
-## Member Fee Status
+## Payment statuses
 
-Each member has a fee status:
-
-| Status | Description |
+| Status | What it means |
 |--------|-------------|
-| **Paid** | Current period fee is paid |
-| **Partial** | Some amount paid, but not full fee |
-| **Unpaid** | No payment for current period |
-| **Exempt** | Member is exempt from fees |
-| **Expired** | Fee period has expired |
+| **Success** | Paid — Stripe processed the charge or admin confirmed manual payment |
+| **Open** | Payment initiated but not completed (abandoned checkout, pending bank transfer) |
+| **Pending Accept** | Manual payment (cash, bank transfer) recorded — needs admin approval |
+| **Refunded** | Payment returned to the payer |
+| **Canceled** | Payment was canceled before completion |
 
 ---
 
-## Fee Reminders
+## Member fee status
 
-Send reminders to members with unpaid fees:
+Each member has a fee status for the current period:
 
-1. Go to **Fees** → **Unpaid**
-2. Filter by period or member group
-3. Select members
+| Status | What it means | What to do |
+|--------|-------------|-----------|
+| **Paid** | Current period fee is paid in full | Nothing — they're good |
+| **Partial** | Some amount paid, but not the full fee | Contact member for remaining balance |
+| **Unpaid** | No payment for the current period | Send a reminder |
+| **Exempt** | Member is exempt from fees (e.g., honorary members) | Nothing — manually set by admin |
+| **Expired** | Fee period has passed without payment | Decide: send late reminder, or take action |
+
+View a member's payment history: **Members** → select member → **Fee** tab to see their current fee level and history, or **Payments** tab for the full transaction log.
+
+<img src="/images/platform/users/user-profile-fees.png" alt="Fee tab on a member profile showing active Organisation fee and Local fee with payment period history" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Collecting payments
+
+### Online payments (Stripe)
+
+Members pay directly through Orgo — either from the product payment page or from their profile. Stripe handles cards, bank transfers, Apple Pay, Google Pay, and other local methods.
+
+### Manual payment recording ("Mark as paid")
+
+For cash, bank transfers, or checks received outside Stripe:
+
+1. **Fees** → **Record Manual Payment** (or from the member's profile → Payments tab)
+2. Select the member
+3. Choose the fee product and tier
+4. Select payment method: **Card**, **Check**, or **Bank transfer (IBAN)**
+5. Enter the amount received
+6. Add a note (e.g., "Cash received at AGM", "Bank transfer ref #1234")
+7. Save — payment appears as **Pending Accept**
+
+An admin or HR user then reviews and accepts the payment, moving it to **Success**. The system records who marked the payment and who accepted it for audit purposes.
+
+For bank transfers, you can also display your organization's IBAN on the member payment page so members can initiate transfers themselves — these arrive as pending payments for admin approval.
+
+### Bulk recording
+
+If you received many payments at once (e.g., bank transfer batch):
+
+1. **Fees** → **Bulk Actions**
+2. Upload a CSV with member IDs and amounts
+3. Review and confirm
+4. All payments recorded at once
+
+---
+
+## Billing cycles and proration
+
+Fees aren't just flat charges — they support full cycle-based billing with automatic proration for mid-cycle joins.
+
+### Cycle settings
+
+Configure these on each fee product:
+
+| Setting | What it does | Example |
+|---------|-------------|---------|
+| **Billing period** | How many months per cycle | 12 (annual), 3 (quarterly), 1 (monthly) |
+| **Cycle day** | Day of month the cycle starts | 1 (first of month) |
+| **Cycle month** | Month the annual cycle starts | 1 (January) or 9 (September for fiscal year) |
+| **Recurrences** | Number of cycles before subscription ends | Empty = indefinite, 3 = three cycles then stops |
+
+### Proration
+
+When a member joins mid-cycle, proration calculates a fair partial amount for the remaining period.
+
+**Example:** Annual fee is $120, cycle runs January–December. A member joins in April.
+- Remaining months: 9 (April–December)
+- Prorated amount: $120 × (9/12) = **$90**
+
+Enable proration per product with the **Prorate mid-cycle joins** toggle. You can also set a minimum months threshold — if the member joins late enough in the cycle, they pay full price for the next cycle instead.
+
+<Tip>
+  Most membership organizations use a yearly cycle starting January 1 with proration enabled. Members who join mid-year pay a fair partial amount, then full price from the following January.
+</Tip>
+
+### Advance payment
+
+Enable **Allow payment for next year** so members can pay ahead before their current period expires. This is useful during renewal season — members can pay for next year without waiting for their current membership to expire.
+
+---
+
+## Making fees mandatory
+
+Fees can be mandatory at two levels — organization-wide and per local center.
+
+### Organization-level mandatory fees
+
+**Settings** → **Fees** → **Module Settings** → enable **Mandatory Fees**
+
+When enabled:
+- Members must pay their fee to access full platform features
+- Unpaid members see restricted functionality until they pay
+- Fee status becomes a key part of member management
+- Enable **Continuity mandatory** to require uninterrupted payment history
+
+### Local center-level fees
+
+<img src="/images/platform/fees/local-fee-settings.png" alt="Local center fee settings showing Northeast Council membership product and $30 annual default price" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+Each local center can have its own fee product with independent pricing and its own Stripe Connect account. This supports federated organizations where chapters collect their own dues.
+
+| Setting | Where to configure | What it does |
+|---------|-------------------|-------------|
+| **Local center fee product** | Local center settings | Separate fee product with local pricing |
+| **Local Stripe account** | Local center settings | Payments go directly to the chapter's bank account |
+| **Local fee is mandatory** | Tenant fee settings | Members must pay both org-level AND local-level fees |
+
+This means a member in the "Northeast Council" might pay:
+- **$100/year** to the national organization (org Stripe account)
+- **$50/year** to the Northeast Council (local Stripe account)
+
+Both payments are tracked independently with separate statuses.
+
+<Info>
+  Making fees mandatory is a significant decision. It means members with unpaid fees have a degraded experience. Most organizations use this for annual membership renewal — you're essentially saying "pay your dues to maintain full membership."
+</Info>
+
+---
+
+## Sending reminders
+
+For members with unpaid fees:
+
+1. **Fees** → **Unpaid**
+2. Filter by period, Local Center, or member type
+3. Select members (or select all)
 4. Click **Send Reminder**
 
-Customize reminder email content in **Settings** → **Emails** → **Templates**.
+The reminder email includes the fee amount, payment link, and your customized message. Customize the email template in **Settings** → **Emails** → **Templates**.
 
 ---
 
-## Subscriptions
+## Managing subscriptions
 
-### Active Subscriptions
+Active recurring subscriptions are managed in **Fees** → **Subscriptions**:
 
-View members with active recurring subscriptions:
+| Info shown | Detail |
+|-----------|--------|
+| Member name | Who's subscribed |
+| Product | Which fee product |
+| Amount | Recurring charge amount |
+| Frequency | Monthly, quarterly, yearly |
+| Next billing | When Stripe will charge next |
+| Payment method | Card type/last 4 digits |
 
-**Fees** → **Subscriptions**
-
-Shows:
-- Member name
-- Subscription product
-- Amount and frequency
-- Next billing date
-- Payment method
-
-### Subscription Management
-
-For each subscription:
-- View payment history
-- Cancel subscription
-- Update payment method (by member)
-
-### Member Self-Service
-
-Members can manage their own subscriptions:
-- View subscription status
-- Update payment method
-- Cancel (if allowed)
+Members can manage their own subscription from their profile:
+- Update payment method (expired card, new bank account)
 - View billing history
-
----
-
-## Fee Reports
-
-### Export Payments
-
-Export payment data for accounting:
-
-1. Go to **Fees** → **Payments**
-2. Apply filters as needed
-3. Click **Export**
-4. Download CSV or Excel
-
-### Fee Statistics
-
-View fee collection metrics:
-- Total collected (period/all-time)
-- Collection rate
-- By payment method
-- By Local Center
-
----
-
-## Fee Assignment
-
-### Mandatory Fees
-
-Make fees mandatory for membership:
-
-**Settings** → **Fees** → **Module Settings**:
-
-<ParamField path="isMandatory" type="boolean">
-  Require fee payment for full membership access.
-</ParamField>
-
-When mandatory, members must pay fees before accessing certain features.
-
-### Fee by Member Type
-
-Different fees for different member types:
-- Create separate price tiers per member type
-- Or create separate products for each type
-
----
-
-## Bulk Operations
-
-### Bulk Payment Recording
-
-Record payments for multiple members:
-
-1. Go to **Fees** → **Bulk Actions**
-2. Upload CSV with member IDs and amounts
-3. Review and confirm
-4. Payments recorded
-
-### Bulk Reminders
-
-Send reminders to all unpaid members:
-
-1. Go to **Fees** → **Unpaid**
-2. Select all (or filter first)
-3. Click **Send Reminders**
+- Cancel subscription (if allowed)
 
 ---
 
 ## Refunds
 
-### Issuing Refunds
-
-To refund a payment:
-
 1. Find the payment in **Fees** → **Payments**
-2. Click the payment to open details
+2. Click to open payment details
 3. Click **Refund**
-4. Enter refund amount (full or partial)
+4. Enter full or partial refund amount
 5. Confirm
 
 <Warning>
-Refunds are processed through Stripe. Ensure your Stripe account has sufficient balance.
+  Refunds are processed through Stripe — the money returns to the payer's original payment method. Ensure your Stripe account has sufficient balance. Stripe's processing fee is not refunded.
 </Warning>
 
 ---
 
-## Local Center Fees
+## Fee reports and export
 
-If Local Centers collect their own fees:
+### Export payments
 
-- Each Local Center can have its own fee products
-- Payments go to Local Center's connected Stripe account
-- Reports available at Local Center level
+**Fees** → **Payments** → apply filters → **Export** → CSV or Excel
 
-See [Local Center Fees](/platform/local-group-fees/create-local-fees) for setup.
+Use exports for:
+- Accounting and bookkeeping
+- Bank reconciliation
+- Tax filing
+- Board financial reports
+
+### Collection statistics
+
+<img src="/images/platform/fees/stats-finance.png" alt="Finance statistics chart showing $18,020 in payments over the last 90 days with trend line" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+The dashboard overview shows:
+- Total collected for any period
+- Collection rate (paid ÷ total members)
+- Breakdown by payment method (online vs. manual)
+- Breakdown by Local Center
+
+<img src="/images/platform/fees/fee-stats.png" alt="Local groups fees table showing 8 councils with active member counts and fee collection bars" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Best Practices
+## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Clear fee structure">
-    Document what's included in membership fees and communicate to members.
+  <Accordion title="A member says they paid but it's not showing">
+    Check if the payment was linked to the correct member. Search by payment date, amount, or check the Stripe dashboard directly. For bank transfers, the admin who records it may have missed the entry.
   </Accordion>
 
-  <Accordion title="Timely reminders">
-    Send reminders before fee due dates, not just after.
+  <Accordion title="Member status shows 'Unpaid' but they have a subscription">
+    Check the fee period dates on the payment. Status is calculated from current date vs. payment period. If the subscription payment was recorded for a different period, it won't clear the current period's status.
   </Accordion>
 
-  <Accordion title="Payment options">
-    Offer both one-time and subscription options when possible.
+  <Accordion title="A subscription isn't renewing">
+    Check the Stripe dashboard for the subscription. Common causes: expired card, insufficient funds, or the member's bank declined the charge. The member may need to update their payment method.
   </Accordion>
 
-  <Accordion title="Record all payments">
-    Record manual payments promptly to keep member status accurate.
+  <Accordion title="I want different fees for different Local Centers">
+    Each Local Center can have its own fee products with local pricing. See [Local Center Fees](/platform/local-group-fees/create-local-fees). Or create one national product with price tiers labeled by center.
   </Accordion>
 
-  <Accordion title="Regular reconciliation">
-    Regularly reconcile Orgo records with your bank/Stripe statements.
+  <Accordion title="Some members should be exempt from fees (honorary members, board)">
+    Set their fee status to **Exempt** on their member profile. Exempt members won't appear in unpaid lists or receive reminders.
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Troubleshooting
+## Related
 
-<AccordionGroup>
-  <Accordion title="Payment not showing for member">
-    Check if payment was linked to correct member. Search by payment ID or date.
-  </Accordion>
-
-  <Accordion title="Member status not updating">
-    Ensure payment period dates are correct. Status depends on current date vs period.
-  </Accordion>
-
-  <Accordion title="Subscription not renewing">
-    Check Stripe for card issues. Member may need to update payment method.
-  </Accordion>
-
-  <Accordion title="Refund not processing">
-    Verify Stripe balance. Check Stripe dashboard for error details.
-  </Accordion>
-</AccordionGroup>
-
----
-
-## Related Features
-
-- [Products](/platform/fees/products) - Product creation
-- [Stripe Integration](/platform/fees/stripe-integration) - Payment setup
-- [Local Center Fees](/platform/local-group-fees/create-local-fees) - Local payments
-- [Member Profiles](/platform/users/index) - Payment history per member
+- [Products](/platform/fees/products) — Creating fee products and price tiers
+- [Stripe Integration](/platform/fees/stripe-integration) — Payment processing setup
+- [Donations](/platform/fees/donations) — Fundraising campaigns
+- [Local Center Fees](/platform/local-group-fees/create-local-fees) — Branch-level fee collection

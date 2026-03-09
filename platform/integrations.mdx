@@ -1,46 +1,40 @@
 ---
 title: 'Integrations'
-description: 'Connect Orgo with your favorite tools and platforms'
+description: 'Connect Orgo with Stripe, Google, HubSpot, n8n, and other tools your organization uses'
 ---
 
-Orgo integrates with popular third-party services to extend functionality. Connect authentication providers, analytics tools, marketing platforms, and automation services.
+Orgo connects with third-party services so you don't have to switch between tools. Process payments with Stripe, let members log in with Google, sync contacts to HubSpot, automate workflows with n8n, and track analytics.
 
-## How to access
-
-**Settings** → **Developers** → **Integrations**
-
----
-
-## Prerequisites
-
-- Administrator access required
-- Third-party account credentials
+<img src="/images/platform/developers/integrations.png" alt="Integrations settings page with connected services" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Available Integrations
+## Available integrations
 
 <CardGroup cols={2}>
   <Card title="SSO Authentication" icon="key">
-    Single sign-on with OAuth providers
+    Let members log in with Google, Facebook, Apple, LinkedIn, or Microsoft
   </Card>
   <Card title="Stripe" icon="credit-card">
-    Payment processing
+    Process payments, subscriptions, and donations
   </Card>
   <Card title="n8n" icon="diagram-project">
-    Workflow automation
+    Automate workflows between Orgo and other apps
   </Card>
   <Card title="HubSpot" icon="hubspot">
-    CRM integration
+    Sync members to your CRM
   </Card>
   <Card title="Facebook Pixel" icon="facebook">
-    Conversion tracking
+    Track conversions for advertising
   </Card>
   <Card title="Google Analytics" icon="chart-line">
-    Website analytics
+    Understand how members use your platform
   </Card>
   <Card title="Google Tag Manager" icon="tags">
-    Tag management
+    Manage all tracking scripts in one place
+  </Card>
+  <Card title="Webhooks" icon="webhook">
+    Send real-time data to any external system
   </Card>
 </CardGroup>
 
@@ -48,317 +42,174 @@ Orgo integrates with popular third-party services to extend functionality. Conne
 
 ## SSO Authentication
 
-Enable members to log in with their existing accounts.
+Let members sign in with accounts they already have — fewer passwords, faster login.
 
-### Supported Providers
+### Supported providers
 
-| Provider | Description |
-|----------|-------------|
-| **Google** | Google Workspace accounts |
-| **Facebook** | Facebook login |
-| **Apple** | Sign in with Apple |
-| **LinkedIn** | Professional profiles |
-| **Microsoft** | Azure AD / Microsoft accounts |
+| Provider | Best for |
+|----------|---------|
+| **Google** | Organizations using Google Workspace |
+| **Microsoft** | Organizations using Microsoft 365 / Azure AD |
+| **Facebook** | Consumer-facing communities |
+| **Apple** | iOS-heavy member bases |
+| **LinkedIn** | Professional associations |
 
-### Setup Steps
+### Setup
 
 <Steps>
-  <Step title="Enable SSO provider">
-    Go to **Settings** → **Authentication** → **SSO**.
+  <Step title="Create an OAuth app with the provider">
+    Go to the provider's developer console (Google Cloud Console, Azure Portal, etc.) and register a new application.
   </Step>
-  <Step title="Create OAuth app">
-    Register an app in the provider's developer console.
+  <Step title="Get credentials">
+    Copy the Client ID and Client Secret.
   </Step>
-  <Step title="Enter credentials">
-    Add Client ID and Client Secret to Orgo.
+  <Step title="Configure in Orgo">
+    Go to **Settings** → **Authentication** → **SSO**. Enter the credentials.
   </Step>
-  <Step title="Test connection">
-    Verify login works correctly.
+  <Step title="Test">
+    Log out and try signing in with the new provider.
   </Step>
 </Steps>
 
-### Configuration
-
-<ParamField path="clientId" type="string" required>
-  OAuth Client ID from the provider.
-</ParamField>
-
-<ParamField path="clientSecret" type="string" required>
-  OAuth Client Secret from the provider.
-</ParamField>
-
-<ParamField path="allowedDomains" type="array">
-  Restrict login to specific email domains.
-</ParamField>
+You can optionally restrict SSO to specific email domains — e.g., only `@yourcompany.com` addresses can use Google SSO.
 
 ---
 
 ## Stripe
 
-Process payments, subscriptions, and donations.
+Stripe handles all payments in Orgo — membership fees, event tickets, donations, and product sales.
 
-### Features
-
-| Feature | Description |
-|---------|-------------|
-| **Payments** | One-time and recurring |
-| **Subscriptions** | Membership billing |
-| **Invoices** | Automatic invoicing |
-| **Refunds** | Process refunds |
-
-### Setup Steps
-
-<Steps>
-  <Step title="Create Stripe account">
-    Sign up at stripe.com.
-  </Step>
-  <Step title="Get API keys">
-    Find keys in Stripe Dashboard → Developers.
-  </Step>
-  <Step title="Connect to Orgo">
-    Go to **Settings** → **Payments** → **Stripe**.
-  </Step>
-  <Step title="Enter credentials">
-    Add Publishable Key and Secret Key.
-  </Step>
-</Steps>
-
-### Configuration
-
-<ParamField path="publishableKey" type="string" required>
-  Stripe publishable API key.
-</ParamField>
-
-<ParamField path="secretKey" type="string" required>
-  Stripe secret API key.
-</ParamField>
-
-<ParamField path="webhookSecret" type="string">
-  Webhook signing secret for events.
-</ParamField>
+For detailed setup instructions, see [Stripe Integration](/platform/fees/stripe-integration).
 
 ---
 
-## n8n
+## n8n (Workflow Automation)
 
-Automate workflows between Orgo and other apps.
+n8n lets you build automated workflows between Orgo and hundreds of other apps — no coding required.
 
-### Use Cases
+### What you can automate
 
-- Sync members to external CRM
-- Trigger emails on events
-- Update spreadsheets automatically
-- Send Slack notifications
+| Trigger | Action |
+|---------|--------|
+| New member registers | Add to Mailchimp list, notify Slack channel |
+| Payment completed | Update spreadsheet, send custom receipt |
+| Event created | Post to social media, notify team |
+| Discussion posted | Send digest to email |
 
-### Setup Steps
+### Setup
 
 <Steps>
-  <Step title="Install n8n">
-    Set up n8n instance (cloud or self-hosted).
+  <Step title="Set up n8n">
+    Use [n8n cloud](https://n8n.io) or self-host an instance.
   </Step>
-  <Step title="Create Orgo credentials">
-    Generate API key in Orgo.
+  <Step title="Generate an API key in Orgo">
+    Go to **Settings** → **Developers** to create API credentials.
   </Step>
-  <Step title="Add to n8n">
-    Configure Orgo node with API credentials.
+  <Step title="Configure the Orgo node in n8n">
+    Add your Orgo API credentials to n8n.
   </Step>
   <Step title="Build workflows">
-    Create automation workflows.
-  </Step>
-</Steps>
-
-### Available Triggers
-
-- New member registered
-- Event created
-- Payment completed
-- Discussion posted
-
----
-
-## HubSpot
-
-Sync member data with HubSpot CRM.
-
-### Features
-
-| Feature | Description |
-|---------|-------------|
-| **Contact sync** | Members → HubSpot contacts |
-| **Properties** | Map custom fields |
-| **Lists** | Sync group memberships |
-| **Activities** | Track engagement |
-
-### Setup Steps
-
-<Steps>
-  <Step title="Create HubSpot app">
-    Register in HubSpot developer portal.
-  </Step>
-  <Step title="Get API key">
-    Generate private app access token.
-  </Step>
-  <Step title="Connect in Orgo">
-    Go to **Settings** → **Integrations** → **HubSpot**.
-  </Step>
-  <Step title="Configure sync">
-    Map fields and enable sync direction.
+    Use the visual editor to connect triggers and actions.
   </Step>
 </Steps>
 
 ---
 
-## Facebook Pixel
+## HubSpot CRM
 
-Track conversions and build audiences for advertising.
+Sync member data to HubSpot for advanced CRM, marketing automation, and reporting.
 
-### Tracked Events
+| Feature | What syncs |
+|---------|-----------|
+| **Contacts** | Members → HubSpot contacts |
+| **Properties** | Custom fields → HubSpot properties |
+| **Lists** | Group memberships → HubSpot lists |
+| **Activities** | Engagement data → HubSpot timeline |
 
-| Event | Description |
-|-------|-------------|
-| **PageView** | Page visits |
-| **Lead** | Registration started |
-| **CompleteRegistration** | Registration completed |
-| **Purchase** | Payment completed |
+### Setup
 
-### Setup Steps
-
-<Steps>
-  <Step title="Create Facebook Pixel">
-    In Facebook Events Manager, create a new pixel.
-  </Step>
-  <Step title="Copy Pixel ID">
-    Get your Pixel ID.
-  </Step>
-  <Step title="Add to Orgo">
-    Go to **Settings** → **Integrations** → **Facebook Pixel**.
-  </Step>
-  <Step title="Enter Pixel ID">
-    Paste the ID and save.
-  </Step>
-</Steps>
-
-<ParamField path="pixelId" type="string" required>
-  Facebook Pixel ID.
-</ParamField>
+1. Register an app in the HubSpot developer portal
+2. Generate a private app access token
+3. Go to **Settings** → **Integrations** → **HubSpot**
+4. Enter the token and configure field mapping
 
 ---
 
-## Google Analytics
+## Analytics & Tracking
 
-Track visitor behavior and website performance.
+### Google Analytics
 
-### Tracked Data
+Track how members use your platform — page views, sessions, popular features.
 
-- Page views
-- User sessions
-- Event tracking
-- Conversion goals
+**Setup:** Get your GA4 Measurement ID (`G-XXXXXXX`) from Google Analytics → go to **Settings** → **Integrations** → **Google Analytics** → paste the ID.
 
-### Setup Steps
+### Google Tag Manager
 
-<Steps>
-  <Step title="Create GA4 property">
-    In Google Analytics, create a new property.
-  </Step>
-  <Step title="Get Measurement ID">
-    Find your G-XXXXXXX ID.
-  </Step>
-  <Step title="Add to Orgo">
-    Go to **Settings** → **Integrations** → **Google Analytics**.
-  </Step>
-  <Step title="Enter Measurement ID">
-    Paste the ID and save.
-  </Step>
-</Steps>
+Manage all tracking scripts (Analytics, Pixel, custom scripts) from one place without touching Orgo settings again.
 
-<ParamField path="measurementId" type="string" required>
-  Google Analytics 4 Measurement ID (G-XXXXXXX).
-</ParamField>
+**Setup:** Get your Container ID (`GTM-XXXXXXX`) from Google Tag Manager → go to **Settings** → **Integrations** → **Google Tag Manager** → paste the ID.
 
----
+### Facebook Pixel
 
-## Google Tag Manager
+Track conversions from Facebook/Instagram ads — registrations, purchases, page views.
 
-Manage all tracking tags in one place.
+**Setup:** Get your Pixel ID from Facebook Events Manager → go to **Settings** → **Integrations** → **Facebook Pixel** → paste the ID.
 
-### Benefits
-
-- Centralized tag management
-- No code changes needed
-- Version control
-- Preview and debug
-
-### Setup Steps
-
-<Steps>
-  <Step title="Create GTM container">
-    In Google Tag Manager, create a container.
-  </Step>
-  <Step title="Get Container ID">
-    Find your GTM-XXXXXXX ID.
-  </Step>
-  <Step title="Add to Orgo">
-    Go to **Settings** → **Integrations** → **Google Tag Manager**.
-  </Step>
-  <Step title="Enter Container ID">
-    Paste the ID and save.
-  </Step>
-</Steps>
-
-<ParamField path="containerId" type="string" required>
-  Google Tag Manager Container ID (GTM-XXXXXXX).
-</ParamField>
+Tracked events: PageView, Lead (registration started), CompleteRegistration, Purchase (payment completed).
 
 ---
 
 ## Webhooks
 
-Send real-time notifications to external systems.
+Send real-time event data to any external system via HTTP POST.
 
-### Available Events
+<img src="/images/platform/developers/webhooks-list.png" alt="Webhooks management page showing configured subscriptions with delivery stats" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-| Event | Trigger |
-|-------|---------|
-| `user.created` | New member registered |
-| `user.updated` | Profile updated |
-| `payment.completed` | Payment successful |
-| `event.created` | New event created |
+### Available events
+
+| Event | Fires when |
+|-------|-----------|
+| `user.created` | A new member registers |
+| `user.updated` | A member's profile is updated |
+| `payment.completed` | A payment succeeds |
+| `event.created` | A new event is created |
 
 ### Setup
 
 1. Go to **Settings** → **Developers** → **Webhooks**
 2. Click **Add Webhook**
-3. Enter your endpoint URL
-4. Select events to subscribe
+3. Enter your endpoint URL (must accept POST requests)
+4. Select which events to subscribe to
 5. Save
+
+Your endpoint receives a JSON payload with event data whenever the subscribed event occurs.
 
 ---
 
-## Best Practices
+## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Use test mode first">
-    Test integrations in sandbox/test mode before going live.
+  <Accordion title="Which analytics tool should I use?">
+    If you already use Google Analytics, just add the Measurement ID. If you use multiple tracking tools (Analytics, Pixel, custom scripts), use Google Tag Manager to manage them all from one place.
   </Accordion>
 
-  <Accordion title="Secure credentials">
-    Keep API keys and secrets secure. Never share publicly.
+  <Accordion title="Can I use multiple SSO providers?">
+    Yes — enable as many as you want. Members choose which provider to use on the login screen.
   </Accordion>
 
-  <Accordion title="Monitor integrations">
-    Check integration health regularly for errors.
+  <Accordion title="Webhooks aren't firing">
+    Check that your endpoint URL is correct, publicly accessible, and accepts POST requests. Verify that the webhook is subscribed to the right events. Check your endpoint's logs for errors.
   </Accordion>
 
-  <Accordion title="Document configurations">
-    Keep records of integration settings for reference.
+  <Accordion title="I need an integration that isn't listed">
+    Use webhooks to send data to any system, or use n8n for more complex workflows. For custom integrations, see the [OAuth Server](/platform/oauth) for authentication and the API documentation for data access.
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Related Features
+## Related
 
-- [API Access](/platform/api) - REST API
-- [OAuth Server](/platform/oauth) - OAuth provider
-- [Stripe Integration](/platform/fees/stripe-integration) - Payment details
+- [Stripe Integration](/platform/fees/stripe-integration) — Detailed payment setup
+- [OAuth Server](/platform/oauth) — Use Orgo as an identity provider for your apps
+- [Notifications](/platform/notifications) — Platform notification settings

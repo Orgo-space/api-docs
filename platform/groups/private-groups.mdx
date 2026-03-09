@@ -1,305 +1,202 @@
 ---
 title: 'Private Groups'
-description: 'Custom groups for projects, teams, and interest-based collaboration'
+description: 'Member-created spaces for project teams, committees, interest groups, and working groups'
 ---
 
-Private Groups allow members to create their own exclusive spaces for collaboration and discussion. They're ideal for project teams, working groups, interest-based communities, or any group requiring controlled membership.
+Private Groups are the flexible, member-driven group type. Unlike Local Centers (geographic) or Role Groups (automatic), Private Groups are created by members, have manually controlled membership, and can serve any purpose — project teams, committees, interest communities, event planning, board governance.
 
-## How to access
+<img src="/images/platform/groups/groups-browse.png" alt="Browse groups page showing private groups" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-**Sidebar** → **+ New Group**
-
-Or: **Groups** → **My Groups** → **Create Group**
+They're the closest thing to a Slack channel or Microsoft Teams group: create one, invite people, start collaborating.
 
 ---
 
-## What are Private Groups
+## Do I need Private Groups?
 
-Private Groups provide:
-
-- **Member-created** - Any authorized member can create a group
-- **Controlled membership** - Creator controls who can join
-- **Customizable features** - Enable only the features you need
-- **Project-focused** - Perfect for temporary or permanent collaborations
+| Your situation | Use |
+|---------------|-----|
+| A committee needs a space to collaborate | Private Group |
+| A project team needs task tracking and file sharing | Private Group with Issues enabled |
+| Members want to form interest-based communities (Photography, Hiking) | Private Group with "joinable" enabled |
+| You're planning a specific event and the team needs a workspace | Private Group — archive it when the event is done |
+| A board needs a confidential discussion space | Private Group — restrict to board members only |
+| You want a space that auto-includes all members of a type | [Role Group](/platform/groups/role-groups) instead |
+| You need geographic branches | [Local Center](/platform/groups/local-groups) instead |
 
 ---
 
 ## Creating a Private Group
 
+Any member with permission can create a group. Click **+ New Group** in the sidebar, or go to **Groups** → **Create Group**.
+
 <Steps>
-  <Step title="Click New Group">
-    Click **+ New Group** in the sidebar or from your groups list.
+  <Step title="Name and description">
+    Give the group a clear name that explains its purpose. "Q4 Marketing Campaign" is better than "Marketing Group". Add a description so members know what to expect.
   </Step>
-  <Step title="Enter basic info">
-    Provide a name that clearly identifies the group's purpose.
+  <Step title="Choose visibility">
+    **Private** — only members can see the group and its content. **Joinable** — any member can discover the group and join without an invitation.
   </Step>
-  <Step title="Set visibility">
-    Choose **Private** to restrict visibility to members only.
+  <Step title="Select a category (optional)">
+    If your organization uses [group categories](/platform/groups), pick one: Working Group, Committee, Interest Group, Project Team, etc. This helps members find groups.
   </Step>
-  <Step title="Select features">
-    Toggle on the features your group needs:
-    - Discussions
-    - Events
-    - Files
-    - Issues (with optional sub-settings)
+  <Step title="Enable features">
+    Toggle on only what you need:
+
+    | Feature | Enable when |
+    |---------|------------|
+    | **Discussions** | The group needs conversations — updates, decisions, Q&A |
+    | **Events** | The group schedules meetings or activities |
+    | **Files** | The group shares documents, presentations, or resources |
+    | **Issues** | The group tracks tasks, action items, or deliverables |
   </Step>
-  <Step title="Configure issues (optional)">
-    If issues are enabled, configure:
-    - Priority levels
-    - Due dates
-    - Issue types
-  </Step>
-  <Step title="Save">
-    Click **Save** to create the group.
+  <Step title="Save and invite members">
+    Create the group, then add members from the Members tab.
   </Step>
 </Steps>
 
----
-
-## Group Settings
-
-### Basic Settings
-
-<ParamField path="name" type="string" required>
-  Display name for the group. Make it descriptive.
-</ParamField>
-
-<ParamField path="description" type="text">
-  Explain the group's purpose and what members can expect.
-</ParamField>
-
-<ParamField path="category" type="select">
-  Group category for organization (if categories enabled).
-</ParamField>
-
-### Visibility Settings
-
-<ParamField path="isJoinable" type="boolean" default="false">
-  **Joinable** - Any member can join without invitation.
-  **Private** - Only invited members can join.
-</ParamField>
-
-### Feature Toggles
-
-<ParamField path="hasDiscussion" type="boolean" default="false">
-  Enable discussion forum for the group.
-</ParamField>
-
-<ParamField path="hasEvents" type="boolean" default="false">
-  Enable events calendar for the group.
-</ParamField>
-
-<ParamField path="hasFiles" type="boolean" default="false">
-  Enable file storage and sharing.
-</ParamField>
-
-<ParamField path="isProject" type="boolean" default="true">
-  Enable issue/task tracking for the group.
-</ParamField>
-
-### Issue Settings
-
-When issues are enabled:
-
-<ParamField path="hasPriority" type="boolean" default="true">
-  Allow setting priority on issues (High, Medium, Low).
-</ParamField>
-
-<ParamField path="hasDueDate" type="boolean" default="false">
-  Enable due dates for issues.
-</ParamField>
-
-<ParamField path="hasTypes" type="boolean" default="true">
-  Enable categorizing issues by type.
-</ParamField>
-
-<ParamField path="hasStatus" type="boolean" default="true">
-  Enable status tracking (Open, In Progress, Done).
-</ParamField>
+<Tip>
+  Only enable the features you actually need. A board meeting group probably needs Discussions + Files. A hiking club needs Discussions + Events. A software project needs all four. Fewer features = less clutter.
+</Tip>
 
 ---
 
-## Managing Members
+## Private vs. joinable
 
-### Adding Members
+This is the key decision when creating a group:
 
-As a group administrator:
+| Mode | How members join | Best for |
+|------|-----------------|----------|
+| **Private** | Invited by the group owner or admin only | Committees, boards, sensitive projects — you control exactly who's in |
+| **Joinable** | Any member can find and join on their own | Interest groups, social clubs, open communities — members self-organize |
 
-1. Go to group → **Members** tab
+You can change this setting later. Starting private and opening it up is safer than starting open and needing to restrict.
+
+---
+
+## Managing members
+
+### Adding members
+
+1. Go to the group → **Members** tab
 2. Click **Add Members**
-3. Search for members by name
-4. Select members to invite
-5. They'll be added immediately (or receive invitation based on settings)
+3. Search by name and select people
+4. They're added immediately
 
-### Member Permissions
+### Group roles
 
-<ParamField path="onlyAdminsCanAddMembers" type="boolean">
-  Restrict member additions to group administrators only.
-</ParamField>
+| Role | What they can do |
+|------|-----------------|
+| **Owner** | Full control — manage members, settings, and features. Can delete the group. The person who created the group is the owner. |
+| **Admin** | Can manage members and settings, but cannot delete the group. Promote trusted members to admin for shared management. |
+| **Member** | Can participate based on group permission settings (post, upload, create events — unless restricted to admins only). |
 
-### Removing Members
+### Removing members
 
-1. Go to group → **Members** tab
-2. Find the member
-3. Click remove/kick
-4. Confirm removal
-
-### Group Roles
-
-- **Owner** - Full control, can delete the group
-- **Admin** - Can manage members and settings
-- **Member** - Can participate based on group permissions
+Go to **Members** tab → find the member → remove. Removed members lose access to all group content immediately.
 
 ---
 
-## Group Permissions
+## Issue tracking
 
-Control what members can do:
+Private Groups with Issues enabled become lightweight project management spaces. This is one of the most powerful features for teams that need to track work.
 
-<ParamField path="onlyAdminsCanPost" type="boolean">
-  Only administrators can create discussion posts.
-</ParamField>
+### Creating issues
 
-<ParamField path="onlyAdminsCanCreateEvents" type="boolean">
-  Only administrators can create events.
-</ParamField>
+Go to the group → **Issues** tab → **Create Issue**
 
-<ParamField path="onlyAdminsCanUploadFiles" type="boolean">
-  Only administrators can upload files.
-</ParamField>
+Each issue can have:
 
----
+| Field | Description |
+|-------|-------------|
+| **Title** | What needs to be done |
+| **Description** | Details, context, acceptance criteria |
+| **Assignee** | Who's responsible |
+| **Priority** | High, Medium, Low (if enabled) |
+| **Due date** | Deadline (if enabled) |
+| **Type** | Task, Bug, Feature, Question (if enabled) |
+| **Status** | Open → In Progress → Done |
 
-## Using Group Features
+### Configure issue tracking
 
-### Discussions
+When enabling Issues on a group, you can toggle:
 
-Perfect for:
-- Project updates and status reports
-- Decision-making conversations
-- Brainstorming and ideation
-- Meeting notes and follow-ups
+| Setting | What it does |
+|---------|-------------|
+| **Priority levels** | Allow High/Medium/Low priority on issues |
+| **Due dates** | Allow setting deadlines |
+| **Issue types** | Categorize issues (Task, Bug, Feature, etc.) |
+| **Status tracking** | Track progress through workflow stages |
 
-### Events
-
-Create group-specific events:
-- Team meetings
-- Project milestones
-- Working sessions
-- Deadlines and reviews
-
-### Files
-
-Share project resources:
-- Documents and spreadsheets
-- Images and presentations
-- Reference materials
-- Deliverables
-
-### Issues
-
-Track tasks and work items:
-- Create issues for tasks
-- Assign to team members
-- Set priorities and due dates
-- Track status through completion
+<Tip>
+  For simple groups (a committee tracking action items), enable Issues with just priorities. For project teams, enable everything — types, due dates, and statuses give you a mini project management tool.
+</Tip>
 
 ---
 
-## Issue Management
+## Controlling who can do what
 
-### Creating Issues
+| Setting | ON | OFF |
+|---------|-----|-----|
+| **Only admins can post** | Group is announcement-only — admins post, members read | Any member can start discussions |
+| **Only admins can create events** | Admins schedule all meetings and activities | Any member can create events |
+| **Only admins can upload files** | Document management is controlled | Any member can share files |
+| **Only admins can add members** | Only admins invite new people | Any member can invite others |
 
-1. Navigate to group → **Issues** tab
-2. Click **Create Issue**
-3. Fill in:
-   - Title
-   - Description
-   - Type (if enabled)
-   - Priority (if enabled)
-   - Due date (if enabled)
-   - Assignee (optional)
-4. Save
-
-### Issue Workflow
-
-```
-Open → In Progress → Done
-         ↓
-       Blocked
-```
-
-### Issue Types
-
-If types are enabled, categorize issues:
-- Task
-- Bug
-- Feature
-- Discussion
-- Question
-- (Custom types)
+For most project teams, leave everything open — everyone contributes. For boards and governance groups, restrict posting and file uploads to admins.
 
 ---
 
-## Use Cases
+## Group lifecycle
+
+Private Groups are often temporary. Here's how to manage them through their lifecycle:
+
+| Phase | What to do |
+|-------|-----------|
+| **Create** | Set up the group, invite members, enable features |
+| **Active use** | Members collaborate — discussions, files, issues, events |
+| **Wind down** | When the project ends or the committee finishes its work |
+| **Archive** | Archive the group — content is preserved for reference, but the group is hidden from the sidebar. Members are removed from the active roster. |
+| **Delete** | If the content isn't worth preserving, delete the group entirely. This is permanent. |
+
+<Info>
+  Always prefer archiving over deleting. Archived groups preserve institutional knowledge — meeting notes, decisions, files. You can always delete later, but you can't un-delete.
+</Info>
+
+---
+
+## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Project teams">
-    Create a group for a specific project with all team members, shared files, and task tracking.
+  <Accordion title="Members want to create interest groups (Photography Club, Book Club) — should I let them?">
+    Yes — this is exactly what joinable Private Groups are for. Members create the group, set it as joinable, and others discover and join on their own. You get organic community building with zero admin work. If you want some oversight, require a group category and review new groups occasionally.
   </Accordion>
 
-  <Accordion title="Working groups">
-    Establish temporary groups for specific initiatives or committees.
+  <Accordion title="A project finished — what do I do with the group?">
+    Archive it. The group disappears from the sidebar but all content (discussions, files, issues) is preserved. If someone needs to reference old project files or decisions six months later, an admin can find the archived group.
   </Accordion>
 
-  <Accordion title="Interest groups">
-    Let members form groups around shared interests (photography, hiking, etc.).
+  <Accordion title="Can I convert a Private Group into a Role Group?">
+    No — they're fundamentally different. Private Groups have manual membership; Role Groups have criteria-based automatic membership. If you realize the membership should be automatic (e.g., "all people with User Type = Board Member"), create a new Role Group and archive the Private Group.
   </Accordion>
 
-  <Accordion title="Event planning">
-    Create a group for planning a specific event with the organizing team.
+  <Accordion title="Too many groups — members can't find the right one">
+    Enable [Group Categories](/platform/groups) to organize groups by type (Working Group, Committee, Interest Group, etc.). Also consider archiving inactive groups — a clean list is easier to navigate than a cluttered one.
   </Accordion>
 
-  <Accordion title="Board/committee">
-    Private space for board members or committee work.
+  <Accordion title="A group owner left the organization — who controls the group now?">
+    A national admin can access any group and reassign ownership. Go to the group settings and promote another member to owner.
   </Accordion>
 
-  <Accordion title="Training cohorts">
-    Group participants of the same training session for collaboration.
+  <Accordion title="I want a group visible to everyone but only admins can post">
+    Create the group as joinable (so everyone can find and join it), then enable "Only admins can post". This gives you a broadcast channel where admins share updates and members can read — similar to a Slack announcement channel.
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Best Practices
+## Related
 
-<AccordionGroup>
-  <Accordion title="Clear purpose">
-    Give your group a clear name and description so members understand its purpose.
-  </Accordion>
-
-  <Accordion title="Right features only">
-    Enable only the features your group actually needs to avoid clutter.
-  </Accordion>
-
-  <Accordion title="Active ownership">
-    Ensure groups have active owners who manage membership and content.
-  </Accordion>
-
-  <Accordion title="Regular cleanup">
-    Archive or delete groups that are no longer active.
-  </Accordion>
-
-  <Accordion title="Appropriate permissions">
-    Set permissions that match how you want the group to function.
-  </Accordion>
-</AccordionGroup>
-
----
-
-## Related Features
-
-- [Groups Overview](/platform/groups/index) - All group types
-- [Issues](/platform/issues) - Task and issue tracking
-- [Files](/platform/files) - Document management
-- [Events](/platform/events/index) - Event management
+- [Groups Overview](/platform/groups) — All group types and when to use each
+- [Issues](/platform/issues) — Task tracking within groups
+- [Role Groups](/platform/groups/role-groups) — For automatic, criteria-based membership
+- [Local Centers](/platform/groups/local-groups) — For geographic branches

@@ -1,93 +1,84 @@
 ---
 title: 'OAuth Server'
-description: 'Use Orgo as an OAuth provider for single sign-on'
+description: 'Use Orgo as an identity provider — let members log in to external apps with their Orgo account'
 ---
 
-Orgo can act as an OAuth 2.0 provider, allowing members to use their Orgo credentials to log in to external applications. Implement single sign-on (SSO) for your organization's tools and services.
+Orgo can act as an OAuth 2.0 provider. This means your members can use their Orgo credentials to log in to your website, internal tools, or partner applications — "Login with Orgo" — without creating separate accounts.
 
-## How to access
-
-**Settings** → **Developers** → **OAuth Applications**
-
----
-
-## Prerequisites
-
-- Administrator access required
-- OAuth module enabled for your organization
+<img src="/images/platform/developers/oauth.png" alt="OAuth application settings" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## How OAuth Works
+## When to use this
+
+| You want to... | OAuth Server? |
+|----------------|-------------|
+| Let members log in to your website with their Orgo account | Yes |
+| Authenticate users in a custom mobile app | Yes |
+| Provide SSO for internal tools (wiki, project manager) | Yes |
+| Give partner services access to member data (with consent) | Yes |
+| Let external people log in to Orgo using Google/Microsoft | No — that's [SSO Authentication](/platform/integrations) (inbound), not OAuth Server (outbound) |
+
+---
+
+## How it works
 
 ```
 1. User clicks "Login with Orgo" on your app
    ↓
-2. User redirected to Orgo login
+2. User is redirected to Orgo's login page
    ↓
-3. User authenticates and approves
+3. User authenticates and approves access
    ↓
-4. Orgo redirects back with authorization code
+4. Orgo redirects back with an authorization code
    ↓
-5. Your app exchanges code for access token
+5. Your app exchanges the code for an access token
    ↓
-6. Your app uses token to access user data
+6. Your app uses the token to get user info
 ```
 
----
-
-## Creating an OAuth Application
-
-<Steps>
-  <Step title="Navigate to OAuth settings">
-    Go to **Settings** → **Developers** → **OAuth Applications**.
-  </Step>
-  <Step title="Click Create Application">
-    Start creating a new OAuth app.
-  </Step>
-  <Step title="Enter application details">
-    Provide name, description, and redirect URIs.
-  </Step>
-  <Step title="Copy credentials">
-    Save your Client ID and Client Secret securely.
-  </Step>
-</Steps>
+This is the standard OAuth 2.0 Authorization Code flow.
 
 ---
 
-## Application Settings
+## Setting up an OAuth application
 
-<ParamField path="name" type="string" required>
-  Application name shown to users during authorization.
-</ParamField>
+**Settings** → **Developers** → **OAuth Applications** → **Create Application**
 
-<ParamField path="description" type="text">
-  Description of what the app does.
-</ParamField>
+<img src="/images/platform/developers/oauth-apps.png" alt="OAuth Apps management page showing configured applications" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-<ParamField path="redirectUris" type="array" required>
-  Allowed callback URLs after authorization.
-</ParamField>
+| Field | What to enter |
+|-------|-------------|
+| **Name** | What users see during authorization — "My Organization Website" |
+| **Description** | What the app does (for your reference) |
+| **Redirect URIs** | Where Orgo sends users after authorization — must match exactly |
+| **Scopes** | What data the app can request |
 
-<ParamField path="scopes" type="array">
-  Permissions the app can request.
-</ParamField>
+After creating the app, you'll receive a **Client ID** and **Client Secret**. Store the secret securely — it's shown only once.
 
 ---
 
-## OAuth Endpoints
+## OAuth endpoints
 
-| Endpoint | Description |
-|----------|-------------|
-| `/oauth/authorize` | Authorization endpoint |
-| `/oauth/token` | Token exchange endpoint |
-| `/oauth/userinfo` | User info endpoint |
+| Endpoint | Purpose |
+|----------|---------|
+| `/oauth/authorize` | Where you send users to log in |
+| `/oauth/token` | Where your server exchanges the code for a token |
+| `/oauth/userinfo` | Where your server retrieves the authenticated user's data |
 
 ---
 
-## Authorization Flow
+Orgo includes a built-in OAuth documentation page that developers can reference when building integrations:
 
-### Step 1: Redirect to Authorization
+<img src="/images/platform/developers/oauth-dev-docs.png" alt="Built-in OAuth developer documentation page" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Implementation
+
+### Step 1: Redirect to authorization
+
+Send users to Orgo's authorization endpoint:
 
 ```
 GET /oauth/authorize?
@@ -97,7 +88,9 @@ GET /oauth/authorize?
   scope=profile email
 ```
 
-### Step 2: Exchange Code for Token
+### Step 2: Exchange code for token
+
+After the user authorizes, Orgo redirects to your URI with a code. Exchange it server-side:
 
 ```
 POST /oauth/token
@@ -110,27 +103,16 @@ client_secret=YOUR_CLIENT_SECRET&
 redirect_uri=YOUR_REDIRECT_URI
 ```
 
-### Step 3: Get User Info
+### Step 3: Get user info
+
+Use the access token to retrieve the user's profile:
 
 ```
 GET /oauth/userinfo
 Authorization: Bearer ACCESS_TOKEN
 ```
 
----
-
-## Available Scopes
-
-| Scope | Data Accessible |
-|-------|-----------------|
-| `profile` | Name, profile picture |
-| `email` | Email address |
-| `groups` | Group memberships |
-| `roles` | User roles and permissions |
-
----
-
-## User Info Response
+Response:
 
 ```json
 {
@@ -145,69 +127,46 @@ Authorization: Bearer ACCESS_TOKEN
 
 ---
 
-## Use Cases
+## Available scopes
 
-<AccordionGroup>
-  <Accordion title="Internal tools">
-    Allow members to log in to internal tools with their Orgo account.
-  </Accordion>
+| Scope | What it grants access to |
+|-------|------------------------|
+| `profile` | Name, profile picture |
+| `email` | Email address |
+| `groups` | Group memberships |
+| `roles` | User roles and permissions |
 
-  <Accordion title="Partner applications">
-    Provide SSO for partner services your members use.
-  </Accordion>
-
-  <Accordion title="Custom websites">
-    Add "Login with Orgo" to your organization's website.
-  </Accordion>
-
-  <Accordion title="Mobile apps">
-    Authenticate users in custom mobile applications.
-  </Accordion>
-</AccordionGroup>
+Request only the scopes your app needs — fewer scopes means less data exposure and a simpler consent screen for users.
 
 ---
 
-## Security Best Practices
+## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Keep secrets secure">
-    Never expose Client Secret in client-side code.
+  <Accordion title="I get 'invalid redirect URI' errors">
+    The redirect URI in your authorization request must exactly match one of the URIs registered in the OAuth app settings. Watch for trailing slashes, http vs https, and port numbers.
   </Accordion>
 
-  <Accordion title="Validate redirect URIs">
-    Only whitelist specific, known redirect URIs.
+  <Accordion title="Access tokens are expiring">
+    Access tokens have a limited lifetime. Use refresh tokens to get new access tokens without requiring the user to log in again.
   </Accordion>
 
-  <Accordion title="Use HTTPS">
-    All OAuth endpoints require HTTPS.
+  <Accordion title="Can I use this with a single-page app (SPA)?">
+    SPAs can't safely store the Client Secret. Use the PKCE extension of the Authorization Code flow for browser-based apps, or handle the token exchange on your backend.
   </Accordion>
 
-  <Accordion title="Request minimal scopes">
-    Only request the permissions your app actually needs.
+  <Accordion title="How do I map Orgo roles to permissions in my app?">
+    Use the `roles` scope to get the user's Orgo roles. In your app, map these roles to your permission system — e.g., Orgo `ADMIN_TENANT` → your app's admin role.
   </Accordion>
 </AccordionGroup>
 
----
-
-## Troubleshooting
-
-<AccordionGroup>
-  <Accordion title="Invalid redirect URI">
-    Ensure the redirect URI exactly matches what's registered in the app settings.
-  </Accordion>
-
-  <Accordion title="Token expired">
-    Access tokens expire. Use refresh tokens or re-authenticate.
-  </Accordion>
-
-  <Accordion title="Insufficient scope">
-    Request the necessary scopes during authorization.
-  </Accordion>
-</AccordionGroup>
+<Warning>
+Never expose the Client Secret in client-side code (JavaScript, mobile apps). The secret must stay on your server. All token exchanges should happen server-to-server.
+</Warning>
 
 ---
 
-## Related Features
+## Related
 
-- [API Access](/platform/api) - REST API integration
-- [Users](/platform/users/index) - User management
+- [Integrations](/platform/integrations) — Connect third-party services to Orgo
+- [Members](/platform/users) — User data that OAuth provides access to

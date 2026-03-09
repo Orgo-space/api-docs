@@ -1,42 +1,128 @@
 ---
 title: 'Resignation'
+description: 'Formal member departure with reason tracking and admin approval'
 ---
 
-The Resignation feature in Orgo enables users to formally resign from the organization before closing their account. This process ensures that the organization is informed about the departure and the reasons behind it.
+Resignation is a formal departure process. Unlike simply setting someone to Inactive, resignation captures why people leave — giving you data to improve retention. Every resignation goes through admin approval, so no one disappears without someone knowing.
 
-**Enabling Resignation Feature:**
+<img src="/images/platform/users/resignation-requests.png" alt="Resignation requests list showing pending requests with date, member name, local group, and status" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-1. Access 'Organisation Settings'.
-2. Click 'Modules'.
-3. Find and enable the 'Resignation' option.
+**When to use resignation vs other options:**
+- **Resignation** — Member wants to leave formally. You want to know why and have a record.
+- **Status → Inactive** — Member is lapsing or taking a break. No formal process needed.
+- **Status → Suspended** — Admin needs to block someone immediately. No member input.
+- **Account Deletion** — Member wants their data removed (GDPR). If resignation is enabled, they must resign first.
 
-**Resignation Process for Users:**
+---
 
-1. Visit 'Profile' and select 'Update Profile'.
-2. Navigate to 'Settings & Privacy'.
-3. Scroll down to 'Close account'.
-4. Click on 'Resign' to initiate the resignation process.
-5. Fill out the mandatory 'Resignation reason'.
-6. Optionally, provide feedback on what could encourage you to remain a member.
-7. Decide if you wish to make your account inactive by toggling 'Close my account'.
-8. Submit the resignation.
+## How to enable
 
-![Image](/images/platform/Screenshot-2024-02-29-at-18.32.13.png)
+Go to **Settings** → **Users & Profiles** → **Configuration** → enable **Resignations**.
 
-**Administration Review:**
+Once enabled, members see a **Resign** button on their Close account page, and admins see **Resignation Requests** in the sidebar.
 
-1. The administration team will receive a notification about the new resignation request.
-2. The team can review the request under 'Resignation Requests' in the sidebar.
-3. They have the options to either 'Approve' the resignation or 'Delete' it (the latter is only available to users with the 'ORG: ADMIN' role).
-4. Once a decision is made, the user will be notified of the change in their resignation status via email.
+---
 
-![Image](/images/platform/Screenshot-2024-02-29-at-18.32.40.png)
+## What the member sees
 
-![Image](/images/platform/Screenshot-2024-02-29-at-18.33.43.png)
+Members reach the resignation form through **Profile** → **Settings & Privacy** → **Close account** → **Resign**.
 
-**Best Practices:**
+![Member resignation form showing reason field, feedback field, and close account toggle](/images/platform/users/resignation-form.png)
 
-* Users should ensure that all necessary data is exported and any outstanding obligations are settled before submitting their resignation.
-* Administrators should process resignation requests promptly and provide feedback or an exit interview if applicable.
+When a member clicks **Resign** on the Close account page, the resignation form appears inline. It contains a mandatory **Resignation reason** text area, an optional **What would determine you to continue as member?** feedback field, and a **Close my account** toggle (off by default — if enabled, the account is also deactivated upon approval). At the bottom, **Submit** sends the request for admin review and **Cancel** returns to the Close account page without submitting.
 
-**Note:** The resignation process is an important feature for maintaining an accurate member roster and understanding the reasons behind departures, which can inform future retention strategies.
+| Field | Required | What it does |
+|-------|----------|-------------|
+| **Resignation reason** | Yes | Why they're leaving. This is the most valuable data you'll collect — it tells you what's pushing people away. |
+| **What would determine you to continue as member?** | No | What could change their mind. Surprisingly useful for identifying fixable issues. |
+| **Close my account** | No | If toggled on, their account status changes to Inactive when the resignation is approved. If off, the resignation is on record but their account stays Active (useful for "I'm leaving in spirit but keep my profile"). |
+
+After submitting, the member sees a confirmation. Their account continues to work normally until an admin processes the request.
+
+---
+
+## What admins see
+
+Navigate to **Resignation Requests** in the sidebar to see all submissions.
+
+### Processing a resignation
+
+<Steps>
+  <Step title="Review the request">
+    Click **View** on a pending request. Read the resignation reason and feedback carefully.
+  </Step>
+  <Step title="Consider reaching out">
+    If the member mentioned something fixable, or they're a key contributor, contact them before processing. The feedback field often reveals retention opportunities.
+  </Step>
+  <Step title="Approve or delete">
+    - **Approve**: Processes the resignation. If the member checked "Close my account", their status changes to Inactive. An email notification is sent to the member.
+    - **Delete**: Removes the request entirely. The member is not notified. Only Admin Tenant can do this.
+  </Step>
+</Steps>
+
+### Who can do what
+
+| Action | HR Tenant | Admin Tenant |
+|--------|-----------|-------------|
+| View resignation requests | Yes | Yes |
+| Approve resignations | Yes | Yes |
+| Delete requests | No | Yes |
+
+---
+
+## Resignation + account deletion
+
+When both features are enabled, they work as a pipeline:
+
+1. Member must **resign first** and get approved
+2. Only after resignation is processed can they **delete their account**
+3. Deletion permanently removes their data
+
+This gives you a two-step safeguard: you see why they're leaving (resignation) before any data is lost (deletion).
+
+If only deletion is enabled (resignation is off), members can delete their accounts directly without any admin oversight.
+
+<Tip>
+  Enable resignation even if you also enable account deletion. The resignation reason data alone is worth it — it tells you what's driving people away before their data disappears.
+</Tip>
+
+---
+
+## Using resignation data
+
+The resignation reasons you collect are a retention goldmine. Look for patterns:
+
+- Are multiple people citing the same issue? That's a systemic problem worth fixing.
+- Are departures clustered in a specific local center? That center may have leadership or culture issues.
+- Are people leaving at a particular time of year? You may have a seasonal engagement problem.
+- Is the feedback field showing fixable issues? "I'd stay if there were events near me" is actionable.
+
+---
+
+## Common scenarios
+
+<AccordionGroup>
+  <Accordion title="A member submitted a resignation but changed their mind">
+    If the request is still **Pending**, an Admin Tenant can **Delete** the request. The member keeps their account as-is. If it was already **Approved**, you'll need to manually change their status back to Active (Profile → Edit → Permissions tab → Status → Active).
+  </Accordion>
+
+  <Accordion title="A resignation was approved but the member still has an Active account">
+    This means the member didn't toggle "Close my account" when they resigned. The resignation is on record, but they chose to keep their profile active. This is normal — some members resign from formal membership but want to stay connected.
+  </Accordion>
+
+  <Accordion title="I'm getting too many resignations to process individually">
+    If you're processing many resignations at once, check if there's a pattern in the reasons. High volume often signals an organizational issue worth addressing. For the processing itself, work through the list — there's no bulk approve option, as each resignation should be reviewed individually.
+  </Accordion>
+
+  <Accordion title="Should I delete a resignation request instead of approving it?">
+    Delete is for removing invalid or test requests. Don't use it to prevent a member from leaving — that creates a bad experience. If a member genuinely wants to leave, approve the resignation. If they submitted by mistake, reach out and confirm before deleting.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related
+
+- [Account Deletion](/platform/users/deletion-of-account) — Permanent data removal (can require resignation first)
+- [User Statuses](/platform/users/statuses) — Alternative: set to Inactive without the formal process
+- [Adhesion](/platform/users/adhesion) — The opposite flow: joining the organization
