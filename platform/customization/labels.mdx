@@ -7,15 +7,30 @@ Every organization has its own vocabulary. A scouting group doesn't call people 
 
 <img src="/images/platform/customization/labels.png" alt="Labels customization page for renaming platform terms" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
+<Note>
+  Requires **Tenant Admin** permissions.
+</Note>
+
 ---
 
-## How it works
+## How to customize a label
 
-**Settings** → **Customization** → **Labels**
+**Settings → Customization → Labels**
 
-1. Search for the term you want to change (e.g., "Members")
-2. Type your replacement (e.g., "Scouts")
-3. Save — the change appears everywhere in the platform immediately
+<Steps>
+  <Step title="Search for the term you want to change">
+    Use the autocomplete search field at the top of the page. Type the current term (e.g., "Members") and the system shows all matching translation keys from the platform. Select the one you want to override.
+  </Step>
+  <Step title="Enter your replacement text">
+    In the **Custom Expression** column, type the new term (e.g., "Scouts"). The **System Expression** column on the left shows the current default for reference.
+  </Step>
+  <Step title="Add more overrides if needed">
+    Click the add button to search for and override additional terms. Remember to cover both singular and plural forms (e.g., "Member" and "Members").
+  </Step>
+  <Step title="Save">
+    Click **Save**. The change appears everywhere in the platform immediately — menus, buttons, forms, emails, and system messages.
+  </Step>
+</Steps>
 
 The override is purely visual — the underlying data model doesn't change. You're renaming the display label, not restructuring the system.
 
@@ -25,12 +40,12 @@ The override is purely visual — the underlying data model doesn't change. You'
 
 | Default term | Replace with (examples) |
 |-------------|------------------------|
-| **Member** | Scout, Associate, Volunteer, Participant |
-| **Group** | Patrol, Chapter, Unit, Team, Committee |
+| **Member** / **Members** | Scout(s), Associate(s), Volunteer(s), Participant(s) |
+| **Group** / **Groups** | Patrol(s), Chapter(s), Unit(s), Team(s), Committee(s) |
 | **Local Center** | Troop, District, Branch, Region, Section |
-| **Event** | Activity, Meeting, Session, Program |
+| **Event** / **Events** | Activity/Activities, Meeting(s), Session(s), Program(s) |
 | **Discussion** | Forum, Conversation, Thread, Topic |
-| **Fee** | Dues, Subscription, Contribution, Levy |
+| **Fee** / **Fees** | Dues, Subscription(s), Contribution(s), Levy/Levies |
 
 ### Example: Scouting organization
 
@@ -50,17 +65,31 @@ The override is purely visual — the underlying data model doesn't change. You'
 | Local Center | Chapter |
 | Fees | Annual Dues |
 
+<Tip>
+  Start with the 5-6 terms that differ most for your organization. Don't customize labels that already make sense — over-customization can confuse members who've used similar platforms before.
+</Tip>
+
 ---
 
 ## Multi-language labels
 
-If you have multiple languages enabled, you need to provide label overrides for each language separately:
+If you have multiple languages enabled, you need to provide label overrides for each language separately.
 
-1. Select the language from the language picker
-2. Enter the translated override for that language
-3. Repeat for each language
+<Steps>
+  <Step title="Select the language">
+    Use the language picker at the top of the Labels page to switch to the language you want to customize.
+  </Step>
+  <Step title="Enter the translated override">
+    For each customized term, type the translation in that language. The system expression column updates to show the default translation for the selected language.
+  </Step>
+  <Step title="Repeat for each active language">
+    Switch to each enabled language and provide the corresponding override. Labels without an override fall back to the default translation for that language.
+  </Step>
+</Steps>
 
-Labels without an override fall back to the default translation.
+<Warning>
+  If you enable a new language after customizing labels, remember to add overrides for that language too. Otherwise, members using the new language will see the default terms, not your custom ones.
+</Warning>
 
 ---
 
@@ -78,25 +107,36 @@ Labels cover everything visible to members:
 
 ---
 
-## Resetting to defaults
+## Resetting a label
 
-To undo a label change: find the customized label, clear the override field, and save. The default term is restored.
+To undo a label change, find the customized label in the list, clear the **Custom Expression** field, and save. The default term is restored. You can also remove the entire row by clicking the delete button next to it.
 
 ---
 
-## Common scenarios
+## Real-world example
+
+> **Scenario**: A volunteer fire department with 300 members across 12 stations, operating in German.
+
+1. **Default language**: German.
+2. **Label changes**: "Mitglieder" (Members) → "Kameraden" (Comrades), "Lokales Zentrum" (Local Center) → "Feuerwache" (Fire Station), "Gruppen" (Groups) → "Züge" (Platoons), "Veranstaltungen" (Events) → "Einsatzübungen" (Drills).
+3. **Result**: The entire platform — sidebar, member lists, event calendar, emails — uses the fire department's terminology instead of generic organizational terms.
+
+---
+
+## Troubleshooting
 
 <AccordionGroup>
   <Accordion title="I changed 'Member' but it still shows the old term in some places">
-    There may be multiple label keys for singular and plural forms, or for different contexts (e.g., "Member" vs "Members" vs "member"). Search broadly and update all instances.
+    There are multiple translation keys for singular and plural forms, and for different contexts (e.g., "Member", "Members", "member", "members"). Search broadly in the autocomplete and update all matching instances. Also check capitalized and lowercase variants.
   </Accordion>
-
-  <Accordion title="Should I customize all labels or just the main ones?">
-    Start with the 5-6 terms that your organization uses differently (Member, Group, Local Center, Event, Fee). Don't customize labels that already make sense — over-customization can confuse members who've used similar platforms before.
-  </Accordion>
-
   <Accordion title="We use the same term for two different Orgo features">
-    Be careful — if you rename both "Groups" and "Local Centers" to "Teams", members won't be able to distinguish them. Keep terms distinct even when customizing.
+    Be careful — if you rename both "Groups" and "Local Centers" to "Teams", members won't be able to distinguish them. Keep terms distinct even when customizing. Use your organization's real vocabulary to find natural distinctions.
+  </Accordion>
+  <Accordion title="My custom labels disappeared after a platform update">
+    Custom labels are stored permanently and survive platform updates. If a label appears to have reverted, it's likely that a new translation key was added in the update that you haven't customized yet. Search for the term and add the override for the new key.
+  </Accordion>
+  <Accordion title="I can't find the term I want to change in the search">
+    The autocomplete searches through all translation keys in the system. Try different wordings — the key might use a synonym or abbreviation. If the term is part of a longer phrase, search for the individual word rather than the full sentence.
   </Accordion>
 </AccordionGroup>
 
@@ -104,5 +144,6 @@ To undo a label change: find the customized label, clear the override field, and
 
 ## Related
 
-- [Languages](/platform/customization/languages) — Multi-language support
-- [Branding](/platform/organisation/branding) — Visual customization (logo, colors)
+- [Languages](/platform/customization/languages) — Multi-language support (enable languages before customizing labels)
+- [Menu Organizer](/platform/customization/menu-organizer) — Rearrange and rename sidebar items
+- [Branding](/platform/organisation/branding) — Visual customization (logos, login background)

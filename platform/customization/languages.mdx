@@ -3,23 +3,33 @@ title: 'Languages'
 description: 'Enable multiple languages so members use Orgo in their preferred language'
 ---
 
-Orgo's interface is available in multiple languages. You choose which languages are available, set a default, and members pick their preference. The entire interface — menus, buttons, labels, system messages — switches to their language.
+Orgo's interface is available in 11 languages. You choose which languages are available, set a default, and members pick their preference. The entire interface — menus, buttons, labels, system messages — switches to their language instantly.
+
+**Settings → Customization → Languages**
+
+<Note>
+  Requires **Tenant Admin** permissions.
+</Note>
 
 ---
 
 ## Setting up languages
 
-**Settings** → **Customization** → **Languages**
-
 <Steps>
-  <Step title="Choose available languages">
-    Enable the languages your members need from the supported list.
+  <Step title="Open the language settings">
+    Go to **Settings → Customization → Languages**. You'll see a list of all supported languages with toggle switches.
   </Step>
-  <Step title="Set the default">
-    Choose the primary language for your organization. New members see this until they change their preference.
+  <Step title="Enable the languages your members need">
+    Toggle on each language your organization uses. Each toggle controls whether that language appears in the language picker for members.
   </Step>
-  <Step title="Show the language switcher">
-    Enable the language selector in the interface so members can switch easily.
+  <Step title="Set the default language">
+    Select the primary language from the dropdown at the top. This is the language new members see when they first access the platform, and the fallback when no preference is set.
+  </Step>
+  <Step title="Enable the language switcher">
+    Toggle on the language selector so it appears in the interface. When enabled, members see a language dropdown in their profile area to switch languages.
+  </Step>
+  <Step title="Save">
+    Click **Save** to apply. Changes take effect immediately for all members.
   </Step>
 </Steps>
 
@@ -27,61 +37,89 @@ Orgo's interface is available in multiple languages. You choose which languages 
 
 ## Supported languages
 
-| Language | Code |
-|----------|------|
-| English | en |
-| Romanian | ro |
-| French | fr |
-| German | de |
-| Spanish | es |
-| Italian | it |
-| Portuguese | pt |
+| Language | Code | Notes |
+|----------|------|-------|
+| English | en | Most complete translation |
+| Romanian | ro | Fully translated |
+| French | fr | Fully translated |
+| German | de | Fully translated |
+| Spanish | es | Fully translated |
+| Italian | it | Fully translated |
+| Portuguese | pr | Fully translated |
+| Dutch | nl | Fully translated |
+| Slovak | sk | Fully translated |
+| Ukrainian | ua | Fully translated |
+| Bulgarian | bg | Fully translated |
 
 The platform interface (menus, buttons, system messages) is fully translated in all supported languages. User-generated content (discussion posts, event descriptions) stays in the language it was written in.
+
+<Tip>
+  Only enable languages your members actually speak. Extra languages clutter the language picker. You can always add more later without affecting existing members.
+</Tip>
 
 ---
 
 ## How members choose their language
 
-Members can change their language from their profile menu. The interface updates immediately — no logout required.
+Members change their language from the **profile dropdown menu** in the top-right corner of the interface. The interface updates immediately — no logout required.
 
-For first-time visitors, the system can automatically detect language from:
-- Browser language settings
-- Previous selection (if they've visited before)
+For first-time visitors, the system detects language automatically from:
+- **Browser language settings** — matched against your enabled languages
+- **Previous selection** — saved in the browser if they've visited before
+
+If neither matches an enabled language, the platform falls back to your default language.
 
 ---
 
 ## What gets translated
 
-| Content | Translated? |
-|---------|------------|
-| **Platform interface** (menus, buttons, labels, forms) | Yes — fully translated |
-| **System emails** (notifications, confirmations) | Yes — sent in the member's language |
-| **User-generated content** (posts, events, files) | No — stays in the original language |
-| **Custom labels** (your terminology overrides) | Per-language — you provide translations |
-| **Welcome message** | You write separate versions per language |
+| Content | Translated? | Details |
+|---------|------------|---------|
+| **Platform interface** (menus, buttons, labels, forms) | Yes | Fully translated in all 11 languages |
+| **System emails** (notifications, confirmations) | Yes | Sent in the member's chosen language |
+| **User-generated content** (posts, events, files) | No | Stays in the original language |
+| **Custom labels** (your terminology overrides) | Per-language | You provide translations for each active language |
+| **Welcome message** | Per-language | Write separate versions per language |
+| **Registration form** | Yes | Follows the visitor's detected or default language |
 
 ---
 
 ## Multi-language labels
 
-If you've customized labels (e.g., "Members" → "Scouts"), you need to provide translations for each enabled language. See [Labels](/platform/customization/labels) for details.
+If you've customized labels (e.g., "Members" → "Scouts"), you need to provide translations for each enabled language. Without a per-language override, the customized label falls back to the default language version.
+
+See [Labels & Terminology](/platform/customization/labels) for the full setup process.
 
 ---
 
-## Common scenarios
+## Real-world example
+
+> **Scenario**: A Swiss non-profit operating across French-speaking and German-speaking cantons, with 2,000 members.
+
+1. **Enable** French and German. Leave other languages disabled.
+2. **Set default** to French (60% of members are French-speaking).
+3. **Enable the language switcher** so German-speaking members can switch.
+4. **Customize labels** in both languages: "Membre" (FR) / "Mitglied" (DE) instead of "Member".
+5. **Write the welcome message** in both French and German versions.
+
+Result: French-speaking members see everything in French by default. German-speaking members switch once, and their preference is remembered. System emails (event reminders, fee notifications) go out in each member's chosen language.
+
+---
+
+## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="Our organization operates in two languages (e.g., French and German)">
-    Enable both languages and set the one with more members as default. Members choose their preference. System emails go out in each member's chosen language. For user content, you may need to post in both languages or use one common language.
+  <Accordion title="Our organization operates in two languages — how do we handle user content?">
+    Enable both languages and set the one with more members as default. System-generated content (menus, emails) translates automatically. For user content (discussion posts, event descriptions), you have two options: post in both languages, or pick one common language for shared content. Many bilingual organizations post announcements in both languages.
   </Accordion>
-
-  <Accordion title="Should I enable all supported languages?">
-    Only enable languages your members actually speak. Extra languages just clutter the language picker. You can always add more later.
-  </Accordion>
-
   <Accordion title="A member sees the wrong language">
-    They can change it from their profile menu. If new members consistently get the wrong default, check that your default language setting is correct.
+    They can change it from their **profile menu** in the top-right corner. If new members consistently get the wrong default, check that your default language setting matches the majority language. Also verify that the language switcher is enabled so members can change it themselves.
+  </Accordion>
+  <Accordion title="I changed the default language but existing members still see the old one">
+    The default language only affects new members and visitors without a saved preference. Existing members keep their previously chosen language. They need to switch manually from their profile menu.
+  </Accordion>
+  <Accordion title="Custom labels aren't showing in the correct language">
+    If you've customized labels, you need to provide a translation for each enabled language separately. Go to **Settings → Customization → Labels**, switch to the language that's missing, and add the override. Labels without an override fall back to the default language version.
   </Accordion>
 </AccordionGroup>
 
@@ -89,5 +127,6 @@ If you've customized labels (e.g., "Members" → "Scouts"), you need to provide 
 
 ## Related
 
-- [Labels](/platform/customization/labels) — Custom terminology with per-language translations
-- [Branding](/platform/organisation/branding) — Visual customization
+- [Labels & Terminology](/platform/customization/labels) — Custom terminology with per-language translations
+- [Dashboard Welcome](/platform/customization/dashboard-welcome) — Write welcome messages per language
+- [Branding](/platform/organisation/branding) — Visual customization (logos, login background)

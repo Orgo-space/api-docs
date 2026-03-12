@@ -1,30 +1,37 @@
 ---
 title: 'Dashboard Welcome'
-description: 'A personalized welcome message on the dashboard — with dynamic fields and conditional display'
+description: 'A personalized welcome message on the dashboard — with dynamic fields, rich text, and user type targeting'
 ---
 
-The Dashboard Welcome widget shows a greeting message at the top of the dashboard. Use it to welcome new members, announce important news, or guide people to take action. It supports rich text, images, buttons, and dynamic personalization fields.
+The Dashboard Welcome widget shows a greeting message at the top of the dashboard. Use it to welcome new members, announce important news, or guide people to take action. It supports rich text (HTML), images, and dynamic personalization fields — and you can target different messages to different user types.
 
 <img src="/images/platform/customization/dashboard-organizer.png" alt="Dashboard configuration with welcome widget" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+<Note>
+  Requires **Tenant Admin** permissions.
+</Note>
 
 ---
 
 ## Setting up the welcome message
 
-**Settings** → **Customization** → **Dashboard Welcome**
+**Settings → Customization → Dashboard Welcome**
 
 <Steps>
-  <Step title="Enable the widget">
-    Toggle the welcome message on.
+  <Step title="Enable the welcome message">
+    Toggle the welcome message on. You can also configure whether the message is **sticky** (stays at the top even after scrolling) or scrolls away with the rest of the dashboard.
   </Step>
   <Step title="Write your message">
-    Create the content with the rich text editor. Add a title, body text, images, and buttons.
+    Use the rich text editor to create your content. You can format text with bold, italic, headings, and links. Add an **image URL** if you want a background or featured image for the welcome section.
   </Step>
-  <Step title="Add personalization">
-    Insert dynamic fields so the message feels personal to each member.
+  <Step title="Add personalization fields">
+    Insert dynamic fields anywhere in your message so the greeting feels personal to each member. Type the field name in curly braces (e.g., `{firstName}`).
+  </Step>
+  <Step title="Target by user type (optional)">
+    Select which user types should see this message. You can create a general message for everyone, or show different messages to different user types — leaders see leadership resources while volunteers see volunteer-specific info.
   </Step>
   <Step title="Save and preview">
-    Check how it looks on the dashboard.
+    Save the message and visit the dashboard to see how it looks. Check both desktop and mobile views.
   </Step>
 </Steps>
 
@@ -34,20 +41,18 @@ The Dashboard Welcome widget shows a greeting message at the top of the dashboar
 
 Insert dynamic content that resolves to each member's data:
 
-| Field | Output |
-|-------|--------|
-| `{{firstName}}` | Member's first name |
-| `{{lastName}}` | Member's last name |
-| `{{localCenter}}` | Their Local Center name |
-| `{{memberSince}}` | Their join date |
-| `{{userType}}` | Their membership type |
+| Field | Output | Example |
+|-------|--------|---------|
+| `{firstName}` | Member's first name | "Alex" |
+| `{lastName}` | Member's last name | "Smith" |
+| `{organizationName}` | Your organization's name | "Swiss Alpine Club" |
 
 ### Example message
 
 ```
-Welcome back, {{firstName}}!
+Welcome back, {firstName}!
 
-You've been a valued member of {{localCenter}} since {{memberSince}}.
+You're a member of {organizationName}.
 Check out the upcoming events below, or head to your group to join the discussion.
 ```
 
@@ -55,20 +60,26 @@ Check out the upcoming events below, or head to your group to join the discussio
 
 ## Display options
 
-| Setting | What it does |
-|---------|-------------|
-| **Show only once** | Display the message on first login only — good for onboarding instructions |
-| **Always show** | Display every time — good for ongoing announcements |
+| Setting | What it does | Best for |
+|---------|-------------|----------|
+| **Always show** | Displays every time the member visits the dashboard | Ongoing announcements, evergreen greetings |
+| **Sticky** | Keeps the message pinned at the top while scrolling | Important announcements that shouldn't be missed |
+| **Show both general and user-type messages** | Display the general message alongside user-type-specific messages | When you have both a universal greeting and role-specific content |
 
-### Conditional display
+### Targeting by user type
 
-Show different messages based on:
+You can create multiple welcome messages, each targeted to specific user types:
 
-| Condition | Use for |
-|-----------|---------|
-| **New member** | Onboarding steps: "Complete your profile", "Join a group" |
-| **User type** | Type-specific info: leaders see leadership resources, volunteers see volunteer info |
-| **Local Center** | Location-specific announcements |
+| Target | Use for |
+|--------|---------|
+| **General (all members)** | Universal greeting or platform-wide announcements |
+| **Specific user type** (e.g., Leaders) | Leadership resources, admin instructions, management tools |
+| **Specific user type** (e.g., Volunteers) | Volunteer-specific events, training materials, sign-up links |
+| **Specific user type** (e.g., New Members) | Onboarding steps: "Complete your profile", "Join a group" |
+
+<Tip>
+  You can show both a general message and a user-type-specific message at the same time. Enable **"Show general and user type message"** in the settings to layer them.
+</Tip>
 
 ---
 
@@ -76,15 +87,66 @@ Show different messages based on:
 
 | Situation | Content |
 |-----------|---------|
-| **Launching Orgo for the first time** | "Welcome to our new platform! Here's how to get started..." with steps |
+| **Launching Orgo for the first time** | "Welcome to our new platform! Here's how to get started..." with key action steps |
 | **Onboarding new members** | "Complete your profile, join your local center, check upcoming events" |
 | **Seasonal announcement** | "Registration for Summer Camp is now open — register by March 15" |
 | **Fee reminder** | "Annual dues are due by January 31 — click here to pay" |
-| **Nothing specific** | Keep it simple: "Welcome back, {{firstName}}!" with a link to upcoming events |
+| **Nothing specific** | Keep it simple: `Welcome back, {firstName}!` with a link to upcoming events |
 
-<Tip>
-  Update the welcome message regularly. A stale "Welcome to 2024!" message in 2026 tells members no one is paying attention. Either keep it current or use generic content that's always relevant.
-</Tip>
+<Warning>
+  Update the welcome message regularly. A stale "Welcome to 2024!" message in 2026 tells members no one is paying attention. Either keep it current or use generic, timeless content like `Welcome back, {firstName}!`
+</Warning>
+
+---
+
+## Real-world example
+
+> **Scenario**: A professional association launching Orgo for 2,000 members.
+
+**General message** (all members):
+```
+Hey {firstName}! Welcome to {organizationName}'s new member portal.
+
+Here's how to get started:
+1. Complete your profile — add a photo and your contact details
+2. Join the discussion in your chapter forum
+3. Check out upcoming networking events
+
+Need help? Email support@association.org
+```
+
+**Leader-specific message** (user type: Chapter President):
+```
+Welcome back, {firstName}!
+
+As a Chapter President, you have access to:
+• Member management for your chapter
+• Chapter event creation
+• Local fee collection reports
+
+Visit Settings to configure your chapter.
+```
+
+Result: Regular members see a friendly onboarding message. Chapter presidents see both the general welcome and their specific management tools — layered for relevance without duplicating effort.
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="The welcome message isn't showing on the dashboard">
+    Check three things: (1) the welcome message is toggled **on** in Settings, (2) the Dashboard Organizer has a category that includes the welcome widget, and (3) if you've targeted specific user types, verify the member belongs to one of the selected types.
+  </Accordion>
+  <Accordion title="Dynamic fields show as raw text instead of actual values">
+    Make sure you're using single curly braces with no extra spaces: `{firstName}` not `{ firstName }`. Also verify the field name is spelled exactly as listed — field names are case-sensitive. The three supported fields are: `{firstName}`, `{lastName}`, `{organizationName}`.
+  </Accordion>
+  <Accordion title="The image isn't displaying in the welcome message">
+    The image URL must be publicly accessible over HTTPS. Test the URL by pasting it directly in your browser. If it loads there but not in the welcome message, the image hosting service may be blocking embedded requests — try uploading to a different host.
+  </Accordion>
+  <Accordion title="I want different messages for different local centers">
+    The welcome message targets by user type, not by local center. As a workaround, use `{organizationName}` to include your organization name, and create separate user-type-targeted messages for different audiences within your organization.
+  </Accordion>
+</AccordionGroup>
 
 ---
 
@@ -92,3 +154,4 @@ Show different messages based on:
 
 - [Dashboard Organizer](/platform/customization/dashboard-organizer) — Position the welcome widget on the dashboard
 - [Notifications](/platform/notifications) — For time-sensitive member communication
+- [Newsletter](/platform/newsletter) — For broadcast emails to all members

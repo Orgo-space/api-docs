@@ -1,9 +1,9 @@
 ---
 title: 'Organization Info'
-description: 'Your name, contact details, legal info, currency, and social links.'
+description: 'Your name, contact details, legal info, currency, and social links — the identity card for your entire platform.'
 ---
 
-This is your organization's identity card. Everything here — name, country, contact info, financial details — flows into invoices, emails, registration pages, and the mobile app.
+This is your organization's identity card. Everything here — name, country, contact info, financial details — flows into invoices, emails, registration pages, and the mobile app. Set this up first, before inviting members.
 
 **Settings → Organization → Organization Info**
 
@@ -12,6 +12,31 @@ This is your organization's identity card. Everything here — name, country, co
 <Note>
   Requires **Tenant Admin** permissions.
 </Note>
+
+---
+
+## Setting up your organization
+
+<Steps>
+  <Step title="Fill in basic details">
+    Enter your **Organization Name** (required) — this is the display name shown in the sidebar, emails, and public pages. Add a **Short Name** for mobile headers and compact UI areas. Select your **Country** and **Timezone** to set regional defaults for date/time formatting. Toggle **Is international** if you operate across multiple countries.
+  </Step>
+  <Step title="Choose the default language">
+    Select the platform language for new members and public pages. Available: English, French, German, Italian, Portuguese, Romanian, Slovak, Ukrainian, Bulgarian, Dutch, Spanish. Members can change their own language later.
+  </Step>
+  <Step title="Add contact information">
+    Enter your **Office Email** (required — used in automated communications), **Office Phone** (select country code first), and **Office Address**. Add your **Privacy/GDPR URL** and **Terms of Service URL** — both are shown during registration and must be publicly accessible.
+  </Step>
+  <Step title="Add social media links">
+    Paste the full URL for each platform you use: Facebook, X.com, YouTube, LinkedIn, Instagram, TikTok. Leave unused fields blank. These appear on your organization's public profile.
+  </Step>
+  <Step title="Configure financial details">
+    Select your **Currency** (the symbol auto-fills). Add your **Legal Name**, **Registration Number**, and **VAT Number** for invoices and receipts. Enter your bank **IBAN** for your primary currency, plus optional IBANs for EUR, USD, and CHF to accept multi-currency transfers.
+  </Step>
+  <Step title="Save">
+    Click the **Save** button in the sticky panel on the right. It follows you as you scroll — hit it when you're done.
+  </Step>
+</Steps>
 
 ---
 
@@ -26,10 +51,8 @@ This is your organization's identity card. Everything here — name, country, co
   </Card>
 </CardGroup>
 
-Choose a **Default language** — this sets the platform language for new members and public pages. Available: English, French, German, Italian, Portuguese, Romanian, Slovak, Ukrainian, Bulgarian.
-
 <Tip>
-  Your workspace identifier appears as a badge next to the save button (e.g., `myorg-42`). The slug is auto-generated from your organization name.
+  Your workspace identifier appears as a badge next to the save button (e.g., `myorg-42`). The slug is auto-generated from your organization name and is used in URLs.
 </Tip>
 
 ---
@@ -40,11 +63,11 @@ Choose a **Default language** — this sets the platform language for new member
 
 | Field | Details |
 |-------|---------|
-| **Office Email** | Required. Used in automated communications |
-| **Office Phone** | Select country code first, then enter the number |
-| **Office Address** | Your physical office location |
-
-Below the contact card: **Privacy/GDPR URL** and **Terms of Service URL**. Both are shown during registration — make sure they're publicly accessible.
+| **Office Email** | Required. Used in automated emails and shown in platform communications |
+| **Office Phone** | Select country code first, then enter the number. The input activates after selecting a code |
+| **Office Address** | Your physical office location — shown on invoices and public profile |
+| **Privacy/GDPR URL** | Link to your privacy policy. Shown during registration |
+| **Terms of Service URL** | Link to your terms. Shown during registration |
 
 ---
 
@@ -52,7 +75,16 @@ Below the contact card: **Privacy/GDPR URL** and **Terms of Service URL**. Both 
 
 ![Social media URLs card with fields for Facebook, X.com, Youtube, LinkedIn, Instagram, and TikTok](/images/platform/organisation/org-info-social-media.png)
 
-Paste the full URL for each platform you use. Leave the rest blank. These appear on your organization's public profile.
+Paste the full URL for each platform you use. Leave the rest blank. These appear on your organization's public profile and in the footer of some email templates.
+
+| Platform | URL format |
+|----------|-----------|
+| **Facebook** | `https://facebook.com/yourorg` |
+| **X.com** | `https://x.com/yourorg` |
+| **YouTube** | `https://youtube.com/@yourorg` |
+| **LinkedIn** | `https://linkedin.com/company/yourorg` |
+| **Instagram** | `https://instagram.com/yourorg` |
+| **TikTok** | `https://tiktok.com/@yourorg` |
 
 ---
 
@@ -70,7 +102,7 @@ Paste the full URL for each platform you use. Leave the rest blank. These appear
 </CardGroup>
 
 <Warning>
-  Get these right before enabling payments or membership fees — they appear on every invoice and donation receipt.
+  Get these right before enabling payments or membership fees — they appear on every invoice and donation receipt. Changing financial details later doesn't update already-generated documents.
 </Warning>
 
 ---
@@ -79,7 +111,22 @@ Paste the full URL for each platform you use. Leave the rest blank. These appear
 
 ![Save button with organization name and slug identifier](/images/platform/organisation/org-info-save-button.png)
 
-The **Save** button sits in a sticky panel on the right — it follows you as you scroll. Hit it when you're done.
+The **Save** button sits in a sticky panel on the right — it follows you as you scroll. **Name** and **Office Email** are required — the save will fail if either is empty.
+
+---
+
+## Real-world example
+
+> **Scenario**: A French-German bilingual non-profit based in Switzerland, launching Orgo for 1,200 members.
+
+1. **Name**: "Association Pro Nature Suisse" / **Short Name**: "APN"
+2. **Country**: Switzerland / **Timezone**: Europe/Zurich / **Is international**: No
+3. **Default language**: French (60% of members are French-speaking)
+4. **Office Email**: contact@apn.ch / **Phone**: +41 31 xxx xx xx
+5. **Privacy URL**: https://apn.ch/privacy / **Terms URL**: https://apn.ch/terms
+6. **Social**: Facebook and Instagram URLs filled in, others left blank
+7. **Currency**: CHF (Swiss Franc) / **Legal Name**: "Association Pro Nature Suisse" / **VAT**: CHE-xxx.xxx.xxx
+8. **IBANs**: Primary CHF IBAN + EUR IBAN for cross-border donations
 
 ---
 
@@ -93,9 +140,17 @@ The **Save** button sits in a sticky panel on the right — it follows you as yo
     It auto-updates when you change the currency dropdown. You can manually override it in the **Symbol** field if needed.
   </Accordion>
   <Accordion title="Changes aren't saving">
-    **Name** and **Office Email** are required. Make sure both are filled in.
+    **Name** and **Office Email** are required. Make sure both are filled in. Check that your email is in a valid format and that URLs use `https://`.
   </Accordion>
   <Accordion title="Missing IBAN fields for certain currencies">
-    IBAN fields appear dynamically based on your primary currency, plus EUR, USD, and CHF.
+    IBAN fields appear dynamically: one for your primary currency, plus EUR, USD, and CHF. If you need additional currency IBANs, change your primary currency to see the corresponding field.
   </Accordion>
 </AccordionGroup>
+
+---
+
+## Related
+
+- [Branding](/platform/organisation/branding) — Visual customization (logo, login background)
+- [Modules](/platform/organisation/modules) — Enable/disable platform features
+- [Languages](/platform/customization/languages) — Multi-language support beyond the default

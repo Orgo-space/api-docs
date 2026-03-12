@@ -62,26 +62,36 @@ Insert dynamic content that fills in automatically per member:
 
 | Placeholder | Output |
 |-------------|--------|
-| `{{member.fullName}}` | Member's full name |
-| `{{member.email}}` | Member's email |
-| `{{member.localCenter}}` | Their Local Center |
-| `{{tenant.name}}` | Your organization name |
-| `{{date.today}}` | Today's date |
-| `{{date.year}}` | Current year |
+| `{firstName}` | Member's first name |
+| `{lastName}` | Member's last name |
+| `{email}` | Member's email address |
+| `{phone}` | Member's phone number |
+| `{address}` | Member's street address |
+| `{postalCode}` | Member's postal code |
+| `{currentTown}` | Member's city/town |
+| `{dateBirth}` | Member's date of birth |
+| `{dateJoined}` | Date the member joined |
+| `{organizationName}` | Your organization's name |
+| `{organizationShortName}` | Your organization's short name |
+| `{dateSignature}` | Date of document signature |
+| `{profession}` | Member's profession |
+| `{membershipFeeAmount}` | Fee amount for the member |
+
+Custom fields are also available as `{custom_field_ID}` where `ID` is the custom field's numeric identifier.
 
 ### Example template
 
 ```
-MEMBERSHIP AGREEMENT — {{date.year}}
+MEMBERSHIP AGREEMENT
 
-I, {{member.fullName}}, agree to the terms and conditions
-of membership in {{tenant.name}}.
+I, {firstName} {lastName}, agree to the terms and conditions
+of membership in {organizationName}.
 
 By signing below, I acknowledge that I have read and
 understood the organization's code of conduct and agree
 to abide by its terms.
 
-Date: {{date.today}}
+Date: {dateSignature}
 ```
 
 ---

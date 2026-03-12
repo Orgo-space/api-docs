@@ -1,85 +1,135 @@
 ---
 title: 'Menu Organizer'
-description: 'Rearrange, hide, and rename sidebar navigation items'
+description: 'Rearrange, hide, and rename sidebar navigation items — with permission-based visibility and custom categories'
 ---
 
-The Menu Organizer lets you control what members see in the sidebar. Hide features you don't use, move important items to the top, and rename menu entries to match your terminology.
+The Menu Organizer lets you control what members see in the sidebar. Organize items into categories, hide features you don't use, reorder by drag-and-drop, and restrict visibility by role or user type.
+
+**Settings → Customization → Menu Organizer**
+
+<Note>
+  Requires **Tenant Admin** permissions.
+</Note>
 
 ---
 
-## How to use it
+## How to organize the menu
 
-**Settings** → **Customization** → **Menu Organizer**
-
-The organizer shows all menu items with drag handles and visibility toggles:
-
-- **Drag** items up or down to reorder
-- **Toggle visibility** to show or hide items
-- **Rename** items with custom labels
-- **Save** to apply changes
-
-Changes apply to all members immediately.
+<Steps>
+  <Step title="Open the Menu Organizer">
+    Go to **Settings → Customization → Menu Organizer**. You'll see your current menu structure organized into categories, each containing menu items.
+  </Step>
+  <Step title="Reorder categories and items">
+    Use the **drag handles** (the grip icon on the left) to drag categories or individual items up or down. Items at the top appear first in the sidebar.
+  </Step>
+  <Step title="Edit category names">
+    Click on a category name to edit it inline. Categories act as section headers in the sidebar — name them to help members find what they need.
+  </Step>
+  <Step title="Set permission-based visibility">
+    Each category can be restricted by role level. Click the permission dropdown on a category to choose who sees it:
+    - **All permissions** — visible to everyone
+    - **Tenant Admin** — only organization-level admins
+    - **HR** — HR managers at organization, local, or regional level
+    - **Financial** — financial managers at any level
+    - **Local Center Admin** — local group administrators
+    - **Regional Admin** — parent local center administrators
+  </Step>
+  <Step title="Filter by user type (optional)">
+    If your organization uses user types, you can restrict categories to specific user types. Only members with that user type will see the category in their sidebar.
+  </Step>
+  <Step title="Add new categories">
+    Click the **Add Category** button to create a new section. Name it and drag menu items into it.
+  </Step>
+  <Step title="Save">
+    Click **Save** to apply changes. The new menu structure appears for all members immediately.
+  </Step>
+</Steps>
 
 ---
 
 ## Default menu items
 
-| Item | What it links to |
-|------|-----------------|
-| **Dashboard** | Home page with widgets |
-| **Members** | Member directory |
-| **Groups** | Group listings |
-| **Events** | Event calendar |
-| **Discussions** | Discussion forum |
-| **Files** | Document storage |
-| **Fees** | Payment and fee management |
-| **Newsletter** | Email campaigns |
-| **Settings** | Configuration (admin only) |
+| Item | What it links to | Module required |
+|------|-----------------|-----------------|
+| **Dashboard** | Home page with widgets | Always available |
+| **Members** | Member directory | Users module |
+| **Groups** | Group listings | Groups module |
+| **Events** | Event calendar | Events module |
+| **Discussions** | Discussion forum | Discussions module |
+| **Files** | Document storage | Drive module |
+| **Fees** | Payment and fee management | Payments module |
+| **Newsletter** | Email campaigns | Newsletter module |
+| **Courses** | Learning management | Courses module |
+| **Settings** | Configuration | Admin only |
 
-Not all items appear — only enabled modules show in the menu.
+<Tip>
+  Only enabled modules show in the menu. If you don't see an expected item, check that the corresponding module is enabled in **Settings → Organization → Modules**.
+</Tip>
 
 ---
 
-## Common customizations
+## Common setups
 
 ### Minimal menu (simple community)
 
 Show only what members need:
 - Dashboard, Members, Events, Discussions
-- **Hide:** Files, Fees, Newsletter, Contacts, Issues
+- **Hide:** Files, Fees, Newsletter, Courses, Contacts
+
+A clean sidebar with 5-6 items is easier to navigate than 12.
 
 ### Events-focused (activity-heavy organization)
 
-Move Events to the top of the menu since it's the most-used feature.
+Move Events to the top of the menu since it's the most-used feature. Create a category called "Activities" and place Events, Calendar, and Groups inside it.
 
-### Renamed menu (scouting organization)
+### Role-separated menu (large organization)
 
-If you've customized [Labels](/platform/customization/labels), the menu automatically reflects those changes. "Members" becomes "Scouts", "Groups" becomes "Patrols".
+Create separate categories:
+- **"For Everyone"** — Dashboard, Events, Discussions (all permissions)
+- **"Management"** — Members, Stats, Newsletter (HR/Admin permissions only)
+- **"Finance"** — Fees, Products, Donations (Financial permissions only)
 
----
-
-## Role-based visibility
-
-Different roles see different menus:
-
-| Role | What they see |
-|------|-------------|
-| **Admin** | Full menu including Settings |
-| **Member** | Standard menu without admin items |
-
-The Menu Organizer controls the member-facing menu. Admin-only items (like Settings) are always visible to admins regardless of menu configuration.
+This way, regular members see a clean 3-item menu while admins see the full set.
 
 ---
 
-## Common scenarios
+## Restoring defaults
+
+Click the **Restore Defaults** button at the top of the Menu Organizer to reset the menu to the platform default layout. This undoes all reordering, category changes, and permission restrictions.
+
+<Warning>
+  Restoring defaults removes all your custom categories and permission settings. This cannot be undone — you'd need to reconfigure everything manually.
+</Warning>
+
+---
+
+## Real-world example
+
+> **Scenario**: A sports federation with 10,000 members — athletes, coaches, referees, and administrative staff.
+
+1. **Category: "My Sport"** (all permissions) — Dashboard, Events (renamed "Competitions"), Groups (renamed "Teams")
+2. **Category: "Community"** (all permissions) — Discussions, Files
+3. **Category: "Coaching"** (user type: Coach only) — Courses, Stats
+4. **Category: "Administration"** (HR/Admin permissions) — Members, Newsletter, Fees, Settings
+
+Result: Athletes see a simple 5-item menu. Coaches see an extra "Coaching" section. Administrators see everything including management tools.
+
+---
+
+## Troubleshooting
 
 <AccordionGroup>
   <Accordion title="Members are confused by too many menu items">
-    Hide modules you're not actively using. A clean sidebar with 5-6 items is easier to navigate than 12. You can always show hidden items later when you enable those features.
+    Hide modules you're not actively using by removing them from visible categories. You can always add them back later. Aim for 5-7 items maximum for regular members — put admin tools in permission-restricted categories.
   </Accordion>
-
   <Accordion title="I want different menus for different member types">
-    The Menu Organizer creates one menu for all members. For role-based differences, the system automatically hides items the member doesn't have access to. Admins see Settings; regular members don't.
+    Use the **permission level** and **user type filter** on each category. Create separate categories for different audiences and set the appropriate restrictions. Members only see categories they have access to.
+  </Accordion>
+  <Accordion title="A menu item disappeared for all members">
+    Check three things: (1) the item is still in a visible category, (2) the category doesn't have a restrictive permission level set, (3) the corresponding module is still enabled in **Settings → Organization → Modules**. Disabling a module hides its menu items regardless of Menu Organizer settings.
+  </Accordion>
+  <Accordion title="The menu labels aren't matching my custom terminology">
+    Menu item names follow your [Labels](/platform/customization/labels) customizations automatically. If you renamed "Members" to "Scouts" in Labels, it should appear as "Scouts" in the sidebar too. If it doesn't, try a hard refresh (Ctrl+Shift+R) to clear the browser cache.
   </Accordion>
 </AccordionGroup>
 
@@ -88,5 +138,5 @@ The Menu Organizer controls the member-facing menu. Admin-only items (like Setti
 ## Related
 
 - [Dashboard Organizer](/platform/customization/dashboard-organizer) — Customize the dashboard layout
-- [Labels](/platform/customization/labels) — Rename menu items
-- [Modules](/platform/organisation/modules) — Enable/disable features (which also controls menu visibility)
+- [Labels & Terminology](/platform/customization/labels) — Rename default terms platform-wide
+- [Modules](/platform/organisation/modules) — Enable/disable features (controls which items are available to organize)
