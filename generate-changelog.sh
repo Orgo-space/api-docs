@@ -142,14 +142,14 @@ INCLUDE only what users SEE or INTERACT with:
 
 OUTPUT FORMAT (use EXACTLY this):
 <Update label=\"$MONTH_LABEL\">
-## New Features
+**New Features**
 
-### [Feature Area]
+**[Feature Area]**
 - **Feature Title**: Clear description
 
-## Improvements
+**Improvements**
 
-### [Feature Area]
+**[Feature Area]**
 - **Improvement Title**: What got better
 
 
