@@ -1,0 +1,1167 @@
+# Per-operation code samples injected as `x-codeSamples` on each operation.
+# Mintlify renders these as language tabs in the API playground.
+#
+# Each operation includes three samples: curl, JavaScript (fetch), and PHP
+# (Guzzle). They use the same persona, host, and example bodies as
+# examples.yaml so the docs tell one consistent story.
+#
+# Persona:
+#   - Host       : https://acme.orgo.space  (tenant subdomain)
+#   - Auth env   : $ORGO_API_TOKEN (Bash) / process.env.ORGO_API_TOKEN (JS) / getenv('ORGO_API_TOKEN') (PHP)
+#   - Member     : James Patterson (id 42, email james.patterson@example.com)
+
+operations:
+
+  # ── Users ──────────────────────────────────────────────────────────────────
+
+  - operationId: api_users_post
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl -X POST https://acme.orgo.space/api/v1/users \
+            -H "Content-Type: application/json" \
+            -d '{
+              "firstName": "James",
+              "lastName": "Patterson",
+              "email": "james.patterson@example.com",
+              "plainPassword": "Sup3rSecret!2026",
+              "localCenter": "/api/v1/local_centers/4",
+              "type": "/api/v1/roles/12"
+            }'
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          const res = await fetch("https://acme.orgo.space/api/v1/users", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              firstName: "James",
+              lastName: "Patterson",
+              email: "james.patterson@example.com",
+              plainPassword: "Sup3rSecret!2026",
+              localCenter: "/api/v1/local_centers/4",
+              type: "/api/v1/roles/12",
+            }),
+          });
+          const user = await res.json();
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          use GuzzleHttp\Client;
+
+          $client = new Client(['base_uri' => 'https://acme.orgo.space']);
+          $response = $client->post('/api/v1/users', [
+              'json' => [
+                  'firstName'     => 'James',
+                  'lastName'      => 'Patterson',
+                  'email'         => 'james.patterson@example.com',
+                  'plainPassword' => 'Sup3rSecret!2026',
+                  'localCenter'   => '/api/v1/local_centers/4',
+                  'type'          => '/api/v1/roles/12',
+              ],
+          ]);
+          $user = json_decode($response->getBody(), true);
+
+  - operationId: api_users_id_get
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl https://acme.orgo.space/api/v1/users/42 \
+            -H "Api-Token: $ORGO_API_TOKEN"
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          const res = await fetch("https://acme.orgo.space/api/v1/users/42", {
+            headers: { "Api-Token": process.env.ORGO_API_TOKEN },
+          });
+          const user = await res.json();
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          $response = $client->get('/api/v1/users/42', [
+              'headers' => ['Api-Token' => getenv('ORGO_API_TOKEN')],
+          ]);
+          $user = json_decode($response->getBody(), true);
+
+  - operationId: api_users_get_collection
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl "https://acme.orgo.space/api/v1/users?status=ACTIVE&localCenter=/api/v1/local_centers/4&itemsPerPage=50" \
+            -H "Api-Token: $ORGO_API_TOKEN" \
+            -H "Accept: application/ld+json"
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          const params = new URLSearchParams({
+            status: "ACTIVE",
+            localCenter: "/api/v1/local_centers/4",
+            itemsPerPage: "50",
+          });
+          const res = await fetch(
+            `https://acme.orgo.space/api/v1/users?${params}`,
+            {
+              headers: {
+                "Api-Token": process.env.ORGO_API_TOKEN,
+                Accept: "application/ld+json",
+              },
+            },
+          );
+          const { "hydra:member": users, "hydra:totalItems": total } = await res.json();
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          $response = $client->get('/api/v1/users', [
+              'headers' => [
+                  'Api-Token' => getenv('ORGO_API_TOKEN'),
+                  'Accept'    => 'application/ld+json',
+              ],
+              'query' => [
+                  'status'       => 'ACTIVE',
+                  'localCenter'  => '/api/v1/local_centers/4',
+                  'itemsPerPage' => 50,
+              ],
+          ]);
+          $data = json_decode($response->getBody(), true);
+          $users = $data['hydra:member'];
+          $total = $data['hydra:totalItems'];
+
+  - operationId: me
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl https://acme.orgo.space/api/v1/me \
+            -H "Authorization: Bearer $ORGO_JWT"
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          const res = await fetch("https://acme.orgo.space/api/v1/me", {
+            headers: { Authorization: `Bearer ${jwt}` },
+          });
+          const me = await res.json();
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          $response = $client->get('/api/v1/me', [
+              'headers' => ['Authorization' => 'Bearer ' . $jwt],
+          ]);
+          $me = json_decode($response->getBody(), true);
+
+  - operationId: update_by_admin
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl -X PATCH https://acme.orgo.space/api/v1/users/42 \
+            -H "Api-Token: $ORGO_API_TOKEN" \
+            -H "Content-Type: application/merge-patch+json" \
+            -d '{
+              "localCenter": "/api/v1/local_centers/7",
+              "mainRole": "/api/v1/user_roles/233"
+            }'
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          const res = await fetch("https://acme.orgo.space/api/v1/users/42", {
+            method: "PATCH",
+            headers: {
+              "Api-Token": process.env.ORGO_API_TOKEN,
+              "Content-Type": "application/merge-patch+json",
+            },
+            body: JSON.stringify({
+              localCenter: "/api/v1/local_centers/7",
+              mainRole: "/api/v1/user_roles/233",
+            }),
+          });
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          $response = $client->patch('/api/v1/users/42', [
+              'headers' => [
+                  'Api-Token'    => getenv('ORGO_API_TOKEN'),
+                  'Content-Type' => 'application/merge-patch+json',
+              ],
+              'body' => json_encode([
+                  'localCenter' => '/api/v1/local_centers/7',
+                  'mainRole'    => '/api/v1/user_roles/233',
+              ]),
+          ]);
+
+  # ── Events ─────────────────────────────────────────────────────────────────
+
+  - operationId: api_events_post
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl -X POST https://acme.orgo.space/api/v1/events \
+            -H "Api-Token: $ORGO_API_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "name": "Annual General Meeting 2026",
+              "dateTimeBegin": "2026-03-15T18:00:00+00:00",
+              "dateTimeEnd": "2026-03-15T21:00:00+00:00",
+              "timezone": "America/New_York",
+              "location": "Boston Public Library, Boston MA",
+              "unit": "/api/v1/units/4",
+              "isPublic": true,
+              "maxCapacity": 200
+            }'
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          const res = await fetch("https://acme.orgo.space/api/v1/events", {
+            method: "POST",
+            headers: {
+              "Api-Token": process.env.ORGO_API_TOKEN,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: "Annual General Meeting 2026",
+              dateTimeBegin: "2026-03-15T18:00:00+00:00",
+              dateTimeEnd: "2026-03-15T21:00:00+00:00",
+              timezone: "America/New_York",
+              location: "Boston Public Library, Boston MA",
+              unit: "/api/v1/units/4",
+              isPublic: true,
+              maxCapacity: 200,
+            }),
+          });
+          const event = await res.json();
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          $response = $client->post('/api/v1/events', [
+              'headers' => ['Api-Token' => getenv('ORGO_API_TOKEN')],
+              'json' => [
+                  'name'          => 'Annual General Meeting 2026',
+                  'dateTimeBegin' => '2026-03-15T18:00:00+00:00',
+                  'dateTimeEnd'   => '2026-03-15T21:00:00+00:00',
+                  'timezone'      => 'America/New_York',
+                  'location'      => 'Boston Public Library, Boston MA',
+                  'unit'          => '/api/v1/units/4',
+                  'isPublic'      => true,
+                  'maxCapacity'   => 200,
+              ],
+          ]);
+
+  - operationId: api_events_uuid_get
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl https://acme.orgo.space/api/v1/events/01938d8e-9c4f-7c2a-b8e1-3f7a9b8c4f12 \
+            -H "Api-Token: $ORGO_API_TOKEN"
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          const uuid = "01938d8e-9c4f-7c2a-b8e1-3f7a9b8c4f12";
+          const res = await fetch(
+            `https://acme.orgo.space/api/v1/events/${uuid}`,
+            { headers: { "Api-Token": process.env.ORGO_API_TOKEN } },
+          );
+          const event = await res.json();
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          $uuid = '01938d8e-9c4f-7c2a-b8e1-3f7a9b8c4f12';
+          $response = $client->get("/api/v1/events/{$uuid}", [
+              'headers' => ['Api-Token' => getenv('ORGO_API_TOKEN')],
+          ]);
+
+  - operationId: api_events_get_collection
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl "https://acme.orgo.space/api/v1/events?status=PUBLISHED&order[dateTimeBegin]=desc" \
+            -H "Api-Token: $ORGO_API_TOKEN"
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          const params = new URLSearchParams({
+            status: "PUBLISHED",
+            "order[dateTimeBegin]": "desc",
+          });
+          const res = await fetch(
+            `https://acme.orgo.space/api/v1/events?${params}`,
+            { headers: { "Api-Token": process.env.ORGO_API_TOKEN } },
+          );
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          $response = $client->get('/api/v1/events', [
+              'headers' => ['Api-Token' => getenv('ORGO_API_TOKEN')],
+              'query' => [
+                  'status'              => 'PUBLISHED',
+                  'order[dateTimeBegin]' => 'desc',
+              ],
+          ]);
+
+  # ── Event attendance ───────────────────────────────────────────────────────
+
+  - operationId: event_attend
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl -X POST https://acme.orgo.space/api/v1/event_attends \
+            -H "Api-Token: $ORGO_API_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "event": "/api/v1/events/01938d8e-9c4f-7c2a-b8e1-3f7a9b8c4f12",
+              "user": "/api/v1/users/42",
+              "status": "NEW"
+            }'
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          const res = await fetch("https://acme.orgo.space/api/v1/event_attends", {
+            method: "POST",
+            headers: {
+              "Api-Token": process.env.ORGO_API_TOKEN,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              event: "/api/v1/events/01938d8e-9c4f-7c2a-b8e1-3f7a9b8c4f12",
+              user: "/api/v1/users/42",
+              status: "NEW",
+            }),
+          });
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          $response = $client->post('/api/v1/event_attends', [
+              'headers' => ['Api-Token' => getenv('ORGO_API_TOKEN')],
+              'json' => [
+                  'event'  => '/api/v1/events/01938d8e-9c4f-7c2a-b8e1-3f7a9b8c4f12',
+                  'user'   => '/api/v1/users/42',
+                  'status' => 'NEW',
+              ],
+          ]);
+
+  # ── Adhesion ───────────────────────────────────────────────────────────────
+
+  - operationId: adhesion_create
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl -X POST https://acme.orgo.space/api/v1/adhesion/create \
+            -H "Api-Token: $ORGO_API_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "firstName": "Sarah",
+              "lastName": "O'\''Connor",
+              "email": "sarah.oconnor@example.com",
+              "dateBirth": "1995-09-08T00:00:00+00:00",
+              "phoneNumber": "+1 617 555 0177",
+              "localCenter": "/api/v1/local_centers/4"
+            }'
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          const res = await fetch("https://acme.orgo.space/api/v1/adhesion/create", {
+            method: "POST",
+            headers: {
+              "Api-Token": process.env.ORGO_API_TOKEN,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              firstName: "Sarah",
+              lastName: "O'Connor",
+              email: "sarah.oconnor@example.com",
+              dateBirth: "1995-09-08T00:00:00+00:00",
+              phoneNumber: "+1 617 555 0177",
+              localCenter: "/api/v1/local_centers/4",
+            }),
+          });
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          $response = $client->post('/api/v1/adhesion/create', [
+              'headers' => ['Api-Token' => getenv('ORGO_API_TOKEN')],
+              'json' => [
+                  'firstName'   => 'Sarah',
+                  'lastName'    => "O'Connor",
+                  'email'       => 'sarah.oconnor@example.com',
+                  'dateBirth'   => '1995-09-08T00:00:00+00:00',
+                  'phoneNumber' => '+1 617 555 0177',
+                  'localCenter' => '/api/v1/local_centers/4',
+              ],
+          ]);
+
+  - operationId: adhesion_status_update
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl -X PATCH https://acme.orgo.space/api/v1/adhesion/91/status \
+            -H "Api-Token: $ORGO_API_TOKEN" \
+            -H "Content-Type: application/merge-patch+json" \
+            -d '{"status": "VALIDATED"}'
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          await fetch("https://acme.orgo.space/api/v1/adhesion/91/status", {
+            method: "PATCH",
+            headers: {
+              "Api-Token": process.env.ORGO_API_TOKEN,
+              "Content-Type": "application/merge-patch+json",
+            },
+            body: JSON.stringify({ status: "VALIDATED" }),
+          });
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          $client->patch('/api/v1/adhesion/91/status', [
+              'headers' => [
+                  'Api-Token'    => getenv('ORGO_API_TOKEN'),
+                  'Content-Type' => 'application/merge-patch+json',
+              ],
+              'body' => json_encode(['status' => 'VALIDATED']),
+          ]);
+
+  # ── Contacts ───────────────────────────────────────────────────────────────
+
+  - operationId: api_contacts_post
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl -X POST https://acme.orgo.space/api/v1/contacts \
+            -H "Api-Token: $ORGO_API_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "name": "Olivia Brown",
+              "email": "olivia.brown@example.com",
+              "phone": "+1 415 555 0192",
+              "localCenter": "/api/v1/local_centers/4",
+              "notes": "Met at the January outreach drive."
+            }'
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          const res = await fetch("https://acme.orgo.space/api/v1/contacts", {
+            method: "POST",
+            headers: {
+              "Api-Token": process.env.ORGO_API_TOKEN,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: "Olivia Brown",
+              email: "olivia.brown@example.com",
+              phone: "+1 415 555 0192",
+              localCenter: "/api/v1/local_centers/4",
+              notes: "Met at the January outreach drive.",
+            }),
+          });
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          $response = $client->post('/api/v1/contacts', [
+              'headers' => ['Api-Token' => getenv('ORGO_API_TOKEN')],
+              'json' => [
+                  'name'        => 'Olivia Brown',
+                  'email'       => 'olivia.brown@example.com',
+                  'phone'       => '+1 415 555 0192',
+                  'localCenter' => '/api/v1/local_centers/4',
+                  'notes'       => 'Met at the January outreach drive.',
+              ],
+          ]);
+
+  - operationId: api_contacts_get_collection
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl "https://acme.orgo.space/api/v1/contacts?isNewsletterSubscribed=true&itemsPerPage=100" \
+            -H "Api-Token: $ORGO_API_TOKEN"
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          const res = await fetch(
+            "https://acme.orgo.space/api/v1/contacts?isNewsletterSubscribed=true&itemsPerPage=100",
+            { headers: { "Api-Token": process.env.ORGO_API_TOKEN } },
+          );
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          $response = $client->get('/api/v1/contacts', [
+              'headers' => ['Api-Token' => getenv('ORGO_API_TOKEN')],
+              'query' => [
+                  'isNewsletterSubscribed' => 'true',
+                  'itemsPerPage' => 100,
+              ],
+          ]);
+
+  - operationId: api_contacts_id_patch
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl -X PATCH https://acme.orgo.space/api/v1/contacts/85 \
+            -H "Api-Token: $ORGO_API_TOKEN" \
+            -H "Content-Type: application/merge-patch+json" \
+            -d '{"isNewsletterSubscribed": true}'
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          await fetch("https://acme.orgo.space/api/v1/contacts/85", {
+            method: "PATCH",
+            headers: {
+              "Api-Token": process.env.ORGO_API_TOKEN,
+              "Content-Type": "application/merge-patch+json",
+            },
+            body: JSON.stringify({ isNewsletterSubscribed: true }),
+          });
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          $client->patch('/api/v1/contacts/85', [
+              'headers' => [
+                  'Api-Token'    => getenv('ORGO_API_TOKEN'),
+                  'Content-Type' => 'application/merge-patch+json',
+              ],
+              'body' => json_encode(['isNewsletterSubscribed' => true]),
+          ]);
+
+  # ── Contracts ──────────────────────────────────────────────────────────────
+
+  - operationId: api_contracts_post
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl -X POST https://acme.orgo.space/api/v1/contracts \
+            -H "Api-Token: $ORGO_API_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "name": "Member Agreement 2026",
+              "content": "<h1>Member Agreement</h1><p>Hello {{firstName}}...</p>",
+              "unit": "/api/v1/units/4",
+              "requiresDigitalSignature": true,
+              "displayInProfile": true
+            }'
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          await fetch("https://acme.orgo.space/api/v1/contracts", {
+            method: "POST",
+            headers: {
+              "Api-Token": process.env.ORGO_API_TOKEN,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: "Member Agreement 2026",
+              content: "<h1>Member Agreement</h1><p>Hello {{firstName}}...</p>",
+              unit: "/api/v1/units/4",
+              requiresDigitalSignature: true,
+              displayInProfile: true,
+            }),
+          });
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          $client->post('/api/v1/contracts', [
+              'headers' => ['Api-Token' => getenv('ORGO_API_TOKEN')],
+              'json' => [
+                  'name'                     => 'Member Agreement 2026',
+                  'content'                  => '<h1>Member Agreement</h1><p>Hello {{firstName}}...</p>',
+                  'unit'                     => '/api/v1/units/4',
+                  'requiresDigitalSignature' => true,
+                  'displayInProfile'         => true,
+              ],
+          ]);
+
+  - operationId: api_contract_users_post
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl -X POST https://acme.orgo.space/api/v1/contract_users \
+            -H "Api-Token: $ORGO_API_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "contract": "/api/v1/contracts/9",
+              "user": "/api/v1/users/42",
+              "validityStartDate": "2026-01-15",
+              "validityEndDate": "2027-01-14"
+            }'
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          await fetch("https://acme.orgo.space/api/v1/contract_users", {
+            method: "POST",
+            headers: {
+              "Api-Token": process.env.ORGO_API_TOKEN,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              contract: "/api/v1/contracts/9",
+              user: "/api/v1/users/42",
+              validityStartDate: "2026-01-15",
+              validityEndDate: "2027-01-14",
+            }),
+          });
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          $client->post('/api/v1/contract_users', [
+              'headers' => ['Api-Token' => getenv('ORGO_API_TOKEN')],
+              'json' => [
+                  'contract'          => '/api/v1/contracts/9',
+                  'user'              => '/api/v1/users/42',
+                  'validityStartDate' => '2026-01-15',
+                  'validityEndDate'   => '2027-01-14',
+              ],
+          ]);
+
+  # ── Products & payments ────────────────────────────────────────────────────
+
+  - operationId: api_products_post
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl -X POST https://acme.orgo.space/api/v1/products \
+            -H "Api-Token: $ORGO_API_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "name": "Annual Membership 2026",
+              "isFee": true,
+              "hasSubscription": true,
+              "monthPeriod": 12,
+              "customMinPrice": 5000
+            }'
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          await fetch("https://acme.orgo.space/api/v1/products", {
+            method: "POST",
+            headers: {
+              "Api-Token": process.env.ORGO_API_TOKEN,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: "Annual Membership 2026",
+              isFee: true,
+              hasSubscription: true,
+              monthPeriod: 12,
+              customMinPrice: 5000,
+            }),
+          });
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          $client->post('/api/v1/products', [
+              'headers' => ['Api-Token' => getenv('ORGO_API_TOKEN')],
+              'json' => [
+                  'name'            => 'Annual Membership 2026',
+                  'isFee'           => true,
+                  'hasSubscription' => true,
+                  'monthPeriod'     => 12,
+                  'customMinPrice'  => 5000,
+              ],
+          ]);
+
+  - operationId: api_product_payments_get_collection
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl "https://acme.orgo.space/api/v1/product_payments?status=SUCCESS&datePaid[after]=2026-01-01" \
+            -H "Api-Token: $ORGO_API_TOKEN"
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          const params = new URLSearchParams({
+            status: "SUCCESS",
+            "datePaid[after]": "2026-01-01",
+          });
+          const res = await fetch(
+            `https://acme.orgo.space/api/v1/product_payments?${params}`,
+            { headers: { "Api-Token": process.env.ORGO_API_TOKEN } },
+          );
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          $response = $client->get('/api/v1/product_payments', [
+              'headers' => ['Api-Token' => getenv('ORGO_API_TOKEN')],
+              'query' => [
+                  'status'           => 'SUCCESS',
+                  'datePaid[after]'  => '2026-01-01',
+              ],
+          ]);
+
+  # ── Newsletters ────────────────────────────────────────────────────────────
+
+  - operationId: api_newsletters_post
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl -X POST https://acme.orgo.space/api/v1/newsletters \
+            -H "Api-Token: $ORGO_API_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "name": "January 2026 — Boston Update",
+              "subject": "What'\''s happening at Civic Collective in January",
+              "fromName": "Civic Collective — Boston",
+              "fromEmail": "boston@example.com",
+              "unit": "/api/v1/units/4",
+              "content": "<h1>January Update</h1><p>Hello {{firstName}}...</p>"
+            }'
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          await fetch("https://acme.orgo.space/api/v1/newsletters", {
+            method: "POST",
+            headers: {
+              "Api-Token": process.env.ORGO_API_TOKEN,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: "January 2026 — Boston Update",
+              subject: "What's happening at Civic Collective in January",
+              fromName: "Civic Collective — Boston",
+              fromEmail: "boston@example.com",
+              unit: "/api/v1/units/4",
+              content: "<h1>January Update</h1><p>Hello {{firstName}}...</p>",
+            }),
+          });
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          $client->post('/api/v1/newsletters', [
+              'headers' => ['Api-Token' => getenv('ORGO_API_TOKEN')],
+              'json' => [
+                  'name'      => 'January 2026 — Boston Update',
+                  'subject'   => "What's happening at Civic Collective in January",
+                  'fromName'  => 'Civic Collective — Boston',
+                  'fromEmail' => 'boston@example.com',
+                  'unit'      => '/api/v1/units/4',
+                  'content'   => '<h1>January Update</h1><p>Hello {{firstName}}...</p>',
+              ],
+          ]);
+
+  - operationId: newsletter_send
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl -X PATCH https://acme.orgo.space/api/v1/newsletters/01938d8e-c2f4-7c2a-b8e1-3f7a9b8c4f44/send \
+            -H "Api-Token: $ORGO_API_TOKEN" \
+            -H "Content-Type: application/merge-patch+json" \
+            -d '{}'
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          const uuid = "01938d8e-c2f4-7c2a-b8e1-3f7a9b8c4f44";
+          await fetch(`https://acme.orgo.space/api/v1/newsletters/${uuid}/send`, {
+            method: "PATCH",
+            headers: {
+              "Api-Token": process.env.ORGO_API_TOKEN,
+              "Content-Type": "application/merge-patch+json",
+            },
+            body: "{}",
+          });
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          $uuid = '01938d8e-c2f4-7c2a-b8e1-3f7a9b8c4f44';
+          $client->patch("/api/v1/newsletters/{$uuid}/send", [
+              'headers' => [
+                  'Api-Token'    => getenv('ORGO_API_TOKEN'),
+                  'Content-Type' => 'application/merge-patch+json',
+              ],
+              'body' => '{}',
+          ]);
+
+  # ── Webhooks ───────────────────────────────────────────────────────────────
+
+  - operationId: api_webhook_subscriptions_post
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl -X POST https://acme.orgo.space/api/v1/webhook_subscriptions \
+            -H "Api-Token: $ORGO_API_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "url": "https://your-app.example.com/webhooks/orgo",
+              "events": ["user.created", "product_payment.created", "product_payment.updated"],
+              "secret": "whsec_a3f8b2c4d6e8f1a3b5c7d9e1f3a5b7c9",
+              "active": true
+            }'
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          await fetch("https://acme.orgo.space/api/v1/webhook_subscriptions", {
+            method: "POST",
+            headers: {
+              "Api-Token": process.env.ORGO_API_TOKEN,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              url: "https://your-app.example.com/webhooks/orgo",
+              events: ["user.created", "product_payment.created", "product_payment.updated"],
+              secret: "whsec_a3f8b2c4d6e8f1a3b5c7d9e1f3a5b7c9",
+              active: true,
+            }),
+          });
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          $client->post('/api/v1/webhook_subscriptions', [
+              'headers' => ['Api-Token' => getenv('ORGO_API_TOKEN')],
+              'json' => [
+                  'url'    => 'https://your-app.example.com/webhooks/orgo',
+                  'events' => ['user.created', 'product_payment.created', 'product_payment.updated'],
+                  'secret' => 'whsec_a3f8b2c4d6e8f1a3b5c7d9e1f3a5b7c9',
+                  'active' => true,
+              ],
+          ]);
+
+  # ── Companies ──────────────────────────────────────────────────────────────
+
+  - operationId: api_companies_post
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl -X POST https://acme.orgo.space/api/v1/companies \
+            -H "Api-Token: $ORGO_API_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "name": "Civic Collective LLC",
+              "vatNumber": "US123456789",
+              "email": "ops@example.com"
+            }'
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          await fetch("https://acme.orgo.space/api/v1/companies", {
+            method: "POST",
+            headers: {
+              "Api-Token": process.env.ORGO_API_TOKEN,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: "Civic Collective LLC",
+              vatNumber: "US123456789",
+              email: "ops@example.com",
+            }),
+          });
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          $client->post('/api/v1/companies', [
+              'headers' => ['Api-Token' => getenv('ORGO_API_TOKEN')],
+              'json' => [
+                  'name'      => 'Civic Collective LLC',
+                  'vatNumber' => 'US123456789',
+                  'email'     => 'ops@example.com',
+              ],
+          ]);
+
+  # ── Forms ──────────────────────────────────────────────────────────────────
+
+  - operationId: api_forms_post
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl -X POST https://acme.orgo.space/api/v1/forms \
+            -H "Api-Token: $ORGO_API_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "name": "AGM 2026 Registration",
+              "unit": "/api/v1/units/4",
+              "requiresAuth": false
+            }'
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          await fetch("https://acme.orgo.space/api/v1/forms", {
+            method: "POST",
+            headers: {
+              "Api-Token": process.env.ORGO_API_TOKEN,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: "AGM 2026 Registration",
+              unit: "/api/v1/units/4",
+              requiresAuth: false,
+            }),
+          });
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          $client->post('/api/v1/forms', [
+              'headers' => ['Api-Token' => getenv('ORGO_API_TOKEN')],
+              'json' => [
+                  'name'         => 'AGM 2026 Registration',
+                  'unit'         => '/api/v1/units/4',
+                  'requiresAuth' => false,
+              ],
+          ]);
+
+  # ── Discussion posts ───────────────────────────────────────────────────────
+
+  - operationId: api_posts_post
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl -X POST https://acme.orgo.space/api/v1/posts \
+            -H "Api-Token: $ORGO_API_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "discussion": "/api/v1/discussions/77",
+              "content": "Reminder: the meeting starts at 6pm Eastern."
+            }'
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          await fetch("https://acme.orgo.space/api/v1/posts", {
+            method: "POST",
+            headers: {
+              "Api-Token": process.env.ORGO_API_TOKEN,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              discussion: "/api/v1/discussions/77",
+              content: "Reminder: the meeting starts at 6pm Eastern.",
+            }),
+          });
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          $client->post('/api/v1/posts', [
+              'headers' => ['Api-Token' => getenv('ORGO_API_TOKEN')],
+              'json' => [
+                  'discussion' => '/api/v1/discussions/77',
+                  'content'    => 'Reminder: the meeting starts at 6pm Eastern.',
+              ],
+          ]);
+
+  # ── Voting ─────────────────────────────────────────────────────────────────
+
+  - operationId: api_vote_collections_post
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl -X POST https://acme.orgo.space/api/v1/vote_collections \
+            -H "Api-Token: $ORGO_API_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "name": "Board Election — Spring 2026",
+              "dateOpen": "2026-03-15T18:00:00+00:00",
+              "dateClose": "2026-03-15T21:00:00+00:00",
+              "isSecret": true,
+              "unit": "/api/v1/units/4"
+            }'
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          await fetch("https://acme.orgo.space/api/v1/vote_collections", {
+            method: "POST",
+            headers: {
+              "Api-Token": process.env.ORGO_API_TOKEN,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: "Board Election — Spring 2026",
+              dateOpen: "2026-03-15T18:00:00+00:00",
+              dateClose: "2026-03-15T21:00:00+00:00",
+              isSecret: true,
+              unit: "/api/v1/units/4",
+            }),
+          });
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          $client->post('/api/v1/vote_collections', [
+              'headers' => ['Api-Token' => getenv('ORGO_API_TOKEN')],
+              'json' => [
+                  'name'      => 'Board Election — Spring 2026',
+                  'dateOpen'  => '2026-03-15T18:00:00+00:00',
+                  'dateClose' => '2026-03-15T21:00:00+00:00',
+                  'isSecret'  => true,
+                  'unit'      => '/api/v1/units/4',
+              ],
+          ]);
+
+  # ── Invoices ───────────────────────────────────────────────────────────────
+
+  - operationId: invoice_create_for_bank_transfer
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl -X POST https://acme.orgo.space/api/v1/invoices/create-for-bank-transfer \
+            -H "Api-Token: $ORGO_API_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "productPrice": "/api/v1/product_prices/22",
+              "billingName": "James Patterson",
+              "billingAddress": "123 Beacon Street, Boston, MA 02108",
+              "billingEmail": "james.patterson@example.com"
+            }'
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          await fetch("https://acme.orgo.space/api/v1/invoices/create-for-bank-transfer", {
+            method: "POST",
+            headers: {
+              "Api-Token": process.env.ORGO_API_TOKEN,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              productPrice: "/api/v1/product_prices/22",
+              billingName: "James Patterson",
+              billingAddress: "123 Beacon Street, Boston, MA 02108",
+              billingEmail: "james.patterson@example.com",
+            }),
+          });
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          $client->post('/api/v1/invoices/create-for-bank-transfer', [
+              'headers' => ['Api-Token' => getenv('ORGO_API_TOKEN')],
+              'json' => [
+                  'productPrice'   => '/api/v1/product_prices/22',
+                  'billingName'    => 'James Patterson',
+                  'billingAddress' => '123 Beacon Street, Boston, MA 02108',
+                  'billingEmail'   => 'james.patterson@example.com',
+              ],
+          ]);
+
+  - operationId: api_invoices_get_collection
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl "https://acme.orgo.space/api/v1/invoices?status=PAID&order[dateCreated]=desc" \
+            -H "Api-Token: $ORGO_API_TOKEN"
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          const res = await fetch(
+            "https://acme.orgo.space/api/v1/invoices?status=PAID&order[dateCreated]=desc",
+            { headers: { "Api-Token": process.env.ORGO_API_TOKEN } },
+          );
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          $client->get('/api/v1/invoices', [
+              'headers' => ['Api-Token' => getenv('ORGO_API_TOKEN')],
+              'query' => [
+                  'status' => 'PAID',
+                  'order[dateCreated]' => 'desc',
+              ],
+          ]);
+
+  # ── Badges ─────────────────────────────────────────────────────────────────
+
+  - operationId: api_badges_post
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl -X POST https://acme.orgo.space/api/v1/badges \
+            -H "Api-Token: $ORGO_API_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "name": "100-Hour Volunteer",
+              "hoursThreshold": 100
+            }'
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          await fetch("https://acme.orgo.space/api/v1/badges", {
+            method: "POST",
+            headers: {
+              "Api-Token": process.env.ORGO_API_TOKEN,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: "100-Hour Volunteer",
+              hoursThreshold: 100,
+            }),
+          });
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          $client->post('/api/v1/badges', [
+              'headers' => ['Api-Token' => getenv('ORGO_API_TOKEN')],
+              'json' => [
+                  'name'           => '100-Hour Volunteer',
+                  'hoursThreshold' => 100,
+              ],
+          ]);
+
+  - operationId: api_badge_hours_post
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl -X POST https://acme.orgo.space/api/v1/badge_hours \
+            -H "Api-Token: $ORGO_API_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "user": "/api/v1/users/42",
+              "hours": 4,
+              "notes": "Booth shift at the January outreach drive."
+            }'
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          await fetch("https://acme.orgo.space/api/v1/badge_hours", {
+            method: "POST",
+            headers: {
+              "Api-Token": process.env.ORGO_API_TOKEN,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              user: "/api/v1/users/42",
+              hours: 4,
+              notes: "Booth shift at the January outreach drive.",
+            }),
+          });
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          $client->post('/api/v1/badge_hours', [
+              'headers' => ['Api-Token' => getenv('ORGO_API_TOKEN')],
+              'json' => [
+                  'user'  => '/api/v1/users/42',
+                  'hours' => 4,
+                  'notes' => 'Booth shift at the January outreach drive.',
+              ],
+          ]);
+
+  # ── Public listings (no auth) ──────────────────────────────────────────────
+
+  - operationId: get_all_public_events_from_tenant
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl https://acme.orgo.space/api/v1/public_events
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          const res = await fetch("https://acme.orgo.space/api/v1/public_events");
+          const events = await res.json();
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          $response = $client->get('/api/v1/public_events');
+          $events = json_decode($response->getBody(), true);

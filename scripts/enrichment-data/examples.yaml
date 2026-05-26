@@ -1,0 +1,1001 @@
+# Hand-curated request/response examples for the top 30 endpoints.
+#
+# These override the schema-synthesized examples for the operations listed
+# below. Synthesized examples cover the long tail of ~700 other operations;
+# this file is where we polish the operations that integration developers
+# actually hit first.
+#
+# Format:
+#   operations:
+#     - operationId: <openapi operationId>
+#       request:
+#         <content-type or "*">:
+#           summary: "<one-line label>"
+#           value: { ... JSON ... }
+#       response:
+#         "<status code>":
+#           <content-type or "*">:
+#             summary: "<one-line label>"
+#             value: { ... JSON ... }
+#
+# Persona — consistent across every example to give the docs a single story:
+#   - Tenant subdomain  : acme.orgo.space  (org: "Civic Collective")
+#   - Local centers     : Boston (id 4), Manchester (id 7), San Francisco (id 12)
+#   - Cast              : James Patterson, Emma Whitfield, Sarah O'Connor, Michael Chen
+#   - Anchor date       : 2026-01-15
+#   - Currency          : USD
+#
+# All emails use the RFC 2606 reserved domain `example.com`. Phone numbers
+# use NANP 555 reserved fictional ranges. No real PII.
+
+operations:
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Users
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  - operationId: api_users_post
+    request:
+      "*":
+        summary: "Register a new member (public, no auth)"
+        value:
+          firstName: "James"
+          lastName: "Patterson"
+          email: "james.patterson@example.com"
+          plainPassword: "Sup3rSecret!2026"
+          localCenter: "/api/v1/local_centers/4"
+          type: "/api/v1/roles/12"
+          phoneNumber: "+1 415 555 0142"
+          dateBirth: "1990-04-22T00:00:00+00:00"
+          gender: "M"
+          language: "en"
+          timezone: "America/New_York"
+          isRegisterAsMember: true
+    response:
+      "201":
+        application/json:
+          summary: "Member created, email verification pending"
+          value:
+            id: 42
+            firstName: "James"
+            lastName: "Patterson"
+            fullName: "James Patterson"
+            email: "james.patterson@example.com"
+            status: "NEW"
+            isEmailConfirmed: false
+            localCenter:
+              id: 4
+              name: "Boston"
+            type:
+              id: 12
+              name: "Member"
+            phoneNumber: "+1 415 555 0142"
+            dateBirth: "1990-04-22T00:00:00+00:00"
+            language: "en"
+            timezone: "America/New_York"
+            dateCreated: "2026-01-15T10:30:00+00:00"
+            dateUpdated: "2026-01-15T10:30:00+00:00"
+        application/ld+json:
+          summary: "Member created (JSON-LD shape with @id / @type / @context)"
+          value:
+            "@context": "/api/contexts/User"
+            "@id": "/api/v1/users/42"
+            "@type": "User"
+            id: 42
+            firstName: "James"
+            lastName: "Patterson"
+            email: "james.patterson@example.com"
+            status: "NEW"
+            isEmailConfirmed: false
+            dateCreated: "2026-01-15T10:30:00+00:00"
+
+  - operationId: api_users_id_get
+    response:
+      "200":
+        application/json:
+          summary: "Member profile (public view, same-tenant)"
+          value:
+            id: 42
+            firstName: "James"
+            lastName: "Patterson"
+            fullName: "James Patterson"
+            email: "james.patterson@example.com"
+            status: "ACTIVE"
+            isFullMember: true
+            isFeeActive: true
+            dateJoined: "2024-06-12T09:00:00+00:00"
+            localCenter:
+              id: 4
+              name: "Boston"
+            type:
+              id: 12
+              name: "Member"
+            phoneNumber: "+1 415 555 0142"
+            language: "en"
+            professionHeadline: "Lead organizer at Boston Chapter"
+            logo: "https://cdn.orgo.space/users/42/avatar.jpg"
+            dateCreated: "2024-06-12T08:55:00+00:00"
+            dateUpdated: "2026-01-15T10:30:00+00:00"
+        application/ld+json:
+          summary: "Member profile (JSON-LD)"
+          value:
+            "@context": "/api/contexts/User"
+            "@id": "/api/v1/users/42"
+            "@type": "User"
+            id: 42
+            firstName: "James"
+            lastName: "Patterson"
+            email: "james.patterson@example.com"
+            status: "ACTIVE"
+            localCenter:
+              "@id": "/api/v1/local_centers/4"
+              "@type": "LocalCenter"
+              id: 4
+              name: "Boston"
+            dateCreated: "2024-06-12T08:55:00+00:00"
+
+  - operationId: api_users_get_collection
+    response:
+      "200":
+        application/ld+json:
+          summary: "Page 1 of active members in the Boston local center"
+          value:
+            "@context": "/api/contexts/User"
+            "@id": "/api/v1/users"
+            "@type": "hydra:Collection"
+            hydra:totalItems: 1248
+            hydra:member:
+              - "@id": "/api/v1/users/42"
+                "@type": "User"
+                id: 42
+                firstName: "James"
+                lastName: "Patterson"
+                email: "james.patterson@example.com"
+                status: "ACTIVE"
+                localCenter:
+                  "@id": "/api/v1/local_centers/4"
+                  id: 4
+                  name: "Boston"
+              - "@id": "/api/v1/users/43"
+                "@type": "User"
+                id: 43
+                firstName: "Emma"
+                lastName: "Whitfield"
+                email: "emma.whitfield@example.com"
+                status: "ACTIVE"
+                localCenter:
+                  "@id": "/api/v1/local_centers/7"
+                  id: 7
+                  name: "Manchester"
+            hydra:view:
+              "@id": "/api/v1/users?page=1"
+              "@type": "hydra:PartialCollectionView"
+              hydra:first: "/api/v1/users?page=1"
+              hydra:last: "/api/v1/users?page=42"
+              hydra:next: "/api/v1/users?page=2"
+        application/json:
+          summary: "Same data, plain JSON (no envelope, no totals)"
+          value:
+            - id: 42
+              firstName: "James"
+              lastName: "Patterson"
+              email: "james.patterson@example.com"
+              status: "ACTIVE"
+              localCenter:
+                id: 4
+                name: "Boston"
+            - id: 43
+              firstName: "Emma"
+              lastName: "Whitfield"
+              email: "emma.whitfield@example.com"
+              status: "ACTIVE"
+              localCenter:
+                id: 7
+                name: "Manchester"
+
+  - operationId: me
+    response:
+      "200":
+        application/json:
+          summary: "The authenticated member's own full profile + permissions"
+          value:
+            id: 42
+            firstName: "James"
+            lastName: "Patterson"
+            email: "james.patterson@example.com"
+            status: "ACTIVE"
+            isFullMember: true
+            isFeeActive: true
+            language: "en"
+            timezone: "America/New_York"
+            roles: ["ROLE_USER", "ROLE_MEMBER"]
+            localCenter:
+              id: 4
+              name: "Boston"
+            tenant:
+              id: 1
+              name: "Civic Collective"
+              slug: "acme"
+            permissions:
+              - { domain: "HR", scope: "LOCAL", localCenter: 4 }
+              - { domain: "FINANCIAL", scope: "LOCAL", localCenter: 4 }
+            dateCreated: "2024-06-12T08:55:00+00:00"
+
+  - operationId: update_by_admin
+    request:
+      application/merge-patch+json:
+        summary: "Reassign member to a different local center"
+        value:
+          localCenter: "/api/v1/local_centers/7"
+          mainRole: "/api/v1/user_roles/233"
+    response:
+      "200":
+        application/json:
+          summary: "Updated member"
+          value:
+            id: 42
+            firstName: "James"
+            lastName: "Patterson"
+            email: "james.patterson@example.com"
+            status: "ACTIVE"
+            localCenter:
+              id: 7
+              name: "Manchester"
+            dateUpdated: "2026-01-15T10:30:00+00:00"
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Events
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  - operationId: api_events_post
+    request:
+      "*":
+        summary: "Draft a public-facing chapter meeting with ticketing"
+        value:
+          name: "Annual General Meeting 2026"
+          description: "Quarterly chapter meeting open to all members. Working-group breakouts and an open Q&A with the board."
+          dateTimeBegin: "2026-03-15T18:00:00+00:00"
+          dateTimeEnd: "2026-03-15T21:00:00+00:00"
+          timezone: "America/New_York"
+          location: "Boston Public Library, 700 Boylston St, Boston, MA 02116"
+          placeLatitude: 42.3492
+          placeLongitude: -71.0786
+          unit: "/api/v1/units/4"
+          isPublic: true
+          maxCapacity: 200
+          hasEventTicketing: true
+          requiresRegistrationForm: true
+          sendAttendanceReminder: true
+          sendOneHourReminder: true
+          status: "DRAFT"
+    response:
+      "201":
+        application/json:
+          summary: "Event created in DRAFT — publish via /event-go-publish/{uuid}"
+          value:
+            id: 12
+            uuid: "01938d8e-9c4f-7c2a-b8e1-3f7a9b8c4f12"
+            name: "Annual General Meeting 2026"
+            description: "Quarterly chapter meeting open to all members. Working-group breakouts and an open Q&A with the board."
+            slug: "annual-general-meeting-2026"
+            status: "DRAFT"
+            dateTimeBegin: "2026-03-15T18:00:00+00:00"
+            dateTimeEnd: "2026-03-15T21:00:00+00:00"
+            timezone: "America/New_York"
+            location: "Boston Public Library, 700 Boylston St, Boston, MA 02116"
+            isPublic: true
+            maxCapacity: 200
+            hasEventTicketing: true
+            unit:
+              id: 4
+              name: "Boston"
+            dateCreated: "2026-01-15T10:30:00+00:00"
+
+  - operationId: api_events_uuid_get
+    response:
+      "200":
+        application/json:
+          summary: "A published event with full settings"
+          value:
+            id: 12
+            uuid: "01938d8e-9c4f-7c2a-b8e1-3f7a9b8c4f12"
+            name: "Annual General Meeting 2026"
+            slug: "annual-general-meeting-2026"
+            description: "Quarterly chapter meeting open to all members."
+            status: "PUBLISHED"
+            dateTimeBegin: "2026-03-15T18:00:00+00:00"
+            dateTimeEnd: "2026-03-15T21:00:00+00:00"
+            timezone: "America/New_York"
+            location: "Boston Public Library, 700 Boylston St, Boston, MA 02116"
+            isPublic: true
+            maxCapacity: 200
+            attendeeCount: 87
+            hasEventTicketing: true
+            cover: "https://cdn.orgo.space/events/12/cover.jpg"
+            unit:
+              id: 4
+              name: "Boston"
+            createdBy:
+              id: 42
+              fullName: "James Patterson"
+            dateCreated: "2026-01-15T10:30:00+00:00"
+            dateUpdated: "2026-01-15T10:30:00+00:00"
+
+  - operationId: api_events_get_collection
+    response:
+      "200":
+        application/ld+json:
+          summary: "Upcoming events in this tenant, most recent first"
+          value:
+            "@context": "/api/contexts/Event"
+            "@id": "/api/v1/events"
+            "@type": "hydra:Collection"
+            hydra:totalItems: 14
+            hydra:member:
+              - "@id": "/api/v1/events/01938d8e-9c4f-7c2a-b8e1-3f7a9b8c4f12"
+                "@type": "Event"
+                id: 12
+                uuid: "01938d8e-9c4f-7c2a-b8e1-3f7a9b8c4f12"
+                name: "Annual General Meeting 2026"
+                slug: "annual-general-meeting-2026"
+                status: "PUBLISHED"
+                dateTimeBegin: "2026-03-15T18:00:00+00:00"
+                isPublic: true
+                attendeeCount: 87
+              - "@id": "/api/v1/events/01938d8e-c2f4-7c2a-b8e1-3f7a9b8c4f18"
+                "@type": "Event"
+                id: 18
+                uuid: "01938d8e-c2f4-7c2a-b8e1-3f7a9b8c4f18"
+                name: "Volunteer Workshop"
+                slug: "volunteer-workshop"
+                status: "PUBLISHED"
+                dateTimeBegin: "2026-02-20T14:00:00+00:00"
+                isPublic: false
+                attendeeCount: 24
+            hydra:view:
+              "@id": "/api/v1/events?page=1"
+              "@type": "hydra:PartialCollectionView"
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Event attendance
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  - operationId: event_attend
+    request:
+      "*":
+        summary: "RSVP a member to an event"
+        value:
+          event: "/api/v1/events/01938d8e-9c4f-7c2a-b8e1-3f7a9b8c4f12"
+          user: "/api/v1/users/42"
+          status: "NEW"
+    response:
+      "201":
+        application/json:
+          summary: "Attendance recorded; QR code generated"
+          value:
+            id: 1042
+            event:
+              id: 12
+              name: "Annual General Meeting 2026"
+            user:
+              id: 42
+              fullName: "James Patterson"
+            status: "NEW"
+            qrCode: "data:image/png;base64,iVBORw0KGgoAAAANS..."
+            dateCreated: "2026-01-15T10:30:00+00:00"
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Adhesion (membership application)
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  - operationId: adhesion_create
+    request:
+      "*":
+        summary: "Start a draft adhesion for the current user"
+        value:
+          firstName: "Sarah"
+          lastName: "O'Connor"
+          email: "sarah.oconnor@example.com"
+          dateBirth: "1995-09-08T00:00:00+00:00"
+          phoneNumber: "+1 617 555 0177"
+          address: "456 Commonwealth Ave, Boston, MA 02215"
+          professionHeadline: "Community advocate, currently freelance."
+          motivation: "I want to contribute to local civic projects and meet other organizers in Boston."
+          localCenter: "/api/v1/local_centers/4"
+    response:
+      "201":
+        application/json:
+          summary: "Adhesion created in NEW (draft) status"
+          value:
+            id: 91
+            status: "NEW"
+            firstName: "Sarah"
+            lastName: "O'Connor"
+            email: "sarah.oconnor@example.com"
+            localCenter:
+              id: 4
+              name: "Boston"
+            hasIdDocument: false
+            hasSignedDocument: false
+            canBeSubmitted: false
+            dateCreated: "2026-01-15T10:30:00+00:00"
+
+  - operationId: adhesion_status_update
+    request:
+      application/merge-patch+json:
+        summary: "HR transitions an adhesion to VALIDATED after document review"
+        value:
+          status: "VALIDATED"
+    response:
+      "200":
+        application/json:
+          summary: "Status updated; confirmation email sent automatically"
+          value:
+            id: 91
+            status: "VALIDATED"
+            firstName: "Sarah"
+            lastName: "O'Connor"
+            validatedBy:
+              id: 17
+              fullName: "Emma Whitfield"
+            dateValidated: "2026-01-15T10:30:00+00:00"
+            dateUpdated: "2026-01-15T10:30:00+00:00"
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Contacts (CRM)
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  - operationId: api_contacts_post
+    request:
+      "*":
+        summary: "Create a CRM contact from a manual entry"
+        value:
+          name: "Olivia Brown"
+          email: "olivia.brown@example.com"
+          phone: "+1 415 555 0192"
+          localCenter: "/api/v1/local_centers/4"
+          country: "/api/v1/countries/1"
+          town: "/api/v1/towns/1"
+          notes: "Met at the January outreach drive; interested in volunteering for events."
+          isEmailConfirmed: false
+    response:
+      "201":
+        application/json:
+          summary: "Contact created in MANUAL source"
+          value:
+            id: 85
+            name: "Olivia Brown"
+            email: "olivia.brown@example.com"
+            phone: "+1 415 555 0192"
+            source: "MANUAL"
+            isNewsletterSubscribed: false
+            localCenter:
+              id: 4
+              name: "Boston"
+            dateCreated: "2026-01-15T10:30:00+00:00"
+
+  - operationId: api_contacts_get_collection
+    response:
+      "200":
+        application/ld+json:
+          summary: "Contacts in this tenant — paginated, with totals"
+          value:
+            "@context": "/api/contexts/Contact"
+            "@id": "/api/v1/contacts"
+            "@type": "hydra:Collection"
+            hydra:totalItems: 642
+            hydra:member:
+              - "@id": "/api/v1/contacts/85"
+                "@type": "Contact"
+                id: 85
+                name: "Olivia Brown"
+                email: "olivia.brown@example.com"
+                source: "MANUAL"
+                isNewsletterSubscribed: false
+              - "@id": "/api/v1/contacts/86"
+                "@type": "Contact"
+                id: 86
+                name: "Daniel Kowalski"
+                email: "daniel.kowalski@example.com"
+                source: "EVENT_REGISTRATION"
+                isNewsletterSubscribed: true
+            hydra:view:
+              "@id": "/api/v1/contacts?page=1"
+              "@type": "hydra:PartialCollectionView"
+              hydra:next: "/api/v1/contacts?page=2"
+
+  - operationId: api_contacts_id_patch
+    request:
+      application/merge-patch+json:
+        summary: "Subscribe an existing contact to the newsletter and add a note"
+        value:
+          isNewsletterSubscribed: true
+          notes: "Subscribed via January AGM follow-up email."
+    response:
+      "200":
+        application/json:
+          summary: "Updated contact"
+          value:
+            id: 85
+            name: "Olivia Brown"
+            email: "olivia.brown@example.com"
+            isNewsletterSubscribed: true
+            notes: "Subscribed via January AGM follow-up email."
+            dateUpdated: "2026-01-15T10:30:00+00:00"
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Contracts
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  - operationId: api_contracts_post
+    request:
+      "*":
+        summary: "Create a membership-agreement contract template"
+        value:
+          name: "Member Agreement 2026"
+          content: |
+            <h1>Civic Collective — Member Agreement</h1>
+            <p>This agreement is entered into between Civic Collective ("the organization") and {{firstName}} {{lastName}} ("the member") on {{dateSigned}}.</p>
+            <p>The member agrees to abide by the code of conduct...</p>
+          unit: "/api/v1/units/4"
+          requiresDigitalSignature: true
+          displayInProfile: true
+    response:
+      "201":
+        application/json:
+          summary: "Contract template ready to assign via /contract_users"
+          value:
+            id: 9
+            name: "Member Agreement 2026"
+            hash: "a3f8b2c4d6e8f1a3b5c7d9e1f3a5b7c9"
+            requiresDigitalSignature: true
+            displayInProfile: true
+            unit:
+              id: 4
+              name: "Boston"
+            dateCreated: "2026-01-15T10:30:00+00:00"
+
+  - operationId: api_contract_users_post
+    request:
+      "*":
+        summary: "Assign a contract template to a specific member"
+        value:
+          contract: "/api/v1/contracts/9"
+          user: "/api/v1/users/42"
+          validityStartDate: "2026-01-15"
+          validityEndDate: "2027-01-14"
+    response:
+      "201":
+        application/json:
+          summary: "Contract instance created; pending signature"
+          value:
+            id: 63
+            contract:
+              id: 9
+              name: "Member Agreement 2026"
+            user:
+              id: 42
+              fullName: "James Patterson"
+            status: "UNSIGNED"
+            validityStartDate: "2026-01-15"
+            validityEndDate: "2027-01-14"
+            dateCreated: "2026-01-15T10:30:00+00:00"
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Products & payments
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  - operationId: api_products_post
+    request:
+      "*":
+        summary: "Create a paid annual-membership product with one price"
+        value:
+          name: "Annual Membership 2026"
+          description: "Full membership for the calendar year — includes voting rights, event access, and member newsletter."
+          isFee: true
+          isExternal: false
+          hasSubscription: true
+          monthPeriod: 12
+          cycleDay: 15
+          cycleMonth: 1
+          maxDate: "2026-12-31T23:59:59+00:00"
+          customMinPrice: 5000
+          hasCustomPriceValue: false
+          logo: "https://cdn.orgo.space/products/membership-2026.png"
+    response:
+      "201":
+        application/json:
+          summary: "Product created in DRAFT — publish via /product-go-publish/{uuid}"
+          value:
+            id: 22
+            uuid: "01938d8e-c2f4-7c2a-b8e1-3f7a9b8c4f99"
+            name: "Annual Membership 2026"
+            description: "Full membership for the calendar year — includes voting rights, event access, and member newsletter."
+            status: "DRAFT"
+            isFee: true
+            hasSubscription: true
+            monthPeriod: 12
+            currency: "USD"
+            customMinPrice: 5000
+            productPrices: []
+            dateCreated: "2026-01-15T10:30:00+00:00"
+
+  - operationId: api_product_payments_get_collection
+    response:
+      "200":
+        application/ld+json:
+          summary: "Recent payments across all products in this tenant"
+          value:
+            "@context": "/api/contexts/ProductPayment"
+            "@id": "/api/v1/product_payments"
+            "@type": "hydra:Collection"
+            hydra:totalItems: 318
+            hydra:member:
+              - "@id": "/api/v1/product_payments/107"
+                "@type": "ProductPayment"
+                id: 107
+                status: "SUCCESS"
+                amount: 5000
+                currency: "USD"
+                method: "CARD"
+                user:
+                  "@id": "/api/v1/users/42"
+                  id: 42
+                  fullName: "James Patterson"
+                product:
+                  "@id": "/api/v1/products/01938d8e-c2f4-7c2a-b8e1-3f7a9b8c4f99"
+                  id: 22
+                  name: "Annual Membership 2026"
+                datePaid: "2026-01-15T10:30:00+00:00"
+              - "@id": "/api/v1/product_payments/108"
+                "@type": "ProductPayment"
+                id: 108
+                status: "PENDING"
+                amount: 2500
+                currency: "USD"
+                method: "BANK_TRANSFER"
+                contact:
+                  "@id": "/api/v1/contacts/85"
+                  id: 85
+                  name: "Olivia Brown"
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Newsletters
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  - operationId: api_newsletters_post
+    request:
+      "*":
+        summary: "Draft a newsletter for the Boston local center"
+        value:
+          name: "January 2026 — Boston Update"
+          subject: "What's happening at Civic Collective in January"
+          fromName: "Civic Collective — Boston"
+          fromEmail: "boston@example.com"
+          replyToEmail: "boston@example.com"
+          unit: "/api/v1/units/4"
+          content: "<h1>January Update</h1><p>Hello {{firstName}}, here's what's coming up...</p>"
+    response:
+      "201":
+        application/json:
+          summary: "Newsletter created in DRAFT — schedule or send via /send"
+          value:
+            id: 44
+            uuid: "01938d8e-c2f4-7c2a-b8e1-3f7a9b8c4f44"
+            name: "January 2026 — Boston Update"
+            subject: "What's happening at Civic Collective in January"
+            status: "DRAFT"
+            fromName: "Civic Collective — Boston"
+            fromEmail: "boston@example.com"
+            unit:
+              id: 4
+              name: "Boston"
+            estimatedRecipientCount: 312
+            dateCreated: "2026-01-15T10:30:00+00:00"
+
+  - operationId: newsletter_send
+    request:
+      application/merge-patch+json:
+        summary: "Send a drafted newsletter immediately"
+        value: {}
+    response:
+      "200":
+        application/json:
+          summary: "Newsletter queued for delivery"
+          value:
+            id: 44
+            uuid: "01938d8e-c2f4-7c2a-b8e1-3f7a9b8c4f44"
+            name: "January 2026 — Boston Update"
+            status: "SENT"
+            dateSent: "2026-01-15T10:30:00+00:00"
+            estimatedRecipientCount: 312
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Webhooks
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  - operationId: api_webhook_subscriptions_post
+    request:
+      "*":
+        summary: "Subscribe to user.created and payment.updated events"
+        value:
+          url: "https://your-app.example.com/webhooks/orgo"
+          events:
+            - "user.created"
+            - "product_payment.created"
+            - "product_payment.updated"
+          secret: "whsec_a3f8b2c4d6e8f1a3b5c7d9e1f3a5b7c9"
+          active: true
+          description: "Sync new members and payments into our CRM."
+    response:
+      "201":
+        application/json:
+          summary: "Subscription created — test deliverability via /{id}/test"
+          value:
+            id: 3
+            url: "https://your-app.example.com/webhooks/orgo"
+            events:
+              - "user.created"
+              - "product_payment.created"
+              - "product_payment.updated"
+            active: true
+            description: "Sync new members and payments into our CRM."
+            successfulDeliveriesCount: 0
+            failedDeliveriesCount: 0
+            dateCreated: "2026-01-15T10:30:00+00:00"
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Companies
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  - operationId: api_companies_post
+    request:
+      "*":
+        summary: "Register a new corporate member"
+        value:
+          name: "Civic Collective LLC"
+          companyName: "Civic Collective LLC"
+          vatNumber: "US123456789"
+          address: "123 Beacon Street, Boston, MA 02108"
+          phone: "+1 617 555 0177"
+          email: "ops@example.com"
+    response:
+      "201":
+        application/json:
+          summary: "Company created; current user added as primary contact"
+          value:
+            id: 88
+            uuid: "01938d8e-c2f4-7c2a-b8e1-3f7a9b8c4f88"
+            name: "Civic Collective LLC"
+            status: "NEW"
+            vatNumber: "US123456789"
+            address: "123 Beacon Street, Boston, MA 02108"
+            phone: "+1 617 555 0177"
+            email: "ops@example.com"
+            primaryContact:
+              id: 42
+              fullName: "James Patterson"
+            memberCount: 1
+            dateCreated: "2026-01-15T10:30:00+00:00"
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Forms
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  - operationId: api_forms_post
+    request:
+      "*":
+        summary: "Create a registration form for an event"
+        value:
+          name: "AGM 2026 Registration"
+          description: "Please complete this form to confirm your attendance at the Annual General Meeting on March 15th."
+          unit: "/api/v1/units/4"
+          status: "DRAFT"
+          requiresAuth: false
+    response:
+      "201":
+        application/json:
+          summary: "Form created — add fields and publish next"
+          value:
+            id: 77
+            uuid: "01938d8e-c2f4-7c2a-b8e1-3f7a9b8c4f77"
+            name: "AGM 2026 Registration"
+            description: "Please complete this form to confirm your attendance at the Annual General Meeting on March 15th."
+            slug: "agm-2026-registration"
+            slugGo: "agm26reg"
+            status: "DRAFT"
+            requiresAuth: false
+            unit:
+              id: 4
+              name: "Boston"
+            dateCreated: "2026-01-15T10:30:00+00:00"
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Discussion posts
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  - operationId: api_posts_post
+    request:
+      "*":
+        summary: "Post a message to a discussion thread"
+        value:
+          discussion: "/api/v1/discussions/77"
+          content: "Reminder: the meeting starts at 6pm Eastern. Bring questions for the board!"
+    response:
+      "201":
+        application/json:
+          summary: "Post created"
+          value:
+            id: 512
+            content: "Reminder: the meeting starts at 6pm Eastern. Bring questions for the board!"
+            author:
+              id: 42
+              fullName: "James Patterson"
+            discussion:
+              id: 77
+            reactionCount: 0
+            replyCount: 0
+            dateCreated: "2026-01-15T10:30:00+00:00"
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Voting
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  - operationId: api_vote_collections_post
+    request:
+      "*":
+        summary: "Open a new voting session for the chapter"
+        value:
+          name: "Board Election — Spring 2026"
+          description: "Cast your vote for three open seats on the Boston chapter board."
+          dateOpen: "2026-03-15T18:00:00+00:00"
+          dateClose: "2026-03-15T21:00:00+00:00"
+          isSecret: true
+          unit: "/api/v1/units/4"
+    response:
+      "201":
+        application/json:
+          summary: "Vote collection created in DRAFT — add questions, then publish"
+          value:
+            id: 22
+            name: "Board Election — Spring 2026"
+            description: "Cast your vote for three open seats on the Boston chapter board."
+            status: "DRAFT"
+            isSecret: true
+            dateOpen: "2026-03-15T18:00:00+00:00"
+            dateClose: "2026-03-15T21:00:00+00:00"
+            voteCount: 0
+            dateCreated: "2026-01-15T10:30:00+00:00"
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Invoices
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  - operationId: invoice_create_for_bank_transfer
+    request:
+      "*":
+        summary: "Issue a bank-transfer invoice for a pending payment"
+        value:
+          productPrice: "/api/v1/product_prices/22"
+          billingName: "James Patterson"
+          billingAddress: "123 Beacon Street, Boston, MA 02108"
+          billingEmail: "james.patterson@example.com"
+          vatNumber: null
+    response:
+      "201":
+        application/json:
+          summary: "Invoice issued; PDF will be emailed to billingEmail"
+          value:
+            id: 284
+            number: "INV-2026-00284"
+            status: "PENDING"
+            amount: 5000
+            currency: "USD"
+            billingName: "James Patterson"
+            billingAddress: "123 Beacon Street, Boston, MA 02108"
+            billingEmail: "james.patterson@example.com"
+            pdfUrl: "https://cdn.orgo.space/invoices/INV-2026-00284.pdf"
+            dateCreated: "2026-01-15T10:30:00+00:00"
+            dateDue: "2026-02-14T10:30:00+00:00"
+
+  - operationId: api_invoices_get_collection
+    response:
+      "200":
+        application/ld+json:
+          summary: "Recent invoices in this tenant"
+          value:
+            "@context": "/api/contexts/Invoice"
+            "@id": "/api/v1/invoices"
+            "@type": "hydra:Collection"
+            hydra:totalItems: 318
+            hydra:member:
+              - "@id": "/api/v1/invoices/284"
+                "@type": "Invoice"
+                id: 284
+                number: "INV-2026-00284"
+                status: "PAID"
+                amount: 5000
+                currency: "USD"
+                datePaid: "2026-01-18T14:22:00+00:00"
+              - "@id": "/api/v1/invoices/285"
+                "@type": "Invoice"
+                id: 285
+                number: "INV-2026-00285"
+                status: "PENDING"
+                amount: 2500
+                currency: "USD"
+                dateDue: "2026-02-15T10:30:00+00:00"
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Badges and hours
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  - operationId: api_badges_post
+    request:
+      "*":
+        summary: "Create an hours-based volunteer badge"
+        value:
+          name: "100-Hour Volunteer"
+          description: "Awarded automatically when a member logs 100 hours of volunteer time."
+          hoursThreshold: 100
+          logo: "https://cdn.orgo.space/badges/100h-volunteer.png"
+    response:
+      "201":
+        application/json:
+          summary: "Badge created — will auto-award as members cross the threshold"
+          value:
+            id: 14
+            name: "100-Hour Volunteer"
+            description: "Awarded automatically when a member logs 100 hours of volunteer time."
+            hoursThreshold: 100
+            logo: "https://cdn.orgo.space/badges/100h-volunteer.png"
+            assigneeCount: 0
+            dateCreated: "2026-01-15T10:30:00+00:00"
+
+  - operationId: api_badge_hours_post
+    request:
+      "*":
+        summary: "Log 4 hours of volunteer time for a member"
+        value:
+          user: "/api/v1/users/42"
+          hours: 4
+          notes: "Booth shift at the January outreach drive."
+    response:
+      "201":
+        application/json:
+          summary: "Hours logged; auto-evaluates hours-based badges"
+          value:
+            id: 1024
+            user:
+              id: 42
+              fullName: "James Patterson"
+            hours: 4
+            notes: "Booth shift at the January outreach drive."
+            totalUserHours: 24
+            newBadgesAwarded: []
+            dateCreated: "2026-01-15T10:30:00+00:00"
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Public listings (no auth)
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  - operationId: get_all_public_events_from_tenant
+    response:
+      "200":
+        application/json:
+          summary: "Public-facing events for the tenant landing page"
+          value:
+            - id: 12
+              uuid: "01938d8e-9c4f-7c2a-b8e1-3f7a9b8c4f12"
+              name: "Annual General Meeting 2026"
+              slug: "annual-general-meeting-2026"
+              description: "Quarterly chapter meeting open to all members."
+              dateTimeBegin: "2026-03-15T18:00:00+00:00"
+              dateTimeEnd: "2026-03-15T21:00:00+00:00"
+              location: "Boston Public Library, 700 Boylston St, Boston, MA 02116"
+              cover: "https://cdn.orgo.space/events/12/cover.jpg"
+              attendeeCount: 87
+              maxCapacity: 200
+              isPublic: true
+              hasEventTicketing: true
+              registrationUrl: "https://acme.orgo.space/events/annual-general-meeting-2026"

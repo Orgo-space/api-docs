@@ -1,0 +1,319 @@
+# Tag descriptions injected into the OpenAPI `tags:` array.
+#
+# Each tag corresponds to one entity in the system. Descriptions explain what
+# the entity *is* (not just what its endpoints do), how it fits into other
+# entities, and — where the API surfaces an explicit state machine — what its
+# lifecycle looks like. This is the level of context an LLM (or a developer
+# new to Orgo) needs to make sensible calls without reading the entire spec.
+#
+# Pages where these surface:
+#   - The "Tags" panel of every operation in the playground
+#   - The `/api/v1/<tag>/<slug>.md` per-page mirrors that LLM tools ingest
+#
+# Voice: concrete, second-person, no marketing copy. Same voice as the
+# Platform docs (platform/api.mdx, platform/oauth.mdx).
+
+# ── People & accounts ────────────────────────────────────────────────────────
+
+User: |
+  A person with a full account in the organization. Created when someone signs
+  up through the registration form, when an admin registers them, or when an
+  adhesion (membership application) is approved. Users hold roles, permissions,
+  contracts, fees, family relationships, badges, and event attendances.
+
+  Lifecycle: `NEW` (created, awaiting email verification) → `ACTIVE` (verified,
+  fully usable) → `INACTIVE` (soft-deleted or self-resigned). Admins with
+  `HR_LOCAL` or `HR_TENANT` permission can transition users through these
+  states; users themselves can update their own profile fields and password.
+
+Contact: |
+  A person tracked by the organization who does not have a member account —
+  prospects, event attendees, newsletter subscribers, donors. Contacts share
+  most profile fields with Users (email, phone, custom fields) but cannot log
+  in. A Contact can be converted into a User by initiating an adhesion or
+  sending an invitation. Contacts are scoped to a local center and protected
+  by the same tenant-isolation rules as Users.
+
+Company: |
+  An organizational member — a business, partner organization, or sponsor that
+  pays membership separately from individual users. Companies have their own
+  invitations, members (users with company roles), invoices, payment plans, and
+  bank-transfer flows. Lifecycle: `NEW` → `ACTIVE` → `DELETED` (soft, when the
+  last member leaves). Most company operations require `COMPANY_*` permissions
+  that the primary contact or tenant admin holds.
+
+FamilyEntity: |
+  A household grouping that links related Users — typically a parent account
+  with linked children or a couple sharing a single membership. Family
+  membership can affect fees (e.g., one fee covers the whole household) and
+  determines whose data a guardian account can edit. Created by the family
+  primary, joined via invitation. Has its own delete endpoint distinct from
+  the standard DELETE (preserves member accounts).
+
+ProfileTag: |
+  A free-form label that admins attach to Users or Contacts for segmentation —
+  for example "donor 2026", "speaker", "vegetarian". Tags are tenant-scoped
+  and reusable. Used heavily by Newsletter audience filters and event-invite
+  segments.
+
+UserConnection: |
+  A peer-to-peer relationship between two Users in the same tenant — the
+  "follow" / "friend" graph that powers the member directory's social
+  features. Lifecycle: `PENDING` (request sent) → `ACCEPTED` (mutual) or
+  rejected (deleted). Both sides can list incoming, outgoing, and accepted
+  connections.
+
+UserRole: |
+  A role assignment that grants a User permissions within a specific Unit
+  (local center, role group, project, or the whole tenant). The same User can
+  hold many UserRoles across different units. Creating or deleting a UserRole
+  is how admins promote, demote, or reorganize the team. See the
+  [Permissions](https://orgo.space/docs/platform/permissions) doc for the
+  domain × scope matrix.
+
+Identity: |
+  An identity-verification record on a User or anonymous applicant — the
+  government ID document, OCR-extracted personal data, and validation status.
+  Created either during an adhesion (upload-id step) or by an admin marking
+  someone as verified. Lifecycle: `PENDING` → `VALIDATED` (admin-approved) or
+  `REJECTED`. Reopening is possible. See
+  [Identity Validation](https://orgo.space/docs/platform/identity-validation).
+
+# ── Membership lifecycle ─────────────────────────────────────────────────────
+
+Adhesion: |
+  A membership application. The applicant fills in personal data, uploads an
+  ID document and a signed adhesion form, optionally records a video answer,
+  and submits it for HR review. HR runs an interview, then transitions the
+  application to a final state — which in turn assigns the `MEMBER` role and
+  activates the fee.
+
+  Lifecycle: `NEW` (draft, editable) → `PENDING` (submitted) → `VALIDATED`
+  (data verified) → `INTERVIEWED` (interview complete) → `SUCCESS` (member
+  activated) or `REJECTED` (terminal). Each transition can trigger emails
+  (confirmation, rejection, welcome) and side effects (role assignment, fee
+  start).
+
+Contract: |
+  A reusable contract template — membership agreement, NDA, code of conduct,
+  parental-consent form. Defines the content, placeholder fields (resolved
+  per-signer from User profile and custom fields), signature requirements
+  (member-only, admin co-sign, default-admin-signature), and which units the
+  contract applies to. Editing a contract can invalidate existing signatures
+  via the request-resigning endpoint.
+
+ContractUser: |
+  An individual instance of a Contract assigned to a specific User or Contact.
+  Holds signature status, the rendered placeholder values, the signed PDF,
+  and validity dates. Lifecycle: `UNSIGNED` → `SIGNED` (with or without
+  digital signature) → optionally `EXPIRED`. Admins can mark contracts as
+  signed manually or apply a default-admin signature in bulk.
+
+SubscriptionProfile: |
+  A recurring billing relationship — typically a member's annual membership
+  fee or a company's quarterly invoice. Captures the price, the period, the
+  next due date, and the payment method. Admins can pre-create pending
+  subscriptions and accept them once payment clears. External subscription
+  profiles cover Stripe Billing subscriptions managed outside Orgo.
+
+# ── Organizational structure ─────────────────────────────────────────────────
+
+LocalCenter: |
+  A geographic or operational chapter of the organization — a city branch, a
+  university campus, a regional office. Local centers carry their own admins,
+  fees, members, events, and contracts. Most permission scopes (`HR_LOCAL`,
+  `FINANCIAL_LOCAL`, `ADMIN_LOCAL`) are bounded to a specific local center.
+  Has a public listing endpoint and a map endpoint for the public-facing
+  "find your local center" page.
+
+Unit: |
+  A generic organizational grouping — the umbrella under which local centers,
+  role groups (auto-populated by role), and private project teams all live.
+  Mostly used by the role-assignment and visit-tracking endpoints; most
+  integrations work with the more specific LocalCenter and Group entities
+  instead.
+
+ProfessionType: |
+  A profession/industry classification used on User and Contact profiles for
+  segmentation and reporting (e.g., "Engineering", "Healthcare", "Education").
+  Tenant-scoped; admins can enable or disable specific values for their org
+  through bulk-toggle endpoints.
+
+# ── Events ───────────────────────────────────────────────────────────────────
+
+Event: |
+  A scheduled gathering — meeting, conference, workshop, social, vote
+  assembly. Owns its public landing page, ticket types, registration form,
+  attendees, capacity rules, and post-event reports. Lifecycle: `DRAFT`
+  (visible only to organizers) → `PUBLISHED` (visible per audience rules) →
+  effectively closed once the start date passes. Events can be duplicated,
+  saved as templates, and chained into series (sub-events).
+
+EventAttend: |
+  A registration record linking a User or Contact to an Event. Carries the
+  registration form answers, ticket type, payment status, guest tickets,
+  check-in state, and any QR-code identifier. Lifecycle: `NEW` (registered)
+  → `CONFIRMED` (admin-approved if required) → checked-in at the door.
+  External invites (for non-Users) generate Contact records on confirmation.
+
+EventTemplate: |
+  A saved event blueprint used to spin up similar events quickly — recurring
+  weekly meetings, annual fundraisers, standard workshop formats. Stores the
+  same fields as Event minus the date. The create-from-template endpoint
+  clones it into a new draft Event ready for date editing.
+
+# ── Payments and billing ─────────────────────────────────────────────────────
+
+Product: |
+  Anything you can sell or collect money for — membership fees, event tickets,
+  merchandise, course enrollment fees, donations. Each Product has one or
+  more ProductPrices (defining amount, currency, billing period) and a public
+  payment page. Lifecycle: `DRAFT` → `PUBLISHED` (live and purchasable) →
+  `ARCHIVED` (hidden from listings, existing payments preserved). Requires
+  `FINANCIAL_LOCAL` or `FINANCIAL_TENANT` to manage.
+
+ProductPayment: |
+  A single payment instance against a Product — one ticket purchase, one
+  membership-fee period, one donation, one bundle slot. Created by Stripe
+  checkout, manual entry, bank transfer, or bundle membership. Lifecycle:
+  `PENDING` (awaiting capture) → `SUCCESS` (paid) or `REJECTED` /
+  `CANCELED`. Refunds, comment annotations, and proof uploads each have
+  dedicated endpoints.
+
+Invoice: |
+  A formal billing document issued for one or more ProductPayments — usually
+  for bank-transfer flows, company memberships, or any payment that needs a
+  PDF record for accounting. Lifecycle: `PENDING` → `PAID` / `VOID`. Carries
+  cancel, mark-as-paid, refund, void, send-email, and download endpoints.
+
+FeePayment: |
+  A simplified, hand-recorded fee receipt — the cash-and-paper alternative to
+  the full ProductPayment + Invoice flow. Used mostly by treasurers entering
+  payments collected outside Orgo. Carries an approval endpoint for the
+  reviewer workflow.
+
+# ── Communication ────────────────────────────────────────────────────────────
+
+Newsletter: |
+  An email campaign — composed in the drag-and-drop builder, segmented by
+  audience filter, scheduled or sent immediately, and tracked for opens /
+  clicks. Lifecycle: `DRAFT` → `SCHEDULED` or `SENT`. Has clone, clone-to-non-
+  openers, and audience-statistics endpoints. Public preview pages let
+  recipients view the email in a browser.
+
+Post: |
+  A message in a Discussion thread — top-level posts, replies, reactions, and
+  moderation actions. Posts can be reported, removed, or moderated by users
+  with the right permission. Reactions are tallied per post and exposed via a
+  dedicated endpoint.
+
+Discussion: |
+  A thread of conversation within a DiscussionNamespace. Owned by a Unit
+  (group, local center, project), visible per the unit's privacy rules.
+  Reuses Post entities for the actual messages.
+
+DiscussionNamespace: |
+  A category that groups discussions — for example "Announcements",
+  "General", "Volunteers". Each namespace has its own permission model and
+  surfaces the latest discussion via a dedicated endpoint.
+
+EmailTemplate: |
+  A customizable transactional email — registration confirmation, payment
+  receipt, contract-signing reminder, etc. Templates ship with default
+  content per tenant; admins can override the subject, body, and locale.
+  Send-test and preview endpoints help verify changes before they go live.
+
+Widget: |
+  An embeddable subscription / signup widget that lives inside a Newsletter
+  or on an external page. Captures Contacts (with their newsletter-opt-in
+  state) and feeds them into the audience pool. Has its own subscribers
+  listing and public render endpoint.
+
+# ── Forms and data collection ────────────────────────────────────────────────
+
+Form: |
+  A custom form — registration form, survey, intake questionnaire, event
+  RSVP form. Renders a public page that anyone with the link can fill in;
+  submissions become FormSubmission records. Forms can resolve a "slug-go"
+  short link, recalculate statistics, and export submissions as a table.
+
+# ── Files and drives ─────────────────────────────────────────────────────────
+
+Drive: |
+  A shared folder / file storage namespace — like a Google Drive folder
+  scoped to a Unit or User. Supports browsing, search ("latest" and full-
+  text), and sharing/revoking access. Each Drive entry is either a folder
+  or a file; files are stored in S3.
+
+# ── Learning ─────────────────────────────────────────────────────────────────
+
+CourseEnrollment: |
+  A User's enrollment in a Course — including progress through lessons,
+  quiz scores, and completion status. Created when a user self-enrolls or
+  when an admin enrolls them (with optional notification). Exporting
+  enrollments produces a CSV for reporting.
+
+CourseLesson: |
+  A unit of course content — text, video, downloadable media. Lessons are
+  ordered within a Course and surfaced sequentially to the enrolled User.
+  Media attachments use the standard Media + S3 storage.
+
+CourseQuiz: |
+  An assessment attached to a Course — multiple-choice questions with a
+  pass/fail threshold. Quiz results are recorded per CourseEnrollment and
+  can be exported for the course administrator.
+
+# ── Governance ───────────────────────────────────────────────────────────────
+
+VoteCollection: |
+  An e-voting session — board elections, by-law changes, motion votes. A
+  VoteCollection groups one or more Votes (individual questions). Lifecycle:
+  `DRAFT` → `PUBLISHED` (voters notified) → `OPEN` (accepting ballots) →
+  `CLOSED` (tallied) → `ARCHIVED`. Has clone, archive, close, and CSV-export
+  endpoints.
+
+# ── Productivity ─────────────────────────────────────────────────────────────
+
+Project: |
+  A team workspace — a working group, a campaign, a one-off initiative. Owns
+  its members, tasks, drive folder, and discussion namespace. Lifecycle is
+  open-ended — projects stay around until explicitly deleted.
+
+Task: |
+  A to-do item — usually inside a Project, but standalone tasks are
+  supported. Carries assignee, due date, status, and a comment thread.
+  Multi-assignee tasks fan out per user.
+
+Workflow: |
+  An automation rule — "when X happens, do Y" with optional conditions and
+  delays. Triggers include user-joined, payment-received, contract-signed,
+  course-completed, identity-validated, and user-inactivity events. Actions
+  include sending emails, assigning roles, updating fields, and creating
+  tasks. Workflows can be activated, deactivated, duplicated, and test-run
+  against sample data.
+
+# ── Onboarding queue ─────────────────────────────────────────────────────────
+
+WaitlistEntry: |
+  A pending application against a closed-registration event or organization
+  — for cases where membership is capped or invitation-only. Lifecycle:
+  `PENDING` → `APPROVED` (admitted, often with an invitation email) or
+  rejected (withdrawn or denied). Supports bulk approve, reject, notify, and
+  priority-reorder for queue management.
+
+# ── Admin surface ────────────────────────────────────────────────────────────
+
+DashboardWelcomeMessage: |
+  A configurable banner / message that appears at the top of the member
+  dashboard — used for announcements, onboarding tips, or seasonal
+  campaigns. Tenant-scoped, can be targeted per user via the current_user
+  endpoint.
+
+WebhookSubscription: |
+  A registered HTTP endpoint that receives event notifications from Orgo.
+  Subscribers pick which event types they care about (`user.created`,
+  `product_payment.created`, etc. — see
+  [Webhooks](https://orgo.space/docs/api-reference/concepts/webhooks)),
+  optionally set a secret for signature verification, and get a delivery-
+  log endpoint for debugging. Test-firing a subscription helps verify
+  end-to-end connectivity before going live.

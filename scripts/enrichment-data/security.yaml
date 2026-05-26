@@ -1,0 +1,146 @@
+# Security scheme declarations and per-route overrides for the OpenAPI spec.
+#
+# The postprocess script:
+#   1. Replaces `components.securitySchemes` with the `schemes:` block below.
+#   2. Sets the top-level `security:` to `default:` — every operation
+#      inherits this unless explicitly overridden.
+#   3. For each entry under `public:`, marks matching operations as
+#      `security: []` (no auth required).
+#
+# Public-route entries may be:
+#   - a plain string  -> matched as an fnmatch pattern against the path;
+#                        all HTTP methods on that path become anonymous
+#   - a mapping       -> { path: "...", methods: [post, get] };
+#                        only the listed methods become anonymous
+#
+# IMPORTANT: Be conservative when adding patterns. Symfony's firewall may
+# pass a request through unauthenticated (e.g., `^/api/v1/users` matches
+# everything starting with `/api/v1/users`), but the controller may still
+# enforce auth via CustomVoter or IsGranted. Marking such endpoints as
+# `security: []` here would mislead clients into omitting the Api-Token /
+# JWT header and seeing 403s in practice.
+#
+# When in doubt, leave the endpoint out — it will inherit the JWT/ApiToken
+# default, which is the correct expectation for almost every call.
+
+schemes:
+  ApiToken:
+    type: apiKey
+    in: header
+    name: Api-Token
+    description: |
+      Server-to-server authentication. Generate a token in the admin UI at
+      **Settings → Developers → API Access**. Send the raw token in the
+      `Api-Token` header — there is no `Bearer` prefix.
+
+      Tokens can be marked read-only at creation time, in which case the API
+      rejects any non-GET request with `403 Forbidden`.
+
+  JWT:
+    type: http
+    scheme: bearer
+    bearerFormat: JWT
+    description: |
+      Session JWT obtained from `POST /api/v1/login-check` (email + password)
+      or `POST /api/v1/verify-login-otp` (one-time password). Send as
+      `Authorization: Bearer <jwt>`. Tokens are valid for approximately 11
+      days and are tied to the tenant the login was made against.
+
+  OAuth2:
+    type: oauth2
+    description: |
+      Authorization Code flow with optional PKCE. Use this when integrating
+      "Log in with Orgo" into a third-party app. See
+      [OAuth Server](https://orgo.space/docs/platform/oauth) for setup.
+    flows:
+      authorizationCode:
+        authorizationUrl: https://app.orgo.space/oauth/authorize
+        tokenUrl: https://app.orgo.space/oauth/token
+        refreshUrl: https://app.orgo.space/oauth/token
+        scopes:
+          profile: Name and profile picture
+          email: Email address
+          groups: Group and local-center memberships
+          roles: User roles and permissions
+
+  ContactHash:
+    type: apiKey
+    in: header
+    name: X-Contact-Hash
+    description: |
+      Magic-link authentication for unauthenticated contacts opening an event
+      invitation they received by email. The hash is embedded in the link Orgo
+      sends. Used mostly by the event-app surface; not relevant to most
+      server-to-server integrations.
+
+# Default security applied to every operation that is not in `public:`.
+# Any one of these is sufficient.
+default:
+  - { ApiToken: [] }
+  - { JWT: [] }
+
+# Endpoints callable without authentication. Verified against the OpenAPI spec
+# AND the Symfony firewall (api/config/packages/security.yaml) AND, where
+# relevant, the controller-level auth.
+public:
+  # ── Reference data (read-only public lookups) ──────────────────────────────
+  - /api/v1/towns
+  - /api/v1/towns/{id}
+  - /api/v1/counties
+  - /api/v1/counties/{id}
+  - /api/v1/countries
+  - /api/v1/countries/{id}
+  - /api/v1/profession_types
+  - /api/v1/profession_types/{id}
+  - /api/v1/event_types
+  - /api/v1/event_types/{id}
+
+  # ── Public event surface (event landing pages, attendee-facing) ────────────
+  - /api/v1/public_events
+  - /api/v1/get_public_event_anonymous/{uuid}
+
+  # ── Public form surface (form landing pages, anonymous submissions) ────────
+  - /api/v1/get_public_form_anonymous/{uuid}
+  - /api/v1/resolve-slug-go/{slugGo}
+
+  # ── Public local-center surface (find-your-center map) ─────────────────────
+  - /api/v1/local-centers-public
+  - /api/v1/local-centers-map-public
+  - /api/v1/local_centers/{id}
+
+  # ── Public product / payment-page surface (donation pages, public products)─
+  - /api/v1/product/public/{uuid}
+  - /api/v1/product_by_slug
+  - /api/v1/product_prices/public/{id}
+  - /api/v1/get-payment-page-info/{uuid}
+  - /api/v1/get-payment-page-comments/{uuid}
+  - /api/v1/get-payment-page-payments/{uuid}
+
+  # ── Public newsletter / widget surface ─────────────────────────────────────
+  - /api/v1/newsletters_public/{uuid}
+  - /api/v1/get-newsletter-widget/{uuid}
+
+  # ── Waitlist self-service ─────────────────────────────────────────────────
+  - /api/v1/waitlist_entries/public/{uuid}
+  - /api/v1/waitlist_entries/withdraw/{uuid}
+
+  # ── Company-invitation self-service (open by hash) ─────────────────────────
+  - /api/v1/company-invitation/{hash}
+  - /api/v1/company-invitation/{hash}/accept
+  - /api/v1/company-invitation/{hash}/decline
+
+  # ── Identity flows reachable without an account ────────────────────────────
+  - /api/v1/identity/create/anonymous
+  - /api/v1/identity/upload-media-back
+
+  # ── Pending-subscription surface (Stripe external checkout landing pages) ──
+  - /api/v1/subscription/get-pending/{id}
+  - /api/v1/subscription/external/create-pending
+
+  # ── User self-registration (POST only — the GET list requires auth) ────────
+  - path: /api/v1/users
+    methods: [post]
+
+  # Note: many controller endpoints (e.g. /api/v1/users/{id}/*) also pass the
+  # Symfony firewall but are guarded by CustomVoter inside the controller, so
+  # they are intentionally NOT listed here — callers still need to authenticate.
