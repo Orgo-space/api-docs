@@ -25,6 +25,11 @@ Passes (in order):
    10. Inject tag descriptions from enrichment-data/tags.yaml
    11. Stamp `x-orgo-postprocessed: <ISO timestamp>` in info for traceability
 
+  Size reduction (new)
+   12. Drop `application/ld+json` and `multipart/form-data` content variants
+       and any schema left unreferenced, so endpoint pages stay small enough
+       that agents do not truncate them
+
 Usage:
   ./postprocess-openapi.py path/to/openapi.json
 
@@ -606,6 +611,81 @@ if webhooks_block:
 info["x-orgo-postprocessed"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
 
 
+# ─── Pass 12: prune redundant content-type variants ──────────────────────────
+#
+# API Platform emits every operation three times over: application/json,
+# application/ld+json and multipart/form-data, each with its own generated
+# schema variant (User, User.jsonld, User.multipart, plus one per
+# serialization group). That tripling is what pushes endpoint pages to ~2MB of
+# HTML / 169K of markdown, past the point where agents truncate them.
+#
+# We keep application/json (and merge-patch/csv, which are not duplicates) and
+# drop the two variants. This extends the same reasoning the response-side
+# multipart guard above already applies. The alternative content types remain
+# documented in api-reference/concepts/content-types.
+#
+# A content-type is only removed when at least one other remains, so an
+# endpoint that *only* accepts multipart (file upload) keeps its schema.
+
+PRUNE_CONTENT_TYPES = {"application/ld+json", "multipart/form-data"}
+
+content_types_pruned = 0
+
+
+def prune_content_types(node):
+    global content_types_pruned
+    if isinstance(node, dict):
+        block = node.get("content")
+        if isinstance(block, dict):
+            survivors = [m for m in block if m not in PRUNE_CONTENT_TYPES]
+            if survivors:
+                for media in [m for m in block if m in PRUNE_CONTENT_TYPES]:
+                    del block[media]
+                    content_types_pruned += 1
+        for value in node.values():
+            prune_content_types(value)
+    elif isinstance(node, list):
+        for item in node:
+            prune_content_types(item)
+
+
+prune_content_types(spec.get("paths", {}))
+prune_content_types(spec.get("webhooks", {}))
+
+# Drop schemas that nothing references any more. Walk transitively: a surviving
+# schema may itself point at others.
+all_schemas = components.get("schemas", {})
+
+
+def collect_refs(node, into):
+    if isinstance(node, dict):
+        ref = node.get("$ref")
+        if isinstance(ref, str) and ref.startswith("#/components/schemas/"):
+            into.add(ref.rsplit("/", 1)[-1])
+        for value in node.values():
+            collect_refs(value, into)
+    elif isinstance(node, list):
+        for item in node:
+            collect_refs(item, into)
+
+
+reachable: set[str] = set()
+collect_refs(spec.get("paths", {}), reachable)
+collect_refs(spec.get("webhooks", {}), reachable)
+frontier = set(reachable)
+while frontier:
+    nxt: set[str] = set()
+    for name in frontier:
+        if name in all_schemas:
+            collect_refs(all_schemas[name], nxt)
+    frontier = nxt - reachable
+    reachable |= nxt
+
+schemas_before = len(all_schemas)
+components["schemas"] = {k: v for k, v in all_schemas.items() if k in reachable}
+schemas_pruned = schemas_before - len(components["schemas"])
+
+
 # ─── Write back ──────────────────────────────────────────────────────────────
 
 OPENAPI_PATH.write_text(json.dumps(spec, ensure_ascii=False, separators=(",", ":")))
@@ -631,6 +711,8 @@ print(f"examples hand-curated (req)  : {example_stats['manual_req']}")
 print(f"examples hand-curated (resp) : {example_stats['manual_resp']}")
 print(f"x-codeSamples injected       : {code_samples_injected}")
 print(f"webhook events declared      : {webhook_schemas_added}")
+print(f"content variants pruned      : {content_types_pruned}")
+print(f"schemas pruned (unreferenced): {schemas_pruned} of {schemas_before}")
 print(f"file size                    : {OPENAPI_PATH.stat().st_size:,} bytes")
 if stale_examples:
     print(f"\n[stale] examples.yaml references operationIds not in the spec:")
