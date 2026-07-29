@@ -47,7 +47,7 @@ This is the standard OAuth 2.0 Authorization Code flow.
 
 ## Setting up an OAuth application
 
-**Settings** → **Developers** → **OAuth Applications** → **Create Application**
+**Developer** → **Apps** → **Create Application**
 
 <img src="/images/platform/developers/oauth-apps.png" alt="OAuth Apps management page showing configured applications" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -56,19 +56,52 @@ This is the standard OAuth 2.0 Authorization Code flow.
 | **Name** | What users see during authorization — "My Organization Website" |
 | **Description** | What the app does (for your reference) |
 | **Redirect URIs** | Where Orgo sends users after authorization — must match exactly |
-| **Scopes** | What data the app can request |
+| **Scopes** | What the app requests on the consent screen |
+| **Act on behalf of members** | Leave on for an app that creates or changes data. Turn off for a reporting or analytics integration — see below |
 
 After creating the app, you'll receive a **Client ID** and **Client Secret**. Store the secret securely — it's shown only once.
+
+<Note>
+Apps you create here are **confidential** clients. Developers can also self-register **public** clients against your tenant without admin involvement; those get no secret and are limited to the same member-level access. See [Authentication](/api-reference/concepts/authentication) for that path.
+</Note>
+
+---
+
+## Read-only or acting on behalf
+
+Every app is either read-only or permitted to act on the member's behalf. New apps can act by default.
+
+A read-only app may use `GET`, `HEAD` and `OPTIONS` only. Anything else is rejected with `403` and the message *"This application has read-only access and may not act on your behalf."*
+
+<Warning>
+The limit is by **HTTP method, not intent**. A few endpoints perform a read via `POST` — a read-only app cannot call those either. If a partner reports being blocked on something that only reads data, this is usually why.
+</Warning>
+
+Whichever setting applies is shown to the member on the consent screen before they approve.
+
+---
+
+## What an app can never do
+
+A token issued to an app is capped to **member level**, no matter who authorizes it. If one of your administrators connects the app, it still cannot perform administrator actions.
+
+This is deliberate and not configurable. An app acts as a member, never as an administrator — so connecting a third-party app cannot escalate that party to admin access over your tenant.
 
 ---
 
 ## OAuth endpoints
 
+Clients should read these from the discovery document at `/.well-known/oauth-authorization-server` rather than hardcoding them.
+
 | Endpoint | Purpose |
 |----------|---------|
-| `/oauth/authorize` | Where you send users to log in |
-| `/oauth/token` | Where your server exchanges the code for a token |
-| `/oauth/userinfo` | Where your server retrieves the authenticated user's data |
+| `/authorize` | Where you send users to log in and approve |
+| `/api/v1/oauth/token` | Where your server exchanges the code for a token |
+| `/api/v1/oauth/userinfo` | Where your server retrieves the authenticated user's data |
+| `/api/v1/oauth/register` | Self-service registration for public clients |
+| `/api/v1/oauth/jwks.json` | Public keys for verifying token signatures |
+
+All of these live on your tenant's own host — `acme.orgo.space`, or your custom domain.
 
 ---
 
@@ -82,14 +115,17 @@ Orgo includes a built-in OAuth documentation page that developers can reference 
 
 ### Step 1: Redirect to authorization
 
-Send users to Orgo's authorization endpoint:
+Send users to Orgo's authorization endpoint. PKCE is required — including for confidential apps like the ones you create here:
 
 ```
-GET /oauth/authorize?
+GET /authorize?
+  response_type=code&
   client_id=YOUR_CLIENT_ID&
   redirect_uri=YOUR_REDIRECT_URI&
-  response_type=code&
-  scope=profile email
+  scope=profile email&
+  state=CSRF_TOKEN&
+  code_challenge=BASE64URL(SHA256(verifier))&
+  code_challenge_method=S256
 ```
 
 ### Step 2: Exchange code for token
@@ -97,13 +133,14 @@ GET /oauth/authorize?
 After the user authorizes, Orgo redirects to your URI with a code. Exchange it server-side:
 
 ```
-POST /oauth/token
+POST /api/v1/oauth/token
 Content-Type: application/x-www-form-urlencoded
 
 grant_type=authorization_code&
 code=AUTHORIZATION_CODE&
 client_id=YOUR_CLIENT_ID&
 client_secret=YOUR_CLIENT_SECRET&
+code_verifier=ORIGINAL_VERIFIER&
 redirect_uri=YOUR_REDIRECT_URI
 ```
 
@@ -112,7 +149,7 @@ redirect_uri=YOUR_REDIRECT_URI
 Use the access token to retrieve the user's profile:
 
 ```
-GET /oauth/userinfo
+GET /api/v1/oauth/userinfo
 Authorization: Bearer ACCESS_TOKEN
 ```
 
@@ -152,11 +189,11 @@ Request only the scopes your app needs — fewer scopes means less data exposure
   </Accordion>
 
   <Accordion title="Access tokens are expiring">
-    Access tokens have a limited lifetime. Use refresh tokens to get new access tokens without requiring the user to log in again.
+    Access tokens last one hour. Use the refresh token to get a new one without sending the member back through consent. Refresh tokens last 30 days and **rotate** — each refresh returns a new one and invalidates the previous, so the app must store the new value every time.
   </Accordion>
 
   <Accordion title="Can I use this with a single-page app (SPA)?">
-    SPAs can't safely store the Client Secret. Use the PKCE extension of the Authorization Code flow for browser-based apps, or handle the token exchange on your backend.
+    Yes. A SPA should self-register as a public client rather than using an app created here — it gets no Client Secret, and PKCE alone authenticates it. PKCE is mandatory for every client either way, so a confidential app sends both its secret and the `code_verifier`.
   </Accordion>
 
   <Accordion title="How do I map Orgo roles to permissions in my app?">
