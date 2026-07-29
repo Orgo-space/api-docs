@@ -7,9 +7,43 @@ description: 'Geographic chapters and branches with their own admins, events, an
 "twitter:description": 'Geographic chapters and branches with their own admins, events, and member communities'
 ---
 
-Local Centers are your organization's geographic branches — cities, regions, chapters, districts. Each center has its own discussions, events, files, members, and local administrators, while staying connected to the national organization.
+<script type="application/ld+json">{`
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Orgo Local Centers",
+  "applicationCategory": "BusinessApplication",
+  "applicationSubCategory": "Membership Management Software",
+  "operatingSystem": "Web, iOS, Android",
+  "description": "Orgo Local Centers organizes a membership organization into geographic branches, chapters, or regions, each with its own discussions, events, files, members, and delegated local administrators.",
+  "offers": {
+    "@type": "Offer",
+    "priceSpecification": {
+      "@type": "PriceSpecification",
+      "priceCurrency": "EUR"
+    }
+  },
+  "provider": {
+    "@type": "Organization",
+    "name": "Orgo Informatics",
+    "url": "https://orgo.space"
+  },
+  "audience": {
+    "@type": "BusinessAudience",
+    "audienceType": "Membership organizations, professional associations, political parties, youth organizations, alumni networks, trade unions, faith communities, advocacy groups, and federated nonprofits"
+  }
+}
+`}</script>
 
-If your organization has geographic structure of any kind, Local Centers are how you model it.
+Orgo Local Centers is a geographic chapter and branch management feature within Orgo that lets organizations divide their membership into independently administered local groups.
+
+Most organizations call these chapters or branches. In Orgo's platform terminology, they're called Local Centers.
+
+**Built for** organizations with local branches or regional structure, including professional associations, alumni networks, trade unions, and faith communities, and similar federated bodies.
+
+**Replaces** spreadsheets and generic membership tools for organizing branches, chapters, and regional structures, not for single-location team management (use Private Groups instead).
+
+Local Centers are your organization's geographic branches — cities, regions, chapters, districts. Each center has its own discussions, events, files, members, and local administrators, while staying connected to the national organization.
 
 <img src="/images/platform/groups/local-centers-list.png" alt="Local Centers list with interactive map showing pins across the US, member counts, towns, and action buttons" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -26,14 +60,14 @@ Click on any center to open its detail view with quick actions for Members, Fees
 | Members are spread across cities or regions | Yes — Local Centers let each area run independently |
 | You have chapters, branches, or districts | Yes — each becomes a Local Center |
 | You want local events alongside national ones | Yes — each center has its own event calendar |
-| Your organization is a single location | No — use Private Groups for teams instead |
-| You're a fully online community with no geographic structure | No — use Role Groups or Private Groups |
+| Your organization is a single location | No — use [Private Groups](/platform/groups/private-groups) for teams instead |
+| You're a fully online community with no geographic structure | No — use [Role Groups](/platform/groups/role-groups) or [Private Groups](/platform/groups/private-groups) |
 
 ---
 
 ## How Local Centers fit in
 
-Local Centers sit between the Main Group (everyone) and Private Groups (manual teams):
+Local Centers sit between the [Main Group](/platform/groups/main-group) (everyone) and Private Groups (manual teams):
 
 ```
 National Organization
@@ -109,7 +143,7 @@ Regional grouping gives you **Parent Local** admin roles — admins who oversee 
 
 | Method | How it works |
 |--------|-------------|
-| **During registration** | The registration form includes a Local Center field. Members select their branch when signing up. |
+| **During registration** | The [registration form](/platform/users/registration-form) includes a Local Center field. Members select their branch when signing up. |
 | **Admin assignment** | An admin edits the member's profile and assigns them to a center. |
 | **Transfer** | An admin moves a member from one center to another. The member's content stays in the original center. |
 
@@ -174,9 +208,9 @@ To assign local roles: go to **Members** → select a member → **Permissions**
 
 If your organization collects fees at the branch level (local membership dues, chapter fees), each center can have its own fee configuration:
 
-- Assign a fee product to the center
+- Assign a [fee product](/platform/fees/products) to the center
 - Set a default price (can differ from national fees)
-- Enable online payment via Stripe (requires a connected Stripe account for the center)
+- Enable online payment via [Stripe](/platform/fees/stripe-integration) (requires a connected Stripe account for the center)
 - Local financial admins can process and track payments
 
 See [Local Group Fees](/platform/local-group-fees/create-local-fees) for the full setup.
