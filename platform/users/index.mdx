@@ -14,10 +14,17 @@ you store about them, how you find them again, and what happens when they leave.
 
 ## The member directory
 
-**Members** in the sidebar (`/users`) lists everyone in your organisation.
+**Members** in the sidebar lists everyone in your organisation.
 **Settings** → **Users & Profiles** → **Who Can See Members in General Groups**
 decides who sees it at all: All Users, HR Local, HR Tenant, Admin Local or Admin
 Tenant. At an admin level, ordinary members never see the directory.
+
+<Note>
+Always reach the directory from the sidebar rather than by typing a URL. The
+organisation-wide list lives at `/users?generalUnit=true`; a bare `/users` has no
+scope to show and renders an empty page. The same screen shows a single group's
+members at `/users?unit={id}`.
+</Note>
 
 <img src="/images/platform/users/user-directory.png" alt="Member directory in table view with the filter bar, member rows and the CSV export button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -70,7 +77,11 @@ Columns are permission-gated rather than chosen:
 | Fee | HR_LOCAL or FINANCIAL_LOCAL, fees module on |
 | Adhesion | HR_LOCAL, adhesion on |
 | Status | HR_LOCAL, and no status filter active |
-| **Groups** and one per [custom field](/platform/users/custom-fields), added from the table icon | HR_TENANT, or ADMIN_LOCAL on your own local center |
+| **Groups**, from the column menu | HR_LOCAL on a chapter list, HR_TENANT on the organisation-wide list |
+| One column per [custom field](/platform/users/custom-fields), from the column menu | HR_TENANT |
+
+The column menu itself (the table icon above the list) needs HR_TENANT, and it only
+appears in the table view, never in Gallery or Map.
 
 Each row's menu holds **View Profile**, **Modify Profile** and **Modify Roles**
 (ADMIN_LOCAL and above), plus making or removing a unit admin inside a unit.
@@ -92,6 +103,41 @@ for your own local center. The status comes from **Default Status for
 Admin-Created Users**, and with an email address supplied the member gets a
 welcome message with a login link. For many people at once, use
 [Import](/platform/customization/import).
+
+---
+
+## Worked example: what a chapter treasurer sees
+
+Permission names on their own do not tell you what lands on screen, because the
+directory gates the filters, the columns and the export separately. Here is the
+same person, a chapter treasurer holding only `FINANCIAL_LOCAL` on their own
+chapter, walking through the list.
+
+| What they want | Do they get it | Why |
+|---|---|---|
+| The **Fee** column | Yes | The fee column asks for `FINANCIAL_LOCAL` or `HR_LOCAL` |
+| Email, phone and age columns | Yes | `FINANCIAL_LOCAL` implies `HR_ASSISTANT_LOCAL`, which is what those columns ask for |
+| The **Fee status** filter (Paid / Not paid / Grace period) | No | That filter asks for `HR_TENANT`, an organisation-wide permission |
+| The **Fee type** filter | No | That filter asks for `HR_TENANT` or `FINANCIAL_TENANT` |
+| The CSV export | No | Export asks for `HR_TENANT` organisation-wide, or `HR_LOCAL` on the chapter being listed |
+| The column menu, to add a custom field column | No | The column menu asks for `HR_TENANT` |
+
+So a treasurer who needs to work through unpaid members chapter by chapter needs
+`FINANCIAL_LOCAL` **and** `HR_LOCAL` on that chapter: `FINANCIAL_LOCAL` for the
+money, `HR_LOCAL` for the export and the status column. If they also need the
+fee filters, that is `FINANCIAL_TENANT`, which reaches every chapter, so consider
+whether the chapter-scoped screens in
+[Local group fees](/platform/local-group-fees/member-fees) are the better answer
+before widening their scope.
+
+Two implications worth remembering for any permission you hand out:
+
+- `FINANCIAL_LOCAL`, `HR_LOCAL` and `HR_PARENT_LOCAL` all imply
+  `HR_ASSISTANT_LOCAL`, so any of them unlocks contact details. `EVENT_LOCAL` and
+  `COMMUNICATION_LOCAL` do not.
+- Filters and columns are not the same gate. Seeing a value in a column does not
+  mean you can filter or sort a list by it, and being able to read the list does
+  not mean you can export it.
 
 ---
 
@@ -192,6 +238,80 @@ Security & Permissions.
     Add the field in [Profile Fields](/platform/users/profile-fields) and mark it
     required. On their next visit, members with missing required fields are
     redirected to an onboarding screen that lists exactly what is missing.
+
+    That redirect only knows about a fixed set of fields: first name, last name,
+    date of birth, gender, phone, address, town born, town current, and the
+    Facebook, Twitter, LinkedIn, Instagram, Telegram and TikTok links, plus any
+    custom field. Marking anything else required, in particular **Bio**,
+    **Postal code**, **Website**, **Location on members map**, the three
+    **Profession** fields or any of the company fields, still marks it required
+    on the profile form, so a member who opens that form cannot save without it.
+    What it does not do is trigger the prompt, so nobody is ever sent there and
+    the field quietly stays empty for everyone who does not edit their profile.
+    If one of those is what you actually need, collect it with a
+    [custom field](/platform/users/custom-fields) instead, which the prompt does
+    check.
+  </Accordion>
+
+  <Accordion title="Members see photo cards instead of the table">
+    The directory opens in **Gallery** for everyone who is not an Orgo
+    administrator, and in the table for those who are. Nothing is missing: the
+    view toggle above the list switches between table, Gallery and Map, and your
+    choice is remembered in that browser from then on. If a colleague says a
+    column is missing, first check that they are looking at the table and not at
+    Gallery, since the column menu is only offered in the table view.
+  </Accordion>
+
+  <Accordion title="A colleague sees fewer columns than I do">
+    Columns are not a shared setting. Each one is gated on the permission in the
+    table above, evaluated per person and, for chapter permissions, per chapter.
+    Turning a column on from the column menu changes what you see, not what your
+    colleagues see.
+
+    The two that surprise people most: email, phone and age need
+    `HR_ASSISTANT_LOCAL`, which `HR_LOCAL`, `HR_PARENT_LOCAL` and
+    `FINANCIAL_LOCAL` all imply but `EVENT_LOCAL` and `COMMUNICATION_LOCAL` do
+    not; and the custom-field columns need `HR_TENANT`, so a chapter
+    administrator does not get them even on their own chapter's list.
+  </Accordion>
+
+  <Accordion title="The Excel export button is missing">
+    Export is gated separately from reading the list. On the organisation-wide
+    list it needs `HR_TENANT`. On a chapter's list it needs `HR_LOCAL` on that
+    chapter. `FINANCIAL_LOCAL`, `ADMIN_LOCAL` and `HR_ASSISTANT_LOCAL` are not
+    enough, even though all of them can read the list and some of them see more
+    columns than the export contains.
+
+    A chapter secretary who has `HR_LOCAL` but still sees no button is usually
+    on the organisation-wide list rather than their chapter's. Pick the chapter
+    in the **Chapter** filter first.
+  </Accordion>
+
+  <Accordion title="The New requests (N) button never appears">
+    Four conditions have to hold at once: **Manual Approval** is on, you hold
+    `ADMIN_LOCAL`, you are looking at either your own chapter's list or the
+    organisation-wide list with `HR_TENANT`, and you are not already filtering by
+    the Unapproved status. The last one catches people out: the button hides once
+    you are in the queue it would take you to.
+
+    `HR_LOCAL` alone does not show the counter, and it does not show the
+    **Approve** action on the row either. Approving members is `ADMIN_LOCAL` and
+    above.
+  </Accordion>
+
+  <Accordion title="Someone can see the Members link but the page is empty or refuses them">
+    Sidebar entries and page permissions are configured in two different places
+    and can disagree. Each entry in the sidebar carries its own permission, set
+    in **Settings** → **Customization** → **Menu Organizer**, while what the
+    Members page shows is decided by **Settings** → **Users & Profiles** →
+    **Configuration** → **Who Can See Members in General Groups**. Set the menu
+    entry more generously than that setting and people see a link that leads to
+    an empty page.
+
+    Fix it at whichever end reflects your intent: raise the menu entry's
+    permission to match the visibility setting, or lower the visibility setting
+    if the members really should see the directory. Do not assume a hidden link
+    means a protected page, or that a visible link means an accessible one.
   </Accordion>
 </AccordionGroup>
 

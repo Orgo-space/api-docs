@@ -19,7 +19,7 @@ Branding controls three things: the four logo variants Orgo swaps between depend
   Requires **ADMIN_TENANT**. The page is unreachable and its contents are hidden for everyone else.
 </Note>
 
-<img src="/images/platform/organisation/branding-logo-grid.png" alt="Branding page showing the four logo slots: Logo light theme, Logo dark theme, Icon logo, Icon logo dark" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/organisation/branding-logo-grid.png" alt="Branding page showing the four logo slots: Logo light theme, Logo dark theme, Squared logo, Icon logo dark" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
@@ -31,19 +31,19 @@ Uploads accept **PNG and JPEG**. The page's own hint is: for best layout results
 |---|---|
 | **Logo light theme** | App header and sidebar, the sign-in screen, registration screens, invoice emails, and the invoice PDF |
 | **Logo dark theme** | Substituted for the light logo whenever the surface behind it is dark |
-| **Icon logo** | Browser favicon, the favicon on public share pages, your organization's avatar in lists, the OAuth consent screen, and the centre of an event app QR ticket |
-| **Icon logo dark** | The favicon when the visitor's browser is in dark mode |
+| **Squared logo** | Browser favicon, the favicon on public share pages, your organization's avatar in lists, the OAuth consent screen, and the centre of an event app QR ticket |
+| **Icon logo dark** | The favicon when the member is in dark mode, whether from their own theme choice or their operating system |
 
 Two behaviours are worth knowing:
 
 **The dark logo is not only for dark mode.** In the app header it is used whenever the chrome is dark, which includes a dark menu theme on an otherwise light interface. If you skip this slot, a dark-on-dark logo becomes invisible for those members.
 
-**The first upload fills the empty slots.** Upload the light logo while the other three are still empty and the same image is copied into all four. That is a starting point, not a finished setup: replace the dark and icon variants so contrast and cropping are right.
+**The first upload fills the empty slots.** Upload the light logo while the other three are still empty and the same image is copied into all four. That is a starting point, not a finished setup: replace the dark and square variants so contrast and cropping are right.
 
 If a slot is empty and nothing was copied into it, Orgo's own logo is shown.
 
 <Tip>
-  Give the two icon slots a genuinely square image. They are used as a favicon and as a round avatar, so a wide logo ends up either letterboxed or cropped.
+  Give **Squared logo** and **Icon logo dark** a genuinely square image. They are used as a favicon and as an avatar, so a wide logo ends up either letterboxed or cropped.
 </Tip>
 
 ---
@@ -52,9 +52,9 @@ If a slot is empty and nothing was copied into it, Orgo's own logo is shown.
 
 <img src="/images/platform/organisation/branding-auth-background.png" alt="Auth background image URL field with a Save button below it" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-**Auth background image URL** takes a URL, not a file upload. Paste a publicly reachable HTTPS address and click **save**.
+**Auth background image URL** takes a URL, not a file upload. Paste a publicly reachable HTTPS address and click **Save**.
 
-It appears behind the sign-in screen and the registration screens, including the per-user-type and child registration forms. It does not appear on the password reset or password setup screens. It is a **desktop-only** treatment: on phones the form fills the screen and no background is drawn. Leave the field empty and members see Orgo's default animated background instead.
+It appears behind the sign-in screen and the registration screens, including the per-user-type and child registration forms. It does not appear on the password reset or password setup screens. It is a **desktop-only** treatment: on phones and in embedded iframes the form fills the frame and no background is drawn. Leave the field empty and members see Orgo's default animated background instead.
 
 <img src="/images/platform/organisation/branding-login-page.png" alt="Sign-in screen with the organization logo and a custom photographic background" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -89,7 +89,7 @@ If you are currently viewing Orgo in dark mode, the Light menu block is hidden a
 
 - **The primary brand colour.** It is a fixed design token with no per-organization input. Only the chrome hue is configurable.
 - **Fonts and layout.**
-- **The mobile app icon.** The shared Orgo app ships Orgo's own icons; the Icon logo slot does not change them. Branded per-tenant apps are a separate arrangement, covered in [Mobile Apps](/platform/mobile-apps).
+- **The mobile app icon.** The shared Orgo app ships Orgo's own icons; the Squared logo slot does not change them. Branded per-tenant apps are a separate arrangement, covered in [Mobile Apps](/platform/mobile-apps).
 - **Most email headers.** The light logo is used on invoice emails and the invoice PDF. Other system emails use a shared layout with no logo.
 
 ---
@@ -98,13 +98,13 @@ If you are currently viewing Orgo in dark mode, the Light menu block is hidden a
 
 <AccordionGroup>
   <Accordion title="The logo is cropped or stretched">
-    Check which slot the file is in. The two **Logo** slots expect a wide image; the two **Icon logo** slots expect a square one. A wide file in an icon slot is what produces cropping in the favicon and avatar.
+    Check which slot the file is in. The two **Logo** slots expect a wide image; **Squared logo** and **Icon logo dark** expect a square one. A wide file in a square slot is what produces cropping in the favicon and avatar.
   </Accordion>
   <Accordion title="The background image is not showing on the sign-in screen">
     Open the URL in a private window with no session. If it does not load there, the host requires authentication or is not public. If it does load, check you are not on a phone: the background is desktop only.
   </Accordion>
   <Accordion title="The logo disappears when members switch theme">
-    The dark variant is missing or is the same file as the light one. Upload a light-coloured version to **Logo dark theme** and **Icon logo dark**. Remember this also applies to a dark menu theme in otherwise light mode.
+    The dark variant is missing or is the same file as the light one. Upload a light-coloured version to **Logo dark theme** and **Icon logo dark**. This also applies to a dark menu theme in an otherwise light interface.
   </Accordion>
   <Accordion title="The logo has a white box around it">
     The file is a JPEG, which has no transparency, or a PNG exported on a white background. Re-export as PNG with transparency.
@@ -115,7 +115,7 @@ If you are currently viewing Orgo in dark mode, the Light menu block is hidden a
 </AccordionGroup>
 
 <Note>
-  The **Getting Started** checklist in the sidebar lists "Add organisation's logo" under Customization and Branding, and links straight to this page.
+  The admin **Getting Started** checklist has a **Customization & Branding** step whose first task, **Add organisation's logo**, links straight to this page.
 </Note>
 
 ---

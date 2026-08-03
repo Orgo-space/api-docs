@@ -199,12 +199,152 @@ is recorded in the activity log with the query name and who ran it.
 
 ---
 
-## Common questions
+## Troubleshooting
 
 <AccordionGroup>
   <Accordion title="Ask Orgo says it cannot understand my question">
     Give it a scope: "how many active members joined each month this year" works
     better than "membership trends".
+  </Accordion>
+
+  <Accordion title="Clicking Analytics drops me back on the dashboard">
+    Two settings are checked before the page renders, and failing either one
+    redirects you to the dashboard with no message. The analytics module has to
+    be active, and you have to clear the analytics setting labelled **Minimum
+    access level**, which ships as any signed-in member.
+
+    Worked example: an organisation raises **Minimum access level** to
+    `HR_TENANT` so that ordinary members stop seeing the numbers. That works, but
+    it also takes away the Geography and Leaderboards tabs, which default to any
+    signed-in member and were the two tabs the organisation actually wanted
+    everyone to have. The minimum is a gate on the whole page, evaluated before
+    any per-tab role.
+
+    If you get in and the page is empty, the minimum passed and none of the tab
+    roles did.
+  </Accordion>
+
+  <Accordion title="I hold FINANCIAL_TENANT but there is no Finance tab">
+    Finance needs the role and online payments switched on. The tab checks both,
+    so an organisation that collects fees by bank transfer only never sees it,
+    whoever is looking. Revenue totals still show on the Platform tab.
+
+    **DB Query** is the other tab keyed to `FINANCIAL_TENANT`, and it does not
+    check the payments setting, so seeing Database Queries but no Finance is the
+    normal shape of that combination rather than a fault.
+  </Accordion>
+
+  <Accordion title="Can I give Ask Orgo to an HR admin, or put it in a custom menu?">
+    No, on both counts. The route, the sidebar entry and every endpoint behind
+    the chat require `ADMIN_TENANT`, and the sidebar entry is written into the
+    menu in code rather than drawn from your configurable menu, so it cannot be
+    added to another role's menu or moved.
+
+    Someone without `ADMIN_TENANT` who follows a link to Ask Orgo is sent to the
+    login screen rather than shown a permission message, which reads like an
+    expired session and is not one. The same is true of any page in Orgo that
+    they lack the role for. There is no read-only or delegated version of the
+    chat; if a colleague needs an answer regularly, save the query and give them
+    access to it, with the caveat in the next answer.
+  </Accordion>
+
+  <Accordion title="I shared a saved query and my colleague cannot find it">
+    Sharing works, the way in does not. Adding somebody under **Extra access**
+    lets them run that query, and once at least one query is shared with them a
+    **queries** entry appears in their sidebar. That entry points at the
+    Database Queries tab of Analytics, and the tab itself renders only for
+    `FINANCIAL_TENANT`, so they land on Analytics without it.
+
+    Send them the query's own address instead, the one in your browser bar when
+    you have the query open. That page has no role gate of its own and checks the
+    share, so it opens for them and records the run in the activity log under
+    their name.
+
+    The related setting is the analytics `hasQuery` flag: turning it off removes
+    the sidebar entry for everyone but leaves the tab in place for finance
+    admins.
+  </Accordion>
+
+  <Accordion title="Ask Orgo refused to put two figures in one answer">
+    It refuses when the arithmetic would be wrong rather than returning a number
+    that looks fine.
+
+    Worked example: ask for total fees paid and the number of events attended,
+    per member. Both hang off the member as separate one-to-many branches, so
+    joining them multiplies every fee row by every attendance row: a member with
+    4 payments and 5 events contributes 20 rows, and the fee total comes back
+    five times too high. Orgo detects the shape, blocks the sum, and tells you to
+    query each metric separately.
+
+    Ask it as two questions, then line the answers up by member in a spreadsheet,
+    or ask for counts rather than sums when you only need magnitude.
+  </Accordion>
+
+  <Accordion title="Export CSV gave me far fewer rows than the answer said">
+    The export from the chat asks for pages of 10,000 rows, but every query,
+    including that one, is capped at 500 rows per request. So a result of more
+    than 500 rows exports as a single file holding the first 500, and the
+    completion message still says the export finished.
+
+    Worked example: a question matching 3,000 members reports 3,000 in the chat
+    and downloads a CSV with 500 rows in it.
+
+    For a full extract, use **Save** to store the query, then run and export it
+    from **Database Queries**. Saving deliberately drops the paging limit, so the
+    saved statement returns the whole result set. The other option is to narrow
+    the question until it fits, one local center or one month at a time.
+  </Accordion>
+
+  <Accordion title="A saved query returns more rows than the chat did">
+    Saving removes any row limit of 50 or more, on the assumption that it came
+    from the default paging rather than from your question. Limits below 50 are
+    kept, because those look like something you asked for.
+
+    Worked example: "top 100 members by discussion posts" answers with 100 rows
+    in the chat. Saved and re-run from Database Queries, it returns every member
+    ranked by posts, which for a large organisation is a much heavier query than
+    the one you tested. "Top 25" saves as 25.
+
+    If you want a fixed cut-off in a saved query, ask for fewer than 50, or add
+    the real filter you mean (a date range, a status) instead of relying on the
+    count.
+  </Accordion>
+
+  <Accordion title="A long conversation lost track of what I asked earlier">
+    A conversation keeps 20 messages: the first two, which hold the original
+    framing, and the most recent eighteen. Turns in the middle are dropped, so in
+    a long session a follow-up can no longer see a constraint you set twenty
+    turns ago. Restate it, or start a fresh chat for a new line of questioning.
+
+    Reopening an old chat shows at most 50 rows of the last result, because that
+    is the size of the snapshot stored with the conversation. It is a record of
+    what you saw, not a live result. Re-run the question to page through
+    everything or to pick up data that has changed since.
+  </Accordion>
+
+  <Accordion title="Can another admin read my Ask Orgo conversations?">
+    Your chat list shows your own conversations only, and there is no shared
+    inbox of everyone's chats. But conversations are stored per organisation
+    rather than sealed per person, and another organisation admin who has the
+    address of one can open it.
+
+    In practice this changes little, because the feature is limited to
+    `ADMIN_TENANT` and any admin can ask the same question themselves and get the
+    same data. Treat chats as a shared admin workspace rather than private notes,
+    and delete a conversation when you want its text and its stored rows gone.
+  </Accordion>
+
+  <Accordion title="A dashboard number is stale and I cannot clear the cache">
+    **Reset cache** requires `ADMIN_TENANT`, while the tabs themselves can be
+    opened by `HR_TENANT`, `FINANCIAL_TENANT` or ordinary members depending on
+    your settings. A finance admin looking at a stale figure after a large
+    payment run has no button to press and has to wait out the five minute cache,
+    or ask an organisation admin.
+
+    **Reset cache** also only clears the five minute cache. It does not rebuild
+    the overnight aggregation, so a figure that is a whole day out rather than
+    minutes out will not move until the next nightly run, however many times you
+    press it.
   </Accordion>
 
   <Accordion title="The number here does not match the number on the members list">

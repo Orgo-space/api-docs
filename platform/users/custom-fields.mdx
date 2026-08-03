@@ -81,6 +81,29 @@ Forms label User and Admin fields "(user only)" and "(admin only)". Admin fields
 
 Visibility is organisation-wide, not per user type; to vary the questions by type, use per-type [registration forms](/platform/users/registration-form).
 
+### Where a value actually saves
+
+Visibility gates writing as strictly as it gates reading, and the write check asks
+who is signed in at that moment. On the public registration pages nobody is signed
+in yet, so nothing above Public passes. The value is dropped without an error: the
+applicant sees a normal success screen and the answer is simply not there.
+
+| Where the value is entered | Public | User | Admin |
+|---|---|---|---|
+| A member editing their own profile | Saved | Saved | The field is not shown to them |
+| Your staff editing a member's profile | Saved | Saved | Saved |
+| A member's [adhesion](/platform/users/adhesion) form | Saved | Saved | Rejected unless staff are filling it in |
+| The public registration form at `/register` | Saved | **Field renders, answer discarded** | **Field renders, answer discarded** |
+| A per-user-type form at `/join/<slug>` | Saved | **Field renders, answer discarded** | Field is stripped before the page loads |
+| [Import](/platform/customization/import) from a spreadsheet | Saved | Saved | Saved |
+
+The practical rule: **only Public fields belong on a registration form.** If you need
+the answer at sign-up but not on public display, collect it as Public and then
+control who sees the member's profile at all with
+[Privacy settings](/platform/users/privacy-settings), or ask for it after joining on
+the [profile form](/platform/users/profile-fields), where the member is signed in
+and User visibility works as intended.
+
 ---
 
 ## Encryption at rest
@@ -140,6 +163,98 @@ Tags are a lighter alternative: a name administrators apply to member profiles f
 <img src="/images/platform/users/tags-list.png" alt="Tags settings page listing the organisation's tags with edit controls" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 Use a tag when staff need to label people ("VIP", "needs follow-up"). Use a custom field when you need a member to answer a question.
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Answers from the registration form are missing for everyone">
+    Check the field's visibility. Anything above **Public** is discarded on the public
+    registration pages, because the write check asks who is signed in and, at
+    registration, nobody is. There is no error: the applicant fills the box, the
+    account is created, and the answer never reaches the profile.
+
+    Set the field to **Public** if you need it at sign-up, or move the question to the
+    [profile form](/platform/users/profile-fields), where the member is signed in and
+    User visibility behaves as documented. See the table under
+    [Where a value actually saves](#where-a-value-actually-saves).
+
+    The same field on a `/join/<slug>` form behaves slightly differently: Admin fields
+    are stripped before the page is built, so the applicant never sees them, while
+    User fields still render and are still discarded.
+  </Accordion>
+
+  <Accordion title="A regional officer sees only Public fields on chapter members">
+    Reading User and Admin values on someone else's profile requires an
+    organisation-wide staff permission (`HR_TENANT`, `FINANCIAL_TENANT` or
+    `HR_ASSISTANT_TENANT`), or a chapter staff permission **plus the reader and the
+    member being in the same chapter**. The chapter comparison is a direct match, not
+    a walk up the hierarchy, so someone holding `HR_PARENT_LOCAL` over a region does
+    not pick up User and Admin values on members of the chapters below them: on those
+    profiles they see the Public fields only, like any other member.
+
+    If a regional officer genuinely needs those values across the region, the only
+    permission that delivers them today is an organisation-wide one such as
+    `HR_TENANT`. Weigh that against the reach it grants, and prefer keeping the
+    sensitive questions in an organisation-level workflow instead.
+  </Accordion>
+
+  <Accordion title="The custom field columns are not in the member directory">
+    Adding a custom field to the directory takes two things that are gated
+    differently. The column menu (the table icon above the list) needs `HR_TENANT`,
+    and it only exists in the table view, so a person sitting in **Gallery** will not
+    see it at all. The custom-field columns themselves also need `HR_TENANT`.
+
+    A chapter administrator therefore cannot put a custom field on their chapter's
+    list, even for a field they can read perfectly well on each member's profile. Use
+    the profile, or export the list, or ask an organisation administrator to run it.
+  </Accordion>
+
+  <Accordion title="I imported values into an encrypted field">
+    Import writes custom field values straight to storage and does not run them through
+    encryption, so values loaded from a spreadsheet into an encrypted field are stored
+    as they were typed. Everything still reads back correctly in the interface, which
+    is exactly why this is easy to miss: nothing looks wrong.
+
+    To bring imported rows under encryption, open the field, switch **encryption** off,
+    save, then switch it back on and save again. Each flip queues a background pass over
+    every stored value for that field, and the second pass encrypts everything it finds
+    in plain text, including the imported rows. Note what the first flip does: it writes
+    every value for the field back as plain text before the second flip re-encrypts them.
+
+    If that window is unacceptable for the data in question, do not import into that
+    field. Collect the values through a form, or use
+    [Identity Validation](/platform/identity-validation) for identity documents, which
+    has its own encrypted storage and its own import rules.
+  </Accordion>
+
+  <Accordion title="I switched encryption on and off quickly and I am not sure what is stored">
+    Each flip queues a background pass, and a pass that notices the flag has changed
+    under it stops where it is rather than fighting the newer instruction. Flip twice
+    in quick succession and the first pass can end part-way, leaving some values
+    converted and some not.
+
+    This is safe to read: every value carries its own marker, so Orgo decrypts the ones
+    that need it and returns the rest untouched, whatever state the field is in. It is
+    only untidy at rest. To settle it, leave the toggle alone for a few minutes, then
+    check your organisation's [Logs](/platform/logs) for the encryption entries, and if
+    you want certainty that every row matches the flag, flip it off and on once more
+    and let that pass finish.
+  </Accordion>
+
+  <Accordion title="Who read an encrypted value, and when">
+    Every request that decrypts at least one value files one entry in your
+    organisation's [Logs](/platform/logs), recording who made the request, their IP
+    address, the endpoint they hit and how many values were decrypted.
+
+    Read it as one entry per request, not one per value. Opening a member's profile
+    files a single entry covering every encrypted field on it, and a screen that lists
+    many members at once files one entry with a large count. The entry is written just
+    after the response is sent, so allow a moment before it appears. Turning encryption
+    on or off is logged separately, with the field name and the direction of the change.
+  </Accordion>
+</AccordionGroup>
 
 ---
 

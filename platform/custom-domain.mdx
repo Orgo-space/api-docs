@@ -92,9 +92,10 @@ The verified counter next to **Email Setup** counts only the required records, s
 | **Validating DNS** | Your records are being checked. Usually minutes once they exist. | Wait |
 | **Active** | The domain serves your community and email is signed by your domain. | Nothing |
 | **Failed** | Setup hit an error. | **Retry**, or contact support if it recurs |
-| **Abandoned** | No DNS was detected for 7 days, and the setup was cleaned up. | Cancel and start over |
 
 Awaiting DNS is the only status that needs you.
+
+**The 7-day limit.** A setup that sits in Awaiting DNS or Validating for 7 days is cleaned up: the certificate and the sender identity are released and the setup record is deleted. There is no warning status for this. The page simply returns to the empty **Start setup** form, and you begin again from scratch.
 
 **How often Orgo re-checks.** Checks start once a minute and slow down the longer a setup waits: roughly every minute for the first half hour, then every five minutes for about six hours, then every half hour for about a day, then once a day until the 7-day cleanup. **Check now** bypasses that schedule, so use it after you have just saved your records rather than waiting for the next automatic pass.
 
@@ -110,9 +111,9 @@ Two things have to finish, and they rarely finish together.
 
 The status reads **Active** only once both halves are done, so a domain can be serving pages perfectly while the page still says Validating because DKIM has not propagated yet.
 
-<Note>
-  If your contact email is on a different domain from the one you just set up, DNS alone will not switch the sender. Change it to an address on the new domain in [Organization Info](/platform/organisation/organisation-info), then let the next check run.
-</Note>
+<Warning>
+  Set your contact email **before** the DKIM records verify. Orgo checks the contact email once, on the first check where domain verification and all three DKIM keys are green, and never revisits it. If the address was on another domain at that moment, changing it afterwards in [Organization Info](/platform/organisation/organisation-info) will not promote it on its own; ask support to re-run the promotion.
+</Warning>
 
 Payment and donation short links (`/pay/<slug>`) use a separate payment host this setup does not change; ask support if you want those on your domain too.
 
@@ -143,7 +144,7 @@ Payment and donation short links (`/pay/<slug>`) use a separate payment host thi
     Almost always certificate validation not completing inside its window, meaning the validation record was not in place in time. Confirm it, then use **Retry**.
   </Accordion>
   <Accordion title="Emails still arrive from the old address">
-    All three DKIM records in the Email Setup group must read Verified, and your organization contact email must be on the new domain.
+    All three DKIM records in the Email Setup group must read Verified, and your organization contact email must have been on the new domain at the moment they turned green. If it was not, support has to promote it for you.
   </Accordion>
   <Accordion title="An error message is shown above the stepper">
     That line is the last error from the most recent check. It clears as soon as a check runs clean, so a message that stays means the condition is still present.

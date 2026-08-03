@@ -74,9 +74,22 @@ action.
 
 | Channel | Applies to | Conditions |
 |---|---|---|
-| In-app | Every notification | Always stored |
-| Push | Most notifications | The member has **Push notifications** on and at least one registered device or browser. File notifications never push. |
-| Email | Discussions, comments, replies, mentions, events, votes, tasks, member and role changes | The matching per-member email toggle is on. Reactions, role changes, moderation alerts, and file uploads never email. |
+| In-app | Every notification | Always stored, whatever the member's other preferences say |
+| Push | Everything except file uploads | The member has **Push notifications** on and at least one registered device or browser |
+| Email | Discussions, comments and replies, mentions, events, votes, tasks and support tickets, and membership changes (added to a group or local center, roles changed, registration, invitation accepted) | Content notifications need the matching per-member toggle. Membership changes have no toggle and always email. Reactions, file uploads, networking 1:1 invitations and moderation alerts never email. |
+
+Membership and role changes are the surprising row. When an administrator gives
+a member a new role, the member gets an email as well as the in-app entry, and
+no notification preference switches it off. The single exception is a change to
+the member's **user type**, which is deliberately silent. Removing a role
+notifies nobody, and neither does editing your own roles.
+
+<Note>
+Task comments are the other category the preference screen does not cover.
+Comments on a project task email the assignees and the task creator through the
+task email path rather than through notification preferences, so the **Task**
+toggle does not stop them. That toggle governs support tickets and issues.
+</Note>
 
 ---
 
@@ -185,35 +198,128 @@ activity feed, not an audit trail: for a durable record of email, use the
 ## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="A member says they get too many emails">
-    On their profile, **Notifications** tab, switch **New discussion** to
-    **Daily** or **Weekly**, or turn off the categories they object to. Changing
-    the tenant defaults will not help.
+  <Accordion title="A member says they get too many emails. What do I change?">
+    Work on their profile, **Notifications** tab, not on the tenant defaults:
+    the defaults are seeds applied once at onboarding and changing them does
+    nothing for anyone already in the organization.
+
+    Take the categories in this order.
+
+    1. Set **New discussion** to **Daily** or **Weekly**. Discussions are
+       usually the bulk of the volume and the only category that batches.
+    2. Turn off the individual categories they object to. Each one only stops
+       the email; the notification still appears under the bell.
+    3. If they are still unhappy, check whether the traffic is coming from
+       something with no toggle: membership and role changes always email, and
+       task comments email through the task email path.
+
+    A member who is a member of several organizations sees these preferences
+    separately in each one, so check the workspace they are complaining about.
   </Accordion>
 
-  <Accordion title="Push notifications are not arriving">
-    Check **Push notification subscribed** on their profile, that the browser or
-    phone has not blocked notifications at the OS level, and that the device
-    registered. Registration happens on sign-in, so signing out and back in
-    re-registers it. A brand-new install can take a couple of launches before the
-    device is known.
+  <Accordion title="Push notifications are not arriving. What do I check?">
+    Work down the chain, because each link fails independently.
+
+    1. **Push notification subscribed** on their profile. Off means no device
+       receives anything, whatever the browser says.
+    2. Permission at the operating system or browser level. Orgo cannot see a
+       revoked permission, and revoking it removes the browser registration.
+    3. Whether a device is actually registered. Registration happens at
+       sign-in, so signing out and back in is the reliable fix, and a member who
+       never signs out on an old phone keeps receiving there instead.
+    4. The notification type. File notifications never push, in-app only.
+    5. For an organization with its own branded app, whether the OneSignal app
+       ID and REST API key are set on the organization record. Without them the
+       mobile sends are rejected and only browser push works.
+
+    Registration is per member, per workspace, per device, so someone in two
+    organizations has to be signed in to both on that phone to receive from
+    both.
   </Accordion>
 
-  <Accordion title="They see it in the app but no email arrived">
-    Check the Channels table above for types that never email, then the matching
-    toggle, then whether they used an unsubscribe link, which switches that
-    category off silently.
+  <Accordion title="The notification is in the app but no email arrived. Why?">
+    In-app and email are separate deliveries of the same record, so the record
+    existing proves nothing about the email. Check, in order:
+
+    - the type, against the Channels table above. Reactions, file uploads,
+      networking invitations and moderation alerts have no email at all;
+    - the matching per-member toggle, and for discussions whether the frequency
+      is **Daily** or **Weekly**, in which case the email is waiting for the
+      next digest run;
+    - whether they used an unsubscribe link, which switches a category off with
+      no confirmation step and no trace on the profile other than the toggle
+      itself;
+    - the address on the account. An empty or malformed address is skipped
+      silently, without an entry in the email log;
+    - whether this is a demo organization. Demo tenants never send notification
+      emails.
   </Accordion>
 
-  <Accordion title="Nobody gets notified about our group's posts">
-    Check the group type. A restricted group only notifies members who follow it;
-    open-access local centers, all-member groups, and role groups notify everyone
-    who has not muted them.
+  <Accordion title="A member unsubscribed in one organization and stopped getting emails from another. Is that expected?">
+    Yes, and it is the most confusing behaviour on this page. Unsubscribe links
+    match on the email address, not on the account, so one click switches that
+    category off for every Orgo account sharing that address, in every
+    organization. The one-click unsubscribe in the mail header does the same for
+    all categories at once.
+
+    The fix is to turn the categories back on per account, on each affected
+    profile's **Notifications** tab.
   </Accordion>
 
-  <Accordion title="The badge cleared without anyone reading anything">
-    A digest email marks its notifications read, as does opening the bell panel,
-    the notifications page, or the item itself.
+  <Accordion title="Nobody is notified about our group's posts. What is wrong?">
+    Start with the group type, because who receives is decided there and not by
+    a setting on the discussion.
+
+    - A restricted group notifies the members who follow it, and nobody else.
+      An empty follower list means an empty notification run.
+    - An open-access local center, an all-member group and a role group notify
+      every active member except those who muted the group.
+    - Inactive members are never notified in any group, and the person who
+      posted is always excluded.
+
+    If a single member is missing, check their status first and whether they
+    muted the group second.
+  </Accordion>
+
+  <Accordion title="The unread badge cleared without anyone reading anything. What clears it?">
+    More things than most admins expect, which is why the badge is a poor proxy
+    for "has the member seen this".
+
+    - Opening the bell panel or the notifications page marks every unread
+      notification read, not just the ones on screen.
+    - Opening the thing a notification points at (a discussion, an event, a
+      drive file) marks the notifications for that item read.
+    - Sending an instant email for a notification marks that notification read,
+      so an unopened inbox still zeroes the badge.
+    - Sending a digest marks every unread notification read for that member, not
+      only the ones listed in the digest.
+  </Accordion>
+
+  <Accordion title="A member set Daily or Weekly and no digest ever arrives. Why?">
+    A digest run only picks up members who have at least one unread
+    **discussion** notification in the window. Comments, events, mentions, votes
+    and task activity do not trigger a digest, so a member whose groups are
+    quiet gets nothing even with the frequency set.
+
+    Also check that the member is Active, that their address is valid, and the
+    timing: the daily run is 06:00 UTC looking back 25 hours, and the weekly run
+    is Wednesday 09:00 UTC looking back 7 days. A member who set **Weekly** on a
+    Thursday waits almost a week for the first one.
+  </Accordion>
+
+  <Accordion title="An old notification has disappeared from the list. Can I get it back?">
+    No. Notifications older than two months are deleted nightly, records and
+    read state together. The bell is a recent-activity feed, not an archive.
+    For a durable record of what was sent, use the
+    [email log](/platform/emails), which is not on this retention schedule.
+  </Accordion>
+
+  <Accordion title="A member sees the toast and badge update but a colleague does not. Why?">
+    Live delivery goes to members only. People signed in through an event-app
+    session as [contacts](/platform/contacts) get the notification stored and
+    pushed, but no live badge or toast: their count moves on the next refresh.
+    The badge also polls every 180 seconds, so a member with a stale tab can be
+    up to three minutes behind.
   </Accordion>
 </AccordionGroup>
 

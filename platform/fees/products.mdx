@@ -89,6 +89,20 @@ Open a product and use the **Prices & Options** tab. Every purchasable amount is
 
 Each row's menu offers **modify**, **Go to Price in Stripe**, **Make default**, **Archive** and **delete**. Members only ever see prices that are not archived, not hidden, and inside their valid dates; `HR_TENANT` sees all of them.
 
+### Worked example: a membership fee product
+
+**An example, not a default.** One fee product, **Period** annually, **Cycle beginning** September, holding five prices. Nothing here is preconfigured; each row is one price you add on **Prices & Options**.
+
+| Price | Amount | What makes it behave that way |
+|---|---|---|
+| Standard | 120 | **Payment type** One-time. This is also the price you point **Default Price** at under **Settings** → **Payments & Fees** → **Membership fees**, which is what decides the level a new member starts on. |
+| Student | 60 | **Age under** 26. Needs **Enable Age Restrictions on Prices**. |
+| Senior | 60 | **Age over** 65. A member has to be under the first value or over the second, so one price can carry both. |
+| Honorary | left empty | **Is only assignable by admins (hidden for members)**. Members never see it, and applying it extends validity without a payment. See [Membership Fees](/platform/fees/fees). |
+| Corporate | 900 | **Company only** with **Company slots** 10. |
+
+`HR_TENANT` is what puts the **Is only assignable by admins** and **Is bundle** switches on the form; a finance admin without it will not see either.
+
 <Warning>
   Once any payment has been taken against a price, its amount is frozen. Saving a different amount returns "You cannot edit the price of this product." Use a new price version instead.
 </Warning>
@@ -100,6 +114,29 @@ Each row's menu offers **modify**, **Go to Price in Stripe**, **Make default**, 
 A fee price carries **Valid from** and **Valid to** dates, and each version points back at the one it replaced. That chain lets a payment recorded for 2024 still resolve at the 2024 amount after you raise the price for 2026.
 
 To raise a price, open it, choose **New price version**, then fill in **New price**, **Valid from** and optionally **Valid to**. Orgo closes the old version by setting its **Valid to** to the day before the new one starts, so the two never overlap. To work out what a member owed on a given date, the version whose validity window contains that date wins; if none does, Orgo falls back to the organisation default price. The Prices table gains **Valid From** and **Valid To** columns and an expandable **Previous Version** row as soon as any history exists.
+
+### Worked example: taking a level from 120 to 135
+
+You charge 120 a year and want 135 from the 2026 membership year, which starts on 1 September 2026.
+
+<Steps>
+  <Step title="Version the current price">
+    Open the 120 price, choose **New price version**, enter **New price** 135 and **Valid from** 1 September 2026. Leave **Valid to** empty so the new amount runs until you version it again.
+  </Step>
+  <Step title="Let Orgo close the old one">
+    The 120 row is stamped **Valid to** 31 August 2026 and linked to the new row. You do not set that date yourself, and you should not: setting both by hand is how gaps and overlaps appear.
+  </Step>
+  <Step title="Check what history resolves to">
+    A payment recorded in March 2026 against the 2025 period still resolves at 120, because the date it covers falls inside the old window. Anything covering 1 September 2026 onwards resolves at 135. Members carry on pointing at the same level; there is nothing to reassign.
+  </Step>
+  <Step title="Next year, version the newest row">
+    A 2027 rise is a new version of the 135 row, not a second version of the 120 one. Versions form a chain, and the chain has to stay in order.
+  </Step>
+</Steps>
+
+Two dates with no version between them fall through to the organisation **Default Price**, so leave no gap. Deleting a version that a newer one points back at is refused until you delete the newer one first.
+
+Versioning is acted on for membership fee products only. On a donation or event product, retire a price by archiving it and adding its replacement.
 
 ---
 
@@ -148,6 +185,34 @@ Archiving takes a product out of circulation while keeping its payment history: 
 
   <Accordion title="A local center needs its own fee">
     Create it from **Finance** → **Local products** and configure it per chapter. See [Local Center Fees](/platform/local-group-fees/create-local-fees).
+  </Accordion>
+
+  <Accordion title="Orgo refuses to delete a price">
+    Four different things block it, and the message says which: payments already taken against it, event attendees registered on it, use by a ticket bundle, or a newer price version pointing back at it. The last one is the only one you can clear, by deleting the newer version first. Otherwise archive the price: it disappears from checkout and keeps its history.
+  </Accordion>
+
+  <Accordion title="Orgo refuses to delete a product">
+    Deletion is only for products that have never taken money; anything with payments against it is refused, and the message tells you so. Archive it instead, which also archives it in Stripe when it exists there.
+  </Accordion>
+
+  <Accordion title="Creating the product fails and the title looks fine">
+    A title made only of spaces counts as blank and is rejected with "Product name is required.", because Stripe will not accept a product without a name. Type a real title rather than a placeholder space.
+  </Accordion>
+
+  <Accordion title="I cannot switch the frequency off">
+    A saved product must keep at least one of **Recurring** and **One-off**, so whichever one is currently alone cannot be cleared. **One-off** is also unavailable while no Stripe account is connected, the organisation's for organisation products and the chapter's own for local center products.
+  </Accordion>
+
+  <Accordion title="Access denied when opening or saving a product">
+    Organisation products need `FINANCIAL_TENANT`. `FINANCIAL_LOCAL` reaches only products belonging to a chapter the holder is attached to, which is why a chapter finance admin can open **Local products** but not the organisation membership fee. Event ticket products are the exception: they are gated on `EVENT_TENANT` instead.
+  </Accordion>
+
+  <Accordion title="A price will not accept the settings I give it">
+    Two combinations are refused outright. "The default price cannot be set as admin assignable only" means the price you selected as **Default Price** under **Settings** → **Payments & Fees** → **Membership fees** cannot also be **Is only assignable by admins (hidden for members)**: point **Default Price** at another price first. And a price created as a bundle cannot be turned back into an ordinary price once its bundle has been sold, has event attendees, or has members assigned to it.
+  </Accordion>
+
+  <Accordion title="A price exists in Orgo but not in Stripe">
+    Prices are only pushed to Stripe when an account is connected at the time you save them, so anything created before you connected Stripe stays local, and **Go to Price in Stripe** has nothing to open. The product itself is created in Stripe on the first checkout that needs it, and saving the price again after that pushes it across.
   </Accordion>
 </AccordionGroup>
 

@@ -193,7 +193,7 @@ With the website builder, chapters also publish to `/chapters` and `/chapter/:id
 
 ---
 
-## Common questions
+## Troubleshooting
 
 <AccordionGroup>
   <Accordion title="Can one person administer several chapters?">
@@ -206,6 +206,116 @@ With the website builder, chapters also publish to `/chapters` and `/chapter/:id
 
   <Accordion title="Why do chapter names show as 'Town - Name'?">
     That is **Center Name Format** under **Settings** → **Modules** → **Groups** → **Local Centers**, which defaults to `%town% - %name%`. The LC and LP prefixes come from a separate switch, **Show LC/LP prefix**, and apply only when parent chapters are enabled.
+  </Accordion>
+
+  <Accordion title="A chapter has disappeared from the list and from the transfer picker">
+    Check its status. The list opens on the active filter, and that filter means
+    the exact **Active** status, not the three statuses that count as active. A
+    chapter set to **Pending close** or **Suspended** drops out of the default
+    view while still being counted as active in member counts and reports.
+    Switch the status filter to **All statuses** to see it, which is also the
+    only setting under which the status column itself appears.
+
+    The same rule reaches past the list. The map, the destination picker on a
+    transfer request and the extra-chapter picker under **Multi local center
+    access** all read the unfiltered chapter feed, which serves exactly-Active
+    chapters. So suspending a chapter also stops anyone transferring a member
+    into it, which is usually more than was intended. Lists that filter on
+    "active" rather than reading that feed, such as the chapter filters on member
+    and fee screens, do include Pending close and Suspended.
+
+    Use **Pending close** to signal a wind-down you still need to work with, and
+    **Closed** when you mean the chapter to leave.
+  </Accordion>
+
+  <Accordion title="I deleted a chapter and it is still there, marked Closed">
+    That is the designed fallback and it is silent: both outcomes report success
+    the same way, so the list is the only place you find out which one happened.
+
+    Orgo hard-deletes a chapter only when nothing points at it. Three things
+    block that: a member with a local Stripe customer record for the chapter, a
+    pending invitation, and any transfer request naming it as the origin or the
+    destination. Transfer requests are kept as history rather than cleared, so a
+    chapter that has ever exchanged a member, or ever taken one local online
+    payment, can only ever be closed and not removed. In practice that is most
+    chapters that have run for a season.
+
+    When a hard delete does go through, the members are not deleted with it.
+    Their chapter field is emptied, which leaves them with no chapter until
+    somebody reassigns them. A member in that state fails any check that compares
+    their chapter with the chapter of the thing they are looking at, so local
+    fees and local permissions stop resolving for them. Move the members first,
+    then delete.
+  </Accordion>
+
+  <Accordion title="ADMIN_PARENT_LOCAL is not reaching the chapters I expected">
+    The reach of a `_PARENT_LOCAL` permission is worked out from the holder's own
+    primary chapter. You are not choosing which branch it covers when you tick
+    the box, you are saying "everything under the same parent as this person".
+
+    Worked example: Riverside and Hillside are both children of North Region.
+    Give `ADMIN_PARENT_LOCAL` to a member whose primary chapter is Riverside and
+    they administer North Region, Riverside and Hillside. Give the same
+    permission to a member of a chapter under South Region and it covers South
+    Region instead. Nothing you do on the permissions panel points it at another
+    branch.
+
+    One more rule catches people out: with **Enable Parent Centers** on, a
+    chapter that has no parent of its own is treated as its own parent. So
+    `ADMIN_PARENT_LOCAL` on a member of a stand-alone top-level chapter is
+    effectively `ADMIN_LOCAL` over that chapter and any children it gains later,
+    not a wider grant.
+
+    To give somebody authority over a branch that is not theirs, either move
+    their primary chapter with a [transfer](/platform/groups/transfers), or use
+    **Multi local center access** and name the chapters.
+  </Accordion>
+
+  <Accordion title="Extra chapter access stopped working and nobody changed the profile">
+    Check whether **Multi local center access** is still on. Every extra chapter
+    grant is stored on the member's profile, but permission checks only consult
+    those rows while the setting is enabled. Turn it off and the grants stop
+    counting immediately, the panel disappears from the profile, and nothing
+    reports that anything was withdrawn. Turn it back on and every grant returns
+    exactly as it was, because the rows were never deleted.
+
+    Two quieter reasons for the same symptom: a grant with an end date in the
+    past no longer appears or applies, and a grant pointing at a chapter that is
+    no longer Active drops out of the panel, since it lists Active chapters only.
+  </Accordion>
+
+  <Accordion title="A chapter is missing a pin, or the map opens over the ocean">
+    A pin is drawn from **Map location** when it is set, and from the chapter's
+    **town** coordinates when it is not, so a chapter with a town usually appears
+    without anyone entering coordinates. It is skipped only when it has neither,
+    or when what is stored is not a pair of numbers, which happens when a name
+    lands in the latitude box. Only exactly-Active chapters are plotted, so a
+    suspended chapter has no pin either.
+
+    Where the map opens is a separate setting. It uses **International Map
+    Center** and **International Map Zoom Level** if they are filled in, then the
+    coordinates of your organisation's country. With neither, it centres on
+    latitude 0, longitude 0, which is open water in the Gulf of Guinea and looks
+    like a broken map. Setting the two international values fixes it, and they
+    are the right place to control the opening view for an organisation that
+    spans several countries.
+  </Accordion>
+
+  <Accordion title="A local admin opens the chapter edit page and sees a blank screen">
+    Two checks disagree, and the failure lands between them. The route asks only
+    whether you hold `ADMIN_LOCAL` somewhere, without looking at which chapter is
+    in the address, so the page loads. The form then renders only for
+    `ADMIN_TENANT` or for your own primary chapter, so for anyone else the page
+    stays empty. No permission message is shown.
+
+    So a chapter admin who follows a link to a different chapter's edit page gets
+    a blank screen rather than "you cannot edit this". This includes somebody
+    holding **Multi local center access** on that chapter, even where the save
+    itself would be accepted, because the form checks the primary chapter only.
+
+    A member who holds no `ADMIN_LOCAL` at all fails the route check instead and
+    is sent to the login screen, which looks like a session that has expired and
+    is not one. That behaviour is the same on any page they lack the role for.
   </Accordion>
 </AccordionGroup>
 

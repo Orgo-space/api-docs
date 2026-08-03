@@ -187,6 +187,109 @@ profile-based builders. If it belongs to one question you asked once, use Forms.
 
 ---
 
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Why can I open the Forms area but not the responses on a colleague's form?">
+    The Responses tab, the statistics, the recalculate button and the **Publish**
+    action all check the same thing: that you created the form, or that you hold
+    `ADMIN_TENANT`, `COMMUNICATION_TENANT`, or `EVENT_TENANT`. `HR_TENANT` is not
+    on that list, and it does not imply any of the three.
+
+    Worked example: two colleagues both hold `HR_TENANT`. Both reach `/forms`,
+    both create and publish their own forms, and neither can open the other's
+    Responses tab, because for each of them the other's form fails every branch
+    of the check. The requests are refused rather than returning an empty table.
+
+    Fixes, in order of preference: give the people who read results
+    `COMMUNICATION_TENANT` or `EVENT_TENANT`, keep one shared account as the
+    owner of forms the whole team reads, or ask the owner to send the CSV.
+  </Accordion>
+
+  <Accordion title="I deleted a form. Can I still reach its answers?">
+    Not from the app. Deleting sets the form's status to `DELETED`, and every
+    signed-in read of forms filters that status out: the form disappears from the
+    list, and so do its Responses tab, its statistics and its CSV export. The
+    public link stops working too, because the public page only serves forms that
+    are published or closed.
+
+    Nothing is destroyed. The submissions, the answers and the contacts created
+    from them all stay in the database. But there is no undelete button, so
+    **Download CSV** before you delete anything you might want to read again. To
+    take a form out of circulation without losing access to the answers, use
+    **Not accepting responses** instead of Delete.
+  </Accordion>
+
+  <Accordion title="Which really stops responses, Schedule auto-close or Not accepting responses?">
+    They work differently and only one of them is a hard stop.
+
+    **Not accepting responses** changes the stored status of the form to closed.
+    The submit endpoint accepts nothing but a published form, so responses stop
+    at the source, and closing the form also computes its final statistics.
+
+    **Schedule auto-close** is evaluated when the form is read. Once the date has
+    passed, the form reports itself as closed and the public page shows the
+    "Form Closed" panel in place of the questions, but the stored status is still
+    published.
+
+    For an audited cut-off (a vote, a deadline with money attached) set the
+    switch when the deadline arrives rather than relying on the date alone. One
+    detail worth knowing: turning **Not accepting responses** on clears the
+    scheduled date, so reopening the form later does not silently re-arm an old
+    schedule. Reopening also queues a fresh recalculation of the statistics.
+  </Accordion>
+
+  <Accordion title="Two people tried to answer and the second one got the thank-you page">
+    That is **Limit to one submission per device**. The device is a hash of the
+    respondent's IP address and browser user agent, so it is really "one answer
+    per network plus browser build", not one answer per person.
+
+    Worked example: five colleagues answer from the same office router. The first
+    two use different browsers and both get through. The next three are all on
+    the same version of the same browser, so they produce the same hash as one of
+    the first two and see the thank-you page without their answers being saved.
+    The same person on a phone that switches from office wifi to mobile data
+    counts as a new device and can answer again.
+
+    Two more details. Only confirmed responses block a device, so on a form set
+    to **Anyone with email verification** a first respondent who never clicks the
+    confirmation link leaves the device open. And nothing deduplicates by email
+    or by member account: the device hash is the only repeat guard there is, on
+    every submission mode.
+  </Accordion>
+
+  <Accordion title="The Summary count and the Table count do not agree">
+    They read different sources. **Table View** counts confirmed submission rows
+    live. **Summary** reads a stored statistics record that Orgo maintains in the
+    background as answers arrive.
+
+    When the background update falls behind, Orgo forces a full recalculation
+    only once 50 or more responses have landed since the last one. Below that it
+    serves what it has, which is why a form collecting a handful of answers a day
+    can show a Summary that trails the table by a few responses for a while. The
+    refresh button next to **Download CSV** forces the recalculation immediately.
+
+    On a closed form the stored record is final by design: the refresh button
+    will not move it, and that is what "closing a form freezes its statistics"
+    means in practice.
+  </Accordion>
+
+  <Accordion title="My CSV is missing the oldest responses">
+    The export stops at 10,000 rows and takes the newest ones, ordered by
+    submission date, with no warning in the file or on screen.
+
+    Worked example: a form with 12,300 confirmed responses exports a CSV with the
+    most recent 10,000 in it. The 2,300 oldest are simply absent, and the row
+    count in the file is the only clue.
+
+    Below 10,000 the export is complete. Above it, read the older responses in
+    **Table View**, which pages through everything 100 rows at a time, or split
+    long-running collection across more than one form.
+  </Accordion>
+</AccordionGroup>
+
+---
+
 ## Related
 
 - [Contacts](/platform/contacts) for the records created by public responses

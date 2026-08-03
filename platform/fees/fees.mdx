@@ -111,7 +111,23 @@ A **Checkout donation** section adds an optional gift to the membership checkout
 - **Off (anniversary):** the period runs from the payment date for the product's number of months, ending the day before the anniversary. An annual fee paid on 1 September covers to 31 August.
 - **On (fixed cycle):** the period is anchored to the product's **Cycle beginning** month, so a September-anchored annual fee always runs 1 September to 31 August and a January payment buys only the remainder.
 
-Proration decides the price, not the end date. With **Enable pro-ratio for shorter first cycle** off, a mid-cycle payer still ends on the cycle boundary and pays in full; with it on the amount is reduced for the remaining months, unless **Number of months after cycle begining to start pro-rate** vetoes it for late joiners.
+Proration decides the price, not the end date. With **Enable pro-ratio for shorter first cycle** off, a mid-cycle payer still ends on the cycle boundary and pays in full; with it on the amount is reduced for the remaining months, unless **Number of months after cycle begining to start pro-rate** vetoes it for members who join in the opening months of the cycle.
+
+### Worked example: joining mid-cycle
+
+**An example, not a default.** An annual membership priced at 120, **Period** 12 months, **Cycle beginning** September, with **Fixed Starting Date for Fees** and **Enable pro-ratio for shorter first cycle** both on.
+
+| The member joins | The period on offer | Charged |
+|---|---|---|
+| September 2025 | 1 Sep 2025 to 31 Aug 2026 | 120, the whole cycle |
+| January 2026 | 1 Jan 2026 to 31 Aug 2026 | 80, eight months of twelve |
+| June 2026 | 1 Jun 2026 to 31 Aug 2026 | 30, three months of twelve |
+
+Every partial period still ends on the cycle boundary, so everyone renews together on 1 September.
+
+Now set **Number of months after cycle begining to start pro-rate** to 3. Anyone joining in the first three months of the cycle (September, October, November) is charged the full 120 instead, and proration only starts with a December join. The setting exists so that a member joining a few weeks late does not get a discount for it.
+
+Proration is measured from the member's join date, not from the day they pay: a member who joined in January but only settles in June still buys the January to August period at 80.
 
 ---
 
@@ -127,6 +143,8 @@ Each member carries an assigned membership price, per level, plus an optional lo
 Raising a price therefore never reprices history: a 2024 payment still resolves against the 2024 version.
 
 On **Finance** → **Local members fees** the fee column is a per-member dropdown, and the change is recorded against the fee year on screen, so a member can sit on one level this year and another next. The first future-dated change pins the member's current level to the current cycle, so promoting the new level later cannot reprice earlier periods. The change is refused with a conflict once a successful payment covers the target cycle or any later one; the lock icon marks the rows the server would refuse.
+
+**Example.** With **Cycle beginning** September, the fee year labelled 2026 means 1 September 2026 to 31 August 2027, and in July 2026 the current fee year is still 2025. So in July 2026 you can move a member from Student to Standard for 2026 even though they have paid 2025 in full: the earliest period the change touches is 1 September 2026, and no payment reaches it yet. Once that member pays 2026, the 2026 dropdown locks and only 2027 onwards remains editable.
 
 ---
 
@@ -150,6 +168,14 @@ Exemption comes from the user type, not the individual: a user type with **Not e
 | **By someone else** | A parent listed as managing a member can pay for them, and companies can cover their members. A company-covered member sees "Membership managed by" instead of a pay button. |
 
 An admin may only record a payment for a member they manage: chapter and organisation finance admins for their whole scope, unit admins only for members in their own units.
+
+### Worked example: recording a part-paid year
+
+**An example, not a default.** A member on a 120 level with a September cycle already paid 30 by card for 1 June to 31 August 2026. An administrator now ticks the whole 1 September 2025 to 31 August 2026 cycle under **Mark as paid**.
+
+Orgo works out what the cycle costs (120), subtracts the overlapping part of what is already paid (the 30), and records a single 90 row. The member's periods do not double up and the totals still add up to what was actually collected. If the selection turns out to be fully covered, nothing is recorded for that member at all and they simply do not appear in the batch.
+
+An early renewal is stacked the same way. When a member pays while their membership is still valid, the new period starts at their current validity date rather than at the payment date, so paying two weeks early costs them nothing in days.
 
 ---
 
@@ -228,6 +254,26 @@ Open the payment on **Finance** → **Payments** and choose **Refund**. Orgo ref
 
   <Accordion title="Chapters need their own dues on top">
     Turn on **Local Center Fees Enabled** and configure each chapter's fee product. Members then hold two independent validity dates. See [Local Center Fees](/platform/local-group-fees/create-local-fees).
+  </Accordion>
+
+  <Accordion title="I am on a member's fee tab and there is no pay button">
+    Working as designed: the online payment buttons only ever appear to the member looking at their own fee tab. An administrator settles someone else's fee with **Mark as paid**, or sends them the payment link to pay themselves. Before digging further, confirm whether it is you or the member who cannot see the button, because the two have completely different causes.
+  </Accordion>
+
+  <Accordion title="The member has no way to pay at all, not even the advance window">
+    Three conditions close the member's own payment route regardless of dates. An active, uncancelled subscription on the fee product, because they are already being charged automatically. A bank transfer already in progress, because Orgo is waiting for that money to land. And, with **Require Contract for Membership** on, an unsigned or lapsed membership contract, which also fails on the server with "Please sign the mandatory membership contract before any payments". The last two block **Mark as paid** as well, so an administrator cannot work around them; an active subscription does not, which is how you settle a period for a subscriber whose charge went astray.
+  </Accordion>
+
+  <Accordion title="A member is told to select more periods before paying">
+    Two arrears settings do this. **Minimum Cycles to Pay** produces "You must select at least N cycles to pay", and only bites when the member actually has that many unpaid periods. **Continuity Mandatory** produces "Your account has unpaid balances from previous fee periods": the selection has to start at the oldest unpaid period and run without gaps, so a member cannot pay this year while last year is open. One checkout also covers at most 12 periods; a member further behind than that pays in two goes.
+  </Accordion>
+
+  <Accordion title="A pending batch has no Approve button">
+    **Approve** is shown only to `ADMIN_TENANT`, and only while the batch is still pending. A chapter administrator with `ADMIN_LOCAL` sees **Cancel and delete** instead. If you hold neither, the batch stays pending and the members it covers stay unpaid.
+  </Accordion>
+
+  <Accordion title="A returning member was not charged the registration fee">
+    The one-time registration fee is due only to a member who has never had a membership validity date. Any date at all in their history exempts them, including one that came from a lapsed membership, a level switch, or a free or lifetime price an administrator assigned. There is no way to charge it a second time.
   </Accordion>
 </AccordionGroup>
 

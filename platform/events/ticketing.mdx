@@ -122,6 +122,27 @@ tickets priced 0 still separate members from guests.
 
 ---
 
+## Common ticket structures
+
+Every structure below is built from the same ticket type fields. The amounts and dates are
+**examples**, not defaults: nothing here is preconfigured.
+
+| What you want | How to build it |
+|---|---|
+| **Early bird, then regular** | Two ticket types on the same event. "Early Bird" at 60, **Available until** 31 March 23:59. "Regular" at 80, **Available from** 1 April 00:00. Both stay listed all along: the early bird turns **Expired** and the regular sits at **Upcoming** until its window opens. Neither is selectable outside its window. |
+| **Member versus non-member** | "Member" at 40 with **Availability** set to **Members only**, "Standard" at 70 with **Members & external**. A logged-out visitor sees both, can select only Standard, and gets the login and register prompt on the member one. |
+| **Tiered access by membership level** | Start from a members-only ticket, then add levels under **Restrict to specific membership levels**: "Student rate" at 25 restricted to your Student level, "Full rate" at 55 restricted to Standard and Senior. A member whose level is not listed is refused. Because only one membership-restricted ticket is allowed per attendee per event, these tiers are mutually exclusive by construction. |
+| **Free event with categories** | Price every type 0: "In person" with **Max Seats** 120, "Online" with no seat limit. A zero-priced ticket goes through free registration with no card step, so the attendee still fills in the registration form and still gets a QR ticket. An event where every ticket has a price cannot be used for free registration. |
+| **Paid event with one free category** | Mix them: a paid ticket type and a 0 priced one on the same event. The free one is completed without a card; the paid ones go to Stripe. |
+| **One ticket per person** | Turn on **Allow only one ticket per order** at the top of the Tickets page. For anything larger, note that one browser session can hold at most 10 tickets per event, so a company buying 12 places has to do it in two checkouts. |
+
+<Note>
+A ticket priced 0 is not the same as a members-only ticket priced 0. Price decides whether Stripe is
+involved; **Availability** decides who can select it. You can combine them freely.
+</Note>
+
+---
+
 ## Addons
 
 Addons are extras sold alongside a ticket: a meal, a workshop track, parking, a partner place. They
@@ -167,6 +188,24 @@ The list shows each voucher's status (**Active**, **Upcoming**, **Expired**, **L
 **Inactive**) and its usage count. A voucher that takes the order to zero completes without a card
 payment. Deleting a voucher does not change discounts already applied to past orders, and a refund
 does not give a use back.
+
+### How the discount is worked out
+
+A fixed-amount voucher comes off the order total once, not off each ticket. A percentage voucher is
+the one that surprises people, because the percentage is applied to the order's **average** ticket
+price, multiplied by the number of tickets it is allowed to cover.
+
+**Example.** An order of two Regular tickets at 80 and one Student ticket at 25 totals 185.
+
+| Voucher | Discount taken | Why |
+|---|---|---|
+| 20%, no other limits | 37.00 | 20% of the whole 185. |
+| 20%, **Max tickets per use** 2 | 24.67 | The average ticket is 61.67; two of them is 123.34; 20% of that. Not 20% of the two dearest tickets. |
+| 20%, **Max tickets per use** 2, **Max discount amount** 20 | 20.00 | The cap wins. |
+| 20%, **Restrict to ticket types** Regular | 32.00 | Only the two Regular lines count, so the average is 80. |
+
+If you want a percentage to apply to specific tickets, set **Restrict to ticket types**. **Max
+tickets per use** limits how many tickets are covered but does not choose which ones.
 
 ---
 
@@ -292,6 +331,85 @@ with `HR_LOCAL` over that person.
   <Accordion title="I want to stop sales without deleting anything">
     Turn on **Close registrations** on the event form. No new registrations or ticket purchases are
     accepted, and existing attendees keep their tickets.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Orgo will not let me delete a ticket type">
+    Deletion is blocked as soon as the ticket type has history, and the message names the reason:
+    payments taken against it, attendees registered on it, or use by a ticket bundle. The records
+    that point at it have to keep pointing at something. Set its **Available until** to now instead:
+    it stops selling, keeps its history, and shows as **Expired** in the list.
+  </Accordion>
+
+  <Accordion title="Saving a ticket is rejected because of its dates">
+    The purchase window has to sit inside the event's own lifetime: **Available from** cannot be
+    earlier than the date the event was created, and **Available until** cannot be later than the
+    event's end (its start, if no end is set). The form also nudges the two dates apart by an hour if
+    you set them so that the end falls before the start.
+  </Accordion>
+
+  <Accordion title="A buyer is told they cannot hold more than 10 tickets">
+    One browser session can hold at most 10 tickets per event across all ticket types, and the
+    message tells the buyer how many more they may take. This is a cap on a single cart, not on the
+    event: they complete that checkout and start another one for the rest.
+  </Accordion>
+
+  <Accordion title="A voucher code is rejected as invalid">
+    "Invalid voucher code" covers four cases at once: the code does not exist on **this** event
+    (vouchers are per event, so a code created on last year's event will not carry over), it is
+    switched off with **Active**, it is outside its **Valid from** / **Valid to** window, or it has
+    reached **Max uses**. Codes are stored and matched in upper case, so capitalisation in the email
+    you sent does not matter.
+  </Accordion>
+
+  <Accordion title="The voucher took off less than the buyer expected">
+    See [How the discount is worked out](#how-the-discount-is-worked-out). The usual causes are
+    **Max discount amount** capping the money, **Max tickets per use** limiting how many tickets the
+    percentage covers, or the percentage landing on the order's average ticket price rather than on
+    the dearest tickets.
+  </Accordion>
+
+  <Accordion title="Checkout fails with a message about the name">
+    "Name can only contain letters, spaces, hyphens, apostrophes and periods." Something that is not
+    a name went into a name box, most often a phone number. Orgo checks every buyer, attendee and
+    addon-attendee name before the card is charged rather than after, so the money is never taken.
+  </Accordion>
+
+  <Accordion title="Checkout fails because the tickets use different currencies">
+    One order cannot mix currencies. This only happens when ticket types on the same event were
+    saved with different currencies; rebuild the odd one out in the event's currency.
+  </Accordion>
+
+  <Accordion title="An addon cannot be added to an order">
+    Three separate limits produce three different messages: **Max per ticket** ("Maximum N of X per
+    ticket allowed"), **Total inventory** ("Only N X available"), and an archived addon ("no longer
+    available"). Inventory counts sales across all buyers, so it can run out mid-event.
+  </Accordion>
+
+  <Accordion title="An attendee lost the confirmation email, can I resend it?">
+    There is no resend button. A signed-in member can open the event page and download their own
+    ticket as a PDF; an administrator with `HR_LOCAL` over that member can download the same PDF and
+    forward it. The QR code is fixed when the attendee record is created and never regenerated, so a
+    re-downloaded ticket scans exactly like the original, and an attendee who shows the QR from the
+    original email is equally valid.
+  </Accordion>
+
+  <Accordion title="The Tickets page and the public event page disagree about how many seats are left">
+    They count differently, and both are right. The **Sold Out** and **Only N left!** tags on the
+    admin ticket list subtract only tickets already sold. The public page also subtracts seats
+    currently held in other people's carts, so it can warn buyers, or refuse them outright, while
+    your list still looks comfortable. The two converge once the open carts are paid for or their
+    8 minute holds expire.
+  </Accordion>
+
+  <Accordion title="I refunded an order but the voucher still counts as used">
+    Refunding returns seats and addon stock but never a voucher use. On a limited-use code, raise
+    **Max uses** by the number of orders you refunded, otherwise the code retires early.
   </Accordion>
 </AccordionGroup>
 

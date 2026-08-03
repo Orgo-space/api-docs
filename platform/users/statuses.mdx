@@ -91,9 +91,11 @@ Privacy** → **Close account** page sets them to Inactive. See
 ## Where a new member's status comes from
 
 Self-registration creates the account as **Unconfirmed email**; once the member
-clicks the verification code or link it becomes, in this order, **Awaiting
-referral** if the referral programme requires referrals, else **New request**
-(`UNAPPROVED`) if **Manual Approval** is on, else **Active**. Accounts created
+clicks the verification code or link it becomes, in this order, **Waiting list**
+if the [registration waitlist](/platform/users/waitlist) is on and they chose a
+local center, else **Awaiting referral** if the referral programme requires
+referrals, else **New request** (`UNAPPROVED`) if **Manual Approval** is on,
+else **Active**. Accounts created
 by an administrator use **Default Status for Admin-Created Users** instead,
 which offers Active, Inactive, Unapproved, Waiting list, Suspended and Excluded.
 
@@ -159,22 +161,114 @@ ordering) and they do not apply to members. See
 
 <AccordionGroup>
   <Accordion title="What is the difference between Inactive and Suspended?">
-    For access, nothing: both block the login and cut open sessions. Inactive is
-    where a member lands by lapsing or closing their own account and is the only
-    one the reactivation prompt works with; Suspended is an administrator
-    blocking someone.
+    For access, nothing: both block the login and cut open sessions. The
+    difference is what they mean and what they allow next.
+
+    Inactive is where a member lands by lapsing or by closing their own account.
+    It is the only status the reactivation prompt works with, so it is the one
+    to use when you expect the person back. Suspended is an administrator
+    blocking someone, and the only way out of it is an administrator changing
+    the status by hand.
+
+    Use Excluded rather than Suspended when the departure is permanent and you
+    want your records to say so. The access effect is identical.
   </Accordion>
 
   <Accordion title="Does changing status remove any data?">
-    No profile data is removed. Role assignments are the exception, so check the
-    Roles tab after reinstating someone.
+    No profile data is removed by an ordinary status change. Role assignments
+    are the exception: every open role is end-dated, and the rows stay in the
+    member's history with a closed date rather than disappearing. Reinstating
+    someone does not reopen them, so check the Roles tab after any
+    reinstatement.
+
+    Deletion is the one status that does remove things. See
+    [Deletion of account](/platform/users/deletion-of-account) for exactly what
+    it clears.
   </Accordion>
 
   <Accordion title="I set someone to Excluded and now nobody can open their profile">
     Expected: a non-Active profile is only reachable by an admin with HR access
-    over their local group. If an **Active** member's profile is unreachable,
-    that is privacy rather than status, see
+    over their local group. Ordinary members get a refusal, which is usually
+    what an exclusion is meant to achieve.
+
+    If an **Active** member's profile is unreachable, that is privacy rather
+    than status, see
     [Privacy settings](/platform/users/privacy-settings).
+  </Accordion>
+
+  <Accordion title="I moved a member to Unreachable and they are still using the app. Why?">
+    Only Inactive, Suspended, Excluded and Deleted cut open sessions
+    immediately. Waiting list, Unreachable, Helping hands, Contributor and New
+    request block the next sign-in but leave the current session running until
+    its token expires.
+
+    So the descriptive statuses are filing labels with a delayed effect, not an
+    eject button. If you need someone out now, use Suspended or Inactive.
+  </Accordion>
+
+  <Accordion title="A local admin gets 'Only tenant administrators can modify user status'">
+    That message comes from **Allow Local Admins to Modify User Permissions**
+    being off, under **Settings** → **Users & Profiles** → **Configuration**.
+    With it off, only `HR_TENANT` and `ADMIN_TENANT` can change any status,
+    including approving new registrations and parking someone on the waiting
+    list.
+
+    Either turn the setting back on, or handle status changes centrally. There
+    is no middle setting that allows approvals but blocks other status changes.
+
+    A different message ("Access Denied") usually means the admin lacks
+    `HR_LOCAL` over that member's local group, which is a separate check that
+    applies even when the setting is on.
+  </Accordion>
+
+  <Accordion title="The status I need is not in the dropdown">
+    The dropdown is built from what your organization has switched on.
+
+    - Waiting list, Suspended, Excluded, Unreachable, Helping hands and
+      Contributor each appear only when that status is enabled under
+      **Settings** → **All Modules** → **Extra User Statuses**. Suspended is on
+      out of the box, the rest are not.
+    - **New request** appears only while **Manual Approval** is on.
+    - Awaiting referral and Deleted are never offered: the referral programme
+      and the Delete account action set them.
+    - Unconfirmed email appears only while the member is already in it. Once you
+      move them to something else you cannot put them back; resend the
+      verification instead.
+  </Accordion>
+
+  <Accordion title="I reactivated a member and they were sent a welcome email">
+    **Send Welcome Message** fires on every transition into Active, not only at
+    registration, and it is on by default. Reinstating a lapsed member,
+    approving a New request and bulk-activating an imported list all trigger it.
+
+    Turn it off under **Settings** → **Users & Profiles** → **Configuration**
+    before a bulk reactivation, then turn it back on.
+  </Accordion>
+
+  <Accordion title="A member is Active but still cannot sign in">
+    Then status is not the cause. The sign-in refusal names the status it
+    rejected, so an Active member being refused means the block is somewhere
+    else: an unset password, an unverified email address, multi-factor
+    authentication, or a gate the app applies after the login succeeds.
+
+    Work through [Troubleshooting member access](/platform/users/troubleshooting-access).
+  </Accordion>
+
+  <Accordion title="Someone closed their own account. What happens next?">
+    Closing sets them to Inactive and signs them out at once. Their profile
+    data, history and role records stay, with the roles end-dated.
+
+    If **Allow Account Reactivation** is on, they can start the return
+    themselves from the login screen: accepting the prompt moves them to **New
+    request** and emails your administrators, who approve them like any other
+    pending member. Those admin emails are the local center's admins when local
+    centers are active, and your tenant admins otherwise, and they are silenced
+    along with the rest of **New Member Admin Notification** if you have that
+    system email switched off.
+
+    **Notify Admins on Account Deactivation** only covers closures a member
+    performs themselves. Setting someone to Inactive from the admin side does
+    not send it, on the assumption that the admin doing it already knows.
   </Accordion>
 </AccordionGroup>
 

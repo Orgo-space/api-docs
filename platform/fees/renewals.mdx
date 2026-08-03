@@ -52,6 +52,26 @@ to members whose validity date falls exactly on a milestone:
 Nothing is sent between the rungs or after 30 days past expiry: a member who
 lapses and never returns hears from Orgo seven times, then stops.
 
+### Worked example: a membership expiring on 30 June
+
+Each rung is matched against the validity date exactly, so the whole ladder for
+one member is fixed the moment their validity date is known. For a membership
+valid to **30 June 2026**, and taking that date as an **example**:
+
+| Sent at 18:00 UTC on | Email |
+|---|---|
+| 30 May 2026 | 1 Month Reminder |
+| 23 June 2026 | 7 Days Reminder |
+| 30 June 2026 | Renewal Day Notice |
+| 1 July 2026 | Lapsed Reminder |
+| 7 July 2026 | Lapsed Reminder again |
+| 14 July 2026 | 14 Days After Reminder |
+| 30 July 2026 | 30 Days After Reminder |
+
+Nothing arrives on any other day, and the moment they pay, their validity date
+moves and the remaining rungs no longer match. Because the match is on the exact
+date, a rung the job misses is not sent late: it is skipped.
+
 <img src="/images/platform/fees/fee-renewal-reminder-templates.png" alt="Membership renewal reminder templates listed with their send timing, from 1 Month Reminder through 30 Days After Reminder" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 <Note>
@@ -63,8 +83,8 @@ to individual members. The company version of that reminder is sent normally.
 A member is skipped entirely when they have an active subscription on that fee
 product, their user type is marked as not eligible for a fee, their membership is
 covered by a company with its own validity date (the company is chased instead,
-not the member who cannot pay), or the fee is a one-time payment with a period
-under two months. Monthly one-off fees get no ladder.
+not the member who cannot pay), or the fee period is under two months. Monthly
+fees get no ladder.
 
 **Company memberships.** A second job runs daily at 18:30 UTC on the same seven
 rungs plus the 1-day-before one. Each email goes to the company's contact email
@@ -172,6 +192,16 @@ After any payment the validity date is set to the end of the last period paid
 for, so an early renewal extends the membership rather than restarting it from
 the payment date.
 
+**Example.** An annual membership valid to 30 June 2026, with the default one
+month advance window and **Fixed Starting Date for Fees** off, so periods follow
+the member rather than the calendar. The member pays on 12 June 2026. The new
+period does not start on 12 June: it starts where the old one ended, so the
+membership now runs
+to 30 June 2027 and the renewal date stays put year after year. The same holds
+inside a grace window: with **Fee Valid Months** set to 1, a member who pays on
+15 July 2026 still counts as active at that moment, so they too resume from
+30 June and lose nothing for being late.
+
 ---
 
 ## Stopping an automatic renewal
@@ -184,6 +214,72 @@ Cancelling stops future charges. It does not refund anything already paid and it
 does not end the current period early: the member stays active until the period
 they paid for runs out, and from that point counts as a one-time payer, reminders
 included.
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="A member says they never got a renewal reminder">
+    Work down the list. Do they have an active subscription on the fee product
+    (subscribers are skipped by design)? Is their membership covered by a company
+    (the company is chased instead)? Is their user type marked as not eligible
+    for a fee? Is the fee period shorter than two months? Then check that
+    **Membership Renewal Reminders** is on under **Settings** → **Emails &
+    Notifications** → **System Emails**, and that the individual template has not
+    been overridden off. Finally, look at their validity date: the ladder matches
+    it against the exact milestone dates, so a validity date that was edited or
+    recalculated in between can step over a rung entirely.
+  </Accordion>
+
+  <Accordion title="Members on a monthly membership never hear anything">
+    Expected. The under-two-months rule is read from whichever period applies to
+    that member, so a level with a one-month **Cycle period (in months)** override
+    is skipped even on an annual product, and selling the level as a subscription does not
+    put it back in. Monthly subscribers still get their per charge **Renewal
+    Confirmed** or **Renewal Failed** email, which is the only mail they should be
+    getting.
+  </Accordion>
+
+  <Accordion title="A member on automatic renewal was not renewed">
+    Either the card was declined, in which case Stripe's failure notice reaches
+    Orgo and the member is sent **Renewal Failed**, or there was never a
+    subscription in the first place. The second case is the common one: a payment
+    an administrator recorded by hand, or a bank transfer, leaves no card on file,
+    so a level being sold as recurring does not by itself make the member a
+    subscriber. Check the **Subscribers** tab of the fee product before assuming
+    a member is on automatic renewal.
+  </Accordion>
+
+  <Accordion title="A member cannot switch to the level I told them to pick">
+    The level chooser only offers prices that are not archived, not company only,
+    not hidden from members, and it only appears to the member while their
+    membership has expired and more than one level is open to them. A price marked
+    **Is only assignable by admins (hidden for members)** is invisible to them by
+    definition: a `FINANCIAL_LOCAL` holder has to assign it, and can do so at any
+    time rather than only at expiry.
+  </Accordion>
+
+  <Accordion title="Auto-deactivation ran but some expired members are still active">
+    The job only looks at members who have a validity date. Someone who never paid
+    at all has no date, so they are never deactivated by it, however long they have
+    been on the books. Also skipped: user types not eligible for a fee, and lifetime
+    levels while **Lifetime Membership Available** is on. If nothing at all
+    happened, check that **Fee Payment Mandatory** and **Auto-deactivate on Fee
+    Expiry** are both on and that **Days Until Deactivation** is between 1 and 365,
+    since a value outside that range skips the whole organisation.
+  </Accordion>
+
+  <Accordion title="A lapsed member is stuck on the payment page and cannot pay">
+    With **Fee Payment Mandatory** on, the redirect keys on the validity date, so
+    it starts the day the date passes even when a grace window is still running.
+    The pages needed to complete a payment stay reachable, so if the member is
+    truly stuck it is worth checking the blockers on the fee itself: an unsigned
+    membership contract when **Require Contract for Membership** is on, a bank
+    transfer already in progress, or an active subscription. See
+    [Membership Fees](/platform/fees/fees).
+  </Accordion>
+</AccordionGroup>
 
 ---
 

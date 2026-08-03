@@ -21,10 +21,10 @@ for COMMUNICATION_TENANT. HR_TENANT also has full access.
 
 <img src="/images/platform/users/lists-index.png" alt="Lists and Segments index with All, Dynamic and Static chips and a table of lists showing type, audience, subscribed and total counts" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-The index shows each list with its owner, its type, its audience, how many people
-are in it and how many of those are subscribed to receive email. Chips at the top
-filter to **All**, **Dynamic** or **Static**, and a search box appears once you
-have more than ten lists.
+The index has five columns: **Name**, **Type** (Automated or Static), **Audience**
+(the profile type), **Subscribed** and **Total**, plus edit and delete buttons on
+each row. Chips at the top filter to **All**, **Dynamic** or **Static**, a search
+box appears once you have more than ten lists, and the table pages at 20.
 
 ---
 
@@ -73,6 +73,13 @@ maintain itself, create a new automated list.
   </Step>
 </Steps>
 
+<Note>
+You can also start from **Ask Orgo**. When an answer there is a set of people, it
+offers **Save as segment** (or **Open in editor** on a list proposal), which opens
+this builder with your question already in the describe box and the suggestion
+already running.
+</Note>
+
 <img src="/images/platform/users/list-builder.png" alt="List builder with the Describe your audience panel, list type cards, profile type and member status choices, and two filter criteria joined by AND" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
@@ -98,16 +105,28 @@ not carry the same data.
 | **Membership Fee Status** | yes | no | Paid, Not Paid |
 | **Donation dropout** | no | Contacts Only | Started but never donated |
 
-**Local center** only appears when your organisation uses local centers, and
-**Status** needs profile statuses to be configured.
+**Local center** only appears when your organisation uses local centers.
+**Status** is always offered on Members Only; on the contact scopes it appears
+only when contact statuses are turned on.
 
 For the two donation criteria, picking a donation value reveals a **Product**
 selector so you can narrow to one donation campaign rather than all of them.
 Choosing "Attended specific event" reveals an event search.
 
-Text and number criteria support equals, not equals, greater than, greater than
-or equals, less than, less than or equals, and contains, so "under 18" or "joined
-after March" are expressed as comparisons rather than exact matches.
+### Operators
+
+Which comparisons you get depends on the criterion, and the **Operator** dropdown
+is hidden when only one applies:
+
+| Criterion | Operators |
+|---|---|
+| The three dates, **Age** and **Only full members** | Equals, Not equals, Greater than, Greater than or equals, Less than, Less than or equals, Contains, Is null, Is not null |
+| **Tags** | Has tag, Has all tags, Doesn't have tag |
+| **Local center** | Equals, Has no local center, Has any local center |
+| Everything else | Equals only |
+
+So "under 18" or "joined after March" are comparisons rather than exact matches.
+There is no free-text criterion: you cannot build a list by name or email address.
 
 ---
 
@@ -133,6 +152,13 @@ and adds the ones you tick, **Add CSV** for bulk additions from a file, and a
 remove button per row. Adding someone who is already in the list is harmless: the
 existing entry is kept and the row is reported as skipped rather than failing.
 
+<Warning>
+Adding and removing people on a manual list requires **ADMIN_TENANT**, which is a
+higher bar than the rest of this page. A COMMUNICATION_TENANT holder can open the
+list and see the **Add**, **Add CSV** and remove controls, but those calls are
+refused. If you manage manual lists, you need ADMIN_TENANT.
+</Warning>
+
 <Note>
 Automated lists have no add or remove buttons. To change who is in one, change
 its criteria.
@@ -140,11 +166,33 @@ its criteria.
 
 ---
 
-## Using a list as a newsletter audience
+## A list is not the same thing as an audience
 
-When composing a newsletter, choose **From a list** as the recipients option and
-pick the list. The count shown next to the option is the subscribed count, not
-the total.
+When you compose a newsletter you pick one audience, and a saved list is only one
+of the choices:
+
+| Option | Who it sends to |
+|---|---|
+| **All members and contacts** | Everyone subscribed in the database |
+| **Members from a group** | One group |
+| **All subscribed contacts** | Contacts only, no members |
+| **From a list** | A saved list, the subject of this page |
+| **Event attendees** | Participants of one event |
+| **Non-openers of "..."** | People who did not open an earlier campaign, offered only on a follow-up |
+
+The other five are derived from the platform's own structures and cannot be saved
+or reused. Reach for a list when the audience is a question about the people
+themselves rather than a group, an event or a previous campaign.
+
+<Note>
+Someone whose only communication permission is COMMUNICATION_LOCAL sees just one
+option, **Members from a group**. **From a list** is hidden from them, along with
+the two database-wide options and event attendees. Local campaign managers send to
+a group they manage, not to a saved list.
+</Note>
+
+Choose **From a list** and pick the list. The count shown next to the option is
+the subscribed count, not the total.
 
 For an automated list, the audience is resolved again when the newsletter is
 actually sent, so people who became eligible after you drafted it are included and
