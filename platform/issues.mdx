@@ -1,142 +1,165 @@
 ---
-title: 'Issues & Tasks'
-description: 'Track tasks, assign work, and manage projects within groups — with backlog and kanban views'
-"og:title": 'Issues & Tasks | Orgo'
-"og:description": 'Track tasks, assign work, and manage projects within groups — with backlog and kanban views'
-"twitter:title": 'Issues & Tasks | Orgo'
-"twitter:description": 'Track tasks, assign work, and manage projects within groups — with backlog and kanban views'
+title: 'Issues'
+description: 'A shared task board for project groups: types, priorities, statuses, assignees and comments'
+"og:title": 'Issues | Orgo'
+"og:description": 'A shared task board for project groups: types, priorities, statuses, assignees and comments'
+"twitter:title": 'Issues | Orgo'
+"twitter:description": 'A shared task board for project groups: types, priorities, statuses, assignees and comments'
 ---
 
-Issues is a lightweight project management tool built into every group. Create tasks, assign them to members, track progress with statuses, and visualize work on a kanban board. No separate tool needed.
+**Built for** working groups that need to track who is doing what.
+**Replaces** action-item lists in meeting minutes and message threads.
 
----
+An issue is a piece of work with an owner, a type, a priority and a status, discussed in a
+comment thread. Issues live on a **project group**: a group flagged as a project when it is
+created. The [help desk](/platform/help-desk) uses the same board, scoped to the whole
+organisation instead of one group.
 
-## Do I need Issues?
-
-| You want to... | Issues? |
-|----------------|---------|
-| Track action items from meetings | Yes |
-| Manage a project with assigned tasks | Yes |
-| Plan event logistics with a team | Yes |
-| Log bugs or problems to fix | Yes |
-| Manage a content calendar | Yes |
-| Handle member support requests | Use [Help Desk](/platform/help-desk) instead |
-| Track personal to-dos | Not ideal — Issues is for group collaboration |
+<img src="/images/platform/support/issues-list.png" alt="Issue board for a project group with type, assignee, priority and status columns" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Enabling Issues for a group
+## Issues, tasks or the help desk
 
-Issues are enabled per group, not globally:
-
-1. Go to the group's settings
-2. Enable **Issues/Tasks**
-3. Configure which features are active
-
-| Setting | Default | What it controls |
-|---------|---------|-----------------|
-| **Priority levels** | On | High, Medium, Low priority on issues |
-| **Due dates** | Off | Target completion dates |
-| **Issue types** | On | Categorize as Task, Bug, Feature, etc. |
-| **Status tracking** | On | Workflow columns (To Do → In Progress → Done) |
+| You want to | Use |
+|---|---|
+| Track work inside one working group | Issues |
+| Run a project with a board, gantt view and goals | [Projects and tasks](/platform/projects) |
+| Answer member questions and requests | [Help Desk](/platform/help-desk) |
+| Discuss something without tracking it | [Discussions](/platform/discussion) |
 
 ---
 
-## Creating an issue
+## Creating a project group
 
-Go to any group's **Issues** tab → click **Add Issue**:
+Issues are not available on ordinary groups. You need a project group, and the
+**Project Management** module has to be on:
+**Settings → Modules → Projects → Enable Project Management** (needs `ADMIN_TENANT`).
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| **Subject** | Yes | Brief title — "Book venue for annual meeting" |
-| **Description** | No | Details, requirements, links, context |
-| **Type** | No | Task, Bug, Feature, Research (if types enabled) |
-| **Assignee** | No | Who's responsible |
-| **Priority** | No | High, Medium, or Low |
-| **Due date** | No | When it should be done (if dates enabled) |
-| **Attachments** | No | Screenshots, documents, reference files |
+On the Issues page, a member who belongs to no project yet is offered **Projects → New**,
+which creates a group in project mode. Who may create one follows the tenant's
+group-creation setting (**Settings → Modules → Groups & Teams**). Once the group exists,
+open it and pick the **Issues** tab.
 
----
+A new project group starts with:
 
-## View modes
+| | Seeded values |
+|---|---|
+| **Statuses** | To do, In progress, Waiting list |
+| **Types** | Research, Maintenance, Development |
+| **Priority field** | On |
+| **Type field** | On |
+| **Due date field** | Off |
 
-### Backlog view
-
-A flat list of all issues. Sort by date, priority, status, or assignee. Filter and search to find what you need. Good for reviewing everything at once.
-
-### Kanban view
-
-A visual board with columns for each status. Drag issues between columns to update their status. See progress at a glance. Good for daily standups and active project tracking.
-
----
-
-## Customizing the workflow
-
-### Statuses
-
-Default statuses:
-
-| Status | Meaning |
-|--------|---------|
-| **To Do** | Not started |
-| **In Progress** | Someone's working on it |
-| **In Review** | Waiting for review or approval |
-| **Done** | Complete |
-
-Create custom statuses to match your workflow: go to the group settings → **Issue Statuses** → add, rename, reorder, or color-code statuses.
-
-### Issue types
-
-Default types:
-
-| Type | Use for |
-|------|---------|
-| **Task** | General work items |
-| **Bug** | Problems to fix |
-| **Feature** | New things to build or add |
-| **Research** | Investigation or analysis |
-
-Create custom types in group settings → **Issue Types**. You can set default assignees per type — e.g., all "Budget" issues auto-assign to the treasurer.
+<Warning>
+These are fixed once the group exists. Orgo has no screen for editing a project group's
+issue statuses or types after creation. If you need a configurable workflow, use
+[Projects](/platform/projects) instead, where statuses and types are editable.
+</Warning>
 
 ---
 
-## Working with issues
+## Who sees what
 
-### Filtering
-
-Filter by status, assignee, type, priority, due date, author, or creation date. Combine filters to focus on what matters — e.g., "High priority, assigned to me, In Progress."
-
-### Notifications
-
-Members get notified when:
-- They're assigned to an issue
-- An issue they're watching changes status
-- Someone comments on their issue
-- A due date is approaching
+Issues are visible to members of the group they belong to, and to nobody else. That check
+runs on the server, not just in the interface, so an issue in a private working group stays
+inside it. Anyone who can open a project board can add an issue to it and edit the issues on
+it.
 
 ---
 
-## Common scenarios
+## Adding an issue
+
+Click **Add issue** on the board. The form asks for:
+
+| Field | Notes |
+|---|---|
+| **Title** | Required |
+| **Description** | Rich text, with photos, videos and file attachments |
+| **Type** | Defaults to the first type in the list |
+| **Assignee** | Optional. Filled automatically if the type has a default assignee |
+| **Priority** | Highest, High, Medium, Low, Lowest. New issues start at Medium |
+| **Status** | Defaults to the first status, or **Close** to archive immediately |
+| **Due date** | Only when the due-date field is on for that group |
+
+Mentioning someone in the description notifies them. The author follows the issue
+automatically and is notified of every comment.
+
+---
+
+## The board
+
+The board is a sortable list. Columns: due date where enabled, type, title, assignee,
+priority and status, plus a created-date-and-author column that the **author** button in
+the toolbar shows or hides. Type, status, assignee and priority can all be changed inline
+from the list.
+
+Filters sit above the list:
+
+- free-text search over the title
+- **Task type**
+- status: **Opened** (the default), any individual status, or **Closed**
+- assignee avatars, including **unassigned**
+- your own avatar, which filters to issues that mention you
+- an **Author** search, to see one person's issues
+
+Sorting by priority turns on drag-and-drop, so you can reorder issues by hand within the
+priority ranking. The board updates live as colleagues change things.
+
+---
+
+## Closing an issue
+
+Set the status dropdown to **Close**. Two variants:
+
+- **Close** archives the issue immediately and clears its status.
+- **Close and comment** opens a box for a closing note, then archives it.
+
+Closed issues disappear from the default view and come back through the **Closed** status
+filter. Reopening means giving the issue a status again.
+
+---
+
+## Comments and attachments
+
+Every issue has a thread. Comments support rich text, images, video and file attachments,
+and mentions. Following an issue happens automatically when you create or comment on one.
+
+## Who gets notified
+
+| Event | Who is notified |
+|---|---|
+| **New comment** | Everyone following the issue |
+| **Issue assigned** | The new assignee, unless they assigned it to themselves |
+| **Issue closed or reopened** | The person who raised it, or the assignee when the author is the one closing |
+| **Mention in the description or a comment** | The person mentioned |
+
+Changing status, type, priority or due date notifies nobody, and there is no reminder when
+a due date approaches. If you need due-date reminders, use [tasks](/platform/tasks).
+
+---
+
+## Common questions
 
 <AccordionGroup>
-  <Accordion title="We use Issues for meeting action items — any tips?">
-    Create issues during the meeting with clear subjects and assignees. Set due dates for accountability. Use a "Meeting Actions" type so you can filter by it later. Review open items at the start of the next meeting.
+  <Accordion title="My group has no Issues tab">
+    The tab only appears on groups created in project mode, and only for members of the group. An ordinary group cannot be converted afterwards.
   </Accordion>
 
-  <Accordion title="The kanban board has too many columns">
-    Keep it simple — 3 to 5 statuses is ideal. "To Do", "In Progress", and "Done" works for most teams. Add "In Review" if you have an approval step. More columns means more friction.
+  <Accordion title="I want different statuses for this project">
+    Project groups keep the statuses they were seeded with. Use [Projects](/platform/projects), where statuses and types are editable per project.
   </Accordion>
 
-  <Accordion title="Can issues be shared across groups?">
-    No — issues belong to one group. If multiple groups need to track work together, create a shared private group for the project and use issues there.
+  <Accordion title="Where is the kanban board?">
+    There is no kanban view. The board is a sortable list, with drag-and-drop reordering when you sort by priority.
   </Accordion>
 
-  <Accordion title="What's the difference between Issues and Help Desk?">
-    Issues are for internal team work — tasks, projects, action items among group members. Help Desk is for support — members submit tickets, a support team responds. Different workflows, different audiences.
+  <Accordion title="Can an issue belong to two groups?">
+    No. An issue belongs to exactly one project group. Work that spans teams needs a shared group, or a project.
   </Accordion>
 
-  <Accordion title="Nobody is updating their issue statuses">
-    Make it part of the routine. Review the board in meetings. Keep the workflow simple. If people find it burdensome, you probably have too many statuses or required fields.
+  <Accordion title="Due dates are not showing">
+    The due-date field is off for project groups by default and there is no screen to switch it on. Projects and tasks carry due dates as standard.
   </Accordion>
 </AccordionGroup>
 
@@ -144,6 +167,8 @@ Members get notified when:
 
 ## Related
 
-- [Groups](/platform/groups) — Where issues live
-- [Help Desk](/platform/help-desk) — Member support tickets
-- [Files](/platform/files) — Attach documents to issues
+- [Help Desk](/platform/help-desk) - the same board for member support requests
+- [Projects](/platform/projects) - the fuller project workspace with editable workflows
+- [Tasks](/platform/tasks) - task assignment, due dates and reminder digests
+- [Groups](/platform/groups) - where project groups are created and managed
+- [Notifications](/platform/notifications) - controlling what reaches you

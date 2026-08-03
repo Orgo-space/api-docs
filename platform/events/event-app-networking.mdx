@@ -1,0 +1,162 @@
+---
+title: 'Event App Networking'
+description: 'Attendee profiles, connection requests and 15-minute 1:1 meetings inside the Event App'
+"og:title": 'Event App Networking | Orgo'
+"og:description": 'Attendee profiles, connection requests and 15-minute 1:1 meetings inside the Event App'
+"twitter:title": 'Event App Networking | Orgo'
+"twitter:description": 'Attendee profiles, connection requests and 15-minute 1:1 meetings inside the Event App'
+---
+
+The **Networking** tab in the [Event App](/platform/events/event-app) is where attendees find each other. It has two halves: **Participants**, a searchable directory of everyone attending, and **My meetings**, the 1:1 meetings they have booked.
+
+**Built for** conferences and business events where meeting the right person is the reason people came.
+
+<img src="/images/platform/events/event-app-networking.png" alt="Networking tab on a phone showing attendee cards with headline, Connect and Book 1:1 buttons, and search and country filters" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Turning it on
+
+Two switches on the event form, under **Features**:
+
+| Setting | Effect |
+|---|---|
+| **Visibility of attendee list** | Off, the roster is admin-only and there is no Networking tab. On, attendees see each other and the tab appears |
+| **Enable 1:1 networking** | Adds meeting booking on top of the directory. It cannot be switched on until the attendee list is visible |
+
+Editing them needs event ownership, `EVENT_LOCAL`, `EVENT_TENANT` or `ADMIN_TENANT`.
+
+---
+
+## The participant directory
+
+Attendees can search by name, filter by country, and filter to people they have saved. Each card shows the photo, name, headline, country, bio (expandable), LinkedIn and Bluesky links, and phone and email when the person has chosen to share them.
+
+**Who appears in it**
+
+- People whose registration is Registered, Invited, or Awaiting invoice payment, and not cancelled.
+- Only people with an email address on file. A registration with no email is skipped.
+- One card per person, even if they hold several tickets.
+- Up to 500 people. Larger events show the first 500 by surname.
+
+Organisers (`ADMIN_TENANT`, `EVENT_TENANT`, `EVENT_LOCAL`) see the full roster including people who hid themselves, and see phone and email regardless of the individual's privacy choices. That view is the **Participants** tab, not this one.
+
+---
+
+## Privacy controls
+
+Every attendee controls their own visibility from the **Profile** tab, and the choice applies to every event they attend, not just this one.
+
+| Control | What it does | Default for members | Default for non-member attendees |
+|---|---|---|---|
+| **Profile visibility** | Off: "Only visible to organizers", the person is removed from the directory entirely | Visible | Visible |
+| **Phone number** | Private hides the number from other attendees | Visible | Private |
+| **Email** | Private hides the address from other attendees | Private is off, so visible | Private |
+
+<Note>
+For members these are the same privacy flags as their normal Orgo profile, so a change made here also applies across the platform, and the other way round. For non-member attendees the flags live on their contact record.
+</Note>
+
+Attendees can also edit their photo, headline, bio, LinkedIn, Bluesky and town from the Profile tab. Name, email and phone values themselves are managed on the member or contact record, not here.
+
+---
+
+## Connections
+
+**Connect** sends a lasting connection request, the same relationship used elsewhere in Orgo, not just for this event. The recipient accepts or rejects it; the card shows Connect, Pending, Awaits you, or Connected.
+
+- Only members can send and receive connection requests. Non-member attendees do not have this button; 1:1 meetings are their equivalent.
+- One connection per pair of people.
+- Removing an accepted connection deletes it. Rejecting or withdrawing a pending one starts a **21-day cooldown** before the same request can be made again.
+
+---
+
+## 1:1 meetings
+
+Meetings are fixed **15-minute** slots.
+
+<Steps>
+  <Step title="Pick a person">
+    Tap **Book 1:1** on their card, or scan their badge QR code and book from the result panel.
+  </Step>
+  <Step title="Pick a slot">
+    The grid shows every 15-minute slot in the event's agenda, day by day, with a status: **available**, **warned**, or **full**. Warned means it clashes with a meeting you already have or with an agenda session you said you would attend. You can still book a warned slot.
+  </Step>
+  <Step title="Add a message and send">
+    The meeting is created as **pending** and a space is assigned automatically. Both people get an email and an in-app notification.
+  </Step>
+  <Step title="The other person accepts or declines">
+    Accepting moves it to **confirmed**. Declining releases the slot back to everyone else. Either person can cancel a meeting at any point until the slot has passed, and the other one is notified.
+  </Step>
+</Steps>
+
+**How the slot grid is built**
+
+- Only days that have at least one agenda session are bookable, and only between the first start and the last end on that day. An event with no agenda has no bookable slots.
+- Slots are aligned to :00, :15, :30 and :45.
+- Sessions marked as not available for networking are cut out of the grid.
+- A slot is full when no space has capacity left. Pending and confirmed meetings hold capacity; declined and cancelled ones release it.
+
+**My meetings** groups the results into Pending incoming, Pending outgoing, Confirmed, and Past and canceled, with a day filter across the top.
+
+---
+
+## Networking spaces
+
+Spaces are the rooms or tables the meetings happen in. Without at least one space, no slot has capacity and nothing can be booked.
+
+Open the event and use **Networking spaces** in the event sidebar. The entry appears once **Enable 1:1 networking** is on, and only for people who can manage the event (event owner, `EVENT_LOCAL`, `EVENT_TENANT` or `ADMIN_TENANT`).
+
+| Field | Meaning |
+|---|---|
+| **Name** | What attendees see on a confirmed meeting, for example "Table 4" or "Lounge" |
+| **Capacity per slot** | 1 is a single one-to-one table. A higher number allows that many parallel meetings in the same space at the same time. Leaving it empty or setting 0 means **unlimited parallel meetings** |
+| Order | Spaces are offered to bookings in the order listed. The first one with room takes the meeting |
+
+Attendees never choose a space. It is assigned when the meeting is created. Deleting a space keeps existing meetings at their slot but they lose the space reference.
+
+---
+
+## Saved people
+
+Scanning another attendee's badge QR code offers to save them. Saved people are filterable in the directory with the **Saved** pill. This is a private, per-event list for the person who scanned. It creates no connection and writes nothing to your contact records.
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="The Networking tab is not there">
+    **Visibility of attendee list** is off for that event. Turn it on in the event's Features section.
+  </Accordion>
+
+  <Accordion title="The tab is there but nobody can book anything">
+    Check three things: **Enable 1:1 networking** is on, the event has agenda sessions (the bookable window comes from the agenda), and at least one networking space exists.
+  </Accordion>
+
+  <Accordion title="An attendee is missing from the directory">
+    Either they set their profile visibility to organisers only, their registration has no email address on file, or their registration status is not one that grants access. Organisers can confirm by comparing against the Participants tab, which shows everyone.
+  </Accordion>
+
+  <Accordion title="Phone numbers are missing on most cards">
+    That is the default for non-member attendees: their phone and email start private and stay hidden until they choose to share. Members start with both visible.
+  </Accordion>
+
+  <Accordion title="Every slot shows as full">
+    Total capacity is the sum of the capacity of your spaces. With one 1:1 table only one meeting can happen per 15 minutes across the whole event. Add spaces or raise their capacity per slot.
+  </Accordion>
+
+  <Accordion title="A non-member attendee cannot send a connection request">
+    Connections are a member-to-member relationship. Non-member attendees use 1:1 meetings instead.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related
+
+- [Event App](/platform/events/event-app) - Access, login and the tab overview
+- [Event App: agenda, feed and votes](/platform/events/event-app-feed) - The other in-event tabs
+- [Create Event](/platform/events/create-event) - Where the Features switches live
+- [Event Attendance](/platform/events/attendance) - Registration statuses that grant access
+- [Privacy Settings](/platform/users/privacy-settings) - The member-level privacy flags this shares

@@ -1,79 +1,155 @@
 ---
 title: 'Recording a Payment Made Outside Orgo'
-description: 'Mark an invoice as paid when a member pays by bank transfer, cash or cheque'
+description: 'Mark an invoice as paid, record a membership fee period, and log a one-off payment taken by bank transfer, cash or cheque'
 "og:title": 'Recording a Payment Made Outside Orgo | Orgo'
-"og:description": 'Mark an invoice as paid when a member pays by bank transfer, cash or cheque'
+"og:description": 'Mark an invoice as paid, record a membership fee period, and log a one-off payment taken by bank transfer, cash or cheque'
 "twitter:title": 'Recording a Payment Made Outside Orgo | Orgo'
-"twitter:description": 'Mark an invoice as paid when a member pays by bank transfer, cash or cheque'
+"twitter:description": 'Mark an invoice as paid, record a membership fee period, and log a one-off payment taken by bank transfer, cash or cheque'
 ---
 
-Not every payment goes through the platform. Members pay membership fees by bank
-transfer, hand over cash at an event, or send a cheque. Recording those payments
-in Orgo keeps membership status, payment history and reporting correct.
+Not every payment goes through the platform. Members pay by bank transfer, hand
+over cash at a meeting, or send a cheque. Recording those payments keeps
+membership status, payment history and reporting correct.
 
-Payments taken outside Orgo are recorded against an **invoice**, not against the
-member directly.
+There are three places to do it, and they are not interchangeable. Pick by what
+was paid for.
+
+| What was paid | Where to record it | Permission |
+|---|---|---|
+| An invoice you raised | The invoice, **Mark as paid** | `ADMIN_TENANT` |
+| A membership fee period | The member's **Fees** card, **Mark as paid** | `FINANCIAL_TENANT` for the organisation fee, `FINANCIAL_LOCAL` for a local fee |
+| Anything else (a course place, merchandise, a one-off service) | The member's **Payments** tab, **Record payment** | `FINANCIAL_TENANT` |
 
 ---
 
-## Recording the payment
+## Marking an invoice as paid
+
+**Invoices**, open the invoice, then **Mark as paid**. The button is only there
+while the invoice is unpaid.
+
+Four things happen.
+
+1. The invoice becomes **paid** and Orgo records which administrator marked it,
+   so the action stays attributable.
+2. A **PAID** badge is added to the stored document, the amount due line changes
+   to read as paid, and the "Pay online" link is removed from it.
+3. A payment record is created for the gross total (net plus VAT) and linked to
+   the invoice. That record is what updates membership status and shows in
+   payment history.
+4. The paid invoice is emailed to the customer.
+
+<Warning>
+Step 4 catches people out. Marking an invoice as paid emails the customer. If you
+are tidying historical records, they still get the email. Switch off **Send
+invoice emails automatically** in **Settings** → **Modules** → **Payments & Fees**
+→ **Invoice Product** first if you are doing a batch of corrections.
+</Warning>
+
+<img src="/images/platform/fees/invoice-detail.png" alt="Unpaid invoice detail page showing the Mark as paid, Edit and Void buttons above the amount and billing summary" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+### Membership invoices
+
+If the invoice has the **Membership** switch on, marking it paid also books the
+membership period on the invoice and moves the member's fee validity date
+forward. For a company, it updates the company membership end date, applies the
+member slots that come with the chosen level, and pushes the new validity date
+out to everyone the company covers.
+
+This is why the membership level and the start and end dates matter on the
+invoice form: they are the period being bought.
+
+### Event registration invoices
+
+Marking an event registration invoice as paid confirms the registrations
+attached to it. The attendees move from awaiting payment to confirmed, the linked
+payment is marked successful, and ticket confirmation emails go out. Always
+record an event payment against the event's own invoice rather than raising a
+separate one, otherwise the attendance is never confirmed and check-in and
+attendee reports stay wrong.
+
+---
+
+## Recording a membership fee period
+
+An invoice is not required to record a membership fee. On the member's profile,
+open the **Fees** card and use **Mark as paid**. Orgo asks which period you are
+recording, shows the period end it works out from your fee configuration, and
+records the payment against that period using the price that was valid at the
+period start, not today's price.
+
+<Note>
+The action needs **Allow Mark as Paid** switched on in **Settings** →
+**Modules** → **Payments & Fees** → **Membership fees**. With it off, nobody can
+record a fee manually and members must pay online.
+</Note>
+
+An **Enter different amount** switch appears only if your organisation uses fixed
+starting dates for fees. Without that setting the amount is locked to the
+member's price, and a different figure is rejected.
+
+Manual fee payments are recorded with the payment method **check** and count
+immediately: the member's validity date moves forward as soon as you confirm.
+
+Recording a batch that resolves to nothing (every period deselected, or a member
+with no fee price for that period) is refused with an explanatory error rather
+than saved half-formed.
+
+Local centre fees have their own **Mark as paid** on the same profile, needing
+`FINANCIAL_LOCAL` for that member's local centre. Both behave the same way: what
+an administrator marks as paid counts straight away. The pending state you see on
+**Fee payments** in the sidebar belongs to local fee payments members submit
+themselves, which a local administrator approves there.
+
+---
+
+## Recording any other payment
+
+For everything that is not membership, use the member's **Payments** tab and the
+**Record payment** button. It needs `FINANCIAL_TENANT`.
 
 <Steps>
-  <Step title="Open Invoices">
-    **Invoices** in the main menu. If the invoice already exists, find it in the
-    list. If it does not, create it first, then come back to this step.
+  <Step title="Choose what was bought">
+    Either pick an existing product, or switch on **Custom item** and type an
+    **Item name**. A custom item creates a hidden one-off product so the payment
+    has something to hang from without cluttering your product list.
   </Step>
-  <Step title="Open the invoice">
-    Click the invoice series or number to open it. You will see the full detail
-    view, including the amount and who it belongs to.
+  <Step title="Choose the price">
+    Products with active prices require you to pick one, and the **Amount** is
+    then locked to it. Only products configured to accept a custom amount let you
+    type a figure.
   </Step>
-  <Step title="Mark it as paid">
-    Use **Mark as paid**. The invoice moves to paid immediately.
+  <Step title="Set the payment date">
+    Defaults to today. Set it to the day the money actually arrived so reporting
+    lines up with your bank statement.
   </Step>
 </Steps>
 
-<Note>
-Opening an invoice requires organisation administrator rights. A local
-administrator can see a member's fee status but cannot open the invoice to record
-a payment against it.
-</Note>
+<img src="/images/platform/fees/record-payment-modal.png" alt="Record payment modal with the custom item switch, product and price pickers, amount field and payment date picker" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
----
-
-## What happens when you mark an invoice as paid
-
-Four things happen, and one of them is visible to the member.
-
-1. The invoice status becomes **paid**, and Orgo records which administrator
-   marked it, so the action is attributable later.
-2. A **PAID** badge is added to the invoice document itself, so the stored and
-   downloadable copy shows it too.
-3. A payment is recorded against the member, which is what updates their
-   membership status and their payment history.
-4. **The paid invoice is emailed to the member automatically.**
+The payment is saved as successful, stamped with your name as the administrator
+who recorded it, and carries no Stripe charge. The amount you enter is treated as
+the net figure, with VAT derived on top of it.
 
 <Warning>
-Point 4 catches people out. Marking an invoice as paid sends the member an email.
-If you are correcting historical records or tidying up test data, the member will
-still be emailed. Do the tidying on invoices that belong to a test account rather
-than a real one.
+Membership fee products are deliberately not offered here, and are rejected if
+you try. A fee payment also has to carry the period it buys, which this form does
+not collect. Use the **Fees** card instead.
 </Warning>
-
----
-
-## Event registration invoices
-
-An invoice raised for an event registration behaves slightly differently. As well
-as the four steps above, marking it as paid links the payment to the person's
-attendance, so they appear as a paid attendee and their ticket is issued. That
-linkage is what makes check-in and attendee reports correct, so always record
-event payments against the event invoice rather than creating a separate one.
 
 ---
 
 ## Getting it wrong
 
-If you mark the wrong invoice as paid, do not delete it. Cancel or void the
-invoice instead so the trail of what happened stays intact, then record the
-payment against the correct one. Deleting removes the history that explains why
-the member's balance changed.
+If you mark the wrong invoice as paid, do not delete it. See
+[cancelling and correcting invoices](/platform/fees/cancelling-invoices):
+the trail of what happened is worth more than a tidy list.
+
+---
+
+## Related
+
+- [Invoices](/platform/fees/invoices) creating invoices, numbering and templates
+- [Cancelling and correcting invoices](/platform/fees/cancelling-invoices) voiding and refunding
+- [Membership fees](/platform/fees/fees) how fee periods and prices are configured
+- [Local group fees](/platform/local-group-fees/create-local-fees) fees collected by a local centre
+- [Stripe integration](/platform/fees/stripe-integration) taking payment online instead

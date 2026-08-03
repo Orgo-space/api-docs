@@ -1,125 +1,208 @@
 ---
 title: 'Waitlist'
-description: 'Queue interested people when membership is full or closed'
+description: 'Queue new registrations per local center and admit them when there is room'
 "og:title": 'Waitlist | Orgo'
-"og:description": 'Queue interested people when membership is full or closed'
+"og:description": 'Queue new registrations per local center and admit them when there is room'
 "twitter:title": 'Waitlist | Orgo'
-"twitter:description": 'Queue interested people when membership is full or closed'
+"twitter:description": 'Queue new registrations per local center and admit them when there is room'
 ---
 
-The Waitlist lets you manage overflow when your organization has limited capacity or wants to control when new members join. Instead of turning people away, you queue them — and invite from the list when spots open.
+The waitlist puts new registrations into a queue attached to the local center they
+signed up for, instead of letting them straight into the platform. Each person
+gets a position, a status link they can bookmark, and an email when things change.
+Chapter staff work the queue and admit people when there is room.
 
-<img src="/images/platform/users/waitlist-settings.png" alt="Registration Waitlist settings showing enable toggle, self-removal options, and priority levels per user type" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+**Built for** organisations whose local groups have real capacity limits: scout
+troops, sports clubs, chapters with a room and a leader-to-member ratio.
+**Replaces** a spreadsheet of names per branch and the emails asking "where am I on
+the list?".
 
-**When to use a waitlist:**
-- Your organization has a membership cap (physical space, legal limit, charter restriction)
-- You accept members in batches or cohorts (seasonal enrollment, academic terms)
-- You want to gauge demand before expanding capacity
-- You're creating exclusivity or scarcity intentionally
-
-**When you don't need it:**
-- Registration is always open and there's no capacity limit
-- You already use [Adhesion](/platform/users/adhesion) and it handles your intake pace
+<Warning>
+The waitlist is per local center, and it applies to every new self-registration
+for a center, not only to overflow. While it is on, someone who registers for a
+center is queued whether that center is full or not. Their account status becomes
+**Waiting list** and they cannot sign in until an administrator approves them and
+sets their status to Active. Organisation administrators are exempt.
+</Warning>
 
 ---
 
-## How to enable
+## Turning it on
 
-**Settings** → **Users & Profiles** → **Registration Waitlist**
+**Settings** → **Users & Profiles** → **Registration Waitlist**. Requires
+ADMIN_TENANT.
+
+<img src="/images/platform/users/waitlist-settings.png" alt="Registration Waitlist settings with the enable switch, Allow Self Removal, Notify Admins On New, Volunteer Trigger Slots and per user type priority levels" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 | Setting | What it does |
-|---------|-------------|
-| **Waitlist** | Toggle to enable. When active, visitors can join the waitlist when registration is closed or full. |
-| **Allow self-removal** | When on, users can remove themselves from the waitlist. When off, only admins can remove entries. Keep it on — it keeps the list accurate. |
-| **Notify admins on new entry** | Email notification when someone joins the waitlist. Useful if you want to track demand in real time. |
+|---|---|
+| **Enable Registration Waitlist** | Turns queueing on for new registrations that have a local center. |
+| **Allow Self Removal** | Intended to let people take themselves off the list. There is no button for it in the interface today, so removals are done by staff from the Waitlist screen. |
+| **Notify Admins On New** | Emails everyone with HR_LOCAL in that center whenever someone joins its queue. Off by default. |
+| **Volunteer Trigger Slots** | When a volunteer's waitlist entry is approved, this many places are added in total to the center's user type capacities, going first to the types furthest below their limit. Leave empty to release nothing. |
+
+Below those, **Waitlist Priority Settings** assigns each user type a priority of
+**Normal**, **High** or **Emergency**, which anyone joining the queue picks up.
+Saving these requires HR_TENANT, and **Reset to Default** puts every type back to
+Normal.
+
+**Capacity per local center.** Each center's capacities live in its own
+**Waitlist Settings** (`/local/settings/waitlist`), reachable with
+FINANCIAL_LOCAL: enable the user types the center accepts, give each a **Maximum
+Capacity**, and the page shows the current count and available spots. Capacity is
+a planning figure, not a barrier. It drives the "spots available" readouts and the
+volunteer slot mechanism; it does not stop people joining the queue.
 
 ---
 
-## What happens when someone joins the waitlist
+## What a new registration experiences
 
-<Steps>
-  <Step title="Visitor tries to register">
-    When membership is closed or the waitlist is active, the registration page shows a waitlist option instead of (or alongside) the regular form.
-  </Step>
-  <Step title="They join the queue">
-    They provide basic information (name, email) and are added to the waitlist.
-  </Step>
-  <Step title="They wait">
-    They receive a confirmation that they're on the list. They can check their position if self-removal is enabled.
-  </Step>
-  <Step title="You invite them">
-    When a spot opens, you approve entries from the waitlist. They receive an invitation to complete registration.
-  </Step>
-  <Step title="They register">
-    They complete the full registration process (and adhesion, if enabled). They become active members.
-  </Step>
-</Steps>
+Registration is standard, including the local center choice. Once they confirm
+their email their account status becomes **Waiting list** and an entry is created
+at the end of that center's queue, with the confirmation screen showing their
+position and estimated processing date. A confirmation email repeats the position
+and estimated wait and links to a status page that needs no login, so it can be
+bookmarked. For a child registered by a parent, every waitlist email goes to the
+parent who owns the family instead.
+
+When staff approve the entry it moves to **Approved** and the person gets an
+approval email pointing at the dashboard. Approval does not change the account
+status on its own: set the member's status to Active from the member directory so
+they can sign in.
 
 ---
 
-## Managing the waitlist
+## Children and the minimum age
 
-Navigate to **Waitlist** in the sidebar to view and process entries.
+If your organisation has a minimum registration age and a parent registers a child
+below it, the entry gets the **Underage** status rather than Waiting: hidden from
+the waitlist screen unless you filter for it, no queue position, cannot be
+approved.
 
-### Admin actions
+A nightly job watches for children who have just reached the minimum age. Within
+72 hours of the birthday the entry flips to Waiting, takes a position at the back
+of the queue, and the parent is emailed that their child is now eligible.
 
-| Action | What it does |
-|--------|-------------|
-| **Approve** | Sends the person an invitation to register. Can select individual entries or use **Approve Selected** for bulk processing. |
-| **Reject** | Removes from the waitlist. The person is notified. |
-| **Change Priority** | Move entries to High, Normal, or Low priority. High-priority entries are surfaced at the top. |
-| **Send Notifications** | Send a bulk notification to waitlisted people (e.g., "spots opening soon"). |
-| **Export CSV** | Download the waitlist for external analysis or communication. |
-
-### Priority system
-
-The default order is first come, first served. Use priority to adjust:
-
-- **High** — Move to the top of the queue (e.g., returning members, VIP referrals)
-- **Normal** — Standard queue position
-- **Low** — Deprioritized (e.g., incomplete information, questionable entries)
+<Note>
+The minimum age is stored per organisation but there is no control for it in the
+settings interface at the moment. Ask support to set it if you need it.
+</Note>
 
 ---
 
-## Waitlist + adhesion (the full pipeline)
+## What priority actually does
 
-For organizations that need both capacity management and application review:
+Priority does **not** move anyone up the queue. Positions are assigned strictly in
+order of joining, per local center, and renumbered when entries leave. What it
+changes is the estimated wait shown to the person, calculated at half the normal
+estimate for High and 30% of it for Emergency, and the priority filter staff use
+to decide who to admit first.
 
-1. **Waitlist** handles demand — people queue when membership is full
-2. When spots open, you invite from the waitlist
-3. **Adhesion** handles vetting — invited people fill out a full application
-4. Admins review and approve/reject the application
-5. Approved applicants become active members
+Priority comes from the person's user type and can be changed for selected entries
+at any time. One special case: if the person registering a child is an active
+volunteer anywhere in the organisation, the child's entry is created at High
+priority regardless of user type.
 
-This gives you two control points: who gets invited (waitlist) and who gets approved (adhesion).
+---
+
+## Working the queue
+
+**Waitlist** in the main menu (`/waitlist`) needs ADMIN_LOCAL to open; the bulk
+actions themselves check HR_LOCAL. What you see is scoped to your permissions:
+ADMIN_TENANT sees every center, HR_PARENT_LOCAL its own center and the centers
+under it, ADMIN_LOCAL or HR_ASSISTANT_LOCAL only their own.
+
+<img src="/images/platform/users/waitlist-management.png" alt="Waitlist screen with local center, status and priority filters, bulk action bar, and a table of entries showing position, local center, user, priority, status, type and requested date" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+Three filters sit at the top: local center, status (defaults to **Waiting**) and
+priority. Pick a single local center and you also get four tiles, **Total
+Waiting**, **Processed Today**, **Avg Wait Time** and **High Priority**, plus a
+capacity bar per user type showing count against capacity and spots left.
+
+<Note>
+Total Waiting and Avg Wait Time are calculated from the queue. Processed Today and
+High Priority currently display 0 whatever the data: use the status and priority
+filters to count those instead.
+</Note>
+
+The table pages 30 at a time: position, local center, the person with a link to
+their profile, priority, status, type (their user type, or Parent, Volunteer or
+Parent & Volunteer, with self registered or parent registered underneath) and the
+request date with days waited. Tick the entries you want, then use the action bar:
+
+| Action | Applies to | What happens |
+|---|---|---|
+| **Approve Selected** | Waiting entries | Marks them Approved, stamps who approved and when, renumbers the queue, emails each person, and releases volunteer slots if that is configured. |
+| **Reject Selected** | Waiting entries | Asks for a rejection reason, which is required, stores it and emails it to the person. |
+| **Send Notifications** | Any selected entry except Underage | Sends a position update email with their current place and how many people are ahead. |
+| **Change Priority** | Waiting entries | Sets Normal, High or Emergency on the selection. |
+| **Export CSV** | Any selected entry | Downloads position, first and last name, email, phone, local center, type, registration method, priority, status, request date and waiting days. |
+
+Every action confirms first, and the counts in the confirmation reflect only the
+entries the action can actually process.
+
+---
+
+## The status page
+
+Every waitlist email links to a public status page at `/waitlist/status/<code>`.
+It needs no login and shows the person's name, local center, queue position,
+status, estimated wait, priority, when they registered, how many people are ahead
+and what happens next. Approved and rejected entries show the outcome instead,
+with the rejection reason if there is one.
+
+Estimated wait is a projection from how quickly that center has been processing
+entries, adjusted for priority, with a buffer. Treat it as an indication, not a
+promise.
+
+---
+
+## Entry statuses
+
+| Status | Meaning |
+|---|---|
+| **Waiting** | In the queue with a position. |
+| **Underage** | A child below the minimum registration age. Hidden by default, no position, cannot be approved. |
+| **Approved** | Admitted by staff. The queue behind them is renumbered. |
+| **Rejected** | Declined with a stored reason that was emailed to them. |
+| **Withdrawn** | Taken off the list at their own request. Available through the API; there is no button for it in the interface today. |
+| **Expired** | Reserved status. Nothing sets it automatically. |
 
 ---
 
 ## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="How do I process people from the waitlist?">
-    Go to **Waitlist** in the sidebar. Select the entries you want to invite (use the checkboxes), then click **Approve Selected**. They'll receive an invitation email with a link to complete registration.
+  <Accordion title="Someone was approved but still cannot log in">
+    Approval emails them but does not activate the account. Change their status
+    from Waiting list to Active in the member directory. See
+    [User Statuses](/platform/users/statuses).
   </Accordion>
 
-  <Accordion title="The waitlist is getting stale — people signed up months ago">
-    Export the list to CSV and review. Send a bulk notification asking if they're still interested. Remove entries that don't respond after a reasonable time. If self-removal is enabled, some will remove themselves naturally.
+  <Accordion title="A person is not in the list at all">
+    The status filter defaults to Waiting and underage entries show only when you
+    filter for Underage. Then check the local center filter, and whether the person
+    chose a local center at all: without one they are never queued.
   </Accordion>
 
-  <Accordion title="I want to open registration temporarily without the waitlist">
-    Disable the waitlist toggle in settings. Registration returns to normal. When you want to close it again, re-enable the waitlist. Existing waitlist entries are preserved.
+  <Accordion title="We only want the waitlist for one branch">
+    Not configurable: the module is on or off for the whole organisation. If only
+    one branch has a limit, leave the waitlist off and control intake with Manual
+    Approval, or admit the other branches' queues promptly.
   </Accordion>
 
-  <Accordion title="Can someone on the waitlist access the platform?">
-    No. Waitlist entries are not registered users — they've expressed interest but haven't gone through registration. They become users only after being invited and completing registration.
+  <Accordion title="The list has gone stale, with people who signed up months ago">
+    Sort by the Requested column, export the selection to CSV, and use **Send
+    Notifications** to check who is still interested. Reject the rest with a reason:
+    it is emailed to them.
   </Accordion>
 
-  <Accordion title="What's the difference between the waitlist and setting Status After Register to Unapproved?">
-    The **waitlist** is for pre-registration — people can't even create an account yet. They're in a queue.
-
-    **Unapproved status** is post-registration — people have accounts but can't do much until approved.
-
-    Use the waitlist when you want to control the total number of members. Use Unapproved when you want everyone to register but need to review them before granting access.
+  <Accordion title="How does the waitlist differ from the Unapproved status?">
+    The waitlist queues people per local center with a visible position, an
+    estimated wait, a public status page and its own emails. Manual Approval parks
+    new registrations as Unapproved for review, with no ordering and no capacity
+    view. Use the waitlist when place scarcity is the problem, Manual Approval when
+    vetting is.
   </Accordion>
 </AccordionGroup>
 
@@ -127,7 +210,8 @@ This gives you two control points: who gets invited (waitlist) and who gets appr
 
 ## Related
 
-- [Adhesion](/platform/users/adhesion) — Application review after waitlist invitation
-- [Registration Form](/platform/users/registration-form) — What members fill out after being invited
-- [Invitations](/platform/users/invitations) — Manual invitation system (separate from waitlist)
-- [User Statuses](/platform/users/statuses) — Alternative: Unapproved status for post-registration gating
+- [User Statuses](/platform/users/statuses) - Waiting list and the statuses around it
+- [Registration Form](/platform/users/registration-form) - the signup that feeds the queue
+- [Local Groups](/platform/groups/local-groups) - the local centers the queue is attached to
+- [Family Members](/platform/users/family-members) - parents registering children
+- [Permissions](/platform/permissions) - ADMIN_LOCAL, HR_LOCAL and the parent-local levels

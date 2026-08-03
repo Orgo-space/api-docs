@@ -1,95 +1,178 @@
 ---
-title: 'Troubleshooting Member Access & Fees'
-description: 'What to check when a member cannot sign in, or when a fee amount looks wrong'
-"og:title": 'Troubleshooting Member Access & Fees | Orgo'
-"og:description": 'What to check when a member cannot sign in, or when a fee amount looks wrong'
-"twitter:title": 'Troubleshooting Member Access & Fees | Orgo'
-"twitter:description": 'What to check when a member cannot sign in, or when a fee amount looks wrong'
+title: 'Troubleshooting Member Access'
+description: 'What to check, in order, when a member cannot sign in'
+"og:title": 'Troubleshooting Member Access | Orgo'
+"og:description": 'What to check, in order, when a member cannot sign in'
+"twitter:title": 'Troubleshooting Member Access | Orgo'
+"twitter:description": 'What to check, in order, when a member cannot sign in'
 ---
 
-Two problems come up more than any others, and both look identical from the
-outside: a member insists something is wrong, and the administrator looking at
-their profile can see nothing unusual.
+"I cannot get in" almost never means the platform is broken. It usually means the
+address, the workspace, the status or the sign-in method is not what the member
+thinks it is. Work through these in order: knowing what you ruled out is what
+makes an escalation fast to answer.
 
-Work through these in order before escalating. Each step rules something out, and
-knowing what you ruled out is what makes a support request fast to answer.
+**Built for** whoever answers the "I cannot log in" emails. **Replaces** guessing
+and resetting passwords at random.
 
 ---
 
-## A member cannot sign in, but their membership is active
+## The five-minute pass
 
 <Steps>
-  <Step title="Confirm which address they are using">
-    The commonest cause by far. Members sign up with a work address and later try
-    to sign in with a personal one, or the reverse. Compare what they typed
-    against the address on their profile, character for character.
+  <Step title="Confirm the address, character for character">
+    An account is identified by email plus workspace, so a work address and a
+    personal one are two different accounts. Compare what they typed against the
+    address on their profile.
   </Step>
-  <Step title="Check whether they belong to more than one community">
-    If the same email address is a member of another organisation on Orgo, a
-    login can land them in the wrong place. Ask whether they belong to another
-    community, because they will not think to mention it.
-  </Step>
-  <Step title="Check the sign-in method">
-    Signing in with Google is not the same as signing in with a password or a
-    one-time code. Someone who first joined with one method and later tries
-    another can be locked out even though the account is fine.
+  <Step title="Confirm the workspace">
+    If the same address belongs to more than one organisation on Orgo, the login
+    screen has to pick one. Ask whether they belong to another community; they
+    will not think to mention it.
   </Step>
   <Step title="Check their status, not their fee">
-    An active payment does not by itself grant access. Look at the member's
-    status: **Profile** → **Edit** → **Permissions** → Status. Inactive,
-    Suspended or Unapproved all block access while the fee tab looks perfectly
-    healthy. See [User Statuses](/platform/users/statuses).
+    A paid fee does not grant access. Open **Members** → the member → **Edit** →
+    **Permissions** and read **Status**. Only **Active** permits a sign-in, while
+    the fee tab looks perfectly healthy either way. See
+    [User statuses](/platform/users/statuses).
   </Step>
-  <Step title="For a newly registered member, check approval and adhesion">
-    Two settings block brand-new members specifically. **Status After Register**
-    may be set to Unapproved, in which case somebody has to approve them by hand.
-    And if **Adhesion** is enabled and mandatory, they must complete and have
-    their application approved before they get in. Both live in
-    **Settings** → **Users & Profiles** → **Configuration**.
+  <Step title="Check the sign-in method they used">
+    Password, one-time code and social sign-in do not fail the same way, and do
+    not even find the same accounts. See below.
   </Step>
   <Step title="Have them try a private window">
-    A stale session shows the symptoms of a broken account. This costs thirty
-    seconds and rules out a whole class of problem.
+    A stale session shows the symptoms of a broken account, and this rules it out
+    in thirty seconds.
   </Step>
 </Steps>
-
-If all five pass and they still cannot sign in, that is worth reporting. Include
-the address they used, the method they tried, and what they saw, because those
-three together are what makes it reproducible.
 
 ---
 
-## A fee amount is wrong
+## The workspace picker hides some accounts
 
-<Steps>
-  <Step title="Check which fee is actually assigned">
-    A reduced or exempt rate has to be assigned to the member, not only to their
-    member type. Someone marked as staff or as a partner still owes the standard
-    amount until the reduced fee is on their record.
-  </Step>
-  <Step title="Check the period the amount covers">
-    An unexpected total is often several periods rather than one wrong number.
-    Arrears from a previous year appear alongside the current amount and read as
-    a single inflated figure.
-  </Step>
-  <Step title="Check whether an old amount is still cached on the payment page">
-    If you changed the fee and the member still sees the old figure, have them
-    reload the payment page in a private window before assuming the change did
-    not save.
-  </Step>
-  <Step title="Look at the payment history">
-    Repeated months at the same amount usually mean a subscription is charging
-    alongside a manually recorded payment, so the member is being counted twice.
-  </Step>
-</Steps>
+When a member enters their email on the shared login page, Orgo looks up which
+workspaces that address belongs to. That lookup only returns accounts whose
+status is Active, Unconfirmed email, New request, Inactive or Awaiting referral.
+
+A member whose account is **Suspended, Excluded, on the waiting list or deleted**
+is therefore not shown their organisation at all. They report "it says my
+organisation does not exist", which reads like a platform fault and is the status
+doing its job. Check the status before you believe the message.
+
+<Note>
+The lookup also surfaces workspaces where the address is only an event contact
+rather than a member. Those route to the event app's own code login, not to the
+member login, and they carry no password. See
+[the event app](/platform/events/event-app).
+</Note>
+
+---
+
+## The three sign-in methods behave differently
+
+| Method | Finds accounts with status | Typical failure |
+|---|---|---|
+| Password | Any status, but the status is checked **before** the password | "The email or password you entered is incorrect" therefore means the password really is wrong; a blocked account gets a status message instead, whatever they typed |
+| One-time code by email | Any status except Deleted; the status check runs when the code is verified | A silent "if this email exists, a code has been sent" with no email arriving means the address is not registered in that workspace |
+| Google, Microsoft, Facebook, LinkedIn | Only Active, New request and Awaiting referral | An **Inactive** member is told there is no organisation for this email, and never sees the reactivation prompt they would get with a password |
 
 <Warning>
-Changing a fee amount does not retroactively change invoices already raised. An
-invoice keeps the amount it was created with, on purpose, so history stays
-truthful. If a member is holding an invoice at the wrong amount, void it and
-issue a correct one rather than editing the fee and expecting the invoice to
-follow.
+An Inactive member who only ever uses Google sign-in will keep hitting a dead
+end. Ask them to sign in with the one-time code instead: that path offers the
+reactivation prompt, or at least reports the real status.
 </Warning>
+
+Which method the login screen offers first is a setting: **Default to Password
+Login** (**Settings** → **Users & Profiles** → **Configuration**). Members can
+always switch to the other one.
+
+---
+
+## What each blocked status tells the member
+
+| Status | What they see |
+|---|---|
+| **Unconfirmed email** | "Account not confirmed", with a resend button and a countdown of up to 5 minutes before a new confirmation email can be sent |
+| **New request** (Unapproved) | An account-not-approved message. Someone with `HR_LOCAL` has to approve them from the member directory. |
+| **Inactive** | The reactivation prompt, if **Allow Account Reactivation** is on. Accepting it moves them to New request and emails your admins for approval. If the setting is off, they are told to contact support. |
+| **Suspended** and everything else | "Your account is suspended/inactive, please contact support" |
+| **Awaiting referral** | They are sent back to the registration flow to finish collecting the referrals your organisation requires |
+
+---
+
+## Password problems
+
+**Self-service reset.** The member uses the forgot-password link, receives a
+code, and sets a new password. It only works for accounts on Active, Inactive,
+Awaiting referral or Unconfirmed email. A suspended or excluded account is
+refused.
+
+<Note>
+Completing a password reset also moves the account's status: an Unconfirmed or
+Inactive member who resets their password becomes **Active**, or **New request**
+if Manual Approval is on, or **Awaiting referral** if the referral programme
+requires referrals. This is the fastest way to unstick a member who never
+confirmed their email address.
+</Note>
+
+**Admin-initiated reset.** On the member's profile you can send them a
+password-reset email. It requires `HR_LOCAL` over their local group, works only
+for the same four statuses, and is throttled to one per minute per member. Each
+send is written to the audit log against the administrator who sent it.
+
+**Members who never had a password.** Anyone created by an invitation, an
+import, an admin, or by signing in with Google has a randomly generated password
+they have never seen. They must use the one-time code or a reset.
+
+**One password across workspaces.** If the same address is a member of several
+organisations on Orgo, changing the password changes it in all of them.
+
+---
+
+## One-time code problems
+
+The email code path has hard limits. Quote them when a member says the code "does
+not work":
+
+| Limit | Value |
+|---|---|
+| Code validity | 5 minutes |
+| Wait between requests | 20 seconds |
+| Requests allowed | 10 in any 5 minutes |
+| Wrong entries allowed per code | 15 |
+| Lockout after repeated failures | 10 minutes |
+
+A member who has requested several codes is usually typing an older one. Have
+them use the most recent email, or wait out the lockout rather than requesting
+again.
+
+---
+
+## Multi-factor authentication
+
+When the MFA module is on, everyone with tenant-level admin, HR or finance
+permissions has MFA forced on and cannot switch it off. Every other member has a
+switch on their own **Settings & Privacy** → **Multi Factor Authentication**
+page.
+
+The verification code is valid for 5 minutes, and a device that has passed the
+check stays trusted for 2 days. After that, or on a new browser or device, the
+member is asked again. "It asked me for a code again" after a couple of days is
+expected behaviour, not a fault.
+
+---
+
+## Email changes
+
+Changing the email address on an account is a two-step verification: a code to
+the current address, then a code to the new one. Only when both are verified does
+the address change, and the member is signed out and must sign in with the new
+address.
+
+A member stuck halfway through this still has their old address. If they cannot
+receive mail at the old address at all, an admin with `ADMIN_LOCAL` over their
+local group (or `HR_TENANT`) sees a plain address field on the member's Email
+settings instead of the two-step flow, and can change it directly.
 
 ---
 
@@ -97,20 +180,21 @@ follow.
 
 Report it, rather than working around it, when:
 
-- The same member has the same problem again after it was fixed once
-- A fee amount changes without anyone changing it
-- A member is reactivated, or a payment is unticked, with no administrator action
-- Text renders as odd characters instead of apostrophes or quotation marks
+- the same member has the same problem again after it was fixed once;
+- a member is reactivated, suspended or deleted with no administrator action;
+- the login page shows an internal error rather than a specific message;
+- text renders as odd characters instead of apostrophes or quotation marks.
 
-That last one is a display fault rather than a data fault, and it is worth
-sending in with a screenshot. None of these has a setting you can adjust, and
-attempting a workaround usually buries the evidence needed to fix the cause.
+Include the address they used, the workspace, the method they tried and what they
+saw. Those four together are what makes a report reproducible; without them the
+first reply is always a request for them.
 
 ---
 
 ## Related
 
-- [Statuses](/platform/users/statuses) — what each member status permits
-- [Renewals](/platform/fees/renewals) — recurring versus one-time payment
-- [Recording a payment](/platform/fees/record-payment)
-- [Cancelling & correcting invoices](/platform/fees/cancelling-invoices)
+- [User statuses](/platform/users/statuses) - what each status permits
+- [Deletion of account](/platform/users/deletion-of-account) - why a deleted account cannot sign in at all
+- [Resignation](/platform/users/resignation) - the departure that leaves the account working
+- [Permissions](/platform/permissions) - the permissions named on this page
+- [Renewals](/platform/fees/renewals) - when the problem really is the fee

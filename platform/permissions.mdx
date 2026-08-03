@@ -7,289 +7,181 @@ description: 'Comprehensive guide to the permission system and access levels'
 "twitter:description": 'Comprehensive guide to the permission system and access levels'
 ---
 
-Orgo Permissions is the role-based access control system within Orgo that governs which features and data users can access, based on permission domain (ADMIN, HR, FINANCIAL, EVENT, COMMUNICATION) and scope level (organization, regional, or local).
+A permission grants access to a part of Orgo. Every permission is a pair: a **domain** (what area of the platform) and a **scope** (whose data). `HR_LOCAL` means member management, limited to one chapter. `FINANCIAL_TENANT` means money, across the whole organization.
 
-**Built for** organizations that delegate admin work across chapters, regions, or committees, including professional associations, alumni networks, trade unions, and faith communities that need different people to manage different areas at different levels of the organization.
+**Built for** organizations that delegate admin work across chapters, regions, or committees: professional associations, alumni networks, trade unions, and faith communities where different people manage different areas at different levels.
 
-**Replaces** shared admin logins and informal trust-based access for routine, ongoing responsibilities, not for one-off exceptions, where direct permission assignment to a single user profile is still the documented approach.
+**Replaces** shared admin logins and informal trust-based access.
 
-Unlike [organizational roles](/platform/users/user-types), permissions directly grant access to features and data.
-
-<Info>
-  Looking for how to create positions like "President" or "Secretary"? See [Roles](/platform/users/user-types) for organizational structure.
-</Info>
+Permissions are not the same as [roles and user types](/platform/users/user-types). A role like "President" is an organizational position; it grants access only if you attach permissions to it.
 
 ---
 
-## Permission Domains Overview
+## Two separate things grant access
 
-Orgo has **6 permission domains**, each controlling a specific area of the platform:
+Orgo has one account-level flag and one permission set, and they are not interchangeable.
 
-| Domain | Purpose | Key Capabilities |
-|--------|---------|------------------|
-| **ADMIN** | Full platform control | All settings, billing, integrations, user management |
-| **HR** | Member management | Profiles, adhesions, resignations, imports, badges |
-| **HR_ASSISTANT** | Support tasks | Identity validation, GDPR requests, gamification |
-| **FINANCIAL** | Money matters | Products, fees, payments, financial reports |
-| **EVENT** | Event management | Create events, manage attendance, reports |
-| **COMMUNICATION** | Messaging | Newsletters, discussion moderation |
+| | What it is | Where it is set |
+|---|---|---|
+| **Orgo administrator** | An account flag on a member. Screens that configure the organization itself (Settings, modules, branding, imports, workflows, email templates) check for this flag, not for a permission. | The **Orgo administrator** switch at the top of a member's **Permissions** tab. Only a member who already holds it can see the switch. |
+| **Permissions** | The domain and scope grants described on this page. They govern everyday administrative work: members, fees, events, campaigns. | The permission checkboxes on the same tab, or attached to a role. |
+
+<Warning>
+Granting the `ADMIN_TENANT` permission is not the same as making someone an Orgo administrator. `ADMIN_TENANT` passes every permission check in the product, but the organization Settings screens still require the Orgo administrator flag. If an admin reports that Settings is missing, this is almost always why.
+</Warning>
+
+---
+
+## The six domains
+
+| Domain | UI label | What it unlocks |
+|---|---|---|
+| **ADMIN** | Admin | Everything in the other five domains at the same or lower scope, plus chapter settings, the waitlist, badges and badge types, roles, profile statuses, event types and statuses, invoices, API tokens and OAuth apps, and the email log |
+| **HR** | HR | Member profiles and their **Permissions** and **Roles** tabs, adhesions, resignation requests, chapter transfer requests, member exports and bulk actions, merging duplicates, e-documents, creating and editing gazette entries, the form builder |
+| **HR_ASSISTANT** | HR Assistant | Awarding badges and logging badge hours, viewing admin-only custom fields, reviewing identity documents on a member profile, and (at organization scope) seeing members who hide themselves from the directory and map |
+| **FINANCIAL** | Financial | Products and product payments, subscribers, membership fee records and fee statistics, chapter fee settings, chapter online payment settings, your organization's own Orgo billing page |
+| **EVENT** | Event Manager | Creating events beyond the level set in **Settings → Events**, plus the organizer-only options on the event form: ticketing and payment fields, gamification tiers, restricting an event to one user type, and propagating an event to chapters |
+| **COMMUNICATION** | Communication Manager | Email campaigns, campaign templates, lists and segments, newsletter signup widgets, the discussion moderation queue |
+
+Sidebar menu entries are only entry points: individual actions inside a screen can require more, and a few require the Orgo administrator flag instead.
+
+### Automatic inclusions
+
+Holding one permission can imply another. This is the complete list; nothing else is implied.
+
+| Holding this | Also grants |
+|---|---|
+| `ADMIN_TENANT` | Every permission check in the product |
+| `HR_TENANT` | `HR_ASSISTANT_TENANT` |
+| `FINANCIAL_TENANT` | `HR_ASSISTANT_TENANT` |
+| `HR_PARENT_LOCAL` | `HR_LOCAL`, `HR_ASSISTANT_LOCAL` |
+| `HR_LOCAL` | `HR_ASSISTANT_LOCAL` |
+| `FINANCIAL_PARENT_LOCAL` | `FINANCIAL_LOCAL`, `HR_ASSISTANT_LOCAL`, `HR_ASSISTANT_PARENT_LOCAL` |
+| `FINANCIAL_LOCAL` | `HR_ASSISTANT_LOCAL` |
+| `EVENT_PARENT_LOCAL` | `EVENT_LOCAL` |
+| `COMMUNICATION_PARENT_LOCAL` | `COMMUNICATION_LOCAL` |
+| `ADMIN_PARENT_LOCAL` | Every local and regional permission within the same chapter tree |
+| `ADMIN_LOCAL` | Every local permission within the same chapter |
 
 <Note>
-  **ADMIN** is the highest permission - users with ADMIN have access to everything, including all other domains.
+`HR_TENANT` does **not** imply `HR_LOCAL` as a separate grant. It does not need to: an organization-scope permission satisfies any check in the same domain at regional or local scope. Regional and local grants are the ones that need the chapter to match.
 </Note>
 
 ---
 
-## Domain Comparison
+## The three scopes
 
-### What Can Each Permission Do?
+| Scope | Suffix | Whose data |
+|---|---|---|
+| Organization | `_TENANT` | Everything in the organization |
+| Regional | `_PARENT_LOCAL` | The member's parent chapter and every chapter under it |
+| Local | `_LOCAL` | The member's own chapter |
 
-This table shows which features each permission domain controls:
+An organization-scope permission always satisfies a check for the same domain at regional or local scope. The reverse is never true.
 
-| Feature | ADMIN | HR | HR_ASSISTANT | FINANCIAL | EVENT | COMMUNICATION |
-|---------|:-----:|:--:|:------------:|:---------:|:-----:|:-------------:|
-| **Organization Settings** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Billing & Subscription** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Module Configuration** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **API & Integrations** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Local Center Settings** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **User Permission Management** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| | | | | | | |
-| **View/Edit Member Profiles** | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| **Process Adhesions** | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| **Handle Resignations** | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| **Member Imports** | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| **Manage Badges** | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| **Official Gazette** | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| **Export Members** | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| | | | | | | |
-| **Identity Validation** | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
-| **GDPR Data Requests** | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
-| **Gamification / Hours** | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
-| | | | | | | |
-| **Manage Products** | ✅ | ❌ | ❌ | ✅ | ❌ | ❌ |
-| **Configure Fees** | ✅ | ❌ | ❌ | ✅ | ❌ | ❌ |
-| **Process Payments** | ✅ | ❌ | ❌ | ✅ | ❌ | ❌ |
-| **Financial Reports** | ✅ | ❌ | ❌ | ✅ | ❌ | ❌ |
-| **Stripe Configuration** | ✅ | ❌ | ❌ | ✅ | ❌ | ❌ |
-| | | | | | | |
-| **Create/Edit Events** | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ |
-| **Manage Attendees** | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ |
-| **Event Check-in (QR)** | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ |
-| **Event Reports** | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ |
-| **Courses** | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ |
-| | | | | | | |
-| **Create Newsletters** | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **Moderate Discussions** | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **Manage Discussion Categories** | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ |
+Regional and local scopes exist only when the **Local Centers** module is on, and regional scope also needs **Enable Parent Centers**. Without them, the only checkboxes shown are the organization-scope ones.
 
 ---
 
-## Detailed Domain Descriptions
+## Complete permission reference
 
-<AccordionGroup>
-  <Accordion title="ADMIN - Full Platform Control" icon="shield-halved">
-    **Who needs it:** Executive team, IT administrators, platform managers
+Twenty permissions exist. The UI shows them as six labels repeated under three headings: **Organization: (your organization)**, **Chapter: (chapter name)** and **Parent chapter: (region name)**.
 
-    **What it controls:**
-    - All organization settings and configuration
-    - Billing, subscription, and payment gateway setup
-    - Feature flags and module activation
-    - API access and integrations
-    - User permission assignment
-    - Local center creation and settings
+| Permission | Shown as | Shown when |
+|---|---|---|
+| `ADMIN_TENANT` | Admin (Organization) | Always |
+| `HR_TENANT` | HR (Organization) | Always |
+| `HR_ASSISTANT_TENANT` | HR Assistant (Organization) | Always |
+| `COMMUNICATION_TENANT` | Communication Manager (Organization) | Always |
+| `FINANCIAL_TENANT` | Financial (Organization) | Fees module on |
+| `EVENT_TENANT` | Event Manager (Organization) | Events module on |
+| `ADMIN_PARENT_LOCAL` | Admin (Parent chapter) | Parent centers on |
+| `HR_PARENT_LOCAL` | HR (Parent chapter) | Parent centers on |
+| `HR_ASSISTANT_PARENT_LOCAL` | HR Assistant (Parent chapter) | Parent centers on |
+| `FINANCIAL_PARENT_LOCAL` | Financial (Parent chapter) | Parent centers on |
+| `EVENT_PARENT_LOCAL` | Event Manager (Parent chapter) | Parent centers on |
+| `COMMUNICATION_PARENT_LOCAL` | Communication Manager (Parent chapter) | Parent centers on |
+| `ADMIN_LOCAL` | Admin (Chapter) | Local centers on |
+| `HR_LOCAL` | HR (Chapter) | Local centers on |
+| `HR_ASSISTANT_LOCAL` | HR Assistant (Chapter) | Local centers on |
+| `FINANCIAL_LOCAL` | Financial (Chapter) | Local centers on |
+| `EVENT_LOCAL` | Event Manager (Chapter) | Local centers on |
+| `COMMUNICATION_LOCAL` | Communication Manager (Chapter) | Local centers on |
+| `USER` | Regular user | Not assignable; used by minimum access level settings |
+| `USER_LOCAL` | Regular user | Not assignable; used by minimum access level settings |
 
-    **Important:** ADMIN permission grants access to **everything**. Users with ADMIN can do anything that HR, FINANCIAL, EVENT, or COMMUNICATION can do.
-
-    <Warning>
-      Be careful assigning ADMIN. These users have access to all organization data, financial information, and can modify any settings.
-    </Warning>
-  </Accordion>
-
-  <Accordion title="HR - Member Management" icon="users">
-    **Who needs it:** HR staff, membership officers, secretaries
-
-    **What it controls:**
-    - View and edit member profiles
-    - Process membership adhesions (applications)
-    - Handle member resignations
-    - Import members in bulk
-    - Manage badges and gamification
-    - Access Official Gazette
-    - Export member data
-    - View birth dates and personal information
-
-    **Includes:** HR permission automatically includes HR_ASSISTANT capabilities.
-  </Accordion>
-
-  <Accordion title="HR_ASSISTANT - Support Tasks" icon="user-check">
-    **Who needs it:** Volunteers helping with membership, identity validators
-
-    **What it controls:**
-    - Identity document validation
-    - GDPR data requests processing
-    - Gamification and training hours tracking
-    - View (not edit) member information
-
-    **Note:** This is a lighter permission for users who need to help with specific HR tasks without full member management access.
-  </Accordion>
-
-  <Accordion title="FINANCIAL - Money Matters" icon="coins">
-    **Who needs it:** Treasurers, finance officers, accountants
-
-    **What it controls:**
-    - Create and manage products
-    - Configure membership fees
-    - Process payments and refunds
-    - View financial reports and statistics
-    - Manage Stripe integration
-    - Export financial data
-
-    **Includes:** FINANCIAL permission automatically includes HR_ASSISTANT capabilities (for viewing member info related to payments).
-  </Accordion>
-
-  <Accordion title="EVENT - Event Management" icon="calendar">
-    **Who needs it:** Event coordinators, activity managers
-
-    **What it controls:**
-    - Create and edit events
-    - Manage event attendees
-    - Check-in participants (QR scanning)
-    - Generate event reports
-    - Manage courses and training sessions
-    - Configure event ticketing
-
-    **Does NOT include:** Financial event settings (ticket pricing) require FINANCIAL permission.
-  </Accordion>
-
-  <Accordion title="COMMUNICATION - Messaging" icon="megaphone">
-    **Who needs it:** Communications officers, community managers
-
-    **What it controls:**
-    - Create and send newsletters
-    - Moderate discussion forums
-    - Manage discussion categories
-    - Pin/delete discussion posts
-    - Send announcements
-  </Accordion>
-</AccordionGroup>
+`USER` and `USER_LOCAL` mean "any signed-in member". They never appear as checkboxes on a profile, only as the lowest option in the minimum access level dropdowns below.
 
 ---
 
-## Permission Hierarchy
+## How a check is decided
 
-Permissions have a hierarchy where higher permissions include lower ones:
+Orgo works through these steps in order.
 
-```
-ADMIN ─────────────────────────────────────────────────
-   │                                         (highest)
-   ├── HR ──────────────┬── HR_ASSISTANT
-   │                    │
-   ├── FINANCIAL ───────┘
-   │
-   ├── EVENT
-   │
-   └── COMMUNICATION
-```
+<Steps>
+  <Step title="Organization boundary">
+    If the record belongs to a different organization than you, access is denied. No permission overrides this.
+  </Step>
+  <Step title="Organization administrator shortcut">
+    If you are an Orgo administrator or hold `ADMIN_TENANT`, access is granted. This shortcut is skipped for the restricted sessions listed further down.
+  </Step>
+  <Step title="Domain and scope match">
+    Your permissions are expanded using the automatic inclusions above, then matched against what the action requires.
+  </Step>
+  <Step title="Chapter match, for regional and local permissions">
+    The record's chapter must be your chapter, your parent chapter, or a chapter you were separately granted through **Multi local center access**.
+  </Step>
+  <Step title="Event user type restriction">
+    If **Restrict events by user type** is on and the event names an allowed user type, a regional or local manager whose user type does not match is denied, even with the right permission.
+  </Step>
+</Steps>
 
-### Automatic Inclusions
-
-| If user has... | They automatically get... |
-|----------------|---------------------------|
-| **ADMIN** | All permissions (HR, FINANCIAL, EVENT, COMMUNICATION, HR_ASSISTANT) |
-| **HR** | HR_ASSISTANT |
-| **FINANCIAL** | HR_ASSISTANT |
-
-<Info>
-  **Example:** A user with HR permission can also validate identities and manage gamification (HR_ASSISTANT features) without needing a separate assignment.
-</Info>
+Lists apply the same rules when they load, so a chapter HR manager opening the member directory sees their chapter's members, not an error.
 
 ---
 
-## Scope Levels (TENANT / PARENT_LOCAL / LOCAL)
+## Minimum access levels
 
-Each permission domain can be assigned at different **scope levels** that control what data the user can access:
+Some behaviour is not a permission you hold but a bar your organization sets, at **Settings → Users & Profiles → Security & Permissions**. It lists every switched-on module and the permission level each one requires.
 
-| Scope | Suffix | What data can they access? |
-|-------|--------|---------------------------|
-| **Organization** | `_TENANT` | All data across the entire organization |
-| **Regional** | `_PARENT_LOCAL` | Parent local center + all its child centers |
-| **Local** | `_LOCAL` | Only their assigned local center |
+| Setting | Default | Controls |
+|---|---|---|
+| **Minimum access level** (Analytics) | Regular user | Opening the analytics area at all |
+| **Membership** (Analytics) | HR | The membership section of analytics |
+| **Geography** (Analytics) | Regular user | The geography section |
+| **Leaderboards** (Analytics) | Regular user | The leaderboards section |
+| **Platform** (Analytics) | Admin | The platform usage section |
+| **Finance** (Analytics) | Financial | The finance section |
+| **Who can create public posts** (Discussions) | Regular user | Starting a discussion in the whole community rather than a group |
+| **Who can create public posts** (Drive) | HR | Uploading to the community drive rather than a group's |
+| **Who can create public posts** (Events) | HR | Publishing an event to the whole community |
+| **Who can see user fee status** (Fees) | Regular user | Seeing whether another member's fee is paid |
+| **Who can create** (Groups) | Regular user | Creating a group |
+| **Who can see members in general unit group** (Users) | Regular user | Browsing the full member directory |
+| **Who can see local center members** (Users) | Regular user | Browsing a chapter's members |
+| **Who can see user type** (Users) | Regular user | Seeing another member's user type |
 
-### How it works
+The same screen carries **Enforce MFA for administrators**. With it on, administrators must enter a code sent by email and are asked again every 48 hours.
 
-The same permission at different scopes gives access to the same features, but limited to different data:
-
-| Permission | Features | Data Access |
-|------------|----------|-------------|
-| `HR_TENANT` | Member management | All members in organization |
-| `HR_PARENT_LOCAL` | Member management | Members in parent center + children |
-| `HR_LOCAL` | Member management | Members in own local center only |
-
-<Note>
-  **Key principle:** `_TENANT` permission automatically covers all `_PARENT_LOCAL` and `_LOCAL` data within that domain.
-</Note>
-
-### Visual Example
-
-```
-National Organization (TENANT)
-├── Region North (PARENT_LOCAL)
-│   ├── Branch A (LOCAL)
-│   ├── Branch B (LOCAL)
-│   └── Branch C (LOCAL)
-└── Region South (PARENT_LOCAL)
-    ├── Branch D (LOCAL)
-    └── Branch E (LOCAL)
-
-HR_TENANT      → Can manage members in ALL branches
-HR_PARENT_LOCAL (Region North) → Can manage members in A, B, C only
-HR_LOCAL (Branch A) → Can manage members in Branch A only
-```
+<img src="/images/platform/users/security-permissions.png" alt="Security and Permissions settings page with the Enforce MFA for administrators switch and per-module minimum access level dropdowns" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Complete Permission Reference
+## Sessions that carry fewer permissions
 
-### All Available Permissions
+Four situations narrow a session below what the member actually holds. In all four the organization administrator shortcut is switched off.
 
-| Permission | Domain | Scope | Level |
-|------------|--------|-------|-------|
-| `ADMIN_TENANT` | Admin | Organization | 100 |
-| `ADMIN_PARENT_LOCAL` | Admin | Regional | 95 |
-| `ADMIN_LOCAL` | Admin | Local | 90 |
-| `HR_TENANT` | HR | Organization | 83 |
-| `HR_PARENT_LOCAL` | HR | Regional | 75 |
-| `HR_LOCAL` | HR | Local | 70 |
-| `FINANCIAL_TENANT` | Financial | Organization | 82 |
-| `FINANCIAL_PARENT_LOCAL` | Financial | Regional | 55 |
-| `FINANCIAL_LOCAL` | Financial | Local | 50 |
-| `HR_ASSISTANT_TENANT` | HR Assistant | Organization | 81 |
-| `HR_ASSISTANT_PARENT_LOCAL` | HR Assistant | Regional | 35 |
-| `HR_ASSISTANT_LOCAL` | HR Assistant | Local | 30 |
-| `EVENT_TENANT` | Event | Organization | 80 |
-| `EVENT_PARENT_LOCAL` | Event | Regional | 50 |
-| `EVENT_LOCAL` | Event | Local | 10 |
-| `COMMUNICATION_TENANT` | Communication | Organization | 80 |
-| `COMMUNICATION_PARENT_LOCAL` | Communication | Regional | 50 |
-| `COMMUNICATION_LOCAL` | Communication | Local | 10 |
-
-<Info>
-  **Level** indicates permission strength. Higher level permissions can assign lower level permissions to other users.
-</Info>
+- **Permission impersonation.** An administrator previews the product as a lower permission set. See [Assigning Permissions](/platform/permissions-assigning).
+- **Event app sign-in.** A ticket holder or host signing in with a one-time email code gets member-level access plus the Event Manager family only. Organization-wide administration is never reachable that way, even for an administrator.
+- **Scoped API tokens.** A token is limited to the categories chosen when it was created, and cannot inherit the organization administrator shortcut. See [API](/platform/api).
+- **Connected apps.** An app acting with its own credentials is capped at plain member access.
 
 ---
 
-## Assigning and auditing
+## Related
 
-Recommended assignments, how to grant permissions, how to test them with
-impersonation, and how to see who currently holds what are all in
-[Assigning Permissions](/platform/permissions-assigning).
-
----
-
-## Related Documentation
-
-- [Roles](/platform/users/user-types) - Organizational positions and role management
-- [User Types](/platform/users/user-types) - Membership categories
-- [Role Groups](/platform/groups/role-groups) - Automatic role assignment
+- [Assigning Permissions](/platform/permissions-assigning) - who may grant what, and how to test it
+- [User Types & Roles](/platform/users/user-types) - positions you can attach permissions to
+- [Role Groups](/platform/groups/role-groups) - groups that fill themselves from roles
+- [Modules](/platform/organisation/modules) - the switches that make permissions visible
+- [Local Groups](/platform/groups/local-groups) - chapters, parents, and what local scope means

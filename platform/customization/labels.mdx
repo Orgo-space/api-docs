@@ -1,146 +1,124 @@
 ---
-title: 'Labels & Terminology'
-description: 'Rename default terms to match your organization — "Members" becomes "Scouts", "Groups" becomes "Patrols"'
-"og:title": 'Labels & Terminology | Orgo'
-"og:description": 'Rename default terms to match your organization — "Members" becomes "Scouts", "Groups" becomes "Patrols"'
-"twitter:title": 'Labels & Terminology | Orgo'
-"twitter:description": 'Rename default terms to match your organization — "Members" becomes "Scouts", "Groups" becomes "Patrols"'
+title: 'Texts (label replacements)'
+description: 'Replace any wording in the Orgo interface with your own, per language'
+"og:title": 'Texts | Orgo'
+"og:description": 'Replace any wording in the Orgo interface with your own, per language'
+"twitter:title": 'Texts | Orgo'
+"twitter:description": 'Replace any wording in the Orgo interface with your own, per language'
 ---
 
-Every organization has its own vocabulary. A scouting group doesn't call people "Members" — they're "Scouts". Labels let you override any default term in the platform so Orgo speaks your language.
+**Built for** organizations whose vocabulary is not Orgo's: scouts, not members; patrols, not groups.
+**Replaces** explaining to every new member that "Local Center" means "troop".
 
-<img src="/images/platform/customization/labels.png" alt="Labels customization page for renaming platform terms" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+The **Texts** page holds a list of text replacements. Each row pairs a phrase Orgo ships with the phrase you want in its place, and you fill in one replacement per enabled language. Anything the interface displays can be replaced this way, not just a fixed vocabulary list.
+
+<img src="/images/platform/customization/labels.png" alt="Text Replacements page with the Add Text Replacement button and the System Expression and Custom Expression columns" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+**Settings → Customization → Texts**
 
 <Note>
-  Requires **Tenant Admin** permissions.
+  Requires **ADMIN_TENANT**. This page is called **Texts** in the app; the underlying setting is the tenant's label overrides.
 </Note>
 
 ---
 
-## How to customize a label
-
-**Settings → Customization → Labels**
+## Adding a replacement
 
 <Steps>
-  <Step title="Search for the term you want to change">
-    Use the autocomplete search field at the top of the page. Type the current term (e.g., "Members") and the system shows all matching translation keys from the platform. Select the one you want to override.
+  <Step title="Click Add Text Replacement">
+    A search panel opens over the page.
   </Step>
-  <Step title="Enter your replacement text">
-    In the **Custom Expression** column, type the new term (e.g., "Scouts"). The **System Expression** column on the left shows the current default for reference.
+  <Step title="Search for the phrase you want to change">
+    Type part of the phrase. The search matches both the translated phrase you see in the app and the underlying English source phrase, so searching in either language works. Results are shown with the English source in brackets when it differs.
   </Step>
-  <Step title="Add more overrides if needed">
-    Click the add button to search for and override additional terms. Remember to cover both singular and plural forms (e.g., "Member" and "Members").
+  <Step title="Tick every phrase you want to override">
+    The list is multi-select. Tick as many as you need in one pass; the button shows the count. Phrases already in your table are skipped with a warning instead of being duplicated.
+
+    <img src="/images/platform/customization/text-replacement-search.png" alt="Add Text Replacement panel searching for member, with checkbox results showing the translated phrase and its English source key in brackets" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+  </Step>
+  <Step title="Fill in the Custom Expression column">
+    Back on the table, each new row shows **System Expression** (Orgo's wording, read-only, in your current interface language) and one **Custom Expression** column per enabled language. Type your replacement in each.
   </Step>
   <Step title="Save">
-    Click **Save**. The change appears everywhere in the platform immediately — menus, buttons, forms, emails, and system messages.
+    Click **Save**. The new wording takes effect straight away for you, without a page reload. Other members pick it up the next time their session loads translations.
   </Step>
 </Steps>
 
-The override is purely visual — the underlying data model doesn't change. You're renaming the display label, not restructuring the system.
-
----
-
-## Common customizations
-
-| Default term | Replace with (examples) |
-|-------------|------------------------|
-| **Member** / **Members** | Scout(s), Associate(s), Volunteer(s), Participant(s) |
-| **Group** / **Groups** | Patrol(s), Chapter(s), Unit(s), Team(s), Committee(s) |
-| **Local Center** | Troop, District, Branch, Region, Section |
-| **Event** / **Events** | Activity/Activities, Meeting(s), Session(s), Program(s) |
-| **Discussion** | Forum, Conversation, Thread, Topic |
-| **Fee** / **Fees** | Dues, Subscription(s), Contribution(s), Levy/Levies |
-
-### Example: Scouting organization
-
-| Original | Customized |
-|----------|-----------|
-| Members | Scouts |
-| Groups | Patrols |
-| Local Center | Troop |
-| Events | Activities |
-
-### Example: Professional association
-
-| Original | Customized |
-|----------|-----------|
-| Members | Associates |
-| Groups | Committees |
-| Local Center | Chapter |
-| Fees | Annual Dues |
-
 <Tip>
-  Start with the 5-6 terms that differ most for your organization. Don't customize labels that already make sense — over-customization can confuse members who've used similar platforms before.
+  Leave a Custom Expression blank and that language keeps Orgo's wording. You do not have to fill every column.
 </Tip>
 
 ---
 
-## Multi-language labels
+## What a replacement covers
 
-If you have multiple languages enabled, you need to provide label overrides for each language separately.
+A replacement swaps one phrase everywhere that exact phrase is used in the interface. It changes display text only: no data, permission or route changes behind it.
 
-<Steps>
-  <Step title="Select the language">
-    Use the language picker at the top of the Labels page to switch to the language you want to customize.
-  </Step>
-  <Step title="Enter the translated override">
-    For each customized term, type the translation in that language. The system expression column updates to show the default translation for the selected language.
-  </Step>
-  <Step title="Repeat for each active language">
-    Switch to each enabled language and provide the corresponding override. Labels without an override fall back to the default translation for that language.
-  </Step>
-</Steps>
+| Surface | Replaced? |
+|---|---|
+| Sidebar, page titles, tabs, buttons | Yes |
+| Form labels, placeholders, help text, validation messages | Yes |
+| Empty states, confirmation dialogs, toasts | Yes |
+| The event app and mobile app interface | Yes, same catalogue |
+| **System and notification emails** | **No.** Emails render from server-side templates that do not read your replacements |
+| **Generated PDFs** (invoices, adhesions, contracts) | **No** |
+| Member-written content: posts, event names, group names | No, and there is nothing to replace |
 
 <Warning>
-  If you enable a new language after customizing labels, remember to add overrides for that language too. Otherwise, members using the new language will see the default terms, not your custom ones.
+  Because the same phrase is replaced everywhere it appears, a short common word is risky. Replacing "Group" changes it in the sidebar and also in every sentence that happens to use it. Prefer replacing the specific phrases you actually see wrong.
 </Warning>
 
 ---
 
-## What you can customize
+## Working with several languages
 
-Labels cover everything visible to members:
+The table shows one **Custom Expression** column per language you enabled under [Languages](/platform/customization/languages). If multi-language support is off, there is a single column for the organization's default language.
 
-| Category | Examples |
-|----------|---------|
-| **Navigation** | Menu items, sidebar labels, page titles |
-| **Buttons** | Action button text ("Create Event" → "Schedule Activity") |
-| **Forms** | Field labels, placeholder text, help text |
-| **Emails** | Subject lines, email body text, notification text |
-| **System messages** | Success confirmations, error messages, validation text |
+The search panel builds its list from the English source catalogue merged with your organization's default language, so a phrase stays findable even when it is only present in one of the two.
+
+<Warning>
+  Enabling a new language later adds an empty column to every existing row. Until you fill it, members using that language see Orgo's wording, not yours.
+</Warning>
 
 ---
 
-## Resetting a label
+## Common replacements
 
-To undo a label change, find the customized label in the list, clear the **Custom Expression** field, and save. The default term is restored. You can also remove the entire row by clicking the delete button next to it.
+| Orgo's wording | Typical replacement |
+|---|---|
+| Member, Members | Scout(s), Associate(s), Volunteer(s), Participant(s) |
+| Group, Groups | Patrol(s), Chapter(s), Team(s), Committee(s) |
+| Local Center | Troop, District, Branch, Section |
+| Event, Events | Activity/Activities, Meeting(s), Session(s) |
+| Fee, Fees | Dues, Contribution(s), Subscription(s) |
+
+Singular and plural are separate phrases. So are capitalised and lowercase variants. Search broadly and tick all the forms in one pass.
 
 ---
 
-## Real-world example
+## Removing a replacement
 
-> **Scenario**: A volunteer fire department with 300 members across 12 stations, operating in German.
-
-1. **Default language**: German.
-2. **Label changes**: "Mitglieder" (Members) → "Kameraden" (Comrades), "Lokales Zentrum" (Local Center) → "Feuerwache" (Fire Station), "Gruppen" (Groups) → "Züge" (Platoons), "Veranstaltungen" (Events) → "Einsatzübungen" (Drills).
-3. **Result**: The entire platform — sidebar, member lists, event calendar, emails — uses the fire department's terminology instead of generic organizational terms.
+Click the **x** at the left of the row, then **Save**. The row disappears and Orgo's own wording returns. Clearing a single language's field and saving reverts just that language.
 
 ---
 
 ## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="I changed 'Member' but it still shows the old term in some places">
-    There are multiple translation keys for singular and plural forms, and for different contexts (e.g., "Member", "Members", "member", "members"). Search broadly in the autocomplete and update all matching instances. Also check capitalized and lowercase variants.
+  <Accordion title="I replaced a word but it still shows the old one in places">
+    Those places use a different phrase. Orgo's catalogue holds separate entries for singular, plural and differently capitalised forms, and longer sentences are stored whole rather than assembled from words. Search for the exact text you see on screen and add that as its own row.
   </Accordion>
-  <Accordion title="We use the same term for two different Orgo features">
-    Be careful — if you rename both "Groups" and "Local Centers" to "Teams", members won't be able to distinguish them. Keep terms distinct even when customizing. Use your organization's real vocabulary to find natural distinctions.
+  <Accordion title="My replacement is not in the emails members receive">
+    Correct, and not fixable from this page. Emails are rendered server-side from templates that do not read text replacements. Adjust the wording in the email templates instead.
   </Accordion>
-  <Accordion title="My custom labels disappeared after a platform update">
-    Custom labels are stored permanently and survive platform updates. If a label appears to have reverted, it's likely that a new translation key was added in the update that you haven't customized yet. Search for the term and add the override for the new key.
+  <Accordion title="I cannot find the phrase in the search">
+    Search a distinctive fragment rather than the whole sentence, and try the English wording as well as your own language. Phrases that come from your own data (a group name, an event type, a custom field label) are not in this catalogue: edit them where they were created.
   </Accordion>
-  <Accordion title="I can't find the term I want to change in the search">
-    The autocomplete searches through all translation keys in the system. Try different wordings — the key might use a synonym or abbreviation. If the term is part of a longer phrase, search for the individual word rather than the full sentence.
+  <Accordion title="Members still see the old wording after I saved">
+    Your own session updates immediately. Other members reload translations on their next page load or session start. A hard refresh clears it for anyone stuck.
+  </Accordion>
+  <Accordion title="Two features now have the same name">
+    Nothing prevents that, and it is a real risk. If you rename both Groups and Local Centers to "Teams", nothing in the interface distinguishes them any more. Keep replacements distinct.
   </Accordion>
 </AccordionGroup>
 
@@ -148,6 +126,8 @@ To undo a label change, find the customized label in the list, clear the **Custo
 
 ## Related
 
-- [Languages](/platform/customization/languages) — Multi-language support (enable languages before customizing labels)
-- [Menu Organizer](/platform/customization/menu-organizer) — Rearrange and rename sidebar items
-- [Branding](/platform/organisation/branding) — Visual customization (logos, login background)
+- [Languages](/platform/customization/languages) - enable languages before filling in their columns
+- [Menu Organizer](/platform/customization/menu-organizer) - rename a single sidebar entry without touching the phrase everywhere
+- [Customization](/platform/customization) - everything under Settings → Customization
+- [Branding](/platform/organisation/branding) - logos and login page
+- [Modules](/platform/organisation/modules) - turn off a feature instead of renaming it

@@ -1,202 +1,189 @@
 ---
 title: 'Data Import'
-description: 'Bulk-import members, local centers, roles, events, badges, products, and more from CSV files'
+description: 'Bulk-create and bulk-update members, contacts, events, badges, products and companies from CSV files'
 "og:title": 'Data Import | Orgo'
-"og:description": 'Bulk-import members, local centers, roles, events, badges, products, and more from CSV files'
+"og:description": 'Bulk-create and bulk-update members, contacts, events, badges, products and companies from CSV files'
 "twitter:title": 'Data Import | Orgo'
-"twitter:description": 'Bulk-import members, local centers, roles, events, badges, products, and more from CSV files'
+"twitter:description": 'Bulk-create and bulk-update members, contacts, events, badges, products and companies from CSV files'
 ---
 
-When migrating to Orgo from another system (or from spreadsheets), the Data Import tool lets you bulk-create records from CSV files. Import members, local centers, roles, events, badges, products, and more — with progress tracking, validation, and error reporting.
+Import turns CSV files into Orgo records. It is how you migrate from another
+system, load a historical archive, or push a bulk correction across thousands of
+profiles without touching them one at a time.
 
-**Settings → Customization → Import Data**
+**Built for** organisations arriving with years of data in another tool or in
+spreadsheets. **Replaces** the manual re-typing, and the "can you just run this
+SQL" request.
+
+The page is at **Settings** → **Customization** → **Import** (`/tenants/import`),
+titled **Data Import System**. Every import endpoint requires `ADMIN_TENANT`.
+
+<img src="/images/platform/customization/data-import.png" alt="Data Import System page showing the recommended import order as numbered steps, each with a Choose CSV button and an example file download" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## How the page works
+
+The page is a numbered list, not a wizard: each entry is one import type. No
+column-mapping screen, no options dialog, no dry run. The file you upload is the
+instruction.
+
+<Steps>
+  <Step title="Download the example CSV">
+    The download icon on each step gives you a file with the exact column headers
+    that step reads.
+  </Step>
+  <Step title="Choose CSV">
+    `.csv` and `.txt`, up to 500 MB. Comma, semicolon and tab are detected
+    automatically, and a UTF-8 byte order mark is stripped.
+  </Step>
+  <Step title="Start Import">
+    Validation and processing run in the background, in batches, so a large file
+    keeps going after you close the tab.
+  </Step>
+  <Step title="Watch the progress">
+    A live percentage, refreshed every three seconds, with running counts of
+    successful, failed and skipped rows.
+  </Step>
+  <Step title="Read the errors">
+    Expand the row in **Import History** for per-row failures: row number, message
+    and raw row data. The first 20 are listed, with the total count underneath.
+  </Step>
+</Steps>
 
 <Note>
-  Requires **Tenant Admin** permissions.
+Orgo does not email you when an import finishes. Keep the page open, or come back
+to the history table.
 </Note>
+
+Validation runs before any row is written: Orgo looks for the header row in the
+first 10 lines and checks the required columns. If they are missing, the import
+fails naming the columns it wanted and the ones it found, and nothing is created.
 
 ---
 
 ## What you can import
 
-The import system supports 15 data types. The platform shows a recommended import order to ensure referential integrity (e.g., local centers before members).
+Run the steps in the order below: each one can reference records the earlier ones
+created. Steps whose module is switched off do not appear at all.
 
-| Import type | What it creates | Depends on |
-|------------|----------------|------------|
-| **Units** | Organizational units | — |
-| **Local Centers** | Local groups/branches | — |
-| **Roles** | User types and roles | — |
-| **Users** | Member accounts | Local Centers, Roles |
-| **User-Role assignments** | Assign roles to existing users | Users, Roles |
-| **Events** | Calendar events | — |
-| **Event Attendance** | Mark attendance on events | Users, Events |
-| **Badge Types** | Badge/achievement categories | — |
-| **Badges** | Individual badges | Badge Types |
-| **Badge-User assignments** | Award badges to members | Users, Badges |
-| **Products** | Items for sale | — |
-| **Product Prices** | Pricing tiers for products | Products |
-| **Product Payments** | Payment records for products | Users, Products |
-| **Companies** | Organization/company records | — |
-| **Company-User assignments** | Link members to companies | Users, Companies |
+| Step | Required columns | Needs module |
+|---|---|---|
+| **Local Centers** | `name`, `local_center_legacy_id` | Local Centers |
+| **Units** | `name`, `unit_legacy_id` | Groups & Teams, **Enable Organizational Units** |
+| **Roles** | `name`, `role_legacy_id` | none |
+| **Badge Types** | `name`, `badge_type_legacy_id` | Gamification |
+| **Badges** | `name`, `badge_type_legacy_id`, `badge_legacy_id` | Gamification |
+| **Users** | `user_legacy_id` | none |
+| **Contacts** | `email` | none |
+| **User Roles** | `user_legacy_id`, `role_legacy_id`, `start_date` | none |
+| **Products** | `product_legacy_id`, `name` | Payments & Fees |
+| **Product Prices** | `product_price_legacy_id`, `product_legacy_id`, `price` | Payments & Fees |
+| **Product Payments** | one way of naming the payer (`user_legacy_id`, or `payer_email`, or `payer_name` + `payer_email` + `payer_organisation`), the product (`product_legacy_id`, or `product_name` + `product_type`) and the price (`product_price_legacy_id`, or `product_name` + `price_name` + `amount` + `currency`) | Payments & Fees |
+| **Events** | `name`, `datetime_begin` | Events |
+| **Event Attendance** | one way of naming the event (`event_legacy_id`, or `event_name` + `event_datetime`, optionally with `chapter`) and the attendee (`user_legacy_id`, or `attendee_email`, or `attendee_name` + `attendee_email` + `attendee_organisation`) | Events |
+| **Badge Assignments** | `user_legacy_id`, `badge_legacy_id`, `concluded_at` | Gamification |
+| **Companies** | `company_legacy_id`, `name` | Companies |
+| **Company Members** | `company_legacy_id`, `user_legacy_id` | Companies |
+| **Modify Users** | any of `email` / `user_legacy_id` / `phone_number` | none |
+| **Modify Contacts** | any of `email` / `phone` | none |
 
-<Tip>
-  For each import type, you can download an **example CSV template** showing the expected column format. Click the download link next to each import type in the interface.
-</Tip>
+The `*_legacy_id` columns are the glue: your old system's identifiers, stored on
+the Orgo record, are how a later file says which event an attendance belongs to.
+Keep them stable across all your files. Where a step accepts several column shapes,
+give it legacy ids if you have them, or human columns like `event_name` and
+`event_datetime`, and Orgo creates or links the event, product, price tier and
+attendee for you.
 
----
-
-## When to use data import
-
-| Situation | Action |
-|-----------|--------|
-| Migrating from another membership platform | Export as CSV from the old system, import into Orgo |
-| Your member database is in a spreadsheet | Save as CSV and import |
-| Adding a large batch of new members at once | Import rather than creating one by one |
-| Updating existing member data in bulk | Import with "update existing" enabled |
-| Setting up Local Centers before launch | Import centers from CSV first, then import members |
-| Awarding badges to many members | Import badge-user assignments from CSV |
-| Loading historical event attendance | Import attendance records after creating events |
+Companies and Company Members check their required columns row by row rather than
+upfront, so a file with the wrong headers starts, then fails every row.
 
 ---
 
-## Preparing your CSV file
+## Creating versus modifying
 
-Your file must be in **CSV** format (comma-separated values) or **TXT** format. Most spreadsheet apps (Excel, Google Sheets) can export to CSV.
+The first sixteen steps only create: a row matching an existing record counts as
+**skipped** and the record is left alone. Users match on `user_legacy_id` first,
+then on email. Contacts whose email belongs to an existing member are skipped by
+design.
 
-### Required fields for member import
+The last two steps, under the **Modify existing records** heading, update in place:
 
-| Field | Description |
-|-------|-------------|
-| **email** | Unique email address — this is how Orgo identifies each member |
-| **firstName** | Member's first name |
-| **lastName** | Member's last name |
-
-### Common optional fields
-
-| Field | Description |
-|-------|-------------|
-| **phone** | Phone number |
-| **birthDate** | Date of birth (format: YYYY-MM-DD) |
-| **localCenter** | Local Center name (must already exist in Orgo) |
-| **userType** | User type name (must already exist in Orgo) |
-| **address** | Street address |
-| **city** | City name |
-| **country** | Country code (e.g., US, DE, FR) |
-
-### Example CSV
-
-```csv
-firstName,lastName,email,phone,localCenter,userType
-John,Doe,john@example.com,+1234567890,New York,Regular Member
-Jane,Smith,jane@example.com,+0987654321,Chicago,Leader
-```
-
----
-
-## The import process
-
-<Steps>
-  <Step title="Choose the import type">
-    Select what you're importing from the list (e.g., Users, Local Centers, Events). The interface shows which imports are recommended to do first and which are optional.
-  </Step>
-  <Step title="Upload the CSV file">
-    Click **Upload** and select your prepared file. Accepted formats: `.csv` and `.txt`.
-  </Step>
-  <Step title="Map columns to fields">
-    The system auto-matches common column names (email, firstName, lastName). For unrecognized columns, manually map each CSV column to the corresponding Orgo field using the dropdown selectors. The mapping configuration is saved for future imports of the same type.
-  </Step>
-  <Step title="Configure import options">
-    Choose what to do with duplicates (skip or update), whether to send welcome emails, and other type-specific options.
-  </Step>
-  <Step title="Preview and validate">
-    The system validates your data before importing. Review the first few rows to verify everything maps correctly. The validator flags issues like invalid emails, missing required fields, and broken references.
-  </Step>
-  <Step title="Run the import">
-    Click **Import**. The system processes rows in batches with real-time progress tracking — you'll see the percentage complete, and counts of successful, failed, and skipped rows.
-  </Step>
-  <Step title="Review results">
-    After completion, check the summary. Download the **error report** for any failed rows — it shows exactly what went wrong for each row so you can fix and re-import.
-  </Step>
-</Steps>
-
----
-
-## Import status tracking
-
-Each import goes through a workflow:
-
-| Status | Meaning |
-|--------|---------|
-| **Pending** | File uploaded, waiting to start |
-| **Validating** | Checking data integrity before processing |
-| **Processing** | Actively importing rows (shows progress %) |
-| **Completed** | All rows processed successfully |
-| **Failed** | Import encountered a critical error |
-
-The import history table shows all past imports with their status, row counts, and timestamps.
-
----
-
-## Import order matters
-
-If your data has dependencies, import in this order:
-
-<Steps>
-  <Step title="Infrastructure first">
-    Import **Units** and **Local Centers** — these are referenced by other records.
-  </Step>
-  <Step title="Roles and types">
-    Import **Roles** (user types) — these are needed when assigning roles to members.
-  </Step>
-  <Step title="People">
-    Import **Users** — now their Local Center and Role references will resolve correctly.
-  </Step>
-  <Step title="Assignments">
-    Import **User-Role assignments**, **Badge-User assignments**, and **Company-User assignments** — these link existing users to existing records.
-  </Step>
-  <Step title="Activity data">
-    Import **Events**, then **Event Attendance**. Import **Products**, then **Product Prices** and **Product Payments**.
-  </Step>
-</Steps>
+- **Modify Users** matches on `email`, then `user_legacy_id`, then `phone_number`,
+  in that order. **Modify Contacts** matches on `email`, then `phone`.
+- An empty cell leaves that field unchanged. Only columns you fill in are written.
+- A row that matches nothing falls back to creating a contact, provided it carries
+  at least an email or a name.
+- Usernames, passwords, permissions and API tokens can never be written by an
+  import.
 
 <Warning>
-  If a row references a Local Center, Role, or User that doesn't exist yet, that row will fail. The platform shows the recommended sequence in the interface — follow it to avoid dependency errors.
+Imported members cannot sign in. The import writes a placeholder password, so
+they need the password reset flow or an invitation before their first login.
 </Warning>
 
 ---
 
-## Real-world example
+## Custom fields
 
-> **Scenario**: A national scouting organization migrating 5,000 members from a legacy spreadsheet to Orgo.
+Any column that is not a recognised system column for that step becomes a
+**profile custom field**. If none with that name exists, Orgo creates one (text,
+visible on the profile) and stores the value, so custom fields need not exist
+before the import.
 
-1. **Export** the spreadsheet to CSV: one file for troops (local centers), one for scout ranks (roles), one for members.
-2. **Import Local Centers** first: CSV with columns `name`, `region`, `address`. All 150 troops created in one batch.
-3. **Import Roles**: CSV with `name`, `type`. Creates "Scout", "Patrol Leader", "Scoutmaster" user types.
-4. **Import Users**: CSV with `firstName`, `lastName`, `email`, `localCenter` (troop name), `userType` (rank). The 5,000 members are processed in ~3 minutes.
-5. **Review**: 4,950 successful, 50 failed (duplicate emails). Download error report, fix duplicates, re-import the 50.
-6. **Import Badge-User assignments**: Award existing achievement badges to members based on historical records.
+A column named `custom_field_123` writes to the existing custom field with that id
+instead, which is useful when two of your fields share a label.
 
-Total migration time: about 15 minutes for a 5,000-member organization.
+---
+
+## Rolling back
+
+Every completed import has a **Rollback** button in **Import History**, until you
+use it once.
+
+For the create steps, rollback deletes the records that import made, in reverse
+dependency order, so nothing is left pointing at a missing parent. For **Modify
+Users** and **Modify Contacts**, Orgo stored a before-image of every row it
+touched: rollback replays those values, including custom fields, then deletes any
+contacts the fallback created. The whole rollback is one transaction, so it either
+completes or changes nothing.
+
+<Warning>
+Rollback of a modify import restores the values as they were at import time. If
+another import or an admin changed those records afterwards, those later changes
+are reverted too.
+</Warning>
+
+<img src="/images/platform/customization/import-history.png" alt="Import History table listing past imports with type, status, results counts, date and a Rollback button, with one row expanded to show per-row error messages" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+Statuses you will see: **Pending**, **Validating**, **Processing**,
+**Completed**, **Failed**, **Rolled Back**. The history keeps the 50 most recent
+imports.
 
 ---
 
 ## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="The import failed for many rows — what went wrong?">
-    Download the **error report** from the import history. Common issues: invalid email format, missing required fields, referencing Local Centers or user types that don't exist yet. Fix the CSV and re-import just the failed rows.
+  <Accordion title="The import failed immediately with zero rows processed">
+    Header validation. The message lists the columns the step needs and the ones
+    it found: check for a title row above the headers and for renamed headers,
+    then upload the corrected file.
   </Accordion>
-  <Accordion title="I imported members but they can't log in">
-    Check whether you enabled **"Send welcome email"** during import. If not, members don't have credentials. You can send invitation emails after the fact from the Members list, or have members use the **"Forgot password"** flow on the login page.
+  <Accordion title="Most rows came back as skipped">
+    Skipped means the record already exists, the expected result when you re-run
+    the same file. To update those records instead, use **Modify Users** or
+    **Modify Contacts**.
   </Accordion>
-  <Accordion title="I want to import custom field values too">
-    Map CSV columns to custom fields during the field mapping step. Custom fields must already exist in Orgo before import — create them in **Settings → Users & Profiles → Custom Fields** first.
+  <Accordion title="A column ended up as a custom field instead of the real profile field">
+    The header did not match a system column for that step. Built-in names are
+    snake_case (`first_name`, `phone_number`, `birth_date`, `town_residence`), not
+    camel case. Compare against the example CSV, roll the import back, fix the
+    header, run it again.
   </Accordion>
-  <Accordion title="Can I undo an import?">
-    There's no automatic undo. For large imports, **test with a small sample** (10-20 rows) first to verify everything works correctly. If something goes wrong with a full import, you'll need to manually clean up the records or contact support.
-  </Accordion>
-  <Accordion title="I have 10,000+ members to import — will it handle that?">
-    Yes. Large imports are processed in batches with progress tracking. It may take several minutes, but the system is designed for large datasets. If you encounter timeout issues, break the file into smaller batches (e.g., 5,000 rows each).
+  <Accordion title="Can I import into a specific list?">
+    Yes, but not from this page. Open the list and use the CSV import inside it.
+    See [Lists & Segments](/platform/users/lists).
   </Accordion>
 </AccordionGroup>
 
@@ -204,7 +191,8 @@ Total migration time: about 15 minutes for a 5,000-member organization.
 
 ## Related
 
-- [Users & Profiles](/platform/users) — Member management after import
-- [Local Groups](/platform/groups/local-groups) — Set up groups before importing members
-- [Invitations](/platform/users/invitations) — Alternative: invite members one by one or in small batches
-- [Custom Fields](/platform/users/custom-fields) — Create custom fields before importing custom data
+- [Users & Profiles](/platform/users) - what the imported members look like afterwards
+- [Merging Duplicates](/platform/users/merging-duplicates) - cleaning up records an import doubled
+- [Custom Fields](/platform/users/custom-fields) - the fields an import can create
+- [Lists & Segments](/platform/users/lists) - importing members straight into a list
+- [Contacts](/platform/contacts) - the difference between a contact and a member

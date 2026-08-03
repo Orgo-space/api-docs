@@ -1,0 +1,196 @@
+---
+title: 'Forms'
+description: 'Build standalone forms and surveys, share them with a public link, and read the responses as charts, single answers, or a table'
+"og:title": 'Forms | Orgo'
+"og:description": 'Build standalone forms and surveys, share them with a public link, and read the responses as charts, single answers, or a table'
+"twitter:title": 'Forms | Orgo'
+"twitter:description": 'Build standalone forms and surveys, share them with a public link, and read the responses as charts, single answers, or a table'
+---
+
+Forms is Orgo's standalone form builder. You write the questions, publish the
+form, share one link, and read the answers back inside Orgo. Anyone who answers
+with an email address that Orgo does not already know becomes a contact, so a
+survey doubles as a way to grow your contact list.
+
+**Built for** the one-off questionnaire that is not part of joining your
+organisation: a satisfaction survey, an interest poll, a call for volunteers, a
+sign-up sheet for an activity.
+
+**Replaces** Google Forms or Typeform for members and the public. It has no
+conditional logic, no file-upload questions, and no payment collection.
+
+<img src="/images/platform/forms/forms-list.png" alt="Forms list showing status filter pills and a grid of form cards with field counts and Published, Draft and Closed status tags" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Turning it on and who can use it
+
+Enable the module at **Settings** → **Modules** → **Form Builder** →
+**Enable Form Builder Module**, which requires `ADMIN_TENANT`.
+
+Opening the Forms area requires `ADMIN_TENANT` or `HR_TENANT`. A form you create
+belongs to you: its statistics, responses, and publish action are open to you as
+its owner, and to anyone holding `ADMIN_TENANT`, `COMMUNICATION_TENANT`, or
+`EVENT_TENANT`.
+
+<Warning>
+The **Forms** entry in the **Management** section of the sidebar is currently
+shown to holders of `COMMUNICATION_TENANT` or `EVENT_TENANT`, but the page
+itself only admits `ADMIN_TENANT` or `HR_TENANT`. If the link is visible and
+clicking it sends you to the login screen, that is this mismatch, not a broken
+session. Ask for `HR_TENANT`, or reorder the menu to hide the entry until it is
+resolved.
+</Warning>
+
+---
+
+## Building a form
+
+**Create form** makes a draft called "Untitled form" immediately and opens the
+builder; rename it in the top bar. On the **Questions** tab, the header card
+holds the title respondents see and an optional rich-text description. Add
+questions with the **+** button on the right, each with a title, an optional
+description shown under it, a type, and a **Required** toggle. **Add text**
+inserts a rich-text block that displays instructions between questions and
+collects no answer. Drag a question by the handle at the top of its card to
+reorder. **Save** keeps the form as a draft; **Publish** saves everything and
+opens the form to responses.
+
+Deleting a question inside the builder marks it "Will be deleted" and offers a
+**Restore** button until you press Save. To copy a question, use the duplicate
+action in the question editor: questions belong to one form, cannot be reused on
+another, and never appear on the
+[Custom Fields](/platform/users/custom-fields) settings page.
+
+### Question types
+
+| Type | Answer |
+|---|---|
+| **Short answer** | One line of text |
+| **Paragraph** | Multi-line text |
+| **Multiple choice** | One option, all shown at once |
+| **Checkboxes** | Any number of options |
+| **Dropdown** | One option, picked from a list |
+| **Number** | A number |
+| **True / False** | A switch |
+| **Date** | A calendar date |
+
+There is no file-upload question and no conditional or branching logic. Every
+respondent sees every question in the order you set. For a file, collect it
+through a [custom field](/platform/users/custom-fields) on the profile or
+registration form, or ask for a link to it in a short-answer question.
+
+<img src="/images/platform/forms/form-builder-questions.png" alt="Form builder Questions tab with the header card, a multiple choice question expanded for editing, and the floating add-question toolbar" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Settings
+
+The **Settings** tab holds who may answer and when.
+
+| Setting | What it does |
+|---|---|
+| **Only registered users** | Only an email that matches an existing member account is accepted. Anyone else is refused. |
+| **Anyone with email verification** | An email is required. A known member or contact is accepted straight away; an unknown address creates a new contact and the response stays pending until the confirmation link is clicked. |
+| **Anyone (Anonymous)** | No email asked. Responses are stored with no submitter and the submitter columns disappear from the responses table. |
+| **Limit to one submission per device** | A second attempt from the same device shows the thank-you page instead of the form. |
+| **Schedule auto-close** | A date and time after which the form reports itself closed and stops showing the questions. |
+| **Thank You Custom Message** | Rich-text page shown after a successful submission, in place of the default "Thank you!" screen. |
+
+The device check behind **Limit to one submission per device** is a hash of the
+respondent's IP address and browser user agent. It deters casual repeat entries
+but is not an identity check: a different network or browser gets a fresh
+attempt.
+
+Display options live behind the palette button on the **Questions** tab: a
+header image, whether to show the title and description, whether to show your
+organisation's logo, and the colour of the submit button.
+
+---
+
+## Publishing and sharing
+
+Publishing generates a seven-character short code and builds a shareable page
+with social-media preview tags. The link button in the top bar copies the
+responder link, `https://<your-app-host>/share/form/<code>`. Respondents do not
+need an Orgo account to open it unless the form is set to **Only registered
+users**, and a signed-in member gets their email filled in automatically and
+skips the verification step.
+
+<img src="/images/platform/forms/form-public-page.png" alt="Public form page showing the title card, the email address card, and the first questions each in their own card" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+To stop responses without losing the link, open **Published options** in the top
+bar and turn on **Not accepting responses**, or set a date under **Schedule
+auto-close**. Either shows a "Form Closed" panel in place of the questions, and
+turning the switch off reopens the form. Deleting a form from the list does not
+free the link either: it hides the form everywhere but keeps the record and its
+responses.
+
+---
+
+## Reading the responses
+
+The **Responses** tab counts confirmed responses, and flags separately how many
+are still pending an email confirmation. It offers three views.
+
+- **Summary** draws a chart per choice question and lists the text answers
+  grouped by identical value, each with who submitted it and when.
+- **Answers** walks through responses one at a time, in the same layout the
+  respondent saw. Covers the 100 most recent confirmed responses.
+- **Table View** is one row per response, one column per question, paginated 100
+  rows at a time.
+
+**Download CSV** exports up to 10,000 responses with the same columns as the
+table. On an anonymous form the submitter and email columns are absent from both
+the table and the export.
+
+Response counts are cached and refresh themselves as answers arrive. If the
+numbers look stale, the refresh button next to **Download CSV** forces a full
+recalculation. Closing a form freezes its statistics. You can delete a single
+response from the **Answers** view, permanently.
+
+<img src="/images/platform/forms/form-responses-summary.png" alt="Responses tab Summary view with the response count, Download CSV button, and a bar chart of answers to a multiple choice question" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## What a response creates
+
+On a form set to **Anyone with email verification**, an email that matches a
+member is linked to that member, an email that matches an existing contact is
+linked to that contact, and an unknown email creates a new
+[contact](/platform/contacts) with the first and last name given on the form,
+marked as coming from a form.
+
+Unless the respondent is signed in as the owner of that email, the response is
+held as pending and a confirmation email goes out. Clicking the link inside
+confirms the response, confirms the contact's email address, and lands the
+respondent on the thank-you page. **The link is valid for 24 hours**; after that
+the form has to be submitted again. Pending responses are counted separately and
+are excluded from the charts, the table, and the export until they are confirmed,
+which is the usual reason a response someone swears they sent is not visible.
+
+---
+
+## Standalone forms versus the other builders
+
+| Use | Builder | Why |
+|---|---|---|
+| A survey, poll, or one-off questionnaire | **Forms** (this page) | Public link, no account needed, answers stored as responses |
+| Collecting data when somebody joins | [Registration form](/platform/users/registration-form) | Writes to the member's profile and creates the account |
+| Different questions per kind of member | [Per-user-type registration forms](/platform/users/user-types) | One field set per user type |
+| Data every member keeps up to date | [Profile form](/platform/users/profile-fields) | Fields live on the profile and can be required or filtered on |
+| A membership application to review and sign | [Adhesion](/platform/users/adhesion) | Has an approval workflow and a generated document |
+| Extra questions asked when booking a place | [Event registration form](/platform/events/registration-forms) | Answers attach to the event attendance |
+
+If the answer belongs on a person's profile forever, use one of the
+profile-based builders. If it belongs to one question you asked once, use Forms.
+
+---
+
+## Related
+
+- [Contacts](/platform/contacts) for the records created by public responses
+- [Custom Fields](/platform/users/custom-fields) for fields that live on member profiles
+- [Registration Form](/platform/users/registration-form) for collecting data at sign-up
+- [Event Registration Forms](/platform/events/registration-forms) for questions asked at booking
+- [Permissions](/platform/permissions) for the permission names used above

@@ -1,149 +1,134 @@
 ---
 title: 'Profile Fields'
-description: 'Configure what members can add to their profiles — and force-collect data with the splash screen'
+description: 'Choose which fields appear on member profiles, in which order, and which ones members must fill in'
 "og:title": 'Profile Fields | Orgo'
-"og:description": 'Configure what members can add to their profiles — and force-collect data with the splash screen'
+"og:description": 'Choose which fields appear on member profiles, in which order, and which ones members must fill in'
 "twitter:title": 'Profile Fields | Orgo'
-"twitter:description": 'Configure what members can add to their profiles — and force-collect data with the splash screen'
+"twitter:description": 'Choose which fields appear on member profiles, in which order, and which ones members must fill in'
 ---
 
-Profile Fields control what information members can view and edit on their profile after registration. This is separate from the registration form — you can ask for different things at different stages.
+The profile form decides what a member profile contains: which built-in fields are switched on, which of your [custom fields](/platform/users/custom-fields) go with them, what order they appear in, and which ones a member has to complete before they can use the platform.
 
-The most powerful feature here is the **splash screen**: mark any field as required, and every member who hasn't filled it out will be prompted on their next login. They can't skip it. This is how you collect data from existing members without chasing them by email.
+It is separate from the [registration form](/platform/users/registration-form), so you can ask for very little at sign-up and build the profile out later.
 
-<img src="/images/platform/users/profile-form-builder.png" alt="Profile fields configuration with visibility and required settings" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/users/profile-form-builder.png" alt="Profile Form builder with an Available Fields panel split into System Fields and Custom Fields, and a Profile Fields panel listing the chosen fields with Required checkboxes" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
 ## How to access
 
-**Settings** → **Users & Profiles** → **Profile Fields**
+**Settings** → **Users & Profiles** → **Profile Form**. Requires `ADMIN_TENANT`.
 
 ---
 
-## The splash screen mechanism
-
-This is the key feature that makes profile fields operationally powerful:
+## Building the form
 
 <Steps>
-  <Step title="You mark a field as required">
-    In the Profile Fields builder, toggle a field to Required.
+  <Step title="Pick fields from the left panel">
+    **Available Fields** has two tabs: **System Fields** (Orgo's built-in profile columns) and **Custom Fields** (the ones you created). The Custom Fields tab is disabled until you have at least one custom field. Click a field or drag it across to add it. Fields already in the form are greyed out and marked **in form**.
   </Step>
-  <Step title="Member logs in">
-    On their next login, the system checks if all required profile fields are filled.
+  <Step title="Order them">
+    Drag rows in the right panel to reorder. The order you set is the order members see, with built-in and custom fields interleaved however you arrange them.
   </Step>
-  <Step title="Splash screen appears">
-    If any required field is empty, a modal form appears showing only the missing fields. The member cannot dismiss it.
+  <Step title="Mark what is required">
+    Tick **Required** on any row. Custom field rows also offer **Immutable**.
   </Step>
-  <Step title="Member fills the fields">
-    They must complete all required fields before they can access the platform.
+  <Step title="Save">
+    Nothing is stored until you press **Save** at the top right.
   </Step>
 </Steps>
 
-**Use cases for the splash screen:**
-- You just added "Emergency Contact" as a required field — all 500 existing members will be prompted on their next login
-- New regulatory requirements mean you need everyone's date of birth — mark Birthday as required
-- You created a custom field "Membership Renewal Year" — make it required and everyone fills it out automatically
-
-<Tip>
-  The splash screen is the most efficient way to collect data from existing members. No bulk emails, no reminders, no chasing — just mark the field as required and your members will fill it out next time they log in.
-</Tip>
+Removing a field with the **X** takes it off the form. It does not delete data already collected: values stay in the database and reappear if you add the field back.
 
 ---
 
-## Field configuration options
+## Built-in fields you can add
 
-For each field, you control three things:
+| Group | Fields |
+|---|---|
+| Identity | First Name, Last Name, Date of birth, Gender, Bio |
+| Location | Town born, Town current, Location on members map, Address, Postal code |
+| Contact | Phone number, Website |
+| Social | Signal, Bluesky, Facebook, Twitter, LinkedIn, Instagram, Telegram, TikTok |
+| Profession | Profession headline, Profession industry, Profession sector |
+| Organisation | Current company/organization name, website, and role |
+| Billing | Company legal name, Company identifier, Company address, Company commerce registry number |
 
-| Option | What it does | Impact |
-|--------|-------------|--------|
-| **Enabled** | Field appears on the profile edit page | Members can see and fill it |
-| **Required** | Field must be filled | Triggers splash screen if empty on login |
-| **Immutable** (custom fields only) | Value can't be changed after first entry | Only admins can modify it once set |
-
-### When to use immutable
-
-Mark a field as immutable when the value should be set once and never changed by the member:
-- Membership ID numbers
-- Official registration dates
-- Verified credentials or license numbers
-- Admin-assigned categories
-
-Members set it once (or admin sets it), and from then on only administrators can change it.
-
----
-
-## What members see
-
-Members edit their profiles at **Profile** → **Update Profile**.
-
-The profile edit page is organized into tabs: **Profile** (personal info, bio, location), **Permissions**, **Roles**, **Profession**, **Badges**, **Family**, **Notifications**, and **Settings & Privacy**. The Profile tab shows editable fields for name, date of birth, gender, bio, town of residence, location on map, and any enabled custom fields. A **Save** button appears at the top right of each section.
-
----
-
-## Registration form vs profile fields
-
-These two features work together as a two-stage data collection pipeline:
-
-| | Registration Form | Profile Fields |
-|---|------------------|----------------|
-| **When** | During sign-up | After login, on the profile page |
-| **Purpose** | Get the minimum to create an account | Build a complete member profile over time |
-| **Required fields** | Block registration (they can't submit without them) | Trigger splash screen on login (they can't use the platform without them) |
-| **Immutable** | Not available | Available for custom fields |
-| **Strategy** | Keep short to maximize completion | Add fields progressively as your needs grow |
+Profile picture is not on this list. It is always available and is not configurable here.
 
 <Note>
-  A field can be on both forms with different settings. Phone might be optional at registration but required on profiles — meaning new members can skip it during sign-up, but they'll be prompted for it on their next login.
+The profession, organisation, and billing fields do not render on the **Profile** tab. They appear on a separate **Profession** tab on the member's profile, and only when the Professions module is active. Profession headline is the exception: with Professions switched off it renders inline on the Profile tab instead.
 </Note>
 
 ---
 
-## Progressive profiling strategy
+## Required fields and the completion screen
 
-Instead of asking for everything at registration, collect data in stages:
+Marking a field **Required** does more than star it on the form. On their next page load, any member with an empty required field is redirected to a completion screen at `/hello-member` and cannot navigate away until they fill it in.
 
-**Stage 1 — Registration:** Email, name. That's it. Get them in.
+That screen is shared with the other things Orgo asks a member to settle on first sight: profile, privacy, notifications, timezone, groups, and unsigned e-documents. Only the steps that actually apply are shown.
 
-**Stage 2 — First login splash screen:** Birthday, phone, local center. Mark these as required profile fields. Members fill them out immediately after their first login.
+Two exceptions are worth knowing:
 
-**Stage 3 — Over time:** Profession, social profiles, custom fields. Keep these enabled but not required. Members fill them out when they feel engaged enough.
+- **Admin-only custom fields are never required of members.** If a custom field's visibility is Admin, it is skipped when checking whether the member's profile is complete.
+- **Not every built-in field can enforce itself.** The completion check only recognises first name, last name, date of birth, gender, phone number, address, town born, town current, and the Facebook, Twitter, LinkedIn, Instagram, Telegram, and TikTok fields. Marking any other built-in field required (bio, postal code, website, map location, Signal, Bluesky, or any profession, organisation, or billing field) shows it as required on the form but does not trigger the completion screen. Required custom fields are always enforced.
 
-**Stage 4 — When you need something new:** Create a new required profile field. Every member gets the splash screen on their next login. Data collected within a week without a single email.
+A custom field counts as filled when it has any value, or, for file fields, an uploaded file.
+
+<Tip>
+Requiring a field is the fastest way to backfill data from existing members: you do not have to email anyone, they are asked the next time they open Orgo. Keep the list short, though, because every required field stands between the member and the thing they logged in to do.
+</Tip>
 
 ---
 
-## How profile fields connect to other features
+## Immutable custom fields
 
-| Feature | How it interacts |
-|---------|-----------------|
-| [Registration Form](/platform/users/registration-form) | Registration collects initial data; profile fields extend it. Both can use the same fields with different settings. |
-| [Custom Fields](/platform/users/custom-fields) | Custom fields you create appear in the profile builder. This is where you enable them for member profiles and set required/immutable. |
-| [Privacy Settings](/platform/users/privacy-settings) | Privacy controls determine who can see each field. A field can be on the profile but hidden from other members. |
-| [Adhesion](/platform/users/adhesion) | Adhesion forms can include profile fields. Data from approved applications can pre-fill the member's profile. |
+**Immutable** is available on custom field rows only. Once the field has a value for a member, it becomes read-only on the profile form.
+
+<Warning>
+Immutable locks the field for everyone editing through the profile form, administrators included. It is a form-level lock, so it does not block changes made through an import or the API. Use it for values that should be entered once, such as a licence number or an externally issued member ID, and expect to correct mistakes outside the profile screen.
+</Warning>
+
+---
+
+## Profile completion percentage
+
+When **Profile Completion Enabled** is on (**Settings** → **Users & Profiles** → **Configuration**, on by default), members see a completion ring in the header and sidebar with the fields they are still missing.
+
+The percentage is calculated over profile picture and email, which always count, plus first name, last name, date of birth, gender, and town current when those are on the profile form, plus one combined "social profile" item when any social field is on the form. Having any single social link filled satisfies that item. Fields that are not on your profile form are not counted against members.
+
+---
+
+## Registration form compared with the profile form
+
+| | Registration form | Profile form |
+|---|---|---|
+| When it is asked | During sign-up | After login, on the member's profile |
+| Effect of Required | Blocks the sign-up submission | Sends the member to the completion screen |
+| Immutable option | Not available | Available for custom fields |
+| Ordering | Fixed list of toggles | Drag and drop, custom fields interleaved |
+
+A field can sit on both with different settings. Phone can be optional at registration and required on the profile, so new members can skip it while signing up and get asked for it on their next visit.
 
 ---
 
 ## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="I need to collect a new piece of information from all existing members">
-    1. Create the field (or find it in the existing list)
-    2. Enable it in Profile Fields
-    3. Mark it as **Required**
-    4. Done — every member sees a splash screen on their next login and must fill it out
+  <Accordion title="I need a new piece of information from all existing members">
+    Create the [custom field](/platform/users/custom-fields), add it to the profile form, tick **Required**, and save. Members are prompted the next time they open Orgo.
   </Accordion>
 
-  <Accordion title="Members are complaining about the splash screen">
-    You probably have too many required fields. Only require what's truly essential. If a field is nice-to-have, keep it enabled but not required — members will fill it out voluntarily (or not, and that's OK).
-  </Accordion>
-
-  <Accordion title="I want admins to see a field but not members">
-    Create a [Custom Field](/platform/users/custom-fields) and mark it as **Admin Only**. It will appear in the admin's view of the profile but members won't see it.
+  <Accordion title="I marked a field required but nobody is being prompted">
+    Check it against the enforced list above. Several built-in fields, including bio, postal code, website, and everything on the Profession tab, display as required but do not drive the completion screen. Use a custom field if you need enforcement.
   </Accordion>
 
   <Accordion title="A member entered the wrong value in an immutable field">
-    An admin can change immutable field values — the restriction only applies to the member. Go to the member's profile → Edit → find the field and update it.
+    The profile form will not let you change it, and that applies to administrators too. Untick **Immutable**, correct the value, then tick it again.
+  </Accordion>
+
+  <Accordion title="I removed a field by mistake">
+    Add it back and save. The values members had already entered were never deleted, so they show up again.
   </Accordion>
 </AccordionGroup>
 
@@ -151,6 +136,8 @@ Instead of asking for everything at registration, collect data in stages:
 
 ## Related
 
-- [Registration Form](/platform/users/registration-form) — What members fill out when signing up
-- [Custom Fields](/platform/users/custom-fields) — Create organization-specific fields
-- [Privacy Settings](/platform/users/privacy-settings) — Control who sees profile data
+- [Custom Fields](/platform/users/custom-fields) for creating the fields this form offers
+- [Registration Form](/platform/users/registration-form) for what is asked at sign-up
+- [Privacy Settings](/platform/users/privacy-settings) for who can see profile data
+- [Adhesion](/platform/users/adhesion) for the membership application form
+- [Permissions](/platform/permissions) for what `ADMIN_TENANT` covers

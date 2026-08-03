@@ -1,0 +1,235 @@
+---
+title: 'Insights & Ask Orgo'
+description: 'Ask questions about your organisation in plain language, and read the built-in analytics dashboards'
+"og:title": 'Insights & Ask Orgo | Orgo'
+"og:description": 'Ask questions about your organisation in plain language, and read the built-in analytics dashboards'
+"twitter:title": 'Insights & Ask Orgo | Orgo'
+"twitter:description": 'Ask questions about your organisation in plain language, and read the built-in analytics dashboards'
+---
+
+Orgo answers questions about your data in two ways. **Ask Orgo** is a chat where
+you type a question in your own words and get a table or chart back. **Analytics**
+is a set of prebuilt dashboards for membership, geography, activity, and money.
+
+**Built for** admins who need a number now and do not want to file a report
+request or export three spreadsheets to get it.
+
+**Replaces** ad hoc CSV exports, spreadsheet pivot tables, and asking a developer
+to run SQL.
+
+<img src="/images/platform/insights/ask-orgo-welcome.png" alt="Ask Orgo welcome screen with a greeting, a question box, and suggested question chips such as active members per local center" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Where to find it
+
+| Surface | Route | Who can open it |
+|---|---|---|
+| **Ask Orgo** | `/ask-orgo`, sidebar item **Ask Orgo** | `ADMIN_TENANT` only |
+| **Analytics** | `/stats`, sidebar item **Analytics** | The **Minimum access level** on the analytics module, then a per-tab role |
+| **Database Queries** | Analytics, **DB Query** tab | `FINANCIAL_TENANT`, or any member a saved query was shared with |
+
+Analytics needs the analytics module active. Both the module switch and the
+per-tab roles live in **Settings** → **Features** (`/tenants/settings/features`),
+under `analytics`.
+
+---
+
+## Ask Orgo
+
+Type a question and press Enter. Questions are capped at 1000 characters, and you
+can attach one image (PNG, JPEG, GIF, or WebP, up to 5 MB). The welcome screen
+offers eight starting points, including **Active members count per local
+center**, **Revenue by product type this year**, **Members who have never made a
+payment**, and **Top 10 members by discussion posts**.
+
+Ask Orgo replies with one of three things:
+
+- a **result**: a summary sentence, a table, and a chart when the shape of the
+  data suits one;
+- a **clarifying question**, when the request is too vague to turn into a query;
+- a **segment proposal**, when you asked it to build or save a list rather than
+  show one. It shows the criteria and an estimated member count, with **Open in
+  editor** to finish it as an [email list](/platform/emails/email-lists).
+
+Follow-ups stay in the same chat and modify the previous query, so "add their
+email", "only active ones", "break it down by month", and "show as a chart" all
+work. Name the values you want, in business terms, rather than pointing at rows
+on screen: the assistant cannot read the result table. A conversation keeps its
+most recent 20 messages; your chat list shows your own last 50 conversations,
+newest first, with a search box. You can delete a chat, and rate an answer with
+the thumbs up and down buttons.
+
+Ask Orgo carries a **Beta** badge, and the page warns that it can make mistakes
+and that database entries are worth checking.
+
+---
+
+## What Ask Orgo can reach
+
+Ask Orgo has no free access to the database. It works from a fixed catalogue of
+55 record types and, within each, a hand-picked list of fields.
+
+| Area | Record types in the catalogue |
+|---|---|
+| **People** | Members, contacts, families and family members, companies and company membership, roles and role assignments, group memberships, tags |
+| **Structure** | Local centers, units, towns, counties, countries |
+| **Membership** | Adhesions (applications), resignation requests, waitlist entries, certifications, identity verification records |
+| **Money** | Products, product prices and add-ons, payments, fee payments, invoices, subscription profiles |
+| **Events** | Events, registrations and attendance, attendance add-ons |
+| **Learning** | Courses, sections, lessons, enrolments, badges, badge awards, badge points |
+| **Engagement** | Discussions, newsletters and their recipients, email delivery log, forms and submissions, votes and voting sessions, referrals |
+| **Work** | Projects, tasks, contracts and contract assignments, official gazettes, custom field definitions and values |
+
+Some are reachable only through a related record: registrations always through
+their event, prices through their product.
+
+Not in the catalogue: credentials, tokens, and session data. Identity
+verification records expose only the upload date, validation status, and
+validation date, because ID and personal numbers are stored encrypted and are not
+queryable (see [Identity validation](/platform/identity-validation)). Voting
+records expose only whether a member voted, never which option they chose (see
+[E-voting](/platform/e-voting)).
+
+<Note>
+Values stored in encrypted [custom fields](/platform/users/custom-fields) come
+back in their stored encrypted form through Ask Orgo, because results are read
+as raw rows rather than as full records. Read those values on the member profile
+instead.
+</Note>
+
+---
+
+## How a question becomes an answer
+
+<Steps>
+  <Step title="Your question goes to the model">
+    Orgo sends Anthropic's Claude API your question, the catalogue above (record
+    and field names with their descriptions), and the structured queries from
+    earlier turns in the same chat. It does not send result rows, which is why a
+    follow-up cannot refer to "those ones" and has to name the values.
+  </Step>
+  <Step title="The model returns a query description, not SQL">
+    A structured description: which record type to start from, which related
+    records to join, filters, columns, grouping, and sorting.
+  </Step>
+  <Step title="Orgo validates it">
+    Unknown record types, fields, and operators are rejected. A query may use at
+    most 6 joins, 20 filters, 20 columns, and 5 aggregate filters, and the page
+    size is clamped to 500 rows. Queries that would inflate totals by combining
+    several one-to-many relations are refused with an explanation rather than
+    returning a wrong number.
+  </Step>
+  <Step title="Orgo runs it against your tenant only">
+    Before anything else is added, the compiler pins the query to your
+    organisation, and every joined record hangs off that filter. Only SELECT
+    statements are allowed, and a non-SELECT is refused before it reaches the
+    database.
+  </Step>
+</Steps>
+
+The round trip has a 30 second budget. A query that is too heavy comes back
+asking you to narrow it: a date range, one local center, or a count instead of
+the detail rows.
+
+<Warning>
+Ask Orgo runs with full tenant-admin reach: an `ADMIN_TENANT` user can ask about
+any member in the organisation, including data they would have to click through
+several profiles to see. Grant `ADMIN_TENANT` accordingly. Local admins do not
+get Ask Orgo at all.
+</Warning>
+
+---
+
+## Working with a result
+
+<img src="/images/platform/insights/ask-orgo-result.png" alt="Ask Orgo conversation showing a summary sentence above a result table with column headers and a row count" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+| Action | What it does |
+|---|---|
+| **Expand table** | Opens the result in the full-width panel with pagination, 50 rows a page |
+| Chart toggle | Switches between the table and the chart the model recommended (available for aggregate results with 2 to 30 rows) |
+| **Export CSV** | Downloads the full result set, 10,000 rows per file, as several files if needed |
+| **Save** | Stores the query under a name in **Database Queries** |
+| **Save as segment** | Opens the email list editor prefilled from the question, for results that are lists of people |
+
+Column headers come back in the language you asked the question in.
+
+---
+
+## Analytics
+
+<img src="/images/platform/insights/analytics-platform.png" alt="Analytics Platform tab showing member, contact, email, and revenue tiles above a daily activity chart with a period selector" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+Tabs appear only if you hold the role configured for them. Defaults:
+
+| Tab | Default role | Shows |
+|---|---|---|
+| **Platform** | `ADMIN_TENANT` | Active and inactive members, new members and members lost, contacts, emails sent, newsletter and notification subscription splits, discussions, comments, reactions, events, disk usage, revenue totals, paying and non-paying members |
+| **Members** | `HR_TENANT` | Members by status, by user type, by gender, average age, signups and exits over time, fees paid by year |
+| **Geography** | Any signed-in member | Members by town, county or state, country, and local center |
+| **Leaderboards** | Any signed-in member | Top members by posts, reactions, events, referrals, and badge points, over 7 days, 30 days, or all time |
+| **Finance** | `FINANCIAL_TENANT` | Total, recurring, and donation revenue, and payment counts over a period. Needs online payments active |
+| **DB Query** | `FINANCIAL_TENANT` | Saved database queries |
+
+The Platform tab is also open to `ADMIN_LOCAL` and `ADMIN_PARENT_LOCAL` when
+local centers are in use, scoped to their own local center and its descendants,
+never organisation-wide. Membership and geography tabs accept a local center
+filter and check the local equivalent of the tab role against it.
+
+Period selectors offer 7 days, 30 days, 90 days, 12 months, and a custom range.
+
+Daily totals are aggregated overnight, at 04:00 UTC for the previous day, and the
+page says so. Today's figures are computed live and added on top, and responses
+are cached for five minutes. **Reset cache** next to the page title clears that
+cache and reloads, which is the fix when a number looks stale after a bulk import
+or a large payment run.
+
+---
+
+## Database Queries
+
+Anything you save from Ask Orgo lands here as a named query that admins can run
+again without the chat. Opening one runs it and shows the results, with
+**Export** for a download. It is stored as the finished statement, with your
+organisation's filter baked in, so it keeps returning your data only. `FINANCIAL_TENANT`
+admins see every saved query in the organisation; everyone else sees only the
+queries shared with them, listed under **Extra access** on the query. Every run
+is recorded in the activity log with the query name and who ran it.
+
+---
+
+## Common questions
+
+<AccordionGroup>
+  <Accordion title="Ask Orgo says it cannot understand my question">
+    Give it a scope: "how many active members joined each month this year" works
+    better than "membership trends".
+  </Accordion>
+
+  <Accordion title="The number here does not match the number on the members list">
+    Check the assumptions in the summary line. Ask Orgo defaults to active
+    members, successful payments, and published events unless you say otherwise.
+    Ask "include inactive members too" to widen it.
+  </Accordion>
+
+  <Accordion title="What is sent to the model, and where is the conversation kept?">
+    Result rows are never sent. What leaves Orgo is your question, the catalogue
+    of record and field names, and the structured queries from the same chat; an
+    attached image goes with the question and is not stored on the conversation
+    afterwards. The conversation itself lives in your organisation's own data as
+    the message text, the structured query, and a snapshot of up to 50 rows from
+    the last result, so reopening a chat does not re-run the query. Deleting the
+    conversation removes all of it.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related
+
+- [Members](/platform/users) for the directory the answers are drawn from
+- [Email lists](/platform/emails/email-lists) for where a segment proposal ends up
+- [Permissions](/platform/permissions) for what `ADMIN_TENANT` and `FINANCIAL_TENANT` unlock
+- [Custom fields](/platform/users/custom-fields) for which values are encrypted
+- [Event analytics](/platform/events/analytics) for per-event numbers, separate from these dashboards

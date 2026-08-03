@@ -1,0 +1,145 @@
+---
+title: 'Email lists'
+description: 'Reusable audiences for campaigns: how lists behave when an email is actually sent, and what feeds them'
+"og:title": 'Email lists | Orgo'
+"og:description": 'Reusable audiences for campaigns: how lists behave when an email is actually sent, and what feeds them'
+"twitter:title": 'Email lists | Orgo'
+"twitter:description": 'Reusable audiences for campaigns: how lists behave when an email is actually sent, and what feeds them'
+---
+
+An email list is a saved audience: the people a campaign goes to. This page covers
+what a list does once email starts moving. For building one, criterion by
+criterion, see [Lists & Segments](/platform/users/lists).
+
+**Built for** organisations sending to part of their base rather than all of it.
+**Replaces** pasting addresses into a mail client.
+
+Lists live at **Administration** → **Communication** → **Lists & Segments**
+(`/email-lists`). Creating, editing and deleting a list needs HR_TENANT or
+COMMUNICATION_TENANT. Adding or removing an individual person from a manual list
+needs ADMIN_TENANT.
+
+---
+
+## Two kinds, one difference that matters for email
+
+An **automated** list is a set of criteria. A **manual** list is a fixed set of
+people.
+
+For email the difference is timing. An automated list is evaluated again at the
+moment the campaign is sent, not when you drafted it, so anyone who became
+eligible in between is included and anyone who no longer qualifies is dropped. A
+manual list sends to exactly the rows in it.
+
+That makes automated lists the right choice for anything recurring ("members who
+have not paid") and manual lists the right choice for anything deliberate ("the
+twelve people going to the retreat").
+
+---
+
+## Subscribed is not the same as in the list
+
+Every member and contact carries a subscription state for email. A list shows both
+numbers: the total and how many of those are **Subscribed**.
+
+Campaigns only reach subscribed people. A list of 900 with 620 subscribed sends to
+620. The count shown next to **From a list** when you pick a newsletter audience is
+the subscribed count, which is why it is often lower than the list total you were
+expecting.
+
+Unsubscribing is the member's decision and lists do not override it. Removing
+someone from a list does not unsubscribe them, and unsubscribing does not remove
+them from any list: the two are independent.
+
+<Note>
+System emails ignore lists entirely. A renewal reminder goes to the member whose
+fee is expiring, whether or not they are in any list and whether or not they have
+unsubscribed from campaigns. Unsubscribing stops marketing, not the messages
+about someone's own membership. See
+[System emails](/platform/emails/system-emails).
+</Note>
+
+---
+
+## Where a list gets used
+
+<Steps>
+  <Step title="As a newsletter audience">
+    In the newsletter composer, choose **From a list** and pick it. This is the
+    main use. See [Newsletter](/platform/newsletter).
+  </Step>
+  <Step title="As an import target">
+    A data import can add everyone in the file to a manual list as it runs, which
+    is the fastest way to turn a spreadsheet into an audience. Only manual lists
+    can be picked: an automated list decides its own membership, so Orgo refuses
+    the import rather than silently ignoring it. See
+    [Importing data](/platform/customization/import).
+  </Step>
+  <Step title="As the output of a question">
+    Ask Orgo can propose a list from a plain-language question and save it as a
+    real list you can then send to. See [Insights](/platform/insights).
+  </Step>
+</Steps>
+
+---
+
+## Adding people to a manual list
+
+Three ways in: **Add** searches members and contacts by name, **Add CSV** takes a
+file of addresses, and an import can populate the list as part of a larger job.
+
+Adding someone who is already in the list is safe. The existing entry is kept and
+the row is reported as skipped, rather than failing. This matters more than it
+sounds: the add dialog only knows about the page of members it has loaded, so on a
+long list you will regularly try to add someone twice without realising.
+
+Removing someone deletes their place in the list and nothing else. Their profile,
+history and subscription state are untouched.
+
+---
+
+## Local centre boundaries
+
+If a newsletter belongs to a local centre, that centre's boundary is applied on
+top of the list. A list containing people from three centres, used by one centre's
+newsletter, reaches only that centre's people. A list cannot be used to reach past
+a boundary that the sender does not have.
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="The campaign reached fewer people than the list holds">
+    The difference is the unsubscribed. Open the list and compare **Total** with
+    **Subscribed**, then use the subscription chips on the recipients table to see
+    exactly who was skipped.
+  </Accordion>
+
+  <Accordion title="Someone new should be in an automated list but is not">
+    Check the list's member status setting. Automated lists default to active
+    members only, so lapsed members drop out of them silently. That one setting
+    can still be changed after the list is created.
+  </Accordion>
+
+  <Accordion title="I need a list to change from manual to automated">
+    You cannot: the type is fixed when the list is created. Create a new automated
+    list with the criteria you want and retire the old one.
+  </Accordion>
+
+  <Accordion title="Someone unsubscribed but keeps getting email from us">
+    Check [Email logs](/platform/emails/email-log) for what they actually
+    received. If it is a system email (renewal, invoice, event confirmation) that
+    is expected: unsubscribing only stops campaigns.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related
+
+- [Lists & Segments](/platform/users/lists) - building a list and the full criteria reference
+- [Newsletter](/platform/newsletter) - choosing a list as a campaign audience
+- [System emails](/platform/emails/system-emails) - the email lists do not control
+- [Contacts](/platform/contacts) - non-member people who can be in a list
+- [Email logs](/platform/emails/email-log) - proving what a given person received

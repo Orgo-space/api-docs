@@ -1,139 +1,116 @@
 ---
 title: 'Privacy Settings'
-description: 'Control who can see member profile information — admin defaults and member overrides'
+description: 'Control who can see each piece of member profile data: organisation defaults, per-member controls, and the directory-wide visibility rules'
 "og:title": 'Privacy Settings | Orgo'
-"og:description": 'Control who can see member profile information — admin defaults and member overrides'
+"og:description": 'Control who can see each piece of member profile data: organisation defaults, per-member controls, and the directory-wide visibility rules'
 "twitter:title": 'Privacy Settings | Orgo'
-"twitter:description": 'Control who can see member profile information — admin defaults and member overrides'
+"twitter:description": 'Control who can see each piece of member profile data: organisation defaults, per-member controls, and the directory-wide visibility rules'
 ---
 
-Privacy settings control the visibility of member data. As an admin, you set organization-wide defaults. Members can then adjust their own privacy — but only to make things more private, never more public than your defaults allow.
+Privacy in Orgo works on two independent layers. You set organisation defaults that are copied onto each account the moment it is created, and every member then owns their own settings from that point on. On top of both, three tenant-wide settings decide who is allowed to browse the member directory at all.
 
-**The core question:** For each piece of profile data (name, email, phone, etc.), who should see it — all community members, or only admins?
-
-<img src="/images/platform/users/privacy-defaults.png" alt="Default Privacy Settings showing toggles for field visibility — Name and Profile Image on, Email, Phone, and Age off, Town and Profession on" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
----
-
-## How it works
-
-Privacy operates on two levels:
-
-1. **Admin defaults** — You set the starting point for all members
-2. **Member overrides** — Individual members can restrict their own data further
-
-A member can hide their phone number even if you've set it to visible by default. But they cannot make their phone number visible if you've restricted it to admin-only.
+<img src="/images/platform/users/privacy-defaults.png" alt="Default Privacy Settings with toggles for Name, Email, Phone, Age, Town, Profile Image, Profession and Social Media" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Setting admin defaults
+## Organisation defaults
 
-**Settings** → **Users & Profiles** → **Privacy Defaults**
+**Settings** → **Users & Profiles** → **Privacy Defaults**. Requires `ADMIN_TENANT`. Toggle ON means the field is visible to the community by default.
 
-### What each field controls
+| Setting | Help text in the app |
+|---|---|
+| **Name** | Show full name to community by default |
+| **Email** | Show email to community by default |
+| **Phone** | Show phone number to community by default |
+| **Age** | Show age to community by default |
+| **Town** | Show town/location to community by default |
+| **Profile Image** | Show profile image to community by default |
+| **Profession** | Show profession to community by default |
+| **Social Media** | Show social media links to community by default |
 
-| Field | Toggle ON (community visible) | Toggle OFF (admin only) |
-|-------|------------------------------|------------------------|
-| **Name** | Full name visible to all members | Community sees first name + last initial only |
-| **Email** | Email visible in member directory | Hidden — only admins see it |
-| **Phone** | Phone number visible to members | Hidden — only admins see it |
-| **Age** | Date of birth / age visible | Hidden from other members |
-| **Town** | Location visible in directory | Hidden — only admins see it |
-| **Profile Image** | Photo visible to all | Only admins see the photo |
-| **Profession** | Professional info visible | Hidden from other members |
-| **Social Media** | Social links visible on profile | Hidden — only admins see them |
-
-### Recommended defaults by organization type
-
-| Organization type | Show to community | Restrict to admins |
-|-------------------|------------------|--------------------|
-| **Social community** | Name, Photo, Town, Profession | Email, Phone, Age |
-| **Professional association** | Name, Photo, Profession, Social | Email, Phone, Age, Town |
-| **Youth organization** | Name, Photo | Email, Phone, Age, Town, Social |
-| **Alumni network** | Name, Photo, Profession, Town | Email, Phone, Age |
-
-<Tip>
-  When in doubt, default to private. Members who want to share can opt in. It's easier to open up than to lock down after members have already been exposed.
-</Tip>
+<Warning>
+  These are a starting point, not a ceiling. The values are copied onto a member's own privacy record once, when the account is created. Changing them afterwards does not touch a single existing member, and nothing stops a member from switching a field back on that you defaulted to admin-only. If a field must never be visible to other members, remove it from the profile form rather than relying on the default.
+</Warning>
 
 ---
 
-## Member privacy controls
+## What a member controls
 
-Members manage their own privacy at **Profile** → **Settings & Privacy** → **Privacy**.
+A member opens their own profile, then **Settings & Privacy** → **Privacy**. Local admins (`ADMIN_LOCAL` and above) and a parent managing a child's profile see the same panel.
 
-![Settings & Privacy tab showing privacy toggles for each data category](/images/platform/users/privacy-user-controls.png)
+<img src="/images/platform/users/privacy-user-controls.png" alt="Member privacy panel with the Make my profile completely private master switch above toggles for Name, Email, Phone, Age, Profile image and town, and Profession and social media" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-The member's privacy page (under Settings & Privacy → Privacy) shows the same field categories as the admin defaults, but as personal overrides. Each category has a toggle — blue/ON means "All community" (shared with other members), gray/OFF means "Only by admins" (hidden from other members). A master toggle at the top — **Make my profile completely private** — overrides all individual settings to restrict everything to admins only. The subtitle under each toggle shows the current visibility level (e.g., "All community" or "Only by admins").
+The member panel groups fields more tightly than the admin defaults do: **Profile image & town** is one switch, and **Profession & social media** is another. Setting either one applies to both fields behind it. Each card shows its current state as "All community" or "Only by admins".
 
-### The "completely private" toggle
-
-**Make my profile completely private** is a master override. When a member enables this:
-- All their profile data is hidden from other members
-- Only organization admins can see their information
-- They essentially become invisible in the member directory
-
-This is useful for members who want to participate in the organization but don't want a public-facing profile.
+**Make my profile completely private** sits above the rest. Turning it on sets every field to private and greys the individual switches out. Turning it off sets every field back to visible.
 
 ---
 
-## How defaults and overrides interact
+## What each setting actually hides
 
-| Admin default | Member can set to... | Result |
-|--------------|---------------------|--------|
-| ON (community) | ON (community) | Visible to all members |
-| ON (community) | OFF (admin only) | Hidden — member chose privacy |
-| OFF (admin only) | — | Always hidden — member can't override to public |
+This is what a signed-in member without HR or Financial permissions sees on someone else's profile.
 
-The key rule: **Members can only restrict, never expand.** If you set email to admin-only, no member can make their email publicly visible — even if they want to.
+| Setting is private | Effect |
+|---|---|
+| **Name** | Last name is cut to its initial and a full stop, and a multi-part first name is cut to its first part. "Andreea Maria Ionescu" reads as "Andreea I." |
+| **Email** | Email address is blank |
+| **Phone** | Phone number, local number and country code are all blank |
+| **Age** | Age is blank |
+| **Town** | Current town and home town are blank |
+| **Profile image** | Photo is blank |
+| **Profession** | Profession headline and industry are blank |
+| **Social media** | Every social link is blank: TikTok, Telegram, Instagram, Facebook, Website, LinkedIn, Twitter, Signal, Bluesky |
 
----
+Three things are hidden from ordinary members no matter how the switches are set: **date of birth**, **member card ID**, and the **identity verification record**. Age can still be shown, date of birth cannot.
 
-## Common scenarios
+Anonymous visitors and guest accounts get the strictest treatment. They see the shortened name and no email, phone, age, town, photo or profession, regardless of what the member chose.
 
-<AccordionGroup>
-  <Accordion title="Members can't find each other in the directory">
-    Check your privacy defaults. If Name and Profile Image are set to admin-only, members appear as anonymous entries in the directory. Set at least Name to community-visible so members can identify each other.
-  </Accordion>
-
-  <Accordion title="A member wants to share their email but I've restricted it to admins">
-    You'd need to change the admin default for Email to community-visible. This affects all members, not just one person. If most members want email private, keep the default and suggest the member add their email to their bio or social links instead.
-  </Accordion>
-
-  <Accordion title="I need to comply with GDPR — what should I set?">
-    GDPR requires that members can control their own data visibility. Orgo's privacy settings satisfy this:
-    - Members can restrict any field to admin-only
-    - Members can make their profile completely private
-    - Members can [delete their account](/platform/users/deletion-of-account) entirely
-
-    As a best practice, default sensitive fields (email, phone, age) to admin-only and let members opt in to sharing.
-  </Accordion>
-
-  <Accordion title="I changed the defaults but existing members aren't affected">
-    Admin defaults apply to new members and to anyone who hasn't customized their personal settings. If a member has already set their own privacy preferences, changing the admin defaults won't override their choices. The defaults only set the starting point.
-  </Accordion>
-</AccordionGroup>
+<Note>
+  **Make my profile completely private** does more than blank fields. The member is filtered out of member lists and directory queries entirely, and opening their profile URL returns "This profile is private" to anyone who is not allowed to see it.
+</Note>
 
 ---
 
-## Can members export the member directory?
+## Who sees the unredacted profile
 
-No. Exporting members to CSV requires HR permissions or higher, so an ordinary
-member cannot download the directory even for fields they are allowed to see on
-screen.
+Field-level privacy is skipped for:
 
-This is worth knowing when you are deciding how open your privacy defaults should
-be. Making a field visible to members means they can see it on a profile, not
-that they can extract it in bulk. The two are enforced separately.
+- the member themselves;
+- a parent who manages that member's profile through the family feature;
+- `ADMIN_TENANT`;
+- anyone with `HR_TENANT` or `FINANCIAL_TENANT`, because both imply the assistant-level HR read;
+- anyone with `HR_LOCAL`, `HR_PARENT_LOCAL`, `FINANCIAL_LOCAL` or `FINANCIAL_PARENT_LOCAL` over that member's local center, for the same reason.
 
-Administrators and anyone with HR permissions can export, so if you are concerned
-about bulk access to member data, the control you want is who holds those
-permissions rather than which fields are visible.
+The private-profile master switch is narrower: it is overridden only by `ADMIN_TENANT`, `HR_TENANT`, `HR_LOCAL` over the member's local center, and `ADMIN_PARENT_LOCAL` inside its regional scope.
+
+<Warning>
+  Financial permissions grant full profile visibility. If you appoint a treasurer at a local center, they can read every field on every member of that local center, privacy switches included.
+</Warning>
+
+---
+
+## Directory-wide visibility
+
+**Settings** → **Users & Profiles** → **Configuration**, section **Privacy & Visibility**. All three require `ADMIN_TENANT` to change.
+
+| Setting | What it does |
+|---|---|
+| **Who Can See Members in General Groups** | Minimum permission needed to browse the full member list. Below it, a member must narrow the list by group, local center or profession first. Options: All Users, HR Local, HR Tenant, Admin Local, Admin Tenant. |
+| **Who Can See Local Center Members** | Minimum permission needed to filter members by a given local center. Same options. |
+| **Restrict Profiles to Shared Local Centers** | When on, a member can only open profiles of people they share a local center with, counting local centers reached through unit roles. Admins and regional admins are exempt. |
+
+---
+
+## Bulk export
+
+Exporting members to CSV requires `HR_LOCAL` at minimum, and the export is capped at 500 rows per page. A plain member cannot download the directory even for fields they are allowed to read on screen, so field visibility and bulk access are two separate controls.
 
 ---
 
 ## Related
 
-- [Profile Fields](/platform/users/profile-fields) — What data members can add (privacy controls who sees it)
-- [Custom Fields](/platform/users/custom-fields) — Custom fields with admin-only option
-- [Account Deletion](/platform/users/deletion-of-account) — Permanent data removal (the ultimate privacy option)
+- [Profile Fields](/platform/users/profile-fields) covers what data a profile holds in the first place
+- [Custom Fields](/platform/users/custom-fields) has its own visibility and encryption options
+- [Permissions](/platform/permissions) explains the roles named above
+- [Identity Validation](/platform/identity-validation) covers ID documents, which privacy switches do not govern
+- [Account Deletion](/platform/users/deletion-of-account) is the permanent option

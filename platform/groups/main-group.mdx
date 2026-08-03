@@ -1,102 +1,119 @@
 ---
 title: 'Main Group'
-description: 'The organization-wide hub that automatically includes every member'
+description: 'The organization-wide space every member can reach, and how to build an all-members group'
 "og:title": 'Main Group | Orgo'
-"og:description": 'The organization-wide hub that automatically includes every member'
+"og:description": 'The organization-wide space every member can reach, and how to build an all-members group'
 "twitter:title": 'Main Group | Orgo'
-"twitter:description": 'The organization-wide hub that automatically includes every member'
+"twitter:description": 'The organization-wide space every member can reach, and how to build an all-members group'
 ---
 
-The Main Group is the central space that every member belongs to automatically. It's your organization's "town square" — the place for announcements, org-wide discussions, shared documents, and the full member directory.
+**Built for** organizations that need one place to reach everyone.
+**Replaces** the "all staff" mailing list nobody can search.
 
-You can't delete it, members can't leave it, and every new registration is added automatically. If you need one place where you're guaranteed to reach everyone, this is it.
+Orgo gives you two ways to reach the whole organization, and they work differently:
 
-<img src="/images/platform/groups/groups-browse.png" alt="Groups browse page showing the USSF main group, community groups, and private groups" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+| | Organization space | Auto-enroll group |
+|---|---|---|
+| What it is | The top-level space named after your organization | An ordinary group with Access set to **Auto-enroll all members** |
+| Where it sits | First card on the Groups page, and at the top of the sidebar | Under **Community groups** on the Groups page |
+| How many | Exactly one, always present | As many as you want |
+| Membership | Everyone, implicitly | Everyone, implicitly |
+| Can members leave? | No, they can only mute it | No, they can only mute it |
+| Members tab | Yes, if permitted | No |
+| Can it be deleted? | No | Yes |
 
----
+Use the organization space for the default feed. Create auto-enroll groups when you want more than one all-hands channel, for example a locked-down **Announcements** group alongside an open **General Discussion** group.
 
-## How to access
-
-Click your **organization name** in the sidebar, or look for **Main Group** in the groups list.
-
----
-
-## What to use the Main Group for
-
-| Use it for | Don't use it for |
-|-----------|-----------------|
-| Organization-wide announcements | Content only relevant to one branch |
-| Shared documents (bylaws, handbooks, templates) | Project-specific files |
-| General discussions that concern all members | Niche interest topics |
-| Organization-wide events (AGM, annual conference) | Local meetups |
-| Member directory — finding and connecting with anyone | — |
+<img src="/images/platform/groups/main-group.png" alt="Organization-wide discussion feed with the organization name in the header and the Discussions, Events, Files and Members tabs" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Available features
+## The organization space
 
-The Main Group supports the same features as any group:
+### How to reach it
 
-### Discussions
+Click your organization's name at the top of the sidebar, or open the first card on the **Groups** page. The sidebar keeps it visible even when the Groups section is collapsed.
 
-Post announcements and start conversations that all members can see.
+### What it contains
 
-1. Go to Main Group → **Discussions**
-2. Click **Create Post**
-3. Write your content (rich text, images, file attachments supported)
-4. Select a category if [discussion namespaces](/platform/discussion/discussion-namespaces) are enabled
-5. Publish
+The same tabs as any other space, subject to which modules are on:
 
-### Events
+| Tab | Shows |
+|-----|-------|
+| **Discussions** | The organization-wide discussion feed |
+| **Events** | Events not tied to a group or chapter |
+| **Files** | The organization-level file area |
+| **Members** | The full member directory |
 
-Schedule organization-wide events visible to everyone.
+Unlike a group, the organization space does not get [discussion namespaces](/platform/discussion/discussion-namespaces) as extra tabs; namespaces are a per-group feature.
 
-### Files
+### Who can see the member directory
 
-Store shared documents organized in folders — bylaws, handbooks, brand assets, templates.
+**Settings** → **Users & Profiles** → **Permissions setup** → **Users Module** → **Who can see members in general unit group**.
 
-### Members
+Set it to the minimum permission a member needs to open the **Members** tab here. Members holding `HR_TENANT` or `FINANCIAL_TENANT` always see it.
 
-Browse, search, and filter the full member directory. Filter by permission level, location, user type, fee status, name, or join date.
+### Notifications
+
+Each member controls their own subscription with the **Subscribe** / **Subscribed** button on the organization card. Turning it off stops notifications; it does not remove them from the space, and nothing about their access changes.
+
+<Note>
+  The organization space is not a group record. It cannot be renamed, archived, deleted, or given its own posting rules. To control who can post organization-wide, use an auto-enroll group instead.
+</Note>
 
 ---
 
-## Controlling who can post
+## Building an all-members group
 
-By default, all members can post in the Main Group. For most organizations, you'll want to restrict this.
+An auto-enroll group behaves like the organization space but is a real group, so you can name it, give it a logo and emoji, restrict posting and archive it later.
 
-**Settings** → **Groups** → **Main Group Settings**
-
-| Setting | Recommended for |
-|---------|----------------|
-| **Only admins can post** — ON | Organizations that want a clean announcement channel without member noise |
-| **Only admins can post** — OFF | Communities that want open discussion where anyone contributes |
-| **Only admins can create events** — ON | When event creation should be centrally managed |
-| **Only admins can upload files** — ON | When document management should be controlled |
+<Steps>
+  <Step title="Create the group">
+    **Groups** → **Create group**. You need `ADMIN_TENANT`.
+  </Step>
+  <Step title="Set Access to Auto-enroll all members">
+    The description under the option reads "Add all members automatically". Every active member of your organization is included, and none of them can leave.
+  </Step>
+  <Step title="Pick the features">
+    Turn on **Discussions**, **Files** and **Events** as needed. At least one has to stay on.
+  </Step>
+  <Step title="Set Who can post?">
+    **Only admins** turns the group into an announcement channel. **Everyone in the group** keeps it open.
+  </Step>
+  <Step title="Save">
+    The group appears immediately under **Community groups** for every member.
+  </Step>
+</Steps>
 
 <Tip>
-  A common pattern: Main Group for admin-only announcements, with open discussion happening in Local Centers or Private Groups. This keeps the Main Group signal high and noise low.
+  A common setup: an **Announcements** group on **Only admins**, plus a **General Discussion** group on **Everyone in the group**. Members get a clean announcement feed and a separate place to talk.
 </Tip>
+
+Auto-enroll groups have no **Members** tab, because their membership is defined as "everyone" rather than stored per member. To browse people, use the organization space's Members tab or the Members page.
 
 ---
 
 ## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="The Main Group feed is too noisy — members post random things">
-    Enable "Only admins can post." The Main Group becomes an announcement channel. Direct members to Local Centers or Private Groups for open discussion.
+  <Accordion title="The organization feed is too noisy">
+    You cannot restrict posting on the organization space itself. Create an auto-enroll group with **Who can post?** set to **Only admins** and direct announcements there, leaving the organization space for open conversation.
   </Accordion>
 
-  <Accordion title="I want to share a document with the entire organization">
-    Go to Main Group → Files → create a folder if needed → upload the document. Every member has access.
+  <Accordion title="I want to share a document with everyone">
+    Open the organization space, go to **Files**, and upload it there. Every member has access. For a curated document set, use an auto-enroll group with only **Files** enabled and posting set to **Only admins**.
   </Accordion>
 
-  <Accordion title="Can I disable the Main Group?">
-    You can turn off "All Members Group" in module settings (**Settings** → **Groups** → **Module Settings**). This hides the Main Group. Members will only see Local Centers, Role Groups, and Private Groups.
+  <Accordion title="Can I turn the organization space off?">
+    No. The **All Members Group** switch in **Settings** → **Groups & Teams** → **Configuration** looks like it does this, but nothing reads that setting and toggling it changes nothing.
   </Accordion>
 
-  <Accordion title="I want different discussions organized by topic">
-    Enable [Discussion Namespaces](/platform/discussion/discussion-namespaces). This lets you create categories (Announcements, General, Questions, etc.) so posts are organized and members can filter by topic.
+  <Accordion title="A member says they stopped getting notifications">
+    Check the **Subscribe** button on the organization card on their Groups page. Anyone can unsubscribe themselves, which silences notifications without affecting access.
+  </Accordion>
+
+  <Accordion title="I want discussions organized by topic">
+    Enable [discussion namespaces](/platform/discussion/discussion-namespaces) and create them on a group. Namespaces render as extra tabs inside that group, not on the organization space.
   </Accordion>
 </AccordionGroup>
 
@@ -104,6 +121,8 @@ By default, all members can post in the Main Group. For most organizations, you'
 
 ## Related
 
-- [Groups Overview](/platform/groups) — All group types and when to use each
-- [Discussion Namespaces](/platform/discussion/discussion-namespaces) — Organize discussions by topic
-- [Local Centers](/platform/groups/local-groups) — Geographic groups for branch-level content
+- [Groups & Teams](/platform/groups) - all access modes and when to use each
+- [Private Groups](/platform/groups/private-groups) - committees and project teams
+- [Role Groups](/platform/groups/role-groups) - criteria-based automatic membership
+- [Local Centers](/platform/groups/local-groups) - geographic branches
+- [Discussions](/platform/discussion) - the discussion feed

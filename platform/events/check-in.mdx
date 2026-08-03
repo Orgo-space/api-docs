@@ -1,80 +1,143 @@
 ---
 title: 'QR Check-in'
-description: 'Scan attendees in at the door, and give the right people permission to do it'
+description: 'Scan attendees in at the door, what the scanner shows, and the exact permission it needs'
 "og:title": 'QR Check-in | Orgo'
-"og:description": 'Scan attendees in at the door, and give the right people permission to do it'
+"og:description": 'Scan attendees in at the door, what the scanner shows, and the exact permission it needs'
 "twitter:title": 'QR Check-in | Orgo'
-"twitter:description": 'Scan attendees in at the door, and give the right people permission to do it'
+"twitter:description": 'Scan attendees in at the door, what the scanner shows, and the exact permission it needs'
 ---
 
-Attendees who registered receive a QR code. Scanning it at the door verifies the
-registration and records the person as present, so your attendance figures come
-out of the event itself rather than a clipboard.
+Every confirmed registration carries a QR code. Scanning it at the door pulls up the attendee, shows
+what they hold, and records them as present in one tap, so your turnout figure comes out of the event
+itself.
+
+**Built for** door teams who need to know in a second whether the person in front of them is on the
+list, what they paid for, and whether they have already been let in.
+
+**Replaces** a printed list and a highlighter.
+
+---
+
+## Where the code comes from
+
+Each registration gets its own code, generated when the registration is confirmed. Guest tickets each
+get their own, so a member bringing three people hands over four different codes.
+
+Attendees find theirs in three places:
+
+- the **PDF ticket** attached to their confirmation email, with the code, ticket number, event, date
+  and location;
+- on the **event page**, once their registration shows as confirmed;
+- in the event app, under their tickets.
+
+<img src="/images/platform/events/event-qr-ticket.png" alt="Event page showing a confirmed registration with its QR code and a download button for the PDF ticket" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+<Note>
+The PDF ticket is only generated for events that have a location, or that use a registration form. A
+locationless event with simple RSVP still produces a code on screen, but no attachment.
+</Note>
 
 ---
 
 ## Who can scan
 
-Scanning requires **Event** permission, or organisation administrator rights.
+This is the thing to sort out before the doors open, not on the day.
 
-This is the most common failure on the day. Somebody is handed a phone to help at
-the door, tries to scan, and gets an error saying the ticket is invalid or that
-they cannot access the page. The ticket is fine. They do not have the permission.
+| How you scan | Permission needed |
+|--------------|-------------------|
+| Phone camera, opening the check-in page in a browser | `HR_TENANT` or `EVENT_TENANT` (`ADMIN_TENANT` covers both) |
+| Scanner inside the Orgo mobile app | `ADMIN_TENANT`, `EVENT_TENANT`, or `EVENT_LOCAL` on the event's group |
 
 <Warning>
-Grant Event permission to everyone who will scan **before** the event, not on the
-door. Permission changes are quick, but discovering the problem while a queue
-forms is not the moment to be editing roles.
+Local events permission is not enough for the plain camera route. Somebody with `EVENT_LOCAL` who
+scans with their phone camera gets an access error even though the ticket is perfectly valid. Give
+door staff `EVENT_TENANT`, or have them scan from inside the mobile app.
 </Warning>
+
+Marking somebody present without a scan is wider: the event owner, `EVENT_LOCAL` on the event's group,
+`HR_TENANT` and admins of the event's group can all set an RSVP to **Attended** from the participant
+list.
 
 ---
 
 ## Scanning
 
 <Steps>
-  <Step title="Open the event in the mobile app">
-    Each event offers a scan action to anyone holding the right permission.
+  <Step title="Point a camera at the code">
+    Any phone camera works. The code is a link to your organisation's Orgo address, so it opens the
+    check-in page in the browser. Inside the Orgo mobile app, open the event and use **Scan** instead,
+    which keeps you in the app between attendees.
   </Step>
-  <Step title="Scan the attendee's code">
-    They can show it from their email or from their own app.
+  <Step title="Read the card">
+    You get the attendee's photo, name and email, the event name, the ticket number, the ticket type
+    and price, and a badge saying whether this is a paid, free, invited or guest entry. A guest pass
+    also shows who it was issued to.
   </Step>
-  <Step title="Read the result">
-    A valid code checks the person in. An invalid one means the registration was
-    cancelled, the code belongs to a different event, or the scanner lacks
-    permission.
+  <Step title="Tap Check in">
+    The card turns green and the registration's RSVP becomes **Attended**. Scanning the same code
+    again shows that they are already checked in rather than an error, so a double scan is harmless.
   </Step>
 </Steps>
 
-<Note>
-If a colleague updated the app recently and the scan action is missing, close and
-reopen it. The action appears after the update has fully applied, which does not
-always happen while the app is still open.
-</Note>
+If the payment behind a ticket has not completed, the card shows a payment warning but still lets you
+check the person in. That is deliberate: sort the money out afterwards rather than holding up a queue.
 
 ---
 
-## Attendees without a QR code
+## When there is no code
 
-Not everyone arrives with one. Speakers, guests and anyone who paid by bank
-transfer may have no code because no card payment was made.
+Speakers, sponsors, staff and anyone who paid by bank transfer often turn up with nothing to scan.
+A code exists only where a registration exists, so the fix is always the same: put them on the list.
 
-The answer is to make sure they are registered for the event in the first place.
-A registration is what produces a code, whatever route the payment took, so add
-them as an attendee rather than looking for a way to issue a code on its own.
+Open the event → **Participants** → **Invite**, add them as a member or by email, and Orgo confirms
+them and emails a ticket with a code. Then either scan it or set their RSVP to **Attended** directly.
+There is no way to issue a bare code without a registration behind it.
 
 ---
 
-## Why an attendee has no code in their email
+## Troubleshooting
 
-Codes are issued for registrations that are complete. If someone cannot find
-theirs, check that their registration is confirmed and their payment recorded
-before assuming the email went missing. Re-sending will not help while the
-registration is still incomplete.
+<AccordionGroup>
+  <Accordion title="The scanner says the ticket is invalid or access denied">
+    Almost always permission, not the ticket. Check the scanning account against the table above,
+    especially if a helper was handed a phone at the door. Fix it in
+    [permissions](/platform/permissions) and rescan.
+  </Accordion>
+
+  <Accordion title="There is no Scan button on my laptop">
+    The in-app scanner is only rendered in the Orgo mobile app. On a laptop, scan with a phone camera
+    and use the page that opens, or check people in manually from the participant list.
+  </Accordion>
+
+  <Accordion title="The camera never starts">
+    The scanner reports the reason rather than failing silently: "Camera access denied" when the
+    device has refused the permission, "No camera found" when there is no usable camera. Grant the
+    permission in the device settings and reopen the scanner.
+  </Accordion>
+
+  <Accordion title="A code from another event scans fine">
+    It resolves to whatever registration it belongs to, and the card names the event. Read the event
+    name on the card before tapping check in, particularly at multi-day or multi-session gatherings.
+  </Accordion>
+
+  <Accordion title="An attendee says the code never arrived">
+    Check their registration first. Codes are issued when a registration is confirmed, so an
+    attendee sitting at **Invited**, **Pending approval** or **Awaiting payment** has nothing to
+    receive. Confirm the row, which reissues the ticket by email.
+  </Accordion>
+
+  <Accordion title="Internet drops at the venue">
+    Check-in is online only. Fall back to an exported participant list on paper, mark it up, and
+    record the RSVPs afterwards from the participant screen.
+  </Accordion>
+</AccordionGroup>
 
 ---
 
 ## Related
 
-- [Attendance](/platform/events/attendance) — attendance records and reports
-- [Ticketing](/platform/events/ticketing) — paid registration and tickets
-- [Permissions](/platform/permissions) — granting Event permission
+- [Attendance](/platform/events/attendance): the participant list, statuses and export
+- [Ticketing](/platform/events/ticketing): what a ticket is and how it gets paid for
+- [Registration Forms](/platform/events/registration-forms): what confirms a registration
+- [Speakers and Trainers](/platform/events/speakers-trainers): the people who usually arrive without a ticket
+- [Permissions](/platform/permissions): granting `EVENT_TENANT` to door staff

@@ -1,149 +1,160 @@
 ---
 title: 'Files & Documents'
-description: 'Centralized document storage — share policies, templates, and resources with your members'
+description: 'Shared drives for your organisation, groups and members, with public share links you can revoke'
 "og:title": 'Files & Documents | Orgo'
-"og:description": 'Centralized document storage — share policies, templates, and resources with your members'
+"og:description": 'Shared drives for your organisation, groups and members, with public share links you can revoke'
 "twitter:title": 'Files & Documents | Orgo'
-"twitter:description": 'Centralized document storage — share policies, templates, and resources with your members'
+"twitter:description": 'Shared drives for your organisation, groups and members, with public share links you can revoke'
 ---
 
-The Files module gives every group a shared drive. Upload policies, meeting minutes, templates, and resources — members find what they need without emailing around.
+Orgo Files (the Drive) gives your organisation one place for documents: an organisation-wide drive, a drive inside every group and local center, and an optional private drive per member. You can also write documents directly in Orgo and publish any file or folder as a public link.
+
+**Built for** membership organisations that need policies, minutes, templates and forms in the same place as their members, events and groups.
+
+**Replaces** an unstructured shared folder in Google Drive or Dropbox for member-facing documents, because access follows your existing group membership instead of a separate list of email addresses.
+
+<img src="/images/platform/features/files-drive.png" alt="The Files home showing drive cards per group and per personal drive with file counts and storage size, next to a Latest files table with name, owner, date and size" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Turning it on
+
+Files is a module. An **ADMIN_TENANT** turns it on at **Settings → Modules → Files & eDocuments → Drive**:
+
+| Setting | What it does |
+|---|---|
+| **Enable Drive Module** | Shows **Files** in the sidebar and the **Files** tab on groups. Off hides the whole surface. |
+| **Enable Personal Drives** | Gives every member a private drive, and lets HR and admins add files to it. |
+
+<img src="/images/platform/features/drive-module-settings.png" alt="Drive module settings with the Enable Drive Module toggle and the Enable Personal Drives toggle, both switched on" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+Two behaviours are off by default and not exposed on this screen: embedding external media (YouTube and Spotify) in a drive, and showing your logo on the public video player.
+
+Each group has its own controls in its settings: a **Files** feature toggle that shows or hides the group's Files tab, and **Who can post?**, set to **Everyone in the group** or **Only admins**. **Only admins** is one choice covering posts, events and file uploads together, so it hides the upload, document and folder buttons from ordinary members of that group.
 
 ---
 
 ## Where files live
 
-Files are stored within groups. Each group has its own file space:
+**Files** shows one card per drive you can reach, with its file count and total size.
 
-| Location | Who can access | Best for |
-|----------|---------------|----------|
-| **Main Group** | All members | Organization-wide policies, templates, handbooks |
-| **Local Centers** | Local center members | Local meeting minutes, regional resources |
-| **Private Groups** | Group members only | Project documents, committee files |
-| **User Profile** | The user + admins | Personal documents, ID uploads, certificates |
+| Drive | Who can see it | Who can add to it |
+|---|---|---|
+| **Organisation drive** | Every member of the organisation | **HR_TENANT** and above by default |
+| **Group drive** (any group, local center or role group) | Members of that group | Members of that group, unless the group is set to **Only admins** |
+| **Personal Drive** | The member, **HR_LOCAL** of their local center, **HR_TENANT**, **ADMIN_TENANT** | The same people |
 
-Files inherit the access rules of their group — no separate permissions to manage.
+Renaming, moving, deleting an item, and publishing or revoking its public link all need the same thing: you own it, you administer its group, or you are **ADMIN_TENANT**. Local admins get no rights over the organisation drive; their authority is scoped to the groups and local centers they administer.
 
----
-
-## Uploading files
-
-Navigate to any group's **Files** tab, then click **Upload File** or drag files directly into the browser.
-
-### Supported file types
-
-| Category | Formats |
-|----------|---------|
-| **Documents** | PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, TXT, CSV |
-| **Images** | JPG, PNG, GIF, SVG |
-| **Video** | MP4, MOV, AVI |
-| **Archives** | ZIP |
+Group drives are how you restrict who sees what. There is no per-file permission: a file inherits the audience of its drive, so leadership documents go in a leadership group.
 
 <Note>
-Maximum file size depends on your plan. If an upload fails, check that the file isn't too large or try a different browser.
+The organisation drive is the drive with no group attached. Uploading there is restricted to **HR_TENANT** and **ADMIN_TENANT** by default, which is why an ordinary member sees the organisation card but no upload button on it. Group drives are open to their members unless the group sets **Who can post?** to **Only admins**.
 </Note>
 
----
-
-## Organizing with folders
-
-Keep files findable with a clear folder structure:
-
-```
-Documents/
-├── Policies/
-│   ├── Code of Conduct.pdf
-│   └── Privacy Policy.pdf
-├── Templates/
-│   ├── Letter Template.docx
-│   └── Report Template.xlsx
-└── Meeting Minutes/
-    ├── 2025/
-    └── 2024/
-```
-
-**Create a folder:** Click **Create Folder**, name it, and save.
-
-**Move files:** Select one or more files → click **Move** → choose the destination folder.
+A personal drive is also reachable from the member's profile, on the **Personal Drive** tab, which appears only when personal drives are enabled.
 
 ---
 
-## What you can do with files
+## What you can put in a drive
 
-| Action | How |
-|--------|-----|
-| **Download** | Click the file or use the download button |
-| **Preview** | Supported for PDFs, images, and common document formats — opens in browser |
-| **Rename** | Edit the file name without re-uploading |
-| **Move** | Relocate to a different folder |
-| **Delete** | Remove permanently |
-| **Share** | Generate a link to share externally |
+| **+** menu | What it does |
+|---|---|
+| **Upload** | Or drag files anywhere onto the page. Up to 100 files per batch, uploaded one at a time with a progress panel. |
+| **Document** | Opens Orgo's own editor. Autosaves five seconds after you stop typing, counts words and characters, and warns you before you leave with unsaved changes. Documents live in the drive like any other item. |
+| **Folder** | Folders nest. Move an item by dragging it or using **Move**; items can only be moved into folders, and a folder cannot be moved into itself. |
+| **Embed media** | When enabled, adds a YouTube or Spotify link as a drive entry. Orgo checks the URL against the allowed providers and pulls the title and thumbnail. Nothing is copied into your storage. |
 
-### Bulk actions
+### Upload limits
 
-Select multiple files to download all as a ZIP, move them together, or delete in batch.
+| Limit | Value |
+|---|---|
+| Maximum file size | 5,000 MB (about 5 GB) |
+| Files per drag-and-drop batch | 100 |
+| Blocked file types | PHP, HTML and XHTML, SVG, Windows and Linux executables, shell scripts |
+| Everything else | Allowed, including PDF, Office files, images, video, archives |
+
+There is no allowed-types list: any format that is not blocked uploads. The blocked ones can execute code in a browser when opened from a link. Orgo also renames every uploaded file in storage to the original name plus 24 random characters, so the storage address cannot be guessed from the name.
+
+<img src="/images/platform/features/drive-document-editor.png" alt="The in-app document editor with a rich text toolbar, a title field, the saved status indicator and a word and character count in the header" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+### Previews
+
+Images, PDFs and videos get an automatic thumbnail in the gallery; other formats show an icon. Office files (DOC, DOCX, XLS, XLSX, PPT, PPTX) offer a read-only browser preview through Microsoft Office Online, or a download, and cannot be edited inside Orgo. A video in a format browsers cannot play (MKV or AVI, for example) prompts you to upload it as download-only.
 
 ---
 
-## Who can upload
+## Working with files
 
-By default, any group member can upload files. To restrict this:
+| Action | Notes |
+|---|---|
+| **Download** | Single file. |
+| **Download folder as archive** | Zips the folder in your browser and downloads it. |
+| **Rename** | Changes the display title only. |
+| **Move** | Drag, or use **Move** and pick a destination folder. |
+| **Delete** | Permanent. The stored file is deleted too, and there is no recycle bin. |
+| **Share** | Opens the share dialog described below. |
+| **Search** | The box on the Files home searches titles across every drive you can reach. Two characters minimum, ten results. |
 
-- Enable **Only admins can upload files** in the group settings
-- Group admins and organization admins can always upload regardless of this setting
-
-This is useful when you want members to consume documents but not add to the clutter.
-
----
-
-## Sharing files externally
-
-Generate a shareable link for any file:
-
-1. Click the file's options menu
-2. Select **Share**
-3. Copy the link
+<img src="/images/platform/features/drive-folder-contents.png" alt="A drive folder listing with file rows showing name, owner, date and size, and an open row menu with Rename, Move, Share, Download and Delete" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 <Warning>
-Shared links may be accessible without login. Don't share sensitive documents this way — use the group's access controls instead.
+Deleting is not reversible and it removes the underlying file from storage. Deleting a folder removes everything inside it.
 </Warning>
 
 ---
 
-## Files in other features
+## Sharing
 
-Files integrate across the platform:
+The **Share** dialog offers two links, and they behave differently.
 
-| Feature | How files work |
-|---------|---------------|
-| **Discussions** | Attach files to posts and replies |
-| **Events** | Add agendas, presentations, and resources to events |
-| **Issues** | Attach screenshots, documents, and reference materials |
-| **E-Documents** | Signed contracts are stored as files |
+<img src="/images/platform/features/drive-share-modal.png" alt="The Share dialog with two sections: Only in the community with a copyable 7-day link, and Anyone with the link with a Generate public link button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+**Only in the community** is a direct link to the file that **expires after 7 days**. Nothing is published and no setting changes. Treat it as a link, not a permission check: it is generated because you have rights on the file, but anyone you send it to can open the file until it expires. For a folder it is an ordinary in-app link instead, so the recipient must log in and already have access to that drive.
+
+**Anyone with the link**, via **Generate public link**, publishes a permanent public address of the form `go.orgo.space/d/<code>`.
+
+| Question | Answer |
+|---|---|
+| Does the visitor need an account? | No. Anyone on the internet with the link can open the file. |
+| Can the link be guessed? | No. The code is 10 random characters drawn from a cryptographic random source, roughly 51 bits, so it cannot realistically be enumerated. |
+| How long does it last? | Until you revoke it. |
+| How do I take it back? | Open **Share** on the file and click **Revoke public link**. The public address stops working and the file becomes unreadable to visitors again. Copies already downloaded are of course still out there, so rotate anything sensitive. |
+| Who can publish or revoke it? | The same people who can edit the file: its owner, the admins of the group it sits in, and **ADMIN_TENANT**. |
+
+Publicly shared files show a globe marker in the list, so you can see what is exposed. Video files get a branded viewer page instead of a raw download, with the organisation logo when video branding is enabled, and playable files also give you an **Embed** snippet for an external website.
+
+### Sharing a whole folder
+
+Sharing a folder publishes a public folder page. Visitors browse the subfolders and open the files, and cannot navigate above the folder you shared.
+
+<Warning>
+Public folder shares are inherited. Every file already in the folder becomes public, and any file you upload or move into it afterwards becomes public automatically. Revoking the folder share removes public access from the whole subtree.
+</Warning>
+
+Publishing and revoking a large folder finishes in the background. The dialog shows **Publishing...** while that runs; the link itself works immediately.
+
+Files sit in Orgo's cloud storage, readable without a login only while a public share link exists. There is no automatic expiry or archival, so an uploaded file stays until someone deletes it.
 
 ---
 
-## Common scenarios
+## Common questions
 
 <AccordionGroup>
-  <Accordion title="Members can't find the file they need">
-    Use folders with clear names. Pin important files to the top. Consider the welcome message or a discussion post linking to key documents.
+  <Accordion title="A member cannot see a file, or I want different members to see different files">
+    Check which drive it is in: a group drive is visible only to that group. Groups are the boundary, so leadership documents go in a leadership group and general resources in the organisation drive. There is no per-file permission to set.
   </Accordion>
 
-  <Accordion title="Too many outdated files cluttering the space">
-    Do a periodic cleanup — archive old meeting minutes into year folders, delete drafts that were superseded. Assign someone to maintain the file structure.
+  <Accordion title="An upload failed">
+    Files over 5 GB are rejected, and so are HTML, SVG, PHP, executable and script files. The upload panel shows the reason per file. Very large uploads also need the tab to stay open until they finish.
   </Accordion>
 
-  <Accordion title="Upload is failing">
-    Check the file size limit for your plan. Try a different browser. Ensure your internet connection is stable — large files need time to upload.
+  <Accordion title="Can members edit an uploaded Word file in Orgo?">
+    No. Office files open read-only. Download, edit locally and upload the new version, or use **+ → Document** for content you want to keep editing inside Orgo.
   </Accordion>
 
-  <Accordion title="I want different members to see different files">
-    Use groups. Put leadership documents in a private group for leaders. Put general resources in the main group. Files inherit group access — no extra configuration needed.
-  </Accordion>
-
-  <Accordion title="Can members edit files directly in Orgo?">
-    No — Orgo is a file storage system, not an editor. Members download, edit locally, and re-upload the updated version. Include version numbers or dates in filenames (e.g., "Budget-v3.xlsx").
+  <Accordion title="Why did a file in a shared folder become public on its own?">
+    That is by design: a public folder share covers everything inside it, including items added later. If you need one file kept private, move it out of the shared folder.
   </Accordion>
 </AccordionGroup>
 
@@ -151,7 +162,8 @@ Files integrate across the platform:
 
 ## Related
 
-- [Groups](/platform/groups/index) — Where files are stored
-- [E-Documents](/platform/contracts) — Digital document signing
-- [Discussions](/platform/discussion) — Attach files to posts
-- [Events](/platform/events) — Event materials and resources
+- [Groups](/platform/groups/index) - group drives and who belongs to them
+- [Permissions](/platform/permissions) - what HR_TENANT, ADMIN_TENANT and the local roles unlock
+- [E-Documents](/platform/contracts) - documents members sign electronically
+- [Discussions](/platform/discussion/index) - attaching files to posts
+- [Modules](/platform/organisation/modules) - turning the Drive module on

@@ -1,89 +1,184 @@
 ---
 title: 'Event Registration Forms'
-description: 'Choose what you ask people when they register for an event, and make fields required'
+description: 'Build the form each event asks at registration, from a fixed list of profile fields plus your own questions'
 "og:title": 'Event Registration Forms | Orgo'
-"og:description": 'Choose what you ask people when they register for an event, and make fields required'
+"og:description": 'Build the form each event asks at registration, from a fixed list of profile fields plus your own questions'
 "twitter:title": 'Event Registration Forms | Orgo'
-"twitter:description": 'Choose what you ask people when they register for an event, and make fields required'
+"twitter:description": 'Build the form each event asks at registration, from a fixed list of profile fields plus your own questions'
 ---
 
-Every event can ask its own questions at registration. A conference needs dietary
-requirements and an organisation name; a members' evening needs almost nothing.
+Every event can ask its own questions when someone registers. A conference needs dietary requirements
+and an organisation name; a members' evening needs almost nothing.
 
-The form is configured per event, so getting it wrong on one event does not
-affect the others, and getting it right once does not carry over either.
+**Built for** organisers who need more than a name and an email from the people attending, and who
+want the answers to land on the member's profile and in the participant export rather than in a
+spreadsheet somewhere else.
+
+**Replaces** a Google Form bolted onto an event page, with the answers already attached to the right
+attendee record.
+
+The form belongs to the individual event, so building it well once does not carry over to the next.
 
 ---
 
-## Two kinds of field
+## Turning the form on
 
-**System fields** are the ones Orgo already knows: name, email, phone, and the
-rest of the profile. For a logged-in member these arrive already filled in, so
-the member confirms rather than retypes.
+Open the event, go to **Modify**, and under **Registration** switch on **Require registration form
+for members**. A **Registration form** entry then appears in the event sidebar. Without it, members
+simply RSVP.
 
-**Custom fields** are yours. They are defined once for your organisation and can
-then be used on any event form. Available types include short text, long text,
-number, date, yes/no, single choice, multiple choice, and file upload.
+Editing the form needs `EVENT_LOCAL` on the event's group, which `EVENT_TENANT` and `ADMIN_TENANT`
+satisfy tenant-wide.
 
 <Note>
-Custom fields belong to the organisation, not to the event. If a field you need
-does not appear in the picker, it has not been created yet. Create it once in
-your organisation settings and it becomes available to every event afterwards.
+Ticketed events always use a registration form. Switching an event to **Paid** turns this on
+automatically and locks the toggle, with the hint "Paid events always require a registration form".
+Switching an event's audience to **Public** turns it on too, though there the toggle stays editable.
 </Note>
 
 ---
 
 ## Building the form
 
-<Steps>
-  <Step title="Open the event and go to its registration form">
-    Each event carries its own form configuration.
-  </Step>
-  <Step title="Add the fields you need">
-    Pick from system fields first, since those auto-fill for members. Add custom
-    fields for anything else.
-  </Step>
-  <Step title="Mark the required ones">
-    Any field can be made mandatory. Be deliberate: every required field is a
-    reason for somebody to abandon registration.
-  </Step>
-  <Step title="Test it while logged out">
-    Open the public registration page in a private window. The form a non-member
-    sees is not the form you see as an administrator, and the difference is where
-    problems hide.
-  </Step>
-</Steps>
+The **Form fields** tab is a two-panel builder: **Available fields** left, **Form fields** right.
+Click or drag a field across to add it, drag rows to reorder, tick **required** where an answer is
+mandatory, then **Save changes**.
+
+<img src="/images/platform/events/event-registration-form-builder.png" alt="Registration form builder with Standard fields and Custom fields tabs on the left and the assembled form on the right, each row carrying a required checkbox" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+### Standard fields
+
+Twelve fields, no others, and their labels cannot be edited. For a logged-in member they arrive
+prefilled, so the member confirms rather than retypes.
+
+| Field | Notes | Written back to the profile |
+|-------|-------|-----------------------------|
+| **Email** | Always present, always required, cannot be removed. | No |
+| **Full Name** | Always present, always required, cannot be removed. | No |
+| **Phone** | Country prefix selector. | Phone number |
+| **Organisation** | | Profession organisation (and, for a non-member contact, the company name) |
+| **Role** | | Profession organisation role |
+| **Town** | | No |
+| **LinkedIn** | | Matching profile social link |
+| **X.com** | | Matching profile social link |
+| **Instagram** | | Matching profile social link |
+| **Company ID** | | No |
+| **Company Name** | | No |
+| **Company Address** | | No |
+
+Write-back happens only when the answer is not empty and differs from what is stored. Fields marked
+**No** are still collected and exported, just not copied onto the profile by this path. Removing
+Email or Full Name through the API silently puts them back at the top of the form on save.
+
+### Custom fields
+
+Anything the standard list does not cover becomes a custom field: use **Create** on the **Custom
+fields** tab of the left panel.
+
+| Type | Behaviour |
+|------|-----------|
+| **Text input** | Single line. |
+| **Text area** | Multi-line. |
+| **Dropdown** | Select one from a list. Needs at least two options. |
+| **Radio buttons** | Choose one, all options visible. Needs at least two options. |
+| **Checkboxes** | Choose several. Needs at least two options. |
+| **Date** | Date picker. |
+| **Yes/No** | A switch. |
+
+Options for the three list types are entered one per row and can be dragged into order. Deleting a
+custom field also removes it from the form layout, and needs the same permission as editing the form.
+
+<Warning>
+Event custom fields belong to that one event. They are not the organisation-wide
+[custom fields](/platform/users/custom-fields), they do not appear in the picker on any other event,
+and there is no way to copy them across. Budget for rebuilding them on each event, or start the event
+from an [event template](/platform/events/event-templates).
+</Warning>
 
 ---
 
-## Collecting more than name and email from public registrations
+## Settings tab
 
-A public event will otherwise leave you with an email address and nothing else,
-which is a common regret after the fact. If you intend to follow up with
-attendees, decide before the event what you need and add those fields, because
-you cannot ask retrospectively.
+| Setting | What it does |
+|---------|-------------|
+| **Disable newsletter subscription** | Hides the "I want to subscribe to the newsletter" switch from the form. |
+| **Disable register checkbox** | Hides the "I want to create an user account on the online community" switch that anonymous registrants otherwise see. |
+| **Custom text at bottom of registration form** | Free text shown after the fields, before the consent checkboxes: house rules, refund terms, cancellation policy. |
+
+<img src="/images/platform/events/event-registration-form-settings.png" alt="Settings tab of the event registration form showing the two registration option switches and the custom text box" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+Consent checkboxes are not configured here: the GDPR checkbox appears when your organisation has a
+GDPR policy URL, the terms checkbox when it has a terms URL. Both come from
+[Organisation Info](/platform/organisation/organisation-info).
+
+---
+
+## Appearance tab
+
+| Setting | What it does |
+|---------|-------------|
+| **Selected color** | Highlight colour for the selected ticket and other accents on the public event page. Defaults to `#FFE089`. |
+| **Button color** | Colour of the primary buttons on the public event page. Defaults to `#3173EE`. |
+| **Hero image border radius** | Corner rounding of the event's hero image, for example `14px`. |
+
+<Note>
+**Hero image border radius** is only applied when **Selected color** also has a value, so set a
+selected colour if you want the rounding to take effect.
+</Note>
+
+---
+
+## Where the answers end up
+
+- **Custom field answers** are stored per registration, on that attendee's record for that event. The
+  same person answering differently at two events keeps two answers.
+- **Standard answers** update the profile as in the table above.
+- **The participant export** contains exactly the standard fields on the form, plus every custom
+  field. Checkbox, radio and dropdown answers export as their visible labels, dates as `YYYY-MM-DD`.
+  Exporting needs `EVENT_TENANT` or `EVENT_LOCAL` on the event.
+
+Decide what you need before the event: you cannot ask retrospectively. Be sparing with **required**,
+since every mandatory field is a reason to abandon registration, and on a paid event that is a lost
+sale. Test in a private window: the form an anonymous visitor sees is not the one you see as an
+administrator.
 
 ---
 
 ## Troubleshooting
 
-**A change to field order does not appear.** Reload the public page rather than
-the editor, and check in a private window. Pages are cached, and you are often
-looking at the version you loaded before the change.
+<AccordionGroup>
+  <Accordion title="The Registration form entry is missing from the sidebar">
+    It appears only when **Require registration form for members** is on for that event, and only for
+    someone who can edit the event.
+  </Accordion>
 
-**A member is blocked by a question that is not visible.** A required field that
-does not render leaves the member unable to continue with no explanation. This is
-usually a required custom field that the member's view cannot display. Make the
-field optional to unblock them immediately, then report it.
+  <Accordion title="A change does not show on the public page">
+    Public event pages are cached. Saving the form clears that cache for public and ticketed events,
+    so reload the public page itself, in a private window, rather than the editor.
+  </Accordion>
 
-**You cannot edit the wording of a system field.** System field labels are fixed.
-To ask the question your own way, add a custom field with the wording you want and
-leave the system field out.
+  <Accordion title="I cannot change the wording of a standard field">
+    Standard field labels are fixed. Add a custom field with the wording you want and leave the
+    standard field off the form.
+  </Accordion>
+
+  <Accordion title="I want the same questions on every event">
+    Build the event once with its form and custom fields, save it as an
+    [event template](/platform/events/event-templates), and create future events from that.
+  </Accordion>
+
+  <Accordion title="A field I added is not in the export">
+    The export includes only the standard fields currently on the form. Remove a field after people
+    registered and their answers stop appearing in the export, even though the profile values remain.
+  </Accordion>
+</AccordionGroup>
 
 ---
 
 ## Related
 
-- [Create an Event](/platform/events/create-event)
-- [Ticketing](/platform/events/ticketing) — paid registration
-- [Custom Fields](/platform/users/custom-fields) — creating fields for your organisation
+- [Create an Event](/platform/events/create-event) - the Registration section of the event form
+- [Ticketing](/platform/events/ticketing) - paid registration, which always uses this form
+- [Event Templates](/platform/events/event-templates) - reusing a form across events
+- [Custom Fields](/platform/users/custom-fields) - organisation-wide fields, which are a different thing
+- [Attendance](/platform/events/attendance) - the participant list and its export

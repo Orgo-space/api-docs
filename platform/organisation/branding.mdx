@@ -1,126 +1,129 @@
 ---
 title: 'Branding'
-description: 'Your logos and login screen — make the platform look like yours.'
+description: 'Logos, login background, and the default interface theme for your organization.'
 "og:title": 'Branding | Orgo'
-"og:description": 'Your logos and login screen — make the platform look like yours.'
+"og:description": 'Logos, login background, and the default interface theme for your organization.'
 "twitter:title": 'Branding | Orgo'
-"twitter:description": 'Your logos and login screen — make the platform look like yours.'
+"twitter:description": 'Logos, login background, and the default interface theme for your organization.'
 ---
 
-Branding is the first thing your members see. A custom logo and login background turn a generic platform into *your* platform. Upload logos for both light and dark themes, and set a branded login screen.
+Branding controls three things: the four logo variants Orgo swaps between depending on where and on what background a logo is shown, the image behind your sign-in and registration screens, and the default interface theme members see.
+
+**Built for** organizations whose members should recognise the platform as theirs, including federations, professional associations, and youth organizations that put their mark on every member touchpoint.
+
+**Replaces** the assumption that a members' area has to look like the vendor's product.
 
 **Settings → Organization → Branding**
 
-<img src="/images/platform/organisation/branding-logo-grid.png" alt="Branding page with logo upload areas" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
 <Note>
-  Requires **Tenant Admin** permissions.
+  Requires **ADMIN_TENANT**. The page is unreachable and its contents are hidden for everyone else.
 </Note>
 
----
-
-## Setting up your brand
-
-<Steps>
-  <Step title="Open the Branding page">
-    Go to **Settings → Organization → Branding**. You'll see a 2×2 grid of logo upload areas and a login background section below.
-  </Step>
-  <Step title="Upload your logos">
-    Upload all four logo variants (see details below). Click each upload area or drag and drop your image files. Use PNG with transparent background for best results.
-  </Step>
-  <Step title="Set the login background">
-    Scroll down to the **Auth Background** section. Paste a publicly accessible HTTPS URL for the image you want behind your login, registration, and password reset screens.
-  </Step>
-  <Step title="Save">
-    Click **Save**. Logos update immediately across the platform. The login background appears on the next page load.
-  </Step>
-</Steps>
+<img src="/images/platform/organisation/branding-logo-grid.png" alt="Branding page showing the four logo slots: Logo light theme, Logo dark theme, Icon logo, Icon logo dark" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Logos
+## The four logo slots
 
-Upload four logo variants so your brand looks sharp everywhere:
+Uploads accept **PNG and JPEG**. The page's own hint is: for best layout results, use PNG with a transparent background.
 
-<CardGroup cols={2}>
-  <Card title="Logo light theme" icon="sun">
-    Your main logo for sidebar, headers, and emails on light backgrounds. Use a horizontal PNG with transparent background.
-  </Card>
-  <Card title="Logo dark theme" icon="moon">
-    A lighter version that pops on dark backgrounds. Same spots as the light logo, but in dark mode.
-  </Card>
-  <Card title="Squared logo" icon="square">
-    Square crop for the collapsed sidebar, mobile app icon, and browser favicon.
-  </Card>
-  <Card title="Icon logo dark" icon="circle-half-stroke">
-    Square crop for compact displays in dark mode.
-  </Card>
-</CardGroup>
+| Slot | Where it appears |
+|---|---|
+| **Logo light theme** | App header and sidebar, the sign-in screen, registration screens, invoice emails, and the invoice PDF |
+| **Logo dark theme** | Substituted for the light logo whenever the surface behind it is dark |
+| **Icon logo** | Browser favicon, the favicon on public share pages, your organization's avatar in lists, the OAuth consent screen, and the centre of an event app QR ticket |
+| **Icon logo dark** | The favicon when the visitor's browser is in dark mode |
 
-| Logo slot | Recommended size | Aspect ratio | Where it's used |
-|-----------|-----------------|--------------|-----------------|
-| **Light theme** | 400×100px+ | Horizontal | Sidebar (expanded), email headers, public pages |
-| **Dark theme** | 400×100px+ | Horizontal | Same spots in dark mode |
-| **Squared** | 200×200px+ | 1:1 (square) | Collapsed sidebar, mobile app, favicon |
-| **Icon dark** | 200×200px+ | 1:1 (square) | Same compact spots in dark mode |
+Two behaviours are worth knowing:
+
+**The dark logo is not only for dark mode.** In the app header it is used whenever the chrome is dark, which includes a dark menu theme on an otherwise light interface. If you skip this slot, a dark-on-dark logo becomes invisible for those members.
+
+**The first upload fills the empty slots.** Upload the light logo while the other three are still empty and the same image is copied into all four. That is a starting point, not a finished setup: replace the dark and icon variants so contrast and cropping are right.
+
+If a slot is empty and nothing was copied into it, Orgo's own logo is shown.
 
 <Tip>
-  PNG with transparent background works best for all four slots. It keeps logos clean on both light and dark themes without white rectangles around them.
+  Give the two icon slots a genuinely square image. They are used as a favicon and as a round avatar, so a wide logo ends up either letterboxed or cropped.
 </Tip>
 
 ---
 
 ## Login background
 
-![Auth background image URL field](/images/platform/organisation/branding-auth-background.png)
+<img src="/images/platform/organisation/branding-auth-background.png" alt="Auth background image URL field with a Save button below it" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-Paste a URL for the image you want behind your login, registration, and password reset screens. Use something that represents your organization — a team photo, an event shot, a branded graphic.
+**Auth background image URL** takes a URL, not a file upload. Paste a publicly reachable HTTPS address and click **save**.
 
-The result:
+It appears behind the sign-in screen and the registration screens, including the per-user-type and child registration forms. It does not appear on the password reset or password setup screens. It is a **desktop-only** treatment: on phones the form fills the screen and no background is drawn. Leave the field empty and members see Orgo's default animated background instead.
 
-![Branded login page with custom background and logo](/images/platform/organisation/branding-login-page.png)
-
-<Tip>
-  Aim for at least **1920×1080px** resolution so the image looks sharp on large monitors. The image URL must be publicly accessible over HTTPS — images behind a login or private CDN won't load.
-</Tip>
+<img src="/images/platform/organisation/branding-login-page.png" alt="Sign-in screen with the organization logo and a custom photographic background" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Real-world example
+## Default theme for your organization
 
-> **Scenario**: A youth sports federation rebranding their Orgo instance.
+Below the logos, **Default theme for organization** sets the chrome: the sidebar, header, and surface colours. Your primary brand colour is not part of it and does not change.
 
-1. **Light logo**: Horizontal federation logo (blue text on transparent background) — appears in the sidebar and all member emails.
-2. **Dark logo**: White version of the same logo — used when members switch to dark mode.
-3. **Squared logo**: The federation's shield/crest icon only — appears in the collapsed sidebar and as the mobile app icon.
-4. **Icon dark**: White version of the shield — for dark mode compact displays.
-5. **Login background**: A wide-angle photo from their national championship event — makes the login page feel like arriving at a federation event.
+<img src="/images/platform/organisation/branding-theme-picker.png" alt="Theme picker showing light menu and dark menu preset swatches with a hue slider" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-Result: Members see the federation's brand at every touchpoint — login, sidebar, emails, and mobile. Dark mode users see properly contrasted versions instead of invisible logos.
+| Group | Presets |
+|---|---|
+| **Light menu** | Default Cool, Warm, Sage, Lavender, Rose, Sand |
+| **Dark menu** | Gray, Graphite, Midnight, Forest, Amber, Ruby, Plum |
+
+A dark menu preset gives you a dark sidebar and header with light content. That is not the same as full dark mode, which inverts the whole interface.
+
+Clicking a swatch saves immediately: there is no separate Save button for the theme. **Reset to default** puts the organization back on Default Cool.
+
+<Warning>
+  The **Or set a custom hue** sliders are a live preview on your own device only. A custom hue is never stored as the organization default. Only the named presets above become what other members see.
+</Warning>
+
+The theme a member actually sees is resolved in this order: the member's own choice, then your organization default, then Orgo's built-in default. Members pick their own from the theme sidebar, and their choice is stored separately for desktop and mobile. Setting an organization default therefore changes what new members and members who never chose will see, not what everyone sees.
+
+If you are currently viewing Orgo in dark mode, the Light menu block is hidden and only the dark presets are offered.
+
+---
+
+## What is not customisable
+
+- **The primary brand colour.** It is a fixed design token with no per-organization input. Only the chrome hue is configurable.
+- **Fonts and layout.**
+- **The mobile app icon.** The shared Orgo app ships Orgo's own icons; the Icon logo slot does not change them. Branded per-tenant apps are a separate arrangement, covered in [Mobile Apps](/platform/mobile-apps).
+- **Most email headers.** The light logo is used on invoice emails and the invoice PDF. Other system emails use a shared layout with no logo.
 
 ---
 
 ## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="Logo looks cropped or stretched">
-    Use PNG with transparent background. Main logos should be horizontal (wide, not tall). Squared/icon logos should be perfectly square (1:1 ratio). Avoid excessive padding around the logo in the file itself — the platform adds its own spacing.
+  <Accordion title="The logo is cropped or stretched">
+    Check which slot the file is in. The two **Logo** slots expect a wide image; the two **Icon logo** slots expect a square one. A wide file in an icon slot is what produces cropping in the favicon and avatar.
   </Accordion>
-  <Accordion title="Background image isn't showing on the login page">
-    Confirm the URL is publicly accessible over HTTPS. Try opening the URL directly in an incognito browser window. If it loads there, the issue is browser cache — clear cache or wait. If it doesn't load, the image hosting may require authentication.
+  <Accordion title="The background image is not showing on the sign-in screen">
+    Open the URL in a private window with no session. If it does not load there, the host requires authentication or is not public. If it does load, check you are not on a phone: the background is desktop only.
   </Accordion>
-  <Accordion title="Dark theme logo isn't appearing">
-    Check you uploaded to the right slot — **Logo dark theme** (top-right in the grid) for the full horizontal logo, **Icon logo dark** (bottom-right) for the square version. Each slot serves a different purpose.
+  <Accordion title="The logo disappears when members switch theme">
+    The dark variant is missing or is the same file as the light one. Upload a light-coloured version to **Logo dark theme** and **Icon logo dark**. Remember this also applies to a dark menu theme in otherwise light mode.
   </Accordion>
-  <Accordion title="Logo appears with a white background instead of transparent">
-    Your image file is likely JPEG (which doesn't support transparency) or a PNG that was exported with a white background. Re-export from your design tool as PNG with transparency enabled. In Figma: export as PNG, check "transparent background". In Photoshop: Save as PNG, don't flatten layers.
+  <Accordion title="The logo has a white box around it">
+    The file is a JPEG, which has no transparency, or a PNG exported on a white background. Re-export as PNG with transparency.
+  </Accordion>
+  <Accordion title="I picked a hue I liked and it vanished for everyone else">
+    Custom hues are not saved to the organization. Pick the closest named preset instead.
   </Accordion>
 </AccordionGroup>
+
+<Note>
+  The **Getting Started** checklist in the sidebar lists "Add organisation's logo" under Customization and Branding, and links straight to this page.
+</Note>
 
 ---
 
 ## Related
 
-- [Organization Info](/platform/organisation/organisation-info) — Name, contact, and financial details
-- [Modules](/platform/organisation/modules) — Enable/disable platform features
-- [Labels & Terminology](/platform/customization/labels) — Rename default terms to match your brand language
+- [Organization Info](/platform/organisation/organisation-info) - Name, contact email, and financial details
+- [Custom Domain](/platform/custom-domain) - Serve the community from your own address
+- [Modules](/platform/organisation/modules) - Turn platform features on and off
+- [Labels and Terminology](/platform/customization/labels) - Rename product vocabulary
+- [Mobile Apps](/platform/mobile-apps) - Shared app and branded apps

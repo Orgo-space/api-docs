@@ -1,0 +1,147 @@
+---
+title: 'Webhooks'
+description: 'Push member, payment, registration, contract, role and contact events to your own systems in real time'
+"og:title": 'Webhooks | Orgo'
+"og:description": 'Push member, payment, registration, contract, role and contact events to your own systems in real time'
+"twitter:title": 'Webhooks | Orgo'
+"twitter:description": 'Push member, payment, registration, contract, role and contact events to your own systems in real time'
+---
+
+A webhook tells your system that something happened in Orgo the moment it happens. Orgo sends an HTTP POST with the full record to a URL you control, so a CRM, a data warehouse or an automation platform stays current without polling the API.
+
+**Built for** teams keeping another system in step with Orgo.
+**Replaces** scheduled exports and "sync every 15 minutes" scripts.
+
+<img src="/images/platform/developers/webhooks-list.png" alt="Webhooks page listing subscriptions with their URL, subscribed events, status, success and failure counts, last trigger time and per-row test, logs, edit and delete actions" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Where it lives
+
+**Settings → Developers → Webhooks**
+
+Creating, editing and deleting a subscription requires **ADMIN_TENANT**. Testing a webhook and reading its delivery logs are available on the same page.
+
+---
+
+## Creating a subscription
+
+<img src="/images/platform/developers/webhook-create.png" alt="Create Webhook form with the Active switch, name, endpoint URL, description and the six event type groups" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+<Steps>
+  <Step title="Name the webhook">
+    A descriptive name: the receiving system, not the event.
+  </Step>
+  <Step title="Enter the endpoint URL">
+    Must be `https` and must resolve to a public address. A URL that resolves to a private or loopback address is rejected when you save it, and again at delivery time.
+  </Step>
+  <Step title="Pick the event types">
+    At least one. They are grouped by family (see below).
+  </Step>
+  <Step title="Save, then test">
+    The play button on the list sends a synthetic `webhook.test` delivery to the URL so you can confirm your endpoint answers before real traffic arrives.
+  </Step>
+</Steps>
+
+---
+
+## Events you can subscribe to
+
+| Group | Events in the UI |
+|---|---|
+| **User** | User Created, User Updated, User Deleted |
+| **Contact** | Contact Created, Contact Updated, Contact Deleted |
+| **Payment** | Payment Created, Payment Updated, Payment Deleted |
+| **Event Attendance** | Registration Created, Registration Updated, Registration Cancelled |
+| **Contract** | Contract Signed, Contract Updated, Contract Removed |
+| **Role** | Role Assigned, Role Updated, Role Removed |
+
+Eighteen events in total. Each delivery carries the full record as it stands at that moment, and update events also carry the fields that changed. Passwords, tokens and connected-account identifiers are stripped before sending.
+
+The exact payload envelope, headers and per-event schemas are in the [Webhooks reference](/api-reference/concepts/webhooks).
+
+---
+
+## Settings reference
+
+| Field | What it does |
+|---|---|
+| **active** | Turns delivery on or off without deleting the subscription. An inactive subscription receives nothing. |
+| **Webhook Name** | Label shown in the list. Required. |
+| **Endpoint URL** | Where the POST goes. Required, `https`, publicly resolvable. |
+| **Description** | Free text for your own reference. |
+| **Event Types** | Which events trigger this webhook. At least one required. |
+| **Max Retries** | Retry attempts after a failed delivery. 0 to 10, default 3. |
+| **Timeout (seconds)** | How long Orgo waits for your response. 1 to 300, default 30. |
+| **Webhook Secret** | Optional. When set, deliveries carry an `X-Webhook-Signature` header derived from the payload and the secret. |
+| **Custom Headers (JSON)** | Extra HTTP headers sent with every delivery, for example an `Authorization` header your endpoint checks. |
+| **Metadata (JSON)** | Notes stored on the subscription. Never sent with the request. |
+
+Secret, custom headers and metadata sit behind **Advanced Options** on the form.
+
+<Warning>
+The `X-Webhook-Signature` value is a lightweight checksum, not a cryptographic signature. Treat it as a change detector, not as proof of origin. To authenticate the caller, put a shared secret in **Custom Headers (JSON)** and verify that header on your side, over HTTPS.
+</Warning>
+
+---
+
+## Delivery and retries
+
+Deliveries are queued, not sent inside the request that caused them, so a slow endpoint never slows down the app.
+
+- A `2xx` response marks the delivery successful.
+- Anything else, a timeout or a TLS error counts as a failure and is retried until **Max Retries** is reached.
+- Retries back off exponentially, starting around 20 seconds and capped at 10 minutes between attempts.
+- Every attempt is logged, including the ones that eventually succeed.
+
+A subscription is never deactivated automatically after repeated failures. Watch the Success / Failed / Total counters on the list, or your own monitoring.
+
+Because retries exist, the same event can arrive more than once. Make your handler idempotent by keying on the delivery's `id`.
+
+---
+
+## Delivery logs
+
+The list icon on each row opens the delivery log for that subscription.
+
+<img src="/images/platform/developers/webhook-logs.png" alt="Webhook delivery log table showing status, event type, response code, response time, attempt number, delivery ID and timestamp for recent attempts" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+Each row shows the status (success, failed, pending), the event type, the HTTP response code your endpoint returned, the response time, which attempt it was, the delivery ID and when it was sent. The page loads 50 attempts by default and can show more; the API caps a single request at 500.
+
+The delivery ID also travels with the request as `X-Webhook-Delivery`, so a line in your own logs can be matched to a row here.
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Saving the URL fails">
+    The endpoint must use `https`, the hostname must resolve, and it must not point at a private or loopback address. A local tunnel with a public https hostname works; `http://localhost` does not.
+  </Accordion>
+
+  <Accordion title="Nothing arrives">
+    Check the subscription is **active**, that it is subscribed to the event you expect, and run the test delivery. If the test succeeds but real events do not appear, the action you are testing may not be one of the eighteen events above.
+  </Accordion>
+
+  <Accordion title="Deliveries show as failed with no response code">
+    The request never completed: DNS, TLS or a timeout. Raise **Timeout (seconds)** if your handler does slow work, or better, acknowledge with `200` first and process afterwards.
+  </Accordion>
+
+  <Accordion title="The same event arrives twice">
+    Expected. Retries and at-least-once delivery mean duplicates happen. Deduplicate on the payload `id`.
+  </Accordion>
+
+  <Accordion title="You need an event that is not listed">
+    Poll the relevant endpoint on a schedule, or build the flow in [n8n](/platform/integrations). The event list is fixed.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related
+
+- [Webhooks reference](/api-reference/concepts/webhooks) - payload envelope, headers and event schemas
+- [Handle webhooks](/api-reference/recipes/handle-webhooks) - a full receiver with idempotency and replay
+- [API Access](/platform/api) - tokens for pulling data the other way
+- [Integrations](/platform/integrations) - HubSpot, n8n, analytics and SSO
+- [OAuth Server](/platform/oauth) - sign-in for your own applications

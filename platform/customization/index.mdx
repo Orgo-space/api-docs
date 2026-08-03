@@ -1,102 +1,105 @@
 ---
 title: 'Customization'
-description: 'Make Orgo match your organization — language, terminology, navigation, dashboard, and data import'
+description: 'Make Orgo speak your language and show your structure: languages, wording, menu, dashboard and data import'
 "og:title": 'Customization | Orgo'
-"og:description": 'Make Orgo match your organization — language, terminology, navigation, dashboard, and data import'
+"og:description": 'Make Orgo speak your language and show your structure: languages, wording, menu, dashboard and data import'
 "twitter:title": 'Customization | Orgo'
-"twitter:description": 'Make Orgo match your organization — language, terminology, navigation, dashboard, and data import'
+"twitter:description": 'Make Orgo speak your language and show your structure: languages, wording, menu, dashboard and data import'
 ---
 
-Orgo is designed to work for thousands of different organizations, but your scouting troop isn't an engineering company. Customization lets you change the language, rename "Members" to "Scouts", rearrange the sidebar, configure the dashboard, and import your existing data — all without writing code or touching the underlying system.
+**Built for** organizations that are not generic and should not read as if they were.
+**Replaces** custom development to change wording, navigation or a home page.
+
+Orgo runs thousands of very different organizations. The Customization section is where you make it fit yours: which languages members can use, what things are called, what the sidebar contains, what the dashboard shows, and how your existing data gets in.
+
+<img src="/images/platform/customization/customization-settings-section.png" alt="Settings sidebar with the Customization section listing Workflows, eDocuments templates, Custom Domain, Languages, Texts, Menu Organizer and Dashboard Welcome" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 **Settings → Customization**
 
 <Note>
-  All customization features require **Tenant Admin** permissions. Only organization administrators can access the Settings menu.
+  Every page in this section requires **ADMIN_TENANT**. Local, HR and financial admins do not see the Settings area.
 </Note>
 
 ---
 
-## What you can customize
+## What is in the section
 
-<CardGroup cols={2}>
-  <Card title="Languages" icon="globe" href="/platform/customization/languages">
-    Enable multiple languages so members use Orgo in their preferred language. Supports 11 languages including English, French, German, Spanish, Romanian, and more.
-  </Card>
-  <Card title="Labels & Terminology" icon="font" href="/platform/customization/labels">
-    Rename "Members" to "Scouts", "Groups" to "Patrols" — match Orgo's vocabulary to yours. Override any default term per language.
-  </Card>
-  <Card title="Menu Organizer" icon="bars" href="/platform/customization/menu-organizer">
-    Rearrange, hide, or rename sidebar navigation items. Create custom categories and control visibility by role and user type.
-  </Card>
-  <Card title="Dashboard Organizer" icon="grid-2" href="/platform/customization/dashboard-organizer">
-    Choose which widgets appear on the member dashboard and in what order. Drag-and-drop categories with different layout types.
-  </Card>
-  <Card title="Dashboard Welcome" icon="hand-wave" href="/platform/customization/dashboard-welcome">
-    Create a personalized welcome message with dynamic fields and target different messages to different user types.
-  </Card>
-  <Card title="Data Import" icon="upload" href="/platform/customization/import">
-    Bulk-import members, local centers, roles, events, badges, products, and more from CSV files.
-  </Card>
-</CardGroup>
+| Page | What it does |
+|---|---|
+| [Workflows](/platform/workflows) | Automate actions from events and triggers |
+| **eDocuments templates** | Document templates. Shown only when the eDocuments module is on. See [E-Document Templates and Signing](/platform/contracts) |
+| [Custom Domain](/platform/custom-domain) | Run Orgo on your own address |
+| [Languages](/platform/customization/languages) | Choose the interface languages members can use, and the default |
+| [Texts](/platform/customization/labels) | Replace Orgo's wording with your own, per language |
+| [Menu Organizer](/platform/customization/menu-organizer) | Reorder, rename, hide and permission-scope the sidebar |
+| [Dashboard Organizer](/platform/customization/dashboard-organizer) | Compose the dashboard. Needs **Use Custom Dashboard** |
+| [Dashboard Welcome](/platform/customization/dashboard-welcome) | The greeting at the top of the dashboard |
+| [Import](/platform/customization/import) | Bring members and other records in from a file |
+
+Demo organizations get two extra entries, **Demo Data** and **AI Provisioning**, for loading sample content. They disappear once the organization is no longer marked as a demo.
+
+<Note>
+  The page called **Labels** in earlier documentation is **Texts** in the app. The doc page kept its address.
+</Note>
 
 ---
 
-## Recommended setup order
-
-When setting up a new organization, customize in this order to avoid rework:
+## A sensible order for a new organization
 
 <Steps>
-  <Step title="Set the default language">
-    Go to **Settings → Customization → Languages**. Enable the languages your members speak and set the primary default. Do this first so everything is in the right language from day one.
+  <Step title="Languages">
+    Decide the default and which languages members may pick. Doing this first means every later step, including your wording, is written against the right set.
   </Step>
-  <Step title="Customize terminology">
-    Go to **Settings → Customization → Labels**. Rename the 5-6 terms that differ for your organization (e.g., "Members" → "Scouts") before anyone sees the platform. You'll need to provide translations for each active language.
+  <Step title="Texts">
+    Replace the handful of phrases that are wrong for your organization: Members to Scouts, Local Center to Troop. You fill in one column per enabled language, which is why languages come first.
   </Step>
-  <Step title="Import existing data">
-    Go to **Settings → Customization → Import Data**. Bring in your member database from CSV. Import in this order: Local Centers first, then Roles/User Types, then Members — so references resolve correctly.
+  <Step title="Import">
+    Bring in your existing records. Import structure before people so references resolve.
   </Step>
-  <Step title="Organize the sidebar menu">
-    Go to **Settings → Customization → Menu Organizer**. Hide modules you're not using, move important items to the top, and set permission-based visibility for each category.
+  <Step title="Menu Organizer">
+    Hide what you do not use, promote what you do, restrict admin sections to the right permissions.
   </Step>
-  <Step title="Configure the dashboard">
-    Go to **Settings → Customization → Dashboard Organizer**. Pick 3-5 widgets that matter most — upcoming events, recent discussions, quick links — and arrange them by priority.
+  <Step title="Dashboard Welcome">
+    Write the greeting new members land on. This is the highest-read text you will write.
   </Step>
-  <Step title="Write a welcome message">
-    Go to **Settings → Customization → Dashboard Welcome**. Greet members with a personalized message. Use dynamic fields to personalize the greeting and target specific user types if needed.
+  <Step title="Dashboard Organizer">
+    If you turned on **Use Custom Dashboard**, compose the dashboard sections and widget tiles.
   </Step>
 </Steps>
 
 <Tip>
-  You can change all of these settings at any time. But getting languages and labels right before inviting members saves confusion — members won't see outdated terminology during onboarding.
+  All of it can be changed later. The reason to do languages and wording before inviting anyone is that early members otherwise learn the vocabulary you are about to replace.
 </Tip>
 
 ---
 
-## Real-world example
+## What Customization does not cover
 
-> **Scenario**: A national scouting organization with 5,000 members across 150 troops, operating in French and German.
-
-1. **Languages**: Enable French (default) and German. Members choose their preference on first login.
-2. **Labels**: Rename "Members" → "Scouts", "Groups" → "Patrols", "Local Center" → "Troop", "Events" → "Activities".
-3. **Import**: Upload troop list (CSV with troop names and regions), then import scout database with troop assignments.
-4. **Menu**: Hide "Fees", "Newsletter", and "Courses" since the org doesn't use them yet. Move "Activities" (events) to the top.
-5. **Dashboard**: Enable Upcoming Activities, My Patrol, and a Welcome Message.
-6. **Welcome**: A personalized greeting using dynamic fields — each scout sees their own name and troop.
+| You want to change | Go to |
+|---|---|
+| Logos, login page, colours | [Branding](/platform/organisation/branding) |
+| Which features exist at all | [Modules](/platform/organisation/modules) |
+| Legal name, VAT, IBANs, timezone | [Organization Info](/platform/organisation/organisation-info) |
+| Who can do what | [Permissions](/platform/permissions) |
+| The wording of emails members receive | Email templates. Text replacements do not reach emails |
+| Registration and profile fields | [Registration form](/platform/users/registration-form), [Profile fields](/platform/users/profile-fields) |
 
 ---
 
 ## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="I don't see the Customization section in Settings">
-    Customization requires **Tenant Admin** permissions. If you're a local admin or regular member, ask your organization's main administrator for access.
+  <Accordion title="I do not see Settings at all">
+    The Settings area needs **ADMIN_TENANT**. Local center admins, HR and financial roles do not have it, by design.
   </Accordion>
-  <Accordion title="Changes I made aren't visible to members">
-    Most customization changes apply immediately. If members don't see updates, ask them to refresh their browser. For language and label changes, members may need to log out and back in for all cached text to update.
+  <Accordion title="Dashboard Organizer is missing from the list">
+    It appears only when **Use Custom Dashboard** is on, under **Settings → Modules → Users & Profiles → Advanced Settings**.
   </Accordion>
-  <Accordion title="I want to undo all customizations and start fresh">
-    Each customization tool has its own reset option. The Menu Organizer has a "Restore Defaults" button. For labels, clear individual overrides. For the dashboard, remove categories and re-add the defaults. There's no single "reset everything" button — this prevents accidental resets.
+  <Accordion title="Members are not seeing my changes">
+    Wording and menu changes reach a member on their next page load or session start. A hard refresh clears anything stuck. Menu and dashboard edits are staged: neither applies until you press save.
+  </Accordion>
+  <Accordion title="Is there a way to undo everything?">
+    Only per tool, and only where the tool provides it. The Menu Organizer has **Reset to defaults**. Text replacements are removed row by row. Dashboard categories are deleted individually. There is deliberately no single reset for the whole section.
   </Accordion>
 </AccordionGroup>
 
@@ -104,6 +107,8 @@ When setting up a new organization, customize in this order to avoid rework:
 
 ## Related
 
-- [Branding](/platform/organisation/branding) — Visual customization (logos, login background)
-- [Modules](/platform/organisation/modules) — Enable/disable platform features
-- [Organization Info](/platform/organisation/organisation-info) — Name, contact details, and financial settings
+- [Branding](/platform/organisation/branding) - logos and login page
+- [Modules](/platform/organisation/modules) - turn features on and off
+- [Organization Info](/platform/organisation/organisation-info) - the organization's own details
+- [Permissions](/platform/permissions) - the permissions the menu and dashboard scope against
+- [Workflows](/platform/workflows) - automation, also under Customization

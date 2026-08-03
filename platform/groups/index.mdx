@@ -1,169 +1,166 @@
 ---
 title: 'Groups & Teams'
-description: 'Organize members into collaborative spaces — from org-wide to project-specific'
+description: 'Organize members into collaborative spaces with discussions, files and events'
 "og:title": 'Groups & Teams | Orgo'
-"og:description": 'Organize members into collaborative spaces — from org-wide to project-specific'
+"og:description": 'Organize members into collaborative spaces with discussions, files and events'
 "twitter:title": 'Groups & Teams | Orgo'
-"twitter:description": 'Organize members into collaborative spaces — from org-wide to project-specific'
+"twitter:description": 'Organize members into collaborative spaces with discussions, files and events'
 ---
 
-Groups are where your members actually collaborate. They're spaces with discussions, events, shared files, and task tracking — scoped to the right audience. Orgo gives you four types of groups, each for a different purpose.
+**Built for** organizations that need more than one shared feed: committees, project teams, interest communities and audience segments that each need their own space.
+**Replaces** ad hoc WhatsApp groups, Slack channels and shared drive folders that nobody can find later.
 
-<img src="/images/platform/groups/groups-browse.png" alt="Groups browse page showing available groups" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+A group is a space with its own discussions, files and events, plus a member list. Every group is created from the same form; what makes them different is the **Access** mode you pick and, for role groups, the criteria you set.
 
----
-
-## The four group types
-
-| Type | Who's in it | How members join | Best for |
-|------|------------|-----------------|----------|
-| [**Main Group**](/platform/groups/main-group) | Everyone | **Automatic** — every member is included by default, can't leave | Organization-wide announcements, shared resources, full member directory |
-| [**Local Centers**](/platform/groups/local-groups) | Members of a geographic branch | **Assigned** — during registration or by admin | Chapters, branches, regional divisions with their own admins and Stripe accounts |
-| [**Role Groups**](/platform/groups/role-groups) | Members matching specific criteria | **Automatic** — system adds/removes based on user type, age, gender, or region | "All Leaders", "Youth 13-17", "Board members" — always up to date |
-| [**Private Groups**](/platform/groups/private-groups) | Selected members | **Invited** by group owner, or **self-join** if the group is set to "joinable" | Project teams, committees, interest groups, working groups |
-
-### Private vs. Joinable groups
-
-Private Groups have two join modes that fundamentally change how they work:
-
-| Mode | How members join | Visibility | Best for |
-|------|-----------------|-----------|----------|
-| **Private** (default) | Admin or owner invites them — no self-service | Only members can see the group exists | Boards, committees, confidential projects |
-| **Joinable** | Any member can discover and join on their own | Listed in the groups browse page | Interest communities (Photography Club, Book Club), open working groups |
-
-You can switch between modes at any time. Starting private and opening up later is safer than the reverse.
-
-<Tip>
-  **Start simple.** You don't need all four types on day one. Most organizations start with just the Main Group and Local Centers, then add Role Groups and Private Groups as needs arise.
-</Tip>
+<img src="/images/platform/groups/groups-browse.png" alt="Groups page showing the organization card, a Teams section for role groups, and separate Community groups and Private groups sections" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Which group type should I use?
+## The four access modes
 
-| I need a space for... | Use |
-|----------------------|-----|
-| Announcements to everyone | **Main Group** — every member sees it |
-| A city or regional chapter | **Local Center** — geographic division with its own admins and events |
-| All members of a specific type (all Leaders, all Volunteers) | **Role Group** — auto-populates based on criteria |
-| A project team or committee | **Private Group** — manually controlled membership |
-| An interest-based community (Photography Club, Hiking Group) | **Private Group** with "joinable" enabled — members can self-join |
-| A temporary working group for an initiative | **Private Group** — archive it when done |
+| Option | Description in the app | Who ends up in it | Listed under | Use it for |
+|--------|-----------------------|-------------------|--------------|------------|
+| **Auto-enroll all members** | Add all members automatically | Every active member of the organization, with no way to leave | Community groups | Announcements everyone receives, with **Who can post?** set to Only admins |
+| **Open to join** | Anyone in community can join | Members who join themselves, plus anyone an admin adds | Community groups | An interest community members opt into |
+| **Private** | Only invited members have access | Only members a group admin adds | Private groups | A committee, board or project team |
+| **[Role group](/platform/groups/role-groups)** | Aggregate members by roles or profile | Everyone matching the criteria you set, recalculated automatically | Teams | Everyone with a given role, age or chapter |
 
----
+<Note>
+  Only organization admins (`ADMIN_TENANT`) can create **Auto-enroll all members**, **Open to join** and **Role group** groups. A member without that permission who creates a group gets a **Private** group.
+</Note>
 
-## What every group can do
-
-Each group — regardless of type — can have these features enabled:
-
-| Feature | What it provides |
-|---------|-----------------|
-| **Discussions** | Forum-style posts and conversations |
-| **Events** | Group-specific events and calendar |
-| **Files** | Shared document storage with folders |
-| **Issues** | Task and issue tracking with priorities, assignees, and due dates |
-| **Members** | Member list with search and filtering |
-
-You choose which features to enable per group. A project team might need Discussions + Issues. A local chapter might need Discussions + Events + Files. The Main Group might have everything.
+You can change the Access mode later by editing the group. A group filed under a [category](#group-categories) is listed under **Programs and activities** instead of Community groups or Private groups. For a geographic branch with its own admins and fees, use a [local center](/platform/groups/local-groups) rather than a group.
 
 ---
 
-## Enabling the Groups module
+## What a group gives you
 
-**Settings** → **Groups** → **Module Settings**
+Each group carries three optional features, chosen with the **Features** selector when you create or edit it:
 
-<img src="/images/platform/groups/groups-module-config.png" alt="Groups module settings showing toggles for group categories, role groups, organizational units, tasks, and all members group" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+| Feature | What it adds | Also requires |
+|---------|-------------|---------------|
+| **Discussions** | A discussion feed inside the group | The Discussions module enabled |
+| **Files** | A file area scoped to the group | The Files & eDocuments module enabled |
+| **Events** | An event list and calendar scoped to the group | The Events module enabled |
+
+At least one feature must stay switched on. Every group also has a **Members** tab and, once you write a description, an **About** tab; auto-enroll groups have no Members tab, because the membership is simply everyone. A group can also carry a logo, a **Menu emoji** shown next to its name in the sidebar, and a rich text description.
+
+### Who can post
+
+A single **Who can post?** control covers discussions, files and events together; there is no separate switch per feature.
+
+| Option | Effect |
+|--------|--------|
+| **Everyone in the group** | Any member can start discussions, upload files and create events |
+| **Only admins** | Only group admins can. Organization moderators keep access: `HR_TENANT` for discussions and files, `EVENT_TENANT` for events |
+
+---
+
+## Enabling the module
+
+**Settings** → **Groups & Teams** → **Configuration**
+
+<img src="/images/platform/groups/groups-module-config.png" alt="Groups and Teams module settings showing the master toggle plus Group Types and Group Features sections" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 | Setting | What it does |
 |---------|-------------|
-| **Enable Groups & Teams** | Master toggle for the entire groups feature |
-| **Group Categories** | Organize groups by type (Working Group, Committee, Team). Useful when you have many groups. |
-| **Role Groups** | Enable automatic groups based on member criteria |
-| **Units** | Enable sub-units within local centers for hierarchical structure |
-| **Tasks/Issues** | Enable task tracking within groups |
-| **All Members Group** | Maintain the Main Group that includes everyone |
+| **Enable Groups & Teams Module** | Master switch. With it off, the group form does not render. |
+| **Enable Group Categories** | Adds a category picker to the group form and a **Group Categories** page in settings |
+| **Enable Role Groups** | Adds the **Role group** access mode, the **Create role group** action and the **Role groups** tab |
+| **Enable Organizational Units** | Adds a **Unit Types** page for sub-units inside chapters |
+| **Group Tasks** | Reserved for group task tracking. It has no effect on the current interface. |
+| **All Members Group** | Reserved for the all-members space. It has no effect on the current interface; use the **Auto-enroll all members** access mode instead. |
+
+<Warning>
+  **Group Tasks** and **All Members Group** are stored on the tenant but nothing reads them. Switching them does not change what members see.
+</Warning>
 
 ---
 
-## Group permissions
+## Who can create a group
 
-Every group has granular controls for who can do what:
+Two checks apply, in this order.
 
-| Permission | What it controls |
-|-----------|-----------------|
-| **Only admins can post** | Restrict discussions to administrators. Good for announcement-only groups. |
-| **Only admins can create events** | Restrict event creation to group admins |
-| **Only admins can upload files** | Restrict file uploads to group admins |
-| **Only admins can add members** | Restrict member management to group admins |
+<Steps>
+  <Step title="The organization-wide minimum">
+    **Settings** → **Users & Profiles** → **Permissions setup** → **Groups Module** → **Who can create**. The default is `USER`, so any signed-in member can create a group. Raise it to `ADMIN_LOCAL`, `HR_TENANT` or `ADMIN_TENANT` to restrict creation.
+  </Step>
+  <Step title="The category minimum">
+    A group filed under a category must also satisfy that category's **Who can create group in this category** permission.
+  </Step>
+</Steps>
+
+Separately, the **Auto-enroll all members**, **Open to join** and **Role group** modes always require `ADMIN_TENANT`. Members who fail the check do not see the **Create group** button on the Groups page or in the sidebar; guest accounts never see it unless they also hold `ADMIN_TENANT`.
 
 ---
 
 ## Group categories
 
-If you have many groups, categories help members find the right ones. Enable categories in module settings, then create them at **Settings** → **Groups** → **Categories**.
+Categories group related spaces together on the Groups page and in the sidebar, and let you delegate creation rights per category. Enable **Enable Group Categories**, then go to **Settings** → **Groups & Teams** → **Group Categories**. Managing categories requires `HR_TENANT`, and members only see the categories they are allowed to create in.
 
-Each category has a name, color, and icon — plus a permission setting controlling who can create groups in that category.
+<img src="/images/platform/groups/group-categories.png" alt="Group Categories settings page listing categories with their colour and the permission required to create groups in each" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-**Example categories:** Working Group, Committee, Interest Group, Project Team, Advisory Board
+| Field | What it does |
+|-------|-------------|
+| **Name** | The section heading members see on the Groups page |
+| **Color** | A preset colour or a custom hex value. Tints the category label and the group's bullet. |
+| **Who can create group in this category** | The permission a member needs to file a new group here: `USER`, `FINANCIAL_LOCAL`, `HR_LOCAL`, `ADMIN_LOCAL`, `FINANCIAL_TENANT`, `HR_TENANT` or `ADMIN_TENANT` |
+
+<Note>
+  The category picker only appears on the group form for **Auto-enroll all members** and **Open to join** groups. Private groups cannot be categorized.
+</Note>
 
 ---
 
-## Structuring your organization with groups
+## The Groups page
 
-### Small community (50 members)
+**Groups** in the sidebar, or `/groups/browse`. Tabs filter the list:
 
-- **Main Group** for announcements and general discussion
-- 2-3 **Private Groups** for committees (Board, Events Committee, etc.)
-- That's it — keep it simple
+| Tab | Shows |
+|-----|-------|
+| **All** | Everything you can see |
+| **Subscribed** | Spaces you get notifications from |
+| **Not subscribed** | Spaces you have muted or never subscribed to |
+| **Archived** | Closed groups and role groups |
+| **Role groups** | Role groups only. Visible to `ADMIN_TENANT` when **Enable Role Groups** is on. |
 
-### Regional organization (500 members, 5 branches)
+Below the tabs, the page lists your organization space and your chapter first, then **Teams** (role groups), **Programs and activities** (groups with a category), **Community groups**, **Private groups** and **Archived groups**. A search box filters by name.
 
-- **Main Group** for org-wide announcements
-- 5 **Local Centers** for geographic chapters, each with their own events and discussions
-- 2-3 **Role Groups** (All Leaders, All Volunteers)
-- Private Groups as needed for projects
+The **Create group** button opens a menu with **Create group** and, for organization admins with role groups enabled, **Create role group**. Organization admins also get a **Settings** shortcut to the module configuration.
 
-### Large federation (10,000+ members, 50+ branches)
+---
 
-- **Main Group** for national-level announcements (admins-only posting)
-- 50+ **Local Centers** organized under regional parent groups
-- Multiple **Role Groups** by user type, age, profession
-- Many **Private Groups** for committees, working groups, projects
-- **Group categories** to help members navigate
+## Archiving and deleting
+
+| Action | Who | What happens |
+|--------|-----|--------------|
+| **Archive** | The owner, a group admin, or `ADMIN_TENANT` | The group moves to the Archived tab. Members, discussions, files and events are kept untouched. |
+| **Unarchive** | `ADMIN_TENANT` | Restores the group from the Archived tab |
+| **Delete** | The owner or `ADMIN_TENANT` | Removes the group permanently |
+
+Archiving is reversible and loses nothing, so prefer it over deleting. A group with a newsletter attached cannot be deleted until the newsletter is removed.
 
 ---
 
 ## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Members can't find the right group">
-    Enable **Group Categories** to organize groups by type. Also make sure group names are descriptive — "Q4 Planning" is better than "Group 7".
+  <Accordion title="Can a member be in more than one group?">
+    Yes, with no limit. Members are in every auto-enroll group, their chapter, every role group they match, and any open or private groups they joined or were added to.
   </Accordion>
 
-  <Accordion title="I want announcements that everyone sees but only admins can post">
-    Use the **Main Group** with "Only admins can post" enabled. All members see the content, but only administrators can create posts.
+  <Accordion title="Why can I not see a group a colleague mentioned?">
+    Private groups are invisible to non-members. Opening one you are not in returns an access error unless you are the owner, a member, or hold `ADMIN_TENANT`.
   </Accordion>
 
-  <Accordion title="I need a group that automatically includes all Leaders">
-    Create a **Role Group** with criteria "User Type = Leader". The system automatically adds all members with that user type and keeps it updated as user types change.
-  </Accordion>
-
-  <Accordion title="A project is finished — what do I do with the group?">
-    **Archive** the Private Group. Content is preserved for reference but the group is hidden from the sidebar. Members are removed from the active roster.
-  </Accordion>
-
-  <Accordion title="Can a member be in multiple groups?">
-    Yes. Members are in the Main Group (automatic), their Local Center (assigned), any matching Role Groups (automatic), and any Private Groups they've joined or been invited to. There's no limit.
-  </Accordion>
 </AccordionGroup>
 
 ---
 
 ## Related
 
-- [Main Group](/platform/groups/main-group) — The org-wide hub
-- [Local Centers](/platform/groups/local-groups) — Geographic branches
-- [Role Groups](/platform/groups/role-groups) — Criteria-based automatic groups
-- [Private Groups](/platform/groups/private-groups) — Project teams and interest groups
-- [Discussions](/platform/discussion) — Forum features within groups
-- [Issues](/platform/issues) — Task tracking within groups
+- [Main Group](/platform/groups/main-group) - the organization-wide space
+- [Role Groups](/platform/groups/role-groups) - criteria-based automatic membership
+- [Private Groups](/platform/groups/private-groups) - committees, project teams and open communities
+- [Local Centers](/platform/groups/local-groups) - geographic branches
+- [Discussions](/platform/discussion) - the discussion feed inside a group

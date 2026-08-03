@@ -7,125 +7,183 @@ description: 'Turn features on and off. Configure exactly how each one behaves.'
 "twitter:description": 'Turn features on and off. Configure exactly how each one behaves.'
 ---
 
-Modules control what your platform can do. Events, payments, discussions, local centers — each is a module you can turn on, turn off, and fine-tune.
+A module is a block of settings stored on your organization that decides whether a whole area of Orgo exists for your members. Turn Events off and events disappear from the sidebar, the dashboard and search. Turn it back on and everything is exactly where it was, because switching a module off hides screens, it does not delete data.
 
-Only enable what you need. Fewer modules = cleaner interface for everyone.
+**Built for** organizations that need a slice of the platform rather than all of it: a federation running events and membership fees but no courses, an association running discussions and a helpdesk but no local centers.
 
-<img src="/images/platform/organisation/module-settings-page.png" alt="Module settings page with feature toggles" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+**Replaces** the choice between a product too bloated to trim and one you outgrow in a year.
+
+**Settings → Modules**
 
 <Note>
-  Requires **Tenant Admin** permissions.
+  Requires **ADMIN_TENANT**. Every module settings route is guarded by `ROLE_ADMIN_TENANT`, and every save goes through `PATCH /tenants/{id}`, which the API only accepts from an admin of that same organization.
 </Note>
 
----
-
-## Finding modules
-
-Every module has its own page in the Settings sidebar under **MODULES**. Click one to open it.
+<img src="/images/platform/organisation/module-settings-page.png" alt="Users and Profiles module page with the tab list on the left and the User Types and Roles settings section on the right" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## How module pages work
+## How a module page works
 
-All module pages follow the same layout — learn one, you know them all.
+The Settings sidebar has a **Modules** group listing sixteen modules, then **All Modules** at the bottom for everything else. Press **Cmd+K** (**Ctrl+K** on Windows and Linux) anywhere inside Settings to search modules, tabs and individual settings by name; choosing a setting opens its page, scrolls to it and highlights it for a couple of seconds. Your last five searches are kept.
 
-<CardGroup cols={3}>
-  <Card title="Header" icon="toggle-on">
-    Enable/disable toggle and **Save All Settings** button. Always pinned at the top.
-  </Card>
-  <Card title="Sub-navigation" icon="list">
-    Tabs specific to the module — Configuration, Custom Fields, Tags, Roles, Forms, and more.
-  </Card>
-  <Card title="Settings sections" icon="sliders">
-    Grouped options with toggles, dropdowns, and inputs under clear headings.
-  </Card>
-</CardGroup>
+Each page puts a sticky card on the left with the module name and its tabs, and the settings on the right.
+
+- **Enable X Module** is the first card on every Configuration tab. Switch it off and the rest of the page is replaced by "Module is currently disabled".
+- Tabs are tied to settings. Turn on **Enable Custom Statuses** in Events and an **Event Statuses** tab appears in the left card.
+- Flipping a switch saves about a second later and confirms with "Settings saved automatically" in the bottom right corner. Most pages have no Save button.
+
+The one exception is **Users & Profiles → Configuration**, which also carries a **Save All Settings** button in its sticky header. Individual switches there still save themselves as you flip them; the button writes the Users, Adhesion and Resignation blocks together in one request.
 
 ---
 
-## Available modules
+## Module reference
 
-<AccordionGroup>
-  <Accordion title="Core">
-    | Module | What it unlocks |
-    |--------|----------------|
-    | **Users & Profiles** | Member management, registration, family members, user types, roles. *Always active.* |
-    | **Contacts** | External contact management with custom statuses |
-    | **Local Centers** | Regional chapters with their own admins, bank accounts, maps |
-  </Accordion>
-  <Accordion title="Engagement">
-    | Module | What it unlocks |
-    |--------|----------------|
-    | **Events** | Event creation, ticketing, attendance tracking, reports |
-    | **Discussions** | Community discussions with namespaces and posting controls |
-    | **Groups & Teams** | Member groups, units, role-based groups, tasks, categories |
-    | **Voting** | Polls and elections within groups |
-    | **Gamification & Courses** | Points, tiers, badges, learning courses |
-  </Accordion>
-  <Accordion title="Operations">
-    | Module | What it unlocks |
-    |--------|----------------|
-    | **Payments & Fees** | Membership fees, Stripe payments, donations, invoicing |
-    | **Emails & Notifications** | Notification defaults, email templates, campaigns |
-    | **Files & eDocuments** | Drive storage, personal drives, electronic document templates |
-    | **Helpdesk** | Member support tickets |
-    | **Analytics** | Dashboards for registration, membership, geography trends |
-  </Accordion>
-  <Accordion title="Membership & Onboarding">
-    | Module | What it unlocks |
-    |--------|----------------|
-    | **Adhesion** | Public join forms for prospective members |
-    | **Waitlist** | Waiting lists with notifications and self-removal |
-    | **Referrals** | Referral workflows with configurable approval steps |
-    | **Identity Validation** | Document-based identity verification |
-    | **Professions** | Industry, job title, and expertise fields |
-    | **Companies** | Company profiles linked to members, company-level fees |
-    | **Form Builder** | Custom forms for structured data collection |
-  </Accordion>
-  <Accordion title="Security & Integrations">
-    | Module | What it unlocks |
-    |--------|----------------|
-    | **Multi-Factor Authentication** | Require MFA for member logins |
-    | **API & OAuth** | API token access and OAuth integrations |
-  </Accordion>
-</AccordionGroup>
+Every module in the Settings sidebar, in the order it appears.
+
+| Module | What turning it on gives you | Tabs |
+|---|---|---|
+| **Users & Profiles** | Member profiles, user types, roles, registration, family links, the member directory. Cannot be switched off: the toggle is permanently disabled. | Configuration, Custom Fields, Tags, Roles & User types, Registration Form, Profile Form, Adhesion Form, Adhesion Template, Referral Program, Registration Waitlist, Privacy Defaults, Security & Permissions |
+| **Contacts** | Records for people who are not members, contact statuses, and (with Local Centers on) contacts assigned to a chapter. | Configuration, Contact Statuses |
+| **Events** | Events, event types, event templates, reports, SDG tagging, attendance reminders, ticketing settings. | Configuration, Event Types, Templates, Event Statuses, Attendance Reminder |
+| **Discussions** | Discussions and comments, categories, the "who can post publicly" rule and the profanity hold queue. | Configuration, Discussion Categories |
+| **Groups & Teams** | Groups, role groups, organizational units, group tasks and the all-members group. The Local Centers module is configured from here too. | Configuration, Group Categories, Unit Types, Local Centers, Regions |
+| **Files & eDocuments** | Drive storage and optional personal drives. Its tabs also hold the Official Gazette and eDocuments modules. The sidebar entry only appears while Drive is on. | Drive, Official Gazette, eDocuments, eDocuments Templates |
+| **Emails & Notifications** | Email campaigns. Its tabs also hold notification defaults for new members, the system email switches and the email template editor. The page header reads "Notifications & Email Campaign". | Email Campaigner, Notification Preferences, Emails Config, Email Templates |
+| **Professions** | Industry, job and expertise fields on member profiles, plus a managed list of industries. | Configuration, Profession Industries |
+| **Payments & Fees** | Online payments for tickets, donations and products. Its tabs also hold membership fees and invoicing. | Online Payments, Payment Gateway, Membership fees, Donation Product, Invoice Product, Invoice Templates |
+| **Gamification & Courses** | Badges, badge categories, volunteer hours, points and tiers. Courses have their own switch on the Courses tab. | Gamification, Badges, Badge Categories, Courses |
+| **Helpdesk** | Member support tickets, a support team with per-member notification switches, issue statuses, issue types and default assignees. | Configuration |
+| **Projects** | Projects with tasks, boards and goals. | Configuration |
+| **Voting** | Votes and polls. | Configuration |
+| **Identity Validation** | Identity document upload and review, optionally required for members, for online payments, or both. | Configuration |
+| **Companies** | Company records, a rule for who may create them, and company-paid memberships. | Configuration |
+| **Form Builder** | Standalone forms for surveys, sign-ups and data collection. | Configuration |
+
+Several of those tabs only appear once their own setting is on. **Event Statuses** needs **Enable Custom Statuses**, **Attendance Reminder** needs **Enable Attendance Reminder**, **Group Categories** needs **Enable Group Categories**, **Unit Types** needs **Enable Organizational Units**, **Regions** needs Local Centers plus **Enable Regions**, **Contact Statuses** needs **Enable Contact Statuses**, **Discussion Categories** needs **Enable Discussion Namespaces**, **Profession Industries** needs **Enable Industry Tracking**, **Badges** and **Badge Categories** need Gamification on, **Invoice Templates** needs Invoices on, and the Users tabs for **Roles & User types**, **Registration Form**, **Adhesion Form**, **Adhesion Template**, **Referral Program** and **Registration Waitlist** each need their own feature switched on.
+
+<Note>
+  **eDocuments Templates** is the odd one out: it leaves Settings and opens the eDocuments list in the main application. Requires **HR_TENANT**.
+</Note>
+
+### Where each module is documented
+
+- **Users & Profiles**: [Members](/platform/users), [User types](/platform/users/user-types), [Registration form](/platform/users/registration-form), [Profile fields](/platform/users/profile-fields), [Custom fields](/platform/users/custom-fields), [Privacy settings](/platform/users/privacy-settings), [Statuses](/platform/users/statuses), [Family members](/platform/users/family-members)
+- **Contacts**: [Contacts](/platform/contacts)
+- **Events**: [Events](/platform/events)
+- **Discussions**: [Discussions](/platform/discussion)
+- **Groups & Teams**: [Groups](/platform/groups), [Units](/platform/groups/units), [Local groups](/platform/groups/local-groups)
+- **Files & eDocuments**: [Files](/platform/files), [Contracts](/platform/contracts), [Official Gazette](/platform/official-gazette)
+- **Emails & Notifications**: [Newsletter](/platform/newsletter), [Notifications](/platform/notifications)
+- **Payments & Fees**: [Membership fees](/platform/fees/fees), [Products](/platform/fees/products), [VAT](/platform/fees/vat), [Stripe](/platform/fees/stripe-integration), [Donations](/platform/fees/donations)
+- **Gamification & Courses**: [Badges](/platform/badges), [Courses](/platform/courses)
+- **Helpdesk**: [Help desk](/platform/help-desk), [Issues](/platform/issues)
+- **Voting**: [E-voting](/platform/e-voting)
+- **Identity Validation**: [Identity validation](/platform/identity-validation)
+- **Companies**: [Companies](/platform/users/companies)
+- **Adhesion, Referral, Waitlist, Resignation**: [Adhesion](/platform/users/adhesion), [Referral](/platform/users/referral), [Waitlist](/platform/users/waitlist), [Resignation](/platform/users/resignation)
+- **API & OAuth**: [API](/platform/api), [OAuth](/platform/oauth), [Integrations](/platform/integrations)
 
 ---
 
-## Enabling and disabling
+## Modules configured somewhere else
 
-Open any module from the sidebar. Toggle it on or off in the header. Hit **Save**.
+Several modules have no sidebar entry of their own. They are switched on from inside another module's page, or from **All Modules**.
 
-Disabling a module hides its features for everyone. Enable it again and everything comes back exactly as it was.
+| Module | Where you switch it on |
+|---|---|
+| Adhesion | Users & Profiles → Configuration → Adhesion & Membership |
+| Resignation | Users & Profiles → Configuration → Resignation & Membership Termination |
+| Referral | Users & Profiles → Referral Program |
+| Waitlist | Users & Profiles → Registration Waitlist |
+| Privacy defaults | Users & Profiles → Privacy Defaults |
+| Multi-Factor Authentication | Users & Profiles → Security & Permissions |
+| Local Centers | Groups & Teams → Local Centers |
+| Official Gazette, eDocuments | Files & eDocuments → the matching tab |
+| Membership fees, Invoices | Payments & Fees → Membership fees and Invoice Product |
+| Notification defaults, System emails | Emails & Notifications → Notification Preferences and Emails Config |
+| Courses | Gamification & Courses → Courses |
+| Languages | Customization → Languages |
+| Third-party integrations | Developers → Third-party Integrations |
+| Welcome message and default theme | Customization → Dashboard Welcome, and Organization → Branding |
+| API & OAuth, Analytics, Extra User Statuses, Realtime | All Modules only |
+
+Four of those deserve a note:
+
+- **API & OAuth** decides whether **API Tokens** and **OAuth Apps** appear in the Developers group.
+- **Analytics** turns the statistics dashboards on. Who may open each area (membership, geography, leaderboards, platform, finance) is set on **Users & Profiles → Security & Permissions**, not here.
+- **Extra User Statuses** is six independent switches (Suspended, Waiting list, Unreachable, Excluded, Helping hands, Contributor) deciding which optional statuses appear in the member status dropdown, member list filters and membership statistics. Open **Options** on the card to reach them. The card's own master switch gates nothing.
+- **Realtime** is on by default and drives live updates over Mercure in feeds, discussions, votes and networking. Switching it off does not break those screens, it just stops them refreshing on their own.
+
+---
+
+## The All Modules page
+
+**Settings → Modules → All Modules** shows every module as a card with a master switch, whether or not it has a page of its own. It is the fallback for anything the dedicated pages do not expose.
+
+<img src="/images/platform/organisation/all-modules-grid.png" alt="All Modules page showing a grid of module cards, each with its name and an on or off switch, above a search box and a View JSON Mode button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+The search box at the top matches both module names and the names of the settings inside them. The switch on a card saves immediately, except the Users card, which is deliberately locked on. Active modules with more than one setting get an **Options** button that expands every raw key as a switch, number box, text box or permission dropdown, with a **save** button underneath.
 
 <Warning>
-  **Users & Profiles** can't be disabled — every other module depends on it.
+  **View JSON Mode** replaces the cards with a text editor holding the whole configuration as raw JSON. Saving invalid JSON is rejected with an error, but saving valid JSON with a wrong key or value is not: it is written straight through. Use the cards unless you are copying a known-good configuration.
 </Warning>
+
+<img src="/images/platform/organisation/all-modules-options.png" alt="An expanded module card on the All Modules page showing its individual setting keys as switches, number boxes and permission dropdowns, with save and cancel buttons" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+Two modules are hidden from this page on purpose, because editing them as raw keys causes more harm than good: **General** (welcome message and default theme) and **Integrations** (analytics IDs and single sign-on). Both have proper pages under Customization and Developers.
 
 ---
 
-## Permission levels
+## Dependencies worth knowing
 
-Some module settings use permission dropdowns to control who can perform certain actions. These range from **User** (any logged-in member) to **Admin Tenant** (full organization control), with specialized roles for HR, finance, events, and communications at both organization and local center levels.
+- **Event ticket settings** are greyed out until Online Payments is on. The page says so and offers a shortcut to enable it.
+- **Local center roles** such as `ADMIN_LOCAL` and `HR_LOCAL` only appear in permission dropdowns while Local Centers is on.
+- **Per-chapter contacts** and **Regions** both need Local Centers.
+- **Company fees** only appear on the Companies page while Membership fees is on.
+- **Enable Skills Field** creates a Skills custom field, seeded with a starter list, the first time you turn it on. Turning it back off keeps the values members already entered.
+- **Enable Weekly Availability** behaves the same way: existing values survive being switched off.
+- **Invoices** creates its invoice product for you the first time it is switched on, if you have not chosen one.
 
-For the full permission hierarchy and role reference, see [Permissions](/platform/permissions).
+---
 
-<Note>
-  Local-level roles (e.g., **Admin Local**, **HR Local**) only appear in dropdowns when the **Local Centers** module is enabled.
-</Note>
+## Permission levels in module settings
+
+Many module settings are a dropdown of permission levels rather than a switch: who can create public events, who can send invitations, who can see member fee status. The list is `USER`, then the organization levels (`ADMIN_TENANT`, `HR_TENANT`, `FINANCIAL_TENANT`, `EVENT_TENANT`, `COMMUNICATION_TENANT`, `HR_ASSISTANT_TENANT`), then the chapter levels (`ADMIN_LOCAL`, `HR_LOCAL`, `FINANCIAL_LOCAL`, `EVENT_LOCAL`, `COMMUNICATION_LOCAL`, `HR_ASSISTANT_LOCAL`) when Local Centers is on.
+
+**Users & Profiles → Security & Permissions** collects every one of those dropdowns from every active module onto one page, grouped by module, alongside the MFA switch. See [Permissions](/platform/permissions) for what each level unlocks.
 
 ---
 
 ## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="I disabled a module but it still shows up">
-    Refresh the page. Also check you toggled the right one — "Files & eDocuments" controls both Drive and eDocuments, for example.
+  <Accordion title="I turned a module off and members still see it">
+    Members carry a copy of your organization settings from when the app last booted in their browser. It refreshes on a full page reload, not on navigation inside the app, so a member who has left a tab open all day is working from the old copy. Ask them to refresh.
   </Accordion>
-  <Accordion title="Local permissions are missing from dropdowns">
-    Enable the **Local Centers** module first. Local-level roles only appear when it's active.
+  <Accordion title="A tab I need is missing from the module">
+    Tabs are tied to settings. Check the Configuration tab for the switch that owns it: Event Statuses needs Enable Custom Statuses, Regions needs Enable Regions, Badges needs Gamification, and so on.
   </Accordion>
-  <Accordion title="I can't find the Settings menu">
-    You need **Tenant Admin** permissions. Ask your organization's admin to grant the role.
+  <Accordion title="Local center options are missing from a dropdown">
+    Enable Local Centers first, from **Groups & Teams → Local Centers**.
+  </Accordion>
+  <Accordion title="Ticket settings on the Events page are greyed out">
+    Online Payments is off. Turn it on from **Payments & Fees → Online Payments**, then come back.
+  </Accordion>
+  <Accordion title="I cannot open Settings at all">
+    You need **ADMIN_TENANT**. Without it the gear icon does not appear and the module routes bounce you to the login screen.
+  </Accordion>
+  <Accordion title="Will turning a module off lose our data">
+    No. The switch writes a flag on your organization and nothing else. Records stay in the database and reappear when you turn the module back on.
   </Accordion>
 </AccordionGroup>
+
+---
+
+## Related
+
+- [Organization Settings](/platform/organisation) for the four settings sections and what each one covers
+- [Organization Info](/platform/organisation/organisation-info) for the details that flow into invoices, emails and public pages
+- [Branding](/platform/organisation/branding) for logos, the login background and the default theme
+- [Permissions](/platform/permissions) for what each permission level unlocks
+- [Customization](/platform/customization) for languages, labels, menu and dashboard layout

@@ -1,213 +1,206 @@
 ---
 title: 'OAuth Server'
-description: 'Use Orgo as an identity provider — let members log in to external apps with their Orgo account'
+description: 'Use Orgo as an identity provider: let members sign in to your own apps with their Orgo account'
 "og:title": 'OAuth Server | Orgo'
-"og:description": 'Use Orgo as an identity provider — let members log in to external apps with their Orgo account'
+"og:description": 'Use Orgo as an identity provider: let members sign in to your own apps with their Orgo account'
 "twitter:title": 'OAuth Server | Orgo'
-"twitter:description": 'Use Orgo as an identity provider — let members log in to external apps with their Orgo account'
+"twitter:description": 'Use Orgo as an identity provider: let members sign in to your own apps with their Orgo account'
 ---
 
-Orgo can act as an OAuth 2.0 provider. This means your members can use their Orgo credentials to log in to your website, internal tools, or partner applications — "Login with Orgo" — without creating separate accounts.
+Orgo is an OAuth 2.0 provider. Members can use their Orgo account to sign in to your website, an internal tool or a partner application ("Login with Orgo") without a second set of credentials.
 
-<img src="/images/platform/developers/oauth.png" alt="OAuth application settings" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+**Built for** organizations running their own software alongside Orgo.
+**Replaces** duplicate user directories and manual account provisioning.
 
----
-
-## When to use this
-
-| You want to... | OAuth Server? |
-|----------------|-------------|
-| Let members log in to your website with their Orgo account | Yes |
-| Authenticate users in a custom mobile app | Yes |
-| Provide SSO for internal tools (wiki, project manager) | Yes |
-| Give partner services access to member data (with consent) | Yes |
-| Let external people log in to Orgo using Google/Microsoft | No — that's [SSO Authentication](/platform/integrations) (inbound), not OAuth Server (outbound) |
+<img src="/images/platform/developers/oauth-apps.png" alt="OAuth Apps page listing registered applications with their App ID and redirect URI, with Create App and OAuth documentation buttons" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## How it works
-
-```
-1. User clicks "Login with Orgo" on your app
-   ↓
-2. User is redirected to Orgo's login page
-   ↓
-3. User authenticates and approves access
-   ↓
-4. Orgo redirects back with an authorization code
-   ↓
-5. Your app exchanges the code for an access token
-   ↓
-6. Your app uses the token to get user info
-```
-
-This is the standard OAuth 2.0 Authorization Code flow.
+Use it when a person signs in to software you run: your website, a custom mobile app, an internal tool. For a script or a cron job that acts on nobody's behalf, use an [API token](/platform/api) instead. To let people sign in to Orgo with Google or Microsoft, you want [SSO Authentication](/platform/integrations), which points the other way.
 
 ---
 
-## Setting up an OAuth application
+## Registering an application
 
-**Developer** → **Apps** → **Create Application**
-
-<img src="/images/platform/developers/oauth-apps.png" alt="OAuth Apps management page showing configured applications" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+**Settings → Developers → OAuth Apps → Create App**. Requires **ADMIN_TENANT**.
 
 | Field | What to enter |
-|-------|-------------|
-| **Name** | What users see during authorization — "My Organization Website" |
-| **Description** | What the app does (for your reference) |
-| **Redirect URIs** | Where Orgo sends users after authorization — must match exactly |
-| **Scopes** | What the app requests on the consent screen |
-| **Act on behalf of members** | Leave on for an app that creates or changes data. Turn off for a reporting or analytics integration — see below |
+|---|---|
+| **Title** | The name members see on the consent screen |
+| **Redirect URL (including http(s))** | Where Orgo sends the member after they approve. Must match your authorization request exactly |
+| **Access level** | On: the app can act on the member's behalf (read and write). Off: read-only |
 
-After creating the app, you'll receive a **Client ID** and **Client Secret**. Store the secret securely — it's shown only once.
+On save, Orgo shows the **App ID** (your `client_id`) and the **App Secret** (your `client_secret`) once. Copy the secret then: it is not shown again. If it is lost, open the app and use **Generate new App Secret**, which invalidates the old one.
+
+Apps created here are confidential clients bound to your organization: only members of your organization can authorize them.
 
 <Note>
-Apps you create here are **confidential** clients. Developers can also self-register **public** clients against your tenant without admin involvement; those get no secret and are limited to the same member-level access. See [Authentication](/api-reference/concepts/authentication) for that path.
+A developer can also self-register a **public** client against your tenant, without an administrator, through the standard dynamic-registration endpoint. Those clients get no secret and are authenticated by PKCE alone. Registration is throttled to 10 clients per hour per IP address. See [Authentication](/api-reference/concepts/authentication).
 </Note>
 
 ---
 
-## Read-only or acting on behalf
+## What an app you register can never do
 
-Every app is either read-only or permitted to act on the member's behalf. New apps can act by default.
+A token issued to an app registered on this page is capped at **member level**, whoever authorizes it. If an administrator connects the app, it still cannot perform administrative actions.
 
-A read-only app may use `GET`, `HEAD` and `OPTIONS` only. Anything else is rejected with `403` and the message *"This application has read-only access and may not act on your behalf."*
+This is deliberate and not configurable. An app you register holds a long-lived shared secret and runs unattended, so it must not be able to inherit an administrator's authority.
+
+<Note>
+Self-registered public clients are treated differently, and on purpose. They hold no secret, PKCE binds the code to the one browser that started the flow, and the token is short-lived and tied to the member who approved it. Such a client stands in for that member's own session, so it carries their own authority rather than a member-level cap. An interactive tool an administrator connects to their own account, an AI assistant for example, therefore works with that administrator's permissions.
+</Note>
+
+On top of that cap, a read-only app (**Access level** off) may use `GET`, `HEAD` and `OPTIONS` only. Anything else is rejected with `403` and *"This application has read-only access and may not act on your behalf."*
 
 <Warning>
-The limit is by **HTTP method, not intent**. A few endpoints perform a read via `POST` — a read-only app cannot call those either. If a partner reports being blocked on something that only reads data, this is usually why.
+The read-only limit is by **HTTP method, not intent**. A few endpoints perform a read over `POST`, and a read-only app cannot call those either. If a partner reports being blocked on something that only reads data, this is usually why.
 </Warning>
 
-Whichever setting applies is shown to the member on the consent screen before they approve.
+The consent screen tells the member which of the two applies, along with the app's name, the scopes requested and the redirect URI, before they approve.
 
 ---
 
-## What an app can never do
+## The flow
 
-A token issued to an app is capped to **member level**, no matter who authorizes it. If one of your administrators connects the app, it still cannot perform administrator actions.
+```
+1. Your app sends the member to /authorize with a PKCE challenge
+   ↓
+2. The member signs in to Orgo and approves (or denies)
+   ↓
+3. Orgo redirects back to your redirect URI with ?code=…&state=…
+   ↓
+4. Your server exchanges the code for tokens at /api/v1/oauth/token
+   ↓
+5. Your app calls the API with the access token
+```
 
-This is deliberate and not configurable. An app acts as a member, never as an administrator — so connecting a third-party app cannot escalate that party to admin access over your tenant.
+Standard OAuth 2.0 authorization code flow. **PKCE (S256) is required for every client**, including confidential ones, which send both their secret and the `code_verifier`.
 
----
-
-## OAuth endpoints
-
-Clients should read these from the discovery document at `/.well-known/oauth-authorization-server` rather than hardcoding them.
-
-| Endpoint | Purpose |
-|----------|---------|
-| `/authorize` | Where you send users to log in and approve |
-| `/api/v1/oauth/token` | Where your server exchanges the code for a token |
-| `/api/v1/oauth/userinfo` | Where your server retrieves the authenticated user's data |
-| `/api/v1/oauth/register` | Self-service registration for public clients |
-| `/api/v1/oauth/jwks.json` | Public keys for verifying token signatures |
-
-All of these live on your tenant's own host — `acme.orgo.space`, or your custom domain.
-
----
-
-Orgo includes a built-in OAuth documentation page that developers can reference when building integrations:
-
-<img src="/images/platform/developers/oauth-dev-docs.png" alt="Built-in OAuth developer documentation page" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
----
-
-## Implementation
-
-### Step 1: Redirect to authorization
-
-Send users to Orgo's authorization endpoint. PKCE is required — including for confidential apps like the ones you create here:
+### 1. Authorization request
 
 ```
 GET /authorize?
   response_type=code&
-  client_id=YOUR_CLIENT_ID&
+  client_id=YOUR_APP_ID&
   redirect_uri=YOUR_REDIRECT_URI&
   scope=profile email&
-  state=CSRF_TOKEN&
+  state=RANDOM_STATE&
   code_challenge=BASE64URL(SHA256(verifier))&
   code_challenge_method=S256
 ```
 
-### Step 2: Exchange code for token
-
-After the user authorizes, Orgo redirects to your URI with a code. Exchange it server-side:
+### 2. Code exchange
 
 ```
 POST /api/v1/oauth/token
 Content-Type: application/x-www-form-urlencoded
+Authorization: Basic base64(client_id:client_secret)
 
 grant_type=authorization_code&
 code=AUTHORIZATION_CODE&
-client_id=YOUR_CLIENT_ID&
-client_secret=YOUR_CLIENT_SECRET&
+client_id=YOUR_APP_ID&
 code_verifier=ORIGINAL_VERIFIER&
 redirect_uri=YOUR_REDIRECT_URI
 ```
 
-### Step 3: Get user info
+Send the secret either in the `Authorization: Basic` header or in the body, never both.
 
-Use the access token to retrieve the user's profile:
+### 3. Identify the member
 
 ```
 GET /api/v1/oauth/userinfo
 Authorization: Bearer ACCESS_TOKEN
 ```
 
-Response:
+Returns OIDC claims for the scopes granted: `sub` and `tenant_id` always, `name` / `given_name` / `family_name` / `picture` with `profile`, `email` and `email_verified` with `email`, `groups` and `roles` with those scopes. `GET /api/v1/me` returns the fuller Orgo profile.
 
-```json
-{
-  "sub": "user-uuid",
-  "name": "John Doe",
-  "email": "john@example.com",
-  "picture": "https://...",
-  "groups": ["main-group", "local-center"],
-  "roles": ["ROLE_USER"]
-}
+---
+
+## Lifetimes
+
+| Token | Lives | Notes |
+|---|---|---|
+| Authorization code | 10 minutes | Single use |
+| Access token | 1 hour | Bearer token for API calls |
+| Refresh token | 30 days | **Rotates**: each refresh returns a new one and invalidates the previous, so store the new value every time |
+
+An authorization session that is started and not completed expires after 30 minutes; the member simply restarts the flow.
+
+---
+
+## Endpoints and scopes
+
+Configure your client from the discovery document rather than hardcoding paths:
+
+```
+https://your-org.orgo.space/.well-known/oauth-authorization-server
 ```
 
----
+Everything lives on your organization's own host, including your custom domain. `/.well-known/openid-configuration` serves the same document, and public signing keys are at `/api/v1/oauth/jwks.json`.
 
-## Available scopes
+| Scope | Grants |
+|---|---|
+| `profile` | Name and profile picture |
+| `email` | Email address and whether it is confirmed |
+| `groups` | The member's local center |
+| `roles` | The token's effective roles |
 
-| Scope | What it grants access to |
-|-------|------------------------|
-| `profile` | Name, profile picture |
-| `email` | Email address |
-| `groups` | Group memberships |
-| `roles` | User roles and permissions |
-
-Request only the scopes your app needs — fewer scopes means less data exposure and a simpler consent screen for users.
+Request only what you need: fewer scopes means a simpler consent screen and less data leaving Orgo.
 
 ---
 
-## Common scenarios
+## Built-in developer page
+
+Orgo ships an OAuth reference inside the app at **Settings → Developers → OAuth Apps → OAuth documentation**, filled in with your own organization's host so developers can copy working URLs.
+
+<img src="/images/platform/developers/oauth-dev-docs.png" alt="In-app OAuth documentation page showing the authorization code flow with the organization's own domain in the example URLs" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Legacy token exchange
+
+The older `request-token-sso` / `verify-success-token-sso` handshake is **deprecated**. Existing integrations keep working and its responses now carry a `Deprecation` header, but new ones must use the OAuth 2.0 flow above. A removal date will be announced separately.
+
+---
+
+## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="I get 'invalid redirect URI' errors">
-    The redirect URI in your authorization request must exactly match one of the URIs registered in the OAuth app settings. Watch for trailing slashes, http vs https, and port numbers.
+  <Accordion title="invalid redirect URI">
+    The `redirect_uri` in your authorization request must match the one registered on the app exactly. Watch trailing slashes, http versus https, and port numbers.
   </Accordion>
 
-  <Accordion title="Access tokens are expiring">
-    Access tokens last one hour. Use the refresh token to get a new one without sending the member back through consent. Refresh tokens last 30 days and **rotate** — each refresh returns a new one and invalidates the previous, so the app must store the new value every time.
+  <Accordion title="401 invalid_client">
+    Wrong or missing App Secret, or a secret sent by two methods at once. Use either the Basic header or the body.
   </Accordion>
 
-  <Accordion title="Can I use this with a single-page app (SPA)?">
-    Yes. A SPA should self-register as a public client rather than using an app created here — it gets no Client Secret, and PKCE alone authenticates it. PKCE is mandatory for every client either way, so a confidential app sends both its secret and the `code_verifier`.
+  <Accordion title="400 invalid_grant">
+    The code was already used, it expired (10 minutes), or the `redirect_uri` differs from the one sent to `/authorize`.
   </Accordion>
 
-  <Accordion title="How do I map Orgo roles to permissions in my app?">
-    Use the `roles` scope to get the user's Orgo roles. In your app, map these roles to your permission system — e.g., Orgo `ADMIN_TENANT` → your app's admin role.
+  <Accordion title="429 at the token endpoint">
+    Too many failed secret attempts for that App ID: 10 within 5 minutes. Wait for `Retry-After`. A request with the correct secret is never throttled.
+  </Accordion>
+
+  <Accordion title="This application belongs to a different organization">
+    The member is signed in to another workspace than the one the app was created in. They must switch workspaces before approving.
+  </Accordion>
+
+  <Accordion title="Building a single-page app">
+    Self-register as a public client rather than using an app created here: no secret to leak, PKCE authenticates it.
   </Accordion>
 </AccordionGroup>
 
 <Warning>
-Never expose the Client Secret in client-side code (JavaScript, mobile apps). The secret must stay on your server. All token exchanges should happen server-to-server.
+Never ship the App Secret in browser or mobile code. Token exchanges belong on your server.
 </Warning>
 
 ---
 
 ## Related
 
-- [Integrations](/platform/integrations) — Connect third-party services to Orgo
-- [Members](/platform/users) — User data that OAuth provides access to
+- [API Access](/platform/api) - tokens for server-to-server access
+- [Authentication](/api-reference/concepts/authentication) - the full authentication reference
+- [Integrate OAuth login](/api-reference/recipes/integrate-oauth-login) - end-to-end walkthrough
+- [Integrations](/platform/integrations) - inbound SSO and third-party services
+- [Permissions](/platform/permissions) - what member level means in Orgo

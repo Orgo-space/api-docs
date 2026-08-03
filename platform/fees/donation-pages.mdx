@@ -1,180 +1,170 @@
 ---
 title: 'Donation Pages & Widgets'
-description: 'The public donation page, embeddable widgets, donor comments and goal tracking'
+description: 'The public donation page and its editor, donor messages, the donor wall, and embeddable donation widgets'
 "og:title": 'Donation Pages & Widgets | Orgo'
-"og:description": 'The public donation page, embeddable widgets, donor comments and goal tracking'
+"og:description": 'The public donation page and its editor, donor messages, the donor wall, and embeddable donation widgets'
 "twitter:title": 'Donation Pages & Widgets | Orgo'
-"twitter:description": 'The public donation page, embeddable widgets, donor comments and goal tracking'
+"twitter:description": 'The public donation page and its editor, donor messages, the donor wall, and embeddable donation widgets'
 ---
 
-Everything a donor sees. Configuring the campaign itself, including prices,
-currencies and how payments are tracked, is covered in
-[Donations](/platform/fees/donations).
+Everything a donor sees. Setting up the campaign itself, its suggested amounts, currencies and payment tracking is covered in [Donations](/platform/fees/donations).
+
+<img src="/images/platform/fees/donation-public-page.png" alt="Public donation page with hero image, progress bar toward the campaign goal, campaign story, and the donation form with suggested amounts" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Landing page
+## Page addresses
 
-The **Landing page** tab controls how your public donation page looks and feels. A live preview updates as you make changes.
+Campaigns live at `https://<your payment host>/pay/<slug>`. The slug is generated from the campaign title and editable on the campaign form; without one the page falls back to `/pay/i/<campaign id>`.
 
-<img src="/images/platform/fees/donation-landing-page-tab.png" alt="Landing page configuration with hero media upload, YouTube video URL field, appearance settings for logo and title display, color pickers, and live preview showing the public donation page" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+Your **default donation product** also answers on the short paths `/donate`, `/doneaza` and `/presedinte`. Pick which campaign that is under **Settings → Online Payments → Donation Product**; the first donation campaign you create claims it automatically.
+
+**Copy link** on the campaign header publishes the landing page and copies a short URL, `https://<your app host>/share/product/<code>`, which the in-page **Share** button and the social preview also use.
+
+The page needs no login to give, and no publish step beyond saving.
+
+---
+
+## The landing page editor
+
+The **Landing page** tab edits the public page against a live preview you can flip between mobile and desktop framing. Nothing applies until **Save**.
+
+<img src="/images/platform/fees/donation-landing-page-tab.png" alt="Landing page tab with hero media image and video tabs, appearance controls, campaign content editor, and a live preview of the public page" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ### Hero media
 
-| Setting | What it does |
-|---------|-------------|
-| **Hero image** | Upload a campaign photo — displayed full-width at the top of the donation page |
-| **Hero video** | Paste a YouTube URL to embed a video above the donation form |
+**Image** uploads a campaign photo, shown full width at the top. **Video** takes a YouTube URL and embeds the player in the hero slot instead.
 
 ### Appearance
 
 | Setting | What it controls |
 |---------|-----------------|
-| **Display organization logo** | Show/hide your org logo at the top of the page |
-| **Display title** | Show/hide the campaign name |
-| **Selection color** | Accent color for selected amounts and interactive elements |
-| **Button color** | Color of the donate button |
-| **Light theme only** | Force light mode regardless of visitor's device settings |
+| **Logo header bar** | Your organization logo above the page. Separate desktop and mobile switches |
+| **Title** | The campaign name printed on the page. Separate desktop and mobile switches |
+| **Primary color** | Accent for the donate button, progress bar and selected amounts: a hex value or one of nine presets (Forest, Green, Teal, Blue, Navy, Purple, Burgundy, Slate, Red) |
+| **Hero border radius** | Hero image corner rounding: 0, 8, 14 or 24 pixels. Desktop only |
 
-### Campaign content
+### Content
 
-Write a compelling description explaining what the money funds and why it matters. The description supports rich text and appears below the hero section. You can also set a custom **thank you message** shown after a successful donation.
+**Description** is the campaign story, in a rich text editor. It sits under **About this campaign** when the campaign has a goal, under the title when it does not, and truncates behind a **Show more** control.
 
-<Tip>
-  Use the live preview on the right to see exactly how donors will experience the page. Every change you make updates the preview in real time.
-</Tip>
+**Thank you message** overrides the default confirmation text shown after a successful donation. The editor prints the default underneath so you can see what you are replacing.
+
+### Social share preview
+
+Upload the image used when the link is pasted into a chat or posted socially. The editor previews the card with your payment host and campaign name. Recommended size is 1200 x 630 pixels, under 1 MB.
 
 ---
 
-## The public donation page
+## What a donor sees
 
-Each campaign gets a shareable URL. Enable **External** visibility to let anyone donate — no login required.
+- Hero image or video, the campaign title and, with a goal set, a progress bar reading "X raised of Y goal", the donation count, and either the target date or the completion percentage. On mobile that becomes a progress ring.
+- The campaign story.
+- **Words of support** from other donors, if messages are enabled.
+- The donation form: a **Give once / Monthly** toggle when both frequencies are enabled, suggested amount buttons, a custom amount field, **Cover the processing fee** with the amount spelled out, and a **Designate to** dropdown when the campaign has options or a chapter picker.
+- Name, email, optional phone, a full address when **Require full address** is on, and optional checkboxes to leave a message, stay confidential, subscribe to the newsletter, or create an account.
+- The donor wall and a **Share** button in the sidebar.
+- Stripe takes payment inline. The donor then sees your thank-you message, a share prompt, and gets a thank-you email.
 
-The public page combines everything you've configured:
-
-- **Hero image or video** at the top
-- **Progress bar** showing amount raised vs. goal
-- **Donation count** and total raised
-- **Campaign description** with your story
-- **Price tier buttons** for quick selection
-- **Custom amount** input (if enabled)
-- **One-time or monthly** toggle
-- **Donor comments** section (if enabled)
-- **Recent and top donors** (if enabled)
-- **Payment form** powered by Stripe
-
-### Donor experience
-
-1. Donor opens the campaign link
-2. Selects a preset amount or enters a custom one
-3. Chooses one-time or monthly
-4. Enters name, email, and optionally a message
-5. Pays via Stripe (cards, Apple Pay, Google Pay, bank transfers)
-6. Sees your custom thank-you message
-7. Receives a confirmation email
+<Warning>
+  A campaign that is archived still loads, but the form is replaced with a notice that payments are disabled. Archive rather than delete: a campaign with any payment on it cannot be deleted.
+</Warning>
 
 ### Confidentiality
 
-Enable **confidentiality** to let donors give anonymously. Their name won't appear on the public donor list — it shows as "Anonymous" instead.
-
-### Local center selection
-
-Enable **local center option** to let donors choose which branch or chapter receives their gift. This is useful for federated organizations where donors want to support their local unit.
+**Enable payment confidentiality** gives the donor a checkbox that keeps their name off the public page. The gift still counts toward the goal and the donation count, but the donor wall and their message show "anonymous". With **Confidentiality Agreement Mandatory** on, the donor must accept the confidentiality notice before the donate button unlocks.
 
 ---
 
-## Donor comments (words of support)
+## Donor messages
 
-When the **comment section** is enabled, donors can leave a message with their gift. These messages create powerful social proof on your public page.
+With **Messages of support from donors** enabled, a donor can attach a message to their gift. Approved ones appear in **Words of support** on the public page, 30 at a time, newest first, names shortened to a first name and a surname initial, or "anonymous" for confidential gifts.
 
-<img src="/images/platform/fees/donation-comments.png" alt="Donor comments management showing a list of approved messages with donor names, amounts, dates, and comment text like 'Matching gift from Johnson & Associates. Investing in youth!' and 'Thank you for making the world a better place.'" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/fees/donation-comments.png" alt="Donor message moderation list with filters for name, message text and status, and rows showing donor, amount, message and a delete action" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-### Moderation workflow
+<Note>
+  Messages are published immediately, not held for review. A message attached to a payment that is successful or on hold is stored as **approved**, so moderation is after the fact: you review the list and take down anything you do not want. There is no pending queue to work through.
+</Note>
 
-All donor comments go through moderation before appearing publicly:
+Moderation lives on the campaign under **Comments**. Filter by donor name, message text or status (approved, rejected), and press **Refresh** to pull new ones. **Delete** rejects a message and pulls it off the public page; **Approve** appears on anything previously rejected and puts it back. Both need FINANCIAL_LOCAL on the campaign.
 
-| Status | What it means |
-|--------|-------------|
-| **Pending** | New comment waiting for review |
-| **Approved** | Visible on the public donation page |
-| **Rejected** | Hidden from public view |
+---
 
-Filter comments by status and use the **Refresh** button to check for new ones. Approved comments appear on the public page with the donor's name (or "Anonymous") and their message.
+## The donor wall
+
+**Display top 50 recent donations** adds a live panel to the page sidebar: the running count, the five most recent gifts with initial, amount and relative date, and a "N persons just made a donation" flash when several arrive at once. **See all** opens a paginated list of every donation, 50 at a time; **See top** opens the largest gifts. Confidential donors show as "anonymous" throughout.
+
+<img src="/images/platform/fees/donation-public-page-donors.png" alt="Public donation page sidebar showing the recent donations panel with donor initials, amounts and relative dates, plus See all and See top buttons" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
 ## Donation widgets
 
-Embed donation forms directly on your website or any external page. The **Widgets** tab lets you create and manage embeddable donation widgets.
+Widgets put the donation form on a website you already run. The **Widgets** tab creates and manages them; each carries its own configuration and statistics. Create one by choosing its type and giving it a name and a title.
 
-<img src="/images/platform/fees/donation-widgets-tab.png" alt="Widgets tab showing two donation widgets — 'Donation Page' (Embed type, 15 total donations, $11,325) and 'Quick Donate' (Popup type, 15 total donations, $12,325) — each with one-time and recurring breakdowns" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
-### Widget types
+<img src="/images/platform/fees/donation-widgets-tab.png" alt="Widgets tab showing two donation widget cards, one embed and one popup, each with its widget ID and total, one-time and recurring donation counts" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 <CardGroup cols={2}>
   <Card title="Embed" icon="code">
-    A full donation form that renders inline on your page. Visitors fill out the form without leaving your website.
+    A full donation form rendered inline in a container you place on your page.
   </Card>
   <Card title="Popup" icon="window-maximize">
-    A floating button that opens a donation modal on click. Less intrusive — ideal for sidebars, footers, or blog posts.
+    A floating button that opens the donation form in an overlay. Good for sidebars, footers, and blog posts.
   </Card>
 </CardGroup>
 
-### Widget configuration
+### Configuration
 
-Each widget has its own set of options:
+**Configure Widget** opens a full-screen editor with a live preview, grouped as follows.
 
-| Setting | What it controls |
-|---------|-----------------|
-| **Preset amounts** | Quick-select amounts for one-time and monthly (e.g., $5, $10, $25, $50) |
-| **Default donation type** | Pre-select "once" or "monthly" |
-| **Button text & colors** | Customize the CTA button appearance |
-| **Primary / background / text colors** | Full color theming |
-| **Position** | For popup widgets: bottom-right, bottom-left, top-right, or top-left |
-| **Language** | Widget language (English, German, French, Spanish, Italian, Romanian) |
-| **Show monthly upsell** | Prompt one-time donors to consider monthly giving |
-| **Require address** | Collect full address from donors |
+| Group | What it holds |
+|-------|--------------|
+| **Basic Information** | Widget title, description, hero image |
+| **Button Appearance** (popup) | Button text, button color, position: bottom right, bottom left, top right, top left |
+| **Embed Appearance** (embed) | Primary, background, text, button text, unselected button and CTA colors, border radius |
+| **Content Settings** | Show title, subtitle, link text and link URL (validated as a real http or https address) |
+| **Donation Settings** | Default currency (13 options), widget language (Romanian, English, German, French, Spanish, Italian), default donation type (one-time or monthly), show monthly upsell, require address details, preset amounts for one-time and for monthly, initial suggested amount |
+| **Button Text Customization** | Overrides for the monthly, one-time, continue, payment and donate button labels, and for the details, payment, success and thank-you headings |
 
-### Widget analytics
+Leave a text override empty and the widget uses the translation for its configured language.
 
-Each widget tracks its own performance:
-- **Total** donations and revenue
-- **One-time** donations and revenue
-- **Recurring** subscriptions and revenue
+<img src="/images/platform/fees/donation-widget-configuration.png" alt="Donation widget configuration screen with basic information, appearance and donation settings on the left and a live widget preview on the right" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-This lets you compare which widget placement drives the most donations.
+### Embedding
 
-### Embedding on your site
+**Copy Embed Code** gives a ready-to-paste snippet: a popup widget is one script tag carrying the widget id; an embed widget is a container div carrying the widget id and the color settings, plus the script tag. Both load from Orgo's CDN and handle the whole flow through to the Stripe payment.
 
-Click **Configure Widget** to get the embed code. Paste it into your website's HTML — the widget handles everything from amount selection to Stripe checkout.
+<Warning>
+  The widget id is public by design and the widget config endpoint is open, so anyone with the id can render your donation form. Delete a widget you no longer want live rather than just removing the snippet from your page.
+</Warning>
+
+### Widget statistics
+
+Each widget card reports **Total**, **One-time** and **Recurring** donation counts with the amounts behind them, so you can compare placements. The campaign's **Stats** tab also splits views and donations between widget traffic and the public page.
 
 ---
 
 ## Goal tracking
 
-Set a fundraising target and donors see a live progress bar on the public page.
-
 | Setting | What it does |
 |---------|-------------|
-| **Total goal** | Target for cumulative one-time donations |
+| **Total goal** | Target for cumulative one-off donations |
 | **Monthly goal** | Target for recurring monthly revenue |
-| **Goal value** | The dollar amount to reach |
+| **Goal value** | The amount to reach, in your organization's currency |
+| **Target date** | Optional deadline, printed under the progress bar in place of the percentage |
 
-The progress bar shows:
-- Amount raised vs. goal (e.g., "$23,650 of $35,000")
-- Number of donations
-- Percentage complete with visual fill
-
-When you hit 100%, the bar fills completely — but donations don't stop. Donors can still give beyond the goal.
+The bar fills to the share of the goal raised and caps its display at 100%. Passing the goal does not stop donations.
 
 <Tip>
-  Set a realistic goal you can achieve. An 80%-funded campaign creates urgency ("almost there!"). A 5%-funded campaign feels discouraging. If you exceed your goal, celebrate publicly and consider a stretch goal.
+  Goals are not available on multi-currency campaigns, since there is no single number to total toward.
 </Tip>
 
----
 ---
 
 ## Related
 
-- [Donations](/platform/fees/donations) — creating a campaign, prices, tracking
-- [Products](/platform/fees/products)
+- [Donations](/platform/fees/donations) - creating a campaign, prices, payments, refunds
+- [Products](/platform/fees/products) - product types and pricing
+- [Stripe Integration](/platform/fees/stripe-integration) - connecting payment processing
+- [Newsletter widgets](/platform/newsletter-widgets) - the same widget system for email signups
+- [Permissions](/platform/permissions) - who can edit campaigns and moderate messages

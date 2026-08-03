@@ -1,195 +1,198 @@
 ---
 title: 'Newsletter'
-description: 'Send email campaigns to your members with segmentation, templates, and analytics'
+description: 'Send email campaigns to members and contacts, with audience targeting, scheduling, and delivery reporting'
 "og:title": 'Newsletter | Orgo'
-"og:description": 'Send email campaigns to your members with segmentation, templates, and analytics'
+"og:description": 'Send email campaigns to members and contacts, with audience targeting, scheduling, and delivery reporting'
 "twitter:title": 'Newsletter | Orgo'
-"twitter:description": 'Send email campaigns to your members with segmentation, templates, and analytics'
+"twitter:description": 'Send email campaigns to members and contacts, with audience targeting, scheduling, and delivery reporting'
 ---
 
-Orgo Newsletter is an email campaign module within Orgo that lets organizations send segmented, templated email communications to members.
+Newsletter is Orgo's email campaign tool. You pick who receives the email from
+the data already in the platform (members, contacts, a group, a list, the
+attendees of an event), design it, then send or schedule it.
 
-**Built for** membership organizations that need segmented communication across branches and roles, such as youth organizations, professional associations, alumni networks, and faith communities, and more broadly any group managing multi-branch or multi-role member communication.
+**Built for** membership organizations that need to reach a specific slice of
+their people, not a generic mailing list: one local center, one role group, the
+people registered for one event.
 
-**Replaces** Mailchimp or Constant Contact for member email campaigns, segmentation, and templates, not for advanced marketing automation or A/B testing, which aren't part of this module.
+**Replaces** Mailchimp or Constant Contact for member communication. It has no
+marketing automation and no A/B testing.
 
-Newsletter campaigns can include announcements, monthly updates, event promotions, or anything else you want in their inbox. Segment by Local Center, user type, or role so the right people get the right message.
-
-<img src="/images/platform/communication/newsletter-list.png" alt="Newsletter campaigns list" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
----
-
-## Setting up newsletters
-
-**Settings** → **Modules** → enable **Newsletter**
-
-Email sending uses AWS SES (configured as part of your Orgo cloud setup — no additional setup needed).
+<img src="/images/platform/communication/newsletter-list.png" alt="Email campaigns page with four summary tiles, a status filter, and a table of campaigns showing recipients, open and click rates" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Creating a campaign
+## Turning it on and who can use it
 
-**Newsletter** → **Create Campaign**
+**Settings** → **Modules** → **Emails & Notifications** → **Enable Email
+Campaign Module**. The same page holds the **Default Newsletter Widget UUID**
+used by [signup widgets](/platform/newsletter-widgets).
 
-Start by picking a template — Blank, Daily News, Event Info, or one of your saved designs. Then fill out the campaign details.
+| Permission | What it allows |
+|---|---|
+| `COMMUNICATION_TENANT` | Create, send, and report on any campaign in the organization |
+| `COMMUNICATION_LOCAL` | The same, but only for the local centers you manage and only the **Members from a group** audience. Tenant-wide and event audiences are hidden, recipient counts are refused unless capped to a center you manage, and the send is capped again to that center |
+| `EVENT_TENANT` | Campaigns attached to an event ("event messages") |
+| `ADMIN_TENANT` | Sees every campaign |
 
-<img src="/images/platform/communication/newsletter-create.png" alt="New Campaign creation flow showing template selection carousel and campaign form with title, subject, and audience targeting" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+The module adds a **COMMUNICATION** sidebar section: **Email campaigns**
+(`COMMUNICATION_LOCAL`), **Campaign templates**, **Lists & Segments**,
+**Newsletter subscription** (all `COMMUNICATION_TENANT`), and **Email Log**
+(`ADMIN_TENANT`).
+
+---
+
+## Building a campaign
+
+Three steps: **Configuration**, **Design content**, **Preview & send**.
 
 <Steps>
-  <Step title="Pick a template">
-    Choose a starting design from your template library. Start from scratch with Blank, or use a pre-built layout.
+  <Step title="Fill in the campaign details">
+    **Campaign title** is internal, **Email subject** is what recipients see.
+    **Sender name** defaults to your organization's short name and **Reply-to
+    email** to its contact email; override either per campaign.
   </Step>
-  <Step title="Set up the campaign">
-    Add a campaign title (internal), email subject (what recipients see), and select your audience. The sidebar gives you quick access to Campaign details, Content editor, Settings, Send, and Schedule.
+  <Step title="Choose the audience and a template">
+    Pick a recipient option below (its recipient count appears next to it), then
+    start from Blank or from a saved template.
   </Step>
-  <Step title="Build the email">
-    Use the drag-and-drop editor to design your email with text, images, buttons, dividers, and social links.
-  </Step>
-  <Step title="Preview and test">
-    Send a test email to yourself to verify formatting, links, and personalization before sending to everyone.
-  </Step>
-  <Step title="Send or schedule">
-    Send immediately or schedule for a specific date/time.
+  <Step title="Design, test, send">
+    Build it in the [editor](/platform/newsletter-builder), check it with
+    **Send test to your email** against your own data, then **Send** or use the
+    **Schedule** tab.
   </Step>
 </Steps>
 
-<img src="/images/platform/communication/newsletter-edit.png" alt="Campaign editor showing title, email subject, audience targeting with 5 options (All members, Members from a group, All contacts, List, Event attendees), and sidebar navigation" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+After the first save the campaign opens as tabs: **Configure**, **Content** and
+**Schedule** while it is a draft, then **Report** and **Sent message** once it
+has gone out. Content auto-saves in the editor.
+
+<img src="/images/platform/communication/newsletter-edit.png" alt="Campaign Configure tab showing campaign title, subject, sender name, reply-to, and the five recipient options with live recipient counts" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## The email editor
+## Audiences
 
-The drag-and-drop editor lets you build professional emails visually. The left sidebar shows placeholders and actions, the center is your email canvas, and the right panel has content blocks you can drag in.
+| Option | Who it resolves to |
+|---|---|
+| **All members and contacts** | Every subscribed member plus every subscribed contact. Gains a local center dropdown when local centers are enabled, which narrows the send to one center |
+| **Members from a group** | The members of one group, role group, or local center. Leaving the group empty sends to all members |
+| **All subscribed contacts** | Contacts only, no members. Gains the same local center dropdown when contacts are assigned to local centers |
+| **From a list** | A [user list](/platform/users/lists), static or dynamic |
+| **Event attendees** | The people registered for one event, members and external registrants |
 
-<img src="/images/platform/communication/newsletter-builder.png" alt="Newsletter email builder showing drag-and-drop editor with USSF Summer Camp 2026 email, content blocks panel on right (Columns, Button, Divider, Heading, Paragraph, Image), and placeholders sidebar on left" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+A member is included when the account is active, has an email address and has
+newsletter email on in their notification settings; a contact when it has an
+email address and is marked newsletter subscribed. Nothing else filters:
+previously bounced addresses are not removed automatically, so clean those up
+from the report.
 
-Available content blocks:
+<Note>
+New members inherit the **Newsletter Notifications** default from **Settings** →
+**Modules** → **Emails & Notifications** at the moment their account is created.
+Changing that default later does not touch anyone who already exists.
+</Note>
 
-| Block | What it does |
-|-------|-------------|
-| **Text** | Rich text content with formatting |
-| **Image** | Photos, graphics, logos |
-| **Button** | Call-to-action buttons (register, donate, read more) |
-| **Divider** | Visual separators between sections |
-| **Spacer** | Empty space for layout |
-| **Social** | Social media icon links |
+Two ways to reuse a campaign:
 
-### Personalization
-
-Insert dynamic fields that resolve to each recipient's data:
-
-| Variable | Output |
-|----------|--------|
-| `{firstName}` | Member's first name |
-| `{fullName}` | Member's full name |
-| `{userCompanyName}` | Member's company name |
-| `{eventTitle}` | Event title (for event-related campaigns) |
-| `{eventDateBegin}` | Event start date and time |
-| `{eventLocation}` | Event location |
-| `{eventRegisterUrl}` | Event registration link |
-| `{unsubscribeUrl}` | Unsubscribe link |
-| `{preferencesUrl}` | Email preferences link |
-
-### Templates
-
-Save any email design as a template for reuse. Organize templates by purpose: Announcements, Event Promotions, Monthly Updates, Welcome Emails.
-
-<img src="/images/platform/communication/newsletter-templates.png" alt="Email templates page showing 4 templates (Blank, Daily News, Event info, Newsletter Short) with preview thumbnails and Create button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+- **Follow up with non-openers** (count in the button) creates a draft named
+  "Follow-up: ..." locked to people who received the original but never opened
+  it, minus anyone who bounced, complained, or unsubscribed. The set is
+  recalculated at send time, so late openers drop out; if nobody is left, Orgo
+  refuses both the copy and the send.
+- **Duplicate campaign** creates a draft named "Copy ..." keeping the content,
+  the subject, and the audience.
 
 ---
 
-## Audience segmentation
+## Sending and scheduling
 
-| Segment | Use when |
-|---------|---------|
-| **All members** | Org-wide announcements everyone should see |
-| **Local Center** | News relevant to one branch |
-| **User type** | Content specific to leaders, volunteers, youth, etc. |
-| **Role** | Communication to board members, financial admins, etc. |
-| **Custom filter** | Advanced criteria combining multiple attributes |
-
-Members who have unsubscribed or have bounced email addresses are automatically excluded.
-
----
-
-## Campaign analytics
-
-After sending, track performance:
-
-| Metric | What it tells you |
-|--------|------------------|
-| **Sent** | Total emails dispatched |
-| **Delivered** | Successfully reached inboxes |
-| **Opens** | How many people opened the email |
-| **Clicks** | How many clicked a link |
-| **Bounces** | Failed deliveries (invalid addresses) |
-| **Unsubscribes** | People who opted out from this campaign |
-
-Use open and click rates to understand what content resonates. Typical benchmarks: 20-30% open rate, 2-5% click rate for membership organizations.
+| Behaviour | Detail |
+|---|---|
+| Queue | Recipients are resolved in batches of 2,000 and each email is dispatched individually at roughly three per second per worker, so a large send arrives over minutes rather than all at once |
+| Resend guard | A campaign already **Sent** cannot be sent again, and a resend to the same recipient is skipped even if the queue retries |
+| Schedule window | At least 2 minutes in the future, on a 15-minute boundary (:00, :15, :30, :45), because the scheduler runs every 15 minutes |
+| Schedule fields | Date, time, and timezone (defaults to the organization timezone) |
+| Schedule failure | Retried, then marked **Failed** after three failures |
+| Statuses | **Draft**, **Scheduled**, **Sending**, **Sent**, **Stop**, **Failed** |
+| Sending to Sent | Automatic once delivery events stop arriving for 15 minutes, or after 2 hours at 95% or better delivery, with a hard cut-off at 24 hours |
 
 ---
 
-## Subscriber management
+## Reporting
 
-Members control their own email preferences:
-- Newsletter opt-in/opt-out from their profile settings
-- One-click unsubscribe link in every email footer (required for compliance)
-- Frequency preferences (if configured)
+The **Report** tab shows Sent, Opened, Clicks, Bounce, and Unsubscribed, the
+campaign details (subject, sender, reply-to, audience, author, sent date, public
+URL), and **Top links** with click counts per URL. **Export CSV** gives one row
+per recipient per recorded action (delivered, opened, clicked, bounced,
+complained, unsubscribed, rejected, failed) with name, email, and action.
 
-As an admin, you cannot override a member's unsubscribe — this is required by email regulations (GDPR, CAN-SPAM).
+<img src="/images/platform/communication/newsletter-show.png" alt="Campaign report with Sent, Opened, Clicks, Bounce and Unsubscribed tiles above a campaign details table and a top links panel" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+Numbers come from the mail provider's delivery events, not from the send:
+
+- **Sent** counts distinct recipients with a delivered or bounced event, so it
+  reflects what actually left the platform.
+- **Opened** and **Clicks** are unique per recipient, not per event. Open
+  tracking needs the mail client to load images, so real opens are undercounted.
+- Results are cached, refreshed when older than five minutes or when a newer
+  delivery event arrives, and frozen 30 days after the last event. **Refresh**
+  re-reads them on a sent campaign.
+- Values are capped so sent never exceeds the recipient count and opens and
+  clicks never exceed sent, so a figure can differ slightly from a raw event
+  count.
+
+Four tiles above the campaign list cover all sent campaigns: total campaigns,
+average open rate, average click rate, total recipients. The averages are
+weighted by recipients and clamped per campaign, so odd data cannot push them
+above 100%.
 
 ---
 
-## Common scenarios
+## Unsubscribes and public links
+
+Every campaign email carries one-click unsubscribe headers, so a member can opt
+out from their mail client without opening it. If your design has no unsubscribe
+placeholder, Orgo appends an unsubscribe link (and, for members, a link to their
+notification preferences) to the footer before sending. You cannot re-subscribe
+someone on their behalf.
+
+**Generate public link for this newsletter** publishes a browser-readable copy:
+copy a short share URL, upload a social preview image, and the campaign appears
+in the campaigns gallery (`/newsletter-gallery`), the in-app archive where
+members see sent campaigns addressed to them or to everyone.
+
+---
+
+## Common questions
 
 <AccordionGroup>
-  <Accordion title="Low open rates — emails might be going to spam">
-    Check that your sending domain has proper authentication set up (SPF, DKIM, DMARC). Avoid spam trigger words in subject lines. Send consistently — irregular sending patterns trigger spam filters. Ask members to add your sender address to their contacts.
+  <Accordion title="The recipient count changed between saving and sending">
+    The count is a live preview; the stored number is recalculated when you
+    press Send, so people who joined, left, or unsubscribed in between are
+    reflected.
   </Accordion>
 
-  <Accordion title="I want to send different content to different branches">
-    Use audience segmentation. Create one campaign per Local Center, or use the Local Center segment to send the same template with localized content. Personalization variables like `{firstName}` and `{fullName}` can tailor the greeting.
+  <Accordion title="A member says they never received it">
+    Check the account is active, has an email address, has newsletter email on
+    in their notification settings, and fell inside the audience. Then read the
+    [email log](/platform/emails/email-log) and the CSV export, which record
+    bounces and rejections per recipient.
   </Accordion>
 
-  <Accordion title="A member says they didn't receive the newsletter">
-    Check: (1) are they unsubscribed? (2) was the email bounced? (3) check their spam/junk folder. In the campaign analytics, search for their email to see the delivery status.
-  </Accordion>
-
-  <Accordion title="When should I use newsletter vs. discussion post?">
-    Use **newsletter** for one-way communication that should reach inboxes — announcements, updates, campaigns. Use **discussion posts** for conversations where you want replies, reactions, and interaction. Many organizations post the content in both: a discussion post for engagement and a newsletter for reach.
+  <Accordion title="Sending an email about one event">
+    Use **Event attendees**, or start from the event with **Send email for
+    participants**, which files the campaign under the event's own messages list
+    and unlocks the event placeholders.
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## "Our members say we send too many emails"
-
-Newsletters are not the only email leaving the platform. Members can also receive
-a **daily digest** and a **weekly digest** summarising activity in their groups
-and discussions. To a member, all of it is "email from you", so a complaint about
-volume is often about the digests rather than about your campaigns.
-
-Each member has their own daily and weekly digest setting.
-
-<Warning>
-Changing the organisation defaults does **not** change existing members. Defaults
-apply to people who join afterwards and to anyone who has never touched their own
-settings. Members already receiving a digest keep receiving it until they turn it
-off themselves.
-
-This is the single most common surprise in this area. If members are complaining
-today, changing the default will not stop it, and you will conclude the setting
-is broken when it is working as designed.
-</Warning>
-
-To reduce volume for people already complaining, either ask them to turn the
-digest off in their own notification settings, or turn it off on their behalf
-from their profile if you have the permissions to edit it.
-
----
-
 ## Related
 
-- [Notifications](/platform/notifications) — In-app and push notifications
-- [Discussions](/platform/discussion) — Forum-style communication
-- [Groups](/platform/groups) — Audience structure for segmentation
+- [Newsletter builder](/platform/newsletter-builder) for the editor, placeholders, and templates
+- [Signup widgets](/platform/newsletter-widgets) for collecting subscribers from your website
+- [Notifications](/platform/notifications) for the automatic messages members get
+- [User lists](/platform/users/lists) for building reusable audiences
+- [Contacts](/platform/contacts) for non-member recipients

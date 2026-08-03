@@ -7,260 +7,200 @@ description: 'Set up registration, manage members, and handle the complete membe
 "twitter:description": 'Set up registration, manage members, and handle the complete member lifecycle'
 ---
 
-Every organization on Orgo is built around its members. This guide helps you set up how people join, what information you collect, how you organize them, and what happens when they leave.
+Everything about the people in your organisation lives here: how they join, what
+you store about them, how you find them again, and what happens when they leave.
 
 ---
 
-## The member lifecycle
+## The member directory
 
-Every member goes through a journey in your organization. Understanding this lifecycle helps you decide which features to enable and how to configure them.
+**Members** in the sidebar (`/users`) lists everyone in your organisation.
+**Settings** → **Users & Profiles** → **Who Can See Members in General Groups**
+decides who sees it at all: All Users, HR Local, HR Tenant, Admin Local or Admin
+Tenant. At an admin level, ordinary members never see the directory.
 
-```
-DISCOVER → REGISTER → GET APPROVED → PARTICIPATE → DEPART
-```
+<img src="/images/platform/users/user-directory.png" alt="Member directory in table view with the filter bar, member rows and the CSV export button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-| Stage | What happens | Features involved |
-|-------|-------------|-------------------|
-| **Discover** | Someone learns about your organization and wants to join | [Invitations](/platform/users/invitations), [Referral Program](/platform/users/referral), [Waitlist](/platform/users/waitlist) |
-| **Register** | They fill out a form and create an account | [Registration Form](/platform/users/registration-form), [User Types](/platform/users/user-types) |
-| **Get approved** | Depending on your settings, they may need admin approval before they can participate | [Adhesion](/platform/users/adhesion), [User Statuses](/platform/users/statuses), [Identity Validation](/platform/identity-validation) |
-| **Participate** | They're an active member — they fill out their profile, take on roles, join events, connect with others | [Profile Fields](/platform/users/profile-fields), [User Types & Roles](/platform/users/user-types), [Custom Fields](/platform/users/custom-fields), [Privacy Settings](/platform/users/privacy-settings), [Family Members](/platform/users/family-members) |
-| **Depart** | They leave the organization, either voluntarily or by admin action | [Resignation](/platform/users/resignation), [Account Deletion](/platform/users/deletion-of-account), [User Statuses](/platform/users/statuses) |
+Three views share the same filters: the table, **Gallery** (photo cards) and
+**Map**, which plots members who have a town on their profile.
+
+### Filters
+
+The filter bar changes with your permissions and active modules. Only these
+filters exist:
+
+| Filter | What it matches | Shown when |
+|---|---|---|
+| **Name or Keyword** | Full name, profession headline, company, or role at that company | Always |
+| **Location** | Town of residence | Organisation-wide and role-group lists |
+| **Country** / **County** / **State** | Country for international organisations, county or state otherwise | Depends on the organisation country |
+| **Status** | One member status (see [User Statuses](/platform/users/statuses)) | HR_LOCAL on that local center, or HR_TENANT organisation-wide |
+| **Fee status** | Fee paid, Fee not paid, or Grace period | Fees module on and HR_TENANT |
+| **Fee type** | A specific membership fee price | Fees module on and HR_TENANT or FINANCIAL_TENANT |
+| **Card ID** | Partial match on the member card number | **Enable Card/Member IDs** is on |
+| **Profession** | Profession industry | Professions module with industries on |
+| Skills, interests, **Availability** | Values from those profile fields | The matching field is enabled |
+| User type | One user type | **Who Can Filter Users by Type** (All Users or Admin Tenant) allows you |
+| **Chapter** | Local center | The organisation has local centers |
+| **All members** / **Only full members** | Full membership | **Full Membership Status** is on |
+| **All permissions** | Members holding one or more permissions | ADMIN_TENANT only |
+
+<Note>
+**Grace period** only appears when the fee is mandatory, auto deactivation on
+expiry is on, and the deactivation delay is more than zero days. It finds members
+whose fee has expired but who are still inside that delay.
+</Note>
+
+The permission and user-type filters are enforced server side: asking without the
+required permission returns access denied, not an unfiltered list. A date-joined
+range (**From** / **Until**) exists in the mobile filter sheet only; the desktop
+bar has no equivalent.
+
+### Columns, sorting and row actions
+
+Sortable headers: name, user type, full member, age, card ID, town, country or
+county, chapter, fee date and status. Sorting applies to the whole result set,
+not just the current page.
+
+Columns are permission-gated rather than chosen:
+
+| Column | Requires |
+|---|---|
+| Email and phone (copy-to-clipboard icons), age | HR_ASSISTANT_LOCAL |
+| Fee | HR_LOCAL or FINANCIAL_LOCAL, fees module on |
+| Adhesion | HR_LOCAL, adhesion on |
+| Status | HR_LOCAL, and no status filter active |
+| **Groups** and one per [custom field](/platform/users/custom-fields), added from the table icon | HR_TENANT, or ADMIN_LOCAL on your own local center |
+
+Each row's menu holds **View Profile**, **Modify Profile** and **Modify Roles**
+(ADMIN_LOCAL and above), plus making or removing a unit admin inside a unit.
+Members pending approval (**New request**) or waitlisted get **Approve** and **Add
+to waiting list** shortcuts next to the name, and a **New requests (N)** button
+jumps to that queue. There is no multi-select: actions apply one member at a
+time.
+
+### Export and adding members
+
+The Excel icon exports the current filtered, sorted list as CSV. Exports are
+paged at 500 profiles: below that you confirm and download, above it you pick
+which page, so a large organisation needs several exports. Export needs
+HR_TENANT, or HR_LOCAL with a chapter selected, and each export is written to the
+audit log with the exact query used.
+
+**Register member** creates an account directly; it needs HR_TENANT, or HR_LOCAL
+for your own local center. The status comes from **Default Status for
+Admin-Created Users**, and with an email address supplied the member gets a
+welcome message with a login link. For many people at once, use
+[Import](/platform/customization/import).
 
 ---
 
-## What you see on a member's profile
+## The member profile
 
-Click any member to open their full profile. Tabs give you quick access to everything about that person:
+Clicking a name opens the profile in a modal you can expand to a full page
+(`/user/{id}`). Which tabs appear depends on modules, permissions and whether the
+profile is your own.
 
-<img src="/images/platform/users/user-profile-overview.png" alt="Member profile page showing user details, status, user type, age, local group, badges, permissions, roles, and social links" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/users/user-profile-overview.png" alt="Member profile showing status, user type, age, town, local group, member since, badges, permissions, resignation, identity, adhesion and roles" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-| Tab | What's there |
-|-----|-------------|
-| **Profile** | Personal details, status, user type, badges, permissions, roles, and social links |
-| **Fee** | Current fee level, payment periods, and fee history |
-| **Payments** | All payments made — membership fees, event tickets, donations — with status, amount, and period |
-| **e-Documents** | Generated contracts, certificates, and signed documents |
-| **Events** | Events the member attended or is registered for |
-| **Files** | Personal documents uploaded by the member |
-| **Referrals** | Members they've invited to the organization |
-| **Logs** | Audit trail — every admin action, profile update, and status change on this member |
+| Tab | What is there | Who sees it |
+|---|---|---|
+| **Profile** | Photo, status, user type, age, town, local group, member since, badges, permissions, roles, social links, resignation, identity and adhesion shortcuts | Everyone who can see the profile |
+| **My Network** | Connection requests and accepted connections | Own profile, connections enabled |
+| **Fee** | Fee level, periods and history | Self, HR_LOCAL, FINANCIAL_LOCAL, or a parent managing the profile |
+| **Payments** | Every payment: fees, tickets, donations | Same as Fee, online payments enabled |
+| **e-Documents** | Contracts and documents assigned to the member | Self, HR_LOCAL, or a managing parent |
+| **Events** | Events attended or registered for | Per event-module visibility |
+| **Files** | The member's personal drive | Self and admins in scope |
+| **Referrals** | People they referred or invited | Referral or invitations enabled |
+| **Company** | The company they belong to | Own profile, companies module on |
+| **Logs** | Audit and email history | ADMIN_TENANT |
 
-<img src="/images/platform/users/user-profile-payments.png" alt="Payments tab showing all member payments with ID, status, product name, period, amount, date, and type columns" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/users/user-profile-logs.png" alt="Logs tab showing the audit log with date, action and author, and the email log sub-tab" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-<img src="/images/platform/users/user-profile-events.png" alt="Events tab showing event cards the member attended or is registered for, with dates, images, and organizer info" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
-<img src="/images/platform/users/user-profile-logs.png" alt="Logs tab showing audit trail with ID, date, action type, and author for every change made to this member" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+The Logs tab has two sub-tabs. **Audit Logs** records every change with the date,
+the action, who made it, and an expandable before-and-after view of each field.
+**Email Logs** shows what the platform sent this member and what happened to it:
+the fastest answer to "they say they never got it".
 
 ---
 
-## Setting up your organization
-
-If you're starting from scratch, follow this order. Each step builds on the previous one.
+## Setting up
 
 <Steps>
   <Step title="Design your registration form">
-    Decide what information new members provide when signing up. Start minimal — you can always collect more data later through profile fields.
-
-    Go to **Settings** → **Users & Profiles** → **Registration Form**.
-
-    [Set up registration →](/platform/users/registration-form)
+    Start minimal: you can collect more later.
+    [Registration form](/platform/users/registration-form)
   </Step>
-  <Step title="Create user types (if you need them)">
-    Do your members fall into categories? Scout vs Leader, Student vs Professional, Full Member vs Volunteer? If yes, create user types so members can identify themselves during registration and you can filter, communicate, and report by type.
-
-    Skip this if all your members are the same type.
-
-    [Create user types →](/platform/users/user-types)
+  <Step title="Create user types, if you need them">
+    Use these when members fall into categories that behave differently, such as
+    Scout and Leader. Each type can have its own registration form.
+    [User types](/platform/users/user-types)
   </Step>
-  <Step title="Set the default status for new members">
-    When someone registers, what should happen? Three options:
-    - **Active** (immediate access — best for open communities)
-    - **Unapproved** (admin must approve each registration — best for controlled membership)
-    - **Inactive** (registered but not yet participating — for pre-launch)
-
-    Go to **Settings** → **Users & Profiles** → **Configuration** → **Status After Register**.
-
-    [Understand statuses →](/platform/users/statuses)
+  <Step title="Decide whether signups need approval">
+    Turn on **Manual Approval** to review each one from the directory.
+    [Statuses](/platform/users/statuses)
   </Step>
-  <Step title="Configure profile fields">
-    Choose what additional information members can add to their profiles after registration. Mark important fields as required — members will be prompted to fill them on their next login.
-
-    [Configure profiles →](/platform/users/profile-fields)
+  <Step title="Configure profile and custom fields">
+    [Profile fields](/platform/users/profile-fields) ·
+    [Custom fields](/platform/users/custom-fields)
   </Step>
   <Step title="Set privacy defaults">
-    Decide what's visible to the community by default. Members can always restrict their own visibility further, but you set the starting point.
-
-    [Set privacy defaults →](/platform/users/privacy-settings)
+    Members can restrict themselves further, never less.
+    [Privacy settings](/platform/users/privacy-settings)
   </Step>
-  <Step title="Define roles and permissions">
-    Model your organizational structure. Create roles for positions (President, Treasurer, Team Leader) and attach permissions so the right people have the right access.
-
-    [Set up roles →](/platform/users/user-types)
-  </Step>
-  <Step title="Invite your first members">
-    Your organization is ready. Start inviting administrators first, then open up to members.
+  <Step title="Assign permissions before you open registration">
+    [Permissions](/platform/permissions)
   </Step>
 </Steps>
 
-![Users module configuration showing settings sections and sub-navigation](/images/platform/users/users-config-page.png)
+<img src="/images/platform/users/users-config-page.png" alt="Users and Profiles module configuration with the left sub-navigation and the User Types and Registration setting sections" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-The Users module configuration page is your starting point. It's organized into sections: registration settings, membership options, invitation controls, family settings, and profile configuration. Each section has toggles and dropdowns that control how the features described in this guide behave.
-
----
-
-## Do I need this feature?
-
-Not every organization needs every feature. Here's how to decide what to enable.
-
-### Controlling who joins
-
-| Your situation | Enable | Why |
-|---------------|--------|-----|
-| Anyone can join, no approval needed | Just the registration form | Simplest setup. Members register and are immediately active. |
-| You want to review each applicant | [Adhesion](/platform/users/adhesion) | Members submit an application. Admins approve, return for revision, or reject. |
-| You have limited capacity | [Waitlist](/platform/users/waitlist) | When registration is closed or full, interested people queue up. You invite from the waitlist when spots open. |
-| Membership is invite-only | [Referral](/platform/users/referral) + [Invitations](/platform/users/invitations) | Only existing members can bring in new people. Set "referrals needed for signup" to 1. |
-| You need to verify identities | [Identity Validation](/platform/identity-validation) | Members upload ID documents. OCR extracts data. Admins verify. |
-
-### Organizing members
-
-| Your situation | Enable | Why |
-|---------------|--------|-----|
-| Members fall into categories (Scout, Leader, Volunteer) | [User Types](/platform/users/user-types) | Categorize members for filtering, reporting, and per-type registration forms. |
-| You have organizational positions (President, Treasurer) | [User Types & Roles](/platform/users/user-types) | Define positions and optionally attach system permissions to them. |
-| You need data beyond standard profile fields | [Custom Fields](/platform/users/custom-fields) | Create fields like "Emergency Contact", "T-Shirt Size", or "License Number". |
-| You serve families with minors | [Family Members](/platform/users/family-members) | Link parent-child accounts, set age restrictions, enable parental controls. |
-
-### Handling departures
-
-| Your situation | Enable | Why |
-|---------------|--------|-----|
-| You want to track why people leave | [Resignation](/platform/users/resignation) | Members submit a reason. Admins review before processing. Helps identify retention issues. |
-| Members should be able to delete their data | [Account Deletion](/platform/users/deletion-of-account) | Supports GDPR right to erasure. If resignation is also enabled, members must resign first. |
-| Neither — you just deactivate people | [User Statuses](/platform/users/statuses) | Change their status to Inactive or Suspended. Their data stays, they just can't log in. |
+All of this lives under **Settings** → **Users & Profiles** and needs
+ADMIN_TENANT to edit. The left sub-navigation also holds Custom Fields, Tags,
+Roles & User types, the Registration, Profile and Adhesion forms, the Adhesion
+template, the Referral Program, the Registration Waitlist, Privacy Defaults and
+Security & Permissions.
 
 ---
 
-## Common scenarios
+## Choosing what to turn on
 
-### "I'm setting up a youth scouting organization"
-
-1. Create user types: Scout, Leader, Parent, Volunteer
-2. Enable **Family Members** with age restrictions (min registration age: 13, auth restriction: 16)
-3. Set up per-type registration forms — Scouts need different fields than Leaders
-4. Enable **Adhesion** so you can review applications for leadership positions
-5. Set **Status After Register** to Active for Scouts, Unapproved for Leaders
-6. Create custom fields: "Unit Assignment", "Badges Earned", "Parent Contact"
-
-### "I'm running a professional association with 10,000 members"
-
-1. Create user types: Full Member, Associate, Student, Honorary
-2. Enable **Identity Validation** to verify professional credentials
-3. Enable **Adhesion** with interview tracking for membership applications
-5. Create custom fields: "License Number", "Specialization", "Years in Practice"
-6. Set privacy defaults to protect contact information (email, phone admin-only)
-
-### "I'm launching a small community — keep it simple"
-
-1. Use the default registration form with just name and email
-2. Set **Status After Register** to Active
-3. Skip user types, adhesion, and waitlist — you don't need them yet
-4. Enable **Invitations** so your first members can bring friends
-5. Add profile fields later as your community grows
-
----
-
-## Feature reference
-
-### Setup & Configuration
-
-<CardGroup cols={2}>
-  <Card title="Registration Form" icon="user-plus" href="/platform/users/registration-form">
-    Design what new members fill out when joining. Per-type forms, iframe embedding, required fields.
-  </Card>
-  <Card title="Profile Fields" icon="id-card" href="/platform/users/profile-fields">
-    Configure post-registration profile data. Required fields trigger a splash screen on login.
-  </Card>
-  <Card title="User Types & Roles" icon="users" href="/platform/users/user-types">
-    Categorize members by type and model your organizational structure with positions and permissions.
-  </Card>
-  <Card title="Custom Fields" icon="input-text" href="/platform/users/custom-fields">
-    Organization-specific data: Emergency Contact, License Number, T-Shirt Size.
-  </Card>
-  <Card title="Privacy Settings" icon="eye-slash" href="/platform/users/privacy-settings">
-    Control who sees what. Admin defaults + member overrides.
-  </Card>
-</CardGroup>
-
-### Joining & Growth
-
-<CardGroup cols={2}>
-  <Card title="Adhesion (Applications)" icon="file-signature" href="/platform/users/adhesion">
-    Formal membership applications with admin approval, draft returns, and rejection.
-  </Card>
-  <Card title="Waitlist" icon="clock" href="/platform/users/waitlist">
-    Queue interested people when membership is full. Invite from the waitlist when ready.
-  </Card>
-  <Card title="Invitations" icon="envelope-open-text" href="/platform/users/invitations">
-    Let members invite others by email. Track who brought who.
-  </Card>
-  <Card title="Referral Program" icon="share-nodes" href="/platform/users/referral">
-    Track referral sources. Enable invite-only mode for exclusive communities.
-  </Card>
-</CardGroup>
-
-### Member Management
-
-<CardGroup cols={2}>
-  <Card title="User Statuses" icon="toggle-on" href="/platform/users/statuses">
-    Active, Inactive, Suspended, Unapproved — control access and track lifecycle.
-  </Card>
-  <Card title="Family Members" icon="people-roof" href="/platform/users/family-members">
-    Link parent-child accounts, age restrictions, parental controls.
-  </Card>
-  <Card title="Identity Validation" icon="id-badge" href="/platform/identity-validation">
-    Document upload, OCR extraction, admin verification.
-  </Card>
-</CardGroup>
-
-### Departures
-
-<CardGroup cols={2}>
-  <Card title="Resignation" icon="right-from-bracket" href="/platform/users/resignation">
-    Formal departure with mandatory reason, admin approval, and retention tracking.
-  </Card>
-  <Card title="Account Deletion" icon="trash-can" href="/platform/users/deletion-of-account">
-    Permanent removal for GDPR compliance. Irreversible.
-  </Card>
-</CardGroup>
+| If you want to | Turn on |
+|---|---|
+| Review every application before admitting people | [Adhesion](/platform/users/adhesion) |
+| Queue people when membership is full or closed | [Waitlist](/platform/users/waitlist) |
+| Let members bring in others | [Invitations](/platform/users/invitations) and [Referral](/platform/users/referral) |
+| Verify who someone is | [Identity Validation](/platform/identity-validation) |
+| Support families with children | [Family Members](/platform/users/family-members) |
+| Track why people leave | [Resignation](/platform/users/resignation) |
+| Support the GDPR right to erasure | [Account Deletion](/platform/users/deletion-of-account) |
+| Clean up duplicate records | [Merging duplicates](/platform/users/merging-duplicates) |
 
 ---
 
 ## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="A member says they can't log in">
-    Full elimination sequence: [Troubleshooting Member Access & Fees](/platform/users/troubleshooting-access). In short, check their **status**. If it's Inactive, Suspended, or Unapproved, they can't access the platform. Go to their profile → Edit → Permissions tab → check the Status dropdown. See [User Statuses](/platform/users/statuses).
+  <Accordion title="A member cannot log in">
+    Start with their status: Inactive, Suspended, New request (still awaiting
+    approval) and Unconfirmed email all block access. Full elimination sequence in
+    [Troubleshooting member access](/platform/users/troubleshooting-access).
   </Accordion>
 
-  <Accordion title="A new member registered but can't see anything">
-    Check **Status After Register** in Settings → Users & Profiles → Configuration. If it's set to Unapproved, someone needs to manually approve them. Also check if **Adhesion** is enabled and mandatory — if so, they need to complete and get approved for their application first.
-  </Accordion>
-
-  <Accordion title="A member wants to leave the organization">
-    If **Resignation** is enabled, they go to Profile → Settings & Privacy → Close account → Resign. An admin must approve the request. If resignation is not enabled, they can directly delete their account (if enabled) or ask an admin to set their status to Inactive.
-  </Accordion>
-
-  <Accordion title="I need to collect new information from existing members">
-    Add the field to [Profile Fields](/platform/users/profile-fields) and mark it as **required**. Next time each member logs in, they'll see a splash screen prompting them to fill it out. They can't skip it.
-  </Accordion>
-
-  <Accordion title="I want different registration forms for different member types">
-    Create [User Types](/platform/users/user-types) first, then go to **Settings** → **Users & Profiles** → **Registration Form**. Each user type gets its own form where you can enable different fields.
-  </Accordion>
-
-  <Accordion title="Members are seeing too much of each other's data">
-    Go to Settings → Users & Profiles → [Privacy Defaults](/platform/users/privacy-settings) and set sensitive fields (email, phone) to admin-only. Members can also restrict their own profiles under Settings & Privacy → Privacy.
+  <Accordion title="I need new information from existing members">
+    Add the field in [Profile Fields](/platform/users/profile-fields) and mark it
+    required. On their next visit, members with missing required fields are
+    redirected to an onboarding screen that lists exactly what is missing.
   </Accordion>
 </AccordionGroup>
+
+---
+
+## Related
+
+- [Lists & Segments](/platform/users/lists) - reusable audiences built from member criteria
+- [User Statuses](/platform/users/statuses) - what each status blocks
+- [Permissions](/platform/permissions) - who can do what
+- [Custom Fields](/platform/users/custom-fields) - data Orgo does not ship with
+- [Contacts](/platform/contacts) - people who are not members

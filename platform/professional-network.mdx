@@ -1,0 +1,169 @@
+---
+title: 'Professional Network'
+description: 'Let members record what they do for a living, browse each other by industry, and connect'
+"og:title": 'Professional Network | Orgo'
+"og:description": 'Let members record what they do for a living, browse each other by industry, and connect'
+"twitter:title": 'Professional Network | Orgo'
+"twitter:description": 'Let members record what they do for a living, browse each other by industry, and connect'
+---
+
+The Professional Network turns your member list into a searchable directory of what people actually do: a headline, an industry, optionally a job title and an area of expertise, and the company they work for. Members browse it by industry or by keyword and send each other connection requests.
+
+**Built for** business networks, alumni associations, chambers of commerce, and any community whose members want to find each other by expertise.
+**Replaces** a spreadsheet of "who knows about what" and a separate LinkedIn group.
+
+<img src="/images/platform/professions/professional-network-directory.png" alt="Professional network page with an industry list and interests panel on the left and a grid of member cards showing name, profession headline and industry" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## How to access
+
+The directory lives at `/professional-network`. It is not in Orgo's default sidebar, so add a **Professional network** item through the [Menu Organizer](/platform/customization/menu-organizer). Clicking an industry on someone's profile also lands here, pre-filtered. Being signed in is the only requirement, subject to [Who can see whom](#who-can-see-whom). Admins configure it under **Settings** → **Modules** → **Professions**, which requires `ADMIN_TENANT`.
+
+---
+
+## Turning it on
+
+Four switches, saved the moment you flip one.
+
+<img src="/images/platform/professions/professions-module-config.png" alt="Professions module settings with the master Enable Professions Module switch and a Professional Information section holding Enable Industry Tracking, Enable Job Information and Enable Expertise" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+| Setting | What it does |
+|---|---|
+| **Enable Professions Module** | Master switch. Off removes the profession block from member profiles. |
+| **Enable Industry Tracking** | Adds the **Profession industry** picker and the **Profession Industries** admin screen. On by default. |
+| **Enable Job Information** | Adds the **Profession job** picker, from a global catalogue of about 490 job titles. Off by default. |
+| **Enable Expertise** | Adds the **Profession expertise** picker, from a global catalogue of about 157 areas. Off by default. |
+
+Headline, sector and the current-organisation fields are not switches here. They are rows on the [profile form](/platform/users/profile-fields).
+
+---
+
+## What members fill in
+
+The **Profession** tab on a profile shows only the fields you have enabled. Members edit their own; an admin needs `ADMIN_LOCAL` or higher over that member.
+
+<img src="/images/platform/professions/profile-profession-tab.png" alt="Profession tab of a member profile with profession headline, job and expertise pickers, industry, a public private non-governmental sector choice and a Current profession card" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+| Field | Enabled by | Notes |
+|---|---|---|
+| **Profession headline** | Profile form | Free text. The line under the name in the directory, and the only field the keyword search looks at. |
+| **Profession job** | *Enable Job Information* | Global catalogue. **Other** shows a free-text box. |
+| **Profession expertise** | *Enable Expertise* | Same pattern, with its own **Other** box. |
+| **Profession industry** | *Enable Industry Tracking* plus the profile form's *Profession industry* row, both required | Drives the industry filter. |
+| **Profession sector** | Profile form | Public, Private or Non-governmental. |
+| **Current company/organization name** | Profile form | Heads the **Current profession** card. |
+| **Current Company/organization website** | Profile form | Rendered as a link on the company name. |
+| **Current role in company/organization** | Profile form | |
+
+<Note>
+The billing fields on the same tab (company identifier, legal name, address, commerce registry number) are for invoicing, not for the directory. See [Companies](/platform/users/companies).
+</Note>
+
+<Warning>
+The three company fields are shown as one **Current profession** block, and that block is keyed to **Current company/organization name**. If you remove that field from the profile form, the website and role fields disappear with it even while they are still selected. Keep the name field on the form whenever you want either of the other two.
+</Warning>
+
+---
+
+## Browsing the directory
+
+Unfiltered, the directory lists every active member with a profession headline, newest profession update first. Your own card comes first, carrying **Add profession** and **Add industry** prompts while yours is empty. Cards show photo, name, user type, headline, industry, a supporter badge if the member subscribed to your support product, and a LinkedIn icon when their LinkedIn URL is set.
+
+Three filters, which combine:
+
+| Filter | What it matches |
+|---|---|
+| **Search by profession** | The headline text, and nothing else. |
+| **Industry** | One industry, each listed with its member count. |
+| **Interests** | Appears only once you designate a [custom field](/platform/users/custom-fields) as the interest field under **Settings** → **Modules** → **Users & Profiles** → **Custom Fields**. Only dropdown, checkbox and radio fields are eligible. |
+
+---
+
+## Managing the industry catalogue
+
+**Settings** → **Modules** → **Professions** → **Profession Industries**, visible only while **Enable Industry Tracking** is on, lists roughly 148 industries Orgo ships globally plus any you add.
+
+<img src="/images/platform/professions/profession-industries.png" alt="Industries admin table with Industry Name, type tagged Custom or Global, an enabled checkbox per row, and bulk buttons for enabling or disabling all custom and all default industries" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+Unticking hides an industry without deleting it, and members who already picked it keep the value. **Disable All Default** clears the shipped list at once, the usual start for a short bespoke list. **Create Industry** takes a name plus optional translations per interface language; custom industries are tagged **Custom**, belong only to your organisation, and are the only ones you can rename or delete.
+
+The job and expertise catalogues are read-only global reference data: you cannot add to them or hide entries.
+
+---
+
+## Connections
+
+Connections have their own switch, **Settings** → **Modules** → **Users & Profiles** → **Profile Settings** → **Has Connections**, on by default and working whether or not the Professions module is on.
+
+**Connect** on another member's profile, or on the Discover members widget, sends a request; the recipient gets an in-app notification and an email, and only they can respond. Accepting notifies and emails the sender. The **Connections** tab on your own profile lists requests received, requests sent and accepted connections, searchable and sortable by most recent, least recent or name. Removing an accepted connection deletes it outright.
+
+Two server-side limits apply: **20 connection requests per hour** per member, and a **21 day cooldown** after a decline before the same sender can ask again. Requests to accounts that are not active are rejected.
+
+<img src="/images/platform/professions/member-connections-tab.png" alt="Connections tab on a member profile listing accepted connections as rows with a count, a search box and a sort dropdown" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Discover members
+
+**User Recommendations**, on the same Profile Settings screen, gives members a **Discover members** carousel of suggested people, also placeable on the [dashboard](/platform/customization/dashboard-organizer) as a widget.
+
+Suggestions score out of 150 points across five signals:
+
+| Signal | Max points |
+|---|---|
+| Same county, region or country | 40 |
+| Age within five years | 30 |
+| Recently joined, decaying over a year | 30 |
+| Mutual connections, 10 points each | 30 |
+| Recent login, decaying over 30 days | 20 |
+
+Excluded: members already connected, already asked, in a decline cooldown, under 18, or with a private profile. At most 50 suggestions are produced, cached for 48 hours and refreshed sooner when a connection is sent or accepted.
+
+<Warning>
+Recommendations are deliberately not based on profession. Industry, expertise, job title and the interest custom field play no part in the score, so filling the professional profile in will not change who a member is shown.
+</Warning>
+
+---
+
+## Who can see whom
+
+**Individual privacy.** Each member has a **Profession & social media** toggle in their privacy settings. Set to admin-only, it blanks their headline and industry for everyone except tenant admins, HR staff, and staff in their own local center. The organisation-wide default is **Settings** → **Modules** → **Users & Profiles** → **Privacy Defaults**. Signed-out visitors never see profession data. See [Privacy Settings](/platform/users/privacy-settings).
+
+**Directory visibility.** **Who Can See Members in General Groups**, under **Privacy & Visibility** in the same module, applies here too. Raised above ordinary members, plain members can still browse and filter by industry, but keyword and interest filters are refused and recommendations fall back to their own local center.
+
+---
+
+## Common questions
+
+<AccordionGroup>
+  <Accordion title="A member filled in their profession but does not appear">
+    The directory needs a **Profession headline** and status Active; industry alone is not enough.
+  </Accordion>
+
+  <Accordion title="The Profession tab is missing from a profile">
+    It needs the Professions module on and at least one profession field available, from either the module switches or the profile form.
+  </Accordion>
+
+  <Accordion title="Searching by profession returns an access error">
+    That is **Who Can See Members in General Groups**, not a bug.
+  </Accordion>
+
+  <Accordion title="A member cannot re-send a declined request">
+    The 21 day cooldown is running; the connect button stays hidden until it expires.
+  </Accordion>
+
+  <Accordion title="We want to track skills as well">
+    Skills are separate: **Enable Skills Field**, on the same **Profile Settings** screen, adds a Skills custom field seeded with a predefined catalogue. It is not part of the Professions module and does not appear in the directory filters.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related
+
+- [Profile Fields](/platform/users/profile-fields) for adding the headline, sector and company fields
+- [Custom Fields](/platform/users/custom-fields) for designating the interest field
+- [Privacy Settings](/platform/users/privacy-settings) for what members can hide
+- [Members](/platform/users) for the main member directory and its filters
+- [Companies](/platform/users/companies) for company records and billing details

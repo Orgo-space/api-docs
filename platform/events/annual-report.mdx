@@ -1,168 +1,148 @@
 ---
 title: 'Annual Event Report'
-description: 'Yearly statistics and trends across all your events — for boards, funders, and strategic planning'
+description: 'Compile a printable booklet of a local centre events over any date range'
 "og:title": 'Annual Event Report | Orgo'
-"og:description": 'Yearly statistics and trends across all your events — for boards, funders, and strategic planning'
+"og:description": 'Compile a printable booklet of a local centre events over any date range'
 "twitter:title": 'Annual Event Report | Orgo'
-"twitter:description": 'Yearly statistics and trends across all your events — for boards, funders, and strategic planning'
+"twitter:description": 'Compile a printable booklet of a local centre events over any date range'
 ---
 
-The Annual Event Report aggregates data from every event in a given year into one summary: total events, total attendance, breakdown by type and location, year-over-year trends. It's what you present to your board, include in grant applications, or use to plan next year's calendar.
-
----
-
-## When to use this
-
-| Audience | What they get from it |
-|----------|---------------------|
-| **Board of directors** | "We held 47 events this year, up 15% from last year. 3,200 total attendees." |
-| **Funders/sponsors** | Impact documentation — events by SDG, volunteer hours, community reach |
-| **Strategic planners** | Which event types work best? Which locations are most active? Where should you invest? |
-| **Members** | AGM presentation — "here's what your organization did this year" |
+The annual report gathers the events of one local centre over a date range you choose and
+lays them out as a single printable document: photo, dates, place, description, and the
+written [event report](/platform/events/event-report) for each one. It is designed to be
+printed or saved as a PDF and handed to a board, a funder or an assembly.
 
 ---
 
-## Prerequisites
+## Turn it on
 
-Enable in **Settings** → **Events** → **Module Settings**:
+**Settings → Modules → Events → Reporting & Analytics**. Changing these requires `ADMIN_TENANT`.
 
-| Setting | What it enables |
-|---------|----------------|
-| **Enable Annual Event Reports** | Master toggle for the feature |
-| **National Annual Report** | Organization-wide report across all locations |
-| **Local Annual Report** | Per-local-center breakdown (requires Local Centers enabled) |
+| Setting | What it does |
+|---|---|
+| **Annual Event Reports** | Enables the feature. Adds the **Annual report** action to local centre pages and the **Add to annual report** checkbox to the event report form. |
+| **Local Annual Report** | Also enables the same action. This toggle only appears once **Annual Event Reports** is on and the Local Centers module is active. |
 
-Annual reports aggregate data from individual [Event Reports](/platform/events/event-report). The more complete your event reports are, the richer the annual data.
+Either setting is enough on its own: the app checks for one or the other.
+
+<Note>
+The module list also shows **National Annual Report**. Nothing in the product reads that
+setting. The per-local-centre report described on this page is the only annual report
+Orgo generates.
+</Note>
 
 ---
 
-## Generating a report
+## Mark the events to include
 
-**Events** → **Annual Report**
+An event appears in the report only if someone ticks **Add to annual report** on the
+event's [Report](/platform/events/event-report) screen. There is no automatic inclusion and
+no bulk action for it, so this is the step that decides what the report contains.
+
+---
+
+## Generate the report
 
 <Steps>
-  <Step title="Select the year">
-    Choose which calendar year to generate the report for.
+  <Step title="Open the local centre">
+    Go to the local centre page. Its actions list includes **Annual report**.
   </Step>
-  <Step title="Configure options">
-    Select what to include: by event type, by location, by SDG alignment.
+  <Step title="Choose the period">
+    Pick a **Report begin date** and a **Report end date**. Any range works, not just a
+    calendar year: a season, a quarter or a mandate period is equally valid.
+
+    <img src="/images/platform/events/event-annual-report-modal.png" alt="Annual report modal with report begin date and end date pickers and the note that a report can contain maximum 200 events" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
   </Step>
   <Step title="Generate">
-    The system compiles data from all events in the selected year.
+    Press **Generate report**. The report opens in a new browser tab, without the app
+    sidebar and navigation, so the page is ready to print as it stands.
   </Step>
-  <Step title="Review and export">
-    Review the data, then export as PDF or CSV.
+  <Step title="Print or save">
+    Press **Print as PDF** at the top. That opens your browser's print dialog, where you can
+    print or choose "Save as PDF". Background colours and images are forced on for printing.
   </Step>
 </Steps>
 
 ---
 
-## What's in the report
+## What goes in
 
-### Event statistics
+An event is included when all of these are true:
 
-| Metric | What it shows |
-|--------|-------------|
-| **Total events** | Number of events held in the year |
-| **By type** | Breakdown per event type (meetings, trainings, conferences, etc.) |
-| **Total attendance** | Sum of all attendees across all events |
-| **Unique attendees** | Individual people who attended at least one event |
-| **Average attendance** | Per-event average |
-| **Attendance rate** | Average check-ins vs. registrations |
+- it is ticked **Add to annual report**;
+- its start date falls inside the range you chose;
+- it is hosted by the local centre itself or by one of that centre's active groups;
+- it is published, or it is your own draft (drafts belonging to other people are never listed);
+- it is a top-level event, not a sub-event of an agenda.
 
-### Trends
+The report is capped at 200 events, which the date modal also states. A longer period simply
+stops at that ceiling, so split a very active decade into shorter ranges.
 
-- Events per month — see seasonal patterns
-- Attendance over time — is engagement growing?
-- Year-over-year comparison — how do you compare to previous years?
-- Most popular event types — where should you invest more?
+<img src="/images/platform/events/event-annual-report.png" alt="Generated annual report showing the local centre header and the first event entry with its dates, place, description and report fields" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-### Breakdowns
+Events are listed oldest first. For each one the report prints:
 
-| Breakdown | What it reveals |
-|-----------|----------------|
-| **By event type** | Which categories drive the most engagement (trainings vs. social events) |
-| **By group/organizer** | Which teams are most active in organizing events |
-| **By Local Center** | Which branches are most active (and which need support) |
-| **By SDG** | Impact alignment with Sustainable Development Goals |
+| Element | Source |
+|---|---|
+| Logo, name, town | The event record |
+| Dates | Start date, and end date when it differs |
+| Location | The event's location field |
+| Description | The event description |
+| Goals, Target, Activities, Advertising, Budget | The event report, showing only the fields that were filled in |
+| Photo gallery | The event's media gallery |
 
----
+A field containing only a dash is skipped, so importing placeholder dashes will not produce
+empty headings.
 
-## National vs. Local reports
-
-### National Annual Report
-
-The big picture — all events across the entire organization:
-- Aggregated statistics
-- Year-over-year trends
-- Impact metrics for external reporting
-
-### Local Annual Report
-
-Per-Local-Center breakdown:
-- Events organized by each center
-- Local attendance figures
-- Center-to-center comparison
-- Identify your most active (and least active) branches
-
-<Info>
-  Local Annual Reports are only available if the [Local Centers](/platform/groups/local-groups) module is enabled.
-</Info>
+<Note>
+Gallery items are rendered as images. Videos and documents attached to an event will not
+display correctly in the printed report, so keep the gallery to photos for the events you
+intend to report on.
+</Note>
 
 ---
 
-## SDG impact tracking
+## What it does not include
 
-If your events are tagged with UN Sustainable Development Goals:
+The report is a qualitative compilation, not a statistics pack. Verify this against your
+expectations before promising numbers to a board:
 
-- See how many events aligned to each SDG
-- Track impact alignment trends over years
-- Export SDG data for grant reporting and UN compliance
+- **No totals or averages.** There is no count of events, no total attendance, no attendance
+  rate, no unique attendees.
+- **No charts and no year on year comparison.**
+- **No breakdown by event type, group, SDG or volunteer hours.**
+- **No CSV or data export.** The only output is the printable page.
+- **No organisation-wide roll-up.** One report covers one local centre. For a whole
+  organisation, generate one per centre.
 
-This is particularly valuable for NGOs, civil society organizations, and development agencies that report on impact.
-
----
-
-## Volunteer hours
-
-If event hosts track volunteer hours in their event reports:
-
-- Total volunteer hours for the year
-- Breakdown by event type
-- Hours per member
-- Year-over-year growth in volunteer engagement
+For counted figures on a single event, use [Analytics](/platform/events/analytics), which
+computes attendance, capacity and revenue from the attendee records.
 
 ---
 
-## Exporting
-
-### PDF export
-
-Professional layout with charts, graphs, and your organization's branding. Ready for board presentations, grant applications, or printing.
-
-### CSV/data export
-
-Raw data for custom analysis — import into Excel, Google Sheets, or your own reporting tools.
-
----
-
-## Common scenarios
+## Common questions
 
 <AccordionGroup>
-  <Accordion title="The annual report shows low numbers — some events don't have reports">
-    Annual reports aggregate from individual event reports. If event hosts didn't create reports or didn't record attendance, the data is incomplete. Enable **attendance reminders** in module settings to nudge hosts, and emphasize the importance of event reporting.
+  <Accordion title="An event is missing from the report">
+    Check the four conditions in order: the **Add to annual report** checkbox is ticked, the
+    start date is inside the range, the event is hosted by this local centre or one of its
+    active groups, and the event is published. A draft belonging to someone else will not
+    appear even when it is ticked.
   </Accordion>
 
-  <Accordion title="I want to compare two local centers">
-    Generate a Local Annual Report. It includes center-to-center comparison for events held, total attendance, and engagement rates. Use this to identify branches that need more support or recognize high-performing centers.
+  <Accordion title="The page says there are no events for this year">
+    That message means the filter returned nothing. Widen the dates first, then confirm that
+    at least one event of that centre carries the annual report tick.
   </Accordion>
 
-  <Accordion title="Our board wants a mid-year report — can I generate for a partial year?">
-    Yes. Select the current year — the report generates with data available so far. You can regenerate at year-end for the complete picture.
+  <Accordion title="Can I edit the layout or add a cover page?">
+    Not in the app. The report prints as it renders. If you need a cover, an introduction or
+    a different order, print to PDF and assemble the final document outside Orgo.
   </Accordion>
 
-  <Accordion title="How do I make the annual report more useful?">
-    Three things: (1) use Event Types consistently so the breakdown is meaningful, (2) record attendance at every event even if it's just an approximate headcount, (3) fill in event reports promptly after each event.
+  <Accordion title="Can I run one report across all local centres?">
+    No. The report is generated from a local centre page and is scoped to that centre and its
+    groups.
   </Accordion>
 </AccordionGroup>
 
@@ -170,7 +150,7 @@ Raw data for custom analysis — import into Excel, Google Sheets, or your own r
 
 ## Related
 
-- [Event Reports](/platform/events/event-report) — Individual event summaries that feed into the annual report
-- [Event Types](/platform/events/event-types) — Categories that power the type breakdown
-- [Local Centers](/platform/groups/local-groups) — Geographic breakdown in reports
-- [Events Overview](/platform/events) — Module setup
+- [Event Reports](/platform/events/event-report): the per-event text this report compiles
+- [Analytics](/platform/events/analytics): counted attendance, capacity and revenue per event
+- [Local Groups](/platform/groups/local-groups): local centres and their groups
+- [Events Overview](/platform/events): module settings and the event lifecycle

@@ -1,0 +1,117 @@
+---
+title: 'Member Fees Table'
+description: 'Record chapter and organisation fee payments member by member, period by period'
+"og:title": 'Member Fees Table | Orgo'
+"og:description": 'Record chapter and organisation fee payments member by member, period by period'
+"twitter:title": 'Member Fees Table | Orgo'
+"twitter:description": 'Record chapter and organisation fee payments member by member, period by period'
+---
+
+The Member fees table is the chapter treasurer's screen: one row per member, one column per fee period, and a checkbox on every period the member still owes. Tick what was collected, and Orgo writes it as a single payment batch.
+
+<img src="/images/platform/fees/chapter-member-fees.png" alt="Member fees table for a chapter with member, unit and fee tier columns and one column per fee period" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Getting there
+
+The table needs **Local Center Members Table** on under **Settings** → **Payments & Fees** → **Membership fees**, plus either `FINANCIAL_LOCAL` on the chapter or an active unit-admin role inside it.
+
+| From | How |
+|---|---|
+| The sidebar | **Finance** → **Local members fees**, for your own chapter |
+| A chapter page | **Fees** in the chapter header |
+| A unit page | **Fees** in the unit header, pre-filtered to that unit |
+| The chapter list | The fees action on a chapter row |
+| **Finance** → **Fee payments** | The chapter name on any batch row |
+
+Chapter admins always land on their own chapter. An organisation admin can open any chapter, and everything they then stage or record is anchored to the chapter they are viewing, not to their own.
+
+---
+
+## Reading the table
+
+| Column | What it shows |
+|---|---|
+| (icon) | The member's type |
+| **Member** | Last and first name, linking to the profile |
+| **Unit** | The member's sub-unit, with its colour dot |
+| **Fee** | The tier the member is charged at, editable unless locked |
+| One per period | The period start and end, with what is paid or owed |
+
+Each period cell shows a green tick with the amount when the period is paid, an orange tick while a payment is still processing, and a checkbox with the outstanding amount when it is not. Partly covered periods show one checkbox per missing slice, so proration is preserved.
+
+Above the table: the **Organisation** / **Local** toggle (only when chapter fees are on and the chapter has a fee product), the fee year, a member status filter (**Active**, **Inactive**, **Suspended**, plus any of Awaiting referral, Excluded, Helping hands or Contributor your organisation uses), and a unit filter with **All units** and **No unit**.
+
+<Note>
+  The table only shows payments made through this chapter. A member's full fee history, including payments recorded elsewhere, lives on their profile's **Fees** tab.
+</Note>
+
+---
+
+## Changing a member's tier
+
+The **Fee** column is a dropdown of the fee product's prices. Picking a new one applies from the start of the fee cycle you are currently viewing, so setting next year's tier does not rewrite this year's.
+
+The dropdown is replaced by a padlock and the tier name once a successful payment covers the viewed cycle or a later one. Trying anyway is refused with *The fee is already paid and can no longer be changed*.
+
+---
+
+## Recording a payment
+
+<Steps>
+  <Step title="Tick the periods collected">
+    The running **Total** above the table adds up everything ticked, in the chapter's currency.
+  </Step>
+  <Step title="Save (optional)">
+    **Save** stores what you ticked as a draft, so the selection survives leaving the page. The draft is shared across the chapter's fee admins, and each admin sees only the members they are allowed to manage.
+  </Step>
+  <Step title="Pay">
+    **Pay [total]** writes one fee payment batch covering every ticked period and takes you to **Finance** → **Fee payments**. The batch is stamped with the bank transfer (`iban`) method and starts as **pending**.
+  </Step>
+  <Step title="Approve">
+    On **Fee payments**, **Approve** marks the batch and every payment inside it successful, then recalculates each member's fee validity date, chapter validity for chapter fee products and organisation validity otherwise. **Approve** is offered to `ADMIN_TENANT`. A pending batch can be removed with **Cancel and delete**, which needs `ADMIN_LOCAL`.
+  </Step>
+</Steps>
+
+Paid rows clear from the draft automatically, so reloading the table after a successful **Pay** does not show them ticked again.
+
+---
+
+## Unit admins
+
+A member with an active admin role on a unit reaches this table without chapter-level finance rights. They see and manage only members holding an active role in their admin units or any unit below them. Staging and recording are filtered the same way on the server, so one unit's treasurer can neither see nor overwrite another's rows.
+
+Their **Fee payments** list opens on the **Local** tab, which is where the payments they record appear.
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="The Organisation / Local toggle is missing">
+    Either **Local Center Fees Enabled** is off, or this chapter has no fee product selected in its [Fees settings](/platform/local-group-fees/create-local-fees).
+  </Accordion>
+
+  <Accordion title="A member has no checkbox on an unpaid period">
+    Their member type is not eligible for fees, or the period falls before they joined. Periods before the join date are left blank.
+  </Accordion>
+
+  <Accordion title="Pay does nothing">
+    Nothing is ticked, or the total is zero. The **Pay** button only appears once the total is above zero and the table has rows.
+  </Accordion>
+
+  <Accordion title="The batch is there but members still look unpaid">
+    The batch is pending. Fee validity dates only move when an organisation admin approves it.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related
+
+- [Chapter Fees](/platform/local-group-fees/create-local-fees): setting up a chapter's own fee
+- [Recording a payment](/platform/fees/record-payment): the other ways to log an offline payment
+- [Membership Fees](/platform/fees/fees): fee cycles, validity dates and reminders
+- [Units](/platform/groups/units): unit admins and the unit hierarchy
+- [Permissions](/platform/permissions): what `FINANCIAL_LOCAL` and `ADMIN_LOCAL` unlock

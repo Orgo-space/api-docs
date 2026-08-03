@@ -1,187 +1,145 @@
 ---
-title: 'E-Documents'
-description: 'Create documents members sign electronically — contracts, waivers, policies, certificates'
-"og:title": 'E-Documents | Orgo'
-"og:description": 'Create documents members sign electronically — contracts, waivers, policies, certificates'
-"twitter:title": 'E-Documents | Orgo'
-"twitter:description": 'Create documents members sign electronically — contracts, waivers, policies, certificates'
+title: 'E-Document Templates and Signing'
+description: 'Build document templates, assign them to members and contacts, and collect signatures in the browser'
+"og:title": 'E-Document Templates and Signing | Orgo'
+"og:description": 'Build document templates, assign them to members and contacts, and collect signatures in the browser'
+"twitter:title": 'E-Document Templates and Signing | Orgo'
+"twitter:description": 'Build document templates, assign them to members and contacts, and collect signatures in the browser'
 ---
 
-Orgo E-Documents is a document creation and e-signature feature within Orgo that lets organizations draft templates, assign them to members, and collect electronically signed agreements.
+E-Documents lets you write a document once as a template, fill it with member data automatically, send it to a member or a contact, and have them sign it on screen. Orgo renders the signed result as a PDF and keeps it against the member's profile.
 
-**Built for** membership organizations that need signed agreements from their members, including youth organizations, professional associations, trade unions, and cooperatives, as well as any group collecting consent, waivers, or acknowledgments from members.
+**Built for** membership organizations that need the same agreement from every member: membership contracts, volunteer agreements, codes of conduct, photo and media releases, parental consents.
 
-**Replaces** paper-based agreement forms, and replaces tools like DocuSign for routine member sign-offs such as waivers, codes of conduct, and membership agreements, not for documents requiring jurisdiction-specific legal certification.
-
----
-
-Document types include membership agreements, volunteer contracts, photo releases, and codes of conduct.
+**Replaces** printing, scanning, and chasing paper forms, and replaces a general e-signature tool for the routine documents your own members sign.
 
 ---
 
-## Do I need E-Documents?
+## Turning it on
 
-| You want to... | E-Documents? |
-|----------------|-------------|
-| Have new members sign a membership agreement | Yes |
-| Collect photo/video release consent | Yes |
-| Get volunteers to sign a contract before starting | Yes |
-| Have members acknowledge a code of conduct | Yes |
-| Issue completion certificates | Yes |
-| Store and share general documents | No — use [Files](/platform/files) |
-| Send contracts requiring legally binding e-signatures | Depends — Orgo signatures capture identity and timestamp, but check your jurisdiction's requirements |
+**Settings → Modules → Files & eDocuments → eDocuments**, then **Enable eDocuments Module**. Module settings require `ADMIN_TENANT`.
 
----
+| Setting | What it does |
+|---|---|
+| **Enable eDocuments Module** | Shows the eDocuments screens and the E-Documents tab on member profiles |
+| **Enable Groups** | Ties each template to one group, which changes who sees it and who may assign it |
+| **Membership Card Contract** | Marks one template as the membership card document, adding a **Print status** column and a **Mark as printed** action on that template's list |
 
-## How it works
-
-### Admin workflow
-
-<Steps>
-  <Step title="Create a template">
-    Design the document with placeholders for member data.
-  </Step>
-  <Step title="Assign to members">
-    Select who needs to sign — individually, by group, by user type, or all members.
-  </Step>
-  <Step title="Members are notified">
-    They receive an email and in-app notification.
-  </Step>
-  <Step title="Track completion">
-    Monitor who has signed and send reminders to those who haven't.
-  </Step>
-  <Step title="Archive">
-    Signed documents are stored permanently.
-  </Step>
-</Steps>
-
-### Member experience
-
-1. Receive notification about a document to sign
-2. Open and read the full document
-3. Click **Sign** to sign electronically
-4. Download a copy for their records
+Day-to-day work lives at **eDocuments** in the admin menu (`HR_TENANT`), with **Documents** and **Templates** tabs. `ADMIN_TENANT` satisfies every `HR_TENANT` check.
 
 ---
 
-## Creating a template
+## Templates
 
-**Settings** → **Features** → **E-Documents** → **Create Document Template**
+<img src="/images/platform/features/e-document-templates.png" alt="Templates tab showing template cards with group tag, signing method, duration and document count, plus a Create new template card" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-### Placeholders
+Each card shows the name, group, signing method (on screen or file upload), duration in months and document count; selecting one opens the editor. The same cards under **Settings → Files & eDocuments → eDocuments Templates** also get **Clone**, which copies the template with the name prefixed `Copy `.
 
-Insert dynamic content that fills in automatically per member:
+Creating a template requires `ADMIN_TENANT`; editing, cloning and deleting require `HR_TENANT`.
 
-| Placeholder | Output |
-|-------------|--------|
-| `{firstName}` | Member's first name |
-| `{lastName}` | Member's last name |
-| `{email}` | Member's email address |
-| `{phone}` | Member's phone number |
-| `{address}` | Member's street address |
-| `{postalCode}` | Member's postal code |
-| `{currentTown}` | Member's city/town |
-| `{dateBirth}` | Member's date of birth |
-| `{dateJoined}` | Date the member joined |
-| `{organizationName}` | Your organization's name |
-| `{organizationShortName}` | Your organization's short name |
-| `{dateSignature}` | Date of document signature |
-| `{profession}` | Member's profession |
-| `{membershipFeeAmount}` | Fee amount for the member |
+### Settings tab
 
-Custom fields are also available as `{custom_field_ID}` where `ID` is the custom field's numeric identifier.
+<img src="/images/platform/features/e-document-template-settings.png" alt="Template Settings tab with General information, Signature and Duration cards including the signing method radio buttons" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-### Example template
+| Setting | What it does |
+|---|---|
+| **Template name** | Internal name, shown in lists and filters |
+| **Associated group** | Ties the template to one group (needs **Enable Groups**) |
+| **Show in member profile** | Members see the template on their own E-Documents tab before it is assigned to them. With **Enable Groups** on, only members of the associated group see it |
+| **Mandatory document** | The member is pushed through onboarding until it is signed (see below) |
+| **Enable signature** | Off makes it a read-and-download document with no signing step |
+| **Signing method** | **Sign by finger on screen** or **Sign by file upload** |
+| **Requires administrator signature** | Not finished until an admin countersigns |
+| **Use default signature** | Stores one reusable admin signature on the template |
+| **Pre-sign with default signature** | Stamps the stored admin signature on every new document at assignment, so it completes the moment the member signs |
+| **Enable signature cancellation** | A signed document can be revoked afterwards |
+| **Infinite contract duration** | The document never expires |
+| **Contract duration in number of months** | 1 to 60 months from the signing date |
 
-```
-MEMBERSHIP AGREEMENT
+**Delete template** refuses once any document from it has been signed. **Cancel all signed** (`ADMIN_TENANT`) instead cancels every outstanding document from that template and asks everyone to sign again.
 
-I, {firstName} {lastName}, agree to the terms and conditions
-of membership in {organizationName}.
+### Document content tab
 
-By signing below, I acknowledge that I have read and
-understood the organization's code of conduct and agree
-to abide by its terms.
+<img src="/images/platform/features/e-document-template-editor.png" alt="Template content editor with rich text on the left and the Placeholders sidebar grouped into Member data, Document, Organization and Company" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-Date: {dateSignature}
-```
+A rich text editor with a **Placeholders** sidebar. Click any tag to insert it at the cursor.
 
----
+| Group | Placeholders |
+|---|---|
+| Member data | `{firstName}` `{lastName}` `{email}` `{phone}` `{address}` `{postalCode}` `{currentTown}` `{dateBirth}` `{dateJoined}` `{profession}` `{userId}` `{cardProfileLink}` `{cardProfileQrCode}` |
+| Document | `{dateSignature}` `{expirationDate}` `{signature}` `{signatureAdmin}` `{autoContractNumber}` |
+| Organization | `{organizationName}` `{organizationShortName}` `{organizationLogo}` |
+| Company | `{companyName}` `{userCompanyName}` `{userCompanyAddress}` `{userCompanyIdentifier}` `{userCompanyRegNo}` `{professionOrganisationRole}` `{membershipFeeAmount}` |
 
-## Document types
+Two more forms work but are not listed as tags: `{custom_field_ID}` for a [custom field](/platform/users/custom-fields) (text input and text area insert their value directly; yes/no, dropdown, checkbox and file render their label or a download link), and `{drive|filename.ext}` to link a file from [Drive](/platform/files).
 
-| Type | Use for |
-|------|---------|
-| **Contracts** | Membership agreements, volunteer contracts — require signature |
-| **Policies** | Code of conduct, privacy policy — require acknowledgment |
-| **Certificates** | Training completion, achievement — issued to members |
-| **Membership cards** | Auto-generated membership documentation |
+`{signature}` and `{signatureAdmin}` mark where the signature images land; a missing signature prints a blank line instead.
+
+<Warning>
+`{cardProfileLink}` and `{cardProfileQrCode}` are meant for templates with **Enable signature** off, such as membership cards, which are rendered fresh from live member data every time. They are not filled in on a signed document.
+</Warning>
 
 ---
 
-## Document statuses
+## Sending a document
 
-| Status | What it means |
-|--------|--------------|
-| **Pending** | Assigned to member, waiting for their action |
-| **Signed** | Member has signed |
-| **Expired** | Signing deadline passed without signature |
-| **Cancelled** | Admin cancelled the document |
+In the **Documents** tab, **Start document** opens a panel with three fields: the template (shown only when more than one exists), a **Search member** autocomplete across members and [contacts](/platform/contacts), and validity. **Contract validity date start** defaults to today, and the end date comes from the template duration unless you switch on **Custom contract validity date end**.
 
----
+Assigning to someone else requires `HR_TENANT`, or `HR_LOCAL` when the template's associated group belongs to a local center. Members can always start their own document from their profile.
 
-## Signature records
+### Public links
 
-Each electronic signature captures:
-- **Who** signed (member identity)
-- **When** they signed (date and time)
-- **From where** (IP address)
-- **How** (device information)
-
-This creates an audit trail for each signed document.
+Two buttons produce a link that works without an Orgo login: **Generate public link** on a template creates a blank invitation (the visitor gives a name and email, which creates a contact, then signs), and **Share** on a pending row links to that one document. Both live at `/public/document/<hash>` and **expire 72 hours** after creation. Creating one requires `HR_TENANT` unless it is for yourself. Every link for a document is deleted as soon as that document is signed.
 
 ---
 
-## Managing documents
+## Statuses
 
-### Sending reminders
+| Status | Shown as | Meaning |
+|---|---|---|
+| `unsigned` | **Pending** | Assigned, waiting for the signer |
+| `signed-user` | **Pending** (filter: **Signed by user**) | The member has signed, an administrator signature is still required |
+| `complete` | **Signed** | Fully signed |
+| `expired` | **Expired** | The validity end date has passed |
 
-For members with pending documents, send manual reminders or configure automatic reminders before the deadline.
-
-### Members access their documents
-
-Members find their documents at **Profile** → **E-Documents** — both pending and completed.
+A nightly job moves signed documents to **Expired** the day after their validity ends.
 
 ---
 
-## Common scenarios
+## Tracking
 
-<AccordionGroup>
-  <Accordion title="How do I get all members to sign a new policy?">
-    Create the document template, then assign it to all members (or filter by user type, group, etc.). Everyone gets notified. Use the tracking view to see who hasn't signed and send reminders.
-  </Accordion>
+<img src="/images/platform/features/e-documents-list.png" alt="Documents tab with name search, template and group filters, status pills, and a table of documents showing member, signature date, validity and status" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-  <Accordion title="A member signed the wrong document version">
-    Cancel the old document and create a new one with the correct content. Assign it to the affected member(s). They'll receive a new signing request.
-  </Accordion>
+Filter by member name, template, group and status. The table shows document ID, member, template, group, signature date, validity and status, with **View**, **Open document**, **Share**, **Download PDF** and **Delete** on each row.
 
-  <Accordion title="Are these signatures legally binding?">
-    Orgo captures identity, timestamp, and IP address with each signature. In many jurisdictions this meets electronic signature requirements, but legal standards vary. Check your local regulations or consult legal counsel for high-stakes documents.
-  </Accordion>
+<img src="/images/platform/features/e-document-detail-panel.png" alt="Document side panel showing status, member, created and signing dates, validity, and a history timeline with Revoke and Download PDF actions" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-  <Accordion title="Can I require signing during registration?">
-    E-Documents are assigned after account creation. For pre-registration agreements, include terms acceptance in the registration or adhesion form instead.
-  </Accordion>
+**View** opens a side panel with the member, the dates, the validity and a **History** timeline. **Revoke** appears there for signed documents when the template has **Enable signature cancellation** on.
 
-  <Accordion title="Members aren't signing their documents">
-    Send reminders. Set reasonable deadlines. Keep documents short and clear — a 20-page legal document gets less engagement than a 1-page acknowledgment. Consider making it required before accessing certain features.
-  </Accordion>
-</AccordionGroup>
+Three more admin actions on a single document, all `HR_TENANT`: **Modify document text** (edits this copy before it is completed), **Mark as signed** (records an offline signature with your own start and end dates), and countersigning, by drawing a signature or with **Sign with default signature**.
+
+---
+
+## What the member sees
+
+Members find their documents under **E-Documents** on their own profile: a card per template with **Sign**, **Upload file** or **Download PDF**, a running count of required documents signed, and previous versions with their validity ranges.
+
+On a signing template, the screen shows the document beside a short form for whatever placeholders it uses (first name, phone, town, company details, custom fields), then the member draws a signature. What they enter is written back to their profile where that field was empty.
+
+---
+
+## Mandatory documents
+
+**Mandatory document** shows the member an onboarding step listing everything they still have to sign, and holds them there until they do. A document is outstanding when it has never been signed, is waiting for the administrator signature, or its validity has ended. Tenant HR admins are exempt.
+
+Separately, **Settings → Modules → Payments & Fees → Membership Fees → Require Contract for Membership** blocks paying the membership fee until the template named in **Membership Contract Document ID** has been validly signed.
 
 ---
 
 ## Related
 
-- [Files](/platform/files) — General document storage
-- [Members](/platform/users) — Member management
-- [Adhesion forms](/platform/users/adhesion) — Collect agreement during member registration
+- [E-Document Records and Legal Weight](/platform/e-documents) - what a signature captures, storage, validity and renewal
+- [Files](/platform/files) - general document storage and sharing
+- [Custom Fields](/platform/users/custom-fields) - the fields you can pull into a template
+- [Adhesion](/platform/users/adhesion) - the separate membership application document
+- [Permissions](/platform/permissions) - what `HR_TENANT` and `ADMIN_TENANT` unlock

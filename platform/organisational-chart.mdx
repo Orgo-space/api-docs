@@ -1,130 +1,156 @@
 ---
 title: 'Organizational Chart'
-description: 'Visualize your leadership structure — who holds which roles at central and local levels'
+description: 'A live map of who holds which position, built from your roles and their assignments'
 "og:title": 'Organizational Chart | Orgo'
-"og:description": 'Visualize your leadership structure — who holds which roles at central and local levels'
+"og:description": 'A live map of who holds which position, built from your roles and their assignments'
 "twitter:title": 'Organizational Chart | Orgo'
-"twitter:description": 'Visualize your leadership structure — who holds which roles at central and local levels'
+"twitter:description": 'A live map of who holds which position, built from your roles and their assignments'
 ---
 
-The Organizational Chart gives members a visual map of your organization's leadership. See who holds which roles at the central and local level, click through to profiles, and understand the reporting structure at a glance.
+The Organizational Chart draws your leadership structure from the roles you have defined and the members currently assigned to them. Nothing is drawn by hand: each box is a role, the number on it is how many active members hold it right now, and clicking it lists them.
 
-<img src="/images/platform/features/org-chart.png" alt="Organizational chart showing leadership hierarchy" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+**Built for** organizations with named positions (president, treasurer, chapter coordinator, unit leader) that members and staff need to look up.
 
----
+**Replaces** the hand maintained org chart slide that is out of date the week after someone is elected.
 
-## Do I need the org chart?
-
-| Your situation | Use it? |
-|---------------|---------|
-| Members need to know who the leaders are | Yes — makes leadership visible and accessible |
-| You have central + local leadership tiers | Yes — the chart shows both levels clearly |
-| New members need orientation on structure | Yes — visual hierarchy is easier than a list |
-| Your org has formal governance (board, council) | Yes — document who holds each position |
-| You're a small, flat organization | Optional — a simple members list might be enough |
+<img src="/images/platform/features/org-chart.png" alt="Organizational chart with a Central section above a Chapters section, each role shown as a box with a member count" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## How it works
-
-**Enable:** Settings → Modules → Users → enable **Has Organisation Chart**
-
-**Access:** Members find it via **Menu** → **Organisation Chart**
-
-The chart is auto-generated from your roles and role assignments. When you assign a member to a role, they appear in the chart. When they leave the role, they disappear. No manual chart-building needed.
-
----
-
-## What the chart shows
-
-### Central section
-
-Your organization's main leadership positions:
-
-| Role example | Typical use |
-|-------------|------------|
-| President | Head of organization |
-| Vice-President | Deputy leadership |
-| Council Member | Board or council positions |
-| Executive Director | Operational leadership |
-| Secretary | Administrative lead |
-| Treasurer | Financial oversight |
-
-### Local groups section
-
-Leadership within each Local Center:
-- Local center presidents
-- Local coordinators
-- Committee members
-
-Each center shows its own leadership tree under the central section.
-
----
-
-## Interacting with the chart
-
-- **Click any role box** to see the members currently holding that position
-- **See member counts** — each role shows how many people are assigned
-- **View start dates** — when each person joined the role
-- **Click a member's name** to go to their profile
-
----
-
-## Setting up roles for the chart
-
-Roles displayed in the chart come from your role configuration:
+## Turning it on
 
 <Steps>
-  <Step title="Create roles">
-    Go to **Settings** → **Users & Profiles** → **Roles**. Create roles like President, Secretary, Committee Member.
+  <Step title="Enable roles">
+    **Settings** → **Modules** → **Users & Profiles** → **User Types & Roles** → **Enable Roles**. This is on by default.
   </Step>
-  <Step title="Set the hierarchy">
-    Arrange roles in the order they should appear — the chart reflects this ordering.
+  <Step title="Enable the chart">
+    **Settings** → **Modules** → **Users & Profiles** → **Profile Settings** → **Organizational Chart**. This is off by default.
   </Step>
-  <Step title="Assign members to roles">
-    On a member's profile, go to **Roles** → **Add Role** → select the role and set a start date.
-  </Step>
-  <Step title="Chart updates automatically">
-    Assignments, removals, and new Local Centers all reflect in the chart immediately.
+  <Step title="Find it in the menu">
+    Members open it from the sidebar under **Organization** → **Organisational Chart**. The menu entry only appears when both settings above are on.
   </Step>
 </Steps>
 
----
-
-## Visibility
-
-Control who can see the organizational chart:
-
-| Setting | Who can view |
-|---------|-------------|
-| **All members** | Any logged-in member |
-| **Specific groups** | Only members of selected groups |
-| **Public** | Anyone, including non-members (no login required) |
-| **Administrators only** | Internal reference only |
+Both settings require `ADMIN_TENANT`. Once the chart is visible, every signed in member of your organization can open it. There is no anonymous or public version of the chart, and no per group visibility setting.
 
 ---
 
-## Common scenarios
+## How the chart is built
+
+Roles carry a **level** and a **position number**, and those two properties are the whole layout.
+
+The level decides which section a role lands in:
+
+| Section heading | Roles shown | Shown when |
+|---|---|---|
+| **Central** | Roles set to the **Organisation** level | Always |
+| **Parent local centers** | Roles set to the **Parent chapter** level | Local centers are active and parent chapters are enabled |
+| **Chapters** | Roles set to the **Chapter** level | Local centers are active |
+| One section per unit type | Roles attached to that unit type | The unit type exists |
+
+The position number decides the row. Roles are grouped in blocks of one hundred: positions 0 to 99 form the first row of a section, 100 to 199 the second, and so on. Roles with no position number are placed in a final row at the bottom of their section. Empty rows are hidden unless you are editing.
+
+<Note>
+User types do not appear on the chart. They are a different kind of role (they describe what a member *is*, not a position held) and they are excluded from both the layout and the counts.
+</Note>
+
+### What the numbers mean
+
+The count on a box is the number of assignments that are still open (no end date) held by members whose account status is **Active**, across the whole organization. Ending a member's role or deactivating their account removes them from the count on the next page load.
+
+On Central roles the box also shows up to three member photos, then a `+N` for the rest.
+
+---
+
+## Looking someone up
+
+Click a role box that has at least one holder to open the member list.
+
+<img src="/images/platform/features/org-chart-role-members.png" alt="Role member list showing the role name and holder count, a chapter filter, and rows with member name, group and date" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+| Column | What it shows |
+|---|---|
+| **Member** | Name and photo, linking to the member profile |
+| **Group** | The chapter or unit the assignment belongs to. Hidden for Organisation level roles, which are not tied to a unit |
+| **Date** | When the assignment was recorded |
+
+For chapter and parent chapter roles a dropdown at the top filters the list to one chapter, with a search box for organizations that have many. The list pages at 100 members at a time.
+
+---
+
+## Editing the structure
+
+Administrators with `ADMIN_TENANT` see an **Edit Positions** button. Everyone else sees a read only chart.
+
+<img src="/images/platform/features/org-chart-edit-mode.png" alt="Chart in edit mode showing Add level buttons, plus buttons on each row and drag handles on role boxes" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+In edit mode you can:
+
+- **Add level**, which appends an empty row to a section
+- **+**, which opens the role form with the section and row prefilled
+- Drag a role box onto another row or another section to move it, or onto another box to swap the two
+- Drag a whole row by its handle to reorder rows within a section
+- Click a role box to open its form, edit it, or delete it
+
+Deleting a role that still has members assigned to it is refused, with the message "Cannot delete role because it has users assigned to it". End the assignments first.
+
+The **Roles** button in the top right opens the full role list at **Settings** → **Modules** → **Users & Profiles** → **Roles & User types**.
+
+### The role form
+
+| Field | What it does |
+|---|---|
+| **Title** | The role name, and the label on the chart box |
+| **Plural title** | Used where the product lists several holders |
+| **Level** | None, User type, Chapter, Parent chapter, Organisation, or a unit type. This is what places the role on the chart. A role set to **None** is not drawn |
+| **Permissions** | Checkboxes grouped as Organisation level, Local group level and Parent local center level. Members holding the role inherit them |
+| **URL Slug** | User types only. Used for the `/join/[slug]` registration URL |
+
+User types additionally expose **Not eligible for fee**, **Parent**, **Volunteer**, and font and background colours. Selecting the User type level clears any permissions on the role: user types never carry permissions.
+
+<Warning>
+Permissions on a role are real access, not decoration. Adding `ADMIN_TENANT` to a role grants full administrative access to everyone holding it. See [Permissions](/platform/permissions) before editing this field.
+</Warning>
+
+---
+
+## Putting people on the chart
+
+Assignments are made on the member, not on the chart. Open a member, go to the **Roles** tab, and tick the roles they hold.
+
+| Role level | Permission needed to assign |
+|---|---|
+| Organisation | `HR_TENANT` |
+| Parent chapter | `HR_PARENT_LOCAL` on the member's chapter |
+| Chapter | `HR_LOCAL` on the member's chapter |
+
+The tab itself appears for `HR_TENANT`, or for `HR_LOCAL` on that member's chapter. When **Allow Local Admins to Modify User Permissions** is turned off, local administrators can see the tab but the checkboxes are read only, and only `HR_TENANT` can change assignments.
+
+A chapter's own page also shows its team, grouped by role in the same position order as the chart.
+
+---
+
+## Common questions
 
 <AccordionGroup>
-  <Accordion title="The chart is empty">
-    Roles exist but no members are assigned to them. Go to member profiles and assign people to roles. The chart populates from role assignments, not from the chart settings.
+  <Accordion title="The chart is empty or a section is missing">
+    A section only renders when at least one role is set to that level. Open **Edit Positions**, check that your roles have the right level, and confirm the chapter sections require local centers to be active.
   </Accordion>
 
-  <Accordion title="A position changed but the chart still shows the old person">
-    Remove the old role assignment from the previous holder's profile and add it to the new person. The chart updates automatically.
+  <Accordion title="A role box shows no number">
+    No member currently holds it with an open assignment and an active account. Boxes with no holders cannot be clicked.
   </Accordion>
 
-  <Accordion title="I want to show the chart on our public website">
-    Set visibility to **Public**. The chart page can then be linked or embedded without requiring login.
+  <Accordion title="A former officeholder still appears">
+    Their assignment has no end date. Open their profile, go to **Roles**, and untick the role. The count updates on the next load of the chart.
   </Accordion>
 
-  <Accordion title="Can I customize how roles appear in the chart?">
-    Yes — role names, descriptions, display order, and color coding are all configurable in the role settings. The chart renders whatever you've configured.
+  <Accordion title="Can I publish the chart on our website?">
+    No. The chart is only reachable by signed in members of your organization.
   </Accordion>
 
-  <Accordion title="Some Local Centers don't show up in the chart">
-    Local Centers appear in the chart only if they have members assigned to leadership roles. Centers with no role assignments aren't displayed.
+  <Accordion title="Two roles are on the same row and I want them stacked">
+    Rows are blocks of one hundred position numbers. Use **Edit Positions** and drag one role down to another row, or add a level and drag it there.
   </Accordion>
 </AccordionGroup>
 
@@ -132,6 +158,8 @@ Control who can see the organizational chart:
 
 ## Related
 
-- [User Types & Roles](/platform/users/user-types) — Configure roles and permissions
-- [Local Centers](/platform/groups/local-groups) — Local center management
-- [Members](/platform/users) — Member profiles and role assignments
+- [Permissions](/platform/permissions) - what each permission on a role unlocks
+- [Assigning permissions](/platform/permissions-assigning) - roles, role groups and direct permissions
+- [Members](/platform/users) - member profiles and the Roles tab
+- [Local groups](/platform/groups/local-groups) - chapters and their teams
+- [Official Gazette](/platform/official-gazette) - the record of decisions your officers publish

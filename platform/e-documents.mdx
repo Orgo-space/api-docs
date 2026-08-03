@@ -1,0 +1,123 @@
+---
+title: 'E-Document Records and Legal Weight'
+description: 'Exactly what Orgo captures when someone signs, where it is stored, how long a signed document stays valid, and what that evidence is worth'
+"og:title": 'E-Document Records and Legal Weight | Orgo'
+"og:description": 'Exactly what Orgo captures when someone signs, where it is stored, how long a signed document stays valid, and what that evidence is worth'
+"twitter:title": 'E-Document Records and Legal Weight | Orgo'
+"twitter:description": 'Exactly what Orgo captures when someone signs, where it is stored, how long a signed document stays valid, and what that evidence is worth'
+---
+
+This page describes the record Orgo creates when an [e-document](/platform/contracts) is signed: what a signature technically is, what is stored alongside it, and what is not. Read it before you rely on Orgo signatures for anything with legal weight.
+
+**Built for** administrators and legal or compliance staff who need to know what evidence a signed document actually carries.
+
+**Replaces** guessing at what your e-signature tool records.
+
+---
+
+## What a signature is
+
+A signature in Orgo is an image, not a cryptographic operation.
+
+- **Sign by finger on screen.** The signer draws in a box on the page. The drawing is exported from the browser as a PNG image and uploaded.
+- **Sign by file upload.** The signer uploads a file (typically a scan or photo of a signed page). The file is stored as-is and becomes the document of record. No PDF is generated for this path.
+
+There is no certificate, no key pair, no cryptographic hash of the document content, and no third-party timestamping authority.
+
+---
+
+## What is stored when someone signs on screen
+
+| Recorded | Detail |
+|---|---|
+| Signature image | The PNG drawn by the signer |
+| Signer identity | The member or contact record the document was assigned to |
+| Signing date | The calendar date, in your organization's configured timezone. The time of day is **not** stored |
+| Document text | A frozen copy of the template body, taken when the document was created, so later edits to the template do not change what was signed |
+| Filled-in values | A snapshot of every placeholder and the value it resolved to at the moment of signing |
+| Document number | A whole number, unique and sequential within your organization, assigned at signing and available as `{autoContractNumber}` |
+| Validity dates | Start and end of the period the document covers |
+| Rendered PDF | The document text with the values and signature images merged, generated at signing |
+| Administrator signature | If the template requires a countersignature, the admin's signature image and the date it was applied |
+| Log entry | A row in the audit log linked to the document, recording the resulting status and the placeholder snapshot |
+
+<Warning>
+Orgo does **not** record the signer's IP address, browser, device, or location with an e-document signature, and there is no field anywhere in the record for them. If your jurisdiction or your counterparty requires that evidence, Orgo signatures alone will not supply it.
+</Warning>
+
+---
+
+## Three ways a document reaches "Signed"
+
+Only the first is an e-signature. The other two are administrative records, and the difference matters if the document is ever challenged.
+
+| Path | What it stores |
+|---|---|
+| The signer draws a signature | Everything in the table above |
+| The signer uploads a file | The uploaded file, the signing date, and a lock on the record. No signature image, no placeholder snapshot, no generated PDF |
+| An admin uses **Mark as signed** | Status, validity dates, the date the admin chose as the signing date, and which admin did it. No signature of any kind |
+
+**Sign with default signature** and **Pre-sign with default signature** apply one reusable image stored on the template as the administrator's countersignature. The same image is reused on every document, so it evidences that the template was approved for countersigning, not that a named person reviewed that individual document.
+
+---
+
+## Where the files live
+
+Signature images and generated PDFs are stored in Orgo's object storage in a private bucket, never on a public address. Links to them are signed on demand and **expire after 15 minutes**, so a PDF link copied out of the admin screen stops working shortly afterwards. Download the file rather than sharing the link.
+
+The one exception is the reusable administrator signature stored on a template. It is served from a stable public address so it does not break inside older generated PDFs.
+
+A signed PDF can also be regenerated on demand from the frozen document text, the stored values, and the signature images. That is what **Download PDF** on a history entry does, and it is why a signed document from years ago still renders correctly after the template has moved on.
+
+---
+
+## Validity, expiry and renewal
+
+A template with **Infinite contract duration** produces documents that never expire. Otherwise validity runs from the signing date for the configured number of months, unless the admin set custom dates when sending it.
+
+- A nightly job flips signed documents to **Expired** the day after their validity end date.
+- Members are emailed **30 days before**, **7 days before**, **on the day**, and **7 days after** the validity end date. Reminders go to members only, not to contacts, and only for the most recent signed copy of each document.
+- A member may re-sign early, but only inside a **60 day window** before the current document expires. Attempting it sooner returns the date on which re-signing opens.
+- When someone re-signs inside that window, the new document starts on the day the old one ends rather than today, so the two periods run back to back with no gap. Re-signing after expiry starts from today.
+
+---
+
+## Ending a signed document
+
+| Action | Who | Effect |
+|---|---|---|
+| **Revoke** on a signed document | `HR_TENANT`, and only when the template has **Enable signature cancellation** on | Deletes the document record |
+| **Delete** on a pending document | `HR_TENANT`, or the person it was assigned to | Deletes the document record |
+| **Cancel all signed** on a template | `ADMIN_TENANT` | Marks every outstanding document from that template as cancelled, records who cancelled it and when, and regenerates the template's identifier so everyone is asked to sign again |
+| Signing again outside the renewal window rules | The signer | The previous document is marked cancelled with the signer recorded as the canceller, and a new one is created |
+
+Cancelled documents stay in the member's history with a **Canceled** tag, the name of who cancelled them, and the date. Deleted documents are removed.
+
+---
+
+## Retention and export
+
+Signed documents are kept for as long as the member record exists; there is no automatic purge of signed e-documents. Public signing links are the exception: they are removed 72 hours after they are created.
+
+Individual PDFs are downloaded from the document row, the side panel, or the member's own E-Documents tab. To take every signed PDF for one template at once, ask Orgo support: there is an operator command that regenerates and exports them in bulk.
+
+---
+
+## Are these signatures legally binding?
+
+That depends entirely on your jurisdiction and on the document. Use the facts above rather than a general assurance:
+
+- Orgo records who signed, on what calendar date, exactly what text they saw, and an image of the mark they drew.
+- Orgo does not record the time of day, the IP address, the device, or any cryptographic proof that the stored PDF has not been altered since.
+
+In many jurisdictions that is enough for a simple electronic signature on routine internal agreements, and not enough for an advanced or qualified electronic signature. For anything where the answer matters, take this page to your legal counsel before deciding.
+
+---
+
+## Related
+
+- [E-Document Templates and Signing](/platform/contracts) - templates, sending, signing and tracking
+- [Identity Validation](/platform/identity-validation) - verifying who a member actually is
+- [Privacy Settings](/platform/users/privacy-settings) - what member data is visible and to whom
+- [Files](/platform/files) - general document storage and share links
+- [Permissions](/platform/permissions) - what `HR_TENANT` and `ADMIN_TENANT` unlock

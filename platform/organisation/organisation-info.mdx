@@ -1,153 +1,128 @@
 ---
 title: 'Organization Info'
-description: 'Your name, contact details, legal info, currency, and social links — the identity card for your entire platform.'
+description: 'Your name, contact details, legal identity, currency and bank details: the record every invoice, email and registration page reads from.'
 "og:title": 'Organization Info | Orgo'
-"og:description": 'Your name, contact details, legal info, currency, and social links — the identity card for your entire platform.'
+"og:description": 'Your name, contact details, legal identity, currency and bank details: the record every invoice, email and registration page reads from.'
 "twitter:title": 'Organization Info | Orgo'
-"twitter:description": 'Your name, contact details, legal info, currency, and social links — the identity card for your entire platform.'
+"twitter:description": 'Your name, contact details, legal identity, currency and bank details: the record every invoice, email and registration page reads from.'
 ---
 
-This is your organization's identity card. Everything here — name, country, contact info, financial details — flows into invoices, emails, registration pages, and the mobile app. Set this up first, before inviting members.
+One form holds your organization's identity. Invoices, automated emails, registration pages and the member directory all read from it, so fill it in before you invite anyone.
 
-**Settings → Organization → Organization Info**
+**Settings → Organization → Organisation info**
 
-<img src="/images/platform/organisation/org-info-basic-details.png" alt="Organization info form with name, country, and details" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/organisation/org-info-basic-details.png" alt="Basic details card with organization name, short name, country, timezone, international organisation checkbox and default language" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 <Note>
-  Requires **Tenant Admin** permissions.
+  Requires **ADMIN_TENANT**. Open it from the cog icon in the top bar, or from your avatar menu, **Organisation Settings**.
 </Note>
-
----
-
-## Setting up your organization
-
-<Steps>
-  <Step title="Fill in basic details">
-    Enter your **Organization Name** (required) — this is the display name shown in the sidebar, emails, and public pages. Add a **Short Name** for mobile headers and compact UI areas. Select your **Country** and **Timezone** to set regional defaults for date/time formatting. Toggle **Is international** if you operate across multiple countries.
-  </Step>
-  <Step title="Choose the default language">
-    Select the platform language for new members and public pages. Available: English, French, German, Italian, Portuguese, Romanian, Slovak, Ukrainian, Bulgarian, Dutch, Spanish. Members can change their own language later.
-  </Step>
-  <Step title="Add contact information">
-    Enter your **Office Email** (required — used in automated communications), **Office Phone** (select country code first), and **Office Address**. Add your **Privacy/GDPR URL** and **Terms of Service URL** — both are shown during registration and must be publicly accessible.
-  </Step>
-  <Step title="Add social media links">
-    Paste the full URL for each platform you use: Facebook, X.com, YouTube, LinkedIn, Instagram, TikTok. Leave unused fields blank. These appear on your organization's public profile.
-  </Step>
-  <Step title="Configure financial details">
-    Select your **Currency** (the symbol auto-fills). Add your **Legal Name**, **Registration Number**, and **VAT Number** for invoices and receipts. Enter your bank **IBAN** for your primary currency, plus optional IBANs for EUR, USD, and CHF to accept multi-currency transfers.
-  </Step>
-  <Step title="Save">
-    Click the **Save** button in the sticky panel on the right. It follows you as you scroll — hit it when you're done.
-  </Step>
-</Steps>
 
 ---
 
 ## Basic details
 
-<CardGroup cols={2}>
-  <Card title="Name & Short Name" icon="text">
-    **Name** is your display name (required). **Short Name** is the abbreviated version for mobile headers and compact UI.
-  </Card>
-  <Card title="Country & Timezone" icon="globe">
-    Sets regional defaults and how dates/times display. Toggle **Is international** if you operate across multiple countries.
-  </Card>
-</CardGroup>
+| Field | What it does |
+|-------|--------------|
+| **Name** | Required. Shown in the sidebar, the browser tab, and as `organizationName` in emails. Rejects `<`, `>`, `{{`, `{%`, `javascript:`, `data:text/html` and inline event handlers with a "Display name contains characters that are not allowed" error. If Short Name is empty, it is filled with the same value. |
+| **Short Name** | Used where space is tight: browser tab title, sidebar and Drive labels, and the default sender name on a new newsletter. Same character rules as Name. |
+| **Country** | Sets the country line on invoices and the default country for member filters and the geography statistics map. |
+| **State** | Appears only when Country is United States. Sets the default drill-down state on the geography statistics map. |
+| **Timezone** | Type-to-search over the full IANA timezone list, shown with the current UTC offset. Becomes the default timezone for a new event when the organizer has no timezone of their own, and is passed to emails as `organizationTimezone`. If the field is empty when you open the form, it pre-fills with your browser's timezone and saves that value. |
+| **Is international organisation** | Relabels Country to **Country Headquarter** and switches the member directory, event attendance lists and geography statistics from state-level filters within your country to country-level filters worldwide. |
+| **Default language** | The interface language for anyone who has not set their own, and the language of server-sent emails. |
 
-<Tip>
-  Your workspace identifier appears as a badge next to the save button (e.g., `myorg-42`). The slug is auto-generated from your organization name and is used in URLs.
-</Tip>
+<Note>
+  Picking a **Default language** switches your own interface immediately, before you save. If you change your mind, pick the old one back and leave without saving.
+</Note>
+
+Two rules govern language. In the app, a member's own language wins, unless the Languages module is off, in which case the organization default overrides it; a `?lang=` parameter in the URL beats both; anything unavailable falls back to English. Server-sent email is narrower: templates render in Romanian, English or German only, and any other default language falls back to English.
 
 ---
 
 ## Contact information
 
-![Contact information card with office email, phone, and address fields](/images/platform/organisation/org-info-contact.png)
+<img src="/images/platform/organisation/org-info-contact.png" alt="Contact card with office email, office phone country selector and number, and office address" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-| Field | Details |
-|-------|---------|
-| **Office Email** | Required. Used in automated emails and shown in platform communications |
-| **Office Phone** | Select country code first, then enter the number. The input activates after selecting a code |
-| **Office Address** | Your physical office location — shown on invoices and public profile |
-| **Privacy/GDPR URL** | Link to your privacy policy. Shown during registration |
-| **Terms of Service URL** | Link to your terms. Shown during registration |
+| Field | What it does |
+|-------|--------------|
+| **Office Email** | Required. The Reply-To on automated email, the contact address printed on invoices, and the organizer address on event calendar invitations. |
+| **Office Phone** | Pick the country code first: the number box stays disabled until you do, then shows a sample number for that country. Printed on invoices. |
+| **Office Address** | Printed in the organization block on every invoice. |
+
+<Warning>
+  Automated email is sent **from** `no-reply@orgo.space` and replies go to your Office Email. Orgo only sends from your own address once the sending domain has been verified, which happens as part of [Custom Domain](/platform/custom-domain) setup. Changing Office Email on this page does not change the From address on its own.
+</Warning>
 
 ---
 
-## Social media
+## Legal links
 
-![Social media URLs card with fields for Facebook, X.com, Youtube, LinkedIn, Instagram, and TikTok](/images/platform/organisation/org-info-social-media.png)
+Three URL fields: **Privacy/GDPR URL**, **Terms of service for members, page URL** and **Internal rules, page URL**.
 
-Paste the full URL for each platform you use. Leave the rest blank. These appear on your organization's public profile and in the footer of some email templates.
+<Warning>
+  Each URL you fill in adds a **required** consent checkbox to the registration form. A member cannot finish signing up without ticking it. The GDPR and Terms links do the same on the event checkout. Leave a field blank and no checkbox is shown.
+</Warning>
 
-| Platform | URL format |
-|----------|-----------|
-| **Facebook** | `https://facebook.com/yourorg` |
-| **X.com** | `https://x.com/yourorg` |
-| **YouTube** | `https://youtube.com/@yourorg` |
-| **LinkedIn** | `https://linkedin.com/company/yourorg` |
-| **Instagram** | `https://instagram.com/yourorg` |
-| **TikTok** | `https://tiktok.com/@yourorg` |
+---
+
+## Social media URLs
+
+<img src="/images/platform/organisation/org-info-social-media.png" alt="Social media card with Facebook, X.com, Youtube, Linkedin, Instagram and Tiktok URL fields" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+Six fields: Facebook, X.com, Youtube, Linkedin, Instagram and Tiktok. Paste the full URL. Orgo stores them on the organization record and returns them in the tenant payload the API serves, but no built-in page or email template renders them, so treat them as data for your own integrations rather than as links members will see.
 
 ---
 
 ## Financial details
 
-![Financial details card with currency, legal name, registration number, VAT, and IBAN fields](/images/platform/organisation/org-info-financial.png)
+<img src="/images/platform/organisation/org-info-financial.png" alt="Financial card with currency and symbol, legal name, registration number, VAT number and the bank IBAN block" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-<CardGroup cols={2}>
-  <Card title="Currency & Legal" icon="building-columns">
-    **Currency** auto-fills the symbol. Add your **Legal Name**, **Registration Number**, and **VAT Number** for invoices and receipts.
-  </Card>
-  <Card title="Bank IBANs" icon="money-bill-transfer">
-    One IBAN field for your primary currency, plus optional fields for **EUR**, **USD**, and **CHF** to accept multi-currency transfers.
-  </Card>
-</CardGroup>
+| Field | Where it shows up |
+|-------|-------------------|
+| **Currency** | Default currency for membership fee payments and for any product price that does not set its own. Choosing one rewrites **Symbol** with the narrow symbol for that currency; you can type over it. |
+| **Legal Name** | Printed as the organization name on invoices, falling back to Name when empty. Also the account holder on bank transfer instructions. |
+| **Registration Number** | Printed as the `Reg:` line on invoices. |
+| **VAT Number** | Printed as the `VAT:` line on invoices. |
+| **BANK IBAN** | The first field carries your currency code as its label. This is the only IBAN the product uses: it appears on bank transfer instructions, on the member fee payments page when **Allow Bank Transfer Payments** is on (Settings → Modules → Payments & Fees), and in the payment proof PDF. |
+
+The three currency-specific fields below it (USD, EUR, CHF, minus whichever one matches your currency) are stored for your own record keeping. Nothing in the product prints them.
 
 <Warning>
-  Get these right before enabling payments or membership fees — they appear on every invoice and donation receipt. Changing financial details later doesn't update already-generated documents.
+  Set these before you take a payment. Invoices and receipts store the values as they were when the document was generated, so later edits do not correct documents already issued.
 </Warning>
 
 ---
 
 ## Saving
 
-![Save button with organization name and slug identifier](/images/platform/organisation/org-info-save-button.png)
+<img src="/images/platform/organisation/org-info-save-button.png" alt="Page header showing organization name, Stripe account tag, workspace slug tag and the Save button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-The **Save** button sits in a sticky panel on the right — it follows you as you scroll. **Name** and **Office Email** are required — the save will fail if either is empty.
+**Save** sits in a panel on the right that follows you as you scroll. **Name** and **Office Email** are required and the form will not submit while either is empty.
 
----
-
-## Real-world example
-
-> **Scenario**: A French-German bilingual non-profit based in Switzerland, launching Orgo for 1,200 members.
-
-1. **Name**: "Association Pro Nature Suisse" / **Short Name**: "APN"
-2. **Country**: Switzerland / **Timezone**: Europe/Zurich / **Is international**: No
-3. **Default language**: French (60% of members are French-speaking)
-4. **Office Email**: contact@apn.ch / **Phone**: +41 31 xxx xx xx
-5. **Privacy URL**: `https://example-ngo.ch/privacy` / **Terms URL**: `https://example-ngo.ch/terms`
-6. **Social**: Facebook and Instagram URLs filled in, others left blank
-7. **Currency**: CHF (Swiss Franc) / **Legal Name**: "Association Pro Nature Suisse" / **VAT**: CHE-xxx.xxx.xxx
-8. **IBANs**: Primary CHF IBAN + EUR IBAN for cross-border donations
+The header carries two read-only badges: your connected Stripe account id, if there is one, and your workspace identifier in the form `slug-id`. The slug is generated from your organization name when the workspace is created, is unique across Orgo, and appears in links as `?workspace=<slug>`. It cannot be edited here.
 
 ---
 
 ## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="Phone number field is disabled">
-    Select a country code from the dropdown first. The phone input activates once a country is selected.
+  <Accordion title="The phone number box is greyed out">
+    Choose a country from the dropdown to its left first. Changing the country afterwards clears the number.
   </Accordion>
-  <Accordion title="Currency symbol didn't update">
-    It auto-updates when you change the currency dropdown. You can manually override it in the **Symbol** field if needed.
+  <Accordion title="There is no State dropdown">
+    It only renders when Country is United States. Pick United States and it appears under the country selector.
   </Accordion>
-  <Accordion title="Changes aren't saving">
-    **Name** and **Office Email** are required. Make sure both are filled in. Check that your email is in a valid format and that URLs use `https://`.
+  <Accordion title="The interface changed language and I had not pressed Save">
+    Choosing a **Default language** loads that language straight away so you can preview it. Nothing is stored until you save.
   </Accordion>
-  <Accordion title="Missing IBAN fields for certain currencies">
-    IBAN fields appear dynamically: one for your primary currency, plus EUR, USD, and CHF. If you need additional currency IBANs, change your primary currency to see the corresponding field.
+  <Accordion title="Emails still arrive from no-reply@orgo.space">
+    That is the default sender for every workspace. Your Office Email is used as the Reply-To. Sending from your own domain requires domain verification, which is part of [Custom Domain](/platform/custom-domain) setup.
+  </Accordion>
+  <Accordion title="Save does nothing">
+    Name or Office Email is empty; the browser blocks the submit and highlights the field. Only ADMIN_TENANT can save this form, and only for their own organization.
+  </Accordion>
+  <Accordion title="I renamed the organization but old emails and invoices still show the old name">
+    Sent emails and generated invoices keep the values they were built with. New documents pick up the new name. Members may also need to reload the app.
   </Accordion>
 </AccordionGroup>
 
@@ -155,6 +130,8 @@ The **Save** button sits in a sticky panel on the right — it follows you as yo
 
 ## Related
 
-- [Branding](/platform/organisation/branding) — Visual customization (logo, login background)
-- [Modules](/platform/organisation/modules) — Enable/disable platform features
-- [Languages](/platform/customization/languages) — Multi-language support beyond the default
+- [Organization Settings](/platform/organisation) overview of the whole settings area
+- [Branding](/platform/organisation/branding) logos and login background
+- [Modules](/platform/organisation/modules) turn platform features on and off
+- [Custom Domain](/platform/custom-domain) your own address and verified email sending
+- [Languages](/platform/customization/languages) the languages members can choose from

@@ -35,188 +35,147 @@ description: 'Create events, sell tickets, track attendance, and report on impac
 }
 `}</script>
 
-Orgo Events is the event management module within Orgo that lets organizations create and publish events, sell tickets or take free RSVPs, and track attendance from within their member database.
+Orgo Events lets your organization create and publish events, take free RSVPs or sell tickets, run the event day itself, and report on what happened, all against your member database rather than a separate tool.
 
-**Built for** membership organizations running events for members and the public, including professional associations, youth organizations, alumni networks, and faith communities, and similar member-based groups.
+**Built for** membership organizations running events for members and the public: professional associations, youth organizations, alumni networks, faith communities, and federated nonprofits.
 
-**Replaces** Eventbrite for ticketing and RSVP management tied to your member database, not for public event marketplace discovery.
-
-Events are often the core of what your organization does — meetups, trainings, conferences, assemblies, volunteer activities. Orgo checks people in at the door and generates reports that prove your impact.
+**Replaces** Eventbrite for ticketing and RSVP management tied to your member list, not for public marketplace discovery.
 
 ---
 
 ## What you can do
 
 <CardGroup cols={2}>
-  <Card title="Create Events" icon="calendar-plus" href="/platform/events/create-event">
-    Build events with dates, locations, hero images, speakers, and custom registration fields.
+  <Card title="Create events" icon="calendar-plus" href="/platform/events/create-event">
+    Dates, timezone, location or online link, cover image, capacity, and visibility.
   </Card>
-  <Card title="Sell Tickets & Addons" icon="ticket" href="/platform/events/ticketing">
-    Multiple ticket tiers with max seats, optional addons (lunch, workshops, parking) with their own capacity limits, early bird pricing, and Stripe checkout.
+  <Card title="Sell tickets and add-ons" icon="ticket" href="/platform/events/ticketing">
+    Multiple ticket types with seat limits and sale windows, add-ons, discount codes, and Stripe checkout.
   </Card>
-  <Card title="Public Event Pages" icon="globe" href="/platform/events/public-page">
-    Every event gets a shareable URL — branded, mobile-friendly, embeddable on your website.
+  <Card title="Publish a public page" icon="globe" href="/platform/events/public-page">
+    A page non-members can open and register on without an Orgo account.
   </Card>
-  <Card title="QR Code Check-in" icon="clipboard-check" href="/platform/events/attendance">
-    Every ticket gets a unique QR code. Scan at the door to check people in instantly — see their name, ticket type, payment status, and addons.
+  <Card title="Check people in" icon="clipboard-check" href="/platform/events/check-in">
+    QR tickets, a scanner in the mobile app, and manual check-in from the participant list.
+  </Card>
+  <Card title="Run the event app" icon="mobile" href="/platform/events/event-app">
+    Agenda, live feed, participants, 1:1 networking, and in-event votes for attendees.
+  </Card>
+  <Card title="Report on it" icon="chart-line" href="/platform/events/analytics">
+    Per-event analytics, event reports, and annual summaries.
   </Card>
 </CardGroup>
 
 ---
 
-## The event lifecycle
+## The events list
 
-Every event follows the same flow, whether it's a 10-person committee meeting or a 500-person conference:
+**Events** in the main menu opens the list: **Upcoming** and **Past** views, a hero card for the next event, a month calendar that dots the days with events, and a filter panel holding a search box over title and description, **All event types**, **All statuses** (only when custom statuses are enabled), **SDG** (only when SDG tagging is enabled), and a **My events** checkbox.
 
-<Steps>
-  <Step title="Create">
-    Fill in details: title, dates, location (or online link), description, hero image. Choose which group is hosting it.
-  </Step>
-  <Step title="Configure registration">
-    Set up tickets (free or paid), capacity limits, registration fields, and deadlines. Or skip this for info-only events.
-  </Step>
-  <Step title="Publish">
-    Move from draft to live. The event appears in calendars, members get notified, and the public page becomes shareable.
-  </Step>
-  <Step title="Manage registrations">
-    Track who signed up, send reminders, process waitlists, invite specific members, handle cancellations.
-  </Step>
-  <Step title="Check in attendees">
-    On event day: scan QR codes with the mobile app, or check people in manually from the participant list.
-  </Step>
-</Steps>
-
----
-
-## Managing your event
-
-Once you create an event, it gets its own management area with a sidebar navigation. Each section handles a different aspect of the event:
-
-<img src="/images/platform/events/event-show-simple.png" alt="Event detail page showing sidebar navigation (View event, Participants, Messages, Landing page, Share, Modify, Delete) with hero image, date, location, RSVP status, and 38 attendees" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
-| Section | What it does |
-|---------|-------------|
-| **View event** | The event detail page — title, date, location, description, ticket selection, and list of who's going |
-| **[Participants](/platform/events/attendance)** | Full attendee table with RSVP status (Attending, Attended, Not attending, Maybe), ticket type, town, and export. Invite participants, check people in, and manage the waitlist from here. |
-| **Speakers** | Add internal members or external contacts as event speakers — displayed on the event page with photo, name, and headline |
-| **[Tickets](/platform/events/ticketing)** | Configure ticket types with prices, seat limits, and availability dates. Add optional addons (lunch, workshops, parking) with their own capacity. |
-| **Payments** | All ticket orders — see who paid, refund orders, filter by status (Paid, Refunded). |
-| **Messages** | Send targeted emails to event registrants — reminders, updates, logistics, or post-event follow-ups |
-| **Landing page** | Preview and share the public event page — the branded, mobile-friendly URL that non-members can access |
-| **Modify** | Edit event details, dates, location, registration settings, and page customization |
-
-<Tip>
-  The sidebar adapts based on your event settings. **Tickets** and **Payments** only appear when ticketing is enabled. **Speakers** only appears when speakers are enabled in the event edit form. **Landing page** appears for public events.
-</Tip>
-
----
-
-## Setting up the Events module
-
-**Settings** → **Events**
-
-<img src="/images/platform/events/events-module-config.png" alt="Events module settings showing event configuration, ticketing and payments, and reporting sections" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
-Before creating your first event, configure these module settings:
-
-| Setting | What it does | Recommendation |
-|---------|-------------|----------------|
-| **Who can create public events** | Permission level required to create events visible outside the org | Start with admins only, expand later |
-| **Online ticket payments** | Enable Stripe checkout for paid events | Enable if you sell tickets — requires [Stripe setup](/platform/fees/stripe-integration) first |
-| **Attendance reminders** | Auto-remind hosts to record attendance 24h after event | Enable — solves the "forgot to check people in" problem |
-| **SDG tagging** | Tag events with UN Sustainable Development Goals | Enable if your org tracks impact alignment |
-| **Bulk invites** | Send invitations to all group members at once | Enable for most organizations |
-| **Propagate to Local Centers** | Copy a national event to all local centers | Enable if you have a federated structure where the same event runs locally |
-
-### Event types
-
-Before creating events, set up [Event Types](/platform/events/event-types) to categorize them. This makes filtering and reporting much more useful.
-
-<Warning>
-  To sell paid tickets, you must first configure Stripe in **Settings** → **Payments** → **Online Payments**. Without this, you can only create free events.
-</Warning>
+**Create an event** opens the form in a panel over the list, with a **Start from template** button when your organization has event templates.
 
 ---
 
 ## Where events live
 
-Events belong to groups. When you create an event, you choose which group hosts it:
+Every event belongs to one place, chosen in the **Group** field on the event form.
 
-| Where you create it | Who sees it |
-|--------------------|-------------|
-| **Main Group** | All members — use for org-wide events (AGM, annual conference) |
-| **Local Center** | Members of that center — use for chapter meetings, local meetups |
-| **Private Group** | Group members only — use for team meetings, committee sessions |
-| **Public event** | Anyone with the link — use for open events, fundraisers, public workshops |
+| Choice | Who sees it |
+|---|---|
+| Your organization (the top option in **Main groups**) | Everyone, subject to the audience setting. Only offered if you hold the permission set in **Who Can Create Public Events**. |
+| A **local center** | People in that center. Creating here requires `EVENT_LOCAL` on that center. |
+| A **group** | Group members. If the group is marked so that only its admins can create events, you need to be a group admin or owner, or hold `ADMIN_TENANT` or `EVENT_TENANT`. |
 
-This means a member's event calendar shows events from all their groups: national events from the Main Group, local events from their center, and team events from their Private Groups.
-
----
-
-## Common setups by organization type
-
-### Youth scouting organization
-
-| Event type | Ticket? | Public? | Typical frequency |
-|-----------|---------|---------|-------------------|
-| Troop meeting | No (RSVP) | Members only | Weekly |
-| Camp/retreat | Paid tickets | Members only | Quarterly |
-| Training course | Free/paid | Members only | Monthly |
-| Annual conference | Paid tickets | Public page | Yearly |
-| Fundraiser gala | Paid tickets | Public page | Yearly |
-
-### Professional association
-
-| Event type | Ticket? | Public? | Typical frequency |
-|-----------|---------|---------|-------------------|
-| Networking event | Free RSVP | Members only | Monthly |
-| Annual conference | Paid tickets | Public page | Yearly |
-| Webinar | Free RSVP | Public page | Bi-weekly |
-| Board meeting | No registration | Private group | Quarterly |
-| AGM | Free RSVP | Members only | Yearly |
-
-### Community group
-
-| Event type | Ticket? | Public? | Typical frequency |
-|-----------|---------|---------|-------------------|
-| Monthly meetup | Free RSVP | Members only | Monthly |
-| Workshop | Free/paid | Public page | Occasional |
-| Social outing | Free RSVP | Members only | Occasional |
-| AGM | Free RSVP | Members only | Yearly |
+Each event is also **Members only** or **Public**. Public needs the **Who Can Create Public Events** permission and is never offered for non-joinable (private) groups. Events start as **drafts**, visible only to people who can manage them, until someone publishes them. See [Create Event](/platform/events/create-event).
 
 ---
 
-## Common scenarios
+## The event workspace
 
-<AccordionGroup>
-  <Accordion title="I need to sell tickets for a conference — where do I start?">
-    First, set up [Stripe](/platform/fees/stripe-integration) if you haven't already. Then create an event, enable ticketing, create ticket types with prices (early bird, regular, VIP, member discount), set capacity, and publish. Each registrant pays via Stripe checkout and receives a QR code ticket by email.
-  </Accordion>
+Opening an event gives it a sidebar whose entries depend on the event's own settings and your permissions. "Manager" below means anyone who can manage the event: its owner, or a holder of the event permissions listed under [Who can do what](#who-can-do-what).
 
-  <Accordion title="I want a simple RSVP event — no tickets, no payment">
-    Create an event, enable "Attendable" but don't enable ticketing. Members can RSVP directly. Set a capacity limit if the venue has one. This works well for meetups, workshops, and internal meetings.
-  </Accordion>
+<img src="/images/platform/events/event-show-simple.png" alt="Event page with the event sidebar on the left and the event hero, date, location and registration panel on the right" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-  <Accordion title="How do I share an event outside my organization?">
-    Make the event **public**. It gets a shareable URL you can post on social media, embed on your website, or include in email campaigns. Non-members can view the page and register without an Orgo account.
-  </Accordion>
+| Entry | Shown when | What it does |
+|---|---|---|
+| **Modify** | manager | The full event form |
+| **View event** | always | The event page members see |
+| **Event app** | the event has a location | Opens the [attendee app](/platform/events/event-app) |
+| **Attenders** | manager | [Participants, invitations, and check-in](/platform/events/attendance) |
+| **Trainers** | the event uses the training type | Assign trainers |
+| **Speakers** | **Enable speakers** is on | Add internal members or external people as speakers |
+| **Networking spaces** | **Enable 1:1 networking** is on | Define where and when meetings can be booked |
+| **Agenda** | manager | Build the agenda from sub-events |
+| **Votes** | manager | [Votes](/platform/e-voting) attached to this event |
+| **Registration form** | the event requires a registration form | [The form builder](/platform/events/registration-forms) |
+| **Tickets** and **Payments** | ticketed event, plus `FINANCIAL_TENANT` or `EVENT_TENANT` | [Ticket types and orders](/platform/events/ticketing) |
+| **Analytics** | manager | [Registration and revenue metrics](/platform/events/analytics) |
+| **Messages** | `EVENT_TENANT`, `EVENT_LOCAL`, or `COMMUNICATION_TENANT` | Email the event's audience |
+| **Landing page** | the event is public or ticketed | Opens the [public page](/platform/events/public-page) |
+| **Copy link** | the event is published and public | Copies the shareable URL |
+| **Report** | **Event Reports** is on | [The post-event report](/platform/events/event-report) |
+| **Duplicate Event** | manager | Copies everything except attendees into a new draft, optionally in another group |
+| **Save as Template** | `ADMIN_TENANT` | Turns this event into a reusable [template](/platform/events/event-templates) |
+| **Email Templates** | `ADMIN_TENANT` | The email templates used by event mail |
+| **Delete** | manager | Blocked while any attendee has a payment attached |
 
-  <Accordion title="I need to run the same event in every local center">
-    Use **Propagate to Local Centers** (enable in module settings). Create the event once in the Main Group, then propagate it — a copy is created in each Local Center. Local admins can then adjust their copy (time, venue) for their area.
-  </Accordion>
+---
 
-  <Accordion title="Members keep registering but not showing up">
-    Enable **attendance reminders** so hosts remember to check people in. After the event, mark no-shows. Over time, this data helps you: (1) set realistic capacity (aim for 70-80% of registrations), (2) send reminder emails before the event, (3) use waitlists so spots don't go to waste.
-  </Accordion>
+## Module settings
 
-</AccordionGroup>
+**Settings → Modules → Events**, requiring `ADMIN_TENANT`.
+
+<img src="/images/platform/events/events-module-config.png" alt="Events module settings showing Event Configuration, Ticketing and Payments, Reporting and Analytics, and Additional Features sections" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+The module menu also holds **Event Types**, **Templates** and, once the matching setting is on, **Event Statuses** and **Attendance Reminder**.
+
+| Setting | What it does |
+|---|---|
+| **Who Can Create Public Events** | The permission level needed to create an organization-wide event and to mark any event Public. Defaults to HR Tenant. This is a ceiling: a local event manager cannot exceed it. |
+| **Training Event Type** | Which [event type](/platform/events/event-types) marks an event as a training. |
+| **General Meeting Event Type** | Which event type marks an event as a general meeting. |
+| **Enable Custom Statuses** | Adds your own event statuses alongside draft and published. |
+| **Online Ticket Payments** | Listed under Ticketing and Payments. In practice the Paid option on the event form is gated by the Online Payments module being active and by your Stripe connection. |
+| **Event Reports** | Adds the post-event report. |
+| **Annual Event Reports** | Generates annual summaries of events. |
+| **National Annual Report** | Annual reporting at organization level. |
+| **Local Annual Report** | Annual reporting per local center. |
+| **Sustainable Development Goals (SDG)** | Adds SDG tagging and the SDG filter. On by default. |
+| **Enable Attendance Reminder** | Emails the host 24 hours after the event ends to record attendance. |
+| **Bulk Invites** | Lets organizers invite every member of the event's group at once. |
+| **Propagate Events to Local Centers** | Lets an `EVENT_TENANT` holder create one event as a published copy in every active local center. Needs the Local Centers module. |
+| **Restrict Event Editing by User Type** | Lets tenant admins limit which user type may edit a propagated event locally. |
+| **Disable Company Invoice in Checkout** | Hides the "I want company invoice" option at ticket checkout. Needs the Invoices module. |
+
+<Warning>
+Paid tickets need Stripe connected first. See [Stripe integration](/platform/fees/stripe-integration). Without it you can create free events and free ticket types only.
+</Warning>
+
+---
+
+## Who can do what
+
+| Permission | What it unlocks in Events |
+|---|---|
+| `EVENT_LOCAL` | Create and manage events in their own local center, and manage organization-wide events (events with no group) |
+| `EVENT_PARENT_LOCAL` | The same, extended across the centers under a parent center |
+| `EVENT_TENANT` | Manage any event, enable ticketing, and propagate events to all local centers |
+| `FINANCIAL_TENANT` | See the Access (Free or Paid) choice, and the Tickets and Payments tabs |
+| `ADMIN_TENANT` | Everything above, plus event types, statuses, and templates |
+
+Event owners can always manage their own event, whatever their permission level.
+
+<Note>
+An event created at organization level has no group, and the permission check treats it as unscoped. Anyone holding `EVENT_LOCAL` can therefore manage organization-wide events, not only events in their own center. Set **Who Can Create Public Events** to a tenant-level permission if that is not what you want.
+</Note>
 
 ---
 
 ## Related
 
-- [Create Event](/platform/events/create-event) — Step-by-step event creation
-- [Event Types](/platform/events/event-types) — Categorize your events
-- [Ticketing](/platform/events/ticketing) — Free and paid ticket setup
-- [Public Event Pages](/platform/events/public-page) — Shareable, branded event pages
-- [Attendance](/platform/events/attendance) — Check-in and tracking
+- [Create Event](/platform/events/create-event) - every field on the form
+- [Event Types and Statuses](/platform/events/event-types) - categories and workflow labels
+- [Event Templates](/platform/events/event-templates) - reusable event setups
+- [Ticketing](/platform/events/ticketing) - ticket types, add-ons, and checkout
+- [Attendance](/platform/events/attendance) - invitations, RSVPs, and check-in
+- [Public event pages](/platform/events/public-page) - what non-members see

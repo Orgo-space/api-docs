@@ -1,91 +1,161 @@
 ---
 title: 'Custom Domain'
-description: 'Serve your community on your own domain, and understand each step of the setup'
+description: 'Serve your community from your own address, with TLS and email sender identity set up in the same flow'
 "og:title": 'Custom Domain | Orgo'
-"og:description": 'Serve your community on your own domain, and understand each step of the setup'
+"og:description": 'Serve your community from your own address, with TLS and email sender identity set up in the same flow'
 "twitter:title": 'Custom Domain | Orgo'
-"twitter:description": 'Serve your community on your own domain, and understand each step of the setup'
+"twitter:description": 'Serve your community from your own address, with TLS and email sender identity set up in the same flow'
 ---
 
-By default your community lives at `yourorg.orgo.space`. A custom domain lets it
-live at an address you own, such as `members.yourorg.org`, so members never leave
-your brand.
+By default your community lives at `yourorg.orgo.space`. A custom domain moves it to an address you own, such as `members.yourorg.org`. The same setup also requests the TLS certificate and prepares your domain as an email sender, so you do this once rather than three times.
 
-Setup is not instant. It runs through a sequence of states, and most of the
-confusion comes from not being able to tell which one you are in.
+**Built for** organizations whose members should never see a vendor address, including federations, associations, and unions with an established public domain.
+
+**Replaces** running a redirect or a reverse proxy of your own in front of the members' area.
+
+**Settings → Customization → Custom Domain**
+
+<Note>
+  Requires **ADMIN_TENANT**. Every endpoint behind this page enforces it server side, not just the menu.
+</Note>
+
+<img src="/images/platform/custom-domain/custom-domain-start.png" alt="Custom Domain setup page showing the before-you-start checklist and the App host field" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Before you start
+
+The page states four things up front, and all four matter:
+
+- You need DNS access at your domain's **apex** (for example `acme.com`), not just at the subdomain.
+- Setup takes about 10 minutes of your time. Validation afterwards is not instant.
+- Your old URL keeps working: once the new domain goes live, `yourorg.orgo.space` redirects to it automatically.
+- TLS is free and renewed for you.
+
+Two rules are enforced when you submit. **It must be a subdomain**: `members.acme.com` is accepted, `acme.com` is rejected, and Orgo resolves the registrable apex using the public suffix list, so `community.acme.co.uk` correctly resolves to `acme.co.uk`. **One setup at a time**: cancel a running setup before starting another.
 
 ---
 
 ## The setup sequence
 
-| State | What is happening | What you do |
-|---|---|---|
-| **Draft** | The domain is recorded but nothing has started | Start the setup |
-| **Provisioning** | A TLS certificate is being requested for your domain | Wait |
-| **Awaiting DNS** | Orgo is waiting for you to add DNS records | **Add the records shown** |
-| **Validating** | Your records have been found and are being verified | Wait |
-| **Active** | The domain is live and serving your community | Nothing |
-| **Failed** | Setup could not complete | See below |
-
-The only step that needs you is **Awaiting DNS**. Everything else moves on its
-own, though not instantly.
-
----
-
-## Adding the DNS records
-
 <Steps>
-  <Step title="Choose the subdomain">
-    Something like `members.yourorg.org` or `community.yourorg.org`. Use a
-    subdomain rather than your bare domain, so your main website is unaffected.
+  <Step title="Enter the host and start">
+    Type the address, for example `community.acme.com`; the page previews the final URL. **Start setup** immediately requests a wildcard TLS certificate for `*.<your apex>` and creates a sender identity for the same apex.
   </Step>
-  <Step title="Add the records Orgo shows you">
-    Add them exactly as displayed, in whichever service manages your DNS. The
-    certificate validation record and the record pointing at Orgo are both
-    required; one without the other leaves setup stuck.
+  <Step title="Add the DNS records">
+    Once both requests come back, the status becomes **Awaiting DNS** and two record groups appear. Add every record exactly as shown at your DNS provider. Use **Copy all as text** or **Download as CSV** rather than retyping.
   </Step>
-  <Step title="Wait for propagation">
-    DNS changes are not immediate. A few minutes is normal, longer is possible
-    depending on your provider and previous cache lifetimes.
+  <Step title="Wait for detection">
+    Orgo checks for the records on its own. The page refreshes every 10 seconds while setup is running, and **Check now** forces an immediate check.
+  </Step>
+  <Step title="Live">
+    When the certificate is issued and your CNAME actually resolves to the Orgo target, the domain starts serving and the old address begins redirecting.
   </Step>
 </Steps>
 
 ---
 
-## "I added the domain but I do not get a login page"
+## The two record groups
 
-Almost always one of three things, in order of likelihood:
+### Domain Validation
 
-**Setup is not finished.** Check the state. If it says Awaiting DNS or
-Validating, the domain is not serving yet and what you are seeing is expected.
+Proves you own the domain so the certificate can be issued, and points traffic at Orgo.
 
-**DNS has not propagated to you.** Your own computer may hold an older answer
-even when the record is correct. Try a private window, another network, or simply
-wait. If it works for someone else, this is what it is.
+| Record | What it is |
+|---|---|
+| CNAME (validation) | A one-off ownership proof under your apex. Marked **Verified** once the certificate is issued. |
+| CNAME (your host) | Points `community.acme.com` at the Orgo endpoint. Marked **Verified** once the domain has gone live. |
 
-**A record is missing or altered.** Some DNS providers append your domain to
-values automatically, which silently turns a correct record into a wrong one.
-Compare what is saved against what Orgo displayed, character for character.
+### Email Setup
+
+Authorises Orgo to send mail signed as your domain.
+
+| Record | What it is |
+|---|---|
+| Three CNAMEs at `<token>._domainkey.<apex>` | DKIM signing keys. All three are required. |
+| TXT at `_dmarc.<apex>` | Tagged **Recommended**, not required. It tells receiving servers what to do with messages that fail authentication. |
+
+The verified counter next to **Email Setup** counts only the required records, so it can read 3/3 while the DMARC row still shows as Recommended.
+
+<Warning>
+  Some DNS providers append your domain to any value you paste, silently turning a correct record into a wrong one. After saving, read the stored record back and compare it character for character with what Orgo shows.
+</Warning>
+
+---
+
+## Status reference
+
+| Status | Meaning | What you do |
+|---|---|---|
+| **Provisioning** | The certificate and sender identity are being requested. Records appear here shortly. | Wait |
+| **Awaiting DNS** | Records are ready to be added at your provider. | **Add the records** |
+| **Validating DNS** | Your records are being checked. Usually minutes once they exist. | Wait |
+| **Active** | The domain serves your community and email is signed by your domain. | Nothing |
+| **Failed** | Setup hit an error. | **Retry**, or contact support if it recurs |
+| **Abandoned** | No DNS was detected for 7 days, and the setup was cleaned up. | Cancel and start over |
+
+Awaiting DNS is the only status that needs you.
+
+**How often Orgo re-checks.** Checks start once a minute and slow down the longer a setup waits: roughly every minute for the first half hour, then every five minutes for about six hours, then every half hour for about a day, then once a day until the 7-day cleanup. **Check now** bypasses that schedule, so use it after you have just saved your records rather than waiting for the next automatic pass.
+
+---
+
+## Going live, and what changes
+
+Two things have to finish, and they rarely finish together.
+
+**Traffic.** The certificate must be issued **and** your host's CNAME must actually resolve to the Orgo target. Only then does Orgo switch your app host over and set up the redirect from `yourorg.orgo.space`.
+
+**Email.** Both the domain verification and all three DKIM keys must succeed. When they do, and your organization's contact email is on the same domain (or a subdomain of it), Orgo marks that address as a verified sender. Until then, mail goes out from `no-reply@orgo.space` with your contact email as the reply address; after verification, from your contact email.
+
+The status reads **Active** only once both halves are done, so a domain can be serving pages perfectly while the page still says Validating because DKIM has not propagated yet.
 
 <Note>
-If it has been more than an hour in Awaiting DNS with records you have checked,
-contact support rather than deleting and starting again. Starting over requests a
-new certificate and puts you at the back of the same queue.
+  If your contact email is on a different domain from the one you just set up, DNS alone will not switch the sender. Change it to an address on the new domain in [Organization Info](/platform/organisation/organisation-info), then let the next check run.
 </Note>
 
----
-
-## If setup fails
-
-A failed state usually means certificate validation could not complete within the
-allowed window, which in practice means the DNS records were not in place in time.
-Confirm the records, then ask support to restart the setup.
+Payment and donation short links (`/pay/<slug>`) use a separate payment host this setup does not change; ask support if you want those on your domain too.
 
 ---
 
-## Email and your custom domain
+## Cancelling and retrying
 
-Serving the community on your domain is separate from sending email from it.
-Email sending needs its own DNS records and its own verification. Setting up one
-does not configure the other, and members noticing that email still arrives from
-the old address is the usual way this is discovered.
+**Retry** on a failed setup cancels the current attempt and starts a fresh one under the same host name.
+
+**Cancel setup**, and **Remove custom domain** on a live one, destroy the TLS certificate and the email sender identity, remove the routing, and drop the redirect from the old address. The DNS records you added stop doing anything, and starting again requests a brand-new certificate.
+
+<Warning>
+  If you have been in Awaiting DNS for more than an hour with records you have verified, contact support rather than cancelling. Starting over requests a new certificate and puts you back at the start of the same validation window.
+</Warning>
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="I added the domain but I get no login page">
+    Awaiting DNS and Validating both mean the domain is not serving yet. If the status is Active, your own machine may be holding an older DNS answer, so try a private window or another network.
+  </Accordion>
+  <Accordion title="Stuck in Awaiting DNS with records that look right">
+    Usually the provider rewrote the record, so check for an added trailing dot. Otherwise the records went into the wrong zone: they belong at your apex, not at the subdomain.
+  </Accordion>
+  <Accordion title="Setup failed">
+    Almost always certificate validation not completing inside its window, meaning the validation record was not in place in time. Confirm it, then use **Retry**.
+  </Accordion>
+  <Accordion title="Emails still arrive from the old address">
+    All three DKIM records in the Email Setup group must read Verified, and your organization contact email must be on the new domain.
+  </Accordion>
+  <Accordion title="An error message is shown above the stepper">
+    That line is the last error from the most recent check. It clears as soon as a check runs clean, so a message that stays means the condition is still present.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related
+
+- [Branding](/platform/organisation/branding) - Logos, login background, and interface theme
+- [Organization Info](/platform/organisation/organisation-info) - Contact email and sender identity
+- [Modules](/platform/organisation/modules) - Turn platform features on and off
+- [Mobile Apps](/platform/mobile-apps) - Shared app and branded apps
+- [Permissions](/platform/permissions) - What ADMIN_TENANT unlocks

@@ -1,0 +1,133 @@
+---
+title: 'Email logs'
+description: 'A record of every email Orgo sent, with the exact body, for answering "the member never got it"'
+"og:title": 'Email logs | Orgo'
+"og:description": 'A record of every email Orgo sent, with the exact body, for answering "the member never got it"'
+"twitter:title": 'Email logs | Orgo'
+"twitter:description": 'A record of every email Orgo sent, with the exact body, for answering "the member never got it"'
+---
+
+The email log answers one question well: did we send it, and what did it say. Every
+email the platform sends is recorded with its recipient, subject, time and the
+exact rendered body.
+
+**Built for** whoever fields "I never got the renewal reminder". **Replaces**
+taking the member's word for it, or your own.
+
+The log is at **Administration** → **Email logs** (`/email-log`) and needs
+ADMIN_TENANT. It is also embedded in two places where you are more likely to want
+it: a member profile has a **Logs** tab with an **Email Logs** view, and a contact
+record shows an **Email logs** card.
+
+<img src="/images/platform/emails/email-log-list.png" alt="Email logs list with a recipient search box and a table of ID, sent date, member, subject and type" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Reading the list
+
+Newest first, twenty per page. Each row shows:
+
+| Column | What it is |
+|---|---|
+| **ID** | The log entry number, and the link to the full entry |
+| **Sent date** | When Orgo handed the message to the mail service |
+| **Member** | The member, contact or company it went to, linked to their record. When the address matches nobody, the address itself is shown |
+| **Subject** | The subject line as sent, with placeholders already filled in |
+| **Type** | Which kind of email it was |
+
+**Search by recipient** at the top finds a member or contact and filters the list
+to them. ID, sent date and type are sortable.
+
+---
+
+## Reading one entry
+
+Opening an entry shows the recipient, the subject, the sent date, the type, and
+**Email Preview**: the message body exactly as it was rendered for that person,
+with their name, dates and links already substituted.
+
+<img src="/images/platform/emails/email-log-detail.png" alt="Email log entry showing recipient, subject, sent date and type cards above a rendered preview of the email body" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+This is the part that settles arguments. If a member says the payment link did not
+work, you can see the link that was in their copy.
+
+---
+
+## Answering "the member never got it"
+
+<Steps>
+  <Step title="Find them in the log">
+    Search by recipient, or open their profile and use the **Logs** tab. Working
+    from the profile is usually faster and avoids picking the wrong person.
+  </Step>
+  <Step title="No row at all?">
+    Orgo did not send it. Either the email is switched off (check
+    [Emails Config](/platform/emails/system-emails)) or the thing that triggers it
+    did not happen: no payment recorded, no invitation issued, no event
+    registration. Fix the cause, not the email.
+  </Step>
+  <Step title="A row exists?">
+    Orgo sent it. Check the address on the row: an old address, a typo, or a
+    placeholder address left by a data import all produce a row that was never
+    going to arrive.
+  </Step>
+  <Step title="Right address, still missing?">
+    It is a delivery problem, not an Orgo problem. Ask them to check spam and
+    quarantine, and check whether their employer's mail filter is involved.
+  </Step>
+  <Step title="Subject starts with FAILED?">
+    The message was queued but could not be delivered after repeated attempts, and
+    the entry records why instead of the body. Usually the address is invalid.
+  </Step>
+</Steps>
+
+---
+
+## What the log does not tell you
+
+The log is a record of sending, not of delivery. It has no opened, clicked,
+bounced or delivered status. Those exist only for newsletter campaigns, where they
+are shown as campaign statistics: see [Newsletter](/platform/newsletter).
+
+Two more gaps worth knowing:
+
+- **Login and multi-factor codes are not logged.** Nothing at all is written for
+  them. Other one-time codes (email verification, password reset, password change,
+  email change, event app sign-in) do get a row, but with the code removed from
+  the subject and no body stored, so nobody with access to the log can use it to
+  get into a member's account.
+- **Deleting a member deletes their email history.** Log entries are attached to
+  the member or contact record and go with it. Export anything you need to keep
+  before deleting an account.
+
+---
+
+## Newsletters in the log
+
+Campaign sends appear here too, one entry per recipient, tagged as **Newsletter**
+and linked to the campaign that produced them. So a member who says they received
+a campaign they should not have appears in the log with the campaign named.
+
+---
+
+## Retention
+
+Orgo does not expire log entries on a schedule: they stay until the person they
+belong to is deleted. On a large organisation the log grows to millions of rows,
+which is why it always opens filtered to a page rather than counted in full.
+
+<Warning>
+The log stores the full body of most emails, which means it holds personal data:
+names, addresses, amounts, membership dates. It is restricted to ADMIN_TENANT for
+that reason. Take that into account in your data retention policy.
+</Warning>
+
+---
+
+## Related
+
+- [System emails](/platform/emails/system-emails) - what should have been sent, and its switch
+- [Email templates](/platform/emails/email-templates) - changing what a message says
+- [Emails](/platform/emails) - sender identity and deliverability
+- [Newsletter](/platform/newsletter) - campaign statistics, including opens and clicks
+- [Users & Profiles](/platform/users) - the profile Logs tab

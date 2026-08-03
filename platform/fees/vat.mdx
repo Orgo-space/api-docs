@@ -1,77 +1,177 @@
 ---
-title: 'VAT & Invoice Templates'
-description: 'Apply VAT to some products and not others, and set the tax details that appear on invoices'
-"og:title": 'VAT & Invoice Templates | Orgo'
-"og:description": 'Apply VAT to some products and not others, and set the tax details that appear on invoices'
-"twitter:title": 'VAT & Invoice Templates | Orgo'
-"twitter:description": 'Apply VAT to some products and not others, and set the tax details that appear on invoices'
+title: 'VAT & Registration Fees'
+description: 'Turn VAT on for membership fees, set a rate per membership level, charge a one-time joining fee, and control the tax shown on invoices'
+"og:title": 'VAT & Registration Fees | Orgo'
+"og:description": 'Turn VAT on for membership fees, set a rate per membership level, charge a one-time joining fee, and control the tax shown on invoices'
+"twitter:title": 'VAT & Registration Fees | Orgo'
+"twitter:description": 'Turn VAT on for membership fees, set a rate per membership level, charge a one-time joining fee, and control the tax shown on invoices'
 ---
 
-Organisations rarely charge one tax rate across everything. A membership fee may
-carry VAT while a refundable deposit does not, or a training course may be exempt
-where a ticket is not.
+Two optional charges sit on top of a membership price: VAT, and a one-time
+registration fee paid when someone first joins. Both are off until you turn them
+on, and both are configured per membership level rather than once for the whole
+organisation.
 
-VAT in Orgo lives in two places: on the **invoice template**, which sets the tax
-name and rate used, and on each **invoice line**, which carries the rate actually
-applied to that item.
+Tax on manual invoices is separate and is set on the invoice template.
 
 ---
 
-## Invoice templates
+## Turning them on
 
-A template holds the tax details that appear on every invoice issued from it.
+**Settings** → **Payments & Fees** → **Membership fees** → **Pricing Options**.
+Requires `ADMIN_TENANT`.
 
-| Field | What it is for |
+| Setting | What it does |
 |---|---|
-| Tax name | What the tax is called on the document, for example VAT or TVA |
-| Tax value | The rate applied |
-| VAT exemption note | The wording shown when a line is exempt, which many jurisdictions require in full |
-| Memo, footer | Standing text on every invoice from this template |
+| **Enable VAT on Fees** | Shows the VAT fields on membership prices and adds VAT on top at checkout and on invoices |
+| **Enable One-time Registration Fee** | Shows the registration fee field on membership prices and charges it once, on a member's first membership payment |
 
-**Settings** → **Invoices** → **Invoice templates**.
+<Warning>
+These two switches are authoritative. With **Enable VAT on Fees** off, a price
+that already holds a VAT rate is charged and invoiced with no VAT at all, and
+every invoice line is issued as non-taxable. Turning the switch on later starts
+applying the stored rates immediately, so check your prices before you flip it.
+</Warning>
+
+<img src="/images/platform/fees/fees-vat-settings.png" alt="Pricing Options section of the membership fee settings with Enable VAT on Fees and Enable One-time Registration Fee switches" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Charging VAT on one product but not another
+## Setting a rate per membership level
 
-Create a template per tax treatment, then issue each product's invoices from the
-template that matches it.
+Once VAT is on, each membership price on a fee product gains a **VAT** block:
 
-<Steps>
-  <Step title="Create a template for the standard case">
-    For example, one with your normal VAT rate, used for membership fees.
-  </Step>
-  <Step title="Create a second template for the exempt case">
-    No tax value, and a VAT exemption note that states the legal basis. Use this
-    for deposits or anything else outside the scope of VAT.
-  </Step>
-  <Step title="Issue each invoice from the matching template">
-    A membership fee and a refundable deposit are separate products, so they can
-    be invoiced from separate templates even when the member pays for both at
-    once.
-  </Step>
-</Steps>
+- **VAT exempt (not taxable)**: the level carries no VAT and is excluded from
+  the taxable base.
+- **VAT rate (%)**: used when the level is not exempt. Decimal rates are stored
+  as written, so 13.5 or 19.6 are fine.
+
+That is how one organisation charges VAT on a standard membership and none on a
+reduced or honorary level: they are separate prices, so they carry separate
+treatments. Donation options on a fee product never show the VAT fields, and
+neither does any product that is not a fee product.
+
+---
+
+## VAT is added on top
+
+Orgo uses the exclusive model everywhere. The price you type is the net amount,
+and VAT is calculated on top of it:
+
+```
+VAT     = net × rate / 100
+Gross   = net + VAT
+```
+
+A level priced at 100 with a 19% rate charges 119. Nothing in the product is
+VAT-inclusive, so do not enter a gross figure and expect Orgo to work backwards
+from it.
+
+---
+
+## The one-time registration fee
+
+The registration fee is a joining fee: it is a field on the membership level,
+and it is charged once per member, on their first membership payment. The field
+carries the note "Charged once, on the member's first membership payment. Leave
+empty for no registration fee."
 
 <Note>
-The rate is stored on each invoice line at the moment the invoice is created, not
-looked up when the invoice is viewed. Changing a template later does not rewrite
-invoices already issued, which is what you want: a historical invoice keeps the
-rate that was correct on the day it was raised.
+"First payment" means the member has never had a membership validity date. A
+member who paid once and then lapsed for years counts as a returning member and
+is never charged the registration fee again. There is no way to re-arm it for an
+individual short of clearing their membership history.
+</Note>
+
+Other things worth knowing:
+
+- It is only available on organisation-level fee products. A local center fee
+  product does not show the field.
+- It has its own VAT treatment, set independently of the price VAT. Those
+  controls appear only once you have entered a registration fee amount, and only
+  when **Enable VAT on Fees** is also on.
+- It is recorded as its own payment row and appears as its own invoice line, so
+  reports separate joining income from recurring dues. It rides on the same card
+  charge as the first membership payment, so refunding that charge reverses both.
+- It buys no membership time. Only the membership portion extends the member's
+  validity date.
+
+---
+
+## What the member is charged
+
+At checkout the member sees one total built from up to five parts:
+
+| Part | When it applies |
+|---|---|
+| Membership (net) | Always |
+| VAT on membership | VAT on, level not exempt, rate above zero |
+| Registration fee | Registration fee on, level has an amount, member has never paid |
+| VAT on registration fee | VAT on, registration fee not exempt, rate above zero |
+| Donation | Only if the member adds one at checkout |
+
+The membership summary card, the fee cards and the card payment panel all
+compute this the same way, so the amount on the button matches the amount on the
+card form.
+
+---
+
+## VAT on an invoice
+
+Membership invoices carry VAT per line, not once for the document. Each line
+stores either a rate or an exempt flag at the moment the invoice is created, so
+a historical invoice keeps the treatment that was correct on the day it was
+raised. Changing a price or a template later never rewrites an issued invoice.
+
+The invoice shows a VAT column per line, then a totals block with **Subtotal**,
+one **VAT** row per distinct rate (labelled with the rate and the base it was
+applied to), **Total** and **Amount due**. Line amounts and VAT are rounded to
+two decimals.
+
+When at least one line is exempt, the invoice prints the VAT exemption note,
+which is the free-text wording that states the legal basis for the exemption.
+
+<Note>
+The exemption note is stored on the invoice template and copied onto each
+invoice raised from it, but there is currently no field for it in the invoice
+template form. It can only be set through the API. If you need it on your
+documents, ask support to set it for you.
 </Note>
 
 ---
 
-## Getting the exemption wording right
+## Tax on manual invoices
 
-The exemption note is free text because the required wording differs by country
-and by the reason for exemption. Orgo does not check that what you write is
-correct for your jurisdiction. If you are unsure, ask your accountant for the
-exact sentence and paste it in, rather than paraphrasing.
+Manual invoices take their tax from the invoice template rather than from a
+membership price. **Settings** → **Payments & Fees** → **Invoice templates**,
+`ADMIN_TENANT`.
+
+| Field | What it is for |
+|---|---|
+| **Tax** | Switch that reveals the two fields below |
+| **Tax Name** | What the tax is called on the document, for example VAT or GST |
+| **Tax Rate (%)** | A whole percentage between 0 and 100 |
+| **Memo**, **Footer** | Standing text on every invoice from this template |
+
+The template's tax name and rate are copied onto an invoice when it is created
+from that template. Create one template per tax treatment and issue each
+invoice from the one that matches it.
+
+---
+
+## Your organisation's VAT number
+
+The VAT identification number printed in the issuer block of every invoice comes
+from **Settings** → **Organisation info** → **VAT Number**. It is a display
+field: Orgo does not validate it and does not use it to decide whether VAT
+applies.
 
 ---
 
 ## Related
 
-- [Products](/platform/fees/products) — creating the products invoices are raised against
-- [Recording a payment](/platform/fees/record-payment) — marking an invoice paid
-- [Stripe Integration](/platform/fees/stripe-integration) — card payments and processor fees
+- [Membership Fees](/platform/fees/fees) for collecting and tracking dues
+- [Products](/platform/fees/products) for the fee products and price levels these settings live on
+- [Renewals](/platform/fees/renewals) for what happens when a membership expires
+- [Invoices](/platform/fees/invoices) for numbering, templates and delivery
+- [Stripe Integration](/platform/fees/stripe-integration) for card payments and payouts

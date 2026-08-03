@@ -1,0 +1,169 @@
+---
+title: 'Emails'
+description: 'How Orgo sends email on your behalf: sender identity, template language, delivery, and where each control lives'
+"og:title": 'Emails | Orgo'
+"og:description": 'How Orgo sends email on your behalf: sender identity, template language, delivery, and where each control lives'
+"twitter:title": 'Emails | Orgo'
+"twitter:description": 'How Orgo sends email on your behalf: sender identity, template language, delivery, and where each control lives'
+---
+
+Orgo sends email on your behalf all day: a welcome message when someone joins, a
+renewal reminder a month before a fee lapses, a ticket confirmation after a
+purchase, a login code when a member cannot remember their password. This section
+covers the machinery behind all of it.
+
+**Built for** organisations that need their automatic email to look and sound like
+them. **Replaces** the transactional email service you would otherwise wire up
+yourself.
+
+Everything here lives under **Settings** → **Notifications & Email Campaign**
+(`/tenants/modules/emails`) and requires ADMIN_TENANT. The delivery log and the
+lists sit in the Administration area instead.
+
+---
+
+## The four surfaces
+
+| Surface | Where | What it is for |
+|---|---|---|
+| **Emails Config** | Settings → Notifications & Email Campaign → Emails Config | Switch whole categories of automatic email on or off |
+| **Email Templates** | Settings → Notifications & Email Campaign → Email Templates | Rewrite the subject and body of an individual email |
+| **Email logs** | Administration → `/email-log` | Every email the platform sent, with the exact body |
+| **Lists & Segments** | Administration → `/email-lists` | Reusable audiences that campaigns send to |
+
+Campaigns you write and send yourself are a separate feature: see
+[Newsletter](/platform/newsletter).
+
+---
+
+## Who the email comes from
+
+Three things decide what a recipient sees in their inbox.
+
+**From name** is always your organisation's name as it appears in
+[Organisation info](/platform/organisation/organisation-info).
+
+**From address** is your organisation's contact email, but only once that address
+has been verified for sending. Until then Orgo sends from `no-reply@orgo.space`.
+Verification is done by Orgo rather than in the settings screen, because it
+requires DNS records on your domain: ask support to verify the address you want to
+send from.
+
+**Reply-To** is always your contact email, verified or not. So even on a brand new
+organisation, a member who hits reply reaches you rather than a dead no-reply
+mailbox.
+
+<Note>
+Change the contact email at **Settings** → **Organisation** → **Contact email**.
+Changing it to an unverified address moves the From address back to
+`no-reply@orgo.space` until the new one is verified.
+</Note>
+
+---
+
+## What language an email is written in
+
+Automatic emails are written in your organisation's default interface language,
+not the recipient's. Only English, Romanian and German are supported for email:
+if your default language is anything else, emails fall back to English.
+
+This applies to the built-in wording of a template. If you write your own version
+of a template, that version is used for every recipient regardless of language, so
+a multilingual organisation should think carefully before customising.
+
+See [Email templates](/platform/emails/email-templates) for what you can rewrite,
+and [Languages](/platform/customization/languages) for the interface language
+setting itself.
+
+---
+
+## How a message actually gets sent
+
+<Steps>
+  <Step title="Something happens">
+    A member registers, a fee approaches its renewal date, a ticket is paid for.
+    Each of these has one email type attached to it.
+  </Step>
+  <Step title="The category switch is checked">
+    If the matching switch in **Emails Config** is off, nothing is sent and nothing
+    is logged as sent. Login codes, password emails and workflow emails ignore this
+    check and always send.
+  </Step>
+  <Step title="The template is resolved">
+    Your customised version if you saved one, otherwise the built-in template in
+    your organisation's language.
+  </Step>
+  <Step title="Placeholders are filled in">
+    Names, dates, amounts, links. See the
+    [placeholder reference](/platform/emails/email-templates#placeholders).
+  </Step>
+  <Step title="It is queued or sent immediately">
+    Login codes, verification codes, password emails, registration confirmations
+    and admin-created account emails are sent on the spot so a failure surfaces
+    right away. Everything else is queued and sent by a background worker.
+  </Step>
+  <Step title="It is written to the log">
+    With the rendered body, so you can see exactly what the recipient got. Codes
+    are the exception: login and multi-factor codes are not logged at all, and the
+    other one-time codes are logged with the code removed and no body stored.
+  </Step>
+</Steps>
+
+---
+
+## Deliverability
+
+A few things Orgo does for you, and one it cannot:
+
+- Emails sent through the template system carry a plain text version alongside the
+  HTML, which mailbox providers (Microsoft in particular) treat as a quality
+  signal.
+- Notification and campaign email carries a `List-Unsubscribe` header, so the
+  unsubscribe button in Gmail and Apple Mail works without the recipient opening
+  the message. Campaign email additionally supports RFC 8058 one-click
+  unsubscribe.
+- Addresses that were minted during a data import for people who had no email of
+  their own are recognised and skipped rather than bounced. A member with one of
+  these will simply never receive email until you give them a real address.
+- Orgo cannot fix your domain's reputation. If you send from your own address,
+  the SPF, DKIM and DMARC records on that domain are yours to maintain.
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="A member says they never got an email">
+    Start at [Email logs](/platform/emails/email-log) and search for them. The log
+    answers whether Orgo sent it, to which address, and what it said. If there is
+    no row at all, the email was either disabled in **Emails Config** or the
+    triggering action did not happen.
+  </Accordion>
+
+  <Accordion title="Emails arrive from no-reply@orgo.space instead of us">
+    Your contact email has not been verified for sending yet. Replies still reach
+    your contact address. Ask support to verify the address.
+  </Accordion>
+
+  <Accordion title="An email is in the wrong language">
+    Automatic email follows the organisation's default language, clamped to
+    English, Romanian or German. A member's own interface language does not change
+    it.
+  </Accordion>
+
+  <Accordion title="We want to stop one specific reminder without stopping the rest">
+    Open that template in **Email Templates** and use the **Enabled** switch in the
+    template header. That per-template switch overrides the broader category
+    switch.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related
+
+- [System emails](/platform/emails/system-emails) - the catalogue of automatic emails and what triggers each
+- [Email templates](/platform/emails/email-templates) - rewriting subject and body, and the placeholder list
+- [Email logs](/platform/emails/email-log) - what was sent, to whom, and what it said
+- [Newsletter](/platform/newsletter) - campaigns you compose and send yourself
+- [Notifications](/platform/notifications) - in-app and push delivery, and per-member preferences

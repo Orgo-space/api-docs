@@ -1,146 +1,123 @@
 ---
 title: 'Event Reports'
-description: 'Document completed events with photos, attendance stats, and outcomes'
+description: 'Record what an event set out to do, what happened, and what it cost'
 "og:title": 'Event Reports | Orgo'
-"og:description": 'Document completed events with photos, attendance stats, and outcomes'
+"og:description": 'Record what an event set out to do, what happened, and what it cost'
 "twitter:title": 'Event Reports | Orgo'
-"twitter:description": 'Document completed events with photos, attendance stats, and outcomes'
+"twitter:description": 'Record what an event set out to do, what happened, and what it cost'
 ---
 
-Event Reports are post-event summaries that capture what happened: how many people came, what was achieved, photos, and outcomes. They serve as organizational memory and feed into [Annual Reports](/platform/events/annual-report) for year-end statistics.
+An event report is a short written record attached to the event itself: what it aimed to
+achieve, what took place, who it was for, how it was promoted, what it cost, and how many
+people took part. It is free text, filled in by the organiser, and it is what the
+[Annual Report](/platform/events/annual-report) compiles.
 
-<img src="/images/platform/events/event-report.png" alt="Event report form with Goals, Activities, Target, Advertising, and Budget sections" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
----
-
-## Why create event reports?
-
-| Purpose | How it helps |
-|---------|-------------|
-| **Institutional memory** | Six months from now, you can look back and see what happened — who attended, what was decided, what photos were taken |
-| **Board/funder reporting** | Prove your impact with concrete numbers and documentation |
-| **Future planning** | Review past reports when planning similar events — what worked, what didn't, how many attended |
-| **Member engagement** | Members who missed the event can see what happened — photos, summary, outcomes |
-| **Annual reporting** | Individual event reports feed automatically into the [Annual Report](/platform/events/annual-report) |
+<img src="/images/platform/events/event-report.png" alt="Event report form showing the Add to annual report checkbox and the Goals, Activities, Target, Advertising and Budget fields" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Enable event reports
+## Turn it on
 
-**Settings** → **Events** → **Module Settings** → enable **Event Reports**
+**Settings → Modules → Events → Reporting & Analytics → Event Reports**. Changing it
+requires `ADMIN_TENANT`.
 
-Once enabled, every completed event gets a **Report** tab.
-
----
-
-## Creating a report
-
-After the event ends, go to the event → **Report** tab.
-
-<Steps>
-  <Step title="Verify attendance">
-    Review and confirm the attendance numbers. The system pre-fills from check-in data, but you can adjust if needed (e.g., you counted walk-ins who weren't scanned).
-  </Step>
-  <Step title="Write a summary">
-    Describe what happened — key moments, topics covered, decisions made. Rich text with formatting, links, and inline images.
-  </Step>
-  <Step title="Upload photos">
-    Add event photos to create a gallery. Drag and drop multiple images at once. These become the event's photo archive.
-  </Step>
-  <Step title="Record outcomes (optional)">
-    Document decisions made, action items, follow-up tasks, or results achieved.
-  </Step>
-  <Step title="Log volunteer hours (optional)">
-    If your org tracks volunteer time, record total volunteer hours contributed at this event.
-  </Step>
-  <Step title="Save or publish">
-    Save as draft for later editing, or publish to make the report visible.
-  </Step>
-</Steps>
-
-<Tip>
-  Create reports within a week of the event while details are fresh. The longer you wait, the harder it is to write a useful summary.
-</Tip>
+The setting is off by default. Once it is on, every event gains a **Report** entry in the
+event sidebar, next to Participants and Tickets.
 
 ---
 
-## What the report includes
+## The report form
 
-| Section | Content |
-|---------|---------|
-| **Event details** | Title, date, location, type, organizer — pulled automatically from the event |
-| **Attendance stats** | Registrations, actual attendance, attendance rate, no-shows, walk-ins |
-| **Summary** | Your written description of what happened |
-| **Outcomes** | Decisions, results, follow-up actions |
-| **Photos** | Event gallery |
-| **Volunteer hours** | Total volunteer hours contributed |
-| **SDG alignment** | If SDG tagging is enabled — impact tracking |
+The form has six fields and a save button. Nothing is mandatory, and you can come back and
+edit it at any time.
 
----
+| Field | What it holds |
+|---|---|
+| **Add to annual report** | Checkbox. Includes this event in the local centre's annual report. Only appears when **Annual Event Reports** or **Local Annual Report** is enabled. |
+| **Goals** | Free text. What the event set out to achieve. |
+| **Activities** | Free text. What actually took place. |
+| **Target** | Free text. Who the event was aimed at. |
+| **Advertising** | Free text. How the event was promoted. |
+| **Budget** | Free text. What it cost, in whatever form your organisation reports it. |
+| **Number of participants** | Whole number. Your own headcount for the event. |
 
-## Attendance verification
+All five text fields accept line breaks, so you can write short paragraphs or bullet-style
+lists. They are stored as plain text: there is no rich text editor, no formatting toolbar,
+and no image upload inside the report.
 
-The report shows attendance metrics calculated from your check-in data:
-
-| Metric | How it's calculated |
-|--------|-------------------|
-| **Registrations** | Total people who signed up |
-| **Checked in** | Marked as attended (via QR or manual) |
-| **No shows** | Registered but not checked in |
-| **Walk-ins** | Attended without pre-registration |
-| **Attendance rate** | Checked in ÷ Registered |
-
-If you didn't check people in during the event, go to the participant list first, mark who attended, then create the report — the numbers will update.
+<Note>
+Photos are not part of the report form. They live in the event's own media gallery on the
+event page, and the annual report pulls its images from there.
+</Note>
 
 ---
 
-## Photo gallery
+## Who can fill one in
 
-### Adding photos
-
-- Click "Add Photos" in the report
-- Select multiple images at once (drag and drop supported)
-- Images are compressed automatically for web viewing
-- Add captions to individual photos if helpful
-
-### Photo guidelines
-
-- Include variety: setup, activities, group shots, candids, speakers
-- Choose your best 10-20 photos, not every photo taken
-- Feature diverse participants
+Saving a report writes to the event itself, so it needs the same permission as editing the
+event: you must be the **event owner**, or hold **EVENT_LOCAL** for the event's local centre.
+`EVENT_TENANT` and `ADMIN_TENANT` satisfy that check organisation-wide.
 
 <Warning>
-  Get photo consent from participants, especially for events with minors. Consider adding a photo release clause to your event registration form.
+The **Report** entry is shown to anyone viewing the event while the setting is on, but a
+member without edit rights gets an access error when they press Save. Grant the person
+writing the report event permission first.
 </Warning>
 
 ---
 
-## Draft vs. published
+## Where the report appears
 
-| State | Who can see it |
-|-------|---------------|
-| **Draft** | Only event organizers and admins — work on it until it's ready |
-| **Published** | Visible to members (for private events) or publicly (for public events) |
+| Surface | What is shown |
+|---|---|
+| Event page | A short **Event Report** block with Goals, Activities, Advertising and Budget, shown once at least one of those four is filled in. |
+| [Annual report](/platform/events/annual-report) | Goals, Target, Activities, Advertising and Budget for every event ticked **Add to annual report**, plus the event's photos. |
+
+Target and Number of participants are stored on the event and returned by the API, but no
+screen in the app displays them. Treat them as data you are recording for export and
+reporting rather than something members will read.
+
+The report block is part of the member-facing event page, not the public one. The report
+fields are excluded from the anonymous event payload, so nothing you write here is visible
+to visitors on the [public event page](/platform/events/public-page).
 
 ---
 
-## Common scenarios
+## What event reports do not do
+
+These are worth stating plainly, because reporting features in other tools often work
+differently:
+
+- **They do not gate anything.** An event can be published, finished, duplicated or deleted
+  whether or not a report exists. No status depends on it.
+- **They do not have a draft or published state.** A saved report is immediately visible to
+  everyone who can see the event page.
+- **They do not calculate attendance.** Number of participants is typed in by hand and is
+  never reconciled against check-ins. For counted figures use
+  [Analytics](/platform/events/analytics), which reads the attendee records directly.
+- **They do not track volunteer hours or SDG alignment.** SDG tags are set on the event
+  itself, not in the report, and are not summarised anywhere in reporting.
+
+---
+
+## Common questions
 
 <AccordionGroup>
-  <Accordion title="The host forgot to create a report — can an admin do it?">
-    Yes. Any admin with event management permissions can create or edit event reports. Gently remind hosts about reporting — enabling **attendance reminders** in module settings helps.
+  <Accordion title="The host never wrote a report. Can an admin do it?">
+    Yes. Anyone with EVENT_TENANT, or EVENT_LOCAL for that local centre, can open the event
+    and fill the report in afterwards. There is no time limit.
   </Accordion>
 
-  <Accordion title="How do I include photos if the event was online?">
-    Screenshot key moments from the webinar or virtual event — the speaker presenting, the Q&A chat, attendance numbers. Many video conferencing tools let you capture screenshots during the session.
+  <Accordion title="Why is the annual report checkbox missing?">
+    It only renders when **Annual Event Reports** or **Local Annual Report** is enabled in
+    the Events module. With both off, the report is still usable, it just cannot feed an
+    annual compilation.
   </Accordion>
 
-  <Accordion title="Is the report public?">
-    It follows the event's visibility setting. Public event → public report. Members-only event → members-only report. Admins can override this.
-  </Accordion>
-
-  <Accordion title="Can I edit a report after publishing?">
-    Yes. Go back to the Report tab and make changes. Updates are reflected immediately.
+  <Accordion title="Can I get the reports out in bulk?">
+    Not from this screen. The annual report gathers them for one local centre over a date
+    range and prints, and the fields are available on the events API for anything more
+    involved.
   </Accordion>
 </AccordionGroup>
 
@@ -148,6 +125,7 @@ If you didn't check people in during the event, go to the participant list first
 
 ## Related
 
-- [Attendance](/platform/events/attendance) — Check-in data that feeds into reports
-- [Annual Report](/platform/events/annual-report) — Yearly aggregation of all event reports
-- [Events Overview](/platform/events) — Module setup and configuration
+- [Annual Report](/platform/events/annual-report): compiling reports for a local centre
+- [Analytics](/platform/events/analytics): counted attendance, capacity and revenue
+- [Attendance](/platform/events/attendance): participant records and statuses
+- [Events Overview](/platform/events): module settings and the event lifecycle

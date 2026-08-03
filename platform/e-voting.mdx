@@ -1,10 +1,10 @@
 ---
 title: 'E-Voting'
-description: 'Run secure elections and polls — anonymous voting, timed ballots, and transparent results'
+description: 'Run elections, motions and polls with timed ballots, anonymous or attributed voting, and live results'
 "og:title": 'E-Voting | Orgo'
-"og:description": 'Run secure elections and polls — anonymous voting, timed ballots, and transparent results'
+"og:description": 'Run elections, motions and polls with timed ballots, anonymous or attributed voting, and live results'
 "twitter:title": 'E-Voting | Orgo'
-"twitter:description": 'Run secure elections and polls — anonymous voting, timed ballots, and transparent results'
+"twitter:description": 'Run elections, motions and polls with timed ballots, anonymous or attributed voting, and live results'
 ---
 
 <script type="application/ld+json">{`
@@ -15,7 +15,7 @@ description: 'Run secure elections and polls — anonymous voting, timed ballots
   "applicationCategory": "BusinessApplication",
   "applicationSubCategory": "Membership Management Software",
   "operatingSystem": "Web, iOS, Android",
-  "description": "Orgo E-Voting runs anonymous elections and polls with timed voting windows, one-vote-per-person enforcement, optional real-time results, and cryptographically sealed ballots for post-vote integrity verification.",
+  "description": "Orgo E-Voting runs elections, motions and polls with multi-question ballots, timed voting windows, one-vote-per-person enforcement, optional live results, anonymous or attributed ballots, and a per-ballot integrity code voters can verify after the vote closes.",
   "offers": {
     "@type": "Offer",
     "priceSpecification": {
@@ -35,213 +35,182 @@ description: 'Run secure elections and polls — anonymous voting, timed ballots
 }
 `}</script>
 
-Orgo E-Voting is a secure balloting module within Orgo that runs anonymous elections, motions, and polls with timed voting windows and verifiable results.
+Orgo E-Voting runs elections, motions and polls on a timed ballot, with one vote per person and results the whole organisation can watch.
 
-**Built for** organizations that hold statutory elections or democratic votes, including professional associations, trade unions, political parties, and cooperatives, and other member-governed bodies.
+**Built for** organisations that hold statutory elections or democratic votes, including professional associations, trade unions, political parties, cooperatives and other member-governed bodies.
 
-**Replaces** paper ballots and manual show-of-hands votes for board elections and AGM resolutions, not the vote-threshold interpretation your bylaws require, since Orgo shows raw results only.
+**Replaces** paper ballots and show-of-hands counts at general assemblies. It does not interpret your bylaws: Orgo reports raw counts and percentages, and has no quorum or majority threshold setting.
 
-Run board elections, put motions to a member vote, or poll your community on scheduling preferences, with one-vote-per-person enforcement.
+<img src="/images/platform/voting/vote-list.png" alt="Voting list showing upcoming, live and finished votes with question count, target group and a turnout bar per vote" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-<img src="/images/platform/voting/vote-list.png" alt="Voting page showing four votes with different statuses — Upcoming (Uniform Design Poll), Live with 15% participation (Summer Camp Location), and two Finished votes with 55% participation (Budget Approval, Board Elections)" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
----
-
-## Votes vs polls
-
-| | Votes | Polls |
-|--|-------|-------|
-| **Purpose** | Formal elections and binding decisions | Quick opinion gathering |
-| **Anonymity** | Anonymous — admins can't see individual choices | Anonymous |
-| **Typical use** | Board elections, AGM resolutions, bylaw amendments | Event date preferences, feedback, scheduling |
-| **Formality** | Official record | Informal |
-
-Both use the same creation flow — you just toggle whether it's a poll or a formal vote.
+<Note>
+  E-Voting is a module. Turn it on at **Settings → Modules → Voting → Enable Voting Module**. It is on by default for new organisations. When it is off, the Voting entry disappears from the sidebar and the mobile tab bar.
+</Note>
 
 ---
 
 ## Creating a vote
 
-**Voting** → **Create Voting**
+Open **Voting** and select **Create Voting**, shown to members with `ADMIN_TENANT` or `HR_TENANT`.
 
-<img src="/images/platform/voting/vote-create.png" alt="Create Vote form showing vote title, start and end date/time pickers with timezone, eligibility options (Group vote or Private vote), group selector, and settings for real-time results and hiding voters list" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/voting/vote-create.png" alt="Create Voting modal with the question builder, single and multiple answer toggle, start and end dates with timezone, audience cards and the settings switches" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 <Steps>
-  <Step title="Write the question">
-    Enter a clear title — "Board Member Election 2025" or "Should we adopt the new bylaws?" You can add multiple questions per vote session (e.g., two board positions in one election).
+  <Step title="Write the question and its options">
+    A question needs at least one option; options can be added, deleted and dragged into order.
   </Step>
-  <Step title="Add options">
-    Add the choices voters can select from. For elections, these are candidates. For motions, typically Yes / No / Abstain.
+  <Step title="Pick the answer type">
+    **Single answer** shows radio buttons and accepts exactly one option. **Multiple answers** shows checkboxes and accepts any number, but at least one.
   </Step>
-  <Step title="Set the schedule">
-    Define when voting opens and closes. The timezone is shown alongside the dates so members in different regions know exactly when the window opens.
+  <Step title="Add more questions if you need them">
+    **Add another question** makes it a multi-question ballot, one question per board seat for example. Voters answer every question in one submission; a partial ballot is rejected. Two or more questions also require a vote title, which becomes its name in the list.
   </Step>
-  <Step title="Choose who votes">
-    **Group vote** — all members of a selected [group](/platform/groups) can vote. **Private vote** — manually select specific voters after creating.
+  <Step title="Set the window">
+    Start and end dates are optional and carry a timezone you pick per vote. With no start date voting opens on publish; with no end date it stays open until every eligible voter has voted or an administrator closes it.
   </Step>
-  <Step title="Configure settings">
-    Toggle **Real-time results** to let voters see running totals while voting is live. Toggle **Hide voters list** so only admins can see who voted.
-  </Step>
-  <Step title="Publish or save as draft">
-    Votes start as drafts. Publish when you're ready to make it visible to voters.
+  <Step title="Choose who votes and save">
+    Pick the audience, then **Save draft** to keep it hidden, or **Publish** to make it live or upcoming and notify voters.
   </Step>
 </Steps>
-
-<Note>
-  The green banner at the bottom confirms: **All votes cast by voters are anonymous.** Admins can see who voted but never how they voted.
-</Note>
-
----
-
-## Vote lifecycle
-
-Each vote moves through four phases:
-
-| Status | What's happening |
-|--------|-----------------|
-| **Draft** | Being set up — not visible to voters |
-| **Upcoming** | Published and scheduled — voters can see it but can't vote yet |
-| **Live** | Voting is open — members can cast their ballots |
-| **Closed** | Voting period ended — results are final |
-
-### Upcoming
-
-Before voting opens, eligible voters can see the questions and options but can't submit their ballot. The page shows "Result will be available at the end of the voting period."
-
-<img src="/images/platform/voting/vote-upcoming.png" alt="Upcoming vote showing Uniform Design Poll with three options (Modern Athletic Fit, Classic Traditional Cut, Hybrid Design), 0% participation donut, and voters list with 30 eligible members" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
-### Live voting
-
-When the voting window opens, eligible members see the ballot with a **Submit vote** button. The participation sidebar tracks progress in real time.
-
-<img src="/images/platform/voting/vote-live.png" alt="Live Summer Camp Location Vote with four location options as radio buttons, Submit vote button, 15% participation donut showing 12 voted out of 80, and voters list with green checkmarks for those who already voted" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
-The voters list shows who has voted (green checkmark) and who hasn't — so you can send targeted reminders to non-voters.
-
----
-
-## Results
-
-When voting closes, results show percentage bars with vote counts for each option, plus participation metrics.
-
-### Election results
-
-For multi-question elections (like board positions), each question shows its own results:
-
-<img src="/images/platform/voting/vote-results.png" alt="Board Elections 2025 results showing two questions — Board Position 1 with Kenneth Alexander leading at 40% (18 votes), and Board Position 2 with Patricia Sullivan leading at 42.86% (15 votes). Participation sidebar shows 55% with 44 voted out of 80 total" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
-### Motion results
-
-For yes/no motions, results clearly show whether the motion passed:
-
-<img src="/images/platform/voting/vote-budget-results.png" alt="Annual Budget Approval results showing Approve at 70% (31 votes), Reject at 11.36% (5 votes), Abstain at 18.18% (8 votes). Participation sidebar shows 55% with 44 voted, voters list with green checkmarks" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
-The action bar at the top provides:
-- **Fullscreen** — present results on a projector during meetings
-- **Integrity verification** — verify ballot authenticity
-- **Export results** — download as CSV for official records
-
-<Tip>
-  Orgo displays results but doesn't declare winners — your organization interprets results based on its own rules (simple majority, supermajority, etc.). Document the outcome for the formal record.
-</Tip>
-
----
-
-## Vote settings
-
-| Setting | What it controls |
-|---------|-----------------|
-| **Start date/time** | When voting opens — no votes accepted before this |
-| **End date/time** | When voting closes — no votes accepted after this |
-| **Timezone** | Displayed with dates so members in different regions know the exact window |
-| **Real-time results** | If on, voters can see running totals while voting is live |
-| **Hide voters list** | Only admins can see who voted and who hasn't |
-| **Draft mode** | Hidden from voters until you publish |
-
-### What you can do during each phase
-
-| Phase | Admin actions |
-|-------|-------------|
-| **Draft** | Edit everything freely |
-| **Upcoming** | Edit settings, extend dates |
-| **Live** | Monitor participation, send reminders, extend end date, close early |
-| **Closed** | View results, export data, verify integrity |
-
-<Warning>
-  Once votes have been cast, you can't change the question or options. If a significant error is found, close the vote and create a new one.
-</Warning>
 
 ---
 
 ## Who can vote
 
-| Scope | Who's eligible |
-|-------|---------------|
-| **Group vote** | All members of the selected group |
-| **Private vote** | Manually selected voters (add individually or import via CSV) |
+The **Who is voting?** cards set eligibility.
 
-For AGM votes, link the vote to your AGM [event](/platform/events) or group — only the right members can participate. For organization-wide elections, select your [main group](/platform/groups/main-group).
+| Audience | Who is eligible |
+|---|---|
+| **Group vote** | Everyone in the selected group. With no group selected, every active member of the organisation. For a local group, its members. For a role group, everyone bound to it. For a regular group, everyone with a role in it that has not ended. |
+| **Private vote** | Only the members the vote creator adds by name. The creator is added automatically when the vote is created. |
+| **Event attendees** | Set automatically when you start the vote from an event. Eligible attendees are those invited or fully registered, and not cancelled. Pending approval, waiting list and awaiting payment are excluded. |
 
----
-
-## Vote collections
-
-When you need multiple related votes — like electing a president, treasurer, and secretary in the same session — group them into a single vote with multiple questions.
-
-Members see all questions in one unified voting experience, completing all ballots in one session.
+On a private vote only the creator can add or remove voters, using the member search in the Participation panel and only while the vote is still editable. A voter who has already cast a ballot cannot be removed.
 
 ---
 
-## Security and anonymity
+## Settings
 
-### What admins can see
-- Who has voted (participation tracking with checkmarks)
-- Who hasn't voted (to send targeted reminders)
-- Aggregate results (totals, percentages, bars)
-
-### What admins cannot see
-- How any individual member voted
-- Individual ballot choices
-
-### How it's enforced
-- **One vote per person** — the system prevents duplicate voting
-- **Anonymous ballots** — votes are stored separately from voter identity
-- **Time-bound** — votes only accepted during the designated period
-- **Sealed ballots** — each ballot gets a cryptographic seal for integrity verification
-
-### Integrity verification
-
-After voting closes, voters can verify their ballot wasn't tampered with using a validation code:
-
-<img src="/images/platform/voting/vote-integrity.png" alt="Integrity verification page for Board Elections 2025 showing a validation code input field and Validate button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+| Setting | What it controls |
+|---|---|
+| **Real-time results** | Voters see running totals while voting is live. Off means results appear only after the vote closes. |
+| **Hide voters list** | Hides who has and has not voted from ordinary voters; `HR_LOCAL` on the vote's group and above still see it. Leave it off and every eligible voter sees the roster and each person's voted or pending state. |
+| **Anonymous voting** | On by default. See [Anonymity](#anonymity-and-integrity). Changeable only while the vote is an unpublished draft with no ballots cast. |
 
 ---
 
-## Common scenarios
+## Lifecycle
+
+| Status | What is happening |
+|---|---|
+| **Draft** | Being set up. Not visible to voters, not shareable. |
+| **Upcoming** | Published with a start date in the future. Voters see the questions and options but cannot answer yet. |
+| **Live** | Voting is open. |
+| **Finished** | The end date has passed, an administrator closed the vote, or every eligible voter has voted. Results are final. |
+
+A vote is editable only while it has no ballots and is neither live nor finished, so questions and options can still be corrected during **Upcoming**. Once it goes live the question builder is locked, dates included.
+
+**Close voting** appears only on a live vote with no end date, and only for people who can manage it; a vote with an end date runs until that moment. **Archive**, offered once a vote is finished, hides it from the default list; the **Archived** checkbox above the list brings archived votes back. **Duplicate** copies the questions, options and, on a private vote, the eligible voters into a new draft named "Copy ..." with no results and a fresh one-hour window that you then adjust.
+
+<Warning>
+  A published vote cannot be reverted to draft, and questions cannot be edited once it is live. If you find a serious mistake, close the vote and duplicate it into a corrected one.
+</Warning>
+
+---
+
+## Voting and results
+
+<img src="/images/platform/voting/vote-live.png" alt="Live vote showing the ballot with radio options, the Vote now button, and the participation panel with turnout percentage and the voter roster" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+An eligible member answers every question and selects **Vote now**. The confirmation panel offers an **Integrity verification** code to copy and keep. Voting twice is refused.
+
+The Participation panel shows turnout as a percentage plus Voted, Pending and Eligible counts, and the roster below it filters to voters who have not answered yet. Orgo sends no voting reminders, so use that list to follow up through a [newsletter](/platform/newsletter) or a message.
+
+Results are bars with the count and percentage per option, per question, including options with zero votes. Percentages are shares of the answers recorded for that question, so a multiple-answer question divides them across selections rather than per voter. They appear once the vote closes, or immediately if **Real-time results** is on; live pages update as ballots arrive and **Refresh** forces a reload. **Fullscreen** presents the results with your organisation's logo, for a projector at a general assembly.
+
+<img src="/images/platform/voting/vote-results.png" alt="Finished multi-question vote showing per-option result bars for two board positions next to the participation panel" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+On a finished vote the actions menu offers two CSV downloads:
+
+- **Export results**: on an anonymous vote, one row per recorded answer with the question, the answer and that ballot's integrity seal, and no voter names. On a non-anonymous vote the same button downloads the per-voter file instead.
+- **Export voter list**: one row per eligible voter with name, email and a yes or no for having voted, plus a company column when the Companies module is on. Offered on anonymous votes.
+
+---
+
+## Anonymity and integrity
+
+**Anonymous voting on** (the default): a ballot is stored with no reference to the person who cast it and no linking record is written anywhere. Administrators see who voted, never what they chose. This is structural rather than a display rule: the storage that would hold the voter's identity is never populated.
+
+**Anonymous voting off**: each ballot is linked to its voter, who is warned of that on the ballot before answering. After the vote closes, people who can manage it get an **Individual results** panel listing each voter with their answers, and **Export results** downloads a per-voter CSV with one column per question. The panel shows up to 500 voters; the CSV holds all of them.
+
+The setting freezes once the vote is published or the first ballot is cast, so a vote presented as secret can never be opened up afterwards, and the reverse is blocked too.
+
+<Warning>
+  Ballots cast from the [Event App](/platform/events/event-app) voting tab are recorded without the voter link, even on a vote configured as non-anonymous. Those ballots count in the totals but do not appear in Individual results or the per-voter export. Run non-anonymous votes on the main member app.
+</Warning>
+
+### The integrity code
+
+Voting in the member app returns an integrity code, shown once in the confirmation panel. Paste it into **Integrity verification** in the vote's actions menu and Orgo confirms whether the tally recorded when that ballot was counted still matches the stored ballots.
+
+<img src="/images/platform/voting/vote-integrity.png" alt="Integrity verification page with the validation code field and the Validate button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+A code that validates means no ballot recorded at or before that point was altered, deleted or inserted afterwards. It carries no identity and does not reveal which option was chosen: it is tamper evidence on the stored ballots, not a signature from an external authority. Codes are issued only in the member app; the Event App and the emailed link for non-member attendees do not return one.
+
+<Note>
+  Orgo records who has voted and when each ballot was stored. In a very small electorate, anyone watching the live participation roster can narrow down who cast what by timing alone. That is inherent to showing live turnout; turn on **Hide voters list** if it matters for your vote.
+</Note>
+
+---
+
+## Event votes, sharing and notifications
+
+Start a vote from an event and it is bound to that event's attendees for its whole life. Attaching it requires you to be the event owner or to hold `EVENT_LOCAL` on the event. Published event votes appear on a **Votes** tab on the event page and in the [Event App](/platform/events/event-app), where attendees answer on their phone. Non-member attendees invited as contacts get an emailed link to a public voting page.
+
+**Share** in the actions menu mints a stable link and QR code that you can show fullscreen for a room to scan. It appears only while the vote is live, and only for people who can manage it; draft votes cannot be shared. The link routes to the vote page, or to the Event App for an event vote, and asks anyone not signed in to log in first. It does not grant eligibility: the rules above still decide who may vote.
+
+Publishing a vote sends a notification: to the listed voters on a private vote, to the attendees on an event vote, and to the organisation or the selected group's audience on a group vote. Closing a vote sends a second one. Each reaches the member in the app, and by email when that member's **Voting / Polls** preference is set to Instant. The organisation default for new members is **Email Notifications: Votes** under Notification Defaults. See [Notifications](/platform/notifications).
+
+---
+
+## Permissions
+
+| Action | Who |
+|---|---|
+| See the Voting section and vote | Any member who is eligible for the vote |
+| Create a vote | `ADMIN_TENANT`, `HR_TENANT` |
+| Edit, publish, close, archive, duplicate, export | `ADMIN_TENANT`, the vote's creator, or `HR_LOCAL` on the vote's group |
+| Add or remove voters on a private vote | The vote's creator |
+| See the voters list when **Hide voters list** is on | `HR_LOCAL` on the vote's group and above |
+| See Individual results on a non-anonymous vote | `ADMIN_TENANT`, the vote's creator, or `HR_LOCAL` on the vote's group, after it closes |
+| Attach a vote to an event | The event owner, or `EVENT_LOCAL` on the event |
+| Turn the module on or off | `ADMIN_TENANT` |
+
+See [Permissions](/platform/permissions) for what each level means.
+
+---
+
+## Common questions
 
 <AccordionGroup>
-  <Accordion title="A member says they can't vote">
-    Check: Is the member's account active? Are they in the eligible group for this vote? Is the voting period open? Have they already voted? Members who've already cast a vote see a confirmation instead of the ballot.
+  <Accordion title="A member says they cannot vote">
+    Check the audience: on a group vote they must be in the group with an active role, on a private vote on the voter list, on an event vote invited or fully registered and not cancelled. Then check the status: an upcoming vote refuses ballots, and a member who already voted sees their own answers instead of the ballot.
   </Accordion>
 
-  <Accordion title="Low participation — how do I get more people to vote?">
-    The voters list shows exactly who hasn't voted yet — send them targeted reminders. Announce the vote in advance via [newsletter](/platform/newsletter). Keep the voting window long enough to accommodate different schedules and time zones.
+  <Accordion title="The vote closed before the end date">
+    A vote also closes once the number of ballots equals the number of eligible voters. On a group vote that count is recalculated live, so it moves as members join or leave the group.
   </Accordion>
 
-  <Accordion title="I need to change something on a live vote">
-    You can extend the deadline or close early. You can't change the question or options once votes are cast. For significant corrections, close the current vote and create a new one with proper explanation.
+  <Accordion title="I need to fix a question on a vote that is already live">
+    You cannot. Close it, use **Duplicate**, correct the copy and publish that, telling voters why.
   </Accordion>
 
-  <Accordion title="Our bylaws require a 2/3 majority — how do I enforce this?">
-    Orgo shows raw results (vote counts and percentages). You interpret whether the threshold was met based on your organization's rules. Document the outcome for the formal record.
+  <Accordion title="Our bylaws require a two thirds majority. Can Orgo enforce it?">
+    No. Orgo has no quorum or threshold setting. It reports counts and percentages, and your organisation applies its own rule and records the outcome.
   </Accordion>
 
-  <Accordion title="Can we do secret ballot elections?">
-    Yes — all votes in Orgo are anonymous by default. Admins see participation (who voted) but never individual choices. Sealed ballots with integrity verification provide an additional layer of trust.
-  </Accordion>
-
-  <Accordion title="I want to show live results during our AGM">
-    Enable **Real-time results** when creating the vote. Use the **Fullscreen** button to display results on a projector. As votes come in, the percentage bars update live.
+  <Accordion title="Where did a finished vote go?">
+    Someone probably archived it. Tick **Archived** above the list to see archived votes.
   </Accordion>
 </AccordionGroup>
 
@@ -249,6 +218,8 @@ After voting closes, voters can verify their ballot wasn't tampered with using a
 
 ## Related
 
-- [Events](/platform/events) — Link votes to AGMs and conferences
-- [Local Centers](/platform/groups/local-groups) — Run elections across regional chapters and branches
-- [Notifications](/platform/notifications) — Send voting reminders
+- [Events](/platform/events) for attaching a vote to a general assembly or conference
+- [Event App](/platform/events/event-app) for in-event voting on a phone
+- [Groups](/platform/groups) for the groups a vote can be scoped to
+- [Notifications](/platform/notifications) for how members are told a vote opened
+- [Permissions](/platform/permissions) for the roles named on this page

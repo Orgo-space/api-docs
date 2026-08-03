@@ -1,105 +1,183 @@
 ---
 title: 'Referral Program'
-description: 'Track which members bring in new people — and optionally make registration invite-only'
+description: 'Require existing members to vouch for a new signup before their account is activated'
 "og:title": 'Referral Program | Orgo'
-"og:description": 'Track which members bring in new people — and optionally make registration invite-only'
+"og:description": 'Require existing members to vouch for a new signup before their account is activated'
 "twitter:title": 'Referral Program | Orgo'
-"twitter:description": 'Track which members bring in new people — and optionally make registration invite-only'
+"twitter:description": 'Require existing members to vouch for a new signup before their account is activated'
 ---
 
-The Referral Program tracks which members bring in new registrations through [Invitations](/platform/users/invitations). It answers "who brought this member?" and "who are our best recruiters?" — and can optionally make your organization invite-only.
+The Referral Program is a vouching gate on new registrations. Someone signs up
+normally, then has to collect a set number of vouches from existing members before
+their account is activated. Each voucher answers three questions you write, and
+those answers stay on the new member's profile.
 
-**Referrals build on Invitations.** The [Invitations](/platform/users/invitations) feature lets members send invitation emails. The Referral Program adds the tracking and statistics layer on top. Enable both for the full picture.
+**Built for** membership organisations that admit people on the word of existing
+members: professional networks, associations with sponsorship rules, alumni bodies.
+**Replaces** the email thread where two board members confirm they know the
+applicant.
 
-<img src="/images/platform/users/referral-settings.png" alt="Referral Program settings with enable toggle, number of referrals needed, and customizable referral questions" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<Note>
+This is not the same feature as [Invitations](/platform/users/invitations).
+Invitations are an existing member reaching out to someone new. The referral
+program is other members vouching for someone who has already registered. They are
+configured on the same settings page but work independently.
+</Note>
 
 ---
 
-## How to enable
+## Setting it up
 
-**Settings** → **Users & Profiles** → **Referral Program**
+**Settings** → **Users & Profiles** → **Referral Program**. Requires ADMIN_TENANT.
+
+<img src="/images/platform/users/referral-settings.png" alt="Referral Program settings with the Enable Referral Program switch, the Enable User Invitations switch, the Number of Referrals Needed for Signup selector and three referral question fields" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 | Setting | What it does |
-|---------|-------------|
-| **Referral Program** | Toggle on to start tracking who refers who |
-| **Referrals needed for signup** | Set to **0** (or empty): Open registration, referrals tracked in the background. Set to **1+**: **Invite-only mode** — public registration is disabled, new users must receive an invitation to register. |
+|---|---|
+| **Enable Referral Program** | Turns vouching on and adds the referral cards to member profiles. |
+| **Number of Referrals Needed for Signup** | **None**, or a number from 1 to 10. This is the gate: **None** means nobody is held for vouching. |
+| **Referral Questions** (1, 2, 3) | The three free-text questions every voucher answers. All three are required before the settings can be saved. |
+
+Both switches have to be considered together: the program only holds new signups
+when **Enable Referral Program** is on **and** the number is 1 or more. With the
+number left at None, the program is on but nothing is gated.
+
+Write questions that ask for something concrete, for example "How long have you
+known this person?", "In what capacity have you worked with them?", "Why should
+they be a member?". The answers are stored verbatim and are visible on the
+profile, so they double as your admission record.
 
 ---
 
-## Open tracking vs invite-only
+## What happens to a new signup
 
-### Open registration with tracking (recommended to start)
+<Steps>
+  <Step title="They register and confirm their email">
+    Registration itself is unchanged: your normal registration form, the usual
+    email confirmation code.
+  </Step>
+  <Step title="Their account is held">
+    Once the email is confirmed, their status becomes **Awaiting referral** and a
+    referral record with a unique link is created for them. They cannot sign in
+    while they are in this state.
+  </Step>
+  <Step title="They receive their referral link">
+    An email tells them how many referrals they need and gives them a link of the
+    form `https://<your app host>/refer/<code>`. The confirmation screen shows the
+    same link with a copy button and the message that they need referrals from N
+    members of your community.
+  </Step>
+  <Step title="Members vouch">
+    Anyone signed in who opens that link sees the applicant's name, answers your
+    three questions and submits. One member can only vouch once for the same
+    applicant.
+  </Step>
+  <Step title="The gate opens">
+    When the number of vouches reaches the configured number, the account is
+    activated, or set to Unapproved if **Manual Approval** is on. The applicant is
+    emailed that they can proceed, and administrators are emailed too.
+  </Step>
+</Steps>
 
-Set "Referrals needed for signup" to **0**.
-
-- Anyone can register normally
-- If they came through a member's invitation link, the referral is recorded
-- If they registered on their own, no referral is recorded
-- You get data on organic vs referred growth
-
-### Invite-only mode
-
-Set "Referrals needed for signup" to **1**.
-
-- Public registration page shows a message that membership is by invitation only
-- Only people who received an invitation link can register
-- Every new member is tracked to their referrer
-- Growth is entirely controlled by existing members
+Every single vouch, not just the last one, emails all tenant administrators with
+the applicant's name, the voucher's name and the progress so far, for example 2 of
+3. That email is controlled by **Settings** → **Emails & Notifications** →
+**System Emails** → **Referral Notifications**, which also covers the applicant's
+own referral emails.
 
 <Warning>
-  Invite-only mode significantly limits growth. Only use it if your organization specifically requires controlled, member-vetted membership. Most organizations are better served by open registration with referral tracking.
+Someone whose account is awaiting referral cannot log in. Attempting to sign in
+returns them to their referral link rather than the dashboard. Plan for applicants
+sitting in this state for as long as it takes their contacts to respond.
 </Warning>
 
 ---
 
-## What gets tracked
+## Who can vouch
 
-| Data point | Description |
-|-----------|-------------|
-| **Referrer** | Who sent the invitation |
-| **Referee** | Who registered through the link |
-| **Date** | When the referral was completed |
-| **Status** | Pending (invited but not registered) or Completed (registered) |
+| Route | Who | Where |
+|---|---|---|
+| The applicant's referral link | Any signed-in member of your organisation | `/refer/<code>` |
+| Vouch on someone's behalf | Members with HR_LOCAL on the applicant's local center, whose own account is active | **Referrals** tab on their profile |
 
-### For admins
+The profile route also lists the ten most recent people awaiting referral as
+shortcut buttons, and has a member search restricted to applicants awaiting
+referral, so staff can work through the queue without collecting links.
 
-View organization-wide referral stats:
-- Top referrers — who's bringing in the most members
-- Referral trends — growth over time from referrals vs direct registration
-- Conversion rates — invitations sent vs accepted
-
-### For members
-
-Members can see their own referral activity:
-- How many people they've successfully referred
-- Status of pending invitations
+Vouching is not anonymous. Each vouch is stored with the voucher's name and their
+three answers, and appears on both profiles: under **Referred by** on the
+applicant's Referrals tab and under **Referrals given** on the voucher's. There is
+no rating, score or approval step on a vouch: submitting one counts.
 
 ---
 
-## Combining with gamification
+## Members you add yourself are exempt
 
-If you have the Gamification module enabled, reward your best recruiters:
-- Award points for each successful referral
-- Create badges for referral milestones (5 referrals, 10 referrals, etc.)
-- Display a leaderboard of top referrers
+The gate only applies to self-signup. A member created by a signed-in
+administrator keeps the status you configured for admin-created users and gets no
+referral record, so you can always add people directly. Imported members are not
+gated either.
 
-[Learn more about Gamification →](/platform/badges)
+<Warning>
+Completion is checked when a vouch is submitted and compares the count against the
+current requirement exactly. Lowering the requirement afterwards does not release
+people who already have more vouches than the new number. If you change the
+number while applicants are mid-flow, activate the affected people from the member
+directory by setting their status to Active.
+</Warning>
+
+---
+
+## Seeing referral activity
+
+On a member's **Referrals** tab:
+
+- **Referred by** shows every vouch that member received, with the voucher and the
+  full answers.
+- **Referrals given** shows every applicant that member vouched for, with the same
+  answers.
+
+Organisation-wide, the statistics page carries a **Referrers** leaderboard ranking
+members by completed referrals over 7 days, 30 days or all time, showing the top 20
+with an option to expand to 50. That card is driven by the invitation link
+mechanism and appears when **Enable User Invitations** is on. A local center
+analytics page shows the same card for its own members.
+
+If the Gamification module is running with tiers, completing a referral awards
+points to the member who referred the newcomer through an invitation link. The
+amount comes from your gamification point rules and defaults to 100.
 
 ---
 
 ## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="I want to know how members are finding us, but I don't want to restrict registration">
-    Enable the Referral Program with "Referrals needed" set to 0. Registration stays open. You'll see which members came through referrals vs found you on their own.
+  <Accordion title="We want vouching, but people should not be locked out while they wait">
+    There is no partial mode: while the requirement is 1 or more, applicants cannot
+    sign in until they reach it. If you want new people to have access immediately
+    and be reviewed afterwards, leave the requirement at None and use **Manual
+    Approval** or [Adhesion](/platform/users/adhesion) instead.
   </Accordion>
 
-  <Accordion title="I want to create an exclusive, invite-only community">
-    Enable Referral with "Referrals needed" set to 1. Enable [Invitations](/platform/users/invitations) so existing members can send invites. Consider also enabling [Adhesion](/platform/users/adhesion) so you can review invited applicants before they're admitted.
+  <Accordion title="An applicant lost their referral link">
+    The link is stable and can be regenerated by attempting to sign in: the login
+    response returns them to their referral page. Administrators can also find the
+    applicant in the member directory by filtering status to Awaiting referral, and
+    vouch for them directly from the Referrals tab if they hold HR_LOCAL.
   </Accordion>
 
-  <Accordion title="A member's invitation count seems wrong">
-    Referrals are only counted when the invited person completes registration. If someone was invited but never registered, it stays as "pending" and doesn't count toward the referrer's total.
+  <Accordion title="Nobody is vouching and applications are piling up">
+    Filter the member directory by the Awaiting referral status to see the backlog.
+    Staff with HR_LOCAL can clear it from the Referrals tab, and any member can
+    still be activated directly by changing their status to Active, which bypasses
+    the gate. A second vouch from the same member for the same applicant is
+    rejected, so the backlog cannot be cleared by one person vouching repeatedly.
+  </Accordion>
+
+  <Accordion title="Do the answers stay private?">
+    No. They are shown on the applicant's profile and on the voucher's profile to
+    anyone who can see those tabs. Do not ask for anything you would not want the
+    applicant to read.
   </Accordion>
 </AccordionGroup>
 
@@ -107,5 +185,8 @@ If you have the Gamification module enabled, reward your best recruiters:
 
 ## Related
 
-- [Invitations](/platform/users/invitations) — The mechanism for sending invitations (referral tracks them)
-- [Gamification](/platform/badges) — Reward referrers with points and badges
+- [Invitations](/platform/users/invitations) - members bringing in new people by email or link
+- [User Statuses](/platform/users/statuses) - what Awaiting referral and Unapproved block
+- [Registration Form](/platform/users/registration-form) - the signup that precedes vouching
+- [Adhesion](/platform/users/adhesion) - a formal application instead of vouching
+- [Permissions](/platform/permissions) - what HR_LOCAL and ADMIN_TENANT cover

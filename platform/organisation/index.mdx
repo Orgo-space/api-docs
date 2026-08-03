@@ -1,165 +1,122 @@
 ---
 title: 'Organization Settings'
-description: 'Your workspace identity, branding, forms, and emails — all in one place.'
+description: 'The settings area: your organization identity, the modules you switch on, how the app is customized, and developer access.'
 "og:title": 'Organization Settings | Orgo'
-"og:description": 'Your workspace identity, branding, forms, and emails — all in one place.'
+"og:description": 'The settings area: your organization identity, the modules you switch on, how the app is customized, and developer access.'
 "twitter:title": 'Organization Settings | Orgo'
-"twitter:description": 'Your workspace identity, branding, forms, and emails — all in one place.'
+"twitter:description": 'The settings area: your organization identity, the modules you switch on, how the app is customized, and developer access.'
 ---
 
-Organization Settings is the control center for everything that defines your Orgo workspace — your name, logos, registration flow, email templates, and which features are turned on. This is where you go first when setting up a new workspace, and where you come back whenever you need to change how your organization presents itself to members.
+Settings is where you define what your workspace is and what it does: your legal and contact identity, which features members can see, how the app is worded and laid out, and who gets programmatic access. This page is the map.
 
-**Settings** (gear icon in the sidebar)
+Open it from the cog icon in the top bar, or from your avatar menu, **Organisation Settings**.
+
+<img src="/images/platform/organisation/settings-full-page.png" alt="Settings area with the Organization, Modules, Customization and Developers sidebar next to a module configuration page" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 <Note>
-  Requires **Tenant Admin** permissions. Only organization administrators see the gear icon in the sidebar. If you don't see it, ask your organization's main admin to grant you Tenant Admin access.
+  The cog icon and the menu entry both require **ADMIN_TENANT**, and so does nearly every page inside. Two exceptions: **Merge Records** is open to **HR_TENANT** and **Billing** to **FINANCIAL_TENANT**.
 </Note>
 
 ---
 
-## The Settings page
+## Organization
 
-Open **Settings** from the gear icon at the bottom of the sidebar. The settings area is organized into four sections, each handling a different aspect of your workspace:
+Who you are.
 
-![Settings page showing the sidebar with ORGANIZATION, MODULES, CUSTOMIZATION, and DEVELOPERS sections alongside the module configuration area](/images/platform/organisation/settings-full-page.png)
-
-<CardGroup cols={2}>
-  <Card title="Organization" icon="building">
-    Your organization's identity — name, country, contact details, legal information, currency, social media links, and visual branding (logos and login background). This information flows into invoices, emails, registration pages, and the mobile app.
-  </Card>
-  <Card title="Modules" icon="puzzle-piece" href="/platform/organisation/modules">
-    Enable or disable platform features like Events, Discussions, Fees, Newsletter, Courses, and more. Each module can be individually configured — turn on what your organization uses, leave the rest off to keep the interface clean.
-  </Card>
-  <Card title="Customization" icon="paintbrush" href="/platform/customization">
-    Tailor the member experience — set languages, rename default terminology (e.g., "Members" to "Scouts"), rearrange the sidebar menu, configure the dashboard layout, write welcome messages, and import data from CSV files.
-  </Card>
-  <Card title="Developers" icon="code">
-    Technical integrations — API access tokens for third-party systems, OAuth application configuration for single sign-on, and webhook endpoints for real-time event notifications.
-  </Card>
-</CardGroup>
-
-### Recommended setup order
-
-If you're setting up a new workspace, configure Settings in this order:
-
-1. **Organization Info** — Set your name, country, timezone, contact details, and currency first. These appear everywhere.
-2. **Branding** — Upload your logos and set the login background so the platform looks like yours from the start.
-3. **Modules** — Enable the features you need (Events, Discussions, Fees, etc.) and disable the rest.
-4. **Customization** — Set languages, rename terms, organize the sidebar menu, and configure the dashboard.
-5. **Forms** — Configure what data you collect during registration and on member profiles.
-6. **Email Templates** — Review and customize the automated emails members will receive.
+| Page | What it covers |
+|------|----------------|
+| [Organisation info](/platform/organisation/organisation-info) | Name, country, timezone, default language, office contact details, legal links, social URLs, currency, VAT and registration numbers, bank IBANs |
+| [Branding](/platform/organisation/branding) | Logo variants and the login background |
+| **Usage & Billing** | Your workspace's resource usage and Orgo subscription |
 
 ---
 
-## Organization identity
+## Modules
 
-The Organization section contains two pages that define how your workspace looks and is identified:
+What members can see and do. Each entry is a feature area with its own configuration page and its own on/off switch, and turning one off hides it across the app.
 
-<CardGroup cols={2}>
-  <Card title="Organization Info" icon="id-card" href="/platform/organisation/organisation-info">
-    Your organization's name, short name, country, timezone, default language, office email, phone, address, privacy policy URL, terms of service URL, social media links, currency, legal name, VAT number, and bank IBANs. Everything entered here appears on invoices, automated emails, registration pages, and the mobile app.
-  </Card>
-  <Card title="Branding" icon="palette" href="/platform/organisation/branding">
-    Four logo variants (light theme, dark theme, squared, and icon dark) and a login background image URL. Logos appear in the sidebar, email headers, mobile app, and browser favicon. The login background shows behind the login, registration, and password reset screens.
-  </Card>
-</CardGroup>
+Users & Profiles, Contacts, Events, Discussions, Groups & Teams, Files & eDocuments, Emails & Notifications, Professions, Payments & Fees, Gamification & Courses, Helpdesk, Projects, Voting, Identity Validation, Companies, Form Builder, and **All Modules** for the full switchboard.
 
-### Organization profile
-
-![Basic details card showing organization name, country, timezone, and language](/images/platform/organisation/org-info-basic-details.png)
-
-The Organization Info form is split into themed cards: basic details (name, country, timezone), contact information (email, phone, address, legal URLs), social media links, and financial details (currency, legal name, VAT, IBANs). The two required fields are **Organization Name** and **Office Email** — the save button won't work without them. Fill in what applies to your organization and skip what doesn't. Financial details are especially important if you plan to use the Fees or Donations modules, since they appear on every invoice and receipt.
-
-### Branding
-
-![Logo upload grid with light theme, dark theme, squared, and icon variants](/images/platform/organisation/branding-logo-grid.png)
-
-Upload four logo variants so your brand looks correct in every context: horizontal logos for the expanded sidebar and email headers (one for light mode, one for dark mode), and square logos for the collapsed sidebar, mobile app icon, and favicon (again, one per theme). Use PNG with transparent backgrounds for all four. Below the logo grid, paste a publicly accessible HTTPS URL for the login background image — this appears behind the login, registration, and password reset screens.
-
-![Branded login page with custom background and logo](/images/platform/organisation/branding-login-page.png)
-
-The result is a fully branded experience: members see your logo in the sidebar, your branding in emails, and your imagery on the login page. Dark mode users see the dark variants automatically.
+Files & eDocuments only appears in this list once the Drive module is active. See [Modules](/platform/organisation/modules) for what each one turns on and the settings inside it.
 
 ---
 
-## Forms
+## Customization
 
-Forms control what data you collect from members at different stages. They're configured inside the **Users & Profiles** module and use the same drag-and-drop builder across all three form types:
+How the app looks, reads and is filled with data.
 
-<CardGroup cols={3}>
-  <Card title="Registration Form" icon="user-plus">
-    The form new members fill in when signing up. Controls the first impression — keep it short to reduce drop-offs. Email is always required and cannot be removed.
-  </Card>
-  <Card title="Profile Form" icon="address-card">
-    Fields visible on a member's profile after registration. Can include file uploads (photos, documents) since the member is already authenticated. Mark fields as required to trigger a splash screen prompt on next login.
-  </Card>
-  <Card title="Adhesion Form" icon="file-signature">
-    A separate application form for prospective members who need approval before joining. Useful for organizations with membership criteria, vetting processes, or paid applications that require admin review.
-  </Card>
-</CardGroup>
+| Page | What it covers |
+|------|----------------|
+| **Workflows** | Automations you define |
+| **eDocuments templates** | Document templates, shown when the eDocuments module is on |
+| [Custom Domain](/platform/custom-domain) | Serving Orgo on your own address, and verified email sending |
+| [Languages](/platform/customization/languages) | Which languages members can pick |
+| [Texts](/platform/customization/labels) | Renaming product vocabulary to match your organization |
+| [Menu Organizer](/platform/customization/menu-organizer) | Reordering and hiding sidebar entries |
+| [Dashboard Organizer](/platform/customization/dashboard-organizer) | Dashboard widgets and categories, shown when the custom dashboard setting is on |
+| [Dashboard Welcome](/platform/customization/dashboard-welcome) | The welcome message on the member dashboard |
+| [Import](/platform/customization/import) | Bringing members and other records in from a file |
 
-**Settings → Modules → Users & Profiles → Registration Form**
-
-![Registration form builder with available fields on the left and form layout on the right](/images/platform/organisation/registration-form-fields.png)
-
-The form builder works the same way for all three form types: available fields are listed on the left panel, and your form layout is on the right. Drag fields from left to right to add them, drag to reorder, and toggle the **required** checkbox for each field. Key details:
-
-- **Email** is always included and cannot be removed — it's how Orgo identifies each member
-- Switch between **System Fields** (built-in fields like name, phone, address) and **Custom Fields** (fields you created) using the tabs on the left
-- Add a title and intro text in the **Form Settings** section below the field list — this appears at the top of the form
-- Click **Iframe** to get an embeddable link you can place on your website, so visitors can register without leaving your site
-- If you have [User Types](/platform/users/user-types) configured, each type gets its own form — you can require different fields for different member types
-
-<Note>
-  File upload fields (photos, documents) only appear on the Profile Form — they require authentication, so they're excluded from the Registration Form. Collect documents after the member has created their account.
-</Note>
+Demo workspaces get two extra entries here, Demo Data and AI Provisioning, for seeding a workspace with sample content.
 
 ---
 
-## Email templates
+## Developers
 
-**Settings → Modules → Emails & Notifications → Templates**
-
-Every automated email Orgo sends — welcome messages, event reminders, fee payment confirmations, password resets, newsletter opt-ins — has a customizable template. Templates are organized by category (Authentication, Events, Fees, etc.), and each template has a rich text editor where you can modify the subject line, body text, and dynamic placeholders.
-
-![Email templates page with category sidebar and template cards](/images/platform/organisation/email-templates-grid.png)
-
-Click any template card to open the editor. Templates with a yellow **Disabled** tag won't be sent until you enable them — this lets you prepare email content before activating it. Each template includes dynamic placeholders (like `{firstName}` and `{organizationName}`) that automatically fill in per-recipient data.
-
-The template categories match your enabled modules: if you enable the Events module, the Events email category appears with templates for event confirmations, reminders, and cancellations. If you disable a module, its email templates are hidden but preserved — re-enable the module and they come back with your customizations intact.
-
-<Tip>
-  Missing an email template category? It means the related module isn't active. Go to **Settings → Modules**, enable the module, and the email template category appears automatically.
-</Tip>
+| Page | What it covers |
+|------|----------------|
+| [Third-party Integrations](/platform/integrations) | Connections to outside services |
+| [API Tokens](/platform/api) | Machine access to your data, shown when the API module is on |
+| [OAuth Apps](/platform/oauth) | Apps that sign members in, shown when the API module is on |
+| **Webhooks** | Outbound notifications when records change |
+| [Merge Records](/platform/users/merging-duplicates) | Combining duplicate people |
+| **Logs** | Activity history for your workspace |
+| **API Documentation** | Opens the API reference in a new tab |
 
 ---
 
-## Real-world example
+## Finding a setting
 
-> **Scenario**: A regional arts council launching Orgo for 800 members — visual artists, performers, and administrators.
+There are several hundred individual toggles. Rather than hunt through the menu, use the **Search settings...** box at the top of the settings sidebar, or press `Cmd` + `K` (`Ctrl` + `K` on Windows and Linux) while you are anywhere inside Settings. It searches page names and individual setting labels and jumps straight to the one you pick.
 
-1. **Organization Info**: Set name "Regional Arts Council", country, timezone, office email. Add privacy policy and terms URLs for registration compliance. Set currency to EUR, add legal name and VAT for invoice generation.
-2. **Branding**: Upload the council's horizontal logo (teal on transparent) for light mode, white version for dark mode. Square logo with just the icon for mobile. Login background: a photo from last year's annual exhibition.
-3. **Modules**: Enable Events (exhibitions, workshops), Discussions (member forum), Fees (annual membership dues), and Files (shared resources). Disable Courses, Newsletter, and E-Voting for now.
-4. **Registration Form**: Keep it minimal — email, first name, last name, and a custom "Artistic Discipline" dropdown field. Move detailed profile fields (bio, portfolio link, address) to the Profile Form with a splash screen prompt.
-5. **Email Templates**: Customize the welcome email with the council's tone and a link to the getting-started guide. Disable the event reminder email until events are set up.
+---
+
+## Setting up a new workspace
+
+<Steps>
+  <Step title="Organisation info">
+    Name, country, timezone, default language and office email first. Everything else reads from these, and Name and Office Email are required before the form will save.
+  </Step>
+  <Step title="Branding">
+    Upload your logos and login background so the app looks like yours before anyone signs in.
+  </Step>
+  <Step title="Modules">
+    Turn on what you use and leave the rest off. A module that is off does not appear in the sidebar, and its settings and email templates stay out of the way.
+  </Step>
+  <Step title="Forms">
+    Configure what you collect at registration and on member profiles, under Users & Profiles.
+  </Step>
+  <Step title="Financial details">
+    If you will take money, finish the currency, legal name, VAT and IBAN fields on Organisation info before issuing the first invoice. Documents keep the values they were generated with.
+  </Step>
+  <Step title="Customization">
+    Rename vocabulary, reorder the menu and set the dashboard once the shape of the workspace is settled.
+  </Step>
+</Steps>
 
 ---
 
 ## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="I can't see the Settings gear icon in the sidebar">
-    The Settings page requires **Tenant Admin** permissions. If you're a local admin, HR manager, or regular member, you won't see the gear icon. Ask your organization's main administrator to either grant you Tenant Admin access or make the changes you need on your behalf.
+  <Accordion title="I cannot see the cog icon">
+    It renders for ADMIN_TENANT only, and only on desktop. Local admins, HR and finance managers, and regular members do not get it. On a phone, use the avatar menu instead.
   </Accordion>
-  <Accordion title="Some email template categories are missing">
-    Email template categories are tied to active modules. If you don't see the "Events" category, it's because the Events module isn't enabled. Go to **Settings → Modules**, enable the relevant module, and the corresponding email template category appears immediately. Your existing customizations are preserved even when toggling modules off and on.
+  <Accordion title="A module I expected is missing from the sidebar">
+    Some entries are conditional: Files & eDocuments appears only when the Drive module is active, eDocuments templates only when eDocuments is on, Dashboard Organizer only when the custom dashboard setting is on, and API Tokens and OAuth Apps only when the API module is on. Turn the module on under **All Modules** and the entry appears.
   </Accordion>
-  <Accordion title="Required profile fields aren't prompting members to fill them in">
-    The splash screen prompt triggers after login, not during registration. Make sure the field is both **visible** and **required** on the Profile Form page (**Settings → Modules → Users & Profiles → Profile Form**). Members see the prompt on their next login after you make the change — it doesn't retroactively appear mid-session.
-  </Accordion>
-  <Accordion title="I changed the organization name but it still shows the old one in some places">
-    The organization name propagates to the sidebar, emails, and registration pages immediately after saving. However, already-sent emails and already-generated invoices/receipts won't update — they preserve the name from when they were created. Browser-cached pages may also show the old name until the member refreshes. For the mobile app, members may need to force-close and reopen the app.
+  <Accordion title="The keyboard shortcut does not open the search">
+    `Cmd` + `K` is only bound inside the settings area. Open any settings page first, then press it.
   </Accordion>
 </AccordionGroup>
 
@@ -167,8 +124,8 @@ The template categories match your enabled modules: if you enable the Events mod
 
 ## Related
 
-- [Organization Info](/platform/organisation/organisation-info) — Name, contact details, financial settings, social links
-- [Branding](/platform/organisation/branding) — Logos and login background
-- [Modules](/platform/organisation/modules) — Enable/disable platform features
-- [Customization](/platform/customization) — Languages, labels, menu, dashboard, data import
-- [Registration Form](/platform/users/registration-form) — Configure what data you collect during sign-up
+- [Organisation info](/platform/organisation/organisation-info) every field on the organization record
+- [Branding](/platform/organisation/branding) logos and login background
+- [Modules](/platform/organisation/modules) the full module reference
+- [Customization](/platform/customization) languages, labels, menu and dashboard
+- [Permissions](/platform/permissions) who can reach what

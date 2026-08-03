@@ -1,132 +1,104 @@
 ---
-title: 'Event Types'
-description: 'Categorize events for filtering, reporting, and clear communication'
-"og:title": 'Event Types | Orgo'
-"og:description": 'Categorize events for filtering, reporting, and clear communication'
-"twitter:title": 'Event Types | Orgo'
-"twitter:description": 'Categorize events for filtering, reporting, and clear communication'
+title: 'Event Types and Statuses'
+description: 'Categorize events, mark trainings and general meetings, and track progress with custom statuses'
+"og:title": 'Event Types and Statuses | Orgo'
+"og:description": 'Categorize events, mark trainings and general meetings, and track progress with custom statuses'
+"twitter:title": 'Event Types and Statuses | Orgo'
+"twitter:description": 'Categorize events, mark trainings and general meetings, and track progress with custom statuses'
 ---
 
-Event Types are categories like "Meeting", "Training", "Conference", "Social Event". They serve three purposes: members instantly know what kind of event they're looking at, admins can filter events by category, and annual reports can break down activity by type.
+Two separate lists shape how events are labelled. **Event types** say what kind of event it is (Workshop, Camp, General Assembly). **Event statuses** say where the event is in your own workflow (Planned, Confirmed, Finalized). Types are always available; statuses are an opt-in feature.
 
----
-
-## Do I need Event Types?
-
-If your organization runs more than one kind of event — yes. Most organizations benefit from 5-8 types. Skip this only if all your events are essentially the same (e.g., a book club that only does monthly meetings).
+**Built for** organizations running more than one kind of event and wanting to filter and report on them.
 
 ---
 
-## Setting up Event Types
+## Event types
 
-**Settings** → **Events** → **Event Types** → **Create Event Type**
+**Settings → Modules → Events → Event Types**. Creating, renaming, and deleting types requires `ADMIN_TENANT`. Every member can see and choose types.
 
-Each type has:
+<img src="/images/platform/events/event-types-config.png" alt="Event types settings page listing type names with inline editing and delete actions, and a Create Event type button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-| Field | Required | What it does |
-|-------|----------|-------------|
-| **Name** | Yes | What members see: "Workshop", "General Assembly", "Camp" |
-| **Description** | No | Helps event creators pick the right type |
-| **Color** | No | Visual coding in calendars and event lists — pick distinct colors |
-| **Icon** | No | Visual identification alongside the name |
+A type has one field: its **name**. Select **Create Event type** to add one, or click a name in the table to rename it in place.
 
----
-
-## Recommended types by organization
-
-### Youth / scouting organization
-
-| Type | Color suggestion | Use for |
-|------|-----------------|---------|
-| Meeting | Blue | Troop meetings, committee meetings |
-| Training | Green | Leader training, skill workshops |
-| Camp | Orange | Overnight camps, retreats, jamborees |
-| Social Event | Purple | Parties, outings, celebrations |
-| General Assembly | Red | AGM, national assemblies |
-| Volunteer Activity | Teal | Community service, fundraisers |
-
-### Professional association
-
-| Type | Color suggestion | Use for |
-|------|-----------------|---------|
-| Networking | Blue | Mixers, happy hours, meet-and-greets |
-| Conference | Red | Annual conference, summits |
-| Webinar | Green | Online presentations, panels |
-| Workshop | Orange | Hands-on training, CPD sessions |
-| Board Meeting | Gray | Governance meetings |
-| AGM | Red | Annual general meeting |
-
-### Community organization
-
-| Type | Color suggestion | Use for |
-|------|-----------------|---------|
-| Meetup | Blue | Regular gatherings |
-| Workshop | Green | Learning sessions |
-| Social | Purple | Fun events, outings |
-| Fundraiser | Orange | Charity events |
-| Meeting | Gray | Committee, planning sessions |
-
----
-
-## Special event types
-
-Two event types can be designated as "special" in module settings (**Settings** → **Events**):
-
-| Setting | What it does |
-|---------|-------------|
-| **Training Event Type** | Events of this type are tracked separately for training statistics. Attendance feeds into training records and can trigger course completion. |
-| **General Meeting Event Type** | Events of this type appear in governance reports. Useful for tracking AGM attendance compliance. |
-
-You configure these once — they don't need to change.
-
----
-
-## Using Event Types
-
-### When creating events
-
-Select the event type from the dropdown. This is optional but strongly recommended — events without a type are harder to find and don't show up in type-based reports.
-
-### Filtering the event list
-
-On the events page, use the type filter to show only specific categories. Combined with date and status filters, this makes it easy to find events in a crowded calendar.
-
-### In reports
-
-Event types power the most useful parts of [Annual Reports](/platform/events/annual-report):
-
-- How many events of each type you held this year
-- Attendance breakdown by type (are trainings better attended than social events?)
-- Year-over-year comparison by type
-- Which types generate the most engagement
-
----
-
-## Managing types
-
-**Editing:** You can rename, recolor, or update descriptions at any time. Existing events keep their assigned type.
-
-**Deleting:** If you delete a type that has events assigned, those events become uncategorized. Reassign them first if the data matters for reporting.
+Once created, the type appears in the **Event type** dropdown on the event form and in the **All event types** filter on the events list. The type name shows on event cards alongside the Free or Ticket badge.
 
 <Warning>
-  Deleting an event type that's set as the Training or General Meeting type will clear that module setting. You'll need to designate a new one.
+Deleting a type does not delete its events. Those events simply lose their type and become uncategorized, which also removes them from type-filtered views. Reassign them first if the history matters.
 </Warning>
+
+### The two special types
+
+Two settings under **Settings → Modules → Events → Configuration** point at a type and change what the event form shows when it is selected:
+
+| Setting | What selecting that type adds to the event form |
+|---|---|
+| **Training Event Type** | A **Training type** selector. The event also gains a **Trainers** entry in its sidebar. Members flagged as trainers can pick this type even when their permission level would not normally allow it. |
+| **General Meeting Event Type** | Three checkboxes: general meeting (set automatically and read-only), elective general meeting, and extraordinary general meeting. Switching away from the type clears all three. |
+
+Nothing else about an event changes with its type. Ticketing, capacity, visibility, and permissions are all set on the event itself.
 
 ---
 
-## Common scenarios
+## Custom event statuses
+
+Statuses are off by default. Turn on **Enable Custom Statuses** in **Settings → Modules → Events → Configuration** and an **Event Statuses** entry appears in the module menu.
+
+<img src="/images/platform/events/event-statuses.png" alt="Event statuses settings listing named statuses with their colors and a final-status marker" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+Each status has:
+
+| Field | What it does |
+|---|---|
+| **Name** | What shows in the status dropdown and the events list filter. |
+| **Color** | The colour of the status tag. New statuses default to amber. |
+| **Mark as final status** | Flags the status as an end state. Statuses marked final are labelled **Final** in the dropdown, and saving an event into one shows the organizer a congratulations dialog. |
+
+Creating, editing, and deleting statuses requires `ADMIN_TENANT`.
+
+### Using statuses
+
+On the event form, a **Custom Status** dropdown appears above the description with your statuses plus a **None** option. Admins get a **Manage event statuses** shortcut next to it.
+
+On the events list, an **All statuses** filter appears next to the event type filter.
+
+<Note>
+Custom statuses are a label you control. They are independent of the built-in draft and published states, which decide who can actually see an event. Moving an event to a status named "Cancelled" does not hide it or stop registrations; use **Close registrations** on the event form for that.
+</Note>
+
+---
+
+## Choosing your types
+
+Most organizations settle on five to eight types. Fewer and the filter is not worth using; more and organizers start picking at random. Some working sets:
+
+| Organization | Types |
+|---|---|
+| Youth or scouting | Meeting, Training, Camp, Social Event, General Assembly, Volunteer Activity |
+| Professional association | Networking, Conference, Webinar, Workshop, Board Meeting, AGM |
+| Community group | Meetup, Workshop, Social, Fundraiser, Meeting |
+
+Statuses work best as a short pipeline, for example Planned, Confirmed, Running, Finalized, with only the last one marked final.
+
+---
+
+## Common questions
 
 <AccordionGroup>
-  <Accordion title="How many event types should I create?">
-    5-8 is the sweet spot for most organizations. Fewer than 5 and you're probably missing useful categories. More than 10 and event creators start picking randomly. Think broad categories, not individual events.
+  <Accordion title="Can I merge two event types?">
+    Not directly. Open the events on the type you want to retire, switch each to the type you are keeping, then delete the empty type.
   </Accordion>
 
-  <Accordion title="Can members see event types?">
-    Yes — the type name and color appear on event listings and calendar views. Members can also filter events by type. Choose names that make sense to members, not just admins.
+  <Accordion title="Do members see event types?">
+    Yes. The type name appears on event cards and members can filter the events list by it, so name them for members rather than for admins.
   </Accordion>
 
-  <Accordion title="I created too many types — some are barely used">
-    You can't merge types directly, but you can: (1) reassign events from the underused type to a broader one, (2) delete the underused type. Review your types annually.
+  <Accordion title="Can an event have more than one type?">
+    No. One type per event. Use [SDG tags](/platform/events/create-event) if you need a second, multi-value dimension for reporting.
+  </Accordion>
+
+  <Accordion title="What happens to the special-type settings if I delete that type?">
+    The setting keeps pointing at a type that no longer exists, so the training and general meeting fields stop appearing. Pick a new type in **Settings → Modules → Events → Configuration**.
   </Accordion>
 </AccordionGroup>
 
@@ -134,6 +106,7 @@ Event types power the most useful parts of [Annual Reports](/platform/events/ann
 
 ## Related
 
-- [Create Event](/platform/events/create-event) — Where you assign event types
-- [Annual Report](/platform/events/annual-report) — Reports broken down by type
-- [Events Overview](/platform/events) — Module setup
+- [Create Event](/platform/events/create-event) - where types and statuses get applied
+- [Event Templates](/platform/events/event-templates) - templates can carry a default event type
+- [Events overview](/platform/events) - all Events module settings
+- [Annual Report](/platform/events/annual-report) - reporting across events

@@ -7,106 +7,213 @@ description: 'In-app, push, and email notifications that keep members informed'
 "twitter:description": 'In-app, push, and email notifications that keep members informed'
 ---
 
-Orgo's notification system keeps members informed about activity in their groups, events, issues, and membership — without requiring them to constantly check the platform. Notifications are delivered through in-app alerts, browser push, mobile push, and email.
+Notifications tell members that something happened to them or in a group they
+follow: a new discussion, a reply, a mention, an event invite, a role change, a
+published vote.
+
+**Built for** organizations whose members do not log in every day and would
+otherwise miss activity in their groups, local centers, and events.
+
+**Replaces** the "did anyone see my post?" follow-up email. It is not a
+broadcast tool: to email everyone deliberately, use the
+[Newsletter](/platform/newsletter).
+
+Every notification is first an in-app record. Push and email are deliveries of
+that same record, so a member who has turned both off still sees everything
+under the bell.
+
+<img src="/images/platform/communication/notifications-center.png" alt="Your Notifications page listing file uploads, group additions, connection requests, and mentions with relative timestamps" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Notification channels
+## Where members see them
 
-| Channel | How it works | Best for |
-|---------|-------------|----------|
-| **In-app** | Bell icon in the header shows unread count and list | Checking activity when already on the platform |
-| **Web push** | Browser popup notification (even when Orgo isn't open) | Time-sensitive updates — event reminders, mentions |
-| **Mobile push** | Phone notification via the Orgo app | On-the-go awareness |
-| **Email** | Email per notification or daily/weekly digest | People who check email more than the platform |
+The bell in the header opens a side panel: 20 per page, newest first, loading
+more as you scroll. **Your Notifications** (`/notifications`) is the same list as
+a full page. Clicking an entry opens what it refers to; file notifications open
+the document in a new tab.
 
----
+The unread badge is per workspace, so a member of several organizations sees a
+separate count for each. It refreshes on a 180-second poll, and immediately when
+a notification is created: the badge increments and a toast appears in any open
+tab. Live delivery reaches members only, not [contacts](/platform/contacts) on an
+event-app session.
 
-## What triggers notifications
-
-| Category | Triggers |
-|----------|---------|
-| **Discussions** | New post in your group, reply to your post, someone @mentions you |
-| **Events** | New event in your group, event reminder, registration confirmation, event changes |
-| **Issues** | Assigned to an issue, status changed, comment on your issue |
-| **Membership** | Application status update, fee payment reminder, document request |
-| **Administrative** | System announcements, feature updates (admins only) |
+Opening the panel or the full page marks everything read, as does opening what a
+notification points at: a discussion, an event, or a drive file.
 
 ---
 
-## Member notification preferences
+## What generates a notification
 
-Members control their own notifications at **Profile** → **Settings** → **Notifications**.
+| Shown as | Who receives it |
+|---|---|
+| added a discussion / added a task | Followers of the group it was created in (all active members, for open-access local centers, all-member groups, and role groups) |
+| added an event | Followers of the event's group, or every active member if it has no group. Only for events that are published and not in the past |
+| added a file | Followers of the group whose drive it was uploaded to |
+| commented on discussion | Everyone following that discussion, except the commenter |
+| replied on your comment | The comment author |
+| mentioned you in a post / comment / reply | The mentioned members |
+| reacted to your post / comment | The author of the discussion or comment |
+| solved task / reopened task / commented on task | Assignees and the creator, except the person acting |
+| invited you to the event | The member an organizer adds to an event |
+| posted in / replied to your post / reacted to your post | Participants in that event feed |
+| published a new vote / closed the vote | Everyone eligible to vote (event attendees, group followers, or the named voter list) |
+| invited you to a 1:1 | The other party to a networking meeting requested, accepted, declined, or cancelled in the event app |
+| added you | The member added to a local center, group, or role group |
+| changed your role | The member whose roles an admin edited |
+| registered in the organisation | The member who completed their own registration |
+| accepted your invitation | The inviter, when an invited person joins |
 
-### Per-channel toggles
-
-Members can enable or disable each channel independently:
-- Push notifications (web) — on/off
-- Push notifications (mobile) — on/off
-- Email notifications — on/off
-
-### Email digest options
-
-Instead of one email per notification:
-
-| Option | When to use |
-|--------|------------|
-| **Immediate** | Every notification sends an email — for people who want to know instantly |
-| **Daily digest** | One summary email per day — for most members |
-| **Weekly digest** | One summary email per week — for casual members |
-| **None** | No email notifications — only in-app and push |
-
----
-
-## Setting up push notifications
-
-### Web/desktop push
-
-1. When a member first visits Orgo, the browser prompts "Allow notifications?"
-2. Click **Allow**
-3. Ensure push is enabled in **Profile** → **Settings** → **Notifications**
-
-### Mobile push
-
-1. Install the Orgo app (available on iOS and Android — search "Orgo" in the App Store or Google Play)
-2. Log in
-3. Accept the notification permission prompt
-4. Ensure mobile push is enabled in profile settings
+Inactive members are never notified, and nobody is notified about their own
+action.
 
 ---
 
-## Admin-specific notifications
+## Channels
 
-Admins receive additional notifications not sent to regular members:
-
-| Trigger | What it means |
-|---------|-------------|
-| **New membership application** | Someone submitted an adhesion form — needs review |
-| **Payment failure** | A subscription charge failed — member needs to update payment method |
-| **Resignation request** | A member wants to leave — needs admin processing |
-| **Identity verification submitted** | A member uploaded ID documents — needs review |
-
-Configure which admin events trigger notifications at **Settings** → **Notifications** → **Admin Notifications**.
+| Channel | Applies to | Conditions |
+|---|---|---|
+| In-app | Every notification | Always stored |
+| Push | Most notifications | The member has **Push notifications** on and at least one registered device or browser. File notifications never push. |
+| Email | Discussions, comments, replies, mentions, events, votes, tasks, member and role changes | The matching per-member email toggle is on. Reactions, role changes, moderation alerts, and file uploads never email. |
 
 ---
 
-## Common scenarios
+## Member preferences
+
+Members set their own under **Edit profile** → **Notifications**. Admins with
+`ADMIN_LOCAL` see the same tab on a member's profile and can change it for them.
+
+| Control | Effect |
+|---|---|
+| **Push notification subscribed** | Master switch for browser and mobile push. Off means no device receives anything. |
+| **Newsletter (email)** | Subscription to newsletter campaigns, shown only when the newsletter module is on. Separate from notifications. |
+| **New discussion** | Email for new discussions, with a frequency chip: **Instant**, **Daily**, or **Weekly**. |
+| **New event** | Instant email when an event is published or you are invited. |
+| **Comment on my post** | Instant email when someone comments or replies. |
+| **Task** | Instant email for task and support-ticket activity. |
+| **Mentions** | Instant email when you are @mentioned. |
+| **Voting / Polls** | Instant email when a vote is published or closed. Shown only when the voting module is on. |
+
+<Note>
+Turning an email toggle off never hides the notification in the app. It only
+stops the email.
+</Note>
+
+Every notification email carries an unsubscribe link that switches off just that
+category, plus a one-click list-unsubscribe that switches off everything.
+
+### Daily and weekly digests
+
+Setting **New discussion** to **Daily** or **Weekly** replaces instant discussion
+emails with a summary.
+
+- Digests only ever contain discussion notifications. Events, mentions, votes,
+  and tasks are never batched: they send instantly or not at all.
+- A digest carries at most 10 unread items.
+- Daily runs at 06:00 UTC looking back 25 hours; weekly runs at 09:00 UTC on its
+  scheduled day looking back 7 days.
+- Sending a digest marks those notifications read, so the bell badge resets with
+  it.
+
+---
+
+## Tenant defaults
+
+**Settings** → **Modules** → **Emails & Notifications** → **Notification
+Preferences**. Requires `ADMIN_TENANT`.
+
+<img src="/images/platform/communication/notification-settings.png" alt="Default Notification Preferences with switches for newsletter, push, comments, tasks, votes, events, mentions and a frequency selector for discussions" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+| Setting | Default |
+|---|---|
+| **Newsletter Notifications** | On |
+| **Push Notifications** | On |
+| **Email Notifications: Comments** | Instant |
+| **Email Notifications: Tasks** | Instant |
+| **Email Notifications: Votes** | Instant |
+| **Email Notifications: Events** | Instant |
+| **Email Notifications: Discussions** | Weekly |
+| **Email Notifications: Mentions** | Instant |
+
+<Warning>
+These are seeds, not overrides. They are applied once, during onboarding, to
+members who have never set their own preference. Changing them does nothing to
+anyone already in the organization.
+</Warning>
+
+---
+
+## Push notification setup
+
+**Browser push** is offered automatically: a supported browser asks for
+permission on first load, and allowing it registers that browser. Revoking
+permission removes the registration. Safari and the native app wrapper skip this
+path.
+
+**Mobile push** runs through OneSignal. The device registers when the member
+signs in to the Orgo app, tagged with the workspace so the right organization's
+messages reach it. A tenant with its own branded app sets its own OneSignal app
+ID and REST API key on its organization record; every other tenant uses the
+shared Orgo app.
+
+Registration is per member, per workspace, per device: someone in two
+organizations registers the same phone once for each, and the two never share
+notifications. Signing out removes that device's registration, which is why a
+member who never signs out on an old phone keeps receiving there.
+
+---
+
+## Muting a group
+
+Members can mute a group they cannot leave: an all-member group, a role group, or
+an open-access local center. The button reads **Mute** on the group card and
+**Subscribe** in the group header. Muting stops new discussion, event, and file
+notifications from that group, but not direct ones such as mentions.
+
+---
+
+## Retention
+
+Notifications older than two months are deleted nightly. The bell is a recent
+activity feed, not an audit trail: for a durable record of email, use the
+[email log](/platform/emails).
+
+---
+
+## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="Members complain about too many notifications">
-    Point them to **Profile** → **Settings** → **Notifications** where they can: switch email to daily/weekly digest, disable push for non-urgent categories, or turn off specific channels entirely. As an admin, consider whether all notification triggers are appropriate for your organization.
+  <Accordion title="A member says they get too many emails">
+    On their profile, **Notifications** tab, switch **New discussion** to
+    **Daily** or **Weekly**, or turn off the categories they object to. Changing
+    the tenant defaults will not help.
   </Accordion>
 
-  <Accordion title="Push notifications aren't working for a member">
-    Check: (1) Did they allow browser/app notifications when prompted? (2) Is push enabled in their Orgo profile settings? (3) Are notifications blocked at the OS level (browser settings → site permissions, or phone settings → app notifications)? Having them log out and back in to the mobile app can also help.
+  <Accordion title="Push notifications are not arriving">
+    Check **Push notification subscribed** on their profile, that the browser or
+    phone has not blocked notifications at the OS level, and that the device
+    registered. Registration happens on sign-in, so signing out and back in
+    re-registers it. A brand-new install can take a couple of launches before the
+    device is known.
   </Accordion>
 
-  <Accordion title="I want to send a notification to all members">
-    Use the [Newsletter](/platform/newsletter) for email campaigns. For in-app notifications, create a discussion post in the Main Group — all members will get a notification for new posts in groups they follow.
+  <Accordion title="They see it in the app but no email arrived">
+    Check the Channels table above for types that never email, then the matching
+    toggle, then whether they used an unsubscribe link, which switches that
+    category off silently.
   </Accordion>
 
-  <Accordion title="Email notifications are going to spam">
-    This is typically a domain authentication issue. Ensure SPF, DKIM, and DMARC are properly configured for your sending domain. Contact Orgo support if you need help with email deliverability.
+  <Accordion title="Nobody gets notified about our group's posts">
+    Check the group type. A restricted group only notifies members who follow it;
+    open-access local centers, all-member groups, and role groups notify everyone
+    who has not muted them.
+  </Accordion>
+
+  <Accordion title="The badge cleared without anyone reading anything">
+    A digest email marks its notifications read, as does opening the bell panel,
+    the notifications page, or the item itself.
   </Accordion>
 </AccordionGroup>
 
@@ -114,6 +221,8 @@ Configure which admin events trigger notifications at **Settings** → **Notific
 
 ## Related
 
-- [Newsletter](/platform/newsletter) — Email campaigns for one-way communication
-- [Discussions](/platform/discussion) — The activity that generates most notifications
-- [Mobile Apps](/platform/mobile-apps) — Mobile push notification setup
+- [Newsletter](/platform/newsletter): Deliberate email campaigns to a chosen audience
+- [Discussions](/platform/discussion): The activity that generates most notifications
+- [Mobile Apps](/platform/mobile-apps): Branded apps and device setup
+- [Groups](/platform/groups): Who follows what, and therefore who gets notified
+- [Permissions](/platform/permissions): Which roles can change tenant-wide defaults

@@ -1,0 +1,151 @@
+---
+title: 'Units'
+description: 'Named teams inside a chapter, typed and nested to match your real organizational structure'
+"og:title": 'Units | Orgo'
+"og:description": 'Named teams inside a chapter, typed and nested to match your real organizational structure'
+"twitter:title": 'Units | Orgo'
+"twitter:description": 'Named teams inside a chapter, typed and nested to match your real organizational structure'
+---
+
+**Built for** organizations whose chapters are themselves subdivided: patrols inside a troop, sections inside a branch, departments inside a council.
+**Replaces** the naming conventions people invent to fake structure ("Berlin - Team A", "Berlin - Team B") and the side spreadsheet that tracks who is in which one.
+
+A unit is a named team that lives inside a chapter. Units are typed, so you name the layers once (Section, Patrol, Department) and then create as many units of each type as you need. Units can nest, one type inside another, to whatever depth your structure requires.
+
+<img src="/images/platform/groups/units-segmented.png" alt="Segmented units board showing parent unit columns, child units, member cards, and an unassigned column" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Units, chapters, and groups
+
+All four sit on the same underlying structure in Orgo, which is why they share features like member roles and a name, but they behave differently:
+
+| | Belongs to | Membership | Created by |
+|---|---|---|---|
+| **Chapter** (local center) | The organization | The member's primary chapter, one per member | `ADMIN_TENANT` |
+| **Unit** | A chapter (usually) and optionally a parent unit | Assigned by an admin | `HR_LOCAL` within their own chapter |
+| **[Private group](/platform/groups/private-groups)** | The organization | People join or are invited | Any member allowed to create groups |
+| **[Role group](/platform/groups/role-groups)** | The organization | Filled automatically from a query | `ADMIN_TENANT` |
+
+The practical difference: a unit describes where someone sits in the org chart, a group describes what they are working on.
+
+---
+
+## Before you start
+
+| Requirement | Where |
+|---|---|
+| **Enable Organizational Units** switched on | **Settings** → **Modules** → **Groups** → **Configuration** |
+| At least one unit type defined | **Settings** → **Modules** → **Groups** → **Unit Types** |
+| `HR_LOCAL` to see the unit screens, `ADMIN_LOCAL` to create and edit units | Scoped to the chapter |
+
+---
+
+## Unit types
+
+A unit type is the template for a layer of your structure. Define them once at **Settings** → **Modules** → **Groups** → **Unit Types**, then create units of that type inside each chapter.
+
+<img src="/images/platform/groups/unit-types.png" alt="Unit Types settings page showing type cards with Within local center and Has user types badges" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+| Field | What it does |
+|---|---|
+| **Title** | Singular name, used on buttons like "add Patrol" |
+| **Plural name** | Used as the page heading and the chapter tab label |
+| **Parent unit type** | The type one level up. Setting this is what makes units nest, and it drives the parent selector on the unit form |
+| **Within local center** | Units of this type belong to a chapter. New units are stamped with the creator's chapter automatically |
+| **Has user type** | Units of this type carry a member type, which colors them in the lists and boards |
+
+Creating, editing, and deleting unit types is restricted to organization admins (`ROLE_ADMIN_TENANT`). Delete a type only after nothing uses it.
+
+<Note>
+  **Within local center** is the switch that decides whether a type shows up as a chapter tab and in the chapter row menu. A type without it produces units that are not tied to any chapter, so only tenant-level admins can manage them.
+</Note>
+
+---
+
+## Working with units
+
+### The unit list
+
+The chapter header carries a tab named after your local unit types (visible with `HR_LOCAL`). It opens a list of every unit of that type in the chapter.
+
+The heading is the type's plural name. `HR_LOCAL` gets an **active** / **archived** filter. `ADMIN_LOCAL` gets an **add** button naming the type, and a pencil on each row. Each row shows the member type badge or logo, the unit name linking to its members, the member count, and the parent unit name (with an **archived** tag if the parent is closed).
+
+Clicking a row slides in the unit form:
+
+| Field | Notes |
+|---|---|
+| **name** | Required |
+| **dateBegin** | Existing units only |
+| **dateEnd** | Only when the unit is archived |
+| **userType** | Only when the type has **Has user type** and member types are enabled |
+| Parent selector | Labelled with the parent type's name. Archived parents are marked |
+| **status** | **active** or **archived** |
+
+Deleting a unit asks for confirmation and removes its role assignments with it.
+
+### The segmented board
+
+`ADMIN_LOCAL` also gets a drag-and-drop board for the whole chapter. When your types nest, it renders as columns: one per parent unit, with its child units stacked inside and an **Unassigned** column for members who are in the chapter but not in any unit.
+
+From the board you can drag a member from one unit to another, use **Add member** to search and place someone, create a child unit inline, edit or delete a unit, set each member's role, and mark a member as **Admin** of their unit.
+
+<Warning>
+  The **Admin** flag on a unit member is not cosmetic. It delegates scoped fee access and unit event attendance, so it is restricted to people who already hold `HR_LOCAL`, `FINANCIAL_LOCAL`, or `ADMIN_TENANT` over the chapter. Unit admins cannot appoint each other.
+</Warning>
+
+### From the chapters list
+
+When units are enabled, each chapter row in the chapters list grows a chevron. Expanding it loads that chapter's whole unit tree inline, indented by depth, showing each unit's type, member type color, and member count.
+
+A unit name in that tree is a link only if you can open it. You can when you hold `HR_LOCAL` over the chapter, or you are an admin of that unit or one above it, or you hold a role on that unit type (or any type above it in the parent chain).
+
+---
+
+## Who can do what
+
+| Action | Requires |
+|---|---|
+| See the unit screens | `HR_LOCAL` |
+| Create a unit | `HR_LOCAL`. `HR_TENANT` may create any type; local admins are limited to ordinary units |
+| Edit or delete a unit | `ADMIN_LOCAL` on the unit's chapter |
+| Toggle a member's unit **Admin** flag | `HR_LOCAL` or `FINANCIAL_LOCAL` on the chapter, or `ADMIN_TENANT` |
+| Create, edit, or delete unit types | `ROLE_ADMIN_TENANT` |
+
+Chapters and role groups can never be created or edited through the unit screens even by tenant admins; they have their own flows.
+
+---
+
+## Common questions
+
+<AccordionGroup>
+  <Accordion title="How deep can units nest?">
+    As deep as your chain of unit types. Each type points at one parent type, and units of a type can only sit under units of that parent type. The chapters list renders the resulting tree at whatever depth it finds.
+  </Accordion>
+
+  <Accordion title="A member should be in two units.">
+    Unit membership is a role assignment, so a member can hold roles in more than one unit at the same time. Dragging on the segmented board moves them; adding them from a second unit's **Add member** leaves both.
+  </Accordion>
+
+  <Accordion title="Why does no unit tab appear on my chapter?">
+    Three things must all be true: **Enable Organizational Units** is on, at least one unit type has **Within local center** ticked, and you hold `HR_LOCAL` over the chapter.
+  </Accordion>
+
+  <Accordion title="What happens to members when a unit is archived?">
+    Archiving sets the unit's status to closed and records an end date. It stays visible under the **archived** filter and keeps its history; it just stops appearing in the active list and in the chapter's unit tree.
+  </Accordion>
+
+  <Accordion title="Should I use a unit or a group for a committee?">
+    A unit if the committee is a permanent part of the chapter's structure and you want it in the org chart and in fee scoping. A [private group](/platform/groups/private-groups) if it is a working space people join for a project.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related
+
+- [Local Centers](/platform/groups/local-groups) - the chapters that units live inside
+- [Groups Overview](/platform/groups) - all group types and when to use each
+- [Role Groups](/platform/groups/role-groups) - membership defined by a query instead of an assignment
+- [Member Transfers](/platform/groups/transfers) - what happens to assignments when a member changes chapter
+- [Permissions](/platform/permissions) - how the local roles are evaluated

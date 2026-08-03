@@ -1,141 +1,128 @@
 ---
-title: 'Badges & Gamification'
-description: 'Recognize achievements — training, milestones, service hours, and special contributions'
-"og:title": 'Badges & Gamification | Orgo'
-"og:description": 'Recognize achievements — training, milestones, service hours, and special contributions'
-"twitter:title": 'Badges & Gamification | Orgo'
-"twitter:description": 'Recognize achievements — training, milestones, service hours, and special contributions'
+title: 'Badges'
+description: 'Named awards on a member profile, given by hand or awarded automatically from hours, events, and courses'
+"og:title": 'Badges | Orgo'
+"og:description": 'Named awards on a member profile, given by hand or awarded automatically from hours, events, and courses'
+"twitter:title": 'Badges | Orgo'
+"twitter:description": 'Named awards on a member profile, given by hand or awarded automatically from hours, events, and courses'
 ---
 
-Badges let you recognize and motivate members by awarding visual achievements. Completed a training course? Badge. Five years of membership? Badge. 100 volunteer hours? Badge. Members see their badges on their profile, and it creates a culture of recognition.
+A badge is a named, illustrated award attached to a member's profile. You define the catalogue once, then badges reach members either because someone gives them out or because Orgo awards them from something the member did: hours logged, an event attended, a course finished.
 
----
+**Built for** organizations that already recognise members informally (training passed, hours volunteered, levels reached) and want that recognition on the member record instead of in a spreadsheet.
 
-## Do I need badges?
+**Replaces** the certificates spreadsheet and the "who is first aid certified?" email thread. It is not a qualifications register: a badge has no expiry date and no renewal.
 
-| Your situation | Badges? |
-|---------------|---------|
-| You run training or courses and want to show completion | Yes |
-| You want to recognize volunteer milestones (hours, years) | Yes |
-| You have a progression system (ranks, levels, belts) | Yes |
-| Event attendance matters and you want to track it visually | Yes |
-| You just need basic member management | Not necessary |
+Badges need the Gamification module. Turn it on at **Settings** → **Modules** → **Gamification & Courses** → **Gamification** with **Enable Gamification Module**. That settings area needs `ADMIN_TENANT`.
 
 ---
 
-## How badges work
+## Categories and badges
 
-Badges are organized into **types** (categories) and individual **badges** within each type. You create the badge system, then award badges to members — manually or automatically.
+Badges can be grouped into categories, which is optional and controlled by the **Enable badge categories** switch. A category has only an image and a title. Its job is to keep the award picker usable once you have more badges than fit on a screen.
 
-### Badge types (categories)
+**Settings** → **Modules** → **Gamification & Courses** → **Badge Categories**
 
-| Type | What it groups |
-|------|---------------|
-| **Progress** | Milestones and level progression |
-| **Merit** | Special achievements and contributions |
-| **Training** | Completed courses and certifications |
-| **Service** | Volunteer hours and community service |
-| **Events** | Event participation and attendance |
+<img src="/images/platform/features/badge-types.png" alt="Badge Categories list showing category artwork and names with an Add badge category button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-Create your own types at **Settings** → **Features** → **Badge Types**.
+Badges themselves live one level down, at **Settings** → **Modules** → **Gamification & Courses** → **Badges**.
 
----
+| Field | What it does |
+|---|---|
+| Image | Circular badge artwork, cropped on upload |
+| **Title** | The badge name. Required, saving without one is blocked |
+| **Badge type** | The category. Shown only when **Enable badge categories** is on |
+| **Hours number** | Volunteering-hours threshold, see [by volunteering hours](#by-volunteering-hours). Shown only when **Enable hours tracking** is on |
+| **Points required** | Tier threshold, see [Gamification](/platform/gamification). Shown only when **Enable tiers/levels by points** is on |
+| **Default note explanation** | Pre-fills the note when someone awards this badge, so the same wording is used every time |
 
-## Creating badges
+<img src="/images/platform/features/badges-list.png" alt="Badges list inside the Gamification and Courses module showing badge names and their categories with an Add badge button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-**Settings** → **Features** → **Badges** → **Create Badge**
+Creating, editing, and deleting badges and categories all need `ADMIN_TENANT`.
 
-| Setting | What it does |
-|---------|-------------|
-| **Name** | Badge display name — "First Aid Certified", "100 Service Hours" |
-| **Description** | What the badge represents and how to earn it |
-| **Image** | Badge icon or graphic (use consistent design across badges) |
-| **Type** | Which category this badge belongs to |
+<Warning>
+Deleting a badge also deletes every award of it from every member. Deleting a category deletes the badges filed under it, and their awards with them. Courses and events that pointed at a deleted badge simply lose the link.
+</Warning>
 
 ---
 
-## Awarding badges
+## Awarding a badge
 
-### Manually
+### By hand
 
-1. Go to a member's **Profile** → **Badges** tab
-2. Click **Add Badge**
-3. Select the badge
-4. Add notes if needed (e.g., "Completed CPR training on March 15")
-5. Save
+Open the member, go to the **Badges** tab, and click **Add badge**. The picker lists categories on the left and their badges on the right, both searchable. Pick one, then fill in:
 
-### Automatically
+| Field | Notes |
+|---|---|
+| **Date completed** | Defaults to today. Back-dating is allowed |
+| **Notes** | Pre-filled from the badge's default note when it has one |
+| **Status** | **Completed** or **Pending**, defaulting to Completed |
 
-Badges can trigger automatically when:
-- A **course is completed** (linked to the Courses module)
-- A **certain number of events** are attended
-- A **volunteer hours milestone** is reached
-- A **membership anniversary** passes
+Pending is for work in progress: the member holds the record, and it is counted and filtered separately from completed awards everywhere it appears.
 
-<Tip>
-Automatic badges work best for quantifiable achievements (attendance counts, course completion). Manual badges work better for subjective recognition (outstanding contribution, leadership excellence).
-</Tip>
+The **Add badge** button appears for `HR_TENANT` and for `HR_LOCAL` on the member's local center. Editing or removing an existing award from the profile table needs `HR_LOCAL` on that member's local center. Every award stores who gave it, shown as **Offered by** on the profile and **Given by** in the centralizer.
 
----
+Nobody is notified when a badge is awarded or removed, so announce the ones that matter yourself.
 
-## Where badges appear
+### By volunteering hours
 
-| Location | Visibility |
-|----------|-----------|
-| **Member's profile** | Always visible (to those who can see the profile) |
-| **Public profile** | If public profile badges are enabled |
-| **Membership card** | If configured to show |
+With **Enable hours tracking** on, the Badges tab gains **Add volunteering hours**, which needs `HR_ASSISTANT_LOCAL` on the member. Each entry has a period (start and end date), a number of hours, a title, and notes.
 
-Configure badge visibility per badge or globally in the module settings.
+Saving or editing an entry re-totals every hour logged for that member and awards, as Completed, each badge whose **Hours number** is above zero and at or below that total. Deleting an hours entry does not take a badge back, so revoke it by hand if the total no longer holds.
 
----
+### From an event
 
-## Building a badge system
+With both **Enable tiers/levels by points** and **Enable badge per event** on, the event form gains a **Gamification** section containing **Award badge on event attendance**, visible to `EVENT_TENANT`. Participants receive the badge when their attendance is set to Attended. If the attendance is deleted or moved away from attending, the badge is removed again.
 
-### Example: Scouting organization
+### From a course
 
-| Badge | Type | How to earn |
-|-------|------|------------|
-| Tenderfoot | Progress | Complete introductory requirements |
-| Second Class | Progress | Pass outdoor skills assessment |
-| First Class | Progress | Complete all core requirements |
-| First Aid | Training | Complete first aid course |
-| Camping Expert | Merit | 20+ camping nights logged |
-| Eagle Scout | Merit | Complete Eagle project |
+With the Gamification module on, a saved course gains **Award badge on completion**. Students receive it when their enrollment is marked complete, and the course page then shows the badge as earned. Deleting a completed enrollment removes the badge.
 
-### Example: Professional association
-
-| Badge | Type | How to earn |
-|-------|------|------------|
-| Conference Attendee 2025 | Events | Attend annual conference |
-| Certified Professional | Training | Pass certification exam |
-| 5-Year Member | Service | 5 years of continuous membership |
-| Mentor | Merit | Complete mentorship program |
-| Published Author | Merit | Publish in association journal |
+<Note>
+A member can hold a given badge only once. Every automatic path checks first and skips if the badge is already on the profile, so re-marking attendance or re-running an import will not create duplicates.
+</Note>
 
 ---
 
-## Common scenarios
+## Where badges show up
+
+On a member profile, the overview card lists badge artwork and names, and the **Badges** tab holds the full table: badge, category, status, who offered it, and the date. Volunteering hours get their own table below it when hours tracking is on.
+
+**Badges** in the sidebar (`/badge-users`) is the tenant-wide view, shown to `HR_ASSISTANT_LOCAL` and above once the module is on. Filter by category, badge, Completed or Pending, and local center, then read across three tabs.
+
+| Tab | What it shows |
+|---|---|
+| **Local centers** | Completed and pending counts per local center. Only when the Local Centers module is on |
+| **Badges stats** | Completed and pending counts per badge, sortable, 30 rows a page |
+| **Badges** | Individual awards: badge, member, who gave it, and when. 100 rows a page |
+
+Someone whose HR permission is local-only sees just the awards for members of their own local center.
+
+<img src="/images/platform/features/badges-centralizer.png" alt="Badges centralizer with local centers, badge stats, and individual award tabs plus Completed and Pending filters" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Common questions
 
 <AccordionGroup>
-  <Accordion title="Members don't seem to care about badges">
-    Make badges meaningful — tied to real achievements, not participation trophies. Announce badge awards in newsletters or discussions. If badges represent genuine accomplishments, members value them.
-  </Accordion>
-
-  <Accordion title="How many badges should we create?">
-    Start with 5-10 covering your most important achievements. You can always add more. Too many dilutes the value — if everyone has 30 badges, none of them mean anything.
-  </Accordion>
-
-  <Accordion title="Can members request badges?">
-    Not directly. Badges are awarded by admins or triggered automatically. Members can't self-assign. This maintains the integrity of the recognition.
-  </Accordion>
-
-  <Accordion title="I want different badge images but I'm not a designer">
-    Use a consistent style — simple icons with your org colors. Free icon sets (like Heroicons or Phosphor) work well. The key is consistency, not complexity.
+  <Accordion title="Can members request a badge or give one to themselves?">
+    There is no request flow and no self-service button. Badges come from an admin with HR permission, or from one of the automatic paths above.
   </Accordion>
 
   <Accordion title="Can I revoke a badge?">
-    Yes — go to the member's profile, find the badge, and remove it. The member is not notified automatically, so communicate the reason if appropriate.
+    Yes. Open the member's Badges tab and delete the award. Nobody is notified, so explain it directly if the reason matters.
+  </Accordion>
+
+  <Accordion title="Can I load our existing badge history?">
+    Yes. The import tool has three badge entities: Badge Types, Badges, and Badge Assignments, each with a downloadable example file. Import categories and badges first, then the assignments.
+  </Accordion>
+
+  <Accordion title="Why is there no Badges tab on the member profile?">
+    The Gamification module is off. Turn it on under Settings, Modules, Gamification &amp; Courses.
+  </Accordion>
+
+  <Accordion title="Why can a colleague see fewer awards than I do in the centralizer?">
+    They hold a local-level HR permission, so the list and the local center filter are limited to their own local center. Tenant-level HR sees everything.
   </Accordion>
 </AccordionGroup>
 
@@ -143,6 +130,8 @@ Configure badge visibility per badge or globally in the module settings.
 
 ## Related
 
-- [Courses](/platform/courses) — Award badges for course completion
-- [Events](/platform/events) — Track event attendance for badges
-- [Members](/platform/users) — Member profiles where badges display
+- [Gamification](/platform/gamification) - Points, tiers, and the leaderboard
+- [Courses](/platform/courses) - Award a badge when a course is completed
+- [Event attendance](/platform/events/attendance) - Award a badge to everyone marked as attended
+- [Members](/platform/users) - The profile where badges appear
+- [Permissions](/platform/permissions) - What HR_LOCAL and HR_ASSISTANT_LOCAL cover

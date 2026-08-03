@@ -7,170 +7,147 @@ description: 'Create fee products, donation campaigns, and payment pages'
 "twitter:description": 'Create fee products, donation campaigns, and payment pages'
 ---
 
-Products are the foundation of all payments in Orgo. Every payment — membership fees, donations, event tickets, merchandise — starts with creating a product. A product defines what you're selling, how much it costs, and who can buy it.
+A product is what Orgo charges for. Membership dues, donation campaigns, event tickets and manual invoices all resolve to a product with one or more prices. Products are mirrored into Stripe when you save them, so a product is also the unit that Stripe reports on.
 
-<img src="/images/platform/fees/products-list.png" alt="Products list with membership fees and pricing" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+**Built for** organisations that collect more than one kind of payment and need each one tracked separately.
+
+<img src="/images/platform/fees/products-list.png" alt="Products list showing an organisation membership fee, a donation product and several local group fee products, with Active and Archived tabs" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Where products live
+
+**Finance** → **Products** (route `/products/tenant`). The Finance section appears when the Payments or Fees module is active, and the screen requires `FINANCIAL_LOCAL`. Creating or editing an organisation-level product requires `FINANCIAL_TENANT`; a local center finance admin with `FINANCIAL_LOCAL` sees **Finance** → **Local products** instead, and anything they create is stamped with their own local center.
+
+The list has **Active** and **Archived** tabs and a **Display totals(slower)** checkbox that adds collected amounts per product. Event ticket products are excluded, being managed inside the event.
 
 ---
 
 ## Product types
 
-| Type | What it's for | Example |
-|------|-------------|---------|
-| **Fee** | Membership dues, subscriptions | "Annual Membership 2026", "Monthly Dues" |
-| **Donation** | Fundraising campaigns, charitable giving | "Building Fund", "Scholarship Program" |
-| **Commerce** | Physical or digital goods | "Organization T-Shirt", "Yearbook" |
-| **Event** | Event tickets (usually created through the [Events](/platform/events) module) | "Conference 2026 Registration" |
-| **Manual Invoice** | Custom charges, one-off invoices | "Special Assessment", "Reimbursement" |
+| Type | Where it is created | What it is for |
+|------|--------------------|----------------|
+| **Membership Fee** (`fee`) | Products → Create Product | Membership dues, billed on a cycle |
+| **Donation** (`donation`) | Products → Create Product | Fundraising campaigns with a public page |
+| **Event** (`event`) | Inside an event, on the Ticketing tab | Event tickets |
+| **Manual Invoice** (`manual_invoice`) | Created for you when the Invoices module is set up | The line item behind manually issued invoices |
 
-Most organizations use **Fee** products for membership and optionally **Donation** products for fundraising. Commerce and Manual Invoice are for specific needs.
+Two further types exist in data, `commerce` and `digital_asset`, but the create form only offers Donation and Membership Fee, so neither can be created from the interface.
+
+The first organisation-level donation product you create also becomes the tenant default donation product. Set the membership fee product explicitly under **Settings** → **Payments & Fees** → **Membership fees**; do not rely on it being picked up automatically.
 
 ---
 
 ## Creating a product
 
-**Settings** → **Fees** → **Products** → **Create Product**
+**Products** → **Create Product**.
 
-<img src="/images/platform/fees/product-create.png" alt="Create Product form with product type selector (Donation or Membership Fee), title, frequency (Recurring or One-off), custom amount toggle, and campaign settings" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
-The create product form walks you through all settings:
+<img src="/images/platform/fees/product-create.png" alt="Create Product form with the Donation and Membership Fee type cards, Title, Frequency, Custom amount and Campaign sections" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 | Field | What it does |
-|-------|-------------|
-| **Product type** | **Donation** (one-time or recurring donations) or **Membership Fee** (recurring member subscriptions) |
-| **Title** | Product name shown to members — "Annual Membership Fee", "Support Our Mission" |
-| **Frequency** | **Recurring** (ongoing subscription charged on a cycle) or **One-off** (single charge) — or both |
-| **Custom amount** | Toggle to let payers enter their own amount. Set optional min/max values. Common for donation products. |
-| **Campaign** | For donations: set a **Total goal** or **Monthly goal** with a target amount. The public page shows a progress bar. |
+|-------|--------------|
+| **Product type** | **Donation** or **Membership Fee**. Shown only while creating; the type cannot be switched afterwards. |
+| **Title** | Required. A blank title is rejected, because Stripe refuses a product with no name. |
+| **URL Slug** | The public payment page address, `https://{your-payment-host}/pay/{slug}`. Not shown for fee products: those get an internal random slug and no public page. |
+| **Frequency** | **Recurring** (ongoing fee) and **One-off**. Both can be on. Recurring needs a connected Stripe account. |
+| **Period** | Fee products only: monthly, 3 months, 6 months or annually. Locked once saved. |
+| **Cycle beginning** | Fee products only: a fixed calendar month, or "The month user subscribes". |
+| **Enable pro-ratio for shorter first cycle** | Fee products with a period longer than one month: charge a partial amount for a mid-cycle join. |
+| **Number of months after cycle begining to start pro-rate** | Suppresses proration for members joining within the first N months of the cycle. |
+| **Enable custom amount** | Donations: lets the payer type an amount, with optional **Minimum** and **Maximum**. |
+| **Campaign (optional)** | Donations: **Goal type** (Total goal or Monthly goal), **Goal value** and a **Target date**, drawn as a progress bar on the public page. |
+| **Belongs to a local center** | Donations: restricts the product to one chapter. |
+| **Has local center option** | Donations: lets the payer choose a chapter at checkout. Requires **Products with Local Center Option** in the Payments module. |
+| **Starting date** | Fee products only: the date membership fees start counting for all members. |
 
-For membership fee products, additional fields appear after saving:
-
-| Field | What it does |
-|-------|-------------|
-| **Billing period** | How many months per cycle — 1 (monthly), 3 (quarterly), 12 (annual) |
-| **Cycle month** | Month the annual cycle starts — January (1) or September (9) for fiscal years |
-| **Proration** | Charge a fair partial amount when someone joins mid-cycle |
-| **Starting date** | When the fee product becomes active |
-
-After creating the product, add **price tiers** for different membership levels and configure the **payment page** appearance.
-
----
-
-## Price tiers
-
-Each product can have multiple price tiers for different membership levels or giving amounts:
-
-### Example: Membership fee
-
-| Tier | Amount | Who it's for |
-|------|--------|-------------|
-| Student | $50/year | Members in education |
-| Regular | $100/year | Standard membership |
-| Family | $150/year | Household membership |
-| Lifetime | $1,000 one-time | Permanent membership |
-
-### Example: Donation campaign
-
-| Tier | Amount |
-|------|--------|
-| Supporter | $25 |
-| Champion | $100 |
-| Patron | $500 |
-| Custom amount | Donor enters their own |
-
-To create tiers: open the product → **Prices** tab → **Add Price** → enter tier name, amount, and currency.
-
-### Custom amounts
-
-For donations, enable **custom price value** to let payers enter any amount. Set optional min/max to keep it reasonable.
+Donation products also carry page toggles here: **Disable newsletter subscription**, **Messages of support from donors**, **Display top 50 recent donations**, **Disable register checkbox for non-members**, **Require full address** and **Enable payment confidentiality**. See [Donation pages](/platform/fees/donation-pages).
 
 ---
 
-## Payment options
+## Prices
 
-| Setting | What it does |
-|---------|-------------|
-| **One-time payment** | Payer pays once — no recurring billing |
-| **Subscription** | Automatic recurring charges via Stripe |
-| **Billing period** | How often subscriptions renew: monthly (1), quarterly (3), yearly (12) |
-| **Cycle day** | Day of month when billing starts (1-28) |
-| **Cycle month** | Month when annual cycle starts (1-12) |
-| **Proration** | Charge a partial amount when someone joins mid-cycle |
-| **Recurrences** | Number of billing cycles before subscription ends (empty = indefinite) |
+Open a product and use the **Prices & Options** tab. Every purchasable amount is a price row; there is no separate concept of a "tier".
 
-<Tip>
-  Most membership organizations use a yearly subscription starting January 1. Enable proration so members who join mid-year pay a fair partial amount for the remaining months.
-</Tip>
+<img src="/images/platform/fees/product-detail.png" alt="Prices and Options tab listing three membership prices with names, amounts and a default badge" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
----
+| Field | Applies to | What it does |
+|-------|-----------|--------------|
+| **name** | all | Shown to the payer and on the payment record. |
+| **price** | all | The amount, in your organisation currency. |
+| **Payment type** | all | **One-time**, **Is recurring**, or both. At least one is required. |
+| **description** | all | Longer text shown with the price. |
+| **VAT** | fee | **VAT exempt (not taxable)** or a percentage rate. Needs **Enable VAT on Fees**. |
+| **Registration fee (one-time)** | fee | Charged once, on the member's first membership payment. Needs **Enable One-time Registration Fee**, and never appears on local center fee products. |
+| **Is only assignable by admins (hidden for members)** | fee | Members never see this price; an admin assigns it. The organisation default price cannot be hidden. |
+| **Company only** / **Company slots** | fee | Reserves the price for company memberships. `0` slots means unlimited. |
+| **Age conditioning** (**Age under** / **Age over**) | fee | Needs **Enable Age Restrictions on Prices**. |
+| **Is lifetime membership** | fee | Needs **Lifetime Membership Available**. Saving it sets the cycle to 1200 months. |
+| **Cycle period (in months)** | fee | Overrides the product period for this price alone. |
+| **Is bundle** | fee | Groups a paying member with linked member slots. Hidden when fixed-date fee cycles are on. |
+| **Display name on payment page** | non-fee | Prints the price name on the public page. |
+| **Availability** | event | **Members & external** or **Members only**, optionally restricted to specific membership levels. |
 
-## Product visibility
+Each row's menu offers **modify**, **Go to Price in Stripe**, **Make default**, **Archive** and **delete**. Members only ever see prices that are not archived, not hidden, and inside their valid dates; `HR_TENANT` sees all of them.
 
-| Setting | What it means |
-|---------|-------------|
-| **Internal** | Only organization members can see and purchase |
-| **External** | Anyone can access via the public payment page — no login needed |
-| **Display on profile** | The product appears on member profile pages for easy purchase |
-| **Archived** | Hidden from everyone but data preserved — use for expired products |
-
-### Public payment pages
-
-External products get a shareable URL:
-
-```
-https://app.orgo.space/public/product/{slug}
-```
-
-Customize the page with your brand colors, logo, and button styling. For donation products, you can also show recent donors, top donors, and a progress bar toward your goal.
+<Warning>
+  Once any payment has been taken against a price, its amount is frozen. Saving a different amount returns "You cannot edit the price of this product." Use a new price version instead.
+</Warning>
 
 ---
 
-## Product options
+## Price versions
 
-Add customizable choices to products — useful for merchandise or events with preferences:
+A fee price carries **Valid from** and **Valid to** dates, and each version points back at the one it replaced. That chain lets a payment recorded for 2024 still resolve at the 2024 amount after you raise the price for 2026.
 
-- T-shirt size (S, M, L, XL)
-- Meal preference (Vegetarian, Standard)
-- Workshop selection
-
-Options are configured in the product's **Options** tab.
+To raise a price, open it, choose **New price version**, then fill in **New price**, **Valid from** and optionally **Valid to**. Orgo closes the old version by setting its **Valid to** to the day before the new one starts, so the two never overlap. To work out what a member owed on a given date, the version whose validity window contains that date wins; if none does, Orgo falls back to the organisation default price. The Prices table gains **Valid From** and **Valid To** columns and an expandable **Previous Version** row as soon as any history exists.
 
 ---
 
-## Goal tracking (donations)
+## Options
 
-For fundraising campaigns, set a target amount:
-
-| Setting | What it does |
-|---------|-------------|
-| **Goal value** | Target for one-time donations — progress bar on the public page |
-| **Goal value (subscription)** | Target for recurring donations |
-
-The public donation page shows a live progress bar toward your goal.
+Donation products, and only donation products, can carry **Product options**: a designation the donor picks on the payment page, for example which programme the gift supports. Add them inline under the prices table, drag to reorder, archive the ones you retire. Each active option has its own deep link into the payment page, so you can send donors straight to one designation.
 
 ---
 
-## Common scenarios
+## The rest of a product
+
+| Tab or page | What it shows |
+|-------------|---------------|
+| **Prices & Options** | Prices, version history, and donation options. |
+| **Landing page** | The public page editor: hero media, colours, text. Not shown for fee products. |
+| **Widgets** | Embeddable donation widgets. Donation products only. |
+| **Stats** | Payment totals and a trend chart over 7 days, 30 days, 90 days or 12 months. |
+| **Payments** | Every payment for the product, filterable by payer name, payment ID, user ID, email, status, type, option, local center and date, with **Record payment** and **Refund** actions. |
+| **Subscribers** | Active recurring subscriptions for the product. |
+| **Comments** | Donor messages awaiting approval. |
+
+<img src="/images/platform/fees/finance-stats.png" alt="Product Stats tab showing payments total for the last 90 days with an amount line and a seven-day moving median" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+Archiving takes a product out of circulation while keeping its payment history: it moves to the **Archived** tab and, if it exists in Stripe, is archived there too. Deleting works only while a product has no payments at all; otherwise Orgo refuses and tells you how many are attached.
+
+---
+
+## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="I need different membership fees for different member types">
-    Create one fee product with multiple price tiers (Student, Regular, Family, etc.). When members pay, they select the tier that applies to them. You can also assign default tiers per user type.
+  <Accordion title="The Recurring option is greyed out">
+    No connected Stripe account: the organisation account for organisation products, the chapter's own for local center products. See [Stripe Integration](/platform/fees/stripe-integration).
   </Accordion>
 
-  <Accordion title="Our fiscal year starts in September, not January">
-    Set the **cycle month** to 9 (September) and **cycle day** to 1. Subscriptions will renew every September 1st.
+  <Accordion title="I cannot change a price amount">
+    The price already has payments against it. Create a new price version instead, so past payments keep resolving at the old amount.
   </Accordion>
 
-  <Accordion title="A member joined in March but our fee year runs January-December">
-    Enable **proration**. The system calculates the partial amount for March-December. From the following January, they pay the full annual amount.
+  <Accordion title="Members do not see a price I created">
+    It is archived, hidden from members, or outside its **Valid from** / **Valid to** window.
   </Accordion>
 
-  <Accordion title="I want to stop offering a product but keep the payment history">
-    **Archive** the product instead of deleting it. Archived products are hidden from members but all payment records are preserved. Never delete a product with payment history.
+  <Accordion title="The VAT or registration fee fields are missing">
+    Both are opt-in per organisation: **Enable VAT on Fees** and **Enable One-time Registration Fee**, under **Settings** → **Payments & Fees** → **Membership fees**. While they are off, no VAT and no registration fee are charged, whatever a price row stores.
   </Accordion>
 
-  <Accordion title="How do local center fees work?">
-    Each Local Center can have its own fee products linked to their own Stripe account. See [Local Center Fees](/platform/local-group-fees/create-local-fees).
+  <Accordion title="A local center needs its own fee">
+    Create it from **Finance** → **Local products** and configure it per chapter. See [Local Center Fees](/platform/local-group-fees/create-local-fees).
   </Accordion>
 </AccordionGroup>
 
@@ -178,7 +155,8 @@ The public donation page shows a live progress bar toward your goal.
 
 ## Related
 
-- [Membership Fees](/platform/fees/fees) — Managing fee collection and tracking payments
-- [Stripe Integration](/platform/fees/stripe-integration) — Connecting payment processing
-- [Donations](/platform/fees/donations) — Running fundraising campaigns
-- [Local Center Fees](/platform/local-group-fees/create-local-fees) — Branch-level fee collection
+- [Membership Fees](/platform/fees/fees): turning a fee product into collected dues
+- [VAT](/platform/fees/vat): when VAT applies and how it is stored
+- [Stripe Integration](/platform/fees/stripe-integration): connecting payment processing
+- [Donations](/platform/fees/donations): running fundraising campaigns
+- [Local Center Fees](/platform/local-group-fees/create-local-fees): chapter-level fee collection

@@ -7,120 +7,114 @@ description: 'Organize discussions into categories so members can find and filte
 "twitter:description": 'Organize discussions into categories so members can find and filter by topic'
 ---
 
-Discussion Namespaces (categories) turn a flat list of posts into an organized forum. Instead of scrolling through everything, members can filter by "Announcements", "Questions", "Ideas", or whatever categories make sense for your organization.
+Discussion namespaces, called **categories** everywhere in the interface, turn a flat feed into a browsable forum. Members pick a category when they post, and filter by it when they read.
 
-<img src="/images/platform/communication/discussion-categories.png" alt="Discussion category settings page" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+A category does two things a tag cannot: it can belong to a single group, and it can carry its own posting permission.
 
----
-
-## Do I need namespaces?
-
-| Your situation | Recommendation |
-|---------------|----------------|
-| Your groups have diverse discussions (news, questions, resources, events) | Yes — categories help members find what they need |
-| Your Main Group is an announcement-only channel | Probably not — one type of content doesn't need categories |
-| Small organization with low discussion volume | Not yet — add categories when the feed gets busy |
-| Active community with 10+ posts per week | Yes — filtering becomes essential |
+<img src="/images/platform/communication/discussion-categories.png" alt="Discussion Categories screen listing categories with their posting permission and rename and delete actions" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Setting up namespaces
+## Turning categories on
 
-**Settings** → **Features** → **Discussion Namespaces**
+**Settings** and then **Discussions**, and switch on **Enable Discussion Namespaces** (on by default). A **Discussion Categories** entry appears under the module.
+
+---
+
+## Organization categories and group categories
+
+Where you create a category decides its scope, and there is no way to change that afterwards.
+
+| Created from | Scope | Effect |
+|--------------|-------|--------|
+| **Settings** and then **Discussions** and then **Discussion Categories**, or the gear icon on the organization feed | Organization-wide | Offered on posts that are not tied to a group |
+| The gear icon next to **All** while viewing a group, role group or local center | That group only | Offered inside that group only |
+
+A group category also decides where the post lands. When a member picks a category that belongs to a group, the new discussion is created in that group even if they started writing from somewhere else. Changing the category on an existing post does not move it.
+
+<img src="/images/platform/communication/discussions-list.png" alt="Group forum with the category sidebar on the left listing All plus each category, and posts filtered to the selected category" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Managing categories
+
+Open the category manager with the gear icon next to **All** in the category sidebar, or from **Settings** and then **Discussions** and then **Discussion Categories**.
 
 <Steps>
-  <Step title="Create categories">
-    Click **+ Create Category** and enter a name. Create as many as you need (aim for 5-10).
+  <Step title="Create">
+    Type a name into the **New category...** box and press Enter. New categories start with posting open to everyone.
   </Step>
-  <Step title="Order them">
-    Drag categories to set the display order. Put the most used categories first.
+  <Step title="Set who can post">
+    The people icon means anyone can post in the category. Select it to switch to the padlock, which restricts posting to admins and moderators. Select it again to reverse.
   </Step>
-  <Step title="That's it">
-    Categories are now available in all groups across the organization. When members create posts, they can select a category. When browsing, they can filter by category.
+  <Step title="Rename">
+    The pencil icon edits the name in place. Existing posts keep the category, so they follow the new name.
+  </Step>
+  <Step title="Delete">
+    The bin icon removes the category. Only categories with no discussions in them can be removed, so move or delete those posts first.
   </Step>
 </Steps>
 
----
-
-## Recommended categories by organization type
-
-### Community / general organization
-
-| Category | Use for |
-|----------|---------|
-| **Announcements** | Official news and updates from leadership |
-| **General** | Open conversation, anything that doesn't fit elsewhere |
-| **Questions** | Help requests, how-to questions |
-| **Ideas** | Suggestions, feedback, proposals |
-| **Events** | Event-related discussion |
-
-### Professional association
-
-| Category | Use for |
-|----------|---------|
-| **Industry News** | Relevant articles, trends, regulatory changes |
-| **Best Practices** | Knowledge sharing, professional advice |
-| **Job Board** | Employment opportunities |
-| **Networking** | Introductions, partnership requests |
-| **Resources** | Shared tools, templates, documents |
-
-### Youth / scouting organization
-
-| Category | Use for |
-|----------|---------|
-| **Program** | Activities, program updates, curriculum |
-| **Training** | Leader development, certification |
-| **Events** | Event planning and follow-up |
-| **Resources** | Materials, handbooks, templates |
-| **General** | Everything else |
+Categories cannot be reordered by hand.
 
 ---
 
-## How members use categories
+## Who can manage categories
 
-### When creating a post
+The permission depends on where the category lives, and it matches the permission needed to moderate the same place.
 
-1. Go to a group → **Discussions** → **Create Post**
-2. Write the post content
-3. Select a category from the dropdown (optional — uncategorized posts are allowed)
-4. Publish
-
-### When browsing
-
-1. Go to a group → **Discussions**
-2. Click the category filter dropdown
-3. Select a category to see only matching posts
-4. Clear the filter to see everything
+| Category scope | Required permission |
+|----------------|---------------------|
+| Organization-wide, or a role group forum | `COMMUNICATION_TENANT` |
+| A local center forum | `COMMUNICATION_LOCAL` for that local center |
+| A group | The group's owner, or a member whose role in the group is marked as admin |
 
 ---
 
-## Key details
+## The "anyone can post" switch
 
-- Categories are **organization-wide** — the same set is available in all groups
-- Only **administrators** can create, edit, reorder, or delete categories
-- Categorizing posts is **optional** — members can post without selecting a category
-- Editing a category name updates it everywhere — all existing posts with that category
-- Deleting a category removes the tag from existing posts but the posts remain
+Each category carries its own posting permission, and in the organization-wide feed it can widen access rather than narrow it.
+
+<Note>
+A member who does not meet **Who Can Create Public Discussions** can still post in the organization feed if they choose a category set to "anyone can post". Leave that switch on the padlock for categories you want to keep as announcement channels.
+</Note>
+
+Inside a group the switch has no effect. Posting there is governed by the group's own **Who can post?** setting, so leave the category switch alone in group feeds.
 
 ---
 
-## Common scenarios
+## Tag groups inside a category
+
+A category can carry tag groups (topic types), each holding a fixed list of tags. When a category has them:
+
+- the composer shows one tag picker per group, so a post can be labelled along several axes at once
+- the sidebar shows one filter per group, plus text search, author and "my posts" filters for that category
+
+Tag groups have no setup screen. They are created through the API (`POST /topic_types`, then `POST /topics` for their values). Most organizations do not need them: free tags typed as `#hashtags` on a post already filter the feed.
+
+---
+
+## Common questions
 
 <AccordionGroup>
-  <Accordion title="Nobody uses the categories — posts are all uncategorized">
-    Categories are optional by design, so members may skip them. Lead by example — make sure admins always categorize their posts. Consider adding a gentle reminder in the post creation flow. If categories aren't adding value, you might have too many or they might not match how your community actually discusses.
+  <Accordion title="Should every group have its own categories?">
+    Only busy ones. A group with a handful of posts a month reads fine as a single feed. Add categories once members start scrolling past things they do not care about.
   </Accordion>
 
-  <Accordion title="I want different categories for different groups">
-    Namespaces are organization-wide — the same categories appear everywhere. This is by design for consistency. If a group doesn't use certain categories, members simply don't select them. The filter only shows categories that have posts in the current group.
+  <Accordion title="Nobody uses the categories">
+    Choosing one is optional, so posts stay uncategorized unless people are nudged. Keep the list short, name categories the way members already talk, and make sure admins categorize their own posts.
   </Accordion>
 
-  <Accordion title="How many categories should I create?">
-    5-10 for most organizations. Fewer than 5 and categories aren't adding much. More than 10 and members can't decide where their post belongs. Think broad themes, not specific topics.
+  <Accordion title="Can I use the same categories everywhere?">
+    Yes, by creating them organization-wide. They are then offered on posts that are not tied to a group. A group's own feed only offers that group's categories, so a shared set has to be recreated per group if you want it in group feeds too.
   </Accordion>
 
-  <Accordion title="Can I restrict who can post in certain categories?">
-    Not natively — any member who can post in a group can use any category. To restrict posting, use the group-level "Only admins can post" setting and direct regular member discussion to a different group. For example, "Announcements" category in the Main Group works when only admins can post there.
+  <Accordion title="Deleting a category does nothing">
+    The category still has discussions in it. Reassign or delete those discussions first, then delete the category.
+  </Accordion>
+
+  <Accordion title="Can I link straight to one category?">
+    Yes. A filtered feed has its own address, `/discuss?category=<id>` for the organization feed or `/discuss?unit=<id>&category=<id>` inside a group, so it can be added to the sidebar with the [Menu Organizer](/platform/customization/menu-organizer).
   </Accordion>
 </AccordionGroup>
 
@@ -128,6 +122,8 @@ Discussion Namespaces (categories) turn a flat list of posts into an organized f
 
 ## Related
 
-- [Discussions](/platform/discussion) — The discussion feature overview
-- [Groups](/platform/groups) — Where discussions live
-- [Main Group](/platform/groups/main-group) — Org-wide discussions
+- [Discussions](/platform/discussion) the feature overview
+- [Moderation](/platform/discussion/moderation) holding and hiding posts
+- [Groups](/platform/groups) where group categories live
+- [Menu Organizer](/platform/customization/menu-organizer) pinning a category to the sidebar
+- [Permissions](/platform/permissions) the permission levels used above
