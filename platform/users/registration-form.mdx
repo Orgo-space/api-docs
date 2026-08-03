@@ -146,7 +146,7 @@ Found under **Settings** → **Users & Profiles** → **Configuration**.
 |---|---|
 | **Enable Registration Form** | Off blocks all self-registration and hides the Register link |
 | **Manual Approval** | New members land in Unapproved after verifying their email, and wait for an admin |
-| **Default User Type After Registration** | Stamps this user type on every new self-registration |
+| **Default User Type After Registration** | Stamps this user type on every account created through a registration route, and overrides any type chosen on the form or implied by a `/join` slug. See the troubleshooting entry below before setting it |
 | **Send Welcome Message** | Sends the welcome email the moment a member becomes Active |
 | **Notify Admins of New Registrations** | Listed here, but the admin notification currently goes out for every new registration regardless of this switch |
 | **Default Status for Admin-Created Users** | Applies to members an admin creates, not to self-registration |
@@ -178,6 +178,68 @@ The registration form has no age gate. Birthday is collected as data only. The m
 
   <Accordion title="I changed the form but existing members are unaffected">
     Correct: the form applies only to new sign-ups. To collect something from existing members, use the [profile form](/platform/users/profile-fields) instead.
+  </Accordion>
+
+  <Accordion title="Everyone gets the same user type, whatever the form says">
+    **Default User Type After Registration** is applied last and wins. It is applied
+    after the type the applicant picked in the **User Types** field, after the type
+    implied by a `/join/<slug>` form, and after the type an administrator chose while
+    creating a member by hand. Whatever any of those said, the finished profile carries
+    the default.
+
+    The clue that this is what happened: the member still holds the *role* for the type
+    they signed up under, visible on their Roles tab, while the **User type** on their
+    profile shows the default. The role was granted at sign-up and never touched.
+
+    Clear the setting if you use per-type forms or let applicants pick their own type.
+    A default only makes sense when there is exactly one answer for everyone, which is
+    precisely the case where the form does not ask.
+  </Accordion>
+
+  <Accordion title="A field marked Required came through empty">
+    **Required** on a registration form is enforced by the browser. That is enough for
+    someone filling the form on your registration page, and it is not enforced anywhere
+    else, so an account created by any other route arrives without those answers:
+
+    - A member an administrator creates with **Register member** from the directory
+    - Anyone loaded through [Import](/platform/customization/import)
+    - Anyone who joins through an [invitation](/platform/users/invitations) link, which
+      bypasses the registration form entirely
+
+    None of these pass through the form, so none of them are asked. If a field must
+    genuinely be present on every profile, put it on the
+    [profile form](/platform/users/profile-fields) and mark it required there: that one
+    is re-checked on every visit and members are redirected until it is filled in.
+
+    A separate cause for the public form specifically: custom fields set to **User** or
+    **Admin** visibility render on the page and are then discarded, whether or not they
+    are marked required. Only Public custom fields survive registration. See
+    [Custom Fields](/platform/users/custom-fields#where-a-value-actually-saves).
+  </Accordion>
+
+  <Accordion title="Settings search finds a setting the page does not have">
+    Search covers the settings catalogue rather than the page you land on, and a few
+    entries in the catalogue are for controls that are not currently built into the
+    Configuration screen. **Minimum Registration Age** and **Children Auth Restriction
+    Age** are the two you will meet from this page: both are findable in search, both
+    take you to **Users & Profiles** → **Configuration**, and neither has a control
+    there to scroll to. Nothing is broken and nothing is hidden by your permissions.
+
+    For an age limit on the public form, there is nothing to configure: the form has no
+    age gate at all, as noted above. Collect the birthday and review applications with
+    **Manual Approval**, or gate joining behind [Adhesion](/platform/users/adhesion).
+  </Accordion>
+
+  <Accordion title="Nobody was notified about a new sign-up">
+    Check the member's status first. The organisation and chapter administrator emails
+    go out when the account is created, but the welcome message to the member waits for
+    them to reach **Active**. Anyone sitting in Waiting list, Awaiting referral or
+    Unapproved has not reached it yet, so no welcome message has been sent and none will
+    be until they are admitted.
+
+    Also check **Send Welcome Message** is on, and remember that
+    **Notify Admins of New Registrations** does not currently gate the administrator
+    notification either way.
   </Accordion>
 </AccordionGroup>
 

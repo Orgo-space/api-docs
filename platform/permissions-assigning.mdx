@@ -90,6 +90,41 @@ These are enforced on save, not just hidden in the interface.
 | Only an Orgo administrator can create another one | The **Orgo administrator** switch is only rendered for members who already hold it. |
 | Local admins can be locked out entirely | Turn off **Allow Local Admins to Modify User Permissions** (**Settings → Users & Profiles → Configuration**, under Privacy & Visibility) and permission changes, status changes and chapter role changes are restricted to `HR_TENANT` and `ADMIN_TENANT`. Local administrators can still manage roles on units below chapter level. The setting is on by default. |
 
+### Worked example: what "at or below your own level" means
+
+"Your own level" is a rank, not a scope, and the ranking puts the Admin family above
+everything else. Highest first:
+
+Admin, then HR, then Financial, then HR Assistant, then Events and Communication
+level with each other at the bottom. Within a family, organisation beats parent
+chapter beats chapter.
+
+Two things fall out of that, and both surprise people:
+
+- **Being organisation-wide does not put you above every chapter permission.** The
+  organisation's secretary general holding `HR_TENANT` ranks below `ADMIN_LOCAL`,
+  so they cannot tick **Chapter administrator** on anyone's Permissions tab: the
+  checkbox is simply not rendered for them. Nor can the treasurer holding
+  `FINANCIAL_TENANT` tick `HR_LOCAL`. The communications lead holding
+  `COMMUNICATION_TENANT` ranks at the very bottom and can hand out nothing except
+  Events and Communication permissions.
+- **A chapter-scope person cannot reach out of their scope at all**, whatever their
+  rank. A chapter president holding `ADMIN_LOCAL` can grant every chapter permission
+  up to and including `ADMIN_LOCAL`, and nothing at parent chapter or organisation
+  scope, because scope is checked before rank.
+
+The **Orgo administrator** flag skips the whole comparison, which is why appointing
+chapter administrators usually lands back with an Orgo administrator.
+
+<Note>
+Assigning a **role** is not gated this way. Any role, including one carrying
+`ADMIN_LOCAL`, can be assigned by anyone holding `HR_LOCAL` on that member's chapter.
+So attaching a permission to a role and letting chapter secretaries hand that role out
+delegates the permission far more widely than ticking the same box directly ever would.
+Review the Permissions column on **Settings → Users & Profiles → Roles & User types**
+and decide deliberately which permissions are allowed to travel by role.
+</Note>
+
 ---
 
 ## Giving one person access to several chapters
@@ -150,6 +185,59 @@ Run the member filter whenever someone leaves. Ending a member's role removes th
   </Accordion>
   <Accordion title="A chapter manager sees the wrong chapter's data">
     Check their chapter on the profile, and check the **Multi chapter access** rows on their Roles tab. A regional permission also covers every chapter under the parent.
+  </Accordion>
+
+  <Accordion title="A checkbox is missing even though I clearly outrank the person">
+    Ranking is by permission family, not by reach. `HR_TENANT` outranks `HR_LOCAL`
+    but not `ADMIN_LOCAL`, because Admin sits above HR in the family order.
+    `FINANCIAL_TENANT` does not reach `HR_LOCAL`. `COMMUNICATION_TENANT` reaches
+    almost nothing.
+
+    This is the intended rule, not a bug, and it is enforced on save as well as in
+    the interface, so working around it by other means fails too. Worked through in
+    [What "at or below your own level" means](#worked-example-what-at-or-below-your-own-level-means).
+    If you need someone to be able to appoint chapter administrators, either give them
+    the **Orgo administrator** flag or make the appointment yourself.
+  </Accordion>
+
+  <Accordion title="Starting impersonation on a Settings page shows the login screen">
+    Impersonation switches off your Orgo administrator status for the whole session,
+    and every Settings screen requires it. Because starting a session reloads the page
+    you are on, starting it from anywhere under Settings immediately fails the check
+    and lands you on the login page.
+
+    You are not signed out. Navigate back to a page your simulated permissions can
+    open, such as the dashboard, and the **Permission Impersonation Active** banner
+    with its **Exit** button is there again. That banner is part of the normal
+    application layout, so it is not drawn on the login page, which is what makes this
+    look worse than it is. Start impersonation from an ordinary page and this does not
+    arise.
+  </Accordion>
+
+  <Accordion title="One Settings page opens for someone the rest refuse">
+    **Settings → Users & Profiles → Roles & User types** checks the `ADMIN_TENANT`
+    permission, while every other Settings screen checks the **Orgo administrator**
+    flag. Someone who holds the permission but not the flag has no way into Settings
+    from the interface, since both entry points (the cog in the header and the item in
+    the profile menu) are drawn only for the flag. Send them a direct link, though, and
+    Roles & User types opens while every neighbouring link on that same sidebar bounces
+    them to the login page.
+
+    Treat it as one page having a looser gate than intended, not as a supported way to
+    delegate role editing. If someone needs to manage roles, give them the Orgo
+    administrator flag knowingly, or make the change yourself.
+  </Accordion>
+
+  <Accordion title="Being refused looks like being signed out">
+    When a route refuses you, Orgo sends you to the login page rather than showing an
+    access denied message. Your session is intact and the page you wanted is
+    remembered, so this reads as a random sign-out when it is really a permission
+    refusal.
+
+    If a colleague reports being logged out at a specific link, do not start with their
+    session. Compare the permission the page requires against what they actually hold,
+    using the **Permissions** filter on the member list to confirm their effective
+    permissions rather than trusting the checkboxes on one profile.
   </Accordion>
 </AccordionGroup>
 
