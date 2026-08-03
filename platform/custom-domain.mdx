@@ -1,0 +1,91 @@
+---
+title: 'Custom Domain'
+description: 'Serve your community on your own domain, and understand each step of the setup'
+"og:title": 'Custom Domain | Orgo'
+"og:description": 'Serve your community on your own domain, and understand each step of the setup'
+"twitter:title": 'Custom Domain | Orgo'
+"twitter:description": 'Serve your community on your own domain, and understand each step of the setup'
+---
+
+By default your community lives at `yourorg.orgo.space`. A custom domain lets it
+live at an address you own, such as `members.yourorg.org`, so members never leave
+your brand.
+
+Setup is not instant. It runs through a sequence of states, and most of the
+confusion comes from not being able to tell which one you are in.
+
+---
+
+## The setup sequence
+
+| State | What is happening | What you do |
+|---|---|---|
+| **Draft** | The domain is recorded but nothing has started | Start the setup |
+| **Provisioning** | A TLS certificate is being requested for your domain | Wait |
+| **Awaiting DNS** | Orgo is waiting for you to add DNS records | **Add the records shown** |
+| **Validating** | Your records have been found and are being verified | Wait |
+| **Active** | The domain is live and serving your community | Nothing |
+| **Failed** | Setup could not complete | See below |
+
+The only step that needs you is **Awaiting DNS**. Everything else moves on its
+own, though not instantly.
+
+---
+
+## Adding the DNS records
+
+<Steps>
+  <Step title="Choose the subdomain">
+    Something like `members.yourorg.org` or `community.yourorg.org`. Use a
+    subdomain rather than your bare domain, so your main website is unaffected.
+  </Step>
+  <Step title="Add the records Orgo shows you">
+    Add them exactly as displayed, in whichever service manages your DNS. The
+    certificate validation record and the record pointing at Orgo are both
+    required; one without the other leaves setup stuck.
+  </Step>
+  <Step title="Wait for propagation">
+    DNS changes are not immediate. A few minutes is normal, longer is possible
+    depending on your provider and previous cache lifetimes.
+  </Step>
+</Steps>
+
+---
+
+## "I added the domain but I do not get a login page"
+
+Almost always one of three things, in order of likelihood:
+
+**Setup is not finished.** Check the state. If it says Awaiting DNS or
+Validating, the domain is not serving yet and what you are seeing is expected.
+
+**DNS has not propagated to you.** Your own computer may hold an older answer
+even when the record is correct. Try a private window, another network, or simply
+wait. If it works for someone else, this is what it is.
+
+**A record is missing or altered.** Some DNS providers append your domain to
+values automatically, which silently turns a correct record into a wrong one.
+Compare what is saved against what Orgo displayed, character for character.
+
+<Note>
+If it has been more than an hour in Awaiting DNS with records you have checked,
+contact support rather than deleting and starting again. Starting over requests a
+new certificate and puts you at the back of the same queue.
+</Note>
+
+---
+
+## If setup fails
+
+A failed state usually means certificate validation could not complete within the
+allowed window, which in practice means the DNS records were not in place in time.
+Confirm the records, then ask support to restart the setup.
+
+---
+
+## Email and your custom domain
+
+Serving the community on your domain is separate from sending email from it.
+Email sending needs its own DNS records and its own verification. Setting up one
+does not configure the other, and members noticing that email still arrives from
+the old address is the usual way this is discovered.

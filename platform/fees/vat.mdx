@@ -1,0 +1,77 @@
+---
+title: 'VAT & Invoice Templates'
+description: 'Apply VAT to some products and not others, and set the tax details that appear on invoices'
+"og:title": 'VAT & Invoice Templates | Orgo'
+"og:description": 'Apply VAT to some products and not others, and set the tax details that appear on invoices'
+"twitter:title": 'VAT & Invoice Templates | Orgo'
+"twitter:description": 'Apply VAT to some products and not others, and set the tax details that appear on invoices'
+---
+
+Organisations rarely charge one tax rate across everything. A membership fee may
+carry VAT while a refundable deposit does not, or a training course may be exempt
+where a ticket is not.
+
+VAT in Orgo lives in two places: on the **invoice template**, which sets the tax
+name and rate used, and on each **invoice line**, which carries the rate actually
+applied to that item.
+
+---
+
+## Invoice templates
+
+A template holds the tax details that appear on every invoice issued from it.
+
+| Field | What it is for |
+|---|---|
+| Tax name | What the tax is called on the document, for example VAT or TVA |
+| Tax value | The rate applied |
+| VAT exemption note | The wording shown when a line is exempt, which many jurisdictions require in full |
+| Memo, footer | Standing text on every invoice from this template |
+
+**Settings** → **Invoices** → **Invoice templates**.
+
+---
+
+## Charging VAT on one product but not another
+
+Create a template per tax treatment, then issue each product's invoices from the
+template that matches it.
+
+<Steps>
+  <Step title="Create a template for the standard case">
+    For example, one with your normal VAT rate, used for membership fees.
+  </Step>
+  <Step title="Create a second template for the exempt case">
+    No tax value, and a VAT exemption note that states the legal basis. Use this
+    for deposits or anything else outside the scope of VAT.
+  </Step>
+  <Step title="Issue each invoice from the matching template">
+    A membership fee and a refundable deposit are separate products, so they can
+    be invoiced from separate templates even when the member pays for both at
+    once.
+  </Step>
+</Steps>
+
+<Note>
+The rate is stored on each invoice line at the moment the invoice is created, not
+looked up when the invoice is viewed. Changing a template later does not rewrite
+invoices already issued, which is what you want: a historical invoice keeps the
+rate that was correct on the day it was raised.
+</Note>
+
+---
+
+## Getting the exemption wording right
+
+The exemption note is free text because the required wording differs by country
+and by the reason for exemption. Orgo does not check that what you write is
+correct for your jurisdiction. If you are unsure, ask your accountant for the
+exact sentence and paste it in, rather than paraphrasing.
+
+---
+
+## Related
+
+- [Products](/platform/fees/products) — creating the products invoices are raised against
+- [Recording a payment](/platform/fees/record-payment) — marking an invoice paid
+- [Stripe Integration](/platform/fees/stripe-integration) — card payments and processor fees

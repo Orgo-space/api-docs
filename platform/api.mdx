@@ -172,6 +172,42 @@ Receive real-time notifications when events occur:
 
 ---
 
+## Limiting what a token can reach
+
+A token does not have to carry everything you can do. Tokens are scoped by
+category, so you can give an integration access to members without giving it
+access to money.
+
+**Categories**
+
+| Category | Covers |
+|---|---|
+| `members` | Member profiles, memberships, badges, courses, contracts, companies |
+| `financial` | Products, fees, payments, invoices, billing profiles |
+| `events` | Events, registrations, attendance |
+| `communications` | Newsletters, discussions |
+
+**Levels.** Each granted category is either **read** or **write**. A category you
+do not grant is not reachable at all.
+
+<Note>
+This is the answer to "can we let a developer or an external tool work with our
+member data without exposing payments?" Yes. Create a token granting `members`
+and leave `financial` out.
+</Note>
+
+A scoped token can never exceed the permissions of the person who created it. The
+scope narrows that person's access; it does not widen it. So a token created by
+someone without financial permissions cannot reach financial data even if the
+category is granted.
+
+Tokens can also be marked **read-only** across every granted category, and given
+an expiry date. For an integration that only reads, use both: the blast radius of
+a leaked token then stops at data it could already see, and stops entirely on the
+expiry date.
+
+---
+
 ## Getting Help
 
 - [API Reference](/api-reference) - Complete endpoint documentation

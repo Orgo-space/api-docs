@@ -1,0 +1,177 @@
+---
+title: 'Assigning Permissions'
+description: 'Who to give which permission, how to assign it, how to test it, and how to audit who holds what'
+"og:title": 'Assigning Permissions | Orgo'
+"og:description": 'Who to give which permission, how to assign it, how to test it, and how to audit who holds what'
+"twitter:title": 'Assigning Permissions | Orgo'
+"twitter:description": 'Who to give which permission, how to assign it, how to test it, and how to audit who holds what'
+---
+
+Working with permissions day to day. For what each domain and scope level
+actually controls, see [Permissions](/platform/permissions).
+
+---
+
+## Recommended Permission Assignments
+
+### By Organizational Position
+
+| Position | Recommended Permission | Why |
+|----------|------------------------|-----|
+| **President / CEO** | ADMIN_TENANT | Full organizational control |
+| **Vice President** | ADMIN_TENANT or HR_TENANT | Depends on responsibilities |
+| **Secretary General** | HR_TENANT | Organization-wide member management |
+| **Treasurer** | FINANCIAL_TENANT | Organization-wide financial access |
+| **Communications Director** | COMMUNICATION_TENANT | Newsletters, announcements |
+| **Regional Director** | ADMIN_PARENT_LOCAL | Full control of their region |
+| **Regional HR Manager** | HR_PARENT_LOCAL | Member management for region |
+| **Branch President** | ADMIN_LOCAL | Full control of their branch |
+| **Branch Secretary** | HR_LOCAL | Local member management |
+| **Branch Treasurer** | FINANCIAL_LOCAL | Local financial operations |
+| **Event Coordinator** | EVENT_LOCAL or EVENT_TENANT | Based on event scope |
+| **Membership Assistant** | HR_ASSISTANT_LOCAL | Identity validation, gamification |
+| **Regular Member** | (none) | Basic member access |
+
+### Quick Decision Guide
+
+<CardGroup cols={2}>
+  <Card title="Need full control?" icon="crown">
+    **Use ADMIN**
+
+    For executives and IT administrators who need access to everything.
+  </Card>
+  <Card title="Managing members?" icon="users">
+    **Use HR**
+
+    For HR staff, secretaries, and membership officers.
+  </Card>
+  <Card title="Handling money?" icon="wallet">
+    **Use FINANCIAL**
+
+    For treasurers and finance officers.
+  </Card>
+  <Card title="Running events?" icon="calendar-days">
+    **Use EVENT**
+
+    For event coordinators and activity managers.
+  </Card>
+  <Card title="Sending communications?" icon="envelope">
+    **Use COMMUNICATION**
+
+    For communications officers and community managers.
+  </Card>
+  <Card title="Helping with validation?" icon="clipboard-check">
+    **Use HR_ASSISTANT**
+
+    For volunteers helping with identity checks and gamification.
+  </Card>
+</CardGroup>
+
+---
+
+## Assigning Permissions
+
+### Via Roles (Recommended)
+
+Attach permissions to roles, then assign roles to users:
+
+<Steps>
+  <Step title="Create or edit a Role">
+    Go to **Settings** → **Roles**
+  </Step>
+  <Step title="Attach permissions">
+    Select which permissions this role grants
+  </Step>
+  <Step title="Assign role to users">
+    Users with this role automatically get the attached permissions
+  </Step>
+</Steps>
+
+### Direct Assignment
+
+For exceptions, assign permissions directly to a user's profile.
+
+<Warning>
+  Direct assignment is harder to audit. Use roles whenever possible.
+</Warning>
+
+---
+
+## Testing Permissions (Impersonation)
+
+Administrators can test the platform with different permissions:
+
+<Steps>
+  <Step title="Click impersonation icon">
+    Shield icon in the header
+  </Step>
+  <Step title="Select permissions to test">
+    Choose which permission level to simulate
+  </Step>
+  <Step title="Browse as that user">
+    See exactly what users with those permissions see
+  </Step>
+  <Step title="Exit impersonation">
+    Click the badge to return to normal
+  </Step>
+</Steps>
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="User can't access a feature">
+    Check if they have the correct **domain** permission. Use the [Domain Comparison](#domain-comparison) table to find which permission controls that feature.
+  </Accordion>
+
+  <Accordion title="User sees too much data">
+    They probably have `_TENANT` scope instead of `_LOCAL`. Change to the appropriate scope level.
+  </Accordion>
+
+  <Accordion title="Permission seems to not work">
+    Check if it's automatically included by another permission. For example, HR already includes HR_ASSISTANT.
+  </Accordion>
+
+  <Accordion title="Can't find LOCAL/PARENT_LOCAL options">
+    Local center features might be disabled. Enable in **Settings** → **Modules** → **Local Centers**.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Seeing who currently holds which permissions
+
+Assigning and removing permissions is done per member, which makes it easy to
+lose track of who has what across a whole organisation. To review:
+
+<Steps>
+  <Step title="Open the member list">
+    **Members**, then filter by role.
+  </Step>
+  <Step title="Filter to each administrative role in turn">
+    Work through the roles you care about — organisation administrator, HR,
+    financial — rather than scanning the full list.
+  </Step>
+</Steps>
+
+There is no single report today that lists every member with elevated
+permissions in one view. If you audit access periodically, for example when
+someone leaves, the practical approach is to check each administrative role in
+turn and remove what is no longer needed.
+
+<Note>
+Do this whenever someone leaves the organisation. Removing a member's account
+does not by itself guarantee that every permission they were granted has been
+reviewed, and a departing administrator is the case where a stale permission
+matters most.
+</Note>
+
+---
+---
+
+## Related
+
+- [Permissions](/platform/permissions) — the permission model itself
+- [Roles](/platform/users/user-types) — organizational positions
+- [Role Groups](/platform/groups/role-groups) — automatic role assignment
