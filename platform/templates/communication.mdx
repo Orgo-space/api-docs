@@ -1,0 +1,388 @@
+---
+title: 'Orgo for member communication'
+description: 'A setup playbook for running member communication on Orgo: which modules to enable, in what order, and which channel to use for what'
+"og:title": 'Orgo for member communication | Orgo'
+"og:description": 'A setup playbook for running member communication on Orgo: which modules to enable, in what order, and which channel to use for what'
+"twitter:title": 'Orgo for member communication | Orgo'
+"twitter:description": 'A setup playbook for running member communication on Orgo: which modules to enable, in what order, and which channel to use for what'
+---
+
+This page is for the person who has decided to run their organization's member
+communication on Orgo and now has to configure it. It routes you: what to switch
+on, in what order, and which page documents each step.
+
+**Built for** organizations replacing a mailing list tool plus a Facebook group
+plus a folder of copy-pasted announcement emails. **Replaces** the guesswork
+about which of those Orgo covers.
+
+One of the [setup templates](/platform/templates/index). Read it alongside
+whichever one describes your core operation, since every organization
+communicates.
+
+---
+
+## What to turn on
+
+Everything in this table needs `ADMIN_TENANT`, because all of it lives in
+Settings.
+
+| Setting | Where | What it does |
+|---|---|---|
+| **Enable Email Campaign Module** | Settings → Notifications & Email Campaign → Email Campaigner | Turns on campaigns, campaign templates, Lists & Segments, signup widgets and the email log, and adds the **COMMUNICATION** section to the administration sidebar |
+| **Default Newsletter Widget UUID** | Settings → Notifications & Email Campaign → Email Campaigner | Which [signup widget](/platform/newsletter-widgets) is served when a page asks for your organization's widget without naming one |
+| **Notification Preferences** (Newsletter Notifications, Push Notifications, Email Notifications: Comments / Tasks / Votes / Events / Discussions / Mentions) | Settings → Notifications & Email Campaign → Notification Preferences | The defaults new members are created with. They are seeds applied once, not overrides. See [Notifications](/platform/notifications) |
+| **Emails Config** category switches | Settings → Notifications & Email Campaign → Emails Config | Switches whole categories of automatic email on or off. See [System emails](/platform/emails/system-emails) |
+| **Email Templates** | Settings → Notifications & Email Campaign → Email Templates | Rewrites the subject and body of one automatic email, with a per-template **Enabled** switch. See [Email templates](/platform/emails/email-templates) |
+| **Enable Discussions Module** and **Who Can Create Public Discussions** | Settings → Discussions | The in-app forum, and whether the organization-wide feed is open to everyone or an announcement channel. See [Discussions](/platform/discussion) |
+| **Enable Profanity Check** | Settings → Discussions | Holds flagged posts for review and adds **Moderation queue** to the COMMUNICATION menu for `COMMUNICATION_TENANT`. See [Moderation](/platform/discussion/moderation) |
+| **Enable Multi-language Support** and the default language | Settings → Customization → Languages | The interface languages members can choose, and the language automatic email is written in. See [Languages](/platform/customization/languages) |
+| **Contact email** | Settings → Organisation | Becomes the Reply-To on every email, and the From address once Orgo has verified it for sending. See [Emails](/platform/emails) |
+
+### Who does the day-to-day work
+
+The module settings above are admin work you do once. Sending is a separate set
+of permissions, assigned per person.
+See [Assigning permissions](/platform/permissions-assigning).
+
+| Permission | What it unlocks |
+|---|---|
+| `COMMUNICATION_TENANT` | Campaigns for the whole organization, campaign templates, Lists & Segments, signup widgets, moderation queue. Covers everything `COMMUNICATION_LOCAL` does |
+| `COMMUNICATION_LOCAL` | **Email campaigns** for the local centers they manage, and only the **Members from a group** audience. Lists, tenant-wide audiences and event audiences are hidden from them |
+| `COMMUNICATION_PARENT_LOCAL` | The same as `COMMUNICATION_LOCAL`, extended to the centers below theirs |
+| `EVENT_TENANT` | Campaigns attached to an event, and signup widgets |
+| `HR_TENANT` | Creating and editing lists, alongside `COMMUNICATION_TENANT` |
+| `ADMIN_TENANT` | All settings above, the [email log](/platform/emails/email-log), and adding or removing individual people on a manual list |
+
+<Warning>
+Adding and removing people on a manual list needs `ADMIN_TENANT`, one level
+higher than everything else on the Lists screen. A `COMMUNICATION_TENANT` holder
+sees the **Add**, **Add CSV** and remove buttons and gets refused when using
+them. If someone maintains manual lists, give them `ADMIN_TENANT`.
+</Warning>
+
+---
+
+## Setup order
+
+Do these in order. Steps 1 and 2 change what every later email looks like, so
+doing them last means resending things.
+
+<Steps>
+  <Step title="Fix the sender identity">
+    Set your contact email under **Settings** → **Organisation**, then ask
+    support to verify it for sending. Until it is verified, mail leaves as
+    `no-reply@orgo.space` with your contact address as Reply-To. See
+    [Emails](/platform/emails).
+  </Step>
+  <Step title="Set the organization language">
+    Automatic email is written in the organization's default language, not the
+    recipient's, and only English, Romanian and German exist. Anything else
+    falls back to English. See [Languages](/platform/customization/languages).
+  </Step>
+  <Step title="Decide what automatic email goes out">
+    Walk the category switches on **Emails Config** before you invite anyone,
+    so members do not receive a reminder ladder you have not read. See
+    [System emails](/platform/emails/system-emails).
+  </Step>
+  <Step title="Rewrite the templates that do not sound like you">
+    Subject and body per email, with placeholders. Note that a customized
+    template has no language: your version is used for every recipient. See
+    [Email templates](/platform/emails/email-templates).
+  </Step>
+  <Step title="Set the notification defaults before importing members">
+    The defaults are applied once, at account creation. Changing them later does
+    nothing for anyone who already exists, so get them right first. See
+    [Notifications](/platform/notifications).
+  </Step>
+  <Step title="Turn on the campaign module">
+    **Enable Email Campaign Module**, then grant `COMMUNICATION_TENANT` to
+    whoever writes campaigns. See [Newsletter](/platform/newsletter).
+  </Step>
+  <Step title="Build the audiences you will reuse">
+    A saved list is the only audience you can define by a question about the
+    people themselves. See [Lists & Segments](/platform/users/lists) for the
+    criteria, and [Email lists](/platform/emails/email-lists) for how a list
+    behaves once email starts moving.
+  </Step>
+  <Step title="Collect subscribers from your website">
+    Embed a [signup widget](/platform/newsletter-widgets) so new subscribers
+    land in Orgo as contacts rather than in a spreadsheet.
+  </Step>
+  <Step title="Design one reusable template">
+    Build the house style once in the
+    [newsletter builder](/platform/newsletter-builder) and save it as a campaign
+    template.
+  </Step>
+  <Step title="Send a test, then the first campaign">
+    **Send test to your email** renders the placeholders against your own
+    record, which is the only reliable way to catch an empty field. Then send or
+    schedule. See [Newsletter](/platform/newsletter).
+  </Step>
+</Steps>
+
+---
+
+## Choosing the right channel
+
+| Channel | Use it for | Who receives it | Can a member opt out |
+|---|---|---|---|
+| **Newsletter campaign** | A deliberate one-way announcement to a chosen audience | Active members with an email address and newsletter email on, plus subscribed contacts, narrowed by the audience you picked | Yes. Every campaign carries an unsubscribe link and one-click unsubscribe headers |
+| **Discussion post** | Two-way conversation inside a group, role group or local center | Members who can see that group. Notification email depends on their own preference | Yes. Mute the group, or set discussions to Daily, Weekly or off |
+| **Notification, in-app** | Telling someone that something happened to them | The people the event concerns, and followers of the group | No. The record is always stored and always visible under the bell |
+| **Notification, email** | The same events, in an inbox | The subset of notification types that email at all: discussions, comments and replies, mentions, events, votes, tasks and membership changes | Partly. Each category has a member toggle, except membership and role changes, which always email |
+| **Notification, push** | Time-sensitive nudges to a phone or browser | Members with **Push notification subscribed** on and a registered device. Everything except file uploads | Yes, one master switch |
+| **System email** | One person's own membership, payment, ticket, document or account | The person the event is about, whatever their subscription state | No. Only an admin can silence one, per category or per template |
+
+Two rules follow from that table. Anything that is about the individual (their
+fee, their ticket, their password) is a system email and must not be reproduced
+as a campaign. Anything that is a conversation belongs in discussions, because a
+campaign has no reply path beyond your Reply-To mailbox.
+
+---
+
+## Recipes
+
+Worked examples, not defaults. Adapt the criteria and names.
+
+### Example 1: a monthly member newsletter to a saved segment
+
+<Steps>
+  <Step title="Build the segment once">
+    **Administration** → **COMMUNICATION** → **Lists & Segments** → create an
+    **Automated by criteria** list, profile type **Members Only**, member status
+    **Active Only**. Add criteria; they always combine with AND. Needs
+    `COMMUNICATION_TENANT` or `HR_TENANT`.
+  </Step>
+  <Step title="Save the design as a campaign template">
+    Build the layout once in the [builder](/platform/newsletter-builder) and
+    save it under **Campaign templates**, so month two is a copy rather than a
+    rebuild.
+  </Step>
+  <Step title="Create the campaign">
+    **Email campaigns** → new campaign. Campaign title is internal, email
+    subject is what members see. Choose **From a list** and pick your segment.
+    The number next to the option is the subscribed count, not the list total.
+  </Step>
+  <Step title="Test, then schedule">
+    **Send test to your email**, then schedule at least 2 minutes ahead on a
+    15-minute boundary. Because the list is automated, it is resolved again at
+    send time, so members who joined since you drafted are included.
+  </Step>
+  <Step title="Next month">
+    **Duplicate campaign** on last month's send, or **Start Campaign** from the
+    template. Both keep the settings so only the content changes.
+  </Step>
+</Steps>
+
+### Example 2: an announcement to one chapter only
+
+<Steps>
+  <Step title="Give the chapter's communicator COMMUNICATION_LOCAL">
+    They see **Email campaigns** and nothing else in the COMMUNICATION section,
+    and inside a campaign only the **Members from a group** audience. Tenant-wide
+    audiences, saved lists and event audiences are hidden.
+  </Step>
+  <Step title="They pick their own group">
+    A local center, group or role group they manage. Members outside their
+    center cannot be reached: the center boundary is applied again when the send
+    is resolved, on top of whatever audience was chosen.
+  </Step>
+  <Step title="If you are sending centrally instead">
+    A `COMMUNICATION_TENANT` holder gets the same result two ways: **Members
+    from a group** pointed at that local center, or **All members and contacts**
+    narrowed with the local center dropdown.
+  </Step>
+</Steps>
+
+### Example 3: an event follow-up to the people who did not open it
+
+<Steps>
+  <Step title="Send the first email from the event">
+    **Send email for participants** on the event files the campaign under that
+    event's messages and unlocks the event placeholders (`{eventTitle}`,
+    `{eventDateBegin}`, `{eventRegisterUrl}` and the rest). Needs
+    `EVENT_TENANT`, or a communication permission.
+  </Step>
+  <Step title="Wait for the delivery events">
+    Open rates need the mail client to load images, so give it a day or two
+    before treating an unopened message as unread.
+  </Step>
+  <Step title="Follow up with non-openers">
+    On the sent campaign, **Follow up with non-openers** (the count is in the
+    button) creates a draft named "Follow-up: ..." locked to people who received
+    the original and never opened it, minus anyone who bounced, complained or
+    unsubscribed.
+  </Step>
+  <Step title="Change the subject line, then send">
+    The audience is recalculated at send time, so late openers drop out. If
+    nobody is left, Orgo refuses both the copy and the send.
+  </Step>
+</Steps>
+
+<Warning>
+An **Event attendees** audience does not check the newsletter subscription flag.
+Registered members and external registrants receive it even if they unsubscribed
+from campaigns, because event mail is treated as informational. Use it for
+logistics, not for marketing.
+</Warning>
+
+---
+
+## Deliverability and consent
+
+Four things a customer has to get right.
+
+**Verified sender identity.** The From address is your contact email only after
+Orgo has verified it, which needs DNS records on your domain and is done by
+support rather than in Settings. Until then mail leaves as `no-reply@orgo.space`.
+Reply-To is your contact email either way, verified or not. SPF, DKIM and DMARC
+on your own domain remain yours to maintain.
+
+**Unsubscribe handling.** Campaign email carries one-click unsubscribe headers,
+so a member can opt out from the mail client without opening the message. If your
+design contains no `{unsubscribeUrl}`, Orgo appends an unsubscribe footer before
+sending. You cannot re-subscribe someone on their behalf. Note that an
+unsubscribe applies to every account sharing that email address, in every Orgo
+workspace, because it matches on the address rather than the account.
+
+**Which sends ignore subscription flags.** Three cases, all deliberate:
+
+- **System emails.** A renewal reminder, invoice or ticket confirmation goes to
+  the person it concerns whether or not they unsubscribed and whether or not they
+  are in any list. Only the Emails Config category switch or the per-template
+  **Enabled** switch stops one.
+- **Event attendee campaigns.** As above, the subscription flag is not consulted.
+- **Membership and role change notifications.** When an admin adds someone to a
+  group or changes their roles, the member is emailed and no preference switches
+  it off.
+
+**Language.** Automatic email follows the organization's default language,
+clamped to English, Romanian or German, and a template you customize yourself has
+no language at all: your version reaches every recipient. Campaigns are whatever
+language you wrote them in, so a bilingual organization either writes both
+versions into one email or sends one campaign per language segment. A `?lang=`
+parameter on a link opens the platform in that language regardless.
+
+---
+
+## Limits worth knowing before you start
+
+| Limit | Detail |
+|---|---|
+| One audience per campaign | Audiences are single-choice and cannot be combined. To reach two groups, send twice or build a list |
+| List criteria are AND only | No OR and no grouping, and no criterion for name or email address |
+| No automation and no A/B testing | Campaigns are composed and sent or scheduled. There are no drip sequences, no variants and no send-time optimization |
+| Send pacing | Recipients are resolved in chunks of 2,000 and dispatched at three emails per second per worker, so a large send lands over minutes |
+| Scheduling granularity | At least 2 minutes ahead and on a 15-minute boundary (:00, :15, :30, :45), because the scheduler runs every 15 minutes |
+| Digests cover discussions only | A digest carries at most 10 unread items and only discussion notifications. Events, mentions, votes and tasks are instant or nothing |
+| Notification retention | Notifications older than two months are deleted nightly. The [email log](/platform/emails/email-log) is the durable record |
+| Customized templates are single-language | Saving your own version of a system email replaces it for every recipient in every language |
+| Manual list membership is ADMIN_TENANT | Higher than the rest of the Lists screen |
+| Demo organizations never send notification email | Expected on a trial workspace, not a fault |
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="The campaign says Sent but nothing seems to have been delivered">
+    Take these in order.
+
+    - Open the campaign's **Report** tab. Sent counts recipients with a
+      delivered or bounced event from the mail provider, so a Sent figure of
+      zero means nothing left the platform, and a high bounce figure means it
+      left and was rejected.
+    - Check the recipient count on the audience. A list of 900 with 620
+      subscribed sends to 620, and an audience whose members are all inactive or
+      have no email address resolves to nobody.
+    - If the campaign belongs to a local center, remember the center boundary is
+      applied on top of the audience, so a tenant-wide list can resolve to a
+      handful of people.
+    - Check whether the send is still in flight. Recipients go out at three per
+      second per worker, so a large campaign is still arriving for several
+      minutes after the status changes.
+  </Accordion>
+
+  <Accordion title="A member says they never got it">
+    Answer it with the [email log](/platform/emails/email-log) rather than by
+    reasoning about settings. A campaign writes one log entry per recipient,
+    tagged Newsletter and linked to the campaign.
+
+    - No row at all: they were not in the resolved audience. Check the account
+      is Active, has an email address, and has newsletter email on in their
+      notification settings, since all three are required for every audience
+      except event attendees.
+    - A row with the wrong address: an old address, a typo, or a placeholder
+      address left by a data import.
+    - A row with the right address: it left Orgo. Ask them to check spam and
+      quarantine, and check the campaign report for a bounce or complaint
+      against them.
+    - Subject starting with FAILED: it was queued and could not be delivered
+      after repeated attempts, and the entry records why.
+  </Accordion>
+
+  <Accordion title="A member unsubscribed in one workspace and stopped receiving from another">
+    Expected, and the most confusing behaviour in this area. Unsubscribe links
+    match on the email address, not on the account, so one click switches that
+    category off for every Orgo account sharing the address, across
+    organizations. The one-click header does the same for all categories at once.
+
+    The fix is to turn the categories back on per account, on each affected
+    profile's **Notifications** tab. Nothing else is needed: the person is not
+    removed from any list, and list membership and subscription state are
+    independent of each other.
+
+    Worth knowing while investigating: opening an unsubscribe URL with a plain
+    GET never unsubscribes anyone. It redirects to the preferences page, so link
+    prefetchers in mail clients cannot opt someone out by accident.
+  </Accordion>
+
+  <Accordion title="A member set Daily or Weekly and no digest ever arrives">
+    A digest run only picks up members with at least one unread **discussion**
+    notification in the window. Comments, events, mentions, votes and task
+    activity never trigger one, so a member whose groups are quiet gets nothing
+    however the frequency is set.
+
+    Then check, in order: that the member is Active, that their address is
+    valid, that the frequency on their profile actually matches the run (daily
+    looks back 25 hours, weekly looks back 7 days, so someone who chose Weekly
+    just after the weekly run waits almost a week), and that this is not a demo
+    organization, which never sends notification email at all.
+
+    Also note that sending a digest marks every unread notification read for
+    that member, not only the ones listed in it, so the bell badge clearing is
+    not evidence that they read anything.
+  </Accordion>
+
+  <Accordion title="Members complain about the volume of email">
+    Work on the individual profile's **Notifications** tab, not on the tenant
+    defaults: the defaults are seeds applied once at account creation and
+    changing them does nothing for anyone who already exists.
+
+    Set **New discussion** to Daily or Weekly first, since discussions are
+    usually the bulk and the only category that batches. Then switch off the
+    individual categories they object to. If the volume persists, the traffic is
+    coming from something with no toggle: membership and role changes always
+    email, and system email follows the Emails Config switches instead of member
+    preferences.
+  </Accordion>
+
+  <Accordion title="We want one announcement to reach everyone, including people who unsubscribed">
+    There is no override, by design. Unsubscribing stops campaigns, and no
+    audience except event attendees ignores it. If the message is genuinely
+    about the recipient's own membership (a fee change, a governance
+    obligation), it belongs in the system email that already covers that event,
+    or in a new one, rather than in a campaign that consent rules exclude people
+    from.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related
+
+- [Newsletter](/platform/newsletter) - composing, audiences, sending and campaign reporting
+- [Emails](/platform/emails) - sender identity, language and how a message gets sent
+- [Notifications](/platform/notifications) - in-app, push and email delivery, and member preferences
+- [Lists & Segments](/platform/users/lists) - building the audiences campaigns send to
+- [Discussions](/platform/discussion) - the two-way channel, and where most notifications come from
