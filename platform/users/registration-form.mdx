@@ -19,7 +19,7 @@ The registration form decides what a new person fills in before they have an acc
 
 **Settings** → **Users & Profiles** → **Registration Form**. Requires `ADMIN_TENANT`.
 
-The entry appears only when **Enable Registration Form** is on (**Settings** → **Users & Profiles** → **Configuration** → Registration & Membership). While it is off, self-registration is refused with "Registration is not possible." and the Register link disappears from the login page. [Invitation](/platform/users/invitations) links are refused too: an invited person opening one is sent to the login screen rather than to the form, so switching registration off closes invitations along with everything else.
+The entry appears only when **Enable Registration Form** is on (**Settings** → **Users & Profiles** → **Configuration** → Registration & Membership). While it is off, self-registration is refused with "Registration is not possible." and the Register link disappears from the login page. [Invitation](/platform/users/invitations) links are the exception: a valid one opens the form as normal, so you can close the door to the public and still admit the people you invite.
 
 <img src="/images/platform/users/registration-form-list.png" alt="Registration Forms page showing a table of forms with slug, status, URL and Iframe copy buttons and Configure actions, and the Floating and Side Panel layout choices below it" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -144,7 +144,7 @@ Found under **Settings** → **Users & Profiles** → **Configuration**.
 
 | Setting | Effect |
 |---|---|
-| **Enable Registration Form** | Off blocks all self-registration and hides the Register link |
+| **Enable Registration Form** | Off blocks all self-registration and hides the Register link. [Invitation](/platform/users/invitations) links still open the form |
 | **Manual Approval** | New members land in Unapproved after verifying their email, and wait for an admin |
 | **Default User Type After Registration** | Stamps this user type on every account created through a registration route, and overrides any type chosen on the form or implied by a `/join` slug. See the troubleshooting entry below before setting it |
 | **Send Welcome Message** | Sends the welcome email the moment a member becomes Active |
@@ -161,7 +161,7 @@ The registration form has no age gate. Birthday is collected as data only. The m
 
 <AccordionGroup>
   <Accordion title="Visitors see 'Registration is not possible.'">
-    **Enable Registration Form** is off. Turn it on: [invitations](/platform/users/invitations) are not a way around it, because an invitation link opens the same registration page and is refused in the same way.
+    **Enable Registration Form** is off. Turn it on to reopen self-registration, or leave it off and [invite](/platform/users/invitations) the people you want: a valid invitation link opens the same page and is not refused.
   </Accordion>
 
   <Accordion title="A /join link shows 'This registration form is not available or has been disabled.'">

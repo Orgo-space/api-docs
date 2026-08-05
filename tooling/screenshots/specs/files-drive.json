@@ -1,0 +1,93 @@
+[
+  {
+    "id": "files-drive-home",
+    "image": "/images/platform/features/files-drive.png",
+    "usedOn": [
+      "platform/files.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/drive",
+    "routeHint": "Files in the left sidebar. Landing view shows one card per reachable drive plus the Latest files table.",
+    "actions": [],
+    "waitFor": "text=Latest files",
+    "viewport": "desktop",
+    "alt": "The Files home showing drive cards for the organisation, two group drives and the personal drive with file counts and storage size, next to a Latest files table with name, owner, date and size",
+    "status": "new"
+  },
+  {
+    "id": "drive-folder-contents",
+    "image": "/images/platform/features/drive-folder-contents.png",
+    "usedOn": [
+      "platform/files.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/drive?generalUnit=true",
+    "routeHint": "Files in the left sidebar, then the organisation card, then open the Reports & Financials folder and click the three-dot control on the first file row. The row control renders a vertical ellipsis, so the selector is .fa-ellipsis-vertical, not .fa-ellipsis.",
+    "actions": [
+      "waitFor text=Reports & Financials",
+      "click text=Reports & Financials",
+      "waitFor text=Q3 2025 Management Accounts",
+      "wait 1500",
+      "click tr > td .fa-ellipsis-vertical",
+      "wait 1000"
+    ],
+    "waitFor": ".dropdown-content:visible >> text=Rename",
+    "viewport": "desktop",
+    "alt": "A drive folder listing with file rows showing name, owner, date and size, and an open row menu with Copy link, Share, Download, Remove, Move and Rename",
+    "status": "new"
+  },
+  {
+    "id": "drive-share-modal",
+    "image": "/images/platform/features/drive-share-modal.png",
+    "usedOn": [
+      "platform/files.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/drive?generalUnit=true",
+    "routeHint": "Share is only offered on a FILE row, never on the two folder rows in the drive root, which is why this has to walk into a folder first. The Share item must be clicked inside the visible dropdown: the other row menus keep hidden copies of the same label in the DOM.",
+    "actions": [
+      "waitFor text=Reports & Financials",
+      "click text=Reports & Financials",
+      "waitFor text=Q3 2025 Management Accounts",
+      "wait 1500",
+      "click tr > td .fa-ellipsis-vertical",
+      "wait 1000",
+      "click .dropdown-content:visible >> text=Share",
+      "wait 2500"
+    ],
+    "waitFor": "text=Anyone with the link",
+    "viewport": "desktop",
+    "alt": "The Share dialog with two sections: Only in the community with a copyable 7-day link, and Anyone with the link with a Generate public link button",
+    "status": "new"
+  },
+  {
+    "id": "drive-document-editor",
+    "image": "/images/platform/features/drive-document-editor.png",
+    "usedOn": [
+      "platform/files.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/drive-doc/1660",
+    "routeHint": "Drive item 1660 is the demo tenant in-app document. The saved status indicator only appears after an edit in the same session, so it is not part of this shot.",
+    "actions": [],
+    "waitFor": "text=Board Meeting Minutes",
+    "viewport": "desktop",
+    "alt": "The in-app document editor with a rich text toolbar, the document title, a heading and paragraphs, and the word and character count in the header",
+    "status": "new"
+  },
+  {
+    "id": "drive-module-settings",
+    "image": "/images/platform/features/drive-module-settings.png",
+    "usedOn": [
+      "platform/files.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/drive",
+    "routeHint": "Settings (gear) then Modules then Files & eDocuments then Drive. Requires ADMIN_TENANT. Both toggles must be on so the Personal Drives card is rendered.",
+    "actions": [],
+    "waitFor": "text=Enable Personal Drives",
+    "viewport": "desktop",
+    "alt": "Drive module settings with the Enable Drive Module toggle and the Enable Personal Drives toggle, both switched on",
+    "status": "new"
+  }
+]

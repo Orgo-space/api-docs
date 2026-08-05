@@ -73,14 +73,55 @@ The exact payload envelope, headers and per-event schemas are in the [Webhooks r
 | **Event Types** | Which events trigger this webhook. At least one required. |
 | **Max Retries** | Retry attempts after a failed delivery. 0 to 10, default 3. |
 | **Timeout (seconds)** | How long Orgo waits for your response. 1 to 300, default 30. |
-| **Webhook Secret** | Optional. When set, deliveries carry an `X-Webhook-Signature` header derived from the payload and the secret. |
+| **Webhook Secret** | Optional. When set, every delivery carries an `X-Webhook-Signature` header: an HMAC-SHA256 of the delivery, keyed with this secret. See [Verifying the signature](#verifying-the-signature). |
 | **Custom Headers (JSON)** | Extra HTTP headers sent with every delivery, for example an `Authorization` header your endpoint checks. |
 | **Metadata (JSON)** | Notes stored on the subscription. Never sent with the request. |
 
 Secret, custom headers and metadata sit behind **Advanced Options** on the form.
 
+---
+
+## Verifying the signature
+
+Set a **Webhook Secret** and every delivery to that subscription carries a signature your endpoint can check, so you can prove the request came from Orgo and not from someone who found your URL. Use a long random string, at least 32 characters, and store it in your own configuration exactly as you typed it here.
+
+The header looks like this:
+
+```
+X-Webhook-Signature: t=1754413200,v1=<64 lowercase hex characters>
+X-Webhook-Timestamp: 1754413200
+```
+
+`t` is the moment Orgo signed the delivery, in Unix seconds, and repeats the value in `X-Webhook-Timestamp`. `v1` is an HMAC-SHA256, hex encoded, over the string `t`, a full stop, and the request body exactly as it arrived:
+
+```
+v1 = HMAC-SHA256(key = your webhook secret, message = "<t>.<raw request body>")
+```
+
+<Steps>
+  <Step title="Read the raw body before anything parses it">
+    Sign the bytes you received. A body that has been decoded and re-encoded to JSON is a different string, and the signature will not match.
+  </Step>
+  <Step title="Split the header on the comma">
+    Take the value after `t=` and the value after `v1=`. Reject the delivery if the header is missing and you expect one.
+  </Step>
+  <Step title="Recompute the HMAC">
+    Concatenate `t`, `.` and the raw body, run HMAC-SHA256 over it with your secret as the key, and hex encode the result.
+  </Step>
+  <Step title="Compare in constant time">
+    Use your language's constant-time comparison (`hash_equals`, `crypto.timingSafeEqual`, `hmac.compare_digest`), not `==`. Reject the delivery if it differs.
+  </Step>
+  <Step title="Reject deliveries that are too old">
+    Compare `t` against your own clock and refuse anything outside a tolerance you choose, five minutes being the usual figure. Because `t` is inside the signed string, nobody can change it without breaking the signature, which is what makes a captured delivery unusable later.
+  </Step>
+</Steps>
+
+Working receivers in Node and Python are in the [Webhooks reference](/api-reference/concepts/webhooks#authenticating-the-sender).
+
+Two things to know before you set a tolerance. Each retry is signed again at the moment it is sent, so a redelivery arrives with a fresh `t` and a different `v1`, and a short window does not cause retries to fail. And because the same delivery can therefore carry different signatures, deduplicate on the payload `id` or on `X-Webhook-Delivery`, never on the signature.
+
 <Warning>
-The `X-Webhook-Signature` value is a lightweight checksum, not a cryptographic signature. Treat it as a change detector, not as proof of origin. To authenticate the caller, put a shared secret in **Custom Headers (JSON)** and verify that header on your side, over HTTPS.
+The signature format changed in August 2026. Until then the header carried a short non-cryptographic checksum, which could be reproduced by anyone who had seen one delivery. A receiver written against the old value must be updated to the recipe above; the old header is not sent alongside the new one. Deliveries keep arriving either way, so nothing stops working while you migrate, but a receiver still comparing the old value is authenticating nothing.
 </Warning>
 
 ---
@@ -129,6 +170,12 @@ The delivery ID also travels with the request as `X-Webhook-Delivery`, so a line
 
   <Accordion title="The same event arrives twice">
     Expected. Retries and at-least-once delivery mean duplicates happen. Deduplicate on the payload `id`.
+  </Accordion>
+
+  <Accordion title="The signature never matches">
+    Three usual causes, in order. Your framework parsed the body before you signed it, so you are hashing re-serialised JSON instead of the bytes that arrived. You hashed the body alone instead of `<t>.<body>`. Or the secret in your configuration is not character for character the one saved on the subscription, which you can settle by saving a new secret in both places at once.
+
+    If you are checking a receiver written before August 2026, it is comparing the old checksum format and will never match the new header.
   </Accordion>
 
   <Accordion title="You need an event that is not listed">

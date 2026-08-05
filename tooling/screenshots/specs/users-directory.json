@@ -1,0 +1,153 @@
+[
+  {
+    "id": "users-directory-table",
+    "image": "/images/platform/users/user-directory.png",
+    "usedOn": [
+      "platform/users/index.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/users?generalUnit=true",
+    "routeHint": "Sidebar -> Members. Do NOT navigate to a bare /users: the root v-if is `tenant && (unitItem || isGeneralUnitAccess)` (client/src/views/User/List.vue:3) and isGeneralUnit is `!!$route.query.generalUnit` (:2250), so /users with no query renders an empty pane. That is exactly what the previous capture caught. Log in as a tenant admin (HR_TENANT) so the Status, Fee status and export controls render, and wait for member rows before capturing.",
+    "actions": [],
+    "waitFor": "text=More filters",
+    "viewport": "desktop",
+    "alt": "Member directory in table view with the filter bar, member rows and the CSV export button",
+    "status": "new",
+    "notes": "Previous attempt produced sidebar-only with a blank main area because the generalUnit query param was missing. Needs the actual table: name, user type, chapter, fee, status columns plus the filter bar and the Excel export icon in the top right."
+  },
+  {
+    "id": "users-profile-overview",
+    "image": "/images/platform/users/user-profile-overview.png",
+    "usedOn": [
+      "platform/users/index.mdx",
+      "platform/users/statuses.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/user/209212",
+    "routeHint": "Members -> open a member. User 123 does not exist in this tenant and renders an empty page; 209212 (Theo Vargas) has roles, profession and custom field values.",
+    "actions": [
+      "wait 9000"
+    ],
+    "waitFor": "text=Edit profile",
+    "viewport": "desktop",
+    "alt": "Member profile showing status, user type, age, town, local group, member since, badges, permissions, resignation, identity, adhesion and roles",
+    "status": "new",
+    "notes": "Verified against client/src/views/User/ShowContent.vue: tab strip (Profile, Fee, Payments, e-Documents, Events, Files, Referrals, Logs) matches the current build."
+  },
+  {
+    "id": "users-profile-fees",
+    "image": "/images/platform/users/user-profile-fees.png",
+    "usedOn": [
+      "platform/fees/fees.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/user/209212?tab=fees",
+    "routeHint": "Members -> open a member -> Fee tab. 209212 (Theo Vargas) is on Chesterfield, so he carries both an organisation fee (Northwind Annual Membership, Standard Member) and a local fee (Chesterfield Membership, Annual), with 2024, 2025 and 2026 settled on both. Note ProductPaymentRepository::feeLocalMembersHistory filters `p.isRefunded is NULL`, so a payment row seeded with is_refunded = 0 is invisible to the history and every period renders Unpaid.",
+    "actions": [
+      "wait 9000"
+    ],
+    "waitFor": "text=2024 Jan",
+    "viewport": "desktop",
+    "alt": "Fee tab on a member profile with the status and total fee summary, and the organisation fee and local fee cards side by side, each listing its plan and its paid periods",
+    "status": "new",
+    "notes": "There was no spec for this image at all, which is why the file still dated from February and showed the pre-tabs-pill chrome, a Connect button and scouting fee tiers on a professional association. Added 2026-08-05. The fee-history XHR resolves after the cards paint, so gate the shot on a history row (a period label), not on the card heading: one run captured both cards with no HISTORY block at all because the waitFor matched before the request came back."
+  },
+  {
+    "id": "users-profile-logs",
+    "image": "/images/platform/users/user-profile-logs.png",
+    "usedOn": [
+      "platform/users/index.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/user/207128?tab=logs",
+    "routeHint": "Open a member profile as ADMIN_TENANT -> Logs tab (the tab query param selects it). 207128 is the only user in this tenant with audit log rows, so the table is populated rather than empty.",
+    "actions": [
+      "wait 9000"
+    ],
+    "waitFor": "text=Audit Logs",
+    "viewport": "desktop",
+    "alt": "Logs tab showing the audit log with date, action and author, and the email log sub-tab",
+    "status": "new",
+    "notes": "If the current file predates the Audit Logs / Email Logs pill sub-tabs, recapture so both pills are visible."
+  },
+  {
+    "id": "users-module-config",
+    "image": "/images/platform/users/users-config-page.png",
+    "usedOn": [
+      "platform/users/index.mdx",
+      "platform/users/statuses.mdx",
+      "platform/users/invitations.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/users",
+    "routeHint": "Settings (gear) -> Modules -> Users & Profiles -> Configuration. /settings is not a route and 404s. modules/modules-users-module-page shoots the same screen at desktop height; this one uses the tall viewport and scrolls so both the User Types & Roles and the Registration & Membership sections its alt names are in frame, which is what keeps the two images distinct.",
+    "actions": [
+      "scrollto text=Registration & Membership",
+      "wait 1200"
+    ],
+    "waitFor": "text=Enable Users Module",
+    "viewport": "tall",
+    "alt": "Users and Profiles module configuration with the left sub-navigation and the User Types and Registration setting sections",
+    "status": "new"
+  },
+  {
+    "id": "user-lists-index",
+    "image": "/images/platform/users/lists-index.png",
+    "usedOn": [
+      "platform/users/lists.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/email-lists",
+    "routeHint": "Switch the sidebar to Administration -> Communication -> Lists & Segments. Needs the newsletter module on and COMMUNICATION_TENANT or HR_TENANT.",
+    "actions": [],
+    "waitFor": "text=Lists & Segments",
+    "viewport": "desktop",
+    "alt": "Lists and Segments index with All, Dynamic and Static chips and a table of lists showing type, audience, subscribed and total counts",
+    "status": "new",
+    "notes": "Pick a tenant with both automated and manual lists so the Automated and Static badges and the Audience column both show values. Captured successfully on the last run and verified against the current Vue view; no recapture needed."
+  },
+  {
+    "id": "user-list-builder",
+    "image": "/images/platform/users/list-builder.png",
+    "usedOn": [
+      "platform/users/lists.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/email-lists/create",
+    "routeHint": "Lists & Segments -> Create. Choose Automated by criteria, profile type Members Only, then add two criteria so the AND separator is visible.",
+    "actions": [
+      "click text=Automated by criteria",
+      "click text=Members Only",
+      "click text=Add Criterion",
+      "fill .ulf-input[type=\"date\"] | 2024-01-01",
+      "click text=Add Criterion",
+      "fill .ulf-input[type=\"date\"] >> nth=1 | 2026-06-30",
+      "click text=Filter criteria",
+      "wait 1200"
+    ],
+    "waitFor": "text=Filter criteria",
+    "viewport": "tall",
+    "alt": "List builder with the Describe your audience panel, list type cards, profile type and member status choices, and two filter criteria joined by AND",
+    "status": "new",
+    "notes": "Both criteria are date properties whose Value input renders with a red is-error border while empty (UserList/Form.vue:302), so the capture fills both before shooting and then clicks the Filter criteria heading to drop focus. Tall viewport plus a crop to the form: at desktop height the AND separator sat flush on the bottom edge and the second criterion was cut off, and an uncropped tall shot is mostly empty canvas with the sticky header repeated. Do not use a bare 'form' selector, it matches the header search box first.",
+    "selector": "form:has(.ulf-ai-panel)"
+  },
+  {
+    "id": "user-list-detail",
+    "image": "/images/platform/users/list-detail.png",
+    "usedOn": [
+      "platform/users/lists.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/email-lists/107",
+    "routeHint": "Lists & Segments -> 'Chesterfield Chapter' (user_list 107). The recipients table only auto-loads when itemsCount is between 1 and 100 (UserList/View.vue:333 and :838); above that the panel shows a Show recipients button instead, which is what the previous capture caught on the 342-member 'Active Members with Paid Fees' list. This list is a dynamic members-only segment on chapter Chesterfield, 34 contacts, 22 subscribed. Avoid 'Event Participants': an eventAttends criterion suppresses the subscription filter chips.",
+    "actions": [
+      "wait 4000"
+    ],
+    "waitFor": "text=Not subscribed",
+    "viewport": "desktop",
+    "alt": "List detail with total, subscribed and unsubscribed tiles, the active criteria card, and the recipients table with subscription filter chips",
+    "status": "new",
+    "notes": "Needs the four stat tiles (Total Contacts, Subscribed, Unsubscribed, Member status), the Active criteria card and the Subscribed / All / Not subscribed chips all in one frame. Tenant ila had 2 automated Contacts Only lists at last capture (325/643 and 0/1 subscribed); prefer the 643-member one only if it still auto-loads, otherwise use a smaller list."
+  }
+]

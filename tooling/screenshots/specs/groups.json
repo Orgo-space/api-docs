@@ -1,0 +1,130 @@
+[
+  {
+    "id": "groups-browse",
+    "image": "/images/platform/groups/groups-browse.png",
+    "usedOn": [
+      "platform/groups/index.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/groups/browse",
+    "routeHint": "Sidebar -> Groups. Stay on the default 'All' tab. Do not filter. This shot is the top of the page.",
+    "actions": [
+      "wait 2500"
+    ],
+    "waitFor": "text=Programs and activities",
+    "viewport": "desktop",
+    "status": "new",
+    "alt": "Groups page showing the organization card, the member's chapter, a Teams section for role groups, and Programs and activities grouped by category, each row with its member count",
+    "notes": "Member counts: PRODUCT-BUGS #9 is fixed on master 9c4f4bdbd, so UnitMemberCountService computes a LocalCenter's count instead of returning 0. `bin/console app:recalculate-unit-member-counts` was run before this capture (1172 units updated) and replaced the hand-patched branch totals on the three parent chapters (Virginia Beach 124, Richmond 129, Alexandria 95) with their own active members (26, 24, 26). That is the correct behaviour: the branch total belongs to the chapters list, which shows it with a grey (+N) beside it. Re-run the command before any recapture. All 17 sections do not fit in one 1080px frame, and the 'tall' viewport is not an option here: at 1920x2200 the app drops the sidebar and top bar entirely (probe: no [class*=sidebar] element). fullPage is also ineffective because the app scrolls an inner pane, not the window. The Community groups and Private groups sections therefore get their own shot, groups-browse-private. MUST be captured with a cold cache, on its own: flush Redis (docker exec orgo-1-redis redis-cli FLUSHALL) immediately before this single-spec run. Only the first /my-groups response after a flush carries the full GroupCategory objects; every later response serves a cached payload in which category is reduced to an IRI on all but one group, so the coloured category labels (COMMITTEES, INTEREST GROUPS, ...) render blank."
+  },
+  {
+    "id": "groups-browse-private",
+    "image": "/images/platform/groups/groups-browse-private.png",
+    "usedOn": [
+      "platform/groups/private-groups.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/groups/browse",
+    "routeHint": "Sidebar -> Groups, then scroll to the bottom of the list. Community groups and Private groups are the last two sections (Browse.vue:292,312).",
+    "actions": [
+      "wait 2500",
+      "scrollto text=Private groups",
+      "wait 1500"
+    ],
+    "waitFor": "text=Private groups",
+    "viewport": "desktop",
+    "status": "new",
+    "alt": "Bottom of the Groups page showing the Community groups section and the Private groups section, each group listed with its member count",
+    "notes": "Sections are derived from the groups themselves: Community groups = Group + isJoinable + no category; Private groups = Group + !isJoinable + no category (Browse.vue:452-458). Every group previously carried a category, so both sections were empty and never rendered; six groups were un-categorized to populate them. Private groups are also excluded from /my-groups unless the viewer belongs to them (MyGroupsController:29), so the capture user was added to all three. MUST be captured with a cold cache, on its own: flush Redis (docker exec orgo-1-redis redis-cli FLUSHALL) immediately before this single-spec run. Only the first /my-groups response after a flush carries the full GroupCategory objects; every later response serves a cached payload in which category is reduced to an IRI on all but one group, so the coloured category labels (COMMITTEES, INTEREST GROUPS, ...) render blank. Verified: load 1 gave all four labels, loads 2 and 3 gave three empty ones. Running the whole groups.json file at concurrency 3 warms the cache and loses the labels."
+  },
+  {
+    "id": "groups-module-config",
+    "image": "/images/platform/groups/groups-module-config.png",
+    "usedOn": [
+      "platform/groups/index.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/groups",
+    "routeHint": "Settings -> Modules -> Groups & Teams -> Configuration",
+    "actions": [
+      "wait 2000"
+    ],
+    "waitFor": "text=Enable Organizational Units",
+    "viewport": "desktop",
+    "alt": "Groups and Teams module settings showing the master toggle plus Group Types and Group Features sections",
+    "status": "new",
+    "notes": "Enable Group Categories and Enable Organizational Units are now both on for the demo tenant, so the page no longer contradicts the sections of index.mdx that document categories, and the Group Categories and Unit Types submenu entries render."
+  },
+  {
+    "id": "main-group-organization-space",
+    "image": "/images/platform/groups/main-group.png",
+    "usedOn": [
+      "platform/groups/main-group.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/discuss?generalUnit=true",
+    "routeHint": "Sidebar -> click the organization name at the very top of the Groups section (the first card on the Groups page also opens it)",
+    "actions": [
+      "wait 2000"
+    ],
+    "waitFor": "text=Start a post",
+    "viewport": "desktop",
+    "alt": "Organization-wide discussion feed with the organization name in the header and the Discussions, Events, Files and Members tabs",
+    "status": "new",
+    "notes": "The category rail is discussion_namespace rows. 'our founding era History' was malformed and the set read as a heritage society; renamed to Industry News, Membership, Standards and Practice, Professional Education, Community Service. The seeder also gave every discussion the same title with an unrelated reply-style body; the bodies of the posts visible in this feed were rewritten to match their titles."
+  },
+  {
+    "id": "role-groups-browse-tab",
+    "image": "/images/platform/groups/role-groups-settings.png",
+    "usedOn": [
+      "platform/groups/role-groups.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/groups/browse?filter=role_groups",
+    "routeHint": "Groups page -> 'Role groups' tab (only visible to ADMIN_TENANT with 'Enable Role Groups' on). Settings -> Groups & Teams -> Role Groups now redirects here.",
+    "actions": [
+      "wait 2500"
+    ],
+    "waitFor": "text=Role groups",
+    "viewport": "desktop",
+    "alt": "Groups page with the Role groups tab selected, listing the organization's role groups with an edit action on each",
+    "status": "new",
+    "notes": "Board and Executive both showed 0 members because unit.active_member_count is a denormalized counter that nothing had recalculated for this tenant; the underlying user_unit_role_group rows already existed. Recaptured 2026-08-06 after a fresh app:recalculate-unit-member-counts run, which moved Chapter Chairs from 9 to 10 and left the rest alone (Northern Virginia Members 40, Board 13, Executive 7). Recapture this shot whenever the recalculation is re-run, so its numbers keep matching groups-browse.png."
+  },
+  {
+    "id": "role-groups-criteria-form",
+    "image": "/images/platform/groups/role-groups-config.png",
+    "usedOn": [
+      "platform/groups/role-groups.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/group/create?type=role_group",
+    "routeHint": "Groups page -> Create group dropdown -> Create role group. Alternatively open an existing role group's edit screen at /group/edit/{id}?type=role_group.",
+    "actions": [
+      "wait 2000"
+    ],
+    "waitFor": "text=Segmentation type",
+    "viewport": "desktop",
+    "alt": "Role group criteria card with the Segmentation type toggle and the Min age, Max age, Gender, Region, Only full members and Membership fee tier fields",
+    "status": "new",
+    "notes": "The Region field only renders when the Local Centers module is on AND regions exist. Three regions (Northern Virginia, Central Virginia, Hampton Roads) are now defined and localCenter.hasRegions is on, so the alt's Region claim is satisfied."
+  },
+  {
+    "id": "group-categories",
+    "image": "/images/platform/groups/group-categories.png",
+    "usedOn": [
+      "platform/groups/index.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/groups/categories",
+    "routeHint": "Settings -> Modules -> Groups & Teams -> Group Categories (the menu entry only appears when 'Enable Group Categories' is on)",
+    "actions": [
+      "wait 3000"
+    ],
+    "waitFor": "text=Working parties",
+    "viewport": "desktop",
+    "alt": "Group Categories settings page listing categories with their colour and the permission required to create groups in each",
+    "status": "new",
+    "notes": "Four categories with distinct colours; create_is_granted_role was blank on all of them so the Permission column rendered empty. Now HR_TENANT, USER, ADMIN_LOCAL and ADMIN_TENANT. The waitFor targets the last row so the settle delay covers the loading spinner that was frozen over the colour chip."
+  }
+]

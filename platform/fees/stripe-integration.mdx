@@ -130,7 +130,7 @@ Payouts are between Stripe and your bank. Orgo does not set the schedule, does n
 
 Refund from the payment's row in the payments list. Orgo refunds exactly that row's amount, which matters when one card charge produced several records (a membership payment plus its registration fee, for example). A refund also cancels any linked event attendance, releases the seat, and recalculates the member's fee validity date. Refunds issued in the Stripe Dashboard are picked up and marked in Orgo too.
 
-Refunding requires `FINANCIAL_LOCAL` on the payment's chapter (so `FINANCIAL_TENANT` and `ADMIN_TENANT` qualify), and only works on a payment that succeeded.
+Refunding requires `FINANCIAL_LOCAL` on the payment's chapter, and `FINANCIAL_TENANT` when the payment carries no chapter, which is the case for every organisation-level payment. `ADMIN_TENANT` qualifies either way. It only works on a payment that succeeded.
 
 ---
 

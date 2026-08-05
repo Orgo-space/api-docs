@@ -1,0 +1,152 @@
+[
+  {
+    "id": "workflows-list",
+    "image": "/images/platform/workflows/workflows-list.png",
+    "usedOn": [
+      "platform/workflows.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/workflows",
+    "routeHint": "Settings (gear) -> Customization -> Workflows. t187c has 3 workflows, so the card grid renders rather than the empty state.",
+    "actions": [],
+    "waitFor": "text=Create Workflow",
+    "viewport": "desktop",
+    "alt": "Workflows list showing workflow cards with trigger and action counts and an active toggle on each",
+    "status": "keep"
+  },
+  {
+    "id": "workflow-builder",
+    "image": "/images/platform/workflows/workflow-builder.png",
+    "usedOn": [
+      "platform/workflows.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/workflows",
+    "routeHint": "Settings -> Customization -> Workflows, then click any workflow card to open the builder at /tenants/workflows/<uuid>. Capture the whole editor: left sidebar palette (Triggers / Actions / Annotations), the canvas with at least one trigger node connected to one action node, and the top bar with Logs / Test / Save / Active. Do not click a node (that opens a modal).",
+    "actions": [
+      "click .workflow-card"
+    ],
+    "waitFor": "text=Annotations",
+    "viewport": "desktop",
+    "alt": "Workflow canvas with a trigger node connected to a send email action node, and the trigger and action palette in the left sidebar",
+    "status": "keep"
+  },
+  {
+    "id": "workflow-trigger-config",
+    "image": "/images/platform/workflows/workflow-trigger-config.png",
+    "usedOn": [
+      "platform/workflows.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/workflows",
+    "routeHint": "Open a workflow, then click the trigger (When) node on the canvas. The user type checkboxes only render when the tenant has user types and the selected event supports the filter, so prefer a trigger in the User Events group such as User Registered. NOTE: the Event Type control is a native <select> with <optgroup> categories. Its open popup is drawn by the operating system and never appears in a Playwright screenshot, so the category grouping cannot be captured here; describe the closed selector instead of promising the grouping.",
+    "actions": [
+      "click .workflow-card",
+      "click .trigger-node"
+    ],
+    "waitFor": "text=Configure Trigger",
+    "viewport": "desktop",
+    "alt": "Trigger configuration panel with the event type selector set to User Approved and the user type filter checkboxes below it",
+    "status": "keep"
+  },
+  {
+    "id": "workflow-action-config",
+    "image": "/images/platform/workflows/workflow-action-config.png",
+    "usedOn": [
+      "platform/workflows.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/workflows",
+    "routeHint": "Open a workflow, click an action (Then) node to open Configure Action, make sure the Send Email type is selected, then expand the collapsed Delay row. Two things this shot depends on. First, the New Member Welcome action must actually carry a customSubject and an emailBody in workflow_action.config, or Subject Line shows only its placeholder and the editor is a blank white pane. Second, the modal body scrolls inside a max-height of 90vh, so at the 1080px desktop viewport the days / hours / minutes inputs are clipped by the modal footer; the tall viewport (2200px) makes 90vh big enough for the whole modal, and the selector crops the shot back down to the modal.",
+    "actions": [
+      "click .workflow-card",
+      "click .action-node",
+      "click .delay-section .collapse-toggle"
+    ],
+    "waitFor": "text=Schedule when this action runs after the trigger fires",
+    "selector": ".action-config-modal",
+    "viewport": "tall",
+    "alt": "Send Email action configuration with a subject line carrying a placeholder, the email body in the rich text editor and the delay section expanded showing the days, hours and minutes inputs",
+    "status": "new",
+    "notes": "Recaptured 2026-08-06 after PRODUCT-BUGS #52: workflow Send Email now runs the subject through the same replacePlaceholders as the body, and workflows.mdx:98 says so. The New Member Welcome action's customSubject was set to 'Welcome to Northwind, {{firstName}}' (workflow_action 33) so the shot demonstrates it; the previous capture also used the wrong single-brace syntax in the body."
+  },
+  {
+    "id": "workflow-execution-logs",
+    "image": "/images/platform/workflows/workflow-execution-logs.png",
+    "usedOn": [
+      "platform/workflows.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/workflows/05c6c873-ba61-4138-9318-f7a9ccc3f0aa/logs",
+    "routeHint": "Settings -> Customization -> Workflows, open a card's three-dot menu and choose View Logs. Navigate straight to the logs route: the earlier two-step click on the card's dropdown never opened and the run silently captured the workflows list instead. 05c6c873 is the New Member Welcome workflow in t187c, seeded with seven runs covering completed, partial, failed, in progress and pending. The seven runs originally all pointed at users surnamed Grant, which reads as generated filler; keep them pointed at seven different members.",
+    "actions": [],
+    "waitFor": "text=Execution Logs",
+    "viewport": "desktop",
+    "alt": "Workflow execution log table with date, trigger, user, status and duration columns above a status filter and Refresh button",
+    "status": "new"
+  },
+  {
+    "id": "activity-log-list",
+    "image": "/images/platform/logs/activity-log-list.png",
+    "usedOn": [
+      "platform/logs.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenant/logs",
+    "routeHint": "Settings -> Developers -> Logs. Capture from t187c only. Capture the filter pill row plus the first page of rows, all collapsed. The page shows 15 rows per page. Note that the Entity column is genuinely empty for edits: the backend only stamps entityType on deletions (AuditLogDeleteProcessor) and on saved-query exports (QueryController), which is what the prose under 'The Entity filter is narrower than the table' describes, so a seed that stamps User on every update row contradicts the page.",
+    "actions": [],
+    "waitFor": "text=Author",
+    "viewport": "desktop",
+    "alt": "Activity log table with filter pills for action, entity, author, user and date above rows showing date, action, author and entity",
+    "status": "new"
+  },
+  {
+    "id": "activity-log-detail",
+    "image": "/images/platform/logs/activity-log-detail.png",
+    "usedOn": [
+      "platform/logs.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenant/logs",
+    "routeHint": "Settings -> Developers -> Logs, then click the detail arrow on the first row, which is an update carrying a three-field diff. Rows with no details render 'No details' and are not worth capturing. The selector crops to the expanded panel: a full-page shot here is 90 percent identical to activity-log-list.png on the same page.",
+    "actions": [
+      "click .chevron-cell"
+    ],
+    "waitFor": ".log-details-pre",
+    "selector": "tr.detail",
+    "viewport": "desktop",
+    "alt": "The expanded details panel of an activity log row, showing the JSON diff with the old and new value for each changed field",
+    "status": "new"
+  },
+  {
+    "id": "usage-meters",
+    "image": "/images/platform/usage-billing/usage-meters.png",
+    "usedOn": [
+      "platform/usage-billing.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenant/usage",
+    "routeHint": "Settings -> Organization -> Usage & Billing. Capture the meters only: the full-width Users card plus the 2x2 grid below it. div.usage-cards-grid is exactly that block (Usage.vue:41-44) and nothing else, which keeps the Invoices empty state below it out of frame. Wait for the skeleton placeholders to be replaced by real values before shooting.",
+    "actions": [],
+    "waitFor": "text=Resource usage",
+    "selector": "div.usage-cards-grid",
+    "viewport": "desktop",
+    "alt": "Resource usage cards for users, storage, emails, contacts and API requests, each with a progress bar and a percentage",
+    "status": "new",
+    "note": "Plan limits are demo data and have to be plausible, because Usage.vue colours the bar from the percentage: amber at 75, red at 90. The demo billing profile shipped max_users 100 and max_emails 300 against 348 users and 8,260 emails, so two of the five bars were solid red at 348% and 2753% on a page whose stated job is answering 'are we about to outgrow our plan'. Raised to 500 and 15,000 on 2026-08-05, which lands both in the 55-70% band. API Requests still reads 0: the meter sums user_api_token_usage rows, and seeding one needs a user_api_token row, which would change the developers area's /api-tokens screenshot."
+  },
+  {
+    "id": "billing-invoices",
+    "image": "/images/platform/usage-billing/billing-invoices.png",
+    "usedOn": [],
+    "tenant": "t187c",
+    "route": "/tenant/usage",
+    "routeHint": "Not capturable on any local tenant. See note.",
+    "actions": [],
+    "waitFor": "text=invoices",
+    "viewport": "desktop",
+    "alt": "Invoices section showing the upcoming invoice card above a table of past invoices with status tags and download links",
+    "status": "dropped",
+    "note": "DROPPED 2026-08-05, image deleted and the <img> removed from usage-billing.mdx. StripeBillingController::invoicesAction returns an empty payload unless billing_profile.stripe_id is set, and with it set the rows come live from the Stripe account over the network. No local tenant has a Stripe customer, so the shot could only ever be the 'There are no invoices' empty state, which is what shipped: the delivered file was the same viewport as usage-meters, differing only in the progress-bar fill animation. Seeding it would mean creating a customer and finalized invoices in a real Stripe account, which is out of scope for demo data. The prose at usage-billing.mdx already describes the upcoming card, the past-invoice columns and every status tag, so the section reads complete without an image."
+  }
+]

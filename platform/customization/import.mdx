@@ -34,8 +34,10 @@ instruction.
     that step reads.
   </Step>
   <Step title="Choose CSV">
-    `.csv` and `.txt`. Comma, semicolon and tab are detected
-    automatically, and a UTF-8 byte order mark is stripped.
+    `.csv` and `.txt`, up to 50 MB. Comma, semicolon and tab are detected
+    automatically, and a UTF-8 byte order mark is stripped. A larger file is refused
+    on the spot with "File is larger than the 50 MB import limit"; split it and run
+    the parts one after another.
   </Step>
   <Step title="Start Import">
     Validation and processing run in the background, in batches, so a large file

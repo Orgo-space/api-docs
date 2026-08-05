@@ -1,0 +1,105 @@
+[
+  {
+    "id": "registration-form-builder",
+    "image": "/images/platform/users/registration-form-builder.png",
+    "usedOn": [
+      "platform/users/registration-form.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/users/user-type-forms/general",
+    "routeHint": "Settings -> Users & Profiles -> Registration Form -> Configure on the 'General Registration Form' row. Scroll the left 'Available Fields' panel so the list is visible from Email down to about 'Profession headline'. The route deep-links straight into the builder, so there is no Configure button on it: the old 'click text=Configure' action always failed and showed up under ACTIONS THAT DID NOT RUN.",
+    "actions": [],
+    "waitFor": "text=Available Fields",
+    "viewport": "desktop",
+    "alt": "Registration form builder with the System Fields and Custom Fields tabs on the left, the ordered form fields with Required checkboxes on the right, and the Form Settings card below",
+    "status": "new",
+    "why": "The existing capture still lists 'Personal number' in Available Fields. That field was removed from the builder catalogue (client/src/config/registrationFields.js, commit 33dc08c8e), so the field list in the shot no longer matches the product."
+  },
+  {
+    "id": "registration-form-list",
+    "image": "/images/platform/users/registration-form-list.png",
+    "usedOn": [
+      "platform/users/registration-form.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/users/user-type-forms",
+    "routeHint": "Settings -> Users & Profiles -> Registration Form. The demo tenant now demonstrates all three statuses the prose describes: General Registration Form (Default, Active), Member (slug 'member', Active), Honorary Member (slug 'honorary-member', Inactive) and five user types still Not configured. A short scroll brings the two Registration Page Layout cards and their Floating / Side Panel labels fully into frame; without it the labels sit past the bottom edge, and the tall viewport leaves half the frame empty grey.",
+    "actions": [
+      "wait 1500",
+      "scroll 160"
+    ],
+    "waitFor": "text=Registration Page Layout",
+    "viewport": "desktop",
+    "alt": "Registration Forms page with a table of forms showing slug, status, URL and Iframe copy buttons and Configure actions, and the Floating and Side Panel layout choices below it",
+    "status": "new"
+  },
+  {
+    "id": "registration-form-user-type",
+    "image": "/images/platform/users/registration-form-user-type.png",
+    "usedOn": [
+      "platform/users/registration-form.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/users/user-type-forms/2847",
+    "routeHint": "Settings -> Users & Profiles -> Registration Form -> Configure on a row that is NOT the General Registration Form. User type 2847 (Member) now has slug 'member', an active form, ten fields and default membership fee price 2085, so Copy URL and Iframe are enabled and the Active switch is on. The route deep-links straight into the builder, so there is no Configure button to click. The page header is sticky, so scrolling to Default Membership Fee Price keeps the Active switch in frame while bringing the Form Settings card fully into view. Gate on the Default Membership Fee Price label, not on 'Form Settings': the card renders empty while /tenant_fee_product is still in flight, and one run shot the builder mid-load with an empty Form Fields panel, a blank Form Settings card and the Active switch off.",
+    "actions": [
+      "waitFor text=Default Membership Fee Price",
+      "wait 2000",
+      "scrollto text=Default Membership Fee Price",
+      "wait 1500"
+    ],
+    "waitFor": "text=Default Membership Fee Price",
+    "viewport": "desktop",
+    "alt": "Registration form builder for a single user type, with the Active switch and Copy URL and Iframe buttons in the sticky header and the Title, intro texts and Default Membership Fee Price selector in Form Settings",
+    "status": "new"
+  },
+  {
+    "id": "registration-page",
+    "image": "/images/platform/users/registration-page.png",
+    "usedOn": [
+      "platform/users/registration-form.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/register",
+    "routeHint": "Public page. Requires the tenant's Registration Page Layout to be Side Panel (settingForms.registerForm.layoutMode = sidemenu) AND tenant.authImage set, otherwise RegistrationLayout falls back to the abstract AnimatedBackground blob, which is what the previous shot caught. The field list is whatever the General Registration Form holds, so recapture this together with registration-form-builder.",
+    "actions": [],
+    "waitFor": "text=Chapter",
+    "viewport": "tall",
+    "alt": "Side panel registration page with a photo on the left and the form on the right showing email, first and last name, phone, date of birth, gender, town, chapter and two custom fields",
+    "status": "new"
+  },
+  {
+    "id": "roles-list",
+    "image": "/images/platform/users/roles-list.png",
+    "usedOn": [
+      "platform/users/user-types.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/users/roles",
+    "routeHint": "Settings -> Users & Profiles -> Roles & User types. The Permissions column renders one tag per entry in role.permissions (client/src/views/Tenant/Role/List.vue:132); every demo role held an empty array, so the column was blank on all 13 rows. The organisation and chapter roles now carry realistic permissions and the user types correctly carry none. GET /roles is served through the Doctrine result cache, so a role edited with raw SQL keeps its old permissions in the API until you run: docker exec orgo-1-php bin/console cache:pool:clear doctrine.result_cache_pool cache.doctrine.orm.main.result cache.doctrine.orm.readonly.result cache.app. One capture showed three freshly seeded roles with a blank Permissions cell for exactly this reason.",
+    "actions": [],
+    "waitFor": "text=Add role",
+    "viewport": "desktop",
+    "alt": "Roles list with Level and Permissions filters, and columns for role, plural name, level tag and attached permissions",
+    "status": "new"
+  },
+  {
+    "id": "user-type-edit",
+    "image": "/images/platform/users/user-type-edit.png",
+    "usedOn": [
+      "platform/users/user-types.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/users/roles",
+    "routeHint": "Settings -> Users & Profiles -> Roles & User types -> click the pencil on a row whose Level tag reads 'User type'. The edit modal must show the level radio group with 'User type' selected, and below it the Not eligible for fee / Parent / Volunteer switches, the two colour pickers, and the URL Slug field with the '/join/[slug]' help text. Scroll inside the modal if needed. Enable Family Members and Enable Volunteer Roles must be on for the Parent and Volunteer switches to render. The pencil is addressed through the row text ('Honorary Member', level tag 'User type'); the old '.button.is-rounded >> nth=2' never opened the modal, so this shot came out byte-identical to roles-list. The selector crops to the slide-in modal.",
+    "actions": [
+      "wait 2500",
+      "click .b-table tr:has-text(\"Honorary Member\") button.is-rounded"
+    ],
+    "waitFor": "text=URL Slug",
+    "selector": ".role-form-modal-container",
+    "viewport": "desktop",
+    "alt": "Role editor with the level radio group set to User type, and the user type controls below it: Not eligible for fee, Parent, font and background colour, and URL Slug",
+    "status": "new"
+  }
+]

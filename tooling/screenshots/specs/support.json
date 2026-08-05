@@ -1,0 +1,103 @@
+[
+  {
+    "id": "contacts-directory",
+    "image": "/images/platform/support/contacts-list.png",
+    "usedOn": [
+      "platform/contacts.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/contacts",
+    "routeHint": "Sidebar -> Contacts (needs the Contacts module on and HR_TENANT). Tenant preper has 1016 contacts.",
+    "actions": [],
+    "waitFor": "text=Add Contact",
+    "viewport": "desktop",
+    "alt": "Contacts directory with newsletter, status and tag columns and a search bar",
+    "status": "new",
+    "note": "The current file predates the bulk-selection feature: the Select link on the right of the filter row is missing. Capture the full filter row (search, Chapter if enabled, Status, All tags, Newsletter) plus Add Contact, Download CSV and the Select link."
+  },
+  {
+    "id": "contact-record",
+    "image": "/images/platform/support/contact-record.png",
+    "usedOn": [
+      "platform/contacts.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/contacts/show/23852",
+    "routeHint": "Sidebar -> Contacts -> click any contact with an email and a status. Contact 23852 (Hugo Vargas, t187c) now carries town, country, source, tags, two social profiles, one paid payment, two email logs and three notes from three different authors. The Notes panel is the last card in the left column and falls below a 1080-high fold, so capture at the tall viewport.",
+    "actions": [],
+    "waitFor": "text=Met Hugo at the spring chapter mixer",
+    "viewport": "tall",
+    "alt": "Contact record showing details, status, newsletter state, tags and the notes thread",
+    "status": "new"
+  },
+  {
+    "id": "helpdesk-tickets",
+    "image": "/images/platform/support/helpdesk-tickets.png",
+    "usedOn": [
+      "platform/help-desk.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/issues?isSupport=true",
+    "routeHint": "Log in as a tenant admin, open the profile menu (top-right avatar) -> Support. Tenant oncr has 314 support tickets.",
+    "actions": [],
+    "waitFor": "text=Support team",
+    "viewport": "desktop",
+    "alt": "Support ticket board listing tickets with type, assignee, priority and status",
+    "status": "new",
+    "note": "This is the screen the existing images/platform/support/issues-list.png actually shows; that file is being repurposed for a project issue board, so this needs its own capture. Keep the Opened status filter and the Task type filter visible."
+  },
+  {
+    "id": "helpdesk-config",
+    "image": "/images/platform/support/helpdesk-config.png",
+    "usedOn": [
+      "platform/help-desk.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/helpdesk",
+    "routeHint": "Settings -> Modules -> Helpdesk. Needs ADMIN_TENANT.",
+    "actions": [],
+    "waitFor": "text=Enable Helpdesk Module",
+    "viewport": "desktop",
+    "alt": "Helpdesk module settings with the Members, Issue statuses and Issue types tabs",
+    "status": "new"
+  },
+  {
+    "id": "project-issue-board",
+    "image": "/images/platform/support/issues-list.png",
+    "usedOn": [
+      "platform/issues.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/issues?unit=19493",
+    "routeHint": "Group 19493 in tenant t187c ('Annual Conference 2026') is a project group with 24 issues across 4 statuses and 5 types. Reach it by opening that group and clicking the Issues tab. DiscussionCollectionExtension filters the board to units the logged-in user belongs to, so the session account (207128, Julian Sorensen) holds a user_role on 19493 along with 8 other members. Do NOT point this at tenant ila: that is a real organisation and is banned as a screenshot source.",
+    "actions": [],
+    "waitFor": "text=Confirm keynote speaker for the opening plenary",
+    "viewport": "desktop",
+    "alt": "Issue board for a project group with type, assignee, priority and status columns",
+    "status": "new",
+    "note": "The current file shows the tenant-wide Support board, not a project group board. It must be replaced with a real project issue board so the page and the image agree."
+  },
+  {
+    "id": "project-issue-statuses-types",
+    "image": "/images/platform/support/issue-statuses-types.png",
+    "usedOn": [
+      "platform/issues.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/group/edit/19493",
+    "routeHint": "Open the project group 'Annual Conference 2026' (unit 19493, group.is_project = 1, has_types = 1) and pick Settings from its menu. The Issue statuses and Issue types tabs sit in a card under the group form, so the shot has to be scrolled down to them. The tabs render only when the group is a project (Update.vue:99), and the Issue types tab only when has_types is on (Update.vue:243).",
+    "actions": [
+      "wait 3000",
+      "scrollto text=Issue statuses",
+      "wait 1200",
+      "click text=In progress",
+      "wait 1200"
+    ],
+    "waitFor": "text=Issue statuses",
+    "viewport": "tall",
+    "alt": "Issue statuses tab on a project group's Settings screen, with the statuses listed as coloured tags and one row open for editing, showing its name field, colour picker, Save and Cancel buttons and the delete bin, beside the Issue types tab and the Add button",
+    "status": "new",
+    "notes": "New capture: platform/issues.mdx described this editor and had no image.",
+    "selector": ".card.p-5.mt-5:has-text(\"Issue statuses\")"
+  }
+]

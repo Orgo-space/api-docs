@@ -1,0 +1,229 @@
+[
+  {
+    "id": "donation-product-create-form",
+    "image": "/images/platform/fees/donation-product-edit.png",
+    "usedOn": [
+      "platform/fees/donations.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/product/create",
+    "routeHint": "Sidebar Finance -> Products -> Create Product. Then click the 'Donation' type card so the donation-only blocks (custom amount, Campaign goal, settings groups) render.",
+    "actions": [
+      "click text=Donation",
+      "fill .field:has(> label:text-is(\"Title\")) input|Winter Appeal 2026",
+      "press ArrowLeft",
+      "wait 1500",
+      "scrollto text=Product type",
+      "wait 1000"
+    ],
+    "waitFor": "text=Enable custom amount",
+    "viewport": "desktop",
+    "alt": "Donation product form showing the Donation and Membership Fee type cards, the title with the generated URL slug and its public address preview, the Recurring and One-off frequency cards, and the custom amount limits",
+    "status": "new",
+    "notes": "The slug is generated on @keyup of the Title input (client/src/views/Product/Form.vue), which Playwright's fill() does not fire, so the slug preview stayed empty. The 'press ArrowLeft' after the fill delivers a keyup to the focused input and triggers changeSlug(). 'press End' also works but scrolls the form to the bottom. The scrollto brings the type cards back into frame."
+  },
+  {
+    "id": "donation-prices-and-options",
+    "image": "/images/platform/fees/donation-product-detail.png",
+    "usedOn": [
+      "platform/fees/donations.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/product/4e01906e8ff511f1832cde84ab?tab=prices",
+    "routeHint": "Finance -> Products -> filter type Donation -> open 'Annual Fund' (id 1167). Prices & Options is the default tab; ?tab=prices selects it without a click.",
+    "waitFor": "text=Product options",
+    "viewport": "desktop",
+    "alt": "Donation product detail on the Prices and Options tab, showing the suggested amount tiers with their descriptions and a default marker",
+    "status": "new",
+    "notes": "Was pointed at product 1168, whose price list held four duplicated tiers with contradictory amounts and blank descriptions. Product 1167 now carries one row per tier, ascending within recurring and one-off, each with a description.",
+    "actions": [
+      "wait 3000"
+    ]
+  },
+  {
+    "id": "donation-ab-testing",
+    "image": "/images/platform/fees/donation-ab-testing.png",
+    "usedOn": [
+      "platform/fees/donations.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/product/4e01906e8ff511f1832cde84ab?tab=prices",
+    "routeHint": "Same product as donation-prices-and-options (id 1167). Scroll the Prices & Options tab down to the 'Pricing A/B Testing' card.",
+    "waitFor": "text=Pricing A/B Testing",
+    "viewport": "desktop",
+    "selector": ".card.p-5.mt-5:has-text(\"Pricing A/B Testing\")",
+    "alt": "Pricing A/B Testing card with two enabled variations, each showing its assigned suggested amounts, traffic share, and total, average, and transaction count",
+    "status": "new",
+    "notes": "Cropped to the A/B card with a selector so it no longer repeats the price rows already shown in donation-product-detail.png. Product 1167 has two enabled variations with prices attached and one-off payments attributed to each, so the total / Average / Transactions cards render.",
+    "actions": [
+      "scrollto text=Pricing A/B Testing"
+    ]
+  },
+  {
+    "id": "donation-payments",
+    "image": "/images/platform/fees/donation-payments.png",
+    "usedOn": [
+      "platform/fees/donations.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/product/payments/4e01906e8ff511f1832cde84ab",
+    "routeHint": "Open the 'Annual Fund' donation product (id 1167, 90 payments) and pick Payments from the product menu.",
+    "waitFor": "text=CONFI.",
+    "viewport": "desktop",
+    "alt": "Donation payments list with filters for payment ID, user, name, date range, type and status, and rows showing one-time and recurring donations with amounts, chapters and dates",
+    "status": "new",
+    "notes": "The campaign was reseeded: amounts in USD, dates spread across 2025-2026, cross-tenant donor contacts (which printed a run-together 'WilliamsburgRomania' in the FROM column) detached, and a share of the payments attached to recurring subscriptions so the TYPE column shows both values. Recaptured 2026-08-06: the refunded flag renders correctly now (PRODUCT-BUGS #12), so the top row shows a red 'refunded' status beside the paid rows.",
+    "actions": [
+      "wait 3000"
+    ]
+  },
+  {
+    "id": "donation-subscribers",
+    "image": "/images/platform/fees/donation-subscribers.png",
+    "usedOn": [
+      "platform/fees/donations.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/product/subscribers/4e01906e8ff511f1832cde84ab",
+    "routeHint": "Open donation product id 1167 ('Annual Fund') and pick Subscribers from the product menu. It has 16 subscription profiles: 10 active, 2 active but cancelling, 4 canceled.",
+    "waitFor": "text=Unsubscribe",
+    "viewport": "desktop",
+    "alt": "Subscribers list for a donation campaign with filters for ID, name, email and status, and rows showing recurring donors with their amount and subscription status",
+    "status": "new",
+    "notes": "Was pointed at product 1168, which had no subscription profiles at all, so the table rendered its header over an empty body. Recaptured 2026-08-06; unchanged in substance, 16 subscription profiles across active, cancelling and canceled.",
+    "actions": [
+      "wait 3000"
+    ]
+  },
+  {
+    "id": "donation-stats",
+    "image": "/images/platform/fees/donation-stats-tab.png",
+    "usedOn": [
+      "platform/fees/donations.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/product/4e01906e8ff511f1832cde84ab?tab=stats",
+    "routeHint": "Open donation product id 1167 ('Annual Fund') on the Stats tab. Scroll past the finance chart to the 'All time stats' cards and the 'Views Over Time' chart.",
+    "actions": [
+      "wait 3000",
+      "scrollto text=All time stats",
+      "scroll 480",
+      "wait 1200"
+    ],
+    "waitFor": "text=All time stats",
+    "viewport": "desktop",
+    "alt": "Stats tab for a donation campaign showing all-time views, clicked and shared counters above a views-over-time chart",
+    "status": "new",
+    "notes": "The counters read 0/0/0 and the chart was an empty state because no page_analytics_aggregator rows existed for this tenant and the campaign's payments were all four years old. Ninety days of aggregated analytics are now seeded for product 1167 and its payments run to 2026. The tab is selected with ?tab=stats rather than a click on the text 'Stats'."
+  },
+  {
+    "id": "donation-comments",
+    "image": "/images/platform/fees/donation-comments.png",
+    "usedOn": [
+      "platform/fees/donation-pages.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/product/comments/1gjk4l2d48amoo6pku74kb4h2",
+    "routeHint": "Open 'Support Northwind's Mission' (id 969, 40 donor messages) and pick Comments from the product menu. No status filter: all 40 messages are approved, so the unfiltered list is the whole campaign.",
+    "waitFor": ".b-table tbody tr",
+    "viewport": "desktop",
+    "alt": "Donor message moderation list showing every message on the campaign, each row with the date, donor, amount, message, an approved status, and a Delete button in the Actions column",
+    "status": "new",
+    "notes": "Recaptured 2026-08-06 after PRODUCT-BUGS #6 and #14 were fixed on master 9c4f4bdbd. The route is unfiltered now: the old capture needed ?status=approved as a workaround because commentStatus was missing from prod_pay_card, which left the Status column empty and put an Approve button on every row. The list now prints 'approved' in the STATUS column on all 40 rows, the action column is headed ACTIONS, and Approve renders only on rejected messages, so only Delete is visible. The waitFor was 'Filter', the heading of the filter card, which paints before the table does and let a slow run capture a spinner; it now waits for a table row.",
+    "actions": [
+      "wait 3000"
+    ]
+  },
+  {
+    "id": "donation-landing-page-editor",
+    "image": "/images/platform/fees/donation-landing-page-tab.png",
+    "usedOn": [
+      "platform/fees/donation-pages.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/product/1gjk4l2d48amoo6pku74kb4h2?tab=style",
+    "routeHint": "Open 'Support Northwind's Mission' (id 969, has hero image, goal and description) on the Landing page tab.",
+    "actions": [
+      "wait 4000",
+      "scrollto text=Hero media",
+      "wait 1500"
+    ],
+    "waitFor": "text=Hero media",
+    "viewport": "desktop",
+    "alt": "Landing page tab with hero media image and video tabs, appearance controls, campaign content editor, and a live preview of the public page",
+    "status": "new",
+    "notes": "The click on 'Landing page' matched the header button of the same name, not the tab, so the shot was of Prices & Options. The tab is now selected with ?tab=style (client/src/views/Product/Show.vue reads $route.query.tab; the Landing page tab's value is 'style')."
+  },
+  {
+    "id": "donation-public-page",
+    "image": "/images/platform/fees/donation-public-page.png",
+    "usedOn": [
+      "platform/fees/donation-pages.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/pay/i/1gjk4l2d48amoo6pku74kb4h2?workspace=t187c&lang=en",
+    "routeHint": "The public page of donation product id 969. Reachable from the product header via the 'Landing page' button. No login required.",
+    "waitFor": "text=About this campaign",
+    "viewport": "desktop",
+    "alt": "Public donation page with hero image, progress bar toward the campaign goal, campaign story, and the donation form with suggested amounts",
+    "status": "keep",
+    "notes": "Clean as captured."
+  },
+  {
+    "id": "donation-public-page-donors",
+    "image": "/images/platform/fees/donation-public-page-donors.png",
+    "usedOn": [
+      "platform/fees/donation-pages.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/pay/i/1gjk4l2d48amoo6pku74kb4h2?workspace=t187c&lang=en",
+    "routeHint": "Same public page as donation-public-page (product 969 has newestAndTopDonationSection enabled and 81 payments): press See all at the foot of the recent donations panel in the right sidebar.",
+    "actions": [
+      "click text=See all",
+      "wait 2500"
+    ],
+    "waitFor": ".pp-v2-donations-modal",
+    "viewport": "tall",
+    "alt": "Donations dialog opened from the donor wall, with All and Top tabs over the full list of gifts showing donor initials, amounts and relative dates, above the public page and its recent donations panel",
+    "status": "keep",
+    "notes": "Clean as captured."
+  },
+  {
+    "id": "donation-widgets-tab",
+    "image": "/images/platform/fees/donation-widgets-tab.png",
+    "usedOn": [
+      "platform/fees/donation-pages.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/product/4e01906e8ff511f1832cde84ab?tab=widgets",
+    "routeHint": "Open donation product id 1167 ('Annual Fund') on the Widgets tab.",
+    "actions": [
+      "wait 5000"
+    ],
+    "waitFor": "text=Configure Widget",
+    "viewport": "desktop",
+    "alt": "Widgets tab showing two donation widget cards, one popup and one embed, each with its widget ID and its total, one-time and recurring donation counts",
+    "status": "new",
+    "notes": "Six test widgets ('test', 'test2', 'test3', 'test4', 'Widget', 'WIdget #1') were deleted and the two survivors renamed and rewritten in English. Their counters were 0 and denominated in RON because no payment carried a widgetId payload and settings.defaultCurrency was RON; both are fixed. waitFor is 'Configure Widget' (a widget card button) rather than the 'Donation Widgets' heading, which paints before the cards load."
+  },
+  {
+    "id": "donation-widget-configuration",
+    "image": "/images/platform/fees/donation-widget-configuration.png",
+    "usedOn": [
+      "platform/fees/donation-pages.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/product/4e01906e8ff511f1832cde84ab?tab=widgets",
+    "routeHint": "Open donation product id 1167 on the Widgets tab, then press 'Configure Widget' on the first widget card. It opens a full-screen editor.",
+    "actions": [
+      "wait 2500",
+      "click text=Configure Widget",
+      "wait 3000"
+    ],
+    "waitFor": "text=Embed Code",
+    "viewport": "desktop",
+    "alt": "Donation widget configuration screen with basic information, appearance and donation settings on the left and a live widget preview on the right",
+    "status": "new",
+    "notes": "The widget was named 'DOnatieeeee' with a Romanian description, a 'Doneazaza' button label and an Orgo marketing screenshot as the hero image. All four are replaced with Northwind copy, a Donate button and a campaign photo."
+  }
+]

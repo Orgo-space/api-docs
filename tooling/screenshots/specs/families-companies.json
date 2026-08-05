@@ -1,0 +1,82 @@
+[
+  {
+    "id": "family-members-tab",
+    "image": "/images/platform/users/family-members-tab.png",
+    "usedOn": [
+      "platform/users/family-members.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/users/edit/209210?tab=family",
+    "routeHint": "Members -> Marcus Vargas (user 209210) -> Family tab. Every family_entity row in the obfuscated demo tenant had zero family_member rows, so the tab rendered its 'No family yet' empty state for every member, including the one the old routeHint named. Family 154466 was renamed 'Vargas Family', reowned to 209210 and populated on 2026-08-05: two parents (Marcus as Family Admin, Elena Vargas with Can manage child accounts), three children (Freya, Jonas, Ines Vargas) and one sibling in Other Family Members. Requires Settings -> Modules -> Users & Profiles -> Family & Relationships -> Enable Family Members, which is on for tenant 282.",
+    "actions": [
+      "wait 6000",
+      "waitFor text=PARENTS",
+      "wait 1500"
+    ],
+    "waitFor": "text=Vargas Family",
+    "viewport": "desktop",
+    "alt": "Family tab on a member profile showing the family name, a Parents section with the family admin and a Can manage child accounts member each with the date they were added, a Children section, and an Other Family Members section",
+    "status": "new",
+    "notes": "The 'Added on <date>' subtext in Family.vue used to be dead - the template read x.dateCreated while FamilyEntityController::getFamilyMembers returned joinedAt - and it renders as of 2026-08-06, so both parent rows read 'Added on Mar 4, 2024'. The child and sibling rows carry no join date and show none."
+  },
+  {
+    "id": "companies-list",
+    "image": "/images/platform/users/companies-list.png",
+    "usedOn": [
+      "platform/users/companies.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/companies",
+    "routeHint": "Log in as a tenant admin. Companies in the left sidebar (Administrative section). selectedStatus is persisted in Vuex (listValues.company.selectedStatus) and the saved session had it on Active, so the capture clicks the All radio first. Tenant 282 now holds 41 Active, 2 Pending and 2 Inactive companies, and the alphabetically first rows carry members and valid-until dates.",
+    "actions": [
+      "wait 3500",
+      "waitFor .status-radio-group",
+      "click .status-radio-group .b-radio:first-child",
+      "wait 3000"
+    ],
+    "waitFor": "text=Companies",
+    "viewport": "desktop",
+    "alt": "Companies list with search, status filters showing counts for All, Active, Pending and Inactive, and rows showing member count and valid-until date",
+    "status": "new"
+  },
+  {
+    "id": "company-members",
+    "image": "/images/platform/users/company-members.png",
+    "usedOn": [
+      "platform/users/companies.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/companies/e10f30a3-d002-4ee0-83f6-0dfceff358db",
+    "routeHint": "Companies -> open 'Redwood Logistics' (company 313), Team Members panel only. Deliberately NOT company 317: templates-federations/federation-company-members already captures 317 with the same .members-list-container crop, and two specs shooting the same panel produce a byte-identical file. 313 has five active members with joined dates, one Primary Contact, one Voting Representative and one PENDING invitation (company_invitation 5, expires 27 Aug 2026), so the Invited badge and its countdown are in frame.",
+    "actions": [
+      "wait 3000",
+      "waitFor text=Invited",
+      "wait 1500"
+    ],
+    "waitFor": "text=Primary Contact",
+    "viewport": "desktop",
+    "alt": "Team Members panel of a company showing active members with a Primary Contact badge and joined date, a pending invitation with an Invited badge and expiry, and Invite and Add Member buttons",
+    "status": "new",
+    "selector": ".members-list-container",
+    "notes": "waitFor must not be 'Team Members': that string is the panel header and is on the page before the members and invitations fetches resolve, so the crop caught an empty 'Team Members 0' bar. Gate on 'Invited', which only exists once both requests have landed."
+  },
+  {
+    "id": "company-payment-plans",
+    "image": "/images/platform/users/company-payment-plans.png",
+    "usedOn": [
+      "platform/users/companies.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/companies/e05339e7-d830-4232-99c4-77ae65100818",
+    "routeHint": "Companies -> open 'Bluepeak Logistics' (company 314, status PENDING, no validFeeDate, Corporate Bronze selected) and capture the Payment & Plan card only. isFeeActive false plus canRenew true is what makes Pay render, and Mark as Paid needs ADMIN_TENANT. Bronze rather than Silver is deliberate: templates-federations/federation-payment-plan shoots company 316 with Silver current, so a different tier keeps the two images distinct.",
+    "actions": [
+      "wait 2500"
+    ],
+    "waitFor": "text=Payment & Plan",
+    "viewport": "desktop",
+    "alt": "Payment and Plan panel listing company membership tiers with slot counts, annual prices and billing period, Select buttons on the unselected tiers, and Pay and Mark as Paid on the current one",
+    "status": "new",
+    "selector": ".card:has(.payment-section)",
+    "notes": "The tenant fee cycle is not calendar-anchored here, so the membership quote comes back not prorated and no struck-through list price renders. The alt must not promise a prorated amount."
+  }
+]

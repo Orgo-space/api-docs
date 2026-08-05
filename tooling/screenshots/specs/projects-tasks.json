@@ -1,0 +1,171 @@
+[
+  {
+    "id": "projects-list",
+    "image": "/images/platform/projects/projects-list.png",
+    "usedOn": [
+      "platform/projects.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/projects",
+    "routeHint": "Requires Settings -> Modules -> Projects -> Enable Project Management to be ON for this tenant. Then sidebar -> PROJECTS section -> click the section title, or go to /projects directly.",
+    "actions": [],
+    "waitFor": "text=Autumn Conference 2026",
+    "viewport": "desktop",
+    "alt": "Projects page showing Active and Archived tabs and project cards with a coloured dot, owner avatar and completed task count",
+    "status": "new",
+    "notes": "Four active projects plus one archived are seeded, so the Active tab shows a 4 count, the Archived tab a 1 count, and every card carries its own colour, owner avatar and a completed/total task ratio."
+  },
+  {
+    "id": "project-overview",
+    "image": "/images/platform/projects/project-overview.png",
+    "usedOn": [
+      "platform/projects.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/project/1108bh1kjj83rp1imlj04kkm9m/overview",
+    "routeHint": "Projects list -> open the project that has tasks -> Overview tab. The id in the URL is the project uuid, a 26 character base32 string, not a numeric id.",
+    "actions": [],
+    "waitFor": "text=Status distribution",
+    "viewport": "desktop",
+    "alt": "Project Overview tab with status and priority pie charts, a needs attention panel, recent tasks and a team workload list",
+    "status": "new",
+    "notes": "Recapture after the task due-date reseed: the Needs attention panel used to read 7 overdue because every seeded due date was in the past."
+  },
+  {
+    "id": "project-settings-members",
+    "image": "/images/platform/projects/project-settings-members.png",
+    "usedOn": [
+      "platform/projects.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/project/1108bh1kjj83rp1imlj04kkm9m/settings",
+    "routeHint": "Open the project -> cog icon labelled Settings in the project header -> Members in the left settings nav. Must be signed in as ADMIN_TENANT or the project owner, otherwise the cog is hidden.",
+    "actions": [
+      "click .settings-nav-item:nth-child(2)",
+      "waitFor text=Individual members"
+    ],
+    "waitFor": "text=Add specific users who should have access to this project",
+    "viewport": "desktop",
+    "alt": "Project settings Members tab showing the project owner, an individual members list with avatars and a group access tag input",
+    "status": "new",
+    "notes": "`click text=Members` matched the wrong node and left the General tab on screen, so the previous shot was of the tab before the click. The settings nav is three sibling buttons; the second is Members. Seven individual members are seeded, otherwise the pane renders the 'No individual members added' empty state."
+  },
+  {
+    "id": "project-goals",
+    "image": "/images/platform/projects/project-goals.png",
+    "usedOn": [
+      "platform/projects.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/project/1108bh1kjj83rp1imlj04kkm9m/goals",
+    "routeHint": "Goals must be enabled first: project Settings -> General -> Project options -> tick Goals and save. Objectives are a separate switch on the project. Seed at least one objective and two goals before capture.",
+    "actions": [],
+    "waitFor": "text=Grow and retain the membership",
+    "viewport": "desktop",
+    "alt": "Objectives and goals screen with two objective sections, each with a colour dot and its goals nested underneath",
+    "status": "new",
+    "notes": "Goals.vue only renders objective sections when the project has objectives enabled, and the Add objective button lives inside that same branch. Two objectives are seeded, one holding two goals and one holding two."
+  },
+  {
+    "id": "projects-module-config",
+    "image": "/images/platform/projects/projects-module-config.png",
+    "usedOn": [
+      "platform/projects.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/projects",
+    "routeHint": "Settings -> Modules -> Projects. Requires ROLE_ADMIN_TENANT.",
+    "actions": [],
+    "waitFor": "text=Enable Project Management",
+    "selector": ".module-layout-with-menu",
+    "viewport": "desktop",
+    "alt": "Projects module settings with the Enable Project Management switch turned on and its helper text",
+    "status": "new",
+    "notes": "Full-page capture put a 60px strip of content at the top of an otherwise empty 2160px frame. Cropping to .module-layout-with-menu keeps the module header and the Configuration menu alongside the switch and drops the dead space."
+  },
+  {
+    "id": "project-tasks-list",
+    "image": "/images/platform/projects/project-tasks-list.png",
+    "usedOn": [
+      "platform/tasks.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/project/1108bh1kjj83rp1imlj04kkm9m/tasks",
+    "routeHint": "Open the project -> Tasks tab. Capture with no filters applied so the assignee avatar row, Group by, Status and Columns controls are all visible.",
+    "actions": [],
+    "waitFor": "text=Add task",
+    "viewport": "desktop",
+    "alt": "Project Tasks tab with assignee avatars, group by and status filters, and a table of tasks with status and priority tags",
+    "status": "new",
+    "notes": "The avatar filter row is built from /search-project-user, which returns the project owner plus individual project members. With no project_user rows it showed a single avatar; seven members are now seeded. Created dates are spread across ten weeks instead of all landing on one day."
+  },
+  {
+    "id": "task-form-modal",
+    "image": "/images/platform/projects/task-form-modal.png",
+    "usedOn": [
+      "platform/tasks.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/project/1108bh1kjj83rp1imlj04kkm9m/tasks",
+    "routeHint": "Open the project -> Tasks tab -> Add task. Type a title and add two checklist items so the modal is not empty, but do not save.",
+    "actions": [
+      "click text=Add task",
+      "wait 1800",
+      "fill .modal-input input | Book the venue for the November AGM",
+      "fill .o-comment-area textarea | Needs to seat 120, be step-free, and have a room we can use for the count.",
+      "click text=Add checklist",
+      "fill .subtask-add-input-lg | Shortlist three venues",
+      "press Enter",
+      "fill .subtask-add-input-lg | Check step-free access and catering",
+      "press Enter",
+      "click .subtask-cancel-inline",
+      "hover .modal-card-title",
+      "wait 1000"
+    ],
+    "waitFor": "text=Check step-free access and catering",
+    "viewport": "desktop",
+    "alt": "New task modal with a title, description, a two item checklist and a side panel holding goal, type, assignees, priority, status and dates",
+    "status": "new",
+    "notes": "The Goal row only renders when the project has hasGoals in its settings, which is now on. The three fill actions in the old spec used a space instead of the runner's selector|value separator, so all three were skipped and the modal was captured empty. The b-tooltip on the Checklist header pops open while the pointer sits there after the last click, so the pointer is parked on the modal title before the shot."
+  },
+  {
+    "id": "project-board",
+    "image": "/images/platform/projects/project-board.png",
+    "usedOn": [
+      "platform/tasks.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/project/1108bh1kjj83rp1imlj04kkm9m/board",
+    "routeHint": "Open the project -> Board tab. Best with tasks spread across To do, In Progress and Done.",
+    "actions": [
+      "click text=Columns",
+      "wait 900",
+      "click .checkbox-label:has-text('No status')",
+      "wait 900",
+      "press Escape",
+      "wait 1200"
+    ],
+    "waitFor": "text=Negotiate venue for the autumn conference",
+    "viewport": "desktop",
+    "alt": "Kanban board with Overdue, To do, In Progress, In Review and Done columns holding task cards with avatars, priority icons and due dates",
+    "status": "new",
+    "notes": "ShowBoard.vue moves any open task whose due date is in the past into the Overdue pseudo-column, so with every seeded due date in the past five of six columns were empty. Due dates are now spread: two deliberately overdue, the rest inside the next five weeks. The No status column is hidden through the Columns control so the six columns fit the frame and Done is not clipped; with every task carrying a status that column was empty anyway."
+  },
+  {
+    "id": "task-detail",
+    "image": "/images/platform/projects/task-detail.png",
+    "usedOn": [
+      "platform/tasks.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/project/1108bh1kjj83rp1imlj04kkm9m/task/48dbb9dccdcb348430b8f778fe",
+    "routeHint": "Open the project -> Tasks tab -> click a task row that has at least two assignees, a checklist and one comment.",
+    "actions": [],
+    "waitFor": "text=Checklist",
+    "viewport": "tall",
+    "alt": "Task detail page showing status and type controls, two assignees with a completion counter, a three item checklist and a comment thread",
+    "status": "new",
+    "notes": "Task 100 (Launch referral campaign) is the showcase row: description, three checklist items with the first ticked, two assignees one of whom has marked their part complete, and a three message comment thread. The app scrolls an inner pane, so fullPage does nothing and a fixed viewport either clips the comments or leaves a third of the frame empty; cropping to .project-layout at the tall viewport keeps the project header and tab row and ends exactly where the card ends.",
+    "selector": ".project-layout"
+  }
+]

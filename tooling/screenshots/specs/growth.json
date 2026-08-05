@@ -1,0 +1,85 @@
+[
+  {
+    "id": "invitations-config",
+    "image": "/images/platform/users/invitations-config.png",
+    "usedOn": [
+      "platform/users/invitations.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/users",
+    "routeHint": "Settings (gear) -> Modules -> Users & Profiles -> Configuration. The selector crops to the 'User Invitations' settings-section card so both the Enable User Invitations switch and the Who Can Send Invitations selector are in frame and nothing else. Without the crop this shot was identical to adhesion/adhesion-settings. The Custom Fields -> Configuration bounce is the same workaround adhesion-settings uses: UsersModuleConfig copies the tenant into local data in created(), and the capture session starts from a persisted Vuex snapshot. The selector rendered blank because the stored value was 'ROLE_USER' while roleOptions (UsersModuleConfig.vue:396) offers USER / HR_LOCAL / HR_TENANT / ADMIN_LOCAL / ADMIN_TENANT, so nothing matched; tenant 282 now stores 'USER' and the field reads All Users.",
+    "actions": [
+      "wait 2500",
+      "click text=Custom Fields",
+      "click text=Configuration",
+      "wait 1500"
+    ],
+    "waitFor": "text=Who Can Send Invitations",
+    "selector": ".settings-section:has(h3:text-is(\"User Invitations\"))",
+    "viewport": "desktop",
+    "alt": "User Invitations section of the Users and Profiles configuration page with the Enable User Invitations switch and the Who Can Send Invitations selector",
+    "status": "new"
+  },
+  {
+    "id": "profile-referrals-tab",
+    "image": "/images/platform/users/profile-referrals-tab.png",
+    "usedOn": [
+      "platform/users/invitations.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/me?tab=referrals",
+    "routeHint": "Requires Settings -> Users & Profiles -> Configuration -> User Invitations -> Enable User Invitations switched ON for this tenant, otherwise the tab does not render. Then open your own profile (avatar menu -> My profile) and pick the 'Referrals' tab. Capture the top of the tab: the three stat cards, the 'Your referrer link' card with the copy and share buttons, the 'Invite by email' box, and as much of 'Invitation history' as fits.",
+    "actions": [
+      "click text=Referrals"
+    ],
+    "waitFor": "text=Invitation history",
+    "viewport": "desktop",
+    "alt": "Referrals tab on a member profile showing sent, joined and pending counters, the personal referrer link with copy and share buttons, the invite by email box and the invitation history list",
+    "status": "new"
+  },
+  {
+    "id": "referral-settings",
+    "image": "/images/platform/users/referral-settings.png",
+    "usedOn": [
+      "platform/users/referral.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/users/referral",
+    "routeHint": "Settings (gear) -> Modules -> Users & Profiles -> Referral Program. The Number of Referrals card and the Referral Questions card are both behind `v-if=\"isActive\"`, so with settingFeatures.referral.isActive false the page is two toggles and 80% empty grey. The demo tenant now has referral.isActive true, numberOfReferralsNeededForSignup 3, and settingForms.referral question1..3 filled with real questions.",
+    "waitFor": "text=Referral Questions",
+    "viewport": "desktop",
+    "alt": "Referral Program settings with the Enable Referral Program switch, the Enable User Invitations switch, the Number of Referrals Needed for Signup selector and three referral question fields",
+    "status": "new"
+  },
+  {
+    "id": "waitlist-settings",
+    "image": "/images/platform/users/waitlist-settings.png",
+    "usedOn": [
+      "platform/users/waitlist.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/users/waitlist",
+    "routeHint": "Settings (gear) -> Modules -> Users & Profiles -> Registration Waitlist. Both the Waitlist Settings card and the Waitlist Priority Settings card are behind `v-if=\"waitlistSettings.isActive\"`, so with the master toggle off the page is one card and 90% empty grey. The demo tenant now has waitlist.isActive true, allowSelfRemoval true, notifyAdminsOnNew true and volunteerTriggerSlots 5, plus waitlist_priority_setting rows so the per user type levels are not all Normal. Tall viewport: the priority card carries one sub-card per user type and does not fit 1080px.",
+    "waitFor": "text=Waitlist Priority Settings",
+    "viewport": "tall",
+    "alt": "Registration Waitlist settings with the enable switch, Allow Self Removal, Notify Admins On New, Volunteer Trigger Slots and per user type priority levels",
+    "status": "new"
+  },
+  {
+    "id": "waitlist-management",
+    "image": "/images/platform/users/waitlist-management.png",
+    "usedOn": [
+      "platform/users/waitlist.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/waitlist",
+    "routeHint": "Waitlist in the main sidebar. Needs ADMIN_LOCAL or ADMIN_TENANT. The status filter defaults to Waiting, so only 'waiting' rows show: the demo tenant now holds ten of them across Virginia Beach, Richmond and Alexandria with distinct surnames and per chapter sequential positions. Tick the first row so the bulk action bar is enabled rather than greyed out.",
+    "actions": [
+      "click .b-table tbody tr:first-child td.checkbox-cell label.b-checkbox"
+    ],
+    "waitFor": "text=entries selected",
+    "viewport": "desktop",
+    "alt": "Waitlist screen with local center, status and priority filters, bulk action bar, and a table of entries showing position, local center, user, priority, status, type and requested date",
+    "status": "new"
+  }
+]

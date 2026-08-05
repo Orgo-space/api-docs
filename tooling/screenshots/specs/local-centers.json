@@ -1,0 +1,165 @@
+[
+  {
+    "id": "local-centers-list",
+    "image": "/images/platform/groups/local-centers-list.png",
+    "usedOn": [
+      "platform/groups/local-groups.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/local-centers/all",
+    "routeHint": "Sidebar -> Chapters. The map panel must be open: only then does the 'Iframe URL' button appear (client/src/views/LocalCenter/List.vue:184). Do NOT add a click on the 'map' button: it is a toggle over a value persisted in Vuex listValues.localCenters.isMapView, which the capture session already has set to true, so clicking closes the panel. That is what produced the previous map-less shot. isMapView is pinned true in capture/state-t187c.json instead.",
+    "actions": [
+      "waitFor text=Create chapter",
+      "wait 5000"
+    ],
+    "waitFor": "text=Iframe URL",
+    "viewport": "desktop",
+    "alt": "Chapters list with the map panel open, showing pins, a status filter, a town filter, and one row per chapter with member counts",
+    "status": "new",
+    "notes": "Map panel must be open. 'Iframe URL' is the reliable waitFor because List.vue renders it only when isMapView is true, so a missed click cannot pass silently. Chapter coordinates are seeded (local_center.geo_location), founding dates are spread 1951-2014, counties are Virginia, and selectorNameFormat is '%name%' so names are no longer doubled. Two things verified on 2026-08-06. The MEMBERS column is NOT unit.active_member_count: it is usersCount from /stats/users-local-centers, already the whole branch total, with the descendants' share repeated in the grey (+N) (List.vue:415-428, utils/localCenterCounts.js). So Alexandria reads 95 (+69) while its own active members are 26, and app:recalculate-unit-member-counts does not change this page. Second, a fresh capture is risky: the Leaflet map did not fit to the chapter pins and rendered centred on Kansas. Open the shipped PNG before keeping any recapture, and revert rather than ship a map with no pins in frame."
+  },
+  {
+    "id": "local-center-detail",
+    "image": "/images/platform/groups/local-center-detail.png",
+    "usedOn": [
+      "platform/groups/local-groups.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/local-center/15658",
+    "routeHint": "Chapters -> click a chapter name to open the panel -> use the expand icon to open the full page. Virginia Beach (15658) now has nine officers across six roles, so the Team panel is populated.",
+    "actions": [
+      "wait 2500"
+    ],
+    "waitFor": "text=Regional Chair",
+    "viewport": "desktop",
+    "alt": "Chapter page showing the status and Chapter badges, the shortcut card, Contact and Address cards, and the Team panel grouping officers by role",
+    "status": "new",
+    "notes": "There is no 'Quick actions' heading anywhere in the client (only a translation key); the shortcut card renders unlabelled, so it cannot be used as a waitFor. The Team panel fetches /user_roles?...&role.isLocalCenterParent=1 for a parent chapter (ShowContent.vue:752), so officers must hold roles flagged is_local_center_parent, not is_local_center. Five such roles are seeded (Regional Chair, Regional Coordinator, Regional Treasurer, Regional Secretary, Membership Officer) with eight officers between them."
+  },
+  {
+    "id": "local-center-form",
+    "image": "/images/platform/groups/local-center-form.png",
+    "usedOn": [
+      "platform/groups/local-groups.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/local-center/edit/15661",
+    "routeHint": "Chapters -> '...' on a row -> Edit. Captured on a child chapter (Hampton, 15661) so the Organization section renders the parent-chapter selector and the Region field; on a parent chapter neither appears.",
+    "actions": [
+      "wait 2500",
+      "scroll 100",
+      "wait 1200"
+    ],
+    "waitFor": "text=General information",
+    "viewport": "desktop",
+    "alt": "Chapter form showing the General information, Location and Organization sections with status, name, Alias, founded, town, map location, map description, the parent chapter selector and the Region field",
+    "status": "new",
+    "notes": "Captured on a child chapter (Hampton, 15661): on a parent chapter the Organization section holds only the \"It's a parent chapter\" checkbox, with no parent selector, which is what the previous shot showed. Regions are now defined on the tenant (hasRegions on, three regions) so the Region field renders. The scroll is tuned to 100: it is the largest value that still keeps the General information heading in frame while reaching the Region field. Do NOT submit this form during capture: an earlier run saved it and renamed the chapter."
+  },
+  {
+    "id": "local-center-map-public",
+    "image": "/images/platform/groups/local-center-map-public.png",
+    "usedOn": [
+      "platform/groups/local-groups.mdx"
+    ],
+    "tenant": "anon-t187c",
+    "route": "/local-center-map/?workspace=t187c",
+    "routeHint": "Direct URL, signed out. The standalone Google Maps chapter finder (simple layout, anonymous-accessible). Uses capture/state-anon-t187c.json, a session with NO auth cookie but with the tenant already warm in the persisted Vuex store; rebuild it with capture/make-anon-state.mjs.",
+    "actions": [
+      "wait 5000",
+      "click All local centers",
+      "wait 5000"
+    ],
+    "waitFor": "text=All local centers",
+    "viewport": "desktop",
+    "alt": "Public chapter finder with a postal code search box, age group, cost, night and language filters, a results list, and pins on a Google map",
+    "status": "new",
+    "notes": "Captured signed out, so the 'Logged in as' chip is gone (it is gated on user?.id, MapView.vue:14). Headless Chromium denies geolocation, so MapView falls back to calculateCenterFromAllLocalCenters(); with chapter coordinates seeded in Virginia that centres on Virginia instead of the hardcoded Romania fallback at MapView.vue:860,871. A cold anonymous load does NOT work: the Google Maps callback fires before GET /tenants?slug= resolves, so loadAllCentersData() throws 'Cannot read properties of null (reading slug)' at MapView.vue:1395 and no chapters are ever fetched. Hence the pre-warmed anonymous state. Needs GOOGLE_MAPS_API_KEY in the capture environment."
+  },
+  {
+    "id": "unit-types",
+    "image": "/images/platform/groups/unit-types.png",
+    "usedOn": [
+      "platform/groups/units.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/groups/unit-types",
+    "routeHint": "Settings -> Modules -> Groups -> Unit Types. Requires 'Enable Organizational Units' on for the submenu entry to appear.",
+    "actions": [
+      "wait 2000"
+    ],
+    "waitFor": "text=Working Party",
+    "viewport": "desktop",
+    "alt": "Unit Types settings page showing type cards with Within local center and Has user types badges and an Add Unit Type button",
+    "status": "new",
+    "notes": "Two fixes were needed: group.hasUnits had to be turned on, and the tenant's unit types had discriminator NULL while List.vue fetches /unit_types?discriminator=unit (List.vue:154), so the page rendered the empty state even though rows existed."
+  },
+  {
+    "id": "units-segmented",
+    "image": "/images/platform/groups/units-segmented.png",
+    "usedOn": [],
+    "tenant": "t187c",
+    "route": "/units/segmented?unit=15658",
+    "routeHint": "",
+    "actions": [],
+    "waitFor": "text=Add member",
+    "viewport": "desktop",
+    "alt": "",
+    "status": "dropped",
+    "notes": "WON'T FIX. The PNG was deleted: it was a group header over ~900px of empty pane, and no page references it. platform/groups/units.mdx deliberately describes the segmented board in prose instead of shipping a board screenshot. Do not recapture."
+  },
+  {
+    "id": "transfer-requests-list",
+    "image": "/images/platform/groups/transfer-requests-list.png",
+    "usedOn": [
+      "platform/groups/transfers.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/local-center-change/list",
+    "routeHint": "Direct URL; there is no menu entry. Sign in as a user with HR_LOCAL or HR_TENANT, otherwise the page redirects to the dashboard. Leave the 'all' filter selected so approved and declined rows are visible alongside pending ones.",
+    "actions": [],
+    "waitFor": "text=Transfer requests",
+    "viewport": "desktop",
+    "alt": "Transfer requests list with all, pending, approved and declined filters and one row per request showing member, requester, both chapters and status",
+    "status": "new",
+    "notes": "Recaptured alongside local-centers-list so the chapter names stay consistent: selectorNameFormat is now '%name%', so rows read 'Norfolk' rather than 'Norfolk - Norfolk'. Recaptured 2026-08-06: 11 records across pending, approved and declined, with the processed dates filled in."
+  },
+  {
+    "id": "transfer-request-form",
+    "image": "/images/platform/groups/transfer-request-form.png",
+    "usedOn": [
+      "platform/groups/transfers.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/local-center-change/form",
+    "routeHint": "Direct URL as a signed-in member; the admin equivalent is the 'Request local transfer' button in the Permissions panel of a member profile. Fill the destination selector and the reason so both editable fields carry data.",
+    "actions": [
+      "wait 2500",
+      "fill .local-center-select input | Alexandria",
+      "wait 1500",
+      "click .local-center-select .dropdown-item",
+      "wait 1000",
+      "fill .textarea | Relocating to Old Town in the spring and would like to continue with the Alexandria chapter.",
+      "wait 800"
+    ],
+    "waitFor": "text=My transfer requests",
+    "viewport": "desktop",
+    "alt": "Local center transfer request form with a locked current chapter, a new chapter selector, a reason field, and the requester's past requests listed below",
+    "status": "new",
+    "notes": "The 'My transfer requests' block is gated on localCenterRequests.length > 0 (ChangeRequestForm.vue:56,66), fed by /local_center_requests?user={id}. Three requests (approved, declined, pending) are now seeded for the capture user Julian Sorensen (207128)."
+  },
+  {
+    "id": "local-center-show-unused",
+    "image": "/images/platform/groups/local-center-show.png",
+    "usedOn": [],
+    "tenant": "t187c",
+    "route": "",
+    "routeHint": "",
+    "actions": [],
+    "waitFor": "",
+    "viewport": "desktop",
+    "alt": "",
+    "status": "dropped",
+    "notes": "WON'T FIX. The PNG was deleted. The earlier note here was wrong: the file was not a chapter panel at all, it was the Home dashboard (welcome hero, post composer, right-rail Voting/Events/My tasks cards). No page referenced it."
+  }
+]

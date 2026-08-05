@@ -1,0 +1,64 @@
+[
+  {
+    "id": "scouting-texts-search",
+    "image": "/images/platform/templates/scouting-texts-search.png",
+    "usedOn": [
+      "platform/templates/scouting.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenant/texts",
+    "routeHint": "Settings -> Customization -> Texts -> Add Text Replacement, then search 'full member'. The point of the shot is that one concept returns many catalogue rows (singular, plural, lowercase and whole sentences), which is what the mapping table on the scouting template page teaches. Neutral demo org (Northwind Professional Association), no scouting wording is typed or saved: the search box is filled but nothing is ticked or saved.",
+    "actions": [
+      "click text=Add Text Replacement",
+      "wait 1500",
+      "fill input[placeholder*='Search expressions']|full member",
+      "wait 2500"
+    ],
+    "waitFor": "text=Only NOT full members",
+    "viewport": "desktop",
+    "alt": "Add Text Replacement panel over the Text Replacements page, searching for full member and listing eight separate catalogue rows with checkboxes, including Full members, Is Full Member, Only full members and Only NOT full members with their source keys in brackets",
+    "status": "keep"
+  },
+  {
+    "id": "scouting-family-settings",
+    "image": "/images/platform/templates/scouting-family-settings.png",
+    "usedOn": [
+      "platform/templates/scouting.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/users",
+    "routeHint": "Settings -> Modules -> Users & Profiles -> Configuration, scrolled to the Family & Relationships block. Shows the only two switches that block contains (Enable Family Members, Non-Member Family Profiles), which is also the evidence that the two age values are not on the settings screen (both are commented out in client/src/config/module-settings/users.js).",
+    "actions": [
+      "scrollto text=Family & Relationships",
+      "wait 1500"
+    ],
+    "waitFor": "text=Non-Member Family Profiles",
+    "selector": ".settings-section:has(h3:text-is(\"Family & Relationships\"))",
+    "viewport": "desktop",
+    "alt": "Family and Relationships block of the Users and Profiles settings, with Enable Family Members and Non-Member Family Profiles both switched on and no other fields in the block",
+    "status": "new",
+    "notes": "Recaptured 2026-08-05 with the same settings-section crop the party-privacy-visibility spec uses. Without it the scrollto stopped short and shipped the whole Configuration page: Resignation & Membership Termination sat above the target and Profile Settings below it, the 'Enable User Invitations' row was sliced in half behind the sticky 'Enable Users Module' header, and the Who Can Send Invitations dropdown under it rendered blank. The alt promises only the Family and Relationships block, and the crop is what makes that true. Tenant 282 has users.hasFamilyMembers and users.hasFamilyNonMembers both true, which is what the alt describes."
+  },
+  {
+    "id": "scouting-local-centers-settings",
+    "image": "/images/platform/templates/scouting-local-centers-settings.png",
+    "usedOn": [
+      "platform/templates/scouting.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/groups/local-centers",
+    "routeHint": "Settings -> Modules -> Groups & Teams -> Local Centers. The shot exists to prove one correction on the scouting page: Enable Local Centers Module is ON out of the box (api/src/Entity/Tenant.php:268, localCenter => isActive true), so the reader verifies it rather than switching it on, while the neighbouring Enable Regions (Tenant.php:269) and Enable Parent Centers are off by default. Master toggle is LocalCentersModuleConfig.vue:12-17 bound to settings.isActive; the Basic Configuration block below it comes from client/src/config/module-settings/localcenters.js.",
+    "actions": [
+      "wait 2500",
+      "click text=Configuration",
+      "wait 1500",
+      "click text=Local Centers",
+      "wait 2000"
+    ],
+    "waitFor": "text=Enable Parent Centers",
+    "viewport": "desktop",
+    "alt": "Local Centers tab of the Groups and Teams settings, with the Enable Local Centers Module switch already on at the top and a Basic Configuration block below it listing Enable Regions, Enable Parent Centers, Local Center User Types, Multi local center access and the other per-chapter switches",
+    "status": "new",
+    "notes": "Recaptured 2026-08-05 because the shipped file had drifted from the demo data. The paragraph under the image in scouting.mdx claimed the Basic Configuration switches all start off, while the shot had Enable Parent Centers and Open Access Local Centers on. Verified against api/src/Entity/Tenant.php:268-285: every switch in this block defaults to false and only localCenter.isActive defaults to true, so the product claim was right and the demo tenant is the thing that differs. Per the owner, the data stays as it is and the prose was corrected instead. The older file also showed Enable Regions off while tenant 282 now has localCenter.hasRegions true, so it was stale as well; the recapture makes image, data and prose agree. Read the switch states off the new image before touching that paragraph again."
+  }
+]

@@ -1,0 +1,109 @@
+[
+  {
+    "id": "event-tickets-page",
+    "image": "/images/platform/events/event-tickets.png",
+    "usedOn": [
+      "platform/events/ticketing.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/events/edit/ticketing/a2a3281d8fc711f19aed9e396b",
+    "routeHint": "Events -> open a paid event (one with the Tickets entry in the left event sidebar) -> Tickets. Strategy Away Day Arlington (event 200431, 2026-09-06, product 970) carries three ticket types, two addons (Guest dinner seat, Printed course pack) and two vouchers (EARLYBIRD25, CHAPTER50), so all three sections are populated and the vouchers still read Active. A past event shows the same vouchers as Expired.",
+    "actions": [],
+    "waitFor": "text=Add ticket",
+    "viewport": "desktop",
+    "fullPage": true,
+    "alt": "Tickets page for an event showing the Allow only one ticket per order switch, three ticket types with price and availability tags, an Addons section and a Vouchers section",
+    "status": "new",
+    "note": "The current file predates two things now on this page: the 'Allow only one ticket per order' card above the ticket list, and the whole Vouchers section below Addons. Capture the full page scrolled so at least one addon card and one voucher card are visible."
+  },
+  {
+    "id": "event-checkout",
+    "image": "/images/platform/events/event-checkout.png",
+    "usedOn": [
+      "platform/events/ticketing.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/public/event/a2a3287a8fc711f19aed9e396b?workspace=t187c",
+    "routeHint": "Open the public page of a paid event, select a ticket, then press Continue to open the checkout overlay. The event must be in the future: the Get tickets card is hidden by eventEnded(), which is why the previously used event (May 2026) produced only the description page. Event 200433 Member Networking Evening Springfield runs 2026-09-08 and sells Patriot Member / Heritage Sponsor / Founder's Circle. Clicking the ticket row alone leaves the quantity at 0 and Continue stays disabled, so press the quantity stepper's plus button first.",
+    "actions": [
+      "scrollto .ticket-price-row",
+      "click .ticket-quantity-picker button:last-child",
+      "wait 1500",
+      "click text=Continue",
+      "wait 3000"
+    ],
+    "waitFor": "text=Order summary",
+    "viewport": "desktop",
+    "alt": "Event checkout with the registration form on the left (email, full name) and an order summary on the right showing the ticket, total, consent checkboxes and Pay with Card",
+    "status": "new"
+  },
+  {
+    "id": "event-orders",
+    "image": "/images/platform/events/event-payments.png",
+    "usedOn": [
+      "platform/events/ticketing.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/events/payments/2ld07n8veu9v6bvh3u0gfrfe34?productUuid=31qpvugo048pjrbonpkk18jm52",
+    "routeHint": "Events -> open a paid event with sales -> Payments in the left event sidebar. loadItemsPage() returns immediately when productUuid is absent, so the query parameter is mandatory: without it the page renders 'No payments yet' no matter which event it points at. Summer Social Arlington (event 200250, product 972) has 21 paid and 3 refunded orders.",
+    "actions": [],
+    "waitFor": "text=Orders",
+    "viewport": "desktop",
+    "alt": "Event orders table with status, buyer name, ticket type, amount and date columns, and refund actions",
+    "status": "new"
+  },
+  {
+    "id": "event-qr-ticket",
+    "image": "/images/platform/events/event-qr-ticket.png",
+    "usedOn": [
+      "platform/events/ticketing.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/public/event/2aff4dh9qe9q68pmut1k4snqbt?workspace=t187c",
+    "routeHint": "Log in as a member who already holds a confirmed registration for the event and open the event page; the confirmed-registration card with the QR code replaces the ticket selector. The t187c session user (Julian Sorensen) has a success registration on event 200245 Regional Forum Arlington, which is still in the future so the card renders.",
+    "actions": [
+      "scrollto text=Show this QR code at the entrance"
+    ],
+    "waitFor": "text=Show this QR code at the entrance",
+    "viewport": "desktop",
+    "alt": "Attendee view of a confirmed registration with the Registration confirmed badge and the QR code shown at the entrance",
+    "status": "new",
+    "note": "There is no download button on the public event page: EventRegistrationStatusBox renders only the status badge and the QR code. The Download button lives on the internal event page (views/Event/ShowContent.vue) and only for attendances that carry a productPrice. The alt text on both pages that use this image was corrected accordingly."
+  },
+  {
+    "id": "event-registration-form-builder",
+    "image": "/images/platform/events/event-registration-form-builder.png",
+    "usedOn": [
+      "platform/events/registration-forms.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/events/edit/registration-form/128n97g5489j58tsor1gha6vca",
+    "routeHint": "Events -> Regional Meetup 2026 (ila event 199974, uuid 2rpaoffh9n9bop72ajh3luui97) -> Registration form in the left event sidebar, first tab Form fields. The whole view is behind v-if item.requiresRegistrationForm. Do NOT point this at t187c uuid 128n97g5489j58tsor1gha6vca (event 200248): that event has requires_registration_form = 0 and renders a blank page, which is what produced the earlier blank duplicates. No t187c event has the flag on. This form has 4 standard plus 2 custom fields.",
+    "actions": [],
+    "waitFor": "text=Available fields",
+    "viewport": "desktop",
+    "alt": "Registration form builder with Standard fields and Custom fields tabs on the left and the assembled form on the right, each row carrying a required checkbox",
+    "status": "new",
+    "note": "Pick an event whose form has more than the two mandatory fields so the right panel is not nearly empty, ideally with at least one custom field so the type badge is visible."
+  },
+  {
+    "id": "event-registration-form-settings",
+    "image": "/images/platform/events/event-registration-form-settings.png",
+    "usedOn": [
+      "platform/events/registration-forms.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/events/edit/registration-form/128n97g5489j58tsor1gha6vca",
+    "routeHint": "Same page and same event as event-registration-form-builder, then click the Settings tab (second of Form fields / Settings / Appearance).",
+    "actions": [
+      "click .tabs-pill > nav a:has-text(\"Settings\")",
+      "wait 1500"
+    ],
+    "waitFor": "text=Registration Options",
+    "viewport": "desktop",
+    "alt": "Settings tab of the event registration form showing the two registration option switches and the custom text box",
+    "status": "new",
+    "note": "Crop or scroll so the Confirmation Message radio pair is NOT the focus: that setting has no reader in the product (see report). Registration Options plus Custom Content is enough.",
+    "notes": "Recaptured 2026-08-06: the thank-you-message radio group was removed from the Settings tab, which now holds only the two Registration options switches and the Custom content textarea."
+  }
+]

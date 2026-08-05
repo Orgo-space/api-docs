@@ -312,7 +312,7 @@ Stated plainly, because each one has caught somebody out.
 
 **The PDF Receipts/Proofs setting is not a general donation receipt.** It adds a downloadable proof on paid rows, but the document is generated from the payer's validated identity record, so it only produces anything for donors who went through [identity validation](/platform/identity-validation). Do not enable it expecting receipts for ordinary card gifts.
 
-**A chapter designation is a label, not a bank instruction.** With **Has local center option** on, a donor picking a chapter under **Designate to** stamps the payment with that chapter, which is what the payments filter and the refund permission read. The money still settles into the Stripe account the campaign resolves to. Only fee payments follow chapter Stripe routing: see [Stripe integration](/platform/fees/stripe-integration).
+**A chapter designation is a label, not a bank instruction.** With **Has local center option** on, a donor picking a chapter under **Designate to** stamps the payment with that chapter, which is what the payments filter and the refund permission read. A gift with no designation is treated as organisation-level, and the refund, cancel, accept and proof actions on it require `FINANCIAL_TENANT` rather than any one chapter's `FINANCIAL_LOCAL`. The money still settles into the Stripe account the campaign resolves to. Only fee payments follow chapter Stripe routing: see [Stripe integration](/platform/fees/stripe-integration).
 
 **There is no CSV export on the campaign payments or subscribers lists.** Both are filterable and paginated on screen only. For a donor extract, ask the question in [Ask Orgo](/platform/insights) and use **Export CSV**, which returns the first 500 rows; save the query and run it from **Database Queries** for the whole set. Ask Orgo requires `ADMIN_TENANT`, so a fundraiser holding only `FINANCIAL_TENANT` cannot do this themselves.
 
@@ -356,7 +356,7 @@ Stated plainly, because each one has caught somebody out.
   </Accordion>
 
   <Accordion title="A donor wants their gift back">
-    **Refund** on the payment row, which needs `FINANCIAL_LOCAL` on the chapter the gift was designated to, so `FINANCIAL_TENANT` and `ADMIN_TENANT` both qualify. It only works on a payment already in `success`; a payment still on hold is cancelled instead, and the full row amount goes back. Refunds you issue in the Stripe Dashboard are picked up and marked in Orgo too, so you do not have to do it twice.
+    **Refund** on the payment row, which needs `FINANCIAL_LOCAL` on the chapter the gift was designated to, or `FINANCIAL_TENANT` when the gift carries no chapter. `ADMIN_TENANT` qualifies either way, and a chapter treasurer cannot refund an undesignated gift. It only works on a payment already in `success`; a payment still on hold is cancelled instead, and the full row amount goes back. Refunds you issue in the Stripe Dashboard are picked up and marked in Orgo too, so you do not have to do it twice.
   </Accordion>
 
   <Accordion title="A monthly donor wants to stop and cannot find how">

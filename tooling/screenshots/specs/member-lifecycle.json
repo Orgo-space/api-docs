@@ -1,0 +1,92 @@
+[
+  {
+    "id": "member-status-dropdown",
+    "image": "/images/platform/users/statuses-dropdown.png",
+    "usedOn": [
+      "platform/users/statuses.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/users/edit/209212?tab=permissions",
+    "routeHint": "Members -> open any member -> Edit -> Permissions tab. The Status select is the first field on that tab, top left, next to the 'Record the resignation of this member' button when the resignation module is on.",
+    "actions": [
+      "click text=Permissions"
+    ],
+    "waitFor": "text=Record the resignation of this member",
+    "viewport": "desktop",
+    "alt": "Status field set to Active at the top of the Permissions tab of a member edit page, beside the Record the resignation of this member button, with the chapter, join date and permission checkboxes below",
+    "status": "new",
+    "note": "The options list CANNOT be captured. The control is a native <select> (client/src/views/User/FormPermissions.vue:8); Chromium renders its popup outside the page, so Playwright screenshots it closed no matter what is clicked. Earlier notes asking for an open dropdown are not achievable without faking the DOM. The alt and statuses.mdx now describe the closed field, and the full status list is in the table directly under the image."
+  },
+  {
+    "id": "resignation-requests-list",
+    "image": "/images/platform/users/resignation-requests.png",
+    "usedOn": [
+      "platform/users/resignation.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/resignation-requests",
+    "routeHint": "Sidebar -> MANAGEMENT -> Resignation requests. Requires the resignation module on (Settings -> Users & Profiles -> Configuration -> Enable Resignation Module) and HR_LOCAL or above. Leave the filter on 'all'.",
+    "actions": [],
+    "waitFor": "text=Resignations",
+    "viewport": "desktop",
+    "alt": "Resignations list with all, pending and processed filter chips and a table of requests showing date, member, requested by, local group, stay active and status",
+    "status": "new",
+    "note": "The current file shows the older chrome: a Status dropdown and View buttons, and no 'Requested by' column. The list now uses all/pending/Processed chips, a Refresh button and a 'details' button."
+  },
+  {
+    "id": "resignation-request-detail",
+    "image": "/images/platform/users/resignation-request-detail.png",
+    "usedOn": [
+      "platform/users/resignation.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/resignation-requests",
+    "routeHint": "Sidebar -> MANAGEMENT -> Resignation requests -> filter to 'pending' -> click 'details' on any row. Capture the modal, which must be a pending request so the Approve and Delete buttons are visible. Sign in as an ADMIN_TENANT so the Delete button renders.",
+    "actions": [
+      "click text=pending",
+      "click text=details"
+    ],
+    "waitFor": "text=Exit conclusion",
+    "viewport": "desktop",
+    "alt": "Resignation request detail showing status, date, member, requested by, stay active, resignation reason, retention answer, exit conclusion box and Approve and Delete buttons",
+    "status": "new"
+  },
+  {
+    "id": "resignation-member-form",
+    "image": "/images/platform/users/resignation-form.png",
+    "usedOn": [
+      "platform/users/resignation.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/users/edit/209216?tab=settings",
+    "routeHint": "Open a member -> Edit -> Settings & Privacy -> Close account -> click Resign so the form expands. TWO TRAPS. (1) The settings rail is rendered twice (a hidden mobile copy first), so a bare 'click text=Close account' picks the invisible one and times out, which is why the previous shot was the Privacy panel and a byte-twin of privacy-user-controls.png. Address the visible chip with a CSS selector. (2) The whole resign block is behind `!item.resignPending` (client/src/views/User/Update.vue:895), so a member who already has a pending resignation request shows 'Your resignation is pending' and no form at all - 209212 has one, 209216 (Ava Whitfield) does not.",
+    "actions": [
+      "click .button.is-white:has-text(\"Close account\"):visible",
+      "click .button.is-danger:has-text(\"Resign\"):visible"
+    ],
+    "waitFor": "text=What would determine you to continue as member?",
+    "viewport": "desktop",
+    "alt": "Resignation form with a resignation reason box, a what would determine you to continue as member box, a Close my account toggle and Submit and Cancel buttons",
+    "status": "new",
+    "note": "The waitFor is the retention question, which is rendered only while the form is expanded (the b-field carries `hidden` until resignationIntent is true), so a failed Resign click now shows up as waitFor MISSED instead of shipping the wrong panel."
+  },
+  {
+    "id": "close-account-page",
+    "image": "/images/platform/users/delete-account.png",
+    "usedOn": [
+      "platform/users/deletion-of-account.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/users/edit/207128?tab=settings",
+    "routeHint": "Edit your own profile -> Settings & Privacy -> Close account, as an ADMIN_TENANT. All four actions only appear together on your own record: the Close account button needs item.id === user.id (Update.vue:828), Suspend needs ADMIN_LOCAL, Resign needs the resignation module and no pending request, and Delete account needs ROLE_ADMIN_TENANT. Viewing another member hides Close account. The sub-nav exists twice, an .is-hidden-desktop copy first in the DOM and the desktop one after it, so a bare text=Close account resolves to the hidden mobile link and the click times out; scope the selector to .is-hidden-mobile.",
+    "actions": [
+      "wait 2000",
+      "click .is-hidden-mobile a.button:has-text(\"Close account\")",
+      "wait 1500"
+    ],
+    "waitFor": "text=Suspend account",
+    "viewport": "desktop",
+    "alt": "Close account page showing Close account, Suspend account, Resign and Delete account actions with their explanations",
+    "status": "new"
+  }
+]

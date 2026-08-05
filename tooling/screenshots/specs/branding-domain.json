@@ -1,0 +1,87 @@
+[
+  {
+    "id": "branding-logo-grid",
+    "image": "/images/platform/organisation/branding-logo-grid.png",
+    "usedOn": [
+      "platform/organisation/branding.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/branding",
+    "routeHint": "Sign in as a tenant admin, then Settings -> Organization -> Branding. Capture the top of the page: the 2x2 logo grid plus the small PNG hint line under it.",
+    "actions": [],
+    "waitFor": "text=Logo light theme",
+    "viewport": "desktop",
+    "alt": "Branding page showing the four logo slots filled with the organization's own wide light, wide dark, square and square dark logos, above the PNG format hint",
+    "status": "keep",
+    "note": "CAPTURED BY nw-capture.mjs, NOT BY run.mjs. The subject is children 0-2 of section.o-mediumwidth (two .columns rows plus the PNG hint <p>), which have no shared wrapper element, so no CSS selector can crop them and run.mjs has no clip support. nw-capture.mjs takes the shot with page.screenshot({clip}) at y 0-650 CSS px, full width, keeping the app header and sidebar for orientation and stopping above the auth-background block. Left uncropped, this shot also contained the auth field, the Save button and the first theme swatch row, which are the subjects of branding-auth-background and branding-theme-picker further down the same page. Content precondition: all four logo slots must be filled. Until 2026-08-05 the demo tenant had uploaded nothing, and LogoUpload.imageCSS() returns the Orgo default for every slot when item.logo is empty (the `type === 'tenant' && !this.image` branch returns before the per-slot reassignment), so all four slots showed Orgo's own mark. Four Northwind PNGs were uploaded through the product's own POST /media_objects flow."
+  },
+  {
+    "id": "branding-auth-background",
+    "image": "/images/platform/organisation/branding-auth-background.png",
+    "usedOn": [
+      "platform/organisation/branding.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/branding",
+    "routeHint": "Settings -> Organization -> Branding. The selector crops to the block that holds the 'Auth background image URL' field and the Save button under it. Without the crop this was a full-page shot identical to branding-logo-grid, which sits at the top of the same page.",
+    "actions": [],
+    "waitFor": "text=Auth background image URL",
+    "selector": "div.mt-6:has-text(\"Auth background image URL\")",
+    "viewport": "desktop",
+    "alt": "Auth background image URL field holding a background image address, with a Save button below it",
+    "status": "new",
+    "note": "Field label and Save button unchanged (client/src/views/Tenant/Branding.vue:33-44). The field must carry a value: an empty box shows the feature unset, which is the state the surrounding prose describes as the thing to avoid. The demo tenant's authImage was set on 2026-08-05."
+  },
+  {
+    "id": "branding-theme-picker",
+    "image": "/images/platform/organisation/branding-theme-picker.png",
+    "usedOn": [
+      "platform/organisation/branding.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/branding",
+    "routeHint": "Settings -> Organization -> Branding, scroll past the Save button to the 'Default theme for organization' heading. Capture from that heading down to the 'Reset to default' button so the Light menu swatch row, the Dark menu swatch row and at least one hue slider are all visible. Capture with the admin's own session in LIGHT mode: the Light menu block is hidden entirely when the admin is viewing Orgo in dark mode (client/src/components/ThemePicker.vue:7).",
+    "actions": [
+      "wait 4000"
+    ],
+    "waitFor": "text=Default theme for organization",
+    "selector": "div.theme-picker",
+    "viewport": "tall",
+    "alt": "Theme picker showing the Light menu and Dark menu chrome preset swatch rows, both hue sliders and the Reset to default button",
+    "status": "new",
+    "note": "Cropped to div.theme-picker, the ThemePicker component root. It contains everything the spec asked for (Light menu row, Dark menu row, both hue sliders, Reset to default) except the h3 heading above it, which is a sibling with no shared wrapper and is already the sentence the doc uses to introduce the image. Without the selector this was a 3840x4400 full-page shot whose top third duplicated branding-logo-grid and whose bottom third was empty. Capture with the admin's own session in LIGHT mode: the Light menu block is hidden entirely when the admin is viewing Orgo in dark mode (client/src/components/ThemePicker.vue:7)."
+  },
+  {
+    "id": "branding-login-page",
+    "image": "/images/platform/organisation/branding-login-page.png",
+    "usedOn": [
+      "platform/organisation/branding.mdx"
+    ],
+    "tenant": "anon",
+    "route": "/login?workspace=t187c",
+    "routeHint": "Log out completely first: an earlier file on disk was captured with a live session and showed the DASHBOARD, not a login screen. Then load /login. Two preconditions on the capture tenant, both set on 2026-08-05: 'Auth background image URL' must hold a value, or the screen renders Orgo's default animated blobs (client/src/views/Auth/Login.vue:9 falls back to <AnimatedBackground/>); and tenant.logo must be filled, or OrgoLogo falls back to /img/orgo-logo.svg and the sign-in card is branded Orgo rather than the organization. Between them those two defaults produced a screenshot of exactly the unconfigured state the prose above it warns about. Desktop viewport only: the background is not drawn on mobile or inside iframes (Login.vue:5-21).",
+    "actions": [
+      "wait 3000"
+    ],
+    "waitFor": "text=Sign in",
+    "viewport": "desktop",
+    "alt": "Sign-in screen with the organization's logo above the email field and its custom photographic background behind the card",
+    "status": "new"
+  },
+  {
+    "id": "custom-domain-start",
+    "image": "/images/platform/custom-domain/custom-domain-start.png",
+    "usedOn": [
+      "platform/custom-domain.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenant/custom-domain",
+    "routeHint": "Sign in as a tenant admin, then Settings -> Customization -> Custom Domain. Use a tenant with no custom domain setup in progress so the empty state renders: intro paragraph, the four-item 'Before you start' checklist, the 'App host' field with the community.acme.com placeholder, and the 'Start setup' button. Do not click Start setup, it makes real AWS calls.",
+    "actions": [],
+    "waitFor": "text=Before you start",
+    "viewport": "desktop",
+    "alt": "Custom Domain setup page showing the before-you-start checklist and the App host field",
+    "status": "new",
+    "note": "Existing file matches the current empty state exactly. The in-progress screens (stepper, Domain Validation and Email Setup record tables) cannot be captured locally: they need a row genuinely mid-setup against live ACM and SES, which no obfuscated local tenant has. The page describes those tables in text instead."
+  }
+]

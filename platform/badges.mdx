@@ -36,7 +36,7 @@ Badges themselves live one level down, at **Settings** → **Modules** → **Gam
 | **Points required** | Tier threshold, see [Gamification](/platform/gamification). Shown only when **Enable tiers/levels by points** is on |
 | **Default note explanation** | Pre-fills the note when someone awards this badge, so the same wording is used every time |
 
-<img src="/images/platform/features/badges-list.png" alt="Badges list inside the Gamification and Courses module showing badge names and their categories with an Add badge button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/features/badges-list.png" alt="Badges list inside the Gamification and Courses module, each row showing the badge artwork, its name, its Type and the hours threshold that awards it, with an Add badge button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 Creating, editing, and deleting badges and categories all need `ADMIN_TENANT`.
 
@@ -62,7 +62,7 @@ A save that fails leaves the modal open and reports the error, so an award that 
 
 Pending is for work in progress: the member holds the record, and it is counted and filtered separately from completed awards everywhere it appears.
 
-The **Add badge** button appears for `HR_TENANT` and for `HR_LOCAL` on the member's local center. Editing or removing an existing award from the profile table needs `HR_LOCAL` on that member's local center. Every award stores who gave it, shown as **Offered by** on the profile and **Given by** in the centralizer.
+The **Add badge** button appears for `HR_TENANT` and for `HR_LOCAL` on the member's local center. Awarding is checked again when you save: it needs `HR_ASSISTANT_LOCAL` over that member's local center, which `HR_LOCAL`, `FINANCIAL_LOCAL` and `ADMIN_LOCAL` all satisfy, or one of the tenant-wide equivalents. Editing or removing an existing award needs the same permission, or that you are the person who gave it. Every award stores who gave it, shown as **Offered by** on the profile and **Given by** in the centralizer.
 
 Nobody is notified when a badge is awarded or removed, so announce the ones that matter yourself.
 

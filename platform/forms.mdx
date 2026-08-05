@@ -28,10 +28,14 @@ conditional logic, no file-upload questions, and no payment collection.
 Enable the module at **Settings** → **Modules** → **Form Builder** →
 **Enable Form Builder Module**, which requires `ADMIN_TENANT`.
 
-Opening the Forms area requires `ADMIN_TENANT` or `HR_TENANT`. A form you create
-belongs to you: its statistics, responses, and publish action are open to you as
-its owner, and to anyone holding `ADMIN_TENANT`, `COMMUNICATION_TENANT`, or
-`EVENT_TENANT`.
+Opening the Forms area requires `ADMIN_TENANT` or `HR_TENANT`. Creating a form
+requires `HR_TENANT`, `EVENT_TENANT` or `COMMUNICATION_TENANT`; editing or
+deleting one requires one of those three, or that you own it. `ADMIN_TENANT`
+covers everything on this page.
+
+A form you create belongs to you: its statistics, responses, and publish action
+are open to you as its owner, and to anyone holding `ADMIN_TENANT`,
+`COMMUNICATION_TENANT`, or `EVENT_TENANT`.
 
 <Warning>
 The **Forms** entry in the **Management** section of the sidebar is currently
@@ -204,6 +208,9 @@ profile-based builders. If it belongs to one question you asked once, use Forms.
     Fixes, in order of preference: give the people who read results
     `COMMUNICATION_TENANT` or `EVENT_TENANT`, keep one shared account as the
     owner of forms the whole team reads, or ask the owner to send the CSV.
+
+    Note the asymmetry: `HR_TENANT` can edit and delete a colleague's form, but
+    not read its answers. Reading results is deliberately the narrower right.
   </Accordion>
 
   <Accordion title="I deleted a form. Can I still reach its answers?">

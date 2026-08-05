@@ -1,0 +1,118 @@
+[
+  {
+    "id": "discussion-feed",
+    "image": "/images/platform/communication/discussion-feed.png",
+    "usedOn": [
+      "platform/discussion/index.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/discuss",
+    "routeHint": "Sidebar -> Discussions. This is the aggregated feed (no unit or generalUnit query), showing the organization feed plus every group the logged-in admin belongs to.",
+    "actions": [],
+    "waitFor": "text=Start a post",
+    "viewport": "desktop",
+    "alt": "Discussions feed with the Start a post composer, sort control, the category panel and post cards showing reaction and comment counts",
+    "status": "new",
+    "note": "The right-hand category panel lists the five organization-wide categories (Announcements, Member Introductions, Chapter News, Professional Development, Volunteering). The newest posts come from the General Discussion group, which includes all members, so they are in frame for any admin."
+  },
+  {
+    "id": "discussion-post-detail",
+    "image": "/images/platform/communication/discussion-post-detail.png",
+    "usedOn": [
+      "platform/discussion/index.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/discuss/9504",
+    "routeHint": "Open /discuss and click the title of a post that has an image, a category and at least one reaction and comment. Discussion 9504 ('Spring regional forum: call for session proposals') sits in the General Discussion group under the Events and meetups category, carries an attached image, 9 reactions, 52 views and 2 comments. Do NOT use 9042: that is a help desk ticket (is_support=1) with no group, no category and no comments, which is what the previous capture showed.",
+    "actions": [],
+    "waitFor": "text=Spring regional forum",
+    "viewport": "desktop",
+    "alt": "A single discussion showing its category and group chips, attached image, reaction count and comment count",
+    "status": "new",
+    "note": "Must be a discussion in a group that includes all members, otherwise the capture account cannot see it: visibility follows group membership and tenant admins are not exempt. The post footer renders reactions and comments only - viewsCount is read by the dashboard discussion cards (components/dashboard/DiscussionCard.vue), never by the feed or the post page, so no alt text here may promise a view count."
+  },
+  {
+    "id": "discussion-post-comments",
+    "image": "/images/platform/communication/discussion-post-comments.png",
+    "usedOn": [
+      "platform/discussion/index.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/discuss/9501",
+    "routeHint": "A different discussion from discussion-post-detail, scrolled to its comment thread. Discussion 9501 ('Best way to run a hybrid chapter meeting?') has four comments including one nested reply, so the thread and the reply indentation are both visible.",
+    "actions": [
+      "scrollto text=One microphone in the middle",
+      "scroll 500"
+    ],
+    "waitFor": "text=One microphone in the middle",
+    "viewport": "desktop",
+    "alt": "Comment thread with several members replying, each comment offering Like and Reply, and a Write a comment box at the bottom",
+    "status": "new",
+    "note": "The composer placeholder is 'Write a comment...', not 'Add a comment' - the old waitFor never matched, so the shot was taken at the top of the page and came out identical to discussion-post-detail."
+  },
+  {
+    "id": "discussions-list",
+    "image": "/images/platform/communication/discussions-list.png",
+    "usedOn": [
+      "platform/discussion/discussion-namespaces.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/discuss?unit=15675&category=423",
+    "routeHint": "Sidebar -> General Discussion -> Discussions, then pick a category in the panel. Unit 15675 (General Discussion) includes all members and now carries four group-scoped categories: Questions and answers (423), Ideas and suggestions (424), Resources (425), Events and meetups (426). Category 423 holds four posts. The old route (?unit=456) is not a unit on this tenant, which is why the shot was the empty state.",
+    "actions": [],
+    "waitFor": "text=Questions and answers",
+    "viewport": "desktop",
+    "alt": "Group forum with the category panel listing All plus each of the group's categories, and the post list filtered to the selected category",
+    "status": "new",
+    "note": "Group categories are fetched with ?unit=<id>, so only categories whose unit_id matches the group appear here. Organization-wide categories are not offered inside a group."
+  },
+  {
+    "id": "discussion-categories",
+    "image": "/images/platform/communication/discussion-categories.png",
+    "usedOn": [
+      "platform/discussion/discussion-namespaces.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/discussions/categories",
+    "routeHint": "Settings -> Modules -> Discussions -> Discussion Categories.",
+    "actions": [],
+    "waitFor": "text=Discussion categories",
+    "viewport": "desktop",
+    "alt": "Discussion Categories screen listing categories with their posting permission and rename and delete actions",
+    "status": "new",
+    "note": "Member Introductions and Professional Development have has_public_posting=1 so the people icon is on screen next to the padlock rows, which is what the Steps block underneath describes."
+  },
+  {
+    "id": "discussion-module-config",
+    "image": "/images/platform/communication/discussion-module-config.png",
+    "usedOn": [
+      "platform/discussion/index.mdx",
+      "platform/discussion/moderation.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/discussions",
+    "routeHint": "Settings -> Modules -> Discussions -> Configuration.",
+    "actions": [],
+    "waitFor": "text=Enable Discussions Module",
+    "viewport": "desktop",
+    "alt": "Discussions module settings with the module toggle, Who Can Create Public Discussions, Enable Discussion Namespaces and Enable Profanity Check",
+    "status": "new",
+    "note": "Enable Profanity Check is now on for this tenant (the moderation queue needs it), so this shot shows the switch in its on state."
+  },
+  {
+    "id": "discussion-moderation-queue",
+    "image": "/images/platform/communication/discussion-moderation-queue.png",
+    "usedOn": [
+      "platform/discussion/moderation.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/discuss/moderation-queue",
+    "routeHint": "Requires Settings -> Modules -> Discussions -> Enable Profanity Check on, and held posts. Both are seeded: two pending and two rejected comments sit on the organization-feed discussions 9510 and 9511, and the tenant custom word list holds crypto, scam, mlm and guaranteed returns. The capture account is ADMIN_TENANT, which is what makes the Custom blocked words editor render.",
+    "actions": [],
+    "waitFor": "text=Custom blocked words",
+    "viewport": "desktop",
+    "alt": "Moderation queue with a Pending review table showing the post text, flagged words, author and group with Approve and Reject buttons, a Rejected posts table below, and the custom blocked words editor",
+    "status": "new",
+    "note": "Held posts must sit on discussions the account can moderate: general feed (no unit) and joinable groups are COMMUNICATION_TENANT, local centers are COMMUNICATION_LOCAL, and private groups never enter the queue at all. The seeded posts are on the general feed. Tall viewport so both tables and the words editor fit in one frame."
+  }
+]

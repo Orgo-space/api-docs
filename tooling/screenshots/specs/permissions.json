@@ -1,0 +1,73 @@
+[
+  {
+    "id": "permissions-roles-list",
+    "image": "/images/platform/users/roles-list.png",
+    "usedOn": [
+      "platform/permissions-assigning.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/users/roles",
+    "routeHint": "Settings -> Users & Profiles -> Roles & User types. NOT CAPTURED FROM HERE. This spec writes the same file as registration/roles-list, so running both makes the runner report a DUPLICATE IMAGES group. registration/roles-list owns the capture; this entry stays only to record that permissions-assigning.mdx uses the image. Flip it back to 'new' only if registration/roles-list is removed.",
+    "actions": [],
+    "waitFor": "text=Add role",
+    "viewport": "desktop",
+    "alt": "Roles list with Level and Permissions filters and a Level column showing Organisation, Local group and User type badges",
+    "status": "keep"
+  },
+  {
+    "id": "permissions-member-tab",
+    "image": "/images/platform/users/permissions-member-tab.png",
+    "usedOn": [
+      "platform/permissions-assigning.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/users/edit/209196?tab=permissions",
+    "routeHint": "Members -> open any member who is NOT the signed-in admin (the tab renders disabled on your own profile) -> Edit -> Permissions tab. Use Hugo Vargas (user 209196): he holds Secretary (HR_TENANT, COMMUNICATION_TENANT) and Chapter Leader (ADMIN_LOCAL), so the locked role-derived checkboxes and their orange role tags render in both the Organization and Chapter groups. FormPermissions.vue reads item.userRolePermissions, which Update.vue:1340 derives as user.permissions minus user.customPermissions; the demo seed inserted user_role rows without materialising user.permissions, which is why every checkbox was blank. user.permissions was recomputed from active roles for tenant 282 on 2026-08-05.",
+    "actions": [
+      "wait 2000",
+      "scrollto text=Orgo administrator",
+      "wait 800"
+    ],
+    "waitFor": "text=Orgo administrator",
+    "viewport": "desktop",
+    "alt": "Member Permissions tab showing the Orgo administrator switch and permission checkboxes grouped by Organization and Chapter, with a role-derived permission locked",
+    "status": "new"
+  },
+  {
+    "id": "permissions-impersonation-modal",
+    "image": "/images/platform/users/permission-impersonation.png",
+    "usedOn": [
+      "platform/permissions-assigning.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/dashboard",
+    "routeHint": "Signed in as an Orgo administrator, open the profile menu at the bottom of the sidebar and click Permission Impersonation. The trigger is .sidebar-user-trigger (AppSidebarUserMenu.vue:5); there is no [data-testid=user-menu] in this build, which is why the previous capture was the untouched dashboard. The dialog is teleported to body, so the crop is .modal-content. Do not click Start Impersonation.",
+    "actions": [
+      "wait 2000",
+      "click .sidebar-user-trigger",
+      "wait 1500",
+      "click text=Permission Impersonation",
+      "wait 2000"
+    ],
+    "waitFor": "text=Regular user",
+    "viewport": "desktop",
+    "alt": "Permission Impersonation dialog listing Regular user plus Admin, HR, HR Assistant, Financial, Events and Communication with Organization, Regional and Local checkboxes",
+    "status": "new",
+    "selector": ".modal-content"
+  },
+  {
+    "id": "permissions-security-settings",
+    "image": "/images/platform/users/security-permissions.png",
+    "usedOn": [
+      "platform/permissions.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/users/security-permissions",
+    "routeHint": "Settings -> Users & Profiles -> Security & Permissions",
+    "actions": [],
+    "waitFor": "text=Permissions setup",
+    "viewport": "desktop",
+    "alt": "Security and Permissions settings page with the Enforce MFA for administrators switch and per-module minimum access level dropdowns",
+    "status": "new"
+  }
+]

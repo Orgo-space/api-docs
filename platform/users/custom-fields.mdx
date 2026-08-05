@@ -138,7 +138,7 @@ Reading and editing an encrypted field is no different from any other; the encry
 | [Registration form](/platform/users/registration-form) | Tick the field on the registration form | Available on per-user-type registration forms too |
 | [Adhesion form](/platform/users/adhesion) | Tick the field on the adhesion form | |
 | Contact records | Contacts reuse the fields already on the profile form | |
-| Member directory | Turn the column on from the column menu | Visible to `HR_TENANT` only, and only in the table view |
+| Member directory | Turn the column on from the column menu | Table view only. `HR_TENANT` anywhere, or `ADMIN_LOCAL` on that administrator's own chapter list |
 | Imports | Use a `custom_field_<id>` column header | The id is the reference tag shown next to each field in the list |
 | E-document templates | Use a `{custom_field_<id>}` placeholder | |
 
@@ -208,14 +208,14 @@ Use a tag when staff need to label people ("VIP", "needs follow-up"). Use a cust
   </Accordion>
 
   <Accordion title="The custom field columns are not in the member directory">
-    Adding a custom field to the directory takes two things that are gated
-    differently. The column menu (the table icon above the list) needs `HR_TENANT`,
-    and it only exists in the table view, so a person sitting in **Gallery** will not
-    see it at all. The custom-field columns themselves also need `HR_TENANT`.
+    The column menu is the table icon above the list, and it only exists in the table
+    view, so a person sitting in **Gallery** will not see it at all. Both the menu and
+    the custom-field columns need `HR_TENANT`, or `ADMIN_LOCAL` while looking at that
+    administrator's own chapter list.
 
-    A chapter administrator therefore cannot put a custom field on their chapter's
-    list, even for a field they can read perfectly well on each member's profile. Use
-    the profile, or export the list, or ask an organisation administrator to run it.
+    A chapter administrator can therefore put a custom field on their own chapter's
+    list, but not on the organisation-wide directory or on another chapter's. For
+    those, use the profile, export the list, or ask an organisation administrator.
   </Accordion>
 
   <Accordion title="I imported values into an encrypted field">

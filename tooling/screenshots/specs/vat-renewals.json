@@ -1,0 +1,55 @@
+[
+  {
+    "id": "fees-vat-settings",
+    "image": "/images/platform/fees/fees-vat-settings.png",
+    "usedOn": [
+      "platform/fees/vat.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/payments/membership-fees",
+    "routeHint": "Settings (gear) -> Modules -> Payments & Fees -> Membership fees. Scroll to the 'Pricing Options' section. Membership fees must be active on the tenant for the section to render at all.",
+    "actions": [
+      "scrollto text=Enable VAT on Fees"
+    ],
+    "waitFor": "text=Enable VAT on Fees",
+    "viewport": "desktop",
+    "alt": "Pricing Options section of the membership fee settings with Enable VAT on Fees and Enable One-time Registration Fee switches",
+    "status": "new",
+    "notes": "Do NOT click the 'Pricing Options' header. SettingsSection is rendered with :default-expanded=\"true\" (components/Settings/SettingsSection.vue), so the section is already open on load and a click COLLAPSES it - that is what produced the earlier capture with an empty section. Scroll it into frame instead. Both switches are ON in the tenant setting_features (fees.hasVat, fees.hasRegistrationFee)."
+  },
+  {
+    "id": "fee-renewal-reminder-templates",
+    "image": "/images/platform/fees/fee-renewal-reminder-templates.png",
+    "usedOn": [
+      "platform/fees/renewals.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/emails/templates",
+    "routeHint": "Settings (gear) -> Modules -> Emails & Notifications -> Email Templates, then the Membership & Fees category in the nested template menu. The page opens on the Users category, which is what email-templates-grid documents, so the category click is what makes this shot different.",
+    "actions": [
+      "click text=Membership & Fees",
+      "wait 2500"
+    ],
+    "waitFor": "text=1 Month Reminder",
+    "viewport": "desktop",
+    "alt": "Membership renewal reminder templates listed with their send timing, from 1 Month Reminder through 30 Days After Reminder",
+    "status": "new",
+    "notes": "The seven individual rungs are: 1 Month Reminder, 7 Days Reminder, 1 Day Reminder, Renewal Day Notice, Lapsed Reminder, 14 Days After Reminder, 30 Days After Reminder. Frame the individual group; the Company equivalents sit directly below and may be partially visible."
+  },
+  {
+    "id": "member-fee-card-due",
+    "image": "/images/platform/fees/member-fee-card-due.png",
+    "usedOn": [
+      "platform/fees/renewals.mdx"
+    ],
+    "tenant": "t187c-member",
+    "route": "/me?tab=fees",
+    "routeHint": "Log in as a member whose membership fee has expired, open the avatar menu -> My Membership Fee (it carries a red 'Due' tag). t187c has fees.fixedStartingDateFee = true, so AppSidebarUserMenu.openProfileFeeTab() routes to /me?tab=fees, NOT /me?tab=payments&subtab=fees - the old route landed on the Payments tab instead.",
+    "actions": [],
+    "waitFor": "text=Change plan",
+    "viewport": "desktop",
+    "alt": "Member fee card showing an unpaid membership with its status, amount and Pay button, above a history list with the current period unpaid and the two previous years paid",
+    "status": "new",
+    "notes": "Captured as Maya Vargas (user 209205, ROLE_USER, valid_fee_date 2025-12-31, tenant price 2085) through the separate session state-t187c-member.json. She stopped being a genuinely unpaid member when PRODUCT-BUGS #12 was fixed: her two 85 USD organisation-fee payments were stored with is_refunded = 0, invisible to feeLocalMembersHistory(), and became visible on 2026-08-06, which made the card read Unpaid in the header and Paid 161.50 for 2026 at the same time. Their periods were moved to 2024 and 2025 (payments 208632, 208633) so the ladder reads 2026 unpaid, 2025 and 2024 paid, which is the state the page describes. Three traps: (1) never capture this as the admin - HR_TENANT and FINANCIAL_TENANT holders are exempt from the state this shot illustrates; (2) do NOT waitFor 'Organisation fee' or 'My Membership Fee' - this tenant renders a single fee card with no 'Organisation fee' heading, and en.json translates the menu key to 'Membership Fee'; the waitFor is 'Change plan'; (3) pick a member with no company_user row, otherwise the card is replaced by a 'Membership managed by company' notice."
+  }
+]

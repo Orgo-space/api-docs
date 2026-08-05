@@ -1,0 +1,84 @@
+[
+  {
+    "id": "emails-system-emails-config",
+    "image": "/images/platform/emails/system-emails-config.png",
+    "usedOn": [
+      "platform/emails/system-emails.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/emails/system-emails",
+    "routeHint": "Settings -> Notifications & Email Campaign -> Emails Config (third item in the left module menu)",
+    "actions": [],
+    "waitFor": "text=Membership Renewal Reminders",
+    "viewport": "desktop",
+    "alt": "Emails Config screen with grouped switches for User Lifecycle, Membership and Fees, Adhesion, Identity Validation, Events, Contracts and other categories",
+    "status": "new"
+  },
+  {
+    "id": "emails-templates-grid",
+    "image": "/images/platform/organisation/email-templates-grid.png",
+    "usedOn": [
+      "platform/emails/email-templates.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/emails/templates",
+    "routeHint": "Settings -> Notifications & Email Campaign -> Email Templates. The current UI shows the category list as a submenu nested under Email Templates in the left module menu, not as a separate Template Categories card, and the third menu item is now labelled Emails Config. The existing file shows the older layout and must be replaced.",
+    "actions": [],
+    "waitFor": "text=Welcome/New member email",
+    "viewport": "desktop",
+    "alt": "Email Templates screen with template categories in the sidebar and a grid of template cards for the Users category, each with a name and a one-line description",
+    "status": "new"
+  },
+  {
+    "id": "emails-template-editor",
+    "image": "/images/platform/emails/email-template-editor.png",
+    "usedOn": [
+      "platform/emails/email-templates.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/emails/templates",
+    "routeHint": "Settings -> Notifications & Email Campaign -> Email Templates -> click the Welcome/New member email card to open the editor modal",
+    "actions": [
+      "click text=Welcome/New member email"
+    ],
+    "waitFor": "text=Insert Placeholder",
+    "viewport": "desktop",
+    "alt": "Template editor over the templates grid, with the subject field, the Use default and Insert Placeholder buttons, the rich text body, and Send Test Email, Enabled, Preview and Save in the header",
+    "status": "new"
+  },
+  {
+    "id": "emails-log-list",
+    "image": "/images/platform/emails/email-log-list.png",
+    "usedOn": [
+      "platform/emails/email-log.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/email-log",
+    "routeHint": "Administration sidebar -> Email logs. Requires an ADMIN_TENANT account.",
+    "actions": [],
+    "waitFor": "text=Email logs",
+    "viewport": "desktop",
+    "alt": "Email logs list with a recipient search box and a table of ID, sent date, member, subject and type",
+    "status": "new",
+    "notes": "Entry 4447's subject carried a name belonging to nobody on this tenant and is now the recipient's own. The Type column is only chipped for the types EmailLog/List.vue emailTypeMeta maps (welcome, fee reminders, subscription renewals, transactional_email, newsletter, admin_notification); system mail such as task_assigned or registration is stored with its own type and renders no chip, so most rows are blank by design."
+  },
+  {
+    "id": "emails-log-detail",
+    "image": "/images/platform/emails/email-log-detail.png",
+    "usedOn": [
+      "platform/emails/email-log.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/email-log",
+    "routeHint": "Administration -> Email logs -> click the ID link of the first row. Navigating by URL to /email-log/<id> works too, but opening the row from the list is what the page describes. The newest t187c row is entry 4500, a newsletter send with a stored HTML body: type 'newsletter' is one of the types the Type card actually chips, so all four cards are populated.",
+    "actions": [
+      "click .b-table tbody tr:first-child a",
+      "wait 2500"
+    ],
+    "waitFor": "text=Email Preview",
+    "viewport": "desktop",
+    "alt": "Email log entry showing recipient, subject, sent date and type cards above a rendered preview of the email body",
+    "status": "new",
+    "notes": "Recaptured 2026-08-06. The Sent date card used to read item.dateSent, which the API did not expose, so moment(undefined) printed today's date on every entry; it now prints the row's own date (Aug 5, 2026 for entry 4500). Keep the row's date and the list screenshot on the same page consistent."
+  }
+]

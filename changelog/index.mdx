@@ -3,6 +3,14 @@ title: "Changelog"
 description: "What's new in ORGO platform"
 ---
 
+<Update label="August 2026">
+**Changes**
+
+**Webhooks**
+- **Signed deliveries (action required)**: `X-Webhook-Signature` is now an HMAC-SHA256 of the delivery, keyed with your webhook secret, in the form `t=<timestamp>,v1=<hex>`. The timestamp is covered by the signature, so a captured delivery cannot be replayed. This replaces the previous checksum and is not sent alongside it: a receiver that compares the old value must be updated. Deliveries themselves are unchanged, so nothing stops arriving while you migrate. Verification recipe: [Webhooks](/platform/webhooks#verifying-the-signature).
+
+</Update>
+
 <Update label="June 2026">
 **New Features**
 
@@ -762,7 +770,7 @@ description: "What's new in ORGO platform"
 **Webhooks Integration**
 - **Webhook Subscriptions**: Connect your ORGO platform to external services like n8n. Configure webhooks to automatically notify external systems when members are created, updated, contracts are signed, payments are processed, and more.
 - **Webhook Delivery Logs**: View detailed logs of all webhook deliveries including success/failure status and retry attempts.
-- **Signature Verification**: Secure webhook payloads with HMAC-SHA256 signatures to verify authenticity.
+- **Webhook Secret**: Set a secret on a subscription and every delivery carries an `X-Webhook-Signature` header derived from it. (This first version was a plain checksum. Cryptographic signing arrived in the August 2026 entry at the top of this page.)
 
 **Email Template Editor**
 - **New TipTap Editor**: Redesigned email template editor with improved formatting capabilities and placeholder insertion.

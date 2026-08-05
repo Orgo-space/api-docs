@@ -87,7 +87,7 @@ Filter by status (**All statuses**, active, pending close, suspended, closed; de
 
 Sortable columns: name, **Region** (when regions are on), status, **members**, **Full members**, town, county, **founded**, **Stripe**, **Online fee activated**. The last two appear only when the matching payment settings are active. Member counts link to a filtered member list for `HR_TENANT`.
 
-With parent chapters on, the list arrives in tree order: each top-level chapter is followed by its whole branch, parents before the chapters under them, siblings alphabetical, and chapters with no family last. A chapter's row is indented by how deep it sits, so the third layer is indented further than the second. A member count followed by `(+N)` means N more members in the chapters beneath it, counted through the whole branch rather than one layer down.
+With parent chapters on, the list arrives in tree order: each top-level chapter is followed by its whole branch, parents before the chapters under them, siblings alphabetical, and chapters with no family last. A chapter's row is indented by how deep it sits, so the third layer is indented further than the second. A member count followed by `(+N)` is a branch total: the figure is that chapter plus everything under it, and `N` is how much of it came from the chapters beneath, counted through the whole branch rather than one layer down. Subtract `N` for the chapter's own members, which is the number the [Groups page](/platform/groups) shows on the chapter row.
 
 <Note>
   Sorting a column with the header still flat-sorts the rows on the page you are looking at and breaks the tree grouping. **Remove sorting** restores it. That is unchanged, and it is why the tree order is the default.
@@ -262,7 +262,7 @@ A chapter can carry its own fee product, default price, and connected Stripe acc
 <img src="/images/platform/groups/local-center-map-public.png" alt="Public chapter finder with a postal code search box, age group, cost, night and language filters, a results list, and pins on a Google map" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 <Note>
-  The finder opens on the visitor's own location. If the browser refuses to share it, the map falls back to a fixed centre rather than to your chapters, and the results panel reports no chapters within 200km until the visitor searches an address or presses **All local centers**. Give every chapter coordinates so that button, and the pins, have something to show.
+  The finder opens on the visitor's own location. If the browser refuses to share it, the map falls back to the centre of your own chapters and the results panel lists the ones nearest to that point. A chapter with no coordinates is invisible to both the pins and the results, so give every chapter coordinates; if none of them has any, the map has nothing to centre on and the panel reports no chapters within 200km until the visitor searches an address or presses **All local centers**.
 </Note>
 
 With the website builder, chapters also publish to `/chapters` and `/chapter/:id` as public pages.
@@ -371,8 +371,8 @@ With the website builder, chapters also publish to `/chapters` and `/chapter/:id
     If you built reports or saved links against the old behaviour, the numbers
     they produce will be larger now, and the larger figure is the correct one.
     To get only a chapter's own members, filter on that chapter without its
-    parent flag, or read the plain member count on the chapters list rather than
-    the count plus its `(+N)`.
+    parent flag, or take the member count on the chapters list and subtract the
+    `(+N)` beside it, which is the part contributed by the branch below.
   </Accordion>
 
   <Accordion title="Extra chapter access stopped working and nobody changed the profile">

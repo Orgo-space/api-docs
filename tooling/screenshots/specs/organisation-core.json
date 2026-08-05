@@ -1,0 +1,104 @@
+[
+  {
+    "id": "settings-full-page",
+    "image": "/images/platform/organisation/settings-full-page.png",
+    "usedOn": [
+      "platform/organisation/index.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/users",
+    "routeHint": "Log in as a tenant admin, click the cog icon in the top bar (goes to Organisation info), then click 'Users & Profiles' under MODULES in the settings sidebar. The point of the shot is the full settings sidebar plus a module config page beside it. Captured on the 'tall' viewport so the whole sidebar (ORGANIZATION, MODULES, CUSTOMIZATION, DEVELOPERS) is in frame; the desktop viewport cuts it off mid-CUSTOMIZATION and made this shot identical to modules/modules-users-module-page.",
+    "actions": [
+      "wait 2500",
+      "click text=Custom Fields",
+      "click text=Configuration"
+    ],
+    "waitFor": "text=Mandatory Adhesion",
+    "viewport": "tall",
+    "alt": "Settings area with the Organization, Modules, Customization and Developers sidebar next to a module configuration page",
+    "status": "new",
+    "why": "Existing shot predates commit c9df3da3d (2026-03-05) which removed 'Local Centers' from the settings sidebar. Current menu also has 'Projects' under MODULES and 'Usage & Billing' under ORGANIZATION, neither of which is in the old image."
+  },
+  {
+    "id": "org-info-basic-details",
+    "image": "/images/platform/organisation/org-info-basic-details.png",
+    "usedOn": [
+      "platform/organisation/index.mdx",
+      "platform/organisation/organisation-info.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/update",
+    "routeHint": "Cog icon in the top bar lands on Organisation info. Capture the first card only (Name, Short Name, Country, Timezone, Is international organisation, Default language). If the organization's Country is United States, a State selector renders under Country: include it, that is the field the old shot is missing.",
+    "actions": [],
+    "waitFor": "text=Is international organisation",
+    "selector": "form .card:has-text(\"Is international organisation\")",
+    "viewport": "desktop",
+    "alt": "Basic details card with organization name, short name, country, timezone, international organisation checkbox and default language",
+    "status": "new",
+    "why": "The old shot has Country = United States with no State selector, a combination the current form cannot produce: Tenant/Form.vue renders the State select whenever the country IRI ends in /230 (United States), added 2026-02-25 in commit 95c18e3f0."
+  },
+  {
+    "id": "org-info-contact",
+    "image": "/images/platform/organisation/org-info-contact.png",
+    "usedOn": [
+      "platform/organisation/organisation-info.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/update",
+    "routeHint": "Organisation info, second card down.",
+    "actions": [],
+    "waitFor": "text=Office Address",
+    "selector": "form .card:has-text(\"Office Address\")",
+    "viewport": "desktop",
+    "alt": "Contact card with office email, office phone country selector and number, and office address",
+    "status": "new"
+  },
+  {
+    "id": "org-info-social-media",
+    "image": "/images/platform/organisation/org-info-social-media.png",
+    "usedOn": [
+      "platform/organisation/organisation-info.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/update",
+    "routeHint": "Organisation info, the 'Social Media URLs' card.",
+    "actions": [],
+    "waitFor": "text=Social Media URLs",
+    "selector": "form .card:has-text(\"Social Media URLs\")",
+    "viewport": "desktop",
+    "alt": "Social media card with Facebook, X.com, Youtube, Linkedin, Instagram and Tiktok URL fields",
+    "status": "new"
+  },
+  {
+    "id": "org-info-financial",
+    "image": "/images/platform/organisation/org-info-financial.png",
+    "usedOn": [
+      "platform/organisation/organisation-info.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/update",
+    "routeHint": "Organisation info, the last card (Currency through BANK IBAN).",
+    "actions": [],
+    "waitFor": "text=BANK IBAN",
+    "selector": "form .card:has-text(\"BANK IBAN\")",
+    "viewport": "desktop",
+    "alt": "Financial card with currency and symbol, legal name, registration number, VAT number and the bank IBAN block",
+    "status": "new"
+  },
+  {
+    "id": "org-info-save-button",
+    "image": "/images/platform/organisation/org-info-save-button.png",
+    "usedOn": [
+      "platform/organisation/organisation-info.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/update",
+    "routeHint": "Organisation info, top of the page: organization name on the left, the Stripe account tag and the slug-id tag on the right, Save button far right in its own sticky column.",
+    "actions": [],
+    "waitFor": "text=Save",
+    "viewport": "desktop",
+    "alt": "Page header showing organization name, Stripe account tag, workspace slug tag and the Save button",
+    "status": "keep",
+    "note": "CAPTURED BY nw-capture.mjs, NOT BY run.mjs. The header level and the sticky Save panel are siblings in two different Bulma columns, so no single element contains both and run.mjs has no clip support; nw-capture.mjs takes it with page.screenshot({clip}) across both columns, from the top of the content down to just under the Save button. The previous full-viewport shot re-showed the Basic details and Contact cards that are already used at organisation-info.mdx lines 14 and 44, putting the same two cards in three images on one page."
+  }
+]
