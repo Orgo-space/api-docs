@@ -13,6 +13,20 @@ It routes rather than explains. Each step links to the page that covers it in de
 
 ---
 
+## Before you start
+
+Gather these before you open Orgo. Every one of them is asked for during setup, and stopping halfway to find a bank statement or write a thank-you message is how half-built campaigns end up published.
+
+- [ ] A Stripe account you can sign into, or the legal entity and bank details to create one during setup
+- [ ] Your organisation's country, which Stripe fixes at account creation and cannot change afterwards
+- [ ] Campaign copy written: a title, a short story, and the thank-you message donors read after paying
+- [ ] A hero image, or the URL of a hero video
+- [ ] A decision on suggested amounts: the figures you want offered, or a plan to press **Generate** and start from what Orgo proposes
+- [ ] A decision on frequency: one-off gifts, monthly giving, or both
+- [ ] Someone with `ADMIN_TENANT` to change the settings, and someone with `FINANCIAL_TENANT` to build the campaign
+
+---
+
 ## What to turn on
 
 Everything in this table lives under **Settings**. Module settings pages all require `ADMIN_TENANT`, which is what the permission column says when the setting itself is what you are changing.
@@ -45,45 +59,133 @@ Everything in this table lives under **Settings**. Module settings pages all req
 
 Do these in order. The main reason is Stripe: several controls stay greyed out until an account is connected, and a campaign saved without them needs revisiting.
 
+Each step says where in the interface it happens and how you can tell it worked, so you can follow along with Orgo open beside you.
+
 <Steps>
   <Step title="Set the organisation country">
-    Stripe needs the country at account creation and it cannot be changed afterwards, so the connect buttons stay disabled until **Settings → Organisation info** has one. See [Organisation info](/platform/organisation/organisation-info).
+    Open **Settings → Organisation info**, set **Country**, and save.
+
+    Stripe needs the country at account creation and it cannot be changed afterwards, so the connect buttons stay disabled until **Settings → Organisation info** has one.
+
+    **Done when:** the connect buttons on the Payment Gateway page below are clickable rather than greyed out.
+
+    See [Organisation info](/platform/organisation/organisation-info).
   </Step>
   <Step title="Connect Stripe">
-    **Settings → Modules → Payments & Fees → Payment Gateway**, then either connect an existing account or generate one. Wait until the page reads **Fully connected** and **Complete** before building anything, because **One-off** and **Recurring** are both unavailable while no account is linked. See [Stripe integration](/platform/fees/stripe-integration).
+    Go to **Settings → Modules → Payments & Fees → Payment Gateway** and either **Connect existing Stripe account** or **Generate Stripe Account**. Stripe runs its own onboarding and returns you to this page.
+
+    <img src="/images/platform/fees/stripe-settings.png" alt="Payment Gateway settings showing a connected Stripe account id, a Fully connected badge, a Complete account status, one outstanding requirement, and buttons for View Stripe Dashboard and Change Stripe account" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+    **Done when:** the page reads **Fully connected** and **Complete**. Build nothing before it does, because **One-off** and **Recurring** are both unavailable on the campaign form while no account is linked. An entry under **Requirements needed** with a future deadline is normal and does not stop you charging.
+
+    See [Stripe integration](/platform/fees/stripe-integration).
   </Step>
   <Step title="Decide the checkout rules once, for all campaigns">
-    **Create Accounts for External Buyers**, **Collect Phone at Checkout**, **Confidentiality Agreement Mandatory** and **Products with Local Center Option** are organisation-wide, not per campaign. Setting them now saves rebuilding forms later. See [Modules](/platform/organisation/modules).
+    **Settings → Modules → Payments & Fees → Online Payments** holds the switches that shape every donation form you will ever build.
+
+    <img src="/images/platform/fees/fees-module-config.png" alt="Online Payments module settings with the Enable Online Payments switch, Payment Features, a Local Centers group holding Local Center Payments and Products with Local Center Option, and Checkout Settings holding Create Accounts for External Buyers, Collect Phone at Checkout and Confidentiality Agreement Mandatory" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+    **Create Accounts for External Buyers**, **Collect Phone at Checkout**, **Confidentiality Agreement Mandatory** and **Products with Local Center Option** are organisation-wide, not per campaign. Setting them now saves rebuilding forms later.
+
+    **Done when:** each switch reads the way you want it for every campaign, not just the first one.
+
+    See [Modules](/platform/organisation/modules).
   </Step>
   <Step title="Create the campaign">
-    **Finance → Products → Create Product**, pick **Donation**, name it, check the URL slug, and turn on **One-off**, **Recurring**, or both. The frequency choice is the one that is awkward to undo: a saved campaign must keep at least one of the two. See [Donations](/platform/fees/donations).
+    **Finance → Products → Create Product**, pick **Donation**, name it, check the URL slug, and turn on **One-off**, **Recurring**, or both.
+
+    <img src="/images/platform/fees/donation-product-edit.png" alt="Create Product form with the Donation card selected next to Membership Fee, a campaign title, an empty URL slug, the Recurring and One-off frequency cards both ticked, custom amount minimum and maximum fields, and the start of the Campaign goal block" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+    The frequency choice is the one that is awkward to undo: a saved campaign must keep at least one of the two.
+
+    **Done when:** the campaign opens on its own detail page with **Prices & Options**, **Landing page**, **Widgets** and **Stats** tabs and an **Active** badge.
+
+    See [Donations](/platform/fees/donations).
   </Step>
   <Step title="Add suggested amounts">
-    On **Prices & Options**, add a price row per suggested amount and mark one default. On a campaign with no prices yet, **Generate** proposes three A/B variations of three amounts each from your country, currency and campaign title, registers them in Stripe and switches A/B testing on. It disappears once any price exists, so use it before you add the first row by hand. See [Donations](/platform/fees/donations).
+    On **Prices & Options**, add a price row per suggested amount and mark one default. These are the buttons a donor sees before they type anything.
+
+    <img src="/images/platform/fees/donation-product-detail.png" alt="Prices and Options tab of a donation campaign listing suggested amounts by name and value, one tagged default and several tagged Recurring, with an Add button above the table" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+    On a campaign with no prices yet, **Generate** proposes three A/B variations of three amounts each from your country, currency and campaign title, registers them in Stripe and switches A/B testing on. It disappears once any price exists, so use it before you add the first row by hand.
+
+    **Done when:** every amount you want offered has a row, and exactly one carries the **default** tag.
+
+    See [Donations](/platform/fees/donations).
   </Step>
   <Step title="Add designations, if gifts are restricted">
-    **Product options** on the same tab are what the donor picks under **Designate to**. Each one has its own link that pre-selects it. See [Products](/platform/fees/products).
+    **Product options** on the same tab are what the donor picks under **Designate to**: one option per fund, project or purpose you take restricted gifts for.
+
+    Each one has its own link that pre-selects it, which is what you put behind a button on your own site or in an appeal email.
+
+    **Done when:** the option list holds one row per restricted purpose, and its link opens the donation page with **Designate to** already filled in.
+
+    See [Products](/platform/fees/products).
   </Step>
   <Step title="Set the goal">
-    Under **Campaign**, choose **Total goal** (cumulative one-off gifts) or **Monthly goal** (recurring revenue), a **Goal value**, and optionally a **Target date**, which replaces the completion percentage on the public progress bar. Goals are unavailable on multi-currency campaigns. See [Donations](/platform/fees/donations).
+    Under **Campaign**, choose **Total goal** (cumulative one-off gifts) or **Monthly goal** (recurring revenue), a **Goal value**, and optionally a **Target date**, which replaces the completion percentage on the public progress bar.
+
+    | If you want | Choose |
+    |---|---|
+    | A running total that climbs toward a number | **Total goal** |
+    | Monthly recurring revenue tracked per month | **Monthly goal** |
+    | A visible deadline instead of a percentage | Any goal type, plus a **Target date** |
+
+    The goal type selector only appears when both **Recurring** and **One-off** are enabled, since with one frequency there is nothing to choose between. Goals are unavailable on multi-currency campaigns.
+
+    **Done when:** the public page prints an amount raised, a goal and a progress bar.
+
+    See [Donations](/platform/fees/donations).
   </Step>
   <Step title="Build the public page">
-    The **Landing page** tab edits hero media, colours, the campaign story, the thank-you message and the social share image against a live preview. See [Donation pages and widgets](/platform/fees/donation-pages).
+    The **Landing page** tab edits hero media, colours, the campaign story, the thank-you message and the social share image against a live preview.
+
+    <img src="/images/platform/templates/fundraising-landing-page-editor.png" alt="Landing page tab of a donation campaign, with a Hero media card holding Image and Video tabs over the uploaded hero photo, an Appearance card with logo header bar and title switches for desktop and mobile plus named primary colour presets, and a live preview on the right showing the campaign page on a phone with its progress bar and suggested amounts" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+    Work down the left column and watch the preview: it renders the real public page, so it shows what a donor will see on the phone most of them are holding.
+
+    **Done when:** the preview shows your hero, your story and your amounts, and you have pressed **Save** in the preview header.
+
+    See [Donation pages and widgets](/platform/fees/donation-pages).
   </Step>
   <Step title="Point the shortcuts at the right campaign">
-    **Settings → Modules → Payments & Fees → Donation Product** sets which campaign answers `/donate`, and which one grants the **Supporter** flag on member profiles. The first donation campaign you create claims the first of those automatically, which is rarely the one you want six months later. See [Donations](/platform/fees/donations).
+    **Settings → Modules → Payments & Fees → Donation Product** sets which campaign answers `/donate`, and which one grants the **Supporter** flag on member profiles.
+
+    <img src="/images/platform/templates/fundraising-donation-product-shortcuts.png" alt="Donation Product settings page with a Donation Product selector naming the live campaign, a Recurring Donation Product selector left unset, and a Manage Products link" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+    The first donation campaign you create claims the first of those automatically, which is rarely the one you want six months later.
+
+    **Done when:** **Donation Product** names the campaign you are currently promoting, and **Recurring Donation Product** names the monthly programme if you run one.
+
+    See [Donations](/platform/fees/donations).
   </Step>
   <Step title="Rewrite the thank-you email">
-    The **Donation thank you** template is per language and is the only message a one-off donor receives. See [Email templates](/platform/emails/email-templates) and [System emails](/platform/emails/system-emails).
+    Open **Settings → Modules → Emails & Notifications → Email Templates** and edit **Donation thank you**.
+
+    The template is per language and is the only message a one-off donor receives, so it carries the whole relationship: what the gift does, and what happens next.
+
+    **Done when:** the template reads in your own voice in every language you take gifts in.
+
+    See [Email templates](/platform/emails/email-templates) and [System emails](/platform/emails/system-emails).
   </Step>
   <Step title="Turn on the email campaign module last">
-    You need the campaign live before you can link to it from an appeal. See [Newsletter](/platform/newsletter).
+    **Settings → Modules → Emails & Notifications → Email Campaigner**, then **Enable Email Campaign Module**.
+
+    You need the campaign live before you can link to it from an appeal.
+
+    **Done when:** a newsletter draft can link to the campaign page you just published.
+
+    See [Newsletter](/platform/newsletter).
   </Step>
 </Steps>
 
 ---
 
 ## What you get
+
+Everything below lands on one public page or one click from it. This is a campaign mid-flight: story and progress on the left, the donation form pinned on the right, recent gifts underneath it.
+
+<img src="/images/platform/fees/donation-public-page.png" alt="Public donation page showing the amount raised against the goal with a progress bar and donation count, an About this campaign story, a Words of support list of donor messages, and a sticky donation form with suggested amount buttons, a custom amount, Cover the processing fee, a confidentiality checkbox, Donate now and a recent donations panel" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 | What you need | What Orgo gives you | Where it is documented |
 |---|---|---|
@@ -101,6 +203,14 @@ Do these in order. The main reason is Stripe: several controls stay greyed out u
 | Donor segments | Lists with **Has Payment** and **Has Recurring Payment** criteria, both of which reveal a **Product** selector so you can narrow to one campaign | [Lists and segments](/platform/users/lists) |
 | Campaign reporting | The campaign's **Stats** tab: views, device split, widget versus public page, and UTM source, medium and campaign breakdowns for both views and gifts | [Donations](/platform/fees/donations) |
 | Revenue reporting | The **Donation Revenue** tile on the Analytics **Finance** tab, and free-form questions in Ask Orgo | [Insights and Ask Orgo](/platform/insights) |
+
+### Where you read the results
+
+Two tabs on the campaign answer different questions. **Payments** is the ledger: one row per gift. **Stats** is the campaign view: money over time above the page analytics.
+
+<img src="/images/platform/templates/fundraising-campaign-stats.png" alt="Stats tab of a donation campaign with the range set to twelve months, showing a payments total and an amount line with a seven-day moving median, and beneath it all-time Views, Clicked and Shared counters above a Views Over Time chart" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+The range buttons above the chart matter more than they look: an appeal that ran last autumn is invisible on the default 90-day window.
 
 ---
 
@@ -122,6 +232,10 @@ A six-week campaign with a published target, tested ask amounts, and two emails.
 | First email | A newsletter to **All members and contacts**, or to a list of everyone who has given before (**Has Payment**, then the **Product** selector on last year's campaign) |
 | Second email | **Follow up with non-openers** on the first campaign, roughly a week later. The set is recalculated at send time, so people who opened late drop out |
 | Reading the result | Each A/B variation reports total raised, average gift and transaction count on the **Prices & Options** tab. A variation that has collected money cannot be deleted |
+
+A week in, the recognition settings are what make the page look busy. The sidebar lists recent gifts, and **See all** opens the full donor wall with an **All** and a **Top** tab.
+
+<img src="/images/platform/fees/donation-public-page-donors.png" alt="Donations dialog opened from the donor wall of a public donation page, with All and Top tabs over a list of gifts showing donor first name and surname initial, anonymous entries, amounts and how long ago each was given, above the campaign page and its Words of support list" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 Two things to know before you rely on this. The A/B test is on the suggested amounts, not on the email: newsletter campaigns have no A/B testing. And a variation that is winning cannot be promoted to "the default" while A/B testing is on, because **Make default** is hidden in that mode. Turn A/B testing off and mark the winning amount default once the appeal closes.
 
@@ -157,14 +271,41 @@ Orgo has no donation step inside event checkout, so an event-linked appeal is a 
   </Step>
   <Step title="Report on the designation">
     Filter the campaign's **Payments** tab by option to get the total raised for that event, separate from the rest of the campaign.
+
+    <img src="/images/platform/fees/donation-payments.png" alt="Payments tab of a donation campaign with a gift count next to the campaign name, filter pills for payer name, payment ID, user ID, email, status, type and date, and rows showing the amount, a paid or refunded status, the payer, where they are from, the date, a confidentiality marker and the one-time type" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+    The same list is where you check a gift somebody says they made, and where **Refund** lives.
   </Step>
 </Steps>
+
+---
+
+## Setup checklist
+
+Work down this before you publish the first link. It mirrors [Setup order](#setup-order), so anything unticked tells you which step to go back to.
+
+- [ ] **Country** is set on **Settings → Organisation info**
+- [ ] The Payment Gateway page reads **Fully connected** and **Complete**
+- [ ] The organisation-wide checkout switches are set the way you want them for every campaign
+- [ ] The campaign exists, with **One-off**, **Recurring** or both switched on
+- [ ] Every suggested amount has a price row, and exactly one is marked default
+- [ ] There is a **Product option** for each restricted purpose, if you take restricted gifts
+- [ ] A goal type and **Goal value** are set, plus a **Target date** if the appeal has a deadline
+- [ ] Hero, story and thank-you message are saved on the **Landing page** tab
+- [ ] **Donation Product** points at the campaign you are promoting, and **Recurring Donation Product** at the monthly programme if you run one
+- [ ] The **Donation thank you** template is rewritten in every language you take gifts in
+- [ ] You have given a test gift yourself and received the thank-you email
+- [ ] The link you are about to publish opens the right campaign, with the right designation pre-selected
 
 ---
 
 ## Limits worth knowing before you start
 
 Stated plainly, because each one has caught somebody out.
+
+<Warning>
+  The one that surprises fundraisers most: Orgo has no donation receipt or tax document anywhere in the product. Read the first limit below before you promise donors anything on paper.
+</Warning>
 
 **Donations do not produce invoices or tax receipts.** **Generate Invoice** on a payment row only appears for membership fee and event registration payments; a donation payment is refused. There is no annual giving statement, no Gift Aid support and no donation tax form anywhere in the product. The donor gets the **Donation thank you** email, and Stripe's own receipt if you enable **Stripe Email Receipts**. If your donors need a document for tax purposes, produce it outside Orgo.
 

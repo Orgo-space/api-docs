@@ -12,7 +12,25 @@ description: 'A playbook for associations whose members are companies and instit
 
 In Orgo a member company is a **company** record. It holds one membership, it is billed as one customer, and the people who work there attach to it and inherit its membership validity. Everything on this page is built on that: the company record first, then billing and invoices, then a geographic tier only if your federation has one.
 
+Your member roster lives under **Companies** in the sidebar. Each row carries the status, the seats used against the allowance, and the valid-until date, so the health of your membership is one screen.
+
 <img src="/images/platform/users/companies-list.png" alt="Companies list with search, status filters showing counts for All, Active, Pending and Inactive, and rows showing member count and valid-until date" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Before you start
+
+Five decisions carry the whole setup. Settle them on paper first: each one becomes a field, a switch or a price row later, and reversing some of them means re-billing your members.
+
+- [ ] Legal entity details collected for every member company: legal name, registration number, VAT number, billing address, town and country
+- [ ] Seat policy decided: how many named people each corporate tier includes, and which tier (if any) is unlimited
+- [ ] Invoicing direction agreed: your organization bills each member company centrally, because company fees never route to a region
+- [ ] Payment method chosen: card through Stripe, bank transfer against an invoice, or an administrator recording money received elsewhere
+- [ ] Primary contact named per company, plus the financial contact email that will receive the renewal ladder
+
+<Note>
+The one that bites later is the seat policy. Seats are not typed in on a company: they arrive from the price the company buys. The tier list you design now is the seat list you live with, and changing a company's allowance means moving it to another tier and taking a payment.
+</Note>
 
 ---
 
@@ -43,11 +61,15 @@ If your members are individuals who happen to be grouped by geography, you do no
 
 A company starts at **Pending** and flips to **Active** on its first recorded membership payment. `ADMIN_TENANT` can also set the status by hand. **Delete Company** is a soft delete: the record moves to **Deleted** and disappears from every list, and only `ADMIN_TENANT` can do it.
 
-The company page also carries the seat counter, the plan, the **Billing Details** and **Financial Contact** cards, the member list, and the **Payment & Plan** panel.
+Once saved, the company page becomes the single screen your staff and the member's own primary contact both work from. Reading down the left column and then the right: the status header, the seat counter with the current plan, the **Billing Details** and **Financial Contact** cards, the member list, and the **Payment & Plan** panel.
+
+<img src="/images/platform/templates/federation-company-record.png" alt="Company record page showing the Active status header, a member counter of 5 of 25 with the plan name, Billing Details and Financial Contact cards, and the Team Members panel" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ### One company, many people, one membership
 
 A membership row inside a company points at either a **User** (someone with an account) or a **[Contact](/platform/contacts)** (a record in your database with no account). Both appear in the member list and both occupy a seat. Only user memberships inherit the company's validity date, because a contact has no fee date to write to.
+
+<img src="/images/platform/templates/federation-company-members.png" alt="Team Members panel listing five people, one carrying a Primary Contact badge, with Add Member and Invite buttons in the panel header" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 Roles are stored per membership, and one person can hold more than one.
 
@@ -70,15 +92,27 @@ The count is active members plus pending invitations, so an outstanding invitati
 
 ### How an employee joins
 
+Three routes, and you will use all three: invitations for new names, **Add Member** for people already in your database, and automatic domain matching for the ones who turn up at your events.
+
 <Steps>
   <Step title="Invitation, the normal route">
-    **Invite** on the company page. Email, first name, last name, role, and an optional message. Both names are labelled optional in the dialog but the server rejects the invitation without them. The email links to `/company-invitation/{hash}`; accepting joins them and emails a one-time login code, creating the account first if they have none. Invitations expire after **30 days** and can be resent (which resets the 30 days) or revoked.
+    Open the company, then press **Invite** in the header of the **Team Members** panel. Fill in the email, first name, last name and role, and add a message if you want one. Both names are labelled optional in the dialog but the server rejects the invitation without them, so treat them as required.
+
+    The email links to `/company-invitation/{hash}`. Accepting joins the person to the company and emails them a one-time login code, creating the account first if they have none. Invitations expire after **30 days** and can be resent (which resets the 30 days) or revoked.
+
+    **Done when** the person appears in the **Team Members** panel with a pending invitation, and the seat counter at the top of the company has gone up by one.
+
+    <img src="/images/platform/templates/federation-invite-member.png" alt="Invite Member dialog with Email, First Name and Last Name fields, a Role dropdown and a Message box, over the company page" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginTop: "1rem" }} />
   </Step>
   <Step title="Add Member, for people already in your database">
-    **Add Member** searches users and contacts that are not already in a company. The button is shown to `ADMIN_TENANT` only, and only while seats are free.
+    Press **Add Member** in the same panel header and search. The picker only returns users and contacts that are not already in a company. The button is shown to `ADMIN_TENANT` only, and only while seats are free.
+
+    **Done when** the person is listed as **Active** in **Team Members** straight away, with no invitation email involved.
   </Step>
   <Step title="Email domain match, automatic">
-    With the Companies module on, somebody registering for an event whose email domain matches the **Website** of an **Active** company is added to that company automatically. Common free providers (gmail.com, outlook.com and similar) are excluded, subdomains are reduced to the base domain, and the company's validity date is copied onto them if it has one. This runs on event registration only, and it does not check seats.
+    Nothing to press. With the Companies module on, somebody registering for an event whose email domain matches the **Website** of an **Active** company is added to that company automatically. Common free providers (gmail.com, outlook.com and similar) are excluded, subdomains are reduced to the base domain, and the company's validity date is copied onto them if it has one. This runs on event registration only, and it does not check seats.
+
+    **Done when** an event registrant from a member firm shows up in that company's member list without anyone inviting them.
   </Step>
 </Steps>
 
@@ -99,6 +133,8 @@ Every switch below needs `ADMIN_TENANT`, and the Settings screens themselves als
 | **Enable Companies Module** | Adds **Companies** to the sidebar and a **Company** tab to a member's own profile |
 | **Who can create companies** | **Any member**, **Local center admins and above**, or **Organization admins only**. This also decides who administers companies they do not belong to (see [Permissions](#permissions) below) |
 | **Enable Company Fees** | Lets companies pay membership fees on behalf of their people. Only appears while the Payments and Fees module is active |
+
+<img src="/images/platform/templates/federation-companies-module.png" alt="Companies module configuration with the Enable Companies Module switch on, a Who can create companies dropdown set to Organization admins only, and Enable Company Fees on with an explanatory note" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ### Payments and fees
 
@@ -127,33 +163,69 @@ Switch **Invoices** on in **Settings** → **Modules** → **All Modules**, then
 
 ## Setup order
 
+Work through these in order. Steps 1 to 4 build the money side, 5 turns the member companies on, and 6 to 9 get your real data in and the enforcement switched on last.
+
 <Steps>
   <Step title="Connect Stripe">
-    **Settings** → **Modules** → **Payments & Fees** → **Payment Gateway**. Your organization needs a **country** set under **Settings** → **Organisation info** first, because Stripe fixes the country when the account is created.
+    Go to **Settings** → **Modules** → **Payments & Fees** → **Payment Gateway** and connect your organization's Stripe account.
+
+    Set a **country** under **Settings** → **Organisation info** first, because Stripe fixes the country when the account is created and it cannot be changed afterwards.
+
+    **Done when** the Payment Gateway tab shows your account as connected rather than offering the connect button. See [Stripe Integration](/platform/fees/stripe-integration).
   </Step>
   <Step title="Create the membership fee product">
-    **Finance** → **Products** → **Create Product** → **Membership Fee**. Set **Period** and **Cycle beginning** now: both are locked once saved. A federation billing an annual corporate fee usually wants **Period** annually and a fixed **Cycle beginning** month so every member company renews together.
+    Go to **Finance** → **Products** → **Create Product** and choose **Membership Fee**.
+
+    Set **Period** and **Cycle beginning** now: both are locked once saved. A federation billing an annual corporate fee usually wants **Period** annually and a fixed **Cycle beginning** month, so every member company renews together instead of on its own separate anniversary.
+
+    **Done when** the product opens on its own page with a **Prices & Options** tab, and the period you chose can no longer be edited.
   </Step>
   <Step title="Add one price per corporate tier">
-    On **Prices & Options**, add a price per tier and tick **Company only** on each, with the **Company slots** that tier buys. `0` slots means unlimited. Prices without **Company only** stay available to individual members, so a federation with associate individual members can run both from one product.
+    On the product's **Prices & Options** tab, press **Add** and create one price per tier. In the price dialog, switch **Company only** on and enter the **Company slots** that tier buys. `0` slots means unlimited.
+
+    Prices without **Company only** stay available to individual members, so a federation with associate individual members can run both from one product.
+
+    **Done when** each corporate tier is listed on **Prices & Options** carrying a **Company price** tag, and opening one shows the slot number you typed.
+
+    <img src="/images/platform/templates/federation-company-price.png" alt="Price dialog for a corporate tier with the Company only switch on and a Company slots field set to 25, above the hint that 0 means unlimited slots" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginTop: "1rem" }} />
   </Step>
   <Step title="Point the organization at the product">
-    **Settings** → **Modules** → **Payments & Fees** → **Membership fees**: **Enable Membership Fees**, then **Membership Fee Product** and **Default Membership Fee Price**. Nothing charges until the product is selected here.
+    Go to **Settings** → **Modules** → **Payments & Fees** → **Membership fees**. Switch **Enable Membership Fees** on, then pick your **Membership Fee Product** and a **Default Membership Fee Price**.
+
+    Nothing charges until the product is selected here, however complete the product itself looks.
+
+    **Done when** the **Product Configuration** card names your product and a default price, and a company's **Payment & Plan** panel starts listing tiers instead of sitting empty.
+
+    <img src="/images/platform/fees/membership-fee-settings.png" alt="Membership fees settings with Enable Membership Fees on, a Product Configuration card naming the membership fee product and default price, and the payment options below" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginTop: "1rem" }} />
   </Step>
   <Step title="Turn on Companies and company fees">
-    **Settings** → **Modules** → **Companies** → **Configuration**: **Enable Companies Module**, choose **Who can create companies**, then **Enable Company Fees**.
+    Go to **Settings** → **Modules** → **Companies** → **Configuration**. Switch **Enable Companies Module** on, choose **Who can create companies**, then switch **Enable Company Fees** on.
+
+    Read [Permissions](#permissions) before you pick the **Who can create companies** value: it quietly decides who can administer companies they do not belong to.
+
+    **Done when** **Companies** appears in the sidebar and the **Enable Company Fees** switch shows its "How company fees work" note underneath.
   </Step>
   <Step title="Turn on invoicing">
-    **All Modules** → **Invoices**, then **Payments & Fees** → **Invoice Product** → **Manual Invoice Product**. Do this before you import companies, so the first renewal round can attach invoices.
+    Switch **Invoices** on under **Settings** → **Modules** → **All Modules**, then set a **Manual Invoice Product** under **Payments & Fees** → **Invoice Product**.
+
+    Do this before you import companies, so the first renewal round can attach invoices. Without that product, invoice creation fails outright.
+
+    **Done when** the **Invoices** list is reachable and creating a manual invoice no longer errors. See [Invoices](/platform/fees/invoices).
   </Step>
   <Step title="Import your member companies">
-    **Settings** → **Import** offers **Companies** (with membership details) and **Company Members** (assigning users to companies with roles), each with an example CSV. See [Import](/platform/customization/import).
+    Go to **Settings** → **Import**. It offers **Companies** (with membership details) and **Company Members** (assigning users to companies with roles), each with an example CSV. Run **Companies** first, then **Company Members**, so every membership has a company to attach to.
+
+    **Done when** the **Companies** list shows your real roster with the expected **All** count, and opening one shows its people in **Team Members**. See [Import](/platform/customization/import).
   </Step>
   <Step title="Name a Primary Contact in each company, then invite the rest">
-    The Primary Contact is who pays and who manages the seats. Fill in **Financial contact email** too: it is the address the renewal ladder writes to.
+    On each company, give one person the **Primary Contact** role: that is who pays and who manages the seats. Fill in **Financial contact email** on the **Financial Contact** card too, because it is the address the renewal ladder writes to.
+
+    **Done when** every company shows a **Primary Contact** badge on exactly one member row, and no company is left with an empty **Financial Contact** card.
   </Step>
   <Step title="Decide on the lockout last">
     Leave **Company Fee Payment Mandatory** off until your companies are actually billed and paid. Switching it on with unpaid records blocks their people out on the next page load.
+
+    **Done when** your first billing round has settled and you have deliberately chosen whether to enforce, rather than discovering the lockout through support tickets.
   </Step>
 </Steps>
 
@@ -161,9 +233,11 @@ Switch **Invoices** on in **Settings** → **Modules** → **All Modules**, then
 
 ## Billing companies
 
-<img src="/images/platform/users/company-payment-plans.png" alt="Payment and Plan panel listing company membership tiers with slot counts, prices, a prorated amount, and Pay and Mark as Paid buttons" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
 The **Payment & Plan** panel on a company lists every non-archived **Company only** price on your organization's fee product, with its slot count and amount. It is visible to the Primary Contact (and any legacy Financial Rep) and to `ADMIN_TENANT`.
+
+The tier the company is on is marked **Current** and carries the action buttons; the others offer **Select** to move the company across.
+
+<img src="/images/platform/templates/federation-payment-plan.png" alt="Payment and Plan card listing three corporate tiers with their seat allowance and annual price, Select buttons on the unselected tiers and Pay plus Mark as Paid on the current one" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ### Where the money goes
 
@@ -316,6 +390,23 @@ If you also run chapters, **Finance** → **Stats** (route `/fee/stats`, `FINANC
 - **One Stripe account for company money.** Company fees never route to a chapter account, and Orgo performs no split between tiers.
 - **Renewal is windowed.** A company cannot pay several periods in advance: the Pay button and the bank-transfer invoice both wait for the 60 day window.
 - **The company gate is all or nothing.** With **Company Fee Payment Mandatory** on, only `ADMIN_TENANT` and fee-exempt user types are spared.
+
+---
+
+## Setup checklist
+
+Work down this list once and your federation is live. Each line is an outcome you can see on screen, in the same order as [Setup order](#setup-order) above.
+
+- [ ] Organization country set under **Organisation info**, and Stripe connected on the **Payment Gateway** tab
+- [ ] Membership fee product created with the right **Period** and **Cycle beginning** (both lock on save)
+- [ ] Company fee prices created on that product: one **Company only** price per corporate tier, each carrying its own **Company slots** allowance
+- [ ] Organization pointed at the product: **Enable Membership Fees** on, with a **Membership Fee Product** and a **Default Membership Fee Price** selected
+- [ ] Companies module on, **Who can create companies** deliberately chosen, and **Enable Company Fees** on
+- [ ] Invoices module on and a **Manual Invoice Product** set, so renewal reminders can carry a PDF
+- [ ] Member companies imported, each with legal name, billing address and VAT number filled in
+- [ ] One **Primary Contact** named per company, and a **Financial contact email** on every **Financial Contact** card
+- [ ] Employees invited or added, with each company's seat counter below its allowance
+- [ ] First billing round settled, then **Company Fee Payment Mandatory** switched on or left off as a decision
 
 ---
 

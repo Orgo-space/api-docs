@@ -19,6 +19,24 @@ One of the [setup templates](/platform/templates/index). Read it alongside
 whichever one describes your core operation, since every organization
 communicates.
 
+Everything below leads to one screen: **Administration** → **COMMUNICATION** →
+**Email campaigns**, where campaigns are written, sent and measured.
+
+<img src="/images/platform/communication/newsletter-list.png" alt="Email campaigns page with Total sent, Avg. open rate, Avg. click rate and Total recipients tiles above a table of draft and sent campaigns with recipient counts and open rates" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Before you start
+
+Have these ready. Each one blocks a step further down, and finding out late
+means resending mail.
+
+- [ ] A sender address you control on your own domain, not a personal mailbox
+- [ ] Access to your domain's DNS, if you want mail to leave as your address instead of `no-reply@orgo.space`
+- [ ] A written answer to "who should receive what": what goes to everyone, what to one chapter, what to a saved segment
+- [ ] A decision on language, knowing that automatic email is written in the organization's default language and only English, Romanian and German exist
+- [ ] `ADMIN_TENANT` on your own account, because every setting below lives in Settings
+
 ---
 
 ## What to turn on
@@ -67,62 +85,128 @@ them. If someone maintains manual lists, give them `ADMIN_TENANT`.
 Do these in order. Steps 1 and 2 change what every later email looks like, so
 doing them last means resending things.
 
+<Note>
+The three settings screens in steps 3, 5 and 6 have no Save button. Each switch
+saves as you flip it and a **Saving** indicator appears while it does.
+</Note>
+
 <Steps>
   <Step title="Fix the sender identity">
     Set your contact email under **Settings** → **Organisation**, then ask
-    support to verify it for sending. Until it is verified, mail leaves as
-    `no-reply@orgo.space` with your contact address as Reply-To. See
-    [Emails](/platform/emails).
+    support to verify it for sending. Verification needs DNS records on your
+    domain, so it is not a switch you can flip in Settings yourself.
+
+    Until it is verified, mail leaves as `no-reply@orgo.space` with your contact
+    address as Reply-To. See [Emails](/platform/emails).
+
+    **Done when** mail your members receive arrives from your own address rather
+    than `no-reply@orgo.space`.
   </Step>
   <Step title="Set the organization language">
-    Automatic email is written in the organization's default language, not the
-    recipient's, and only English, Romanian and German exist. Anything else
-    falls back to English. See [Languages](/platform/customization/languages).
+    **Settings** → **Customization** → **Languages**. Automatic email is written
+    in the organization's default language, not the recipient's, and only
+    English, Romanian and German exist. Anything else falls back to English. See
+    [Languages](/platform/customization/languages).
+
+    **Done when** the default language on that screen is the language you want
+    every automatic email written in.
   </Step>
   <Step title="Decide what automatic email goes out">
-    Walk the category switches on **Emails Config** before you invite anyone,
-    so members do not receive a reminder ladder you have not read. See
+    **Settings** → **Notifications & Email Campaign** → **Emails Config** groups
+    every automatic email into categories (User Lifecycle, Membership & Fees,
+    Adhesion and the rest) with a switch each. Walk them before you invite
+    anyone, so members do not receive a reminder ladder you have not read. See
     [System emails](/platform/emails/system-emails).
+
+    <img src="/images/platform/emails/system-emails-config.png" alt="Emails Config screen with the Notifications and Email Campaign menu on the left and switch rows grouped under User Lifecycle, Membership and Fees, and Adhesion or Applications" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+    **Done when** every category is on deliberately or off deliberately, rather
+    than on because nobody looked.
   </Step>
   <Step title="Rewrite the templates that do not sound like you">
-    Subject and body per email, with placeholders. Note that a customized
-    template has no language: your version is used for every recipient. See
+    **Email Templates**, in the same menu, gives you the subject and body of one
+    automatic email at a time, with placeholders and a per-template **Enabled**
+    switch. Note that a customized template has no language: your version is
+    used for every recipient. See
     [Email templates](/platform/emails/email-templates).
+
+    **Done when** the emails a new member meets in their first week read like
+    your organization wrote them.
   </Step>
   <Step title="Set the notification defaults before importing members">
-    The defaults are applied once, at account creation. Changing them later does
-    nothing for anyone who already exists, so get them right first. See
+    **Notification Preferences**, same menu. These are the settings new accounts
+    are created with: newsletter, push, and email for comments, tasks, votes,
+    events, mentions and discussions.
+
+    They are applied once, at account creation. Changing them later does nothing
+    for anyone who already exists, so get them right first. See
     [Notifications](/platform/notifications).
+
+    <img src="/images/platform/communication/notification-settings.png" alt="Default Notification Preferences with switches for newsletter, push, comments, tasks, votes, events and mentions, and a Daily frequency selector for discussions" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+    **Done when** the switches describe what a brand-new member should be signed
+    up for. Everyone already imported keeps whatever they have.
   </Step>
   <Step title="Turn on the campaign module">
+    **Settings** → **Notifications & Email Campaign** → **Email Campaigner** →
     **Enable Email Campaign Module**, then grant `COMMUNICATION_TENANT` to
     whoever writes campaigns. See [Newsletter](/platform/newsletter).
+
+    <img src="/images/platform/templates/communication-email-campaigner.png" alt="Email Campaigner settings with the Enable Email Campaign Module switch turned on and a Newsletter Management section holding the Default Newsletter Widget UUID field" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+    **Done when** a **COMMUNICATION** section appears in the administration
+    sidebar for the people you granted the permission to.
   </Step>
   <Step title="Build the audiences you will reuse">
-    A saved list is the only audience you can define by a question about the
-    people themselves. See [Lists & Segments](/platform/users/lists) for the
-    criteria, and [Email lists](/platform/emails/email-lists) for how a list
-    behaves once email starts moving.
+    **Administration** → **COMMUNICATION** → **Lists & Segments**. A saved list
+    is the only audience you can define by a question about the people
+    themselves. See [Lists & Segments](/platform/users/lists) for the criteria,
+    and [Email lists](/platform/emails/email-lists) for how a list behaves once
+    email starts moving.
+
+    <img src="/images/platform/users/lists-index.png" alt="Lists and Segments page with All, Dynamic and Static filters and a table of lists showing type, audience, and separate Subscribed and Total columns" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+    **Done when** each list shows a **Subscribed** count beside its **Total**.
+    The subscribed number is the one a campaign actually sends to.
   </Step>
   <Step title="Collect subscribers from your website">
     Embed a [signup widget](/platform/newsletter-widgets) so new subscribers
-    land in Orgo as contacts rather than in a spreadsheet.
+    land in Orgo as contacts rather than in a spreadsheet. Set **Default
+    Newsletter Widget UUID** on the Email Campaigner screen to decide which
+    widget is served when a page asks for your organization's widget without
+    naming one.
+
+    **Done when** a test signup on your own site appears in Orgo as a contact.
   </Step>
   <Step title="Design one reusable template">
-    Build the house style once in the
-    [newsletter builder](/platform/newsletter-builder) and save it as a campaign
-    template.
+    Open any draft campaign and switch to the **Content** tab: that is the
+    drag-and-drop [newsletter builder](/platform/newsletter-builder). Build the
+    house style once, then save it as a campaign template so month two is a copy
+    rather than a rebuild.
+
+    <img src="/images/platform/communication/newsletter-builder.png" alt="Newsletter builder on the Content tab with the design canvas in the middle, a palette of Columns, Button, Heading, Image and other blocks on the right, and Save, Send test to your email and Send in the header" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+    **Done when** the design is listed under **Campaign templates** and the
+    Content tab shows **Saved** rather than **Saving**.
   </Step>
   <Step title="Send a test, then the first campaign">
-    **Send test to your email** renders the placeholders against your own
-    record, which is the only reliable way to catch an empty field. Then send or
-    schedule. See [Newsletter](/platform/newsletter).
+    **Send test to your email**, in the campaign header, renders the
+    placeholders against your own record, which is the only reliable way to
+    catch an empty field. Then **Send**, or set a time on the **Schedule** tab
+    at least 2 minutes ahead on a 15-minute boundary. See
+    [Newsletter](/platform/newsletter).
+
+    **Done when** the campaign shows **Sent** and its Report tab starts filling
+    in as delivery events arrive.
   </Step>
 </Steps>
 
 ---
 
 ## Choosing the right channel
+
+The most useful table on this page. Find the row that matches what you are
+about to send, then check the last column before you write it.
 
 | Channel | Use it for | Who receives it | Can a member opt out |
 |---|---|---|---|
@@ -159,9 +243,15 @@ Worked examples, not defaults. Adapt the criteria and names.
     rebuild.
   </Step>
   <Step title="Create the campaign">
-    **Email campaigns** → new campaign. Campaign title is internal, email
-    subject is what members see. Choose **From a list** and pick your segment.
-    The number next to the option is the subscribed count, not the list total.
+    **Email campaigns** → new campaign. On the **Configure** tab, campaign title
+    is internal and email subject is what members see. In **Recipients**, choose
+    **From a list** and pick your segment. The number next to the option is the
+    subscribed count, not the list total.
+
+    <img src="/images/platform/communication/newsletter-edit.png" alt="Campaign Configure tab with campaign title, email subject, sender name and reply-to fields above a Recipients card offering All members and contacts, Members from a group, All subscribed contacts, From a list, and Event attendees" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+    Only one option can be selected. Audiences cannot be combined, which is the
+    reason the segment exists.
   </Step>
   <Step title="Test, then schedule">
     **Send test to your email**, then schedule at least 2 minutes ahead on a
@@ -203,7 +293,13 @@ Worked examples, not defaults. Adapt the criteria and names.
     `{eventDateBegin}`, `{eventRegisterUrl}` and the rest). Needs
     `EVENT_TENANT`, or a communication permission.
   </Step>
-  <Step title="Wait for the delivery events">
+  <Step title="Read the report, then wait a day">
+    A sent campaign opens on its **Report** tab: Sent, Opened, Clicks, Bounce
+    and Unsubscribed, each with the percentage underneath, over a campaign
+    details card recording the subject, sender, audience and send date.
+
+    <img src="/images/platform/templates/communication-campaign-report.png" alt="Campaign report showing Sent 50 at 100 percent delivered, Opened 30 at 60 percent of sent, Clicks 0, Bounce 4 and Unsubscribed 1, above a campaign details card with subject, sender, recipients, author and sent date" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
     Open rates need the mail client to load images, so give it a day or two
     before treating an unopened message as unread.
   </Step>
@@ -212,6 +308,10 @@ Worked examples, not defaults. Adapt the criteria and names.
     button) creates a draft named "Follow-up: ..." locked to people who received
     the original and never opened it, minus anyone who bounced, complained or
     unsubscribed.
+
+    The button sits in the campaign header next to **Duplicate campaign**, and
+    only while that count is above zero. A campaign everyone opened does not
+    offer it.
   </Step>
   <Step title="Change the subject line, then send">
     The audience is recalculated at send time, so late openers drop out. If
@@ -241,8 +341,9 @@ on your own domain remain yours to maintain.
 **Unsubscribe handling.** Campaign email carries one-click unsubscribe headers,
 so a member can opt out from the mail client without opening the message. If your
 design contains no `{unsubscribeUrl}`, Orgo appends an unsubscribe footer before
-sending. You cannot re-subscribe someone on their behalf. Note that an
-unsubscribe applies to every account sharing that email address, in every Orgo
+sending. You cannot re-subscribe someone on their behalf.
+
+An unsubscribe applies to every account sharing that email address, in every Orgo
 workspace, because it matches on the address rather than the account.
 
 **Which sends ignore subscription flags.** Three cases, all deliberate:
@@ -258,10 +359,12 @@ workspace, because it matches on the address rather than the account.
 
 **Language.** Automatic email follows the organization's default language,
 clamped to English, Romanian or German, and a template you customize yourself has
-no language at all: your version reaches every recipient. Campaigns are whatever
-language you wrote them in, so a bilingual organization either writes both
-versions into one email or sends one campaign per language segment. A `?lang=`
-parameter on a link opens the platform in that language regardless.
+no language at all: your version reaches every recipient.
+
+Campaigns are whatever language you wrote them in, so a bilingual organization
+either writes both versions into one email or sends one campaign per language
+segment. A `?lang=` parameter on a link opens the platform in that language
+regardless.
 
 ---
 
@@ -376,6 +479,26 @@ parameter on a link opens the platform in that language regardless.
     from.
   </Accordion>
 </AccordionGroup>
+
+---
+
+## Setup checklist
+
+The setup order above, in the form you can tick off. Two lines are conditional:
+the manual-list permission only matters if you keep manual lists, and the widget
+only matters if you collect subscribers from a website.
+
+- [ ] Contact email set under **Settings** → **Organisation**, and verification requested from support
+- [ ] Default language set under **Settings** → **Customization** → **Languages**
+- [ ] Every **Emails Config** category reviewed and switched on or off deliberately
+- [ ] Templates that did not sound like you rewritten under **Email Templates**
+- [ ] **Notification Preferences** set before any member import, since they apply only at account creation
+- [ ] **Enable Email Campaign Module** on, and `COMMUNICATION_TENANT` granted to whoever writes campaigns
+- [ ] `ADMIN_TENANT` given to anyone who maintains manual list membership
+- [ ] The lists and segments you will reuse built, each showing a subscribed count
+- [ ] A signup widget embedded on your website, and **Default Newsletter Widget UUID** pointed at it
+- [ ] One house-style design saved under **Campaign templates**
+- [ ] A test send checked in your own inbox, with every placeholder filled in
 
 ---
 

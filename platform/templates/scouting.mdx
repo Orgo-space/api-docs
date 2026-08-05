@@ -25,6 +25,20 @@ You are in the right place if most of these are true:
 - You run residential events where you must know who is allergic to what, and who signed the consent form.
 - Your organization has its own words for all of the above, and "member of local center" is not one of them.
 
+### Before you start
+
+Settle these before you open a single settings screen. Each one is a decision the setup will ask you for, and each is more expensive to change once members exist. Tick them off on paper first.
+
+- [ ] **Structure named.** You can name every layer, from the national body down to the smallest team, and you know which layer owns the member list.
+- [ ] **One word per concept.** You have written down what you call a district, a group, a section, a patrol and an age level. One word each, no synonyms.
+- [ ] **Age sections listed with their ranges.** For example Beavers 6 to 8, Cubs 8 to 10.5, Scouts 10.5 to 14. You know which section a member sits in and which age level they count as for pricing.
+- [ ] **Volunteers listed with their posts.** Each adult, the position they hold, the layer that position belongs to, and the date they started.
+- [ ] **Safeguarding policy on the desk.** You know what your policy makes you record for every adult, and which of those records expires and after how long.
+- [ ] **Youth data audience decided.** You know who is allowed to read a child's medical, dietary and contact details: everyone who can open an event, chapter administrators only, or a named safeguarding lead.
+- [ ] **Parent consent approach chosen.** Either a signed document you must be able to produce on demand, or a tick you only need to have collected. The two lead to different features.
+- [ ] **Subs schedule decided.** What each age level pays, whether the group charges its own dues on top of the national ones, when the fee year runs, and in which currency.
+- [ ] **Data ready.** You have dates of birth for your members, and you know which languages your organization runs in.
+
 ---
 
 ## Speaking your language
@@ -33,13 +47,11 @@ Start here, before you configure anything else. Orgo lets you replace the wordin
 
 The feature is called **Texts**, at **Settings** → **Customization** → **Texts**, and it needs `ADMIN_TENANT`.
 
-<img src="/images/platform/customization/labels.png" alt="Text Replacements page with the Add Text Replacement button and the System Expression and Custom Expression columns" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
-Each row pairs a phrase Orgo ships with the phrase you want in its place, one replacement per enabled language. You add rows by searching the interface catalogue and ticking results, so you do not have to know any technical key.
+The page is a two-column table: **System Expression** on the left is the phrase Orgo ships, **Custom Expression** on the right is the phrase you want in its place, with one Custom Expression column per language you have enabled. You do not type technical keys. **Add Text Replacement** opens a search over the whole interface catalogue, and you tick the results you want to override.
 
 ### A worked mapping
 
-These are the phrases a scouting association usually changes first. The middle column matters: one concept is almost never one row, because the catalogue stores singular, plural and lowercase forms separately and stores longer sentences whole.
+These are the phrases a scouting association usually changes first. The middle column matters: one concept is almost never one row, because the catalogue stores singular, plural and lowercase forms separately, and stores longer sentences whole.
 
 | Orgo's wording | Rows you will find when you search for it | Scouting wording |
 |---|---|---|
@@ -54,7 +66,11 @@ These are the phrases a scouting association usually changes first. The middle c
 | Badge | `Badge`, `Badges` | Award, Awards |
 | Volunteer | `Volunteer` | Leader |
 
-Search a distinctive fragment, tick every form the search returns in one pass, then fill in the **Custom Expression** column for each enabled language. Your own session updates immediately; other people pick the new wording up on their next page load.
+Searching one fragment shows why. Typing "full member" into **Add Text Replacement** returns eight separate rows, each an independent replacement you have to tick and fill in:
+
+<img src="/images/platform/templates/scouting-texts-search.png" alt="Add Text Replacement panel over the Text Replacements page, searching for full member and listing eight separate catalogue rows with checkboxes, including Full members, Is Full Member, Only full members and Only NOT full members with their source keys in brackets" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+So: search a distinctive fragment, tick every form the search returns in one pass, then fill in the **Custom Expression** column for each enabled language and save. Your own session updates immediately; other people pick the new wording up on their next page load.
 
 <Note>
 You do not need to relabel unit layers. A unit type carries its own **Title** and **Plural name**, which you type yourself at **Settings** → **Modules** → **Groups & Teams** → **Unit Types**. Call the type "Section" or "Patrol" there and it appears that way on tabs and buttons without any text replacement.
@@ -84,11 +100,11 @@ Full detail: [Texts](/platform/customization/labels).
 
 ## What to turn on
 
-Every module and setting below is at **Settings** → **Modules**, and every one of them requires `ADMIN_TENANT` to change. Nothing here is on by default except where noted.
+Every module and setting below is at **Settings** → **Modules**, and every one of them requires `ADMIN_TENANT` to change. Most are off until you switch them on. The two marked **already on** ship enabled, so your job there is to confirm rather than to enable.
 
 | Module and tab | Setting | What it buys you |
 |---|---|---|
-| **Groups & Teams** → **Local Centers** | **Enable Local Centers Module** | Chapters: your groups or districts, each with their own members, events, files, dues and admins |
+| **Groups & Teams** → **Local Centers** | **Enable Local Centers Module** (already on) | Chapters: your groups or districts, each with their own members, events, files, dues and admins |
 | **Groups & Teams** → **Local Centers** | **Enable Parent Centers** | One more layer above a chapter, and the `ADMIN_PARENT_LOCAL` and `HR_PARENT_LOCAL` permissions that reach across it |
 | **Groups & Teams** → **Local Centers** | **Enable Regions** | A flat region label for grouping and filtering. Grants no permissions |
 | **Groups & Teams** → **Configuration** | **Enable Organizational Units** | Sections and patrols inside a chapter |
@@ -103,7 +119,7 @@ Every module and setting below is at **Settings** → **Modules**, and every one
 | **Gamification & Courses** → **Gamification** | **Enable Gamification Module** | Badges and the Badges tab on every profile |
 | **Gamification & Courses** → **Gamification** | **Enable badge categories** | Groups badges so the award picker stays usable |
 | **Gamification & Courses** → **Gamification** | **Enable hours tracking** | Volunteering hours, and badges awarded from an hours total |
-| **Gamification & Courses** → **Courses** | **Enable Courses** | Leader training as self-paced courses. On by default |
+| **Gamification & Courses** → **Courses** | **Enable Courses** (already on) | Leader training as self-paced courses |
 | **Files & eDocuments** → **eDocuments** | **Enable eDocuments Module** | Consent forms, volunteer agreements and codes of conduct, signed on screen |
 | **Identity Validation** | **Enable Identity Validation** | ID document upload and admin review. Read the limits in [Adult volunteers](#adult-volunteers) first |
 | **Payments & Fees** → **Membership fees** | **Enable Membership Fees** | Subs. Also **Local Center Fees Enabled** for a second, group-level fee |
@@ -111,42 +127,96 @@ Every module and setting below is at **Settings** → **Modules**, and every one
 
 Not a module: **Texts** and **Languages** live under **Settings** → **Customization**.
 
+### Check the chapter layer first
+
+**Settings** → **Modules** → **Groups & Teams** → **Local Centers** carries your group and district structure, and it is the one screen worth opening before all the others, because people go looking for a switch that is already flipped.
+
+<img src="/images/platform/templates/scouting-local-centers-settings.png" alt="Local Centers tab of the Groups and Teams settings, with the Enable Local Centers Module switch already on at the top and a Basic Configuration block below it listing Enable Regions, Enable Parent Centers, Local Center User Types, Multi local center access and the other per-chapter switches" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+**Enable Local Centers Module** is on for a new organization, so the whole **Basic Configuration** block below it is already visible. The switches inside that block are the ones you actually have to decide about, and they start off:
+
+- **Enable Parent Centers** off. Turn it on only if you want a district layer above your groups.
+- **Enable Regions** off. Turn it on only if you want a flat reporting label. It grants no permissions.
+- **Multi local center access** off. Turn it on only if named people need to reach a second group without moving there.
+
 ---
 
 ## Setup order
 
-The order matters. Several of these screens are hidden until an earlier one is on, and a few decisions are hard to reverse once members exist.
+The order matters. Several of these screens are hidden until an earlier one is on, and a few decisions are hard to reverse once members exist. Each step says what you do, where in the interface it happens, and how you can tell it worked, so you can follow along with Orgo open beside you.
 
 <Steps>
   <Step title="Turn on the modules">
-    Work down the table above. Turning a module on only reveals screens, so it is safe to do in one pass.
+    Work down the table above, at **Settings** → **Modules**. Turning a module on only reveals screens, so it is safe to do in one pass, and you can leave the settings inside each one until later.
+
+    Two of them change the settings menu itself, which is your proof the pass landed: **Enable Organizational Units** adds a **Unit Types** tab to **Groups & Teams**, and **Enable Regions** adds a **Regions** tab under **Local Centers**.
+
+    **Done when:** **Groups & Teams** shows a **Unit Types** tab beside **Configuration** and **Local Centers**, and every switch in the table above is in the position you left it after a page reload.
   </Step>
   <Step title="Relabel the vocabulary">
-    **Settings** → **Customization** → **Texts**. Do this before you train anyone, so nobody learns Orgo's words and then has to unlearn them. Enable your languages first at [Languages](/platform/customization/languages), otherwise you will be adding empty columns to every row later.
+    Enable your languages first at **Settings** → **Customization** → **Languages**, then do the replacements at **Settings** → **Customization** → **Texts**. That order matters: the Texts table grows one Custom Expression column per enabled language, so a language added later means going back through every row you already wrote.
+
+    Do the whole pass before you train anyone, so nobody learns Orgo's words and then has to unlearn them.
+
+    **Done when:** your own sidebar and page titles read in your vocabulary as soon as you save, and the Texts table has no empty Custom Expression cell in any enabled language.
+
+    See [Languages](/platform/customization/languages) and [Texts](/platform/customization/labels).
   </Step>
-  <Step title="Define unit types">
-    **Settings** → **Modules** → **Groups & Teams** → **Unit Types**. One type per layer, each pointing at the type above it through **Parent unit type**. Tick **Within local center** on every type that belongs to a group, or that type will not appear as a tab on the group.
+  <Step title="Define your unit types">
+    **Settings** → **Modules** → **Groups & Teams** → **Unit Types** → **Add Unit Type**. One type per layer of your structure, created top down: **Section** first, then **Patrol** with **Parent unit type** set to Section.
+
+    Tick **Within local center** on every type that belongs to a group. Without it the type has nowhere to live, and it will not appear as a tab on a chapter.
+
+    **Done when:** each type below the top one names its parent on the Unit Types list, and opening any chapter shows a tab named after your top-level type.
   </Step>
   <Step title="Create user types for your age levels">
-    **Settings** → **Modules** → **Users & Profiles** → **Roles & User types**, level **User type**. Give each one a **URL Slug** if you want its own public joining page.
+    **Settings** → **Modules** → **Users & Profiles** → **Roles & User types** → **Add role**. Set **Level** to **User type**, fill in **Title** and **Plural title**, and create one per age band.
+
+    Give each one a **URL Slug** while you are there. The slug is what publishes a joining page at `/join/<slug>` for that age level, and it is also the way around the volunteer and parent picker limit described in [Adult volunteers](#adult-volunteers).
+
+    <img src="/images/platform/users/user-type-edit.png" alt="Role editor with Level set to User type, Title and Plural title filled in, the Not eligible for fee and Parent switches below them, and a URL Slug field whose hint reads Used for the registration URL /join/[slug]" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+    Note what is not on this screen: there is no permissions section. Levels above **User type** have one, and that is the whole point of the next step.
+
+    **Done when:** every age band appears in the Roles list with a green **User type** tag in the Level column, and `/join/<slug>` opens a joining page rather than a not-found.
   </Step>
   <Step title="Create roles for leader positions">
-    Same screen, but pick the level the position belongs to: **Organisation**, **Parent chapter**, **Chapter** or one of your unit types. Attach permissions here, never to a user type.
+    Same screen, one role per post. Set **Level** to the layer the post belongs to: **Organisation** for national officers, **Parent chapter** for district commissioners, **Chapter** for group leaders, or one of your unit types for section leaders. Attach the permissions the post needs here, never to a user type.
+
+    **Done when:** the Roles list shows each post with the right Level tag, and the **Permissions** column is filled in for every post that is meant to administer anything.
   </Step>
   <Step title="Create the chapters">
-    **Chapters** → **Create chapter**, one per group. Set the parent chapter if you enabled that layer. Set the currency carefully: a chapter currency can be set once and never changed.
+    **Chapters** → **Create chapter**, one per group. Set the parent chapter if you enabled that layer.
+
+    Set the currency carefully. A chapter currency can be set once and never changed afterwards, because past payments and the connected Stripe account are bound to it.
+
+    **Done when:** every group appears in the chapters list, each under the right parent, and each with the currency you intend to collect subs in.
   </Step>
   <Step title="Create the units inside each chapter">
-    From the chapter's unit tab, or the drag-and-drop segmented board that `ADMIN_LOCAL` gets. Create sections first, then their patrols.
+    From the chapter's unit tab, or from the drag-and-drop segmented board that `ADMIN_LOCAL` gets. Create your sections first, then the patrols inside them, so each patrol has a section to attach to.
+
+    **Done when:** the chapter's org structure shows every section, each patrol nested under its section, and no unit sitting at the top level by accident.
   </Step>
   <Step title="Add the custom fields you need before anyone registers">
-    Medical notes, dietary requirements, emergency contact, photo permission. Decide the visibility for each one now, because a field above **Public** is silently discarded on the public registration pages.
+    **Settings** → **Modules** → **Users & Profiles** → **Custom Fields**. Medical notes, dietary requirements, emergency contact, photo permission, and the safeguarding dates from your **Before you start** checklist.
+
+    Decide **Visibility** on each field now, and decide it against where the answer is collected. A field above **Public** is silently discarded on the public registration pages, so anything you need at sign-up has to be **Public** there, with profile visibility controlled separately.
+
+    <img src="/images/platform/users/custom-field-editor.png" alt="Custom field editor showing the Title, the Field type dropdown, the reorderable list of options, and the Visibility selector above the Save, Cancel and Remove buttons" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+    **Done when:** every field on your list exists, and for each one you can say in a sentence who reads it and which form collects it.
+
+    See [Custom fields](/platform/users/custom-fields).
   </Step>
   <Step title="Build the registration form, then the fee, then the documents">
-    [Registration form](/platform/users/registration-form) including **Birthday**, then [fees](/platform/fees/fees) and prices, then the [e-document templates](/platform/contracts) for your consent and conduct forms.
+    In that order, because each one depends on the last. The [registration form](/platform/users/registration-form) must include **Birthday** and mark it required, or the age logic in the fee has nothing to read. Then create the [fees](/platform/fees/fees) and one price per age level. Then build the [e-document templates](/platform/contracts) for parental consent, the volunteer agreement and the code of conduct.
+
+    **Done when:** a test registration on your own joining page creates an account with a date of birth on it, that account is offered the right price for its age level, and any document you marked **Mandatory document** is waiting for it in onboarding.
   </Step>
   <Step title="Import your existing members">
-    [Import](/platform/customization/import) handles members, badge categories, badges and badge assignments. Import badge categories and badges before assignments.
+    [Import](/platform/customization/import) handles members, badge categories, badges and badge assignments as separate passes. Run them in that order: an assignment cannot attach to a badge that does not exist yet, and a badge cannot file itself under a category that has not been imported.
+
+    **Done when:** the member count matches your source list, spot-checked members sit in the right chapter and unit, and their badge tabs show the awards you imported.
   </Step>
 </Steps>
 
@@ -182,6 +252,10 @@ Detail: [Local Centers](/platform/groups/local-groups), [Units](/platform/groups
 ## Youth members and parents
 
 Turn on **Enable Family Members** and, if you want to hold details for relatives who never sign in, **Non-Member Family Profiles**. Both are at **Settings** → **Modules** → **Users & Profiles** → **Configuration** → **Family & Relationships**.
+
+<img src="/images/platform/templates/scouting-family-settings.png" alt="Family and Relationships block of the Users and Profiles settings, with Enable Family Members and Non-Member Family Profiles both switched on and no other fields in the block" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+Those two switches are the entire block, which is worth noticing: the two age values described below are not on this screen or any other, so there is nothing here to tune them with.
 
 A family is one record grouping parents, guardians and children. One family per person. Members reach it at **Profile** → **Edit** → **Family**; anyone with `HR_LOCAL` over the member's chapter sees and manages it from the same tab.
 
@@ -238,6 +312,12 @@ Detail: [Family Members](/platform/users/family-members), [Waitlist](/platform/u
 ### Positions, not people
 
 Permissions belong on roles, never on user types. A user type cannot carry a permission at all: the permissions section disappears from the editor the moment you set the level to **User type**. So "Cub Leader" as a category is a user type, and "Cub Leader" as a post with access to the section's members is a role. If you need both, create both.
+
+Both live in the same list at **Settings** → **Modules** → **Users & Profiles** → **Roles & User types**, and the **Level** column is what tells them apart:
+
+<img src="/images/platform/users/roles-list.png" alt="Roles list with Level and Permissions filters above a table whose Level column tags each entry as Organisation, Chapter or User type, and a Permissions column beside it" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+Read that column as the reach of the post. The **Level** and **Permissions** filters above it are the fastest audit you can run: filter on a permission and you get every post that carries it, which is the list you should be able to justify to your safeguarding lead.
 
 Every role assignment has a **dateBegin** and an optional **dateEnd**. Ending the assignment ends the permissions it carried and leaves the assignment visible as history, which is what makes a leader handover one line of work rather than a permissions audit.
 
@@ -311,6 +391,12 @@ Badges need the Gamification module (**Settings** → **Modules** → **Gamifica
 | **Volunteering hours** | The member's Badges tab | Behind **Enable hours tracking**. Each entry has a period, hours, title and notes |
 | **Points and tiers** | **Gamification** → point rules | Behind **Enable tiers/levels by points**. Points come from payments, attendance, referrals and discussion activity |
 
+Your scheme ends up as one list at **Settings** → **Modules** → **Gamification & Courses** → **Badges**:
+
+<img src="/images/platform/features/badges-list.png" alt="Badges settings list with one row per badge showing its artwork, its name, a Type column naming the badge category, and an amber hours pill on the badges that carry an hours threshold" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+Two columns there are conditional, which is a quick way to check your settings took. The **Type** column, which holds the badge category, appears only when **Enable badge categories** is on. The amber hours pill appears only when **Enable hours tracking** or tiers is on, and it is the threshold that awards the badge automatically.
+
 Four ways a badge reaches a member: awarded by hand from their Badges tab (`HR_TENANT`, or `HR_LOCAL` over their chapter), awarded automatically when their logged volunteering hours pass a badge's **Hours number**, awarded on event attendance when the event names a badge, and awarded when a course enrolment is marked complete. A member can hold a given badge only once, and every automatic path checks first, so re-marking attendance never duplicates an award.
 
 Use **Pending** rather than **Completed** for work in progress. It is counted and filtered separately everywhere, which makes it a workable "started this badge" state.
@@ -332,14 +418,37 @@ Detail: [Badges](/platform/badges), [Gamification](/platform/gamification), [Cou
 
 ### Collecting what you need before a camp
 
-Switch on **Require registration form for members** in the event's **Modify** screen, under **Registration**. A **Registration form** entry then appears in the event sidebar. Paid events turn it on automatically and lock the toggle.
+Four steps, in this order. Editing any of it needs `EVENT_LOCAL` on the event's group, which `EVENT_TENANT` and `ADMIN_TENANT` satisfy across the organization.
 
-The builder offers twelve standard fields with fixed labels (email, full name, phone, organisation, role, town, social links and company details) and **none of them covers dietary or medical information**. Everything a camp actually needs is a custom field you create on that event: **Text area** for medical notes and medication, **Checkboxes** for dietary requirements, **Yes/No** for photo permission, **Date** for a travel date, **Text input** for an emergency contact.
+<Steps>
+  <Step title="Turn the registration form on">
+    Open the camp's **Modify** screen and switch on **Require registration form for members**, under **Registration**. Paid events turn it on automatically and lock the toggle, so a ticketed camp is already done here.
 
-Editing the form needs `EVENT_LOCAL` on the event's group, which `EVENT_TENANT` and `ADMIN_TENANT` satisfy across the organization.
+    **Done when:** a **Registration form** entry appears in the event's sidebar, among **Participants**, **Program** and **Tickets**.
+  </Step>
+  <Step title="Add the fields a camp actually needs">
+    Open that **Registration form** entry. The left pane offers fields, the right pane is the form you are building.
+
+    <img src="/images/platform/events/event-registration-form-builder.png" alt="Event registration form builder with the Standard fields and Custom fields tabs on the left over a list of available fields, and the chosen form fields on the right with Email and Full Name both marked required" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+    The **Standard fields** tab offers twelve fields with fixed labels (email, full name, phone, organisation, role, town, social links and company details) and **none of them covers dietary or medical information**. That is what the **Custom fields** tab beside it is for: **Text area** for medical notes and medication, **Checkboxes** for dietary requirements, **Yes/No** for photo permission, **Date** for a travel date, **Text input** for an emergency contact.
+
+    **Done when:** the form fields pane on the right lists every medical, dietary and emergency contact field you need, each marked required or not on purpose, and **Save changes** has been pressed.
+  </Step>
+  <Step title="Add the consent and rules wording">
+    Camp rules, refunds and cancellation go in **Custom text at bottom of registration form**, on the form's **Settings** tab. The GDPR and terms checkboxes are not yours to add: they appear on their own once your organization has the matching URLs, as the table under [Consent at registration](#consent-at-registration) sets out.
+
+    **Done when:** the public event page shows your rules text under the form, and both checkboxes appear if you expect them.
+  </Step>
+  <Step title="Save the camp as a template">
+    From the event sidebar, **Save as Template**. This is the only way to reuse the form you just built, because event custom fields cannot be copied from one event to another by hand.
+
+    **Done when:** the camp appears in your [event templates](/platform/events/event-templates) list, and next year's camp is created from it rather than rebuilt.
+  </Step>
+</Steps>
 
 <Warning>
-Event custom fields belong to that one event. They are not your organization-wide [custom fields](/platform/users/custom-fields), they do not appear on any other event, and there is no way to copy them across. Build the camp once with its full form, save it as an [event template](/platform/events/event-templates), and create every future camp from that template.
+Event custom fields belong to that one event. They are not your organization-wide [custom fields](/platform/users/custom-fields), they do not appear on any other event, and there is no way to copy them across. That is why the template step is not optional: build the camp once with its full form, save it as an [event template](/platform/events/event-templates), and create every future camp from that template.
 </Warning>
 
 ### Where camp data actually lives, and who can read it
@@ -376,6 +485,29 @@ Sort the scanning permission out before the doors open. Scanning with a plain ph
 Two more camp-day realities. Check-in is online only, so at a site with no signal you fall back to a printed participant export and record the RSVPs afterwards. And walk-ins must exist on the participant list before they can be marked present: add them with **Invite**, then set them to **Attended**.
 
 Detail: [Registration forms](/platform/events/registration-forms), [Attendance](/platform/events/attendance), [QR check-in](/platform/events/check-in), [Ticketing](/platform/events/ticketing).
+
+---
+
+## Setup checklist
+
+One line per step in [Setup order](#setup-order), written as the outcome rather than the click. Work down it with Orgo open, and treat anything you cannot tick as unfinished.
+
+- [ ] **Modules on.** Every module in the table above is in the position you chose, **Groups & Teams** shows a **Unit Types** tab, and **Enable Local Centers Module** is confirmed on rather than newly switched on.
+- [ ] **Languages then vocabulary.** Every language you run in is enabled, and no Custom Expression cell in the Texts table is empty in any of them.
+- [ ] **Emails checked after relabelling.** You have opened your system email templates and fixed the wording that Texts does not reach.
+- [ ] **Unit types defined top down.** Each type below the top one names its parent, and every type that belongs to a group has **Within local center** ticked.
+- [ ] **One user type per age level.** Each appears in the Roles list with a **User type** tag, and each that needs its own joining page has a working **URL Slug**.
+- [ ] **One role per post.** Each carries the right level and the permissions it needs, and no permission is sitting on a user type.
+- [ ] **Chapters created.** One per group, each under the right parent, each with the currency you will collect subs in. That currency cannot be changed later.
+- [ ] **Units created inside them.** Sections first, patrols nested under their section, nothing stranded at the top level.
+- [ ] **Custom fields in place with visibility decided.** For every field you can say who reads it and which form collects it, and nothing above **Public** is being asked for at public sign-up.
+- [ ] **Birthday required at registration.** A test registration produces an account with a date of birth on it.
+- [ ] **Fees priced per age level.** One price per level, assigned per member, not an age range on a single price.
+- [ ] **Consent and conduct documents built.** Parental consent, the volunteer agreement and the code of conduct exist as e-document templates, with **Mandatory document** on where the person must be held until they sign.
+- [ ] **Safeguarding records have a home.** A date field for each check that expires, a file field or Identity Validation for the evidence, and a named person with a calendar reminder to run the export, because nothing in Orgo watches those dates.
+- [ ] **Members imported and spot-checked.** Counts match, sampled members sit in the right chapter and unit, badge categories and badges were imported before assignments.
+- [ ] **Camp form saved as a template.** The full camp registration form, with its medical and dietary custom fields, exists as an event template so you never rebuild it.
+- [ ] **Door staff can scan.** Whoever is on the gate either holds `EVENT_TENANT` or is scanning from inside the Orgo mobile app.
 
 ---
 
