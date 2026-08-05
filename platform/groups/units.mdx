@@ -22,12 +22,14 @@ All four sit on the same underlying structure in Orgo, which is why they share f
 
 | | Belongs to | Membership | Created by |
 |---|---|---|---|
-| **Chapter** (local center) | The organization | The member's primary chapter, one per member | `ADMIN_TENANT` |
+| **Chapter** (local center) | The organization, or another chapter when parent chapters are on | The member's primary chapter, one per member | `ADMIN_TENANT` |
 | **Unit** | A chapter (usually) and optionally a parent unit | Assigned by an admin | `HR_LOCAL` within their own chapter |
 | **[Private group](/platform/groups/private-groups)** | The organization | People join or are invited | Any member allowed to create groups |
 | **[Role group](/platform/groups/role-groups)** | The organization | Filled automatically from a query | `ADMIN_TENANT` |
 
 The practical difference: a unit describes where someone sits in the org chart, a group describes what they are working on.
+
+Units and chapters both nest, and they are separate trees. Chapters nest into each other to any depth (national, region, district, branch), and units nest inside one chapter along your chain of unit types. A unit never spans two chapters, and a unit is never the parent of a chapter.
 
 ---
 
@@ -99,6 +101,10 @@ From the board you can drag a member from one unit to another, use **Add member*
 When units are enabled, each chapter row in the chapters list grows a chevron. Expanding it loads that chapter's whole unit tree inline, indented by depth, showing each unit's type, member type color, and member count.
 
 A unit name in that tree is a link only if you can open it. You can when you hold `HR_LOCAL` over the chapter, or you are an admin of that unit or one above it, or you hold a role on that unit type (or any type above it in the parent chain).
+
+<Note>
+  `ADMIN_LOCAL` reaches the units of its own chapter only, however deeply those units are nested inside it. It does not reach units belonging to a chapter below yours in the chapter tree, even one directly below. To administer a branch's units you need a `_PARENT_LOCAL` permission, which is the permission family that travels down the chapter tree. This closes a case where a parent chapter's `ADMIN_LOCAL` holders reached units sitting directly inside their child chapters.
+</Note>
 
 ---
 

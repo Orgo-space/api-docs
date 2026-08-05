@@ -83,8 +83,10 @@ Every event belongs to one place, chosen in the **Group** field on the event for
 | Choice | Who sees it |
 |---|---|
 | Your organization (the top option in **Main groups**) | Everyone, subject to the audience setting. Only offered if you hold the permission set in **Who Can Create Public Events**. |
-| A **local center** | People in that center. Creating here requires `EVENT_LOCAL` on that center. |
+| A **local center** | People in that center. Creating here follows that chapter's own **Who can create events in this chapter** setting, which is `EVENT_LOCAL` until the chapter changes it. See [chapter event permissions](/platform/groups/local-groups#creating-a-chapter). |
 | A **group** | Group members. If the group is marked so that only its admins can create events, you need to be a group admin or owner, or hold `ADMIN_TENANT` or `EVENT_TENANT`. |
+
+Chapters set their own bar. **Who can create events in this chapter**, on the chapter edit form, is one of **Event managers (default)** (`EVENT_LOCAL`), **Any member of this chapter** (`USER`), or **Chapter admins only** (`ADMIN_LOCAL`). `ADMIN_TENANT` clears all three. `EVENT_TENANT` clears the first two, but not **Chapter admins only**: that one is satisfied by chapter admins and organization admins alone, so an organization-wide event manager is refused there. The setting covers only the chapter it is set on and is never inherited by the chapters below it, and anyone below the bar is refused on save with *You do not have permission to create events in this local center*.
 
 Each event is also **Members only** or **Public**. Public needs the **Who Can Create Public Events** permission and is never offered for non-joinable (private) groups. Events start as **drafts**, visible only to people who can manage them, until someone publishes them. See [Create Event](/platform/events/create-event).
 
@@ -133,7 +135,7 @@ The module menu also holds **Event Types**, **Templates** and, once the matching
 
 | Setting | What it does |
 |---|---|
-| **Who Can Create Public Events** | The permission level needed to create an organization-wide event and to mark any event Public. Defaults to HR Tenant. This is a ceiling: a local event manager cannot exceed it. |
+| **Who Can Create Public Events** | The permission level needed to create an organization-wide event and to mark any event Public. Defaults to HR Tenant. This is a ceiling: a local event manager cannot exceed it. It does not decide who may create an event inside a chapter, which each chapter sets for itself. |
 | **Training Event Type** | Which [event type](/platform/events/event-types) marks an event as a training. |
 | **General Meeting Event Type** | Which event type marks an event as a general meeting. |
 | **Enable Custom Statuses** | Adds your own event statuses alongside draft and published. |
@@ -159,8 +161,8 @@ Paid tickets need Stripe connected first. See [Stripe integration](/platform/fee
 
 | Permission | What it unlocks in Events |
 |---|---|
-| `EVENT_LOCAL` | Create and manage events in their own local center, and manage organization-wide events (events with no group) |
-| `EVENT_PARENT_LOCAL` | The same, extended across the centers under a parent center |
+| `EVENT_LOCAL` | Create and manage events in their own local center (creating also has to clear that chapter's **Who can create events in this chapter** setting), and manage organization-wide events (events with no group) |
+| `EVENT_PARENT_LOCAL` | The same, extended across every center below their anchor center, at any depth |
 | `EVENT_TENANT` | Manage any event, enable ticketing, and propagate events to all local centers |
 | `FINANCIAL_TENANT` | See the Access (Free or Paid) choice, and the Tickets and Payments tabs |
 | `ADMIN_TENANT` | Everything above, plus event types, statuses, and templates |

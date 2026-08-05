@@ -111,11 +111,40 @@ Two ways to reuse a campaign:
 |---|---|
 | Queue | Recipients are resolved in batches of 2,000 and each email is dispatched individually at roughly three per second per worker, so a large send arrives over minutes rather than all at once |
 | Resend guard | A campaign already **Sent** cannot be sent again, and a resend to the same recipient is skipped even if the queue retries |
-| Schedule window | At least 2 minutes in the future, on a 15-minute boundary (:00, :15, :30, :45), because the scheduler runs every 15 minutes |
-| Schedule fields | Date, time, and timezone (defaults to the organization timezone) |
+| Schedule window | At least 2 minutes in the future, on a 15-minute boundary (:00, :15, :30, :45), because the scheduler runs every 15 minutes. Today is the earliest selectable date, so a send later this afternoon is fine |
+| Schedule fields | Date, time, and timezone (defaults to your own timezone, falling back to the organization's) |
 | Schedule failure | Retried, then marked **Failed** after three failures |
 | Statuses | **Draft**, **Scheduled**, **Sending**, **Sent**, **Stop**, **Failed** |
 | Sending to Sent | Automatic once delivery events stop arriving for 15 minutes, or after 2 hours at 95% or better delivery, with a hard cut-off at 24 hours |
+
+### Picking a date and time
+
+The **Schedule** tab on a draft campaign and the **Schedule** dialog in the
+content editor's side menu are the same form and follow the same rules.
+
+- **Today is the earliest date you can pick.** A campaign written this morning can
+  go out this afternoon. The fields open on tomorrow at 09:00 as a default, so
+  change the date if you want it to leave today.
+- The time picker steps in 15 minutes, which is the boundary a schedule has to
+  land on.
+- Anything less than 2 minutes away is refused: the form shows "Scheduled time
+  must be at least 2 minutes in the future" and keeps the confirm button
+  disabled. The same check runs again on the server.
+- The timezone dropdown decides what the clock time means. The date and time you
+  type are read in that timezone, so 09:00 in Europe/Bucharest leaves at 09:00 in
+  Bucharest wherever you happen to be sitting. It defaults to your own timezone,
+  or the organization's if your profile has none.
+- Rescheduling follows the same rules, and removing a schedule puts the campaign
+  back to Draft.
+
+<Note>
+The 2-minute check inside the form is measured against your device clock rather
+than against the timezone you selected. Scheduling same-day into a timezone
+several hours from your own can make the two disagree, so the warning appears on
+a time that is genuinely fine, or a time the form accepted is refused on save.
+Push the send a few hours out, or schedule in your own timezone, and it does not
+arise.
+</Note>
 
 ---
 

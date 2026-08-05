@@ -125,11 +125,24 @@ Undo restores the source from the snapshot taken at merge time and points the
 transferred records back at it. A source contact that was deleted is recreated,
 which means it comes back with a new id.
 
-What undo does not do is rewind the surviving record. Field values you chose
-during the merge stay on it, and anything created on it since the merge stays
-there too. Undo separates the two records again, it does not restore the survivor
-to its pre-merge state. Roll back promptly if a merge was wrong, before new
+It also rewinds the surviving record. Every field you took from the source goes
+back to the survivor's own pre-merge value: profile fields, custom field values,
+the username the merge regenerated from the new email address, and the identity
+record and payment customer reference it was handed. A value is only put back
+while it still holds exactly what the merge wrote into it, so anything you edited
+on the survivor after the merge is left as you left it.
+
+What undo does not do is remove activity. Anything created on the survivor since
+the merge stays there. Roll back promptly if a merge was wrong, before new
 activity piles up on the record you would have to sort out by hand.
+
+<Note>
+If the source's old email address was claimed by a new account while the merge
+stood, the source comes back under a suffixed username so the live account keeps
+its own sign-in; the restored person still signs in with their email address as
+normal. If undo cannot proceed at all because it would duplicate a unique value,
+it is refused with a message naming that value and nothing is changed.
+</Note>
 
 <img src="/images/platform/users/merge-history.png" alt="Merge History table listing past merges with date, type, source and target records, who performed them and their status, with an Undo button while the rollback window is open and Expired once it has closed" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 

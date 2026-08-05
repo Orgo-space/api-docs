@@ -66,7 +66,7 @@ See [Assigning permissions](/platform/permissions-assigning).
 |---|---|
 | `COMMUNICATION_TENANT` | Campaigns for the whole organization, campaign templates, Lists & Segments, signup widgets, moderation queue. Covers everything `COMMUNICATION_LOCAL` does |
 | `COMMUNICATION_LOCAL` | **Email campaigns** for the local centers they manage, and only the **Members from a group** audience. Lists, tenant-wide audiences and event audiences are hidden from them |
-| `COMMUNICATION_PARENT_LOCAL` | The same as `COMMUNICATION_LOCAL`, extended to the centers below theirs |
+| `COMMUNICATION_PARENT_LOCAL` | The same as `COMMUNICATION_LOCAL`, extended to every center below their anchor center, at any depth |
 | `EVENT_TENANT` | Campaigns attached to an event, and signup widgets |
 | `HR_TENANT` | Creating and editing lists, alongside `COMMUNICATION_TENANT` |
 | `ADMIN_TENANT` | All settings above, the [email log](/platform/emails/email-log), and adding or removing individual people on a manual list |
@@ -335,8 +335,10 @@ Four things a customer has to get right.
 **Verified sender identity.** The From address is your contact email only after
 Orgo has verified it, which needs DNS records on your domain and is done by
 support rather than in Settings. Until then mail leaves as `no-reply@orgo.space`.
-Reply-To is your contact email either way, verified or not. SPF, DKIM and DMARC
-on your own domain remain yours to maintain.
+Reply-To is your contact email either way, verified or not. A
+[custom domain](/platform/custom-domain) hands you the DKIM records and the two
+`bounce.` records that make SPF align with your own domain; the DMARC policy and
+the SPF record on your apex remain yours to maintain.
 
 **Unsubscribe handling.** Campaign email carries one-click unsubscribe headers,
 so a member can opt out from the mail client without opening the message. If your

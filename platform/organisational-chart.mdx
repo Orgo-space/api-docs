@@ -48,6 +48,10 @@ The level decides which section a role lands in:
 | **Chapters** | Roles set to the **Chapter** level | Local centers are active |
 | One section per unit type | Roles attached to that unit type | The unit type exists |
 
+<Note>
+  The chart has these two chapter sections and no more, whatever the shape of your chapter tree. Chapters nest to any depth, but a role is either a chapter role or a parent-chapter role, so a district commissioner and a national officer at parent-chapter level land in the same **Parent local centers** section. The chart does not draw the layers of the tree; use the chapters list for that.
+</Note>
+
 The position number decides the row. Roles are grouped in blocks of one hundred: positions 0 to 99 form the first row of a section, 100 to 199 the second, and so on. Roles with no position number are placed in a final row at the bottom of their section. Empty rows are hidden unless you are editing.
 
 <Note>
@@ -123,6 +127,8 @@ Assignments are made on the member, not on the chart. Open a member, go to the *
 | Organisation | `HR_TENANT` |
 | Parent chapter | `HR_PARENT_LOCAL` on the member's chapter |
 | Chapter | `HR_LOCAL` on the member's chapter |
+
+A parent-chapter assignment is filed against the member's own chapter when that chapter is flagged **It's a parent chapter**, and otherwise against the chapter directly above it. It is never filed further up, so a district officer's parent-chapter role stays with the district rather than moving to the region.
 
 The tab itself appears for `HR_TENANT`, or for `HR_LOCAL` on that member's chapter. When **Allow Local Admins to Modify User Permissions** is turned off, local administrators can see the tab but the checkboxes are read only, and only `HR_TENANT` can change assignments.
 

@@ -32,8 +32,8 @@ A member's effective permissions are the union of three sources, recalculated wh
 | Secretary general | `HR_TENANT` | Members across the organization |
 | Treasurer | `FINANCIAL_TENANT` | Fees, products, payments, billing |
 | Communications lead | `COMMUNICATION_TENANT` | Campaigns, templates, lists, moderation |
-| Regional director | `ADMIN_PARENT_LOCAL` | Their region and every chapter under it |
-| Regional membership officer | `HR_PARENT_LOCAL` | Members across the region |
+| Regional director | `ADMIN_PARENT_LOCAL` | Their anchor chapter and every chapter beneath it, at any depth |
+| Regional membership officer | `HR_PARENT_LOCAL` | Members across that same branch |
 | Chapter president | `ADMIN_LOCAL` | Their chapter only |
 | Chapter secretary | `HR_LOCAL` | Chapter members |
 | Chapter treasurer | `FINANCIAL_LOCAL` | Chapter fees and payments |
@@ -62,6 +62,10 @@ A member's effective permissions are the union of three sources, recalculated wh
 
 <Note>
 A role marked as a **user type** cannot carry permissions. Ticking the user type level clears the permission list. Use a separate role for the responsibility, or assign the permission directly.
+</Note>
+
+<Note>
+A **Parent chapter** role attaches to the member's own chapter when that chapter is flagged **It's a parent chapter**, and otherwise to the chapter directly above it. It never attaches further up than that, so giving a district officer a parent-chapter role never files them against the region. A member whose chapter is neither a parent nor has one cannot be given a parent-chapter role at all, and the assignment is refused with "Members is not part of any parent local center".
 </Note>
 
 <img src="/images/platform/users/roles-list.png" alt="Roles list with Level and Permissions filters, a Level column showing Organisation, Parent chapter, Chapter and User type badges, and a Permissions column of permission tags" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
@@ -192,7 +196,7 @@ Run the member filter whenever someone leaves. Ending a member's role removes th
     Either the module it belongs to is off (Financial needs Fees, Event Manager needs Events), or the scope is unavailable (chapter permissions need Local Centers, parent chapter permissions need Enable Parent Centers), or it is above your own level.
   </Accordion>
   <Accordion title="A chapter manager sees the wrong chapter's data">
-    Check their chapter on the profile, and check the **Multi chapter access** rows on their Roles tab. A regional permission also covers every chapter under the parent.
+    Check their chapter on the profile, and check the **Multi chapter access** rows on their Roles tab. A regional permission covers an anchor chapter and every chapter beneath it at any depth, so with a three-layer structure it can reach further than the layer you had in mind. Work the anchor out from their own chapter using [What a parent-scope permission reaches](/platform/groups/local-groups#what-a-parent-scope-permission-reaches).
   </Accordion>
 
   <Accordion title="A checkbox is missing even though I clearly outrank the person">

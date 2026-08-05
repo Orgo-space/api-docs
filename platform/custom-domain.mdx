@@ -40,7 +40,7 @@ Two rules are enforced when you submit. **It must be a subdomain**: `members.acm
 
 <Steps>
   <Step title="Enter the host and start">
-    Type the address, for example `community.acme.com`; the page previews the final URL. **Start setup** immediately requests a wildcard TLS certificate for `*.<your apex>` and creates a sender identity for the same apex.
+    Type the address, for example `community.acme.com`; the page previews the final URL. **Start setup** immediately requests a wildcard TLS certificate for `*.<your apex>`, creates a sender identity for the same apex, and points that identity's bounce address at `bounce.<your apex>`.
   </Step>
   <Step title="Add the DNS records">
     Once both requests come back, the status becomes **Awaiting DNS** and two record groups appear. Add every record exactly as shown at your DNS provider. Use **Copy all as text** or **Download as CSV** rather than retyping.
@@ -68,18 +68,71 @@ Proves you own the domain so the certificate can be issued, and points traffic a
 
 ### Email Setup
 
-Authorises Orgo to send mail signed as your domain.
+Authorises Orgo to send mail signed as your domain, and makes that mail authenticate as yours rather than as Amazon's.
 
-| Record | What it is |
-|---|---|
-| Three CNAMEs at `<token>._domainkey.<apex>` | DKIM signing keys. All three are required. |
-| TXT at `_dmarc.<apex>` | Tagged **Recommended**, not required. It tells receiving servers what to do with messages that fail authentication. |
+| Type | Name | Value | What it is |
+|---|---|---|---|
+| CNAME, three of them | `<token>._domainkey.<apex>` | `<token>.dkim.amazonses.com` | DKIM signing keys. Required, and all three must be present |
+| MX | `bounce.<apex>` | `10 feedback-smtp.<region>.amazonses.com` | Required. Moves the envelope sender onto your own domain |
+| TXT | `bounce.<apex>` | `"v=spf1 include:amazonses.com -all"` | Required. The SPF record authorising Amazon SES for that subdomain |
+| TXT | `_dmarc.<apex>` | `"v=DMARC1; p=none;"` | Badged **Recommended**, not required. It tells receiving servers what to do with messages that fail authentication |
 
-The verified counter next to **Email Setup** counts only the required records, so it can read 3/3 while the DMARC row still shows as Recommended.
+Five required records, so the verified counter next to **Email Setup** now counts to 5. It can read 5/5 while the DMARC row still shows as Recommended, because recommended records are not counted.
+
+`<region>` is the AWS region your sender identity lives in, today `eu-central-1`. Copy every name and value from the page rather than from this table: the DKIM tokens are unique to your domain, and the region is stored per setup so it cannot change under you.
 
 <Warning>
   Some DNS providers append your domain to any value you paste, silently turning a correct record into a wrong one. After saving, read the stored record back and compare it character for character with what Orgo shows.
 </Warning>
+
+Three things to check against the form your provider gives you:
+
+- **The zone.** All of these belong in your apex zone. A provider that asks for a host name relative to the zone wants `bounce`, not `bounce.acme.com`.
+- **The MX priority.** The leading `10` in the MX value is the priority. If your provider has a separate priority field, put `10` there and only `feedback-smtp.<region>.amazonses.com` in the value.
+- **The quotes.** Orgo shows TXT values wrapped in double quotes, which is how they look in a zone file. Most provider forms want the value without the surrounding quotes; the few that take raw zone-file syntax want them. Match how the TXT records already in your zone are stored.
+
+### What the bounce records do
+
+Every email carries two sender addresses: the `From:` header your recipients read, and the envelope sender (the `Return-Path`) that only the receiving server sees. Without these two records, the envelope sender on Orgo's mail for you sits on a subdomain of `amazonses.com`.
+
+That matters because SPF is checked against the envelope domain. SPF passes, but it passes for Amazon's domain rather than yours, so it is not *aligned* with your `From:` header, and DMARC only counts a check that passes **and** aligns. Your DMARC result then rests entirely on DKIM, and filters that score the `From:` domain's SPF on their own mark the message down.
+
+The MX record moves the envelope onto `bounce.<apex>`, a subdomain of your own domain, and the TXT record on that subdomain authorises Amazon SES to send for it. SPF then both passes and aligns, so DMARC has two independent passing checks instead of one.
+
+What it does not do:
+
+- It does not change the address recipients see. That is the contact email verification described under [Going live](#going-live-and-what-changes).
+- It does not replace DKIM. Both stay required, and DKIM is still what carries alignment if a message is forwarded.
+- It does not change the SPF record on your apex, and does not need to. For Orgo's mail, the SPF record receivers consult is the one on `bounce.<apex>`.
+- It relies on DMARC's default relaxed alignment, under which `bounce.acme.com` counts as aligned with `acme.com`. If your DMARC record asks for strict SPF alignment with `aspf=s`, a subdomain does not align and DKIM remains your only aligned check.
+- It does not improve a domain's existing reputation, and it does not gate anything in this setup. Status, going live, and sender verification all ignore it.
+
+<Note>
+  If the MX record is missing, wrong, or removed later, Amazon SES silently falls back to its own envelope domain and your mail keeps flowing exactly as it did before. That fallback is deliberate: a DNS typo here costs you alignment, never delivery.
+</Note>
+
+Verification watches the MX record only. When Amazon SES finds it, both bounce rows flip to **Verified** together, so a Verified badge on the TXT row means the MX was found, not that the SPF value was read and approved. Check that one back yourself.
+
+### Your existing SPF record
+
+Below the records table you may see a panel titled **Optional: your existing SPF record**. It is advice about the SPF record on your **apex**, and it is deliberately not a copy-paste row in the table above. It appears in one of two forms:
+
+- **A merged value.** Orgo reads the SPF record currently published on your apex and offers the same record with `include:amazonses.com` inserted before the trailing `all`, keeping every sender you already authorise. If your apex has no SPF record at all, the suggestion is a bare `v=spf1 include:amazonses.com ~all`.
+- **A warning with no value**, when your record is already close to SPF's ceiling of 10 DNS lookups. One more lookup could cross it, which fails SPF for your whole domain, so the fix is to consolidate the record first rather than add to it.
+
+Nothing appears when your apex already lists Amazon SES, or while the lookup has not returned an answer yet.
+
+<Warning>
+  Publish only the merged value Orgo shows, never a bare `v=spf1 include:amazonses.com` record. A domain may hold exactly one SPF record, so pasting a bare one over an apex record that authorises your real mail (Google Workspace, your CRM, your ticketing tool) stops all of it authenticating.
+</Warning>
+
+This panel is optional in the real sense: your mail authenticates correctly without it, because the record that matters for Orgo is on `bounce.<apex>`. It exists for the filters that also glance at the apex.
+
+### Records on a domain that was already verified
+
+Orgo never repoints a sender identity that already has a bounce domain of its own. If your domain was configured by hand before this existed, that bounce domain is kept and the wizard shows its records rather than `bounce.<apex>`.
+
+Otherwise, the next automatic check adds the bounce configuration to your existing setup. Two new rows appear in **Email Setup** marked Pending and the counter that used to read 3/3 now reads 3/5. Nothing else changes: your domain stays **Active**, mail keeps sending, and DKIM keeps signing. Publish the two records when it suits you and the badge flips on the next check.
 
 ---
 
@@ -107,7 +160,7 @@ Two things have to finish, and they rarely finish together.
 
 **Traffic.** The certificate must be issued **and** your host's CNAME must actually resolve to the Orgo target. Only then does Orgo switch your app host over and set up the redirect from `yourorg.orgo.space`.
 
-**Email.** Both the domain verification and all three DKIM keys must succeed. When they do, and your organization's contact email is on the same domain (or a subdomain of it), Orgo marks that address as a verified sender. Until then, mail goes out from `no-reply@orgo.space` with your contact email as the reply address; after verification, from your contact email.
+**Email.** Both the domain verification and all three DKIM keys must succeed. When they do, and your organization's contact email is on the same domain (or a subdomain of it), Orgo marks that address as a verified sender. Until then, mail goes out from `no-reply@orgo.space` with your contact email as the reply address; after verification, from your contact email. The two bounce records are not part of this gate: a domain reaches **Active** with them still Pending, and they can be published afterwards.
 
 The status reads **Active** only once both halves are done, so a domain can be serving pages perfectly while the page still says Validating because DKIM has not propagated yet.
 
@@ -145,6 +198,15 @@ Payment and donation short links (`/pay/<slug>`) use a separate payment host thi
   </Accordion>
   <Accordion title="Emails still arrive from the old address">
     All three DKIM records in the Email Setup group must read Verified, and your organization contact email must have been on the new domain at the moment they turned green. If it was not, support has to promote it for you.
+  </Accordion>
+  <Accordion title="New MX and TXT rows appeared on a domain that already worked">
+    Those are the bounce records, added to every custom domain so that SPF authenticates as your domain rather than as Amazon's. Nothing broke and nothing is waiting on you: your domain stays Active and mail keeps sending while they read Pending. Publish them when convenient.
+  </Accordion>
+  <Accordion title="The bounce MX record never turns Verified">
+    The record belongs in your apex zone, where most provider forms want a host of just `bounce`, not `bounce.acme.com`, and never the subdomain your community runs on. Providers with a separate priority field also want `10` in that field rather than at the front of the value. Mail is unaffected either way: Amazon SES falls back to its own envelope domain while the record is missing.
+  </Accordion>
+  <Accordion title="Do I have to change my apex SPF record">
+    No. The SPF record receivers consult for Orgo's mail is the one on `bounce.<apex>`. The apex panel is advice for filters that also look at your main domain, and it only ever offers a value that keeps the senders you already authorise. If it shows a warning instead of a value, your record is near the 10-lookup limit and needs consolidating before anything is added.
   </Accordion>
   <Accordion title="An error message is shown above the stepper">
     That line is the last error from the most recent check. It clears as soon as a check runs clean, so a message that stays means the condition is still present.

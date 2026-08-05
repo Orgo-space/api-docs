@@ -71,6 +71,11 @@ This applies to the built-in wording of a template. If you write your own versio
 of a template, that version is used for every recipient regardless of language, so
 a multilingual organisation should think carefully before customising.
 
+The [invoice email](/platform/fees/invoices) and the PDF attached to it are the
+exception: they follow your organisation's default language across all 14
+interface languages, and fall back to English only when the default is not one of
+them.
+
 See [Email templates](/platform/emails/email-templates) for what you can rewrite,
 and [Languages](/platform/customization/languages) for the interface language
 setting itself.
@@ -125,8 +130,14 @@ A few things Orgo does for you, and one it cannot:
 - Addresses that were minted during a data import for people who had no email of
   their own are recognised and skipped rather than bounced. A member with one of
   these will simply never receive email until you give them a real address.
-- Orgo cannot fix your domain's reputation. If you send from your own address,
-  the SPF, DKIM and DMARC records on that domain are yours to maintain.
+- If you run a [custom domain](/platform/custom-domain), the setup asks you to
+  publish DKIM keys plus an MX and a TXT record on `bounce.<your domain>`. Those
+  last two put the envelope sender on your own domain, so SPF passes *and* aligns
+  with the address recipients see instead of resolving to Amazon. Mail sends
+  either way, but a domain missing them authenticates on DKIM alone.
+- Orgo cannot fix your domain's reputation. The DMARC policy on your domain, and
+  the SPF record on your apex covering everything else you send from it, are
+  still yours to maintain.
 
 ---
 
@@ -148,7 +159,7 @@ A few things Orgo does for you, and one it cannot:
   <Accordion title="An email is in the wrong language">
     Automatic email follows the organisation's default language, clamped to
     English, Romanian or German. A member's own interface language does not change
-    it.
+    it. Invoice emails are the exception and cover all 14 languages.
   </Accordion>
 
   <Accordion title="We want to stop one specific reminder without stopping the rest">

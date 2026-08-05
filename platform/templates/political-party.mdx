@@ -161,16 +161,18 @@ Orgo calls a territorial branch a **chapter** (**local center** in the data mode
 | Your structure | Model it as | Switch |
 |---|---|---|
 | The party | The organization itself | Nothing to turn on |
-| County, region, federal state | **Parent chapter** | **Enable Parent Centers** |
+| Federal state, region, county, and any tier between them | **Parent chapter**, nested as deep as your statutes go | **Enable Parent Centers** |
 | Local branch, constituency organization | **Chapter** | **Enable Local Centers Module** (on by default) |
 | Sections inside a branch | **Unit**, with a unit type you define | **Enable Organizational Units** |
 | A label for reporting only, granting nothing | **Region** | **Enable Regions** |
 
 All four live at **Settings** → **Modules** → **Groups & Teams**, and all require `ADMIN_TENANT`. See [Chapters](/platform/groups/local-groups) and [Units](/platform/groups/units).
 
-Once they exist, **Chapters** in the sidebar is your map of the party. Parent chapters sit flush left with their branches indented underneath, and a parent's members figure carries a second line showing how many of those sit in its child chapters.
+There is no limit of two layers. Federal state holding region holding county holding branch is one chapter tree, built by flagging every tier that holds another with **It's a parent chapter** and then setting **Belongs to parent chapter** on each tier below it. A tier in the middle carries both settings at once. Moving a chapter in the tree afterwards requires `HR_TENANT`, so plan the shape before you delegate.
 
-<img src="/images/platform/groups/local-centers-list.png" alt="Chapters list with parent chapters at the left margin and their branches indented underneath, each row showing member count, town, county and founding date" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+Once they exist, **Chapters** in the sidebar is your map of the party. Each tier is indented under the one above it, in tree order, and a chapter's members figure carries a `(+N)` count for everyone in the chapters beneath it, counted through the whole branch rather than one tier down.
+
+<img src="/images/platform/groups/local-centers-list.png" alt="Chapters list in tree order with each tier indented under the one above it, each row showing member count, town, county and founding date" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ### Officer permissions follow the layer
 
@@ -179,13 +181,15 @@ Permissions belong on [roles](/platform/organisational-chart#the-role-form), nev
 | Post | Role level | Permission family |
 |---|---|---|
 | Party president, general secretary, national HR | **Organisation** | `ADMIN_TENANT`, `HR_TENANT`, `FINANCIAL_TENANT` |
-| County or regional chair | **Parent chapter** | `ADMIN_PARENT_LOCAL`, `HR_PARENT_LOCAL`, `FINANCIAL_PARENT_LOCAL` |
+| Chair of any tier that holds other chapters | **Parent chapter** | `ADMIN_PARENT_LOCAL`, `HR_PARENT_LOCAL`, `FINANCIAL_PARENT_LOCAL` |
 | Branch chair, branch secretary, branch treasurer | **Chapter** | `ADMIN_LOCAL`, `HR_LOCAL`, `FINANCIAL_LOCAL` |
 
-`ADMIN_PARENT_LOCAL` grants every local permission across a parent chapter and its children; `ADMIN_LOCAL` grants every non-parent local permission inside its own chapter. Both are computed from the holder's own primary chapter, so a regional officer's reach follows them if they move.
+`ADMIN_PARENT_LOCAL` grants every local permission across one anchor chapter and every chapter beneath it, however many tiers down; `ADMIN_LOCAL` grants every non-parent local permission inside its own chapter alone. Both are computed from the holder's own primary chapter, so a regional officer's reach follows them if they move.
+
+The anchor is the officer's own chapter when that chapter is flagged **It's a parent chapter**, and otherwise the chapter directly above theirs. A county chair filed against a county that is flagged as a parent therefore administers the county and its branches and nothing above it, which is what you want. A branch officer given the same permission anchors to their county instead, and so reaches every branch of that county.
 
 <Warning>
-Local permissions are scoped by chapter, not by branch of the tree below a region. `HR_LOCAL` on a chapter is exactly that chapter, and the `_PARENT_LOCAL` variants only mean anything while **Enable Parent Centers** is on. Read [Chapters](/platform/groups/local-groups) before you hand out `ADMIN_PARENT_LOCAL` to a county chair.
+The `_PARENT_LOCAL` family only travels downward, never up and never sideways into another branch, and it only means anything while **Enable Parent Centers** is on. `HR_LOCAL` on a chapter is exactly that chapter, with no reach into the chapters below it. Read [What a parent-scope permission reaches](/platform/groups/local-groups#what-a-parent-scope-permission-reaches) before you hand out `ADMIN_PARENT_LOCAL` to a county chair, especially if your structure has three tiers or more.
 </Warning>
 
 ### When a member moves
@@ -458,7 +462,7 @@ Everything below requires `ADMIN_TENANT` to change, and the Settings screens the
 | What | Exact label | Where | Default |
 |---|---|---|---|
 | Chapters | **Enable Local Centers Module** | **Settings → Modules → Groups & Teams → Local Centers** | On |
-| A region tier above chapters | **Enable Parent Centers** | Same page | Off |
+| One or more tiers above chapters, nested to any depth | **Enable Parent Centers** | Same page | Off |
 | A flat region label | **Enable Regions** | Same page | Off |
 | Sections inside a chapter | **Enable Organizational Units** | **Settings → Modules → Groups & Teams → Configuration** | Off |
 | Named posts with terms and permissions | **Enable Roles** | **Settings → Modules → Users & Profiles → Configuration → User Types & Roles** | On |
@@ -509,11 +513,11 @@ The order matters. Several screens stay hidden until an earlier switch is on, an
     **Done when** the organization card carries your legal details, and the Privacy & Visibility section still shows the levels you chose after a page reload rather than **All Users**.
   </Step>
   <Step title="Build the territorial structure at Groups & Teams, then Chapters">
-    Turn on **Enable Parent Centers** at **Settings** → **Modules** → **Groups & Teams** if you have a regional tier. Then create your branches from **Chapters** → **Create chapter**, setting the parent on each one, and the units inside them if you use them.
+    Turn on **Enable Parent Centers** at **Settings** → **Modules** → **Groups & Teams** if you have any tier above your branches. Then build the tree top down: create each tier that holds others first, flag it **It's a parent chapter**, and only then create the chapters below it with **Belongs to parent chapter** set. The picker only offers chapters already flagged as parents, so building bottom up means going back to fix every link. A middle tier carries both settings at once.
 
     Set each chapter's currency carefully. A chapter currency is set once and can never be changed afterwards.
 
-    **Done when** the Chapters list shows every branch indented under the right parent, each carrying the currency you intend to collect dues in.
+    **Done when** the Chapters list shows every tier indented under the right one above it, each carrying the currency you intend to collect dues in. Reshaping the tree later needs `HR_TENANT`, so get it right while you still hold everything yourself.
   </Step>
   <Step title="Create roles for your offices and user types for membership categories">
     **Settings** → **Modules** → **Users & Profiles** → **Roles & User types**. Set the level to match the post (**Organisation**, **Parent chapter**, **Chapter**, or a unit type) and attach permissions to roles, never to user types, because a user type cannot carry a permission at all.

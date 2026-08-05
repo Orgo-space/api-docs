@@ -284,7 +284,7 @@ With **Enable Company Fees** on, anyone who belongs to a company loses their ind
 
 ### When a company fee lapses
 
-Companies have their own reminder ladder, separate from the individual one: about a month before expiry, 7 days before, 1 day before, on the expiry day, then 7, 14 and 30 days after. Each goes **To** the **Financial contact email**, copying the active Primary Contacts and the two **Additional contact email** addresses. Without a financial contact email, the first Primary Contact is promoted to the To line, and a company with nobody reachable is skipped. The post-expiry rungs are exact day counts, so a company 3 days lapsed hears nothing that day.
+Companies have their own reminder ladder, separate from the individual one: about a month before expiry, 7 days before, 1 day before, on the expiry day, then 7, 14 and 30 days after. Each goes **To** the **Financial contact email**, copying the active Primary Contacts and the two **Additional contact email** addresses. Without a financial contact email, the first Primary Contact is promoted to the To line, and a company with nobody reachable is skipped. Only **Active** and **Pending** companies are reminded, so setting one to Inactive stops both the reminder and the renewal invoice attached to it. The post-expiry rungs are exact day counts, so a company 3 days lapsed hears nothing that day.
 
 With **Company Fee Payment Mandatory** on and the membership lapsed:
 
@@ -311,6 +311,7 @@ Chapters (called **local centers** in the data model, the API and the permission
 |---|---|
 | Members | Every member has exactly one primary chapter. Moving someone is a [transfer request](/platform/groups/transfers), approved by the receiving chapter |
 | Permissions | The `_LOCAL` family appears on the profile permission panel, scoped to the holder's chapter. **Enable Parent Centers** adds the `_PARENT_LOCAL` family on top |
+| Structure above a chapter | **Enable Parent Centers** lets a chapter sit under another chapter, to any depth. A national body holding regions holding member bodies is three layers of one tree, not three products |
 | Fees | **Local Center Fees Enabled** gives each chapter its own fee product, default price and validity date, independent of the organization fee. See [Chapter Fees](/platform/local-group-fees/create-local-fees) |
 | Money | A chapter that connects its own Stripe account receives its own chapter fee payments. Without one, they fall back to the organization account |
 | Structure below a chapter | **Enable Organizational Units** adds typed, nestable teams inside a chapter. See [Units](/platform/groups/units) |
@@ -319,9 +320,11 @@ Chapters (called **local centers** in the data model, the API and the permission
 Chapters and companies do not meet. A company record has no chapter field, a company fee is never routed to a chapter Stripe account, and chapter fee screens work on individual members, not on companies. If your regions need their own income from member companies, either bill it centrally and distribute it in your accounting, or give each region its own corporate tier and reconcile from the payment records.
 </Warning>
 
+If your federation has tiers (a national body, its regions, their member bodies), build them as chapters nested inside each other rather than as regions or groups. **Enable Parent Centers**, flag each chapter that holds others with **It's a parent chapter**, then set **Belongs to parent chapter** on the ones below it. A chapter can be both at once, which is what makes a middle tier possible. Moving a chapter later requires `HR_TENANT`, because the link decides who administers the branch.
+
 Two grouping tools that are not chapters and are worth knowing before you build a hierarchy you cannot undo:
 
-- **Regions** (**Enable Regions**) are a flat label on a chapter, used for filtering and grouping. They grant nothing on their own.
+- **Regions** (**Enable Regions**) are a flat label on a chapter, used for filtering and grouping. They grant nothing on their own, and they are not a layer of the chapter tree.
 - **[Role groups](/platform/groups/role-groups)** are spaces whose membership is a query over roles, age, gender, region or fee tier, recalculated as your data changes. They are the right tool for "every Primary Contact" or "every company representative in the north", and the wrong tool for a permanent tier of your organization.
 
 ---

@@ -60,7 +60,7 @@ Holding one permission can imply another. This is the complete list; nothing els
 | `FINANCIAL_LOCAL` | `HR_ASSISTANT_LOCAL` |
 | `EVENT_PARENT_LOCAL` | `EVENT_LOCAL` |
 | `COMMUNICATION_PARENT_LOCAL` | `COMMUNICATION_LOCAL` |
-| `ADMIN_PARENT_LOCAL` | Every local and regional permission within the same chapter tree |
+| `ADMIN_PARENT_LOCAL` | Every local and regional permission within the same branch of the chapter tree |
 | `ADMIN_LOCAL` | Every local permission within the same chapter |
 
 <Note>
@@ -74,12 +74,30 @@ Holding one permission can imply another. This is the complete list; nothing els
 | Scope | Suffix | Whose data |
 |---|---|---|
 | Organization | `_TENANT` | Everything in the organization |
-| Regional | `_PARENT_LOCAL` | The member's parent chapter and every chapter under it |
+| Regional | `_PARENT_LOCAL` | One anchor chapter and every chapter below it, at any depth |
 | Local | `_LOCAL` | The member's own chapter |
 
 An organization-scope permission always satisfies a check for the same domain at regional or local scope. The reverse is never true.
 
 Regional and local scopes exist only when the **Local Centers** module is on, and regional scope also needs **Enable Parent Centers**. Without them, the only checkboxes shown are the organization-scope ones.
+
+### What "regional" means when chapters nest
+
+Chapters chain to any depth, so regional scope is defined by an anchor chapter rather than by a fixed layer. The anchor comes from the holder's own primary chapter and cannot be pointed elsewhere:
+
+| The holder's own chapter | The anchor |
+|---|---|
+| Flagged **It's a parent chapter** | That chapter itself |
+| Has no parent at all | That chapter itself |
+| An ordinary chapter with a parent | The chapter directly above it |
+
+The grant then covers the anchor and every chapter beneath the anchor, however many layers down. It never reaches the chapter above the anchor and never crosses into another branch. A district officer whose district is flagged as a parent chapter therefore administers the district and its branches, and not the region above it.
+
+The full worked example is on [Local Groups](/platform/groups/local-groups#what-a-parent-scope-permission-reaches).
+
+<Note>
+  Nesting widens administrative reach only. What an ordinary member without a regional permission can see did not change: their own chapter, the chapter directly above it, and the chapters sharing that same direct parent. It does not follow the chain further up. Reading another member's User and Admin custom field values still requires being in the same chapter exactly, with no walk up the tree.
+</Note>
 
 ---
 
@@ -129,7 +147,7 @@ Orgo works through these steps in order.
     Your permissions are expanded using the automatic inclusions above, then matched against what the action requires.
   </Step>
   <Step title="Chapter match, for regional and local permissions">
-    The record's chapter must be your chapter, your parent chapter, or a chapter you were separately granted through **Multi local center access**.
+    For a local permission the record's chapter must be your own chapter, your anchor chapter, or a chapter you were separately granted through **Multi local center access**. For a regional permission it must sit inside your anchor's branch, at any depth.
   </Step>
   <Step title="Event user type restriction">
     If **Restrict events by user type** is on and the event names an allowed user type, a regional or local manager whose user type does not match is denied, even with the right permission.

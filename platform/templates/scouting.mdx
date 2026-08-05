@@ -105,7 +105,7 @@ Every module and setting below is at **Settings** → **Modules**, and every one
 | Module and tab | Setting | What it buys you |
 |---|---|---|
 | **Groups & Teams** → **Local Centers** | **Enable Local Centers Module** (already on) | Chapters: your groups or districts, each with their own members, events, files, dues and admins |
-| **Groups & Teams** → **Local Centers** | **Enable Parent Centers** | One more layer above a chapter, and the `ADMIN_PARENT_LOCAL` and `HR_PARENT_LOCAL` permissions that reach across it |
+| **Groups & Teams** → **Local Centers** | **Enable Parent Centers** | Layers above a chapter, nested as deep as you need, and the `ADMIN_PARENT_LOCAL` and `HR_PARENT_LOCAL` permissions that reach down through them |
 | **Groups & Teams** → **Local Centers** | **Enable Regions** | A flat region label for grouping and filtering. Grants no permissions |
 | **Groups & Teams** → **Configuration** | **Enable Organizational Units** | Sections and patrols inside a chapter |
 | **Groups & Teams** → **Configuration** | **Enable Role Groups** | Groups whose membership is a query over roles and profile data |
@@ -135,7 +135,7 @@ Not a module: **Texts** and **Languages** live under **Settings** → **Customiz
 
 **Enable Local Centers Module** is on for a new organization, so the whole **Basic Configuration** block below it is already visible. Every switch inside that block starts off, and those are the ones you actually have to decide about. The organization in the screenshot has already turned three of them on, which is why they read blue there:
 
-- **Enable Parent Centers**. Turn it on only if you want a district layer above your groups.
+- **Enable Parent Centers**. Turn it on if you want any layer above your groups. It is not limited to one: county holding district holding group is a single chapter tree, built by flagging each layer that holds others with **It's a parent chapter**.
 - **Enable Regions**. Turn it on only if you want a flat reporting label. It grants no permissions, and it adds a **Regions** entry to the module menu on the left.
 - **Open Access Local Centers**. Turn it on only if every member should see content from every group and be notified about it.
 
@@ -188,11 +188,11 @@ The order matters. Several of these screens are hidden until an earlier one is o
     **Done when:** the Roles list shows each post with the right Level tag, and the **Permissions** column is filled in for every post that is meant to administer anything.
   </Step>
   <Step title="Create the chapters">
-    **Chapters** → **Create chapter**, one per group. Set the parent chapter if you enabled that layer.
+    **Chapters** → **Create chapter**, one per group. If you enabled layers above your groups, build top down: create each district or county first and tick **It's a parent chapter** on it, then create the chapters below it with **Belongs to parent chapter** set. The parent picker only offers chapters already flagged as parents.
 
     Set the currency carefully. A chapter currency can be set once and never changed afterwards, because past payments and the connected Stripe account are bound to it.
 
-    **Done when:** every group appears in the chapters list, each under the right parent, and each with the currency you intend to collect subs in.
+    **Done when:** every group appears in the chapters list, indented under the right layer above it, and each with the currency you intend to collect subs in.
   </Step>
   <Step title="Create the units inside each chapter">
     From the chapter's unit tab, or from the drag-and-drop segmented board that `ADMIN_LOCAL` gets. Create your sections first, then the patrols inside them, so each patrol has a section to attach to.
@@ -231,7 +231,7 @@ Four separate mechanisms, and picking the wrong one is the most expensive mistak
 | Your structure | Model it as | Why |
 |---|---|---|
 | National association | The organization itself | Everything lives inside it |
-| District, county or area | Parent chapter, with **Enable Parent Centers** on | `ADMIN_PARENT_LOCAL` and `HR_PARENT_LOCAL` reach a parent chapter and every chapter under it |
+| District, county or area, and any layer between them | Parent chapter, with **Enable Parent Centers** on. Nest them as deep as your structure goes | `ADMIN_PARENT_LOCAL` and `HR_PARENT_LOCAL` reach an anchor chapter and every chapter beneath it, at any depth |
 | Group or troop | Chapter | Owns its members, events, files, discussions, its own dues, and its own administrators |
 | Section (Beavers, Cubs, Scouts, Explorers) | A unit type called Section, one unit per section | Units belong to a chapter, carry a member type and appear in the org chart |
 | Patrol, six or lodge | A unit type called Patrol with **Parent unit type** set to Section | Units nest as deep as your chain of types |
@@ -245,7 +245,8 @@ Things to plan around:
 - **Every member has exactly one chapter.** **Multi local center access** grants named extra chapters to a member from their profile, but that is an access grant, not a second home group. Moving someone for good is a [transfer request](/platform/groups/transfers).
 - **A member can hold roles in several units at once**, so a leader who runs the Cub section and sits on the group committee is two role assignments, not a choice.
 - **The unit member Admin flag is not cosmetic.** It delegates scoped fee access and unit event attendance, so Orgo restricts it to people who already hold `HR_LOCAL`, `FINANCIAL_LOCAL` or `ADMIN_TENANT` over the chapter. Unit admins cannot appoint each other.
-- **`ADMIN_PARENT_LOCAL` reach is computed from the holder's own primary chapter**, not from a branch you pick. Give it to someone whose chapter sits under North District and they administer North District and its children, and there is no control that points it somewhere else.
+- **`ADMIN_PARENT_LOCAL` reach is computed from the holder's own primary chapter**, not from a branch you pick. Give it to someone whose chapter sits under North District and they administer North District and everything beneath it, however deep, and there is no control that points it somewhere else. Give it to a district commissioner whose own chapter is North District and it stays inside North District, because a chapter flagged **It's a parent chapter** anchors to itself and the grant never climbs to the county above.
+- **Reshaping the tree is an organization-level job.** Changing a chapter's parent, or its **It's a parent chapter** flag, requires `HR_TENANT`. District and group administrators see those two fields greyed out and can edit everything else on the chapter form.
 
 Detail: [Local Centers](/platform/groups/local-groups), [Units](/platform/groups/units), [User types and roles](/platform/users/user-types), [Role Groups](/platform/groups/role-groups).
 
@@ -328,7 +329,7 @@ Match the role's level to the scope of the post:
 | Post | Role level | Effective permissions |
 |---|---|---|
 | National commissioner | **Organisation** | Tenant-level, for example `HR_TENANT` |
-| District commissioner | **Parent chapter** | `ADMIN_PARENT_LOCAL` or `HR_PARENT_LOCAL` across the district |
+| District commissioner | **Parent chapter** | `ADMIN_PARENT_LOCAL` or `HR_PARENT_LOCAL` across the district and everything beneath it |
 | Group scout leader | **Chapter** | `ADMIN_LOCAL` or `HR_LOCAL` over the group |
 | Section leader | Your Section unit type | Scoped to that unit, plus the unit **Admin** flag where they need fee and attendance access |
 

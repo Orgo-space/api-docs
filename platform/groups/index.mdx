@@ -29,7 +29,7 @@ A group is a space with its own discussions, files and events, plus a member lis
   Only organization admins (`ADMIN_TENANT`) can create **Auto-enroll all members**, **Open to join** and **Role group** groups. A member without that permission who creates a group gets a **Private** group.
 </Note>
 
-You can change the Access mode later by editing the group. A group filed under a [category](#group-categories) is listed under **Programs and activities** instead of Community groups or Private groups. For a geographic branch with its own admins and fees, use a [local center](/platform/groups/local-groups) rather than a group.
+You can change the Access mode later by editing the group. A group filed under a [category](#group-categories) is listed under **Programs and activities** instead of Community groups or Private groups. For a geographic branch with its own admins and fees, use a [local center](/platform/groups/local-groups) rather than a group. Local centers chain to any depth, so a national body, its regions and their branches are three layers of the same structure rather than three kinds of group.
 
 ---
 
@@ -146,7 +146,13 @@ Archiving is reversible and loses nothing, so prefer it over deleting. A group w
 
 <AccordionGroup>
   <Accordion title="Can a member be in more than one group?">
-    Yes, with no limit. Members are in every auto-enroll group, their chapter, every role group they match, and any open or private groups they joined or were added to.
+    Yes, with no limit. Members are in every auto-enroll group, their chapter, every chapter above their chapter in the chapter tree, every role group they match, and any open or private groups they joined or were added to.
+  </Accordion>
+
+  <Accordion title="Our chapters are nested. Which chapter spaces does a member get?">
+    Their own chapter and every chapter above it, all the way to the top of the tree. Membership travels up; it never travels down, so somebody filed against the national body is not placed in the branches beneath it.
+
+    **Isolate Local Center Access** narrows this one layer at a time: a chapter above them is shown only when their own `HR_PARENT_LOCAL` reach covers that particular chapter, and role groups scoped to a chapter they cannot see are hidden with it.
   </Accordion>
 
   <Accordion title="Why can I not see a group a colleague mentioned?">
