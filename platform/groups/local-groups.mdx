@@ -73,7 +73,7 @@ The app says **Chapters**. **Local center** is the platform term used by the dat
   A chapter currency can be set once and never changed, because past payments and the connected Stripe account are bound to it. A chapter currency also requires the chapter to have its own Stripe account, otherwise charges land in the organization account and get converted twice.
 </Warning>
 
-<img src="/images/platform/groups/local-center-form.png" alt="Chapter create form showing the General information, Location, and Organization sections" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/groups/local-center-form.png" alt="Chapter form showing the General information, Location and Organization sections with status, name, Alias, founded, town, map location, map description, the parent chapter selector and the Region field" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
@@ -119,9 +119,13 @@ The chapter header carries tabs, each scoped to that chapter:
 | Local unit types | `HR_LOCAL` and at least one unit type marked as local (see [Units](/platform/groups/units)) |
 | **analytics** | Analytics module active and a matching grant |
 
-<img src="/images/platform/groups/local-center-detail.png" alt="Chapter page showing the status and Chapter badges, Quick actions, Contact and Address cards, and the Team panel grouped by role" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/groups/local-center-detail.png" alt="Chapter page showing the status and Chapter badges, the shortcut card, Contact and Address cards, and the Team panel grouping officers by role" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-The page shows **Quick actions** (Members, Events, Discussions, and conditionally Chapters, Fees, **Annual report**), Contact, Address, Legal details and Online cards, and a **Team** panel grouping officers by role. Admins add a member to a role, drag members between roles, and remove them; adding someone from another chapter asks you to confirm the transfer.
+The page opens with a card of shortcuts into the chapter (Members, Events, Discussions, and conditionally Chapters, Teams, Fees and **Annual report**). The card carries no heading of its own. Below it sit the Contact, Address, Legal details and Online cards, and beside them a **Team** panel grouping officers by role, with a count on any role held by more than one person. Admins add a member to a role, drag members between roles, and remove them; adding someone from another chapter asks you to confirm the transfer.
+
+<Note>
+  The Team panel only lists roles marked as chapter roles in **Settings** → **Users & Profiles** → **Roles**, and a parent chapter reads a different flag from an ordinary one. A parent chapter shows only roles flagged for parent chapters, so a role that appears on a branch page can be absent from its parent.
+</Note>
 
 **analytics** reuses the organization dashboards scoped to the chapter: Platform, Members, geography, Leaderboards, Finance. Each appears only if you hold the local counterpart of the role that grants it organization-wide, so Members analytics granted to `HR_TENANT` shows here with `HR_LOCAL`. Finance also needs online payments active.
 
@@ -185,9 +189,13 @@ A chapter can carry its own fee product, default price, and connected Stripe acc
 
 ## Public chapter finder
 
-`/local-center-map/` is a separate, member-facing finder built on Google Maps. Visitors search by postal code or address, filter by age group, cost range, meeting days and languages, sort by cost, save favorites, and go from a result card into registration. Chapters supply the data through their coordinates, map description, languages, days of the week, and fee price.
+`/local-center-map/` is a separate, member-facing finder built on Google Maps, and it opens without a login. Visitors search by postal code or address, filter by age group, cost range, meeting nights and languages, sort by cost, save favorites, and go from a result card into registration. The filter is labelled **Night(s) available** and reads the chapter's days of the week. Chapters supply the data through their coordinates, map description, languages, days of the week, and fee price.
 
-<img src="/images/platform/groups/local-center-map-public.png" alt="Public chapter finder with a postal code search box, age group, cost, days and language filters, a results list, and pins on a map" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/groups/local-center-map-public.png" alt="Public chapter finder with a postal code search box, age group, cost, night and language filters, a results list, and pins on a Google map" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+<Note>
+  The finder opens on the visitor's own location. If the browser refuses to share it, the map falls back to a fixed centre rather than to your chapters, and the results panel reports no chapters within 200km until the visitor searches an address or presses **All local centers**. Give every chapter coordinates so that button, and the pins, have something to show.
+</Note>
 
 With the website builder, chapters also publish to `/chapters` and `/chapter/:id` as public pages.
 

@@ -94,7 +94,7 @@ Each step says where in the interface it happens and how you can tell it worked,
   <Step title="Create the campaign">
     **Finance → Products → Create Product**, pick **Donation**, name it, check the URL slug, and turn on **One-off**, **Recurring**, or both.
 
-    <img src="/images/platform/fees/donation-product-edit.png" alt="Create Product form with the Donation card selected next to Membership Fee, a campaign title, an empty URL slug, the Recurring and One-off frequency cards both ticked, custom amount minimum and maximum fields, and the start of the Campaign goal block" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+    <img src="/images/platform/fees/donation-product-edit.png" alt="Create Product form with the Donation card selected next to Membership Fee, a campaign title, the URL slug generated from it with the public address preview beneath, the Recurring and One-off frequency cards both ticked, custom amount minimum and maximum fields, and the start of the Campaign block" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
     The frequency choice is the one that is awkward to undo: a saved campaign must keep at least one of the two.
 
@@ -105,7 +105,7 @@ Each step says where in the interface it happens and how you can tell it worked,
   <Step title="Add suggested amounts">
     On **Prices & Options**, add a price row per suggested amount and mark one default. These are the buttons a donor sees before they type anything.
 
-    <img src="/images/platform/fees/donation-product-detail.png" alt="Prices and Options tab of a donation campaign listing suggested amounts by name and value, one tagged default and several tagged Recurring, with an Add button above the table" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+    <img src="/images/platform/fees/donation-product-detail.png" alt="Prices and Options tab of a donation campaign listing suggested amounts by name, value and description, one tagged default and four tagged Recurring, with an Add button above the table" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
     On a campaign with no prices yet, **Generate** proposes three A/B variations of three amounts each from your country, currency and campaign title, registers them in Stripe and switches A/B testing on. It disappears once any price exists, so use it before you add the first row by hand.
 
@@ -151,9 +151,9 @@ Each step says where in the interface it happens and how you can tell it worked,
   <Step title="Point the shortcuts at the right campaign">
     **Settings → Modules → Payments & Fees → Donation Product** sets which campaign answers `/donate`, and which one grants the **Supporter** flag on member profiles.
 
-    <img src="/images/platform/templates/fundraising-donation-product-shortcuts.png" alt="Donation Product settings page with a Donation Product selector naming the live campaign, a Recurring Donation Product selector left unset, and a Manage Products link" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+    <img src="/images/platform/templates/fundraising-donation-product-shortcuts.png" alt="Donation Product settings with both the Donation Product and the Recurring Donation Product selector naming the campaign Support Northwind's Mission, beside a Manage Products link" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-    The first donation campaign you create claims the first of those automatically, which is rarely the one you want six months later.
+    The first donation campaign you create claims the first of those automatically, which is rarely the one you want six months later. The two selectors can name the same campaign, as they do above, when that one campaign has both **One-off** and **Recurring** switched on.
 
     **Done when:** **Donation Product** names the campaign you are currently promoting, and **Recurring Donation Product** names the monthly programme if you run one.
 
@@ -208,7 +208,7 @@ Everything below lands on one public page or one click from it. This is a campai
 
 Two tabs on the campaign answer different questions. **Payments** is the ledger: one row per gift. **Stats** is the campaign view: money over time above the page analytics.
 
-<img src="/images/platform/templates/fundraising-campaign-stats.png" alt="Stats tab of a donation campaign with the range set to twelve months, showing a payments total and an amount line with a seven-day moving median, and beneath it all-time Views, Clicked and Shared counters above a Views Over Time chart" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/templates/fundraising-campaign-stats.png" alt="Stats tab of a donation campaign with the range buttons above the chart and 12 months selected, showing a payments total and an amount line with a seven-day moving median" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 The range buttons above the chart matter more than they look: an appeal that ran last autumn is invisible on the default 90-day window.
 
@@ -272,7 +272,7 @@ Orgo has no donation step inside event checkout, so an event-linked appeal is a 
   <Step title="Report on the designation">
     Filter the campaign's **Payments** tab by option to get the total raised for that event, separate from the rest of the campaign.
 
-    <img src="/images/platform/fees/donation-payments.png" alt="Payments tab of a donation campaign with a gift count next to the campaign name, filter pills for payer name, payment ID, user ID, email, status, type and date, and rows showing the amount, a paid or refunded status, the payer, where they are from, the date, a confidentiality marker and the one-time type" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+    <img src="/images/platform/fees/donation-payments.png" alt="Payments tab of a donation campaign with a gift count next to the campaign name, filter pills for payer name, payment ID, user ID, email, status, type and date, and rows showing the amount, a paid or refunded status, the payer, their chapter, the date, a confidentiality marker and whether the gift was one-time or a subscription" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
     The same list is where you check a gift somebody says they made, and where **Refund** lives.
   </Step>

@@ -85,7 +85,7 @@ Six fields: Facebook, X.com, Youtube, Linkedin, Instagram and Tiktok. Paste the 
 | **VAT Number** | Printed as the `VAT:` line on invoices. |
 | **BANK IBAN** | The first field carries your currency code as its label. This is the only IBAN the product uses: it appears on bank transfer instructions, on the member fee payments page when **Allow Bank Transfer Payments** is on (Settings → Modules → Payments & Fees), and in the payment proof PDF. |
 
-The three currency-specific fields below it (USD, EUR, CHF, minus whichever one matches your currency) are stored for your own record keeping. Nothing in the product prints them.
+Below it, Orgo renders one field each for USD, EUR and CHF, skipping whichever of the three your own currency has already claimed as the first field. So an organization on USD sees three boxes in total, labelled USD, EUR and CHF, while one on RON sees four. These extra fields are stored for your own record keeping. Nothing in the product prints them.
 
 <Warning>
   Set these before you take a payment. Invoices and receipts store the values as they were when the document was generated, so later edits do not correct documents already issued.
@@ -99,7 +99,7 @@ The three currency-specific fields below it (USD, EUR, CHF, minus whichever one 
 
 **Save** sits in a panel on the right that follows you as you scroll. **Name** and **Office Email** are required and the form will not submit while either is empty.
 
-The header carries two read-only badges: your connected Stripe account id, if there is one, and your workspace identifier in the form `slug-id`. The slug is generated from your organization name when the workspace is created, is unique across Orgo, and appears in links as `?workspace=<slug>`. It cannot be edited here.
+The header carries two read-only badges: your connected Stripe account id, if there is one, and your workspace identifier in the form `slug-id`. The slug is fixed when the workspace is created, taken from the subdomain you chose at signup or derived from the name if you did not choose one, so it does not necessarily resemble your organization's current name. It is unique across Orgo and appears in links as `?workspace=<slug>`. It cannot be edited here.
 
 ---
 

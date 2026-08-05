@@ -19,7 +19,10 @@ and your own Stripe account. Orgo charges no per-ticket fee, you pay only Stripe
 Buyers pay by card in an inline Stripe checkout, receive a ticket by email, and check in at the door
 by QR scan.
 
-<img src="/images/platform/events/event-tickets.png" alt="Tickets page for an event showing three ticket types with price, availability tags and seat counts, plus the Addons and Vouchers sections below" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/events/event-tickets.png" alt="Tickets page for an event showing the Allow only one ticket per order switch, three ticket types with price, availability tags and seat counts, and the start of the Addons section" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+The same screen continues below the fold with the rest of [Addons](#addons) and then
+[Vouchers](#vouchers).
 
 ---
 
@@ -262,12 +265,18 @@ Hide the option with **Settings → Events → Disable Company Invoice in Checko
 
 The **Payments** entry in the event sidebar opens the order list, headed **Orders**.
 
-<img src="/images/platform/events/event-payments.png" alt="Event orders table with status, buyer name, ticket type, amount and date columns, and refund actions" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/events/event-payments.png" alt="Event orders table with order id, status, buyer name, amount and created date columns, and a Generate Invoice action per paid order" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-Each row shows the order id, status, the buyer (member or contact), ticket type, amount, the voucher
-code if one was used, and the payment date. Filter by name, email, or status (**open**, **paid**,
-**refunded**); rows can also read **on-hold** or **canceled**. Where a Stripe account is connected,
-an arrow link opens the payment or invoice in the Stripe dashboard.
+Each row shows the order id, status, the buyer (member or contact), amount, the voucher code if one
+was used, and the payment date. Filter by name, email, or status (**open**, **paid**, **refunded**);
+rows can also read **on-hold** or **canceled**. Where a Stripe account is connected, an arrow link
+opens the payment or invoice in the Stripe dashboard.
+
+The **Ticket type** column stays empty for event ticket orders. It reads a product *option*, which is
+a fee-product concept; event ticket purchases record the ticket tier as the product *price* instead.
+To see which tier someone bought, use the Ticket column on
+[the participant list](/platform/events/attendance) or the Revenue by ticket table in
+[Analytics](/platform/events/analytics).
 
 **Refund** appears on paid orders that were paid by card and requires `FINANCIAL_LOCAL` or higher. It
 refunds the full amount, with no partial refund in the interface, and on success cancels every
@@ -287,7 +296,7 @@ Every attendee record carries a random token that becomes their QR code, deliver
 confirmation email and shown on the event page. Scanning it at the door opens the check-in screen
 with the attendee's name, ticket type, payment status and addons.
 
-<img src="/images/platform/events/event-qr-ticket.png" alt="Attendee view of a confirmed registration with its QR code and download button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/events/event-qr-ticket.png" alt="Attendee view of a confirmed registration on the public event page, with the Registration confirmed badge and the QR code to show at the entrance" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 <Note>
 Scanning requires `HR_TENANT` or `EVENT_TENANT`. A local event admin with only `EVENT_LOCAL` cannot
@@ -295,8 +304,9 @@ scan. The full flow, walk-ins and manual check-in are covered in
 [Check-in](/platform/events/check-in).
 </Note>
 
-A member can download their own ticket as a PDF. An administrator can download someone else's only
-with `HR_LOCAL` over that person.
+A member can download their own ticket as a PDF from the internal event page, and an administrator
+can download someone else's only with `HR_LOCAL` over that person. The public event page above has no
+download button: it renders the status badge and the QR code only.
 
 ---
 
