@@ -94,13 +94,13 @@ Each variation reports **total** raised, **average** donation, and **transaction
 
 ## Tracking the money
 
-**Payments** lists every donation with its ID, status, donor, location, designation, amount, date, confidentiality flag, and type (one-time or recurring). Filter by payment ID, user ID, payer name, email, date range, type, status, or local center; the payment-ID and email filters are only offered to FINANCIAL_TENANT.
+**Payments** lists every donation with its status, donor, location, designation, amount, date, confidentiality flag, and type (one-time or recurring). Filter by payment ID, user ID, payer name, email, date range, type, status, or local center; the payment-ID and email filters are only offered to FINANCIAL_TENANT.
 
 <img src="/images/platform/fees/donation-payments.png" alt="Donation payments list with filter pills for payer name, payment ID, user ID, email, status, type and date, and rows showing the amount, status, donor, chapter, date and whether the gift was one-time or a subscription" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 **Refund**, from the row actions, returns the full amount through Stripe and moves the payment to `refunded`; only a payment already in `success` can be refunded, and one still on hold is cancelled instead. Both actions need FINANCIAL_LOCAL on the chapter the donation was designated to.
 
-**Subscribers** lists the recurring donors on the campaign: name, email, status, chapter, designation, amount, and identity-validation state where that is required. Statuses are Active, Canceled, Canceling, No identity upload, Identity validation pending, Waiting for subscription, and Pending. An admin can cancel a subscription from here with **Unsubscribe**.
+**Subscribers** lists the recurring donors on the campaign: name, status, chapter, designation, amount, and identity-validation state where that is required. Statuses are Active, Canceled, Canceling, No identity upload, Identity validation pending, Waiting for subscription, and Pending. An admin can cancel a subscription from here with **Unsubscribe**.
 
 <img src="/images/platform/fees/donation-subscribers.png" alt="Subscribers list for a donation campaign with filters for ID, name, email and status, and rows showing recurring donors with their amount and subscription status" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 

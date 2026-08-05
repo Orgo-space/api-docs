@@ -12,7 +12,7 @@ description: 'Named teams inside a chapter, typed and nested to match your real 
 
 A unit is a named team that lives inside a chapter. Units are typed, so you name the layers once (Section, Patrol, Department) and then create as many units of each type as you need. Units can nest, one type inside another, to whatever depth your structure requires.
 
-The segmented board is the view you will spend most time in: one column per unit, the members of each shown as cards, and an **Unassigned** column holding everyone in the chapter who is not in a unit yet. You move people by dragging a card from one column to another.
+The segmented board is the view you will spend most time in: a column per unit, the members of each shown as cards. You move people by dragging a card from one column to another.
 
 ---
 
@@ -35,15 +35,15 @@ The practical difference: a unit describes where someone sits in the org chart, 
 
 | Requirement | Where |
 |---|---|
-| **Enable Organizational Units** switched on | **Settings** → **Modules** → **Groups** → **Configuration** |
-| At least one unit type defined | **Settings** → **Modules** → **Groups** → **Unit Types** |
+| **Enable Organizational Units** switched on | **Settings** → **Modules** → **Groups & Teams** → **Configuration** |
+| At least one unit type defined | **Settings** → **Modules** → **Groups & Teams** → **Unit Types** |
 | `HR_LOCAL` to see the unit screens, `ADMIN_LOCAL` to create and edit units | Scoped to the chapter |
 
 ---
 
 ## Unit types
 
-A unit type is the template for a layer of your structure. Define them once at **Settings** → **Modules** → **Groups** → **Unit Types**, then create units of that type inside each chapter.
+A unit type is the template for a layer of your structure. Define them once at **Settings** → **Modules** → **Groups & Teams** → **Unit Types**, then create units of that type inside each chapter.
 
 <img src="/images/platform/groups/unit-types.png" alt="Unit Types settings page showing type cards with Within local center and Has user types badges" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -86,7 +86,7 @@ Deleting a unit asks for confirmation and removes its role assignments with it.
 
 ### The segmented board
 
-`ADMIN_LOCAL` also gets a drag-and-drop board for the whole chapter. When your types nest, it renders as columns: one per parent unit, with its child units stacked inside and an **Unassigned** column for members who are in the chapter but not in any unit.
+`ADMIN_LOCAL` also gets a drag-and-drop board for the whole chapter. When your types nest, it renders as columns: one per parent unit, with its child units stacked inside. Any child unit that has not been given a parent is collected in a final **Unassigned** column. When the type you are looking at has no parent type, the board is flat instead: one section per unit.
 
 From the board you can drag a member from one unit to another, use **Add member** to search and place someone, create a child unit inline, edit or delete a unit, set each member's role, and mark a member as **Admin** of their unit.
 
@@ -107,7 +107,7 @@ A unit name in that tree is a link only if you can open it. You can when you hol
 | Action | Requires |
 |---|---|
 | See the unit screens | `HR_LOCAL` |
-| Create a unit | `HR_LOCAL`. `HR_TENANT` may create any type; local admins are limited to ordinary units |
+| Create a unit | `ADMIN_LOCAL` on the chapter, which is what the **add** button checks. `HR_TENANT` may create any type; local admins are limited to ordinary units |
 | Edit or delete a unit | `ADMIN_LOCAL` on the unit's chapter |
 | Toggle a member's unit **Admin** flag | `HR_LOCAL` or `FINANCIAL_LOCAL` on the chapter, or `ADMIN_TENANT` |
 | Create, edit, or delete unit types | `ROLE_ADMIN_TENANT` |

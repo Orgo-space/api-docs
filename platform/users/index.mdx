@@ -152,7 +152,7 @@ profile is your own.
 
 | Tab | What is there | Who sees it |
 |---|---|---|
-| **Profile** | Photo, status, user type, age, town, local group, member since, badges, permissions, roles, social links, resignation, identity and adhesion shortcuts | Everyone who can see the profile |
+| **Profile** | Photo, status, user type, age, town, chapter, member since, badges, permissions, roles, social links, resignation, identity and adhesion shortcuts | Everyone who can see the profile |
 | **My Network** | Connection requests and accepted connections | Own profile, connections enabled |
 | **Fee** | Fee level, periods and history | Self, HR_LOCAL, FINANCIAL_LOCAL, or a parent managing the profile |
 | **Payments** | Every payment: fees, tickets, donations | Same as Fee, online payments enabled |
@@ -205,9 +205,10 @@ the fastest answer to "they say they never got it".
 
 All of this lives under **Settings** → **Users & Profiles** and needs
 ADMIN_TENANT to edit. The left sub-navigation also holds Custom Fields, Tags,
-Roles & User types, the Registration, Profile and Adhesion forms, the Adhesion
-template, the Referral Program, the Registration Waitlist, Privacy Defaults and
-Security & Permissions.
+Roles & User types, the Registration and Profile forms, the Referral Program,
+Privacy Defaults and Security & Permissions. Entries appear only for what is
+switched on, so the Adhesion form, the Adhesion template and the Registration
+Waitlist are absent until those modules are active.
 
 ---
 
@@ -295,9 +296,12 @@ Security & Permissions.
     the Unapproved status. The last one catches people out: the button hides once
     you are in the queue it would take you to.
 
-    `HR_LOCAL` alone does not show the counter, and it does not show the
-    **Approve** action on the row either. Approving members is `ADMIN_LOCAL` and
-    above.
+    `HR_LOCAL` alone does not show the counter. The **Approve** and **Add to
+    waiting list** shortcuts on the row are a separate gate and do appear for
+    `HR_LOCAL`, because approving somebody is an ordinary status change and asks
+    for `HR_LOCAL` over that member's chapter. So a chapter secretary can approve
+    people one at a time from the list; what they do not get is the counter that
+    jumps them to the queue.
   </Accordion>
 
   <Accordion title="Someone can see the Members link but the page is empty or refuses them">

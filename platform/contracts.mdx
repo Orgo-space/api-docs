@@ -67,13 +67,17 @@ A rich text editor with a **Placeholders** sidebar. Click any tag to insert it a
 | Group | Placeholders |
 |---|---|
 | Member data | `{firstName}` `{lastName}` `{email}` `{phone}` `{address}` `{postalCode}` `{currentTown}` `{dateBirth}` `{dateJoined}` `{profession}` `{userId}` `{cardProfileLink}` `{cardProfileQrCode}` |
-| Document | `{dateSignature}` `{expirationDate}` `{signature}` `{signatureAdmin}` `{autoContractNumber}` |
+| Document | `{dateSignature}` `{expirationDate}` `{dateValidityEnd}` `{signature}` `{signatureAdmin}` `{autoContractNumber}` |
 | Organization | `{organizationName}` `{organizationShortName}` `{organizationLogo}` |
 | Company | `{companyName}` `{userCompanyName}` `{userCompanyAddress}` `{userCompanyIdentifier}` `{userCompanyRegNo}` `{professionOrganisationRole}` `{membershipFeeAmount}` |
 
 Two more forms work but are not listed as tags: `{custom_field_ID}` for a [custom field](/platform/users/custom-fields) (text input and text area insert their value directly; yes/no, dropdown, checkbox and file render their label or a download link), and `{drive|filename.ext}` to link a file from [Drive](/platform/files).
 
 `{signature}` and `{signatureAdmin}` mark where the signature images land; a missing signature prints a blank line instead.
+
+<Warning>
+`{dateValidityEnd}` is offered in the sidebar but nothing fills it in: the generated document shows either a blank or the tag itself. Use `{expirationDate}` for the date the document runs out.
+</Warning>
 
 <Warning>
 `{cardProfileLink}` and `{cardProfileQrCode}` are meant for templates with **Enable signature** off, such as membership cards, which are rendered fresh from live member data every time. They are not filled in on a signed document.
