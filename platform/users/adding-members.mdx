@@ -1,0 +1,276 @@
+---
+title: 'Adding Members'
+description: 'Add a user, invite someone, register a member or create an account: the four ways people get into your organisation, and which one to use'
+"og:title": 'Adding Members | Orgo'
+"og:description": 'Add a user, invite someone, register a member or create an account: the four ways people get into your organisation, and which one to use'
+"twitter:title": 'Adding Members | Orgo'
+"twitter:description": 'Add a user, invite someone, register a member or create an account: the four ways people get into your organisation, and which one to use'
+---
+
+There are four ways a person ends up with an account in your organisation. If you
+have one person's details in front of you and want them in the platform now, that
+is **Register member** in the member directory, the first route below.
+
+---
+
+## Which route to use
+
+| If you want to | Use | Where it starts |
+|---|---|---|
+| Create the account yourself, for one person whose details you already have | **Register member** | **Members** in the sidebar → **Register member** |
+| Send someone a link and let them fill in their own details, with credit to whoever brought them | **Invite** | **Members** → **Invite a friend**, or the **Referrals** tab on your own profile |
+| Let anyone sign themselves up, from your website or a public link | **Self-registration** | The registration form at `/register` |
+| Load a spreadsheet of people you already have | **Import** | **Settings** → **Customization** → **Import** |
+
+Adding a person to a member company is a separate job with its own section
+[further down](#adding-a-person-to-a-member-company). It attaches someone to a
+company that already holds the membership, and it is not a general way of adding
+members.
+
+---
+
+## 1. Register member, from the member directory
+
+<img src="/images/platform/users/user-directory.png" alt="Member directory with the Register member and Invite a friend buttons above the filter bar, the filter row, and the member table" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+**Members** in the sidebar, then **Register member**, the first button above the
+filters. On a phone it is the person-plus icon in the header instead of a
+labelled button.
+
+**Who can.** `HR_TENANT` on the organisation-wide list. `HR_LOCAL` only on their
+own chapter's list, so a chapter secretary has to pick their chapter in the
+**Chapter** filter before the button appears. An administrator without
+`HR_TENANT` and without a chapter on their own account is refused on save with
+"You cannot create user without a local center".
+
+**What you fill in.** First and last name, email, chapter, user type, phone,
+birthday, gender, town of residence and town born, address and postal code, plus
+two collapsible blocks: **Permissions** (`HR_LOCAL` and above, and you can only
+grant what you hold yourself) and **Roles**. If the Companies module is on and
+you may assign a company, a company and company role appear too.
+
+**What the person receives.** The email address is labelled optional and it is
+what decides whether this is an account or only a record. With one, Orgo sends
+the **Account created by admin** message naming you and linking to the login
+page, and they sign in with an email one-time code and set their own password on
+the way through. Without one, nothing is sent and nobody can sign in as them.
+
+**What state the account lands in.** The status comes from **Settings** →
+**Users & Profiles** → **Configuration** → **Default Status for Admin-Created
+Users**: Active by default, or Inactive, Unapproved, Waiting List, Suspended or
+Excluded. That setting always wins, whatever any screen appeared to ask for.
+
+<Note>
+Fields you marked **Required** on the [registration form](/platform/users/registration-form)
+are not asked for here, because nothing created this way passes through that form.
+If a field must be present on every profile, mark it required on the
+[profile form](/platform/users/profile-fields) instead, which is re-checked on
+every visit.
+</Note>
+
+**The same route from a contact.** **Create user account** on a
+[contact](/platform/contacts) record creates a member from that contact's email
+through exactly this mechanism, welcome message included. It carries the email
+and the joined date across but not the name, so open the new profile afterwards
+and fill in the first and last name.
+
+---
+
+## 2. Invite
+
+<img src="/images/platform/users/profile-referrals-tab.png" alt="Referrals tab on a member profile with the sent, joined and pending counters, the personal referrer link with copy and share buttons, the invite by email box and the invitation history" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+**Invite a friend**, next to Register member above the directory, opens the
+**Referrals** tab on your own profile. The button needs **Enable User
+Invitations** on and you to meet **Who Can Send Invitations**, and it is desktop
+only: on a phone, open the Referrals tab from your profile.
+
+Two mechanisms sit on that tab:
+
+- **Invite by email.** Orgo emails each address a registration link tied to that
+  invitation. The box accepts 20 addresses, sends the first 10 of them, and
+  refuses after 50 invitations from one member in an hour, so work in batches of
+  ten.
+- **Your personal link**, `https://<your app host>/register/<member id>`. Orgo
+  sends nothing; you share it yourself, and whoever registers through it is
+  recorded as referred by you.
+
+**What the person receives.** The registration form with their email already
+filled in and locked to the invited address.
+
+**What state the account lands in.** An emailed invitation skips email
+confirmation entirely: the account is created **Active** with the address already
+confirmed, and the person is signed in and taken to the dashboard. If a chapter
+administrator sent it from their chapter context, the invitation carries that
+chapter and accepting places them in it.
+
+Invitation links keep working while **Enable Registration Form** is off, which is
+how you close the door to the public and still admit the people you name. Full
+detail, including the tracking counters: [Member Invitations](/platform/users/invitations).
+
+---
+
+## 3. Self-registration
+
+The public form at `/register`, plus one form per [user type](/platform/users/user-types)
+at `/join/<slug>`, both embeddable in your own site as an iframe. It is live
+while **Enable Registration Form** is on, and you decide what it asks in
+**Settings** → **Users & Profiles** → **Registration Form**.
+
+**What the person receives.** No password is asked for. Orgo generates one, emails
+a six digit code valid for five minutes, and requires them to set their own
+password at first login.
+
+**What state the account lands in.** Unconfirmed email until they enter the code.
+On verification the status resolves in this order: eligible for the
+[waitlist](/platform/users/waitlist) becomes **Waiting list**; a
+[referral program](/platform/users/referral) requiring referrals becomes
+**Awaiting referral**; **Manual Approval** on becomes **Unapproved**; otherwise
+**Active**, and the welcome message goes out if **Send Welcome Message** is on.
+
+Full detail: [Registration Form](/platform/users/registration-form).
+
+---
+
+## 4. Import
+
+**Settings** → **Customization** → **Import**, the **Users** step. Requires
+`ADMIN_TENANT`. Upload a CSV of up to 50 MB, watch the per-row progress, read the
+per-row errors, and undo the whole thing once with **Rollback**. Only
+`user_legacy_id` is required; every unrecognised column becomes a profile custom
+field. The create step skips people who already exist, so use **Modify Users** to
+change them instead.
+
+**What the person receives.** Nothing. Import sends no email at all, so tell
+people yourself that their account exists.
+
+**What state the account lands in.** Active, unless your file carries a `status`
+column. The password the import writes is a placeholder nobody knows, so an
+imported member signs in with the email one-time code from the login page, or
+with a password reset. Two kinds of row cannot sign in at all: rows whose email
+already belongs to somebody else, and rows with no email, both of which get a
+generated placeholder address that cannot receive mail.
+
+Full detail, including the other seventeen import types and the ordering between
+them: [Data Import](/platform/customization/import).
+
+---
+
+## Joining can be gated
+
+Three modules change what happens to a person arriving through the invite or
+self-registration routes. None of them is a way of adding somebody, and none of
+them appears in the table above for that reason.
+
+| Module | What it changes |
+|---|---|
+| **Manual Approval** | New registrations land as Unapproved and wait for an admin. See [User Statuses](/platform/users/statuses) |
+| [Waitlist](/platform/users/waitlist) | Registrations naming a chapter are queued with a position instead of admitted |
+| [Adhesion](/platform/users/adhesion) | A formal application, with an ID check and a signature, after the account exists |
+
+Register member and Import set the status directly and never enter the waitlist
+queue or the Manual Approval review. **Mandatory Adhesion** is the exception: it
+opens an application on every new account however it was created.
+
+---
+
+## Adding a person to a member company
+
+This is a different job. It attaches an individual to a
+[company](/platform/users/companies) that already holds the membership, so it
+only applies to organisations that sell corporate or team memberships and only
+once the company record exists. If the person is not joining through a member
+company, use **Register member** above.
+
+On the company page, the **Team Members** panel offers two buttons:
+
+- **Invite** emails a company invitation naming the company and the role offered.
+  It expires after 30 days, and accepting creates the person's account if they do
+  not have one and emails them a one-time login code.
+- **Add Member** (`ADMIN_TENANT`) attaches somebody who is already in your
+  database, whether a member or a contact.
+
+Both consume one of the company's seats, and a person can belong to only one
+company. Members added this way inherit the company's membership validity instead
+of paying an individual fee. Everything else about companies, including seats,
+fees and renewal reminders: [Companies](/platform/users/companies).
+
+---
+
+## At a glance
+
+| Route | Who can use it | What the person receives | Status it starts in |
+|---|---|---|---|
+| **Register member** | `HR_TENANT`, or `HR_LOCAL` on their own chapter | Account created by admin email with a login link, if you gave an email address | **Default Status for Admin-Created Users** |
+| **Invite** | Whoever **Who Can Send Invitations** names | An invitation email with a registration link, or a link you share yourself | Active, email already confirmed |
+| **Self-registration** | Anybody, while the form is on | A six digit confirmation code | Unconfirmed email, then whatever your gates resolve to |
+| **Import** | `ADMIN_TENANT` | Nothing | Active, unless the file says otherwise |
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="I cannot see the Register member button">
+    Two gates. On the organisation-wide list it needs `HR_TENANT`. On a chapter's
+    list it needs `HR_TENANT`, or `HR_LOCAL` on that exact chapter, which means a
+    chapter secretary has to select their own chapter in the **Chapter** filter
+    first: they never see the button on the organisation-wide list. `ADMIN_LOCAL`
+    on its own is not enough.
+  </Accordion>
+
+  <Accordion title="I created the member but they never received anything">
+    Check the email address first. It is optional on the create form, and without
+    one nothing is sent and there is nothing for the person to sign in with. Then
+    check that **User Created by Admin** is still switched on under **Settings** →
+    **Emails & Notifications** → **System Emails**, and look the address up in the
+    email log. The member's own profile has a **Logs** tab with an **Email Logs**
+    sub-tab that shows exactly what was sent to them.
+  </Accordion>
+
+  <Accordion title="They have a welcome email but cannot sign in">
+    Their status is not Active. Everyone you create by hand or by import gets the
+    status you configured, not the one the screen implied, so check **Default
+    Status for Admin-Created Users**: Inactive, Unapproved, Waiting List,
+    Suspended and Excluded all block sign-in. Setting that default to Waiting List
+    is the least obvious trap, because it blocks the account without creating any
+    waitlist entry for staff to approve. The full elimination sequence is in
+    [Troubleshooting member access](/platform/users/troubleshooting-access).
+  </Accordion>
+
+  <Accordion title="Which routes can I use if I turned the registration form off?">
+    Register member, Import, and invitations. A valid invitation link opens the
+    form even while **Enable Registration Form** is off, which is the supported way
+    to run an invitation-only organisation. Only public self-registration is
+    refused, and it is refused on submit rather than on load, so `/join/<slug>`
+    pages keep rendering. See
+    [Registration Form](/platform/users/registration-form).
+  </Accordion>
+
+  <Accordion title="Fields I marked required came through empty">
+    Only self-registration and invitation links go through the registration form,
+    so only those collect its required fields. Register member, Import and a parent
+    registering a child all bypass it. Put anything genuinely mandatory on the
+    [profile form](/platform/users/profile-fields) instead.
+  </Accordion>
+
+  <Accordion title="I want to add several people at once but not from a spreadsheet">
+    Invite by email is the only bulk route that does not involve a CSV, and it
+    sends ten addresses per batch. For anything larger, build the CSV and use
+    [Import](/platform/customization/import): it validates the headers before
+    writing anything and it can be rolled back once.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related
+
+- [Users & Profiles](/platform/users) - the member directory these routes feed
+- [Member Invitations](/platform/users/invitations) - the invite route in full
+- [Registration Form](/platform/users/registration-form) - what self-registration asks
+- [Data Import](/platform/customization/import) - the CSV route in full
+- [Companies](/platform/users/companies) - adding a person to a member company
+- [Family Members](/platform/users/family-members) - a parent registering a child
+- [User Statuses](/platform/users/statuses) - what each starting status blocks
+- [Permissions](/platform/permissions) - `HR_TENANT`, `HR_LOCAL` and the rest

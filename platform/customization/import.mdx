@@ -120,8 +120,12 @@ The last two steps, under the **Modify existing records** heading, update in pla
   import.
 
 <Warning>
-Imported members cannot sign in. The import writes a placeholder password, so
-they need the password reset flow or an invitation before their first login.
+Imported members get no email and no usable password: the import writes a
+placeholder nobody knows. Someone imported with their own address signs in with
+the email one-time code from the login page, or through a password reset. A row
+whose email already belongs to somebody else, and a row with no email at all,
+gets a generated placeholder address that cannot receive mail, so those members
+cannot sign in until you correct the address.
 </Warning>
 
 ---
@@ -193,6 +197,7 @@ imports.
 
 ## Related
 
+- [Adding Members](/platform/users/adding-members) - the other three ways people get an account
 - [Users & Profiles](/platform/users) - what the imported members look like afterwards
 - [Merging Duplicates](/platform/users/merging-duplicates) - cleaning up records an import doubled
 - [Custom Fields](/platform/users/custom-fields) - the fields an import can create
