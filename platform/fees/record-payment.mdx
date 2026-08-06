@@ -96,9 +96,17 @@ than saved half-formed.
 
 Local centre fees have their own **Mark as paid** on the same profile, needing
 `FINANCIAL_LOCAL` for that member's local centre. Both behave the same way: what
-an administrator marks as paid counts straight away. The pending state you see on
-**Fee payments** in the sidebar belongs to local fee payments members submit
-themselves, which a local administrator approves there.
+an administrator marks as paid counts straight away, because a mark-as-paid batch
+is written as already approved and carries the method **check**.
+
+The pending state you see on **Fee payments** in the sidebar comes from somewhere
+else. It is the batch written by **Pay** on the
+[Member fees table](/platform/local-group-fees/member-fees), stamped as a bank
+transfer (`iban`) and left pending, for organisation and chapter fees alike.
+**Approve** there is shown only to `ADMIN_TENANT`; a chapter administrator with
+`ADMIN_LOCAL` sees **Cancel**, which deletes the batch instead. Members never
+submit a fee payment for approval: a member paying their own fee by bank transfer
+raises an unpaid invoice, which is settled with **Mark as paid** on the invoice.
 
 ---
 

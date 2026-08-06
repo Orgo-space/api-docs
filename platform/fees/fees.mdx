@@ -150,7 +150,7 @@ On **Finance** → **Local members fees** the fee column is a per-member dropdow
 
 ## The valid fee date
 
-Fee validity is not hand-set. It is the end of the billing period of the member's most recent successful payment for the fee product, recomputed whenever a payment is approved or refunded. Local fees keep a separate date.
+Fee validity is not hand-set. It is the end of the billing period of the member's most recent successful payment for the fee product, recomputed whenever a payment is recorded, approved or refunded. Local fees keep a separate date.
 
 Two prices bypass payment: a **lifetime** price with no amount sets validity 100 years out, and a price marked **Is only assignable by admins (hidden for members)** with no amount extends validity by the product period each time it is applied. That covers honorary and free memberships.
 
@@ -163,11 +163,11 @@ Exemption comes from the user type, not the individual: a user type with **Not e
 | Method | How it works |
 |---|---|
 | **Online** | Members pay from their profile's fee tab or a payment link, but only once their fee has expired or the advance-payment window has opened. |
-| **Bank transfer** | With **Allow Bank Transfer Payments** on, members get your account details and a reference identifier to quote. The payment lands pending until an admin approves it. |
+| **Bank transfer** | With **Allow Bank Transfer Payments** and **Enable Membership Payments via Bank Transfer** on, and the Invoices module configured, a member raises an unpaid membership invoice and gets your account details plus its series as the reference to quote. It is settled with **Mark as paid** on that invoice, and never appears on **Fee payments**. |
 | **Mark as paid** | With **Allow Mark as Paid** on, an admin picks the periods to settle on the member's fee tab. If part of the period is already covered, Orgo charges only the remainder. |
 | **By someone else** | A parent listed as managing a member can pay for them, and companies can cover their members. A company-covered member sees "Membership managed by" instead of a pay button. |
 
-An admin may only record a payment for a member they manage: chapter and organisation finance admins for their whole scope, unit admins only for members in their own units.
+On the **Local members fees** table an admin may only record a payment for a member they manage: chapter and organisation finance admins for their whole scope, unit admins only for members in their own units. **Mark as paid** is a finance-admin action and is not offered to unit admins at all.
 
 ### Worked example: recording a part-paid year
 
@@ -187,7 +187,9 @@ An early renewal is stacked the same way. When a member pays while their members
 
 Filter by **Organisation** or **Local**, by chapter, and by **All Statuses**, **Pending** or **Approved**. Each row shows the batch total, payer, chapter, method (card, check or IBAN) and status.
 
-Card batches arrive approved. Everything else arrives pending for a tenant admin: approving marks every payment in the batch successful and recalculates each affected member's valid fee date. A local admin can instead cancel and delete a pending batch.
+What arrives approved is decided by how the batch was written, not by how the member paid. A card batch arrives approved, and only Stripe fulfilment ever writes one. A **Mark as paid** batch, method **check**, arrives approved too. What arrives pending is the batch written by **Pay** on **Finance** → **Local members fees**, stamped as a bank transfer (`iban`), for organisation and chapter fees alike.
+
+Approving marks every payment in the batch successful and recalculates each affected member's valid fee date, the chapter date for a chapter fee product and the organisation date otherwise. Until then the periods show as paid-but-pending on the fee tables and no validity date moves. **Approve** is shown only to `ADMIN_TENANT`. A chapter administrator with `ADMIN_LOCAL` sees **Cancel** instead, which deletes the batch and every payment row in it.
 
 ---
 
@@ -269,7 +271,7 @@ Open the payment on **Finance** → **Payments** and choose **Refund**. Orgo ref
   </Accordion>
 
   <Accordion title="A pending batch has no Approve button">
-    **Approve** is shown only to `ADMIN_TENANT`, and only while the batch is still pending. A chapter administrator with `ADMIN_LOCAL` sees **Cancel and delete** instead. If you hold neither, the batch stays pending and the members it covers stay unpaid.
+    **Approve** is shown only to `ADMIN_TENANT`, and only while the batch is still pending. A chapter administrator with `ADMIN_LOCAL` sees **Cancel** instead, which deletes the batch rather than approving it. A finance-only administrator, `FINANCIAL_LOCAL` or `FINANCIAL_TENANT` without an admin permission, sees the queue and the batch details but neither button, so the batch stays pending and the members it covers stay unpaid.
   </Accordion>
 
   <Accordion title="A returning member was not charged the registration fee">
