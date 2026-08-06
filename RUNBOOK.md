@@ -256,20 +256,16 @@ When adding a new recipe or example, reuse these. The docs tell a coherent story
 
 ## Known limitations to track for the roadmap
 
-1. **🔴 SECURITY — Webhook signature is not cryptographic** (`api/src/Entity/WebhookSubscription.php:345-365` in the backend repo). The current algorithm is a 32-bit non-keyed hash and can be reproduced by anyone who observes one legitimate delivery.
+1. **Schema name explosion** — 204 `User-*` variants in `components.schemas` are auto-generated from API Platform serialization groups. Cosmetic for LLMs (the per-page `.md` mirrors are not affected), but bloats the OpenAPI playground's schema explorer. Fix requires renaming serializer groups in the Symfony backend.
 
-   **The public docs are deliberately silent on signature verification.** Neither `concepts/webhooks.mdx` nor `recipes/handle-webhooks.mdx` mentions the `X-Webhook-Signature` header, the current algorithm, or even the existence of a planned HMAC migration. This is an editorial choice — public discussion of the weakness (even framed as "transitional") signals attackers toward a known issue. The header is still sent by the backend; receivers that examine raw HTTP will see it.
+2. **No per-plan rate limits in the application layer**. `concepts/rate-limits.mdx` documents this honestly. If the backend ships per-plan limits, update that page.
 
-   **Until HMAC ships, route all signature questions to support privately.** Internal posture: HTTPS + IP allow-listing + idempotency on `payload.id` + re-fetch-from-API are the defenses to recommend in 1:1 conversations. Do not put this guidance in public docs until HMAC is the alternative being offered.
+3. **The hand-curated layer covers the top 30 of 743 operations**. Everything else uses synthesized examples — solid but generic. To improve coverage, hand-curate more entries in `examples.yaml` and `code_samples.yaml` as demand surfaces.
 
-   **Action items**:
-   - Ship HMAC-SHA256 webhook signing on the backend. Header shape: `X-Webhook-Signature: t=<unix_ts>,v1=<hex>`.
-   - When live, write the receiver pattern into `concepts/webhooks.mdx` (under "Authenticating the sender") and `recipes/handle-webhooks.mdx` (as a new Step between Receive and Be-idempotent).
-   - Maintain backward compatibility for at least one release by sending both the old and new signature headers; let receivers migrate at their own pace.
-   - Brief support: any customer who asks "how do I verify your webhook signature today?" gets the current code via private email, plus an estimate of when HMAC ships. Do not link them to any public page.
+---
 
-2. **Schema name explosion** — 204 `User-*` variants in `components.schemas` are auto-generated from API Platform serialization groups. Cosmetic for LLMs (the per-page `.md` mirrors are not affected), but bloats the OpenAPI playground's schema explorer. Fix requires renaming serializer groups in the Symfony backend.
+## Closed limitations
 
-3. **No per-plan rate limits in the application layer**. `concepts/rate-limits.mdx` documents this honestly. If the backend ships per-plan limits, update that page.
+**Webhook signature (closed 2026-08-05, backend `184c3a934`).** `X-Webhook-Signature` was a 31-bit non-keyed hash and the docs were deliberately silent about it, with signature questions routed to support privately. It is now HMAC-SHA256 in the shape `t=<unix_ts>,v1=<hex>` over `"<t>.<raw body>"` (`api/src/Entity/WebhookSubscription.php::generateSignature`). The silence posture is retired: verification is documented publicly in `platform/webhooks.mdx` ("Verifying the signature"), `api-reference/concepts/webhooks.mdx` ("Authenticating the sender") and `api-reference/recipes/handle-webhooks.mdx` (Step 3), and support can link to those pages.
 
-4. **The hand-curated layer covers the top 30 of 743 operations**. Everything else uses synthesized examples — solid but generic. To improve coverage, hand-curate more entries in `examples.yaml` and `code_samples.yaml` as demand surfaces.
+One planned action item was **not** taken: the old header is not sent alongside the new one, so the change is breaking for any receiver that compared the old value. Every page that documents the signature says so, and the August 2026 changelog entry is written as "action required". If a customer reports a receiver that suddenly rejects everything, this is the first thing to check.

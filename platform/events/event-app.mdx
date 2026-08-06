@@ -1,0 +1,150 @@
+---
+title: 'Event App'
+description: 'The mobile companion app your attendees use during an event: agenda, feed, networking, badge and votes'
+"og:title": 'Event App | Orgo'
+"og:description": 'The mobile companion app your attendees use during an event: agenda, feed, networking, badge and votes'
+"twitter:title": 'Event App | Orgo'
+"twitter:description": 'The mobile companion app your attendees use during an event: agenda, feed, networking, badge and votes'
+---
+
+The Event App is the attendee-facing side of an Orgo event. It runs in the browser at the event's own `/event-app/` address, is built mobile first, and gives everyone registered for the event a single place to see the agenda, read announcements, find other attendees, book meetings, vote and show their badge at the door.
+
+**Built for** conferences, congresses, general assemblies and multi-day gatherings where attendees need something in their hand during the event, not just a confirmation email.
+
+**Replaces** a separate event app product bolted onto your registration system. It uses the same registrations, the same people and the same permissions as the rest of Orgo.
+
+<img src="/images/platform/events/event-app-details.png" alt="Event App on a phone showing the event cover, title, tab strip and the Details tab with date, location and description" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Who can open it
+
+Access is decided per event, not per organisation.
+
+| Who | Condition |
+|---|---|
+| **A member** (has an Orgo account in your organisation) | Holds a registration for the event that is not cancelled, with status Registered, Invited or Awaiting invoice payment |
+| **A non-member attendee** (a contact created by a ticket purchase or an invitation) | Same registration condition, on an event that belongs to the same organisation |
+| **An event manager** | Has `EVENT_TENANT`, or `EVENT_LOCAL` on that event, even with no registration |
+| **A tenant administrator** | `ADMIN_TENANT` opens any event in the organisation, but only from a full password login (see below) |
+
+Everyone else is redirected to the normal event page with "You are not registered for this event".
+
+There is no organisation-wide switch: any event with attendees has the Event App. You control only which tabs appear, under [What organisers configure](#what-organisers-configure).
+
+---
+
+## The three ways in
+
+| Way in | How it works |
+|---|---|
+| **Members already signed in** | The **Event app** shortcut sits in the event page header (for people who can edit the event) and in the event sidebar, both only once the event has a **location** filled in. Dashboard event cards open it directly for the owner and for anyone with a registration |
+| **Non-members: the link in their confirmation email** | Ticket and registration confirmations sent to a non-member contact link straight into the Event App, carrying a private key tied to that registration: no password, no account, and it works until the registration is cancelled. Treat it as their ticket |
+| **Anyone: a code sent by email** | On the normal login screen, an email with no member account anywhere still works: Orgo sends a six-digit code and signs the person in to the Event App only |
+
+---
+
+## Signing in with an email code
+
+This login is deliberately not the normal member login. It proves that someone controls an email address, and nothing more.
+
+**How it behaves**
+
+- Six digits, valid for **5 minutes**.
+- **20 seconds** between requests for a new code.
+- At most **10 codes per 5 minutes** to one email address, counted across every organisation.
+- Up to **15** attempts per code, and **10 failed attempts within 10 minutes** lock that email out of this login for the rest of the lockout window.
+- The screen never says whether the email is known to Orgo: an unknown address returns exactly the same response as a known one, and no email is sent.
+
+**What the session can do**
+
+The session is scope limited to member-level and event-level permissions (`USER`, `USER_LOCAL`, `EVENT_TENANT`, `EVENT_LOCAL`, `EVENT_PARENT_LOCAL`). `ADMIN_TENANT`, `HR_TENANT`, `FINANCIAL_TENANT` and their local equivalents are all refused, and administrator roles are stripped from the session token when it is issued.
+
+<Warning>
+An administrator who signs in with an email code gets an attendee session, not an admin session. They can moderate the events they manage, but the admin areas of Orgo stay closed until they sign in with their password.
+</Warning>
+
+Non-member attendees are limited further: their session reaches Event App endpoints only, not your member directory, your finances or anything else.
+
+**Which organisation the session belongs to**
+
+- On a **custom domain or your organisation's own subdomain**, the login is pinned to your organisation: a code is only sent if the email exists there, and it can only be redeemed on the host it was requested on. There is no way to pivot from your domain into another organisation.
+- On the shared **app.orgo.space** address, one code signs the person in to every organisation where that email is registered, as a member or as a contact, and they pick from a workspace list. Up to 20 organisations are signed in at once; anything beyond that is available on demand.
+
+---
+
+## My events
+
+<img src="/images/platform/events/event-app-my-events.png" alt="My events screen on a phone listing event cards grouped under an organisation logo, with a Signed in as line and an avatar button that opens the profile" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+Non-member attendees have no dashboard, so they land on **My events** (`/event-app/my-events`): every event in that organisation where they hold a registration that is Registered or Invited and not cancelled, most recent first, one card each, with a "Signed in as" line showing the verified email. The header opens their profile; the workspace drawer switches organisation or logs out.
+
+The screen works for members too. It matches on the verified email rather than on the kind of account, so a member who signs in with a code sees the same list, covering registrations held against their member account and against a contact record carrying the same address.
+
+---
+
+## The tabs
+
+The tab strip adapts to the event:
+
+| Tab | Appears when |
+|---|---|
+| **Program** | The event has at least one sub-event (session). The same label is used for the event sidebar entry that builds it |
+| **Details** | Always. Date, local time, add to calendar, map link, description, media, speakers |
+| **Feed** | Always |
+| **Participants** | Only for people who can manage the event, and only on mobile. This is the administrative roster |
+| **Networking** | **Visibility of attendee list** is on for the event |
+| **Vote** | The event has at least one vote that is upcoming, live or closed |
+| **Profile** | Always |
+
+See [Event App: Program, feed and votes](/platform/events/event-app-feed) and [Event App: networking](/platform/events/event-app-networking) for what each one does.
+
+Above the tabs, every attendee has a **Badge** button: a QR code identifying their registration, used at check-in and to swap details with other attendees. Event managers also get **Scan QR** next to it.
+
+---
+
+## What organisers configure
+
+Everything that shapes the Event App lives on the event itself, under **Features** on the event form. Editing needs the same permission as editing the event: ownership, or `EVENT_LOCAL`, `EVENT_TENANT` or `ADMIN_TENANT`.
+
+| Setting | What it does |
+|---|---|
+| **Visibility of attendee list** | Off: the roster is visible to admins only. On: attendees can see each other, which is what creates the Networking tab |
+| **Enable 1:1 networking** | Adds meeting booking inside the Networking tab. Cannot be switched on until the attendee list is visible |
+| **Enable speakers** | Adds the speakers block to the Details tab |
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="An attendee says the Event App shortcut is missing">
+    The event has no **location**, and the shortcut only renders once one is entered. Attendees arriving by email link are unaffected.
+  </Accordion>
+
+  <Accordion title="Someone registered but gets sent back to the event page">
+    Their status does not grant access: Registered, Invited and Awaiting invoice payment work, Cancelled, Waitlist and No show do not. Check the participant list.
+  </Accordion>
+
+  <Accordion title="The code email never arrives">
+    Requests for an address registered nowhere are silently ignored so the screen cannot reveal who has an account. Confirm the address against the participant list, then check the 20 second cooldown and the 10 codes per 5 minutes limit.
+  </Accordion>
+
+  <Accordion title="An admin signed in with a code and cannot reach the admin menus">
+    By design: email-code sessions cap out at member and event-level permissions. Sign out and sign in with the password for the full workspace.
+  </Accordion>
+
+  <Accordion title="A contact forwarded their email link to someone else">
+    The link is that person's credential for the event, so treat it like a ticket. Cancelling the registration invalidates it immediately.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related
+
+- [Event App: networking](/platform/events/event-app-networking) - Attendee profiles, connections and 1:1 meetings
+- [Event App: Program, feed and votes](/platform/events/event-app-feed) - The in-event surfaces
+- [Event Attendance](/platform/events/attendance) - Registration statuses and the participant list
+- [Check-in](/platform/events/check-in) - Scanning badges at the door
+- [Permissions](/platform/permissions) - What each permission level unlocks

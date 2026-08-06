@@ -1,130 +1,155 @@
 ---
 title: 'Family Members'
-description: 'Link parent-child accounts, manage minors, and enable family memberships'
+description: 'Group parents, guardians and children into one family record, and hold profiles for relatives who have no account'
 "og:title": 'Family Members | Orgo'
-"og:description": 'Link parent-child accounts, manage minors, and enable family memberships'
+"og:description": 'Group parents, guardians and children into one family record, and hold profiles for relatives who have no account'
 "twitter:title": 'Family Members | Orgo'
-"twitter:description": 'Link parent-child accounts, manage minors, and enable family memberships'
+"twitter:description": 'Group parents, guardians and children into one family record, and hold profiles for relatives who have no account'
 ---
 
-The Family Members feature lets you link related accounts — parents and children, spouses, siblings. This is essential for organizations that serve families, especially those working with minors who need parental oversight.
+A family is a named record that groups people who belong together: parents and guardians, their children, and other relatives. Each person can be a full member with their own account, or a name-and-email profile held inside the family for people who never sign in.
 
-**When to enable this:**
-- Your organization includes minors (youth groups, scouting, sports clubs)
-- You offer family memberships or pricing
+**Built for** organizations whose membership is household-shaped rather than individual, including scouting and youth organizations, sports clubs, and faith communities that enrol whole families and need to know which adult is responsible for which child.
 
-<img src="/images/platform/users/family-members-tab.png" alt="Family members tab on user profile" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-- Parents need to manage children's accounts
-- You need parental consent for minors' activities
+<img src="/images/platform/users/family-members-tab.png" alt="Family tab on a member profile showing the family name, a Parents section with the family admin and a Can manage child accounts member, each with the date they were added, a Children section, and an Other Family Members section" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
 ## How to enable
 
-**Settings** → **Users & Profiles** → **Configuration** → **Family & Relationships** section → toggle **Family Members** on.
+**Settings** → **Modules** → **Users & Profiles** → **Configuration** → **Family & Relationships**. Requires `ADMIN_TENANT`.
+
+| Setting | What it does |
+|---------|-------------|
+| **Enable Family Members** | Turns on the Family tab and lets you link member accounts into a family |
+| **Non-Member Family Profiles** | Allows profiles for relatives who are not members, stored as a name, email and phone inside the family |
+
+Both toggles are switches on the Users & Profiles configuration page. Turning on **Non-Member Family Profiles** alone shows the Family tab but leaves it empty: the family panel itself renders only when **Enable Family Members** is on.
 
 ---
 
-## What members see
+## Where families live
 
-Members manage family connections from **Profile** → **Update Profile** → **Family** tab.
+Members open **Profile** → **Edit** → **Family** (route `/users/edit/{id}`). A member sees their own family there. Anyone with `HR_LOCAL` for the member's local centre sees, and can manage, the family from the same tab on that member's profile.
+
+A read-only summary also appears on the profile page itself: linked members as avatars, non-member relatives as a name plus email and phone. That block is visible to the member and to `HR_LOCAL` administrators only.
 
 ---
 
-## Linking family members
+## Creating a family
+
+One family per person. A member who is not in a family yet sees **Create Family**, which names the record after them (for example "Maya Marino Family") and makes them the owner.
+
+When an administrator creates a family from someone else's profile, Orgo asks what that person's place in it should be: **Parent/Owner** or **Child**. Picking Child creates the family without an owner and adds the person as a child, which is what you want when the responsible adult is not in the system yet.
+
+<Note>
+Ordinary members can create their own family and can add non-member relatives to it. Adding an existing organization member to a family requires `HR_LOCAL`. Members without that permission see: "For privacy reasons, only chapter or association administrators can add organisation members to a family."
+</Note>
+
+---
+
+## Adding people
+
+The family panel has three sections, each with its own **Add** button.
+
+| Section | Relationship levels it holds |
+|---|---|
+| **Parents** | Parent, Guardian, Grandparent, Spouse |
+| **Children** | Child |
+| **Other family members** | Sibling, Other |
+
+In the **Parents** section, a row that is a member account carries a grey line under the name: **Family Admin** or **Can manage child accounts**, then **Added on** and the date that person joined the family. Children, other relatives and non-member profiles show the name and its tags only.
+
+The add dialog asks three things:
 
 <Steps>
-  <Step title="Go to the Family tab">
-    **Profile** → **Update Profile** → **Family** tab.
+  <Step title="Pick the relationship">
+    **Parent** (can manage child accounts), **Child** (account managed by parent), or **Other member** (guardian, grandparent, and so on).
   </Step>
-  <Step title="Click Add Family Member">
-    Choose to link an existing member (by email) or create a new child account.
+  <Step title="Answer 'Is member of {your organization}?'">
+    **Yes** searches existing member accounts. **No** takes a first name, last name and an optional email, and stores the person as a non-member profile.
   </Step>
-  <Step title="Select the relationship">
-    Choose: **Parent**, **Child**, **Spouse**, or **Sibling**.
-  </Step>
-  <Step title="The other person confirms">
-    If linking an existing member, they receive a request and must accept the connection. Child accounts created by parents are linked automatically.
+  <Step title="Optionally grant child management">
+    A **Can manage child accounts** switch appears for anyone who is not a child. Parents and guardians receive it automatically.
   </Step>
 </Steps>
 
-### What parents can do for children
+Linking an existing member takes effect immediately. There is no request for the other person to accept.
 
-When a parent account is linked to a child:
-- **Create the child's account** — Parents can register children who are under the minimum self-registration age
-- **Edit the child's profile** — Manage their information
-- **Receive copies of communications** — Important emails may be CC'd to the parent
-- **Approve event registrations** — Parents may need to consent to activities
-- **Handle payments** — Parents manage payments for minors
+A person can hold only one non-parent membership across all families. If you add someone who is already a child or sibling elsewhere, Orgo asks: "{name} is already a member of "{family}". Move them to this family?" Moving requires permission on the other family too, and a family owner cannot be moved out of the family they own. Parents and guardians are exempt: a parent of several children legitimately appears in each child's family.
 
 ---
 
-## Age restrictions
+## Registering a child who has no account
 
-These are the most important settings for organizations working with minors:
+From the Children section you can create the account outright. Orgo asks for an optional email, first and last name, birthday and gender, then:
 
-| Setting | What it does | Example |
-|---------|-------------|---------|
-| **Minimum registration age** | Users below this age cannot create their own accounts — a parent must do it | Set to **13** for COPPA compliance, or **16** for stricter policies |
-| **Auth restriction age** | Users below this age have restricted authentication and may need parental oversight for certain actions | Set to **16** — minors under 16 need parental consent for events, purchases, etc. |
+- Creates an active user account with `accountType` set to `child`
+- Records parental consent (date and method) on both the account and the family membership
+- Creates the parent's family if they do not have one, adds the parent as owner, and adds the child
+- Marks the email as confirmed, since the parent supplied it
 
 <Warning>
-  Configure age restrictions based on your legal jurisdiction. GDPR requires parental consent for children under 16 in most EU countries (some allow 13). COPPA applies to children under 13 in the US.
+The email is optional, but a child registered without one gets a generated placeholder address that cannot receive mail and cannot be used to sign in. Leave it blank only when you want a record, not a login.
+</Warning>
+
+If the [Waitlist](/platform/users/waitlist) is active and the child's local centre qualifies, the child goes onto the waitlist instead of straight into the organization. When **Minimum Registration Age** is configured and the child is younger than it, the waitlist entry is flagged **underage** and the Children list shows an "In waitlist, underage" tag next to their name.
+
+---
+
+## Removing people and deleting a family
+
+Any member of a family with management rights can remove others; you cannot remove yourself. Removing someone deletes the family link, not their account.
+
+Deleting the whole family is a link at the top right of the panel. It only works once every member except the owner has been removed, otherwise Orgo answers "Cannot delete family with other members. Please remove all members first."
+
+---
+
+## Families and fees
+
+Family membership does not change what anyone pays. Fees are resolved per member. Linking a child to a parent does not transfer, discount, or cover the child's fee, and there is no family price tier. If you need one payer to cover several people, use [Companies](/platform/users/companies) or a fee bundle instead.
+
+---
+
+## Age settings
+
+Two age values exist on the tenant, **Children Auth Restriction Age** and **Minimum Registration Age**, but only the second one has any effect today, and neither is editable from the settings screen: both fields are hidden pending backend enforcement.
+
+- **Minimum Registration Age** is read when a parent registers a child. Below it, the child's waitlist entry is marked underage.
+- **Children Auth Restriction Age** does not restrict authentication. It only drives a notification when a young member reaches that age.
+
+<Warning>
+Do not rely on these settings for legal age gating. There is no age check on public self-registration: anyone can register regardless of the birthday they enter. If your jurisdiction requires parental consent below a given age (GDPR, COPPA), enforce it in your registration flow and terms.
 </Warning>
 
 ---
 
-## How it works in practice
-
-### Youth scouting organization
-
-1. **Enable Family Members** with min registration age 13, auth restriction 16
-2. Parents register and create accounts for their children (under 13)
-3. Teens 13-15 can self-register but are linked to parent accounts
-4. Parents receive copies of event communications
-5. Parents approve event sign-ups for minors
-6. When a child turns 16, restrictions lift and they manage their own account
-
-### Family sports club
-
-1. **Enable Family Members** with no age restrictions
-2. Members link their spouse and children
-3. Family units are visible for billing purposes
-4. Family membership pricing can be applied
-5. Event registration can include family members
-
----
-
-## Common scenarios
+## Common questions
 
 <AccordionGroup>
   <Accordion title="A parent wants to register their 10-year-old">
-    The parent must register themselves first, then go to their Family tab and click "Add Family Member" → create a new child account. The child's account is automatically linked to the parent. If the minimum registration age is set to 13, the child cannot self-register.
+    The parent registers themselves, opens **Profile** → **Edit** → **Family**, creates their family if they do not have one, then uses **Add** in the Children section and chooses to register the child. The child is linked automatically.
   </Accordion>
 
-  <Accordion title="A teen turned 16 — do their restrictions automatically lift?">
-    Yes. Age-based restrictions are evaluated dynamically based on the member's birthday. When they cross the auth restriction age threshold, their restrictions are automatically adjusted on their next login.
+  <Accordion title="Can both parents be linked to the same child?">
+    Yes. Add both at parent level in the same family. Parents are not restricted to one family, so a parent already in another family record can be added without being moved out of it.
   </Accordion>
 
-  <Accordion title="Two divorced parents both want access to a child's account">
-    Both parents can be linked to the child. Link the child to both accounts using the Parent relationship type. Both parents will have parental access.
+  <Accordion title="Can a member add another member to their family themselves?">
+    No. Adding an existing account requires `HR_LOCAL`. Members can add non-member relatives (name, email, phone) on their own.
   </Accordion>
 
-  <Accordion title="A member wants to remove a family connection">
-    Either party can unlink the connection from their Family tab. Unlinking a child from a parent doesn't delete the child's account — it just removes the parental oversight link.
+  <Accordion title="What can a parent do with a linked child's account?">
+    They can see the child in the family panel and open the child's profile. **Can manage child accounts** is recorded on the membership and controls who may add and edit members inside that family. It does not grant a parent the ability to act as the child elsewhere in the platform.
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Privacy note
-
-Family connections involve sharing data between accounts. Linked family members can see each other's basic profile information, and parents have elevated access to children's accounts. Make sure your privacy policy covers family data sharing — inform members what information is shared when they link accounts.
-
----
-
 ## Related
 
-- [Registration Form](/platform/users/registration-form) — Birthday field enables age-based restrictions
-- [Profile Fields](/platform/users/profile-fields) — Birthday configuration
-- [Privacy Settings](/platform/users/privacy-settings) — Data visibility controls
+- [Companies](/platform/users/companies) - one organization paying for many members
+- [Waitlist](/platform/users/waitlist) - where underage children are held
+- [Registration Form](/platform/users/registration-form) - the birthday field
+- [Profile Fields](/platform/users/profile-fields) - what a child profile can store
+- [Privacy Settings](/platform/users/privacy-settings) - who can see whom

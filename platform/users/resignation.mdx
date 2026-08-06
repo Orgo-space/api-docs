@@ -1,164 +1,179 @@
 ---
 title: 'Resignation'
-description: 'Formal member departure with reason tracking and admin approval'
+description: 'A member-initiated departure with a mandatory reason and an admin approval step'
 "og:title": 'Resignation | Orgo'
-"og:description": 'Formal member departure with reason tracking and admin approval'
+"og:description": 'A member-initiated departure with a mandatory reason and an admin approval step'
 "twitter:title": 'Resignation | Orgo'
-"twitter:description": 'Formal member departure with reason tracking and admin approval'
+"twitter:description": 'A member-initiated departure with a mandatory reason and an admin approval step'
 ---
 
-Resignation is a formal departure process. Unlike simply setting someone to Inactive, resignation captures why people leave — giving you data to improve retention. Every resignation goes through admin approval, so no one disappears without someone knowing.
+Resignation is a formal departure with a reason attached. A member submits a
+request, an administrator approves it, and the approval closes out their roles
+and (usually) sets them to Inactive. Nothing is deleted: the record of who left,
+when and why stays in the organisation.
 
-<img src="/images/platform/users/resignation-requests.png" alt="Resignation requests list showing pending requests with date, member name, local group, and status" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+**Built for** organisations that want to know why people leave. **Replaces**
+someone quietly going Inactive with no explanation and no record.
 
-**When to use resignation vs other options:**
-- **Resignation** — Member wants to leave formally. You want to know why and have a record.
-- **Status → Inactive** — Member is lapsing or taking a break. No formal process needed.
-- **Status → Suspended** — Admin needs to block someone immediately. No member input.
-- **Account Deletion** — Member wants their data removed (GDPR). If resignation is enabled, they must resign first.
-
----
-
-## How to enable
-
-Go to **Settings** → **Users & Profiles** → **Configuration** → enable **Resignations**.
-
-Once enabled, members see a **Resign** button on their Close account page, and admins see **Resignation Requests** in the sidebar.
+<img src="/images/platform/users/resignation-requests.png" alt="Resignations list with all, pending and processed filter chips and a table of requests showing date, member, requested by, chapter, stay active and status" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## What the member sees
+## Settings
 
-Members reach the resignation form through **Profile** → **Settings & Privacy** → **Close account** → **Resign**.
+Resignation is off by default.
 
-![Member resignation form showing reason field, feedback field, and close account toggle](/images/platform/users/resignation-form.png)
+| Setting | Where | What it does |
+|---|---|---|
+| **Enable Resignation Module** | Settings → Users & Profiles → Configuration → Resignation & Membership Termination (`ADMIN_TENANT`) | Shows the Resign button to members and the Resignation requests screen to admins |
+| **Automatically Inactivate Accounts After Resignation** | Same section, once the module is on | Forces every approved resignation to set the member Inactive. The member's "Close my account" choice disappears from the form and is ignored |
+| **Resignation Notifications** | Settings → Emails & Notifications → System Emails | Sends the two resignation emails (request to admins, approval to the member). On by default; off keeps the workflow but stops both emails |
 
-When a member clicks **Resign** on the Close account page, the resignation form appears inline. It contains a mandatory **Resignation reason** text area, an optional **What would determine you to continue as member?** feedback field, and a **Close my account** toggle (off by default — if enabled, the account is also deactivated upon approval). At the bottom, **Submit** sends the request for admin review and **Cancel** returns to the Close account page without submitting.
+---
+
+## What the member does
+
+Profile → **Settings & Privacy** → **Close account** → **Resign**. The form opens in place.
+
+<img src="/images/platform/users/resignation-form.png" alt="Resignation form with a resignation reason box, a what would determine you to continue as member box, a Close my account toggle and Submit and Cancel buttons" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 | Field | Required | What it does |
-|-------|----------|-------------|
-| **Resignation reason** | Yes | Why they're leaving. This is the most valuable data you'll collect — it tells you what's pushing people away. |
-| **What would determine you to continue as member?** | No | What could change their mind. Surprisingly useful for identifying fixable issues. |
-| **Close my account** | No | If toggled on, their account status changes to Inactive when the resignation is approved. If off, the resignation is on record but their account stays Active (useful for "I'm leaving in spirit but keep my profile"). |
+|---|---|---|
+| **Resignation reason** | Yes | Free text. The request is rejected without it, in the browser and on the server |
+| **What would determine you to continue as member?** | No | The retention question, stored on the request and shown to whoever reviews it |
+| **Close my account** | No, off by default | On, the approval sets the member to Inactive. Off, the resignation is recorded and the account stays Active |
 
-After submitting, the member sees a confirmation. Their account continues to work normally until an admin processes the request.
+When **Automatically Inactivate Accounts After Resignation** is on, the toggle is
+replaced by a line in red: "This account will be closed after resignation is
+approved."
 
----
+After **Submit**, the Close account page shows "Your resignation is pending and it
+will be processed by administration" with a **Cancel resignation** button. The
+account works normally until an admin acts.
 
-## What admins see
+<Note>
+A member may have only one pending request at a time. Submitting a second one is
+refused with "Your current resignation request is pending, we will email you once
+is processed."
 
-Navigate to **Resignation Requests** in the sidebar to see all submissions.
+Guest accounts do not see the Resign button at all.
+</Note>
 
-### Processing a resignation
-
-<Steps>
-  <Step title="Review the request">
-    Click **View** on a pending request. Read the resignation reason and feedback carefully.
-  </Step>
-  <Step title="Consider reaching out">
-    If the member mentioned something fixable, or they're a key contributor, contact them before processing. The feedback field often reveals retention opportunities.
-  </Step>
-  <Step title="Approve or delete">
-    - **Approve**: Processes the resignation. If the member checked "Close my account", their status changes to Inactive. An email notification is sent to the member.
-    - **Delete**: Removes the request entirely. The member is not notified. Only Admin Tenant can do this.
-  </Step>
-</Steps>
-
-### Who can do what
-
-| Action | HR Tenant | Admin Tenant |
-|--------|-----------|-------------|
-| View resignation requests | Yes | Yes |
-| Approve resignations | Yes | Yes |
-| Delete requests | No | Yes |
+An administrator with `HR_LOCAL` over the member's local group sees the same form
+on that member's Close account page, headed "Record the resignation of this
+member", plus a shortcut with that label on the member's Permissions tab. Use it
+when somebody resigns by email or in person.
 
 ---
 
-## Resignation + account deletion
+## What administrators do
 
-When both features are enabled, they work as a pipeline:
+The queue is **Resignation requests** in the sidebar under MANAGEMENT, visible to
+`HR_LOCAL` and above once the module is on. The screen is titled **Resignations**:
+30 requests per page, newest first, chips for **All**, **Pending** and
+**Processed**, and columns for date requested, member, requested by, chapter,
+StayActive and status. StayActive is hidden when automatic inactivation is on,
+because the answer never varies.
 
-1. Member must **resign first** and get approved
-2. Only after resignation is processed can they **delete their account**
-3. Deletion permanently removes their data
+Opening a row shows the reason, the retention answer and an **Exit conclusion**
+box for the reviewer's note. The exit conclusion is hidden from the resigning
+member and read-only once approved. **Approve** processes the resignation;
+**Delete** removes the request entirely and is only offered in the queue to
+`ADMIN_TENANT`.
 
-This gives you a two-step safeguard: you see why they're leaving (resignation) before any data is lost (deletion).
+<img src="/images/platform/users/resignation-request-detail.png" alt="Resignation request detail showing status, date, member, requested by, stay active, resignation reason, retention answer, exit conclusion box and Approve and Delete buttons" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-If only deletion is enabled (resignation is off), members can delete their accounts directly without any admin oversight.
+| Action | Permission |
+|---|---|
+| Submit a resignation for yourself | Any member (not guests) |
+| Record a resignation for another member | `HR_LOCAL` over that member's local group |
+| See a request | The member, whoever submitted it, or `HR_LOCAL` over the member's local group |
+| Approve a request | `HR_LOCAL` over the member's local group |
+| Delete a request | `ADMIN_TENANT`, or the member themselves, or whoever submitted it |
 
-<Tip>
-  Enable resignation even if you also enable account deletion. The resignation reason data alone is worth it — it tells you what's driving people away before their data disappears.
-</Tip>
+`HR_TENANT` and `ADMIN_TENANT` cover every local group.
 
 ---
 
-## Using resignation data
+## What approval actually changes
 
-The resignation reasons you collect are a retention goldmine. Look for patterns:
+Approval, in one step:
 
-- Are multiple people citing the same issue? That's a systemic problem worth fixing.
-- Are departures clustered in a specific local center? That center may have leadership or culture issues.
-- Are people leaving at a particular time of year? You may have a seasonal engagement problem.
-- Is the feedback field showing fixable issues? "I'd stay if there were events near me" is actionable.
+- stamps the request as approved, with the approving admin and the date;
+- sets the member **Inactive** if automatic inactivation is on, otherwise Inactive
+  or Active according to their "Close my account" choice;
+- sets the member's **user type** to the configured **Guest User Type**;
+- clears the member's **adhesion** link, if the Adhesion module is on and a guest
+  user type is configured;
+- **end-dates every open role** the member holds, as of the resignation date;
+- emails the member the resignation-approved notice.
+
+<Warning>
+The user type is reassigned on every approval. If your organisation has no
+**Guest User Type** configured (**Settings** → **Users & Profiles** →
+**Configuration** → User Types & Roles), approving a resignation leaves the
+member with no user type at all. Set a guest user type before you turn the module
+on if user type drives anything in your setup.
+</Warning>
+
+Nothing is deleted: the profile, the payment history, the event attendance and
+the ended roles all remain.
 
 ---
 
-## Common scenarios
+## Emails
+
+| Email | Who gets it | When |
+|---|---|---|
+| Resignation request | `HR_LOCAL` holders in the member's own local group, plus `HR_PARENT_LOCAL` holders in that group or in any group above it in the chapter tree; tenant admins if none of those exist | On submission |
+| Resignation approved | The resigning member | On approval |
+
+Both are governed by **Resignation Notifications** under System Emails.
+
+A member asking for their **data to be removed** is making a different request:
+handle that through [account deletion](/platform/users/deletion-of-account), and
+read that page first so you can tell them what survives. The two are independent:
+deletion does not require a resignation, and resigning does not start a deletion.
+
+---
+
+## Common questions
 
 <AccordionGroup>
-  <Accordion title="A member submitted a resignation but changed their mind">
-    If the request is still **Pending**, an Admin Tenant can **Delete** the request. The member keeps their account as-is. If it was already **Approved**, you'll need to manually change their status back to Active (Profile → Edit → Permissions tab → Status → Active).
+  <Accordion title="A member submitted a resignation and changed their mind">
+    While it is pending, the member withdraws it with **Cancel resignation** on
+    their Close account page, or an `ADMIN_TENANT` deletes it from the queue.
+    After approval, set their status back to Active on the Permissions tab and
+    reassign the roles the approval end-dated.
   </Accordion>
 
-  <Accordion title="A resignation was approved but the member still has an Active account">
-    This means the member didn't toggle "Close my account" when they resigned. The resignation is on record, but they chose to keep their profile active. This is normal — some members resign from formal membership but want to stay connected.
+  <Accordion title="A resignation was approved but the account is still Active">
+    The member left "Close my account" off and your organisation does not force
+    automatic inactivation. The resignation is on record and the roles are closed,
+    but the account still works. That is a supported outcome.
   </Accordion>
 
-  <Accordion title="I'm getting too many resignations to process individually">
-    If you're processing many resignations at once, check if there's a pattern in the reasons. High volume often signals an organizational issue worth addressing. For the processing itself, work through the list — there's no bulk approve option, as each resignation should be reviewed individually.
+  <Accordion title="Requests sit in the queue for weeks">
+    Nothing expires or auto-approves a request. A member who says the form "did
+    not work" has usually submitted one that is still sitting there.
   </Accordion>
 
-  <Accordion title="Should I delete a resignation request instead of approving it?">
-    Delete is for removing invalid or test requests. Don't use it to prevent a member from leaving — that creates a bad experience. If a member genuinely wants to leave, approve the resignation. If they submitted by mistake, reach out and confirm before deleting.
+  <Accordion title="Can I approve requests in bulk?">
+    No. Approval is one request at a time, from the detail view.
+  </Accordion>
+
+  <Accordion title="Should I delete a request instead of approving it?">
+    Delete is for invalid or test entries. It notifies nobody, so the member is
+    left thinking they resigned when nothing was recorded.
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Requests that sit waiting
-
-Every resignation needs an administrator to approve it, which means a request can
-sit pending indefinitely if nobody is watching the queue. Members experience that
-as being ignored at the moment they have already decided to leave, and they tend
-to escalate by emailing whoever they can find.
-
-Two habits prevent it:
-
-- Check the pending queue on a schedule rather than when someone chases
-- Assign the queue to a named person, not to "the admins"
-
-<Note>
-A member who says the resignation flow did not work has often submitted a request
-that is still pending, rather than hit an error. Check the queue before treating
-it as a fault. If there is genuinely no request there, take their email as the
-notice, record the resignation on their behalf, and report the failure.
-</Note>
-
-## Resignation and data deletion are different requests
-
-Resigning ends membership. It does not erase anything, and it should not: you
-keep the record, the history, and the reason they left.
-
-A member asking for their **data to be deleted** is making a separate request
-under the right to erasure. Handle it through account deletion, not by resigning
-them and assuming that covers it. Someone who asked to be erased and later
-discovers their profile still exists has a legitimate complaint, and in the EU it
-is a regulatory one rather than a service one.
-
----
-
 ## Related
 
-- [Account Deletion](/platform/users/deletion-of-account) — Permanent data removal (can require resignation first)
-- [User Statuses](/platform/users/statuses) — Alternative: set to Inactive without the formal process
-- [Adhesion](/platform/users/adhesion) — The opposite flow: joining the organization
+- [User statuses](/platform/users/statuses) - what Inactive blocks, and how to reverse it
+- [Deletion of account](/platform/users/deletion-of-account) - the separate erasure request
+- [Adhesion](/platform/users/adhesion) - the joining flow this mirrors
+- [Permissions](/platform/permissions) - the permissions named on this page
+- [Troubleshooting member access](/platform/users/troubleshooting-access) - when a departure was not the cause

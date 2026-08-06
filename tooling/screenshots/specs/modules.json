@@ -1,0 +1,54 @@
+[
+  {
+    "id": "modules-users-module-page",
+    "image": "/images/platform/organisation/module-settings-page.png",
+    "usedOn": [
+      "platform/organisation/modules.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/users",
+    "routeHint": "Gear icon in the sidebar -> Settings -> Modules -> Users & Profiles (lands on the Configuration tab)",
+    "actions": [],
+    "waitFor": "text=Enable Users Module",
+    "viewport": "desktop",
+    "alt": "Users and Profiles module page with the tab list on the left and the User Types and Roles settings section on the right",
+    "status": "new",
+    "notes": "Existing file predates the 'Who Can Filter Users by Type' setting added 2026-07-22 (commit 06bfc0577), which now renders in the User Types & Roles section whenever Enable User Types is on. Capture with Enable User Types ON so all seven rows show. Keep the sticky header (disabled Enable Users Module switch + Save All Settings button) and the full 12-item tab list in frame."
+  },
+  {
+    "id": "modules-all-modules-grid",
+    "image": "/images/platform/organisation/all-modules-grid.png",
+    "usedOn": [
+      "platform/organisation/modules.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/settings/features",
+    "routeHint": "Settings -> Modules -> All Modules (last entry in the Modules group)",
+    "actions": [],
+    "waitFor": "text=View JSON Mode",
+    "viewport": "desktop",
+    "alt": "All Modules page showing a search box and a View JSON Mode button above a grid of module cards, each with its name and an on or off switch",
+    "status": "new",
+    "notes": "Scroll to the top so the search box and the View JSON Mode button are both visible along with the first two rows of cards. Cards for disabled modules render greyed out, which is worth showing: include at least one off module (for example Gamification or Adhesion on dar-va). This tenant's stored settingFeatures blob carried ten legacy keys that are not in Tenant::SETTINGS_FEATURES_DEFAULTS (groups, files, companies, documents, languages, localGroups, multipleLanguages, professionalNetwork, regionalGroups, resignations). Because mainKey() maps 'group' to the label 'Groups' and 'language' to 'Languages', the strays rendered as a second, switched-off 'Groups' card and a second 'Languages' card next to the real ones. They were pruned from the demo tenant on 2026-08-05; the grid is now 35 cards, one per canonical key minus general and integrations."
+  },
+  {
+    "id": "modules-all-modules-options",
+    "image": "/images/platform/organisation/all-modules-options.png",
+    "usedOn": [
+      "platform/organisation/modules.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/settings/features",
+    "routeHint": "Settings -> Modules -> All Modules, then press the Options button on the Fees card. Fees sits in the top row of the grid, so its expanded key list grows downward from y=175 and the save and cancel row lands inside a tall frame. On the desktop viewport the card is cut off mid-list at 'Default Product Price Id' and the two buttons the prose promises are never in shot.",
+    "actions": [
+      "click .card:has-text(\"Fees\") > div > button",
+      "wait 1500"
+    ],
+    "waitFor": "text=Default Product Price Id",
+    "selector": ".card-container > .card:has-text(\"Fees\")",
+    "viewport": "tall",
+    "alt": "The Fees module card expanded on the All Modules page, showing its setting keys as switches, number boxes, text inputs and a permission dropdown, with save and cancel buttons underneath",
+    "status": "new",
+    "notes": "Fees is the only unlocked module on this tenant whose settings mix all four controls: boolean switch, number box, free-text input and permission dropdown (Who Can See User Fee). Local Centers(Groups) has no permission dropdown and its number key is null, which renders as a text box. Do not use the Users card: its master switch is locked. waitFor targets a key label that only exists once the card is expanded; 'cancel' matched text already on the page and fired before the click landed. The selector crops to the expanded card: the grid is two columns, so an uncropped shot leaves the left column empty for most of the frame while the right column runs the full key list."
+  }
+]

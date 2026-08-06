@@ -1,0 +1,82 @@
+[
+  {
+    "id": "website-homepage-hero",
+    "image": "/images/platform/website/website-homepage-hero.png",
+    "usedOn": [
+      "platform/organisation/public-website.mdx"
+    ],
+    "tenant": "anon",
+    "route": "/homepage?workspace=t187c",
+    "routeHint": "Signed-out page, no session. The `workspace` slug is what tells the app which tenant to resolve when the host is localhost; on a real deployment the host does that. The tenant MUST have a logo uploaded or WebsiteLayout falls back to printing the tenant name as text in the header and drops the footer logo entirely (WebsiteLayout.vue logoUrl). t187c's logo was uploaded on 2026-08-05 for the branding shots.",
+    "actions": [
+      "wait 3000"
+    ],
+    "waitFor": "text=Become a member",
+    "viewport": "desktop",
+    "alt": "Public website homepage with the organization logo and About, Chapters, Events, Donate and Newsletter navigation across the top, a Login and Become a member button pair, and a centred hero holding an eyebrow badge, headline, sub-headline, Become a member and Donate buttons and three statistics",
+    "status": "new",
+    "note": "Above-the-fold viewport shot, not fullPage: the page is six stacked sections and a full-page capture reduces the hero to an unreadable strip. The hero copy, the three statistics and the About/Chapters/Events pillars are hard-coded template strings (WebsiteHero.vue, WebsiteAbout.vue), not tenant content, so the screenshot deliberately shows the shipped copy rather than anything editable. The Donate button in the hero and the Donate nav link only render when settingFeatures.onlinePayments.donationProductUuid is set; t187c has one, which is why both appear. The green Donate Now pill bottom-right is the donation widget script the Donate section injects."
+  },
+  {
+    "id": "website-homepage-chapters",
+    "image": "/images/platform/website/website-homepage-chapters.png",
+    "usedOn": [
+      "platform/organisation/public-website.mdx"
+    ],
+    "tenant": "anon",
+    "route": "/homepage?workspace=t187c",
+    "actions": [
+      "scrollto text=Find a chapter near you",
+      "wait 5000"
+    ],
+    "waitFor": "text=See all chapters",
+    "selector": "#chapters",
+    "viewport": "desktop",
+    "alt": "Find a chapter near you section showing a map of the organization's local centers with a pin on each one and a See all chapters button underneath",
+    "status": "new",
+    "note": "Cropped to the section element (#chapters), which is the WebsiteSection wrapper. The map is the same LocalCenterMap component the members' area uses, fed by /local-centers-map-public. Content precondition: local centers must be active and carry a geoLocation, or the map draws no pins at all. t187c has eleven active chapters, all with coordinates. The 5s wait is for the Leaflet tiles: without it the pins land on grey squares."
+  },
+  {
+    "id": "website-homepage-events",
+    "image": "/images/platform/website/website-homepage-events.png",
+    "usedOn": [
+      "platform/organisation/public-website.mdx"
+    ],
+    "tenant": "anon",
+    "route": "/homepage?workspace=t187c",
+    "actions": [
+      "scrollto text=Upcoming events",
+      "wait 3000"
+    ],
+    "waitFor": "text=See all events",
+    "selector": "#events",
+    "viewport": "desktop",
+    "alt": "Upcoming events section showing three event cards with cover images, dates, titles and locations, above a See all events button",
+    "status": "new",
+    "note": "Cropped to #events. This section calls /public_events?tenant=<slug>&upcoming=1 directly and keeps the first three, so it needs at least three future events that are public. Events without a cover image render a blank card top, so the tenant's upcoming public events must have logos. Do NOT substitute the /community-events page for this shot: that page embeds /public/events in an iframe and the embedded list crashes on this build (store.js isGrantedOwner reads state.tenant.settingFeatures before the tenant resolves), leaving the calendar drawn and the list column empty."
+  },
+  {
+    "id": "website-anonymous-homepage-setting",
+    "image": "/images/platform/website/website-anonymous-homepage-setting.png",
+    "usedOn": [
+      "platform/organisation/public-website.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/users",
+    "routeHint": "Sign in as a tenant admin, then Settings -> Modules -> Users & Profiles -> Configuration, and scroll to the Advanced Settings card at the bottom. Both Custom Homepage Route and Anonymous Homepage URL live in that card.",
+    "actions": [
+      "wait 5000",
+      "click text=Custom Fields",
+      "wait 2500",
+      "click text=Configuration",
+      "wait 3500",
+      "scrollto text=Anonymous Homepage URL",
+      "wait 1500"
+    ],
+    "waitFor": "text=Anonymous Homepage URL",
+    "viewport": "desktop",
+    "alt": "Users and Profiles module settings with the Advanced Settings card open, showing the Use Custom Dashboard switch, the empty Custom Homepage Route field and the Anonymous Homepage URL field holding /homepage",
+    "status": "new",
+    "note": "The sub-nav round trip (Custom Fields, then back to Configuration) is load-bearing and not decoration. UsersModuleConfig.loadSettings() runs once in created() off the Vuex tenant and has no watcher, so on a cold load it reads the tenant persisted in the storage state and every field the tenant gained since then renders as its placeholder. Anonymous Homepage URL showed the grey /welcome placeholder instead of the stored /homepage on the first pass. Navigating away and back re-runs created() after the tenant refresh has landed, and the stored value appears. Full viewport rather than a crop of the card: the left settings rail and the module sub-nav are how a reader finds the page."
+  }
+]

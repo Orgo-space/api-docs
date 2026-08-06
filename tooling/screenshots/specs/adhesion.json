@@ -1,0 +1,85 @@
+[
+  {
+    "id": "adhesion-settings",
+    "image": "/images/platform/users/adhesion-settings.png",
+    "usedOn": [
+      "platform/users/adhesion.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/users",
+    "routeHint": "Settings (gear) -> Users & Profiles -> Configuration. The selector crops to the 'Adhesion & Membership' settings-section card, so the whole section is in frame and nothing else. The sub-toggles only render when 'Enable Adhesion Module' is on; it was off in the obfuscated demo data (while 39 adhesion records existed) and was switched on for tenant t187c on 2026-08-04 so this section, and the Adhesion Form / Adhesion Template tabs, render as documented. The Custom Fields -> Configuration bounce is required: UsersModuleConfig copies the tenant into local data in created(), and the capture session starts from a vuex-persistedstate localStorage snapshot, so on first paint the section still shows the stale (off) value. Re-entering the tab rebuilds it from the refreshed store. Default User Type After Approval, Admin Email Address and Draft Change Reasons were all unset and rendered as placeholder text; templates/political-party.mdx names all three in its alt, so they were populated on tenant 282 on 2026-08-05 (Member, adhesions@northwind.example.org, and four draft reasons). Video recording was switched on at the same time so the adhesion queue's Video column has something to show.",
+    "actions": [
+      "wait 2500",
+      "click text=Custom Fields",
+      "click text=Configuration"
+    ],
+    "waitFor": "text=Mandatory Adhesion",
+    "selector": ".settings-section:has(h3:text-is(\"Adhesion & Membership\"))",
+    "viewport": "desktop",
+    "alt": "Adhesion and Membership settings section with the Enable Adhesion Module, Mandatory Adhesion, Video recording, Review steps and Require identity verification switches",
+    "status": "new"
+  },
+  {
+    "id": "adhesion-form-builder",
+    "image": "/images/platform/users/adhesion-form-builder.png",
+    "usedOn": [
+      "platform/users/adhesion.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/users/forms/adhesion",
+    "routeHint": "Settings -> Users & Profiles -> Adhesion Form",
+    "actions": [],
+    "waitFor": "text=Adhesion form",
+    "viewport": "desktop",
+    "alt": "Adhesion form builder listing built-in profile fields with an include checkbox and a required checkbox on each row",
+    "status": "new",
+    "note": "Existing capture still matches the current view. Only drift: the local_center row is labelled 'Chapter' in the current code, the old capture shows 'Local center'. Recapture only if a cheap re-run is available."
+  },
+  {
+    "id": "adhesion-member-steps",
+    "image": "/images/platform/users/adhesion-member-steps.png",
+    "usedOn": [
+      "platform/users/adhesion.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/adeziune?u=209202",
+    "routeHint": "Sign in as an HR_LOCAL admin, open Management -> Adhesions, click an application in 'Initiated' status, then open the applicant's own adhesion page via the Profile link -> 'Adhesion' shortcut. The ?u=<userId> form of /adhesion renders the same stepper for another member. Pick a member whose application is still Initiated so the step cards are expandable rather than all locked.",
+    "actions": [],
+    "waitFor": "text=Identity",
+    "viewport": "mobile",
+    "alt": "Member adhesion page showing the numbered step cards for identity upload, profile form, signature and sending",
+    "status": "new",
+    "notes": "No crop: the empty band under the Privacy and Terms links is part of the app's real mobile layout. Every wrapper on this route (.adhesion-page, .o-center-scroll, the root section) is exactly viewport height, so cropping to one changes nothing, and the only shorter container, .adhesion-main, drops the organisation name and applicant header the shot is worth having. Left as a full mobile frame."
+  },
+  {
+    "id": "adhesion-admin-list",
+    "image": "/images/platform/users/adhesion-admin-list.png",
+    "usedOn": [
+      "platform/users/adhesion.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/adhesions",
+    "routeHint": "Sidebar -> MANAGEMENT -> Adhesions. Needs HR_LOCAL or above; sign in as a tenant admin so the chapter filter dropdown is visible. Three of the four per-row controls were empty on every row: no adhesion had a signed document, adhesion.hasVideo was off on the tenant so the Video column showed '-' throughout, and no user.identity_id was set so the Identity column never resolved. Fixed on 2026-08-05: adhesion_media rows on the fourteen most recent adhesions, videos on five of them, adhesion.hasVideo on, and identity records linked back to their members so the column shows Validate, validated and rejected states.",
+    "actions": [],
+    "waitFor": "text=records",
+    "viewport": "desktop",
+    "alt": "Adhesions queue with status filter chips and counts, and per-row signed document download, video, identity state and status controls",
+    "status": "new",
+    "note": "Existing capture is stale: it shows an 'All Statuses' select and separate UserID / Type / Last name / First name columns. The current view has an 'All' chip instead of the select, merges the profile into one column, adds a Video column, and the chapter filter is a searchable dropdown."
+  },
+  {
+    "id": "adhesion-template",
+    "image": "/images/platform/users/adhesion-template.png",
+    "usedOn": [
+      "platform/users/adhesion.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/users/adhesion-template",
+    "routeHint": "Settings -> Users & Profiles -> Adhesion Template",
+    "actions": [],
+    "waitFor": "text=Main Template",
+    "viewport": "desktop",
+    "alt": "Adhesion template editor with Header, Main Template and Footer HTML code areas and a Preview button",
+    "status": "new"
+  }
+]

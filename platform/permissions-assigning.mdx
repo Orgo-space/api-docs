@@ -7,171 +7,258 @@ description: 'Who to give which permission, how to assign it, how to test it, an
 "twitter:description": 'Who to give which permission, how to assign it, how to test it, and how to audit who holds what'
 ---
 
-Working with permissions day to day. For what each domain and scope level
-actually controls, see [Permissions](/platform/permissions).
+Working with permissions day to day. For what each domain and scope actually controls, see [Permissions](/platform/permissions).
 
 ---
 
-## Recommended Permission Assignments
+## Where a member's permissions come from
 
-### By Organizational Position
+A member's effective permissions are the union of three sources, recalculated whenever a role or a checkbox changes. Only active roles count: a role with an end date in the past contributes nothing.
 
-| Position | Recommended Permission | Why |
-|----------|------------------------|-----|
-| **President / CEO** | ADMIN_TENANT | Full organizational control |
-| **Vice President** | ADMIN_TENANT or HR_TENANT | Depends on responsibilities |
-| **Secretary General** | HR_TENANT | Organization-wide member management |
-| **Treasurer** | FINANCIAL_TENANT | Organization-wide financial access |
-| **Communications Director** | COMMUNICATION_TENANT | Newsletters, announcements |
-| **Regional Director** | ADMIN_PARENT_LOCAL | Full control of their region |
-| **Regional HR Manager** | HR_PARENT_LOCAL | Member management for region |
-| **Branch President** | ADMIN_LOCAL | Full control of their branch |
-| **Branch Secretary** | HR_LOCAL | Local member management |
-| **Branch Treasurer** | FINANCIAL_LOCAL | Local financial operations |
-| **Event Coordinator** | EVENT_LOCAL or EVENT_TENANT | Based on event scope |
-| **Membership Assistant** | HR_ASSISTANT_LOCAL | Identity validation, gamification |
-| **Regular Member** | (none) | Basic member access |
-
-### Quick Decision Guide
-
-<CardGroup cols={2}>
-  <Card title="Need full control?" icon="crown">
-    **Use ADMIN**
-
-    For executives and IT administrators who need access to everything.
-  </Card>
-  <Card title="Managing members?" icon="users">
-    **Use HR**
-
-    For HR staff, secretaries, and membership officers.
-  </Card>
-  <Card title="Handling money?" icon="wallet">
-    **Use FINANCIAL**
-
-    For treasurers and finance officers.
-  </Card>
-  <Card title="Running events?" icon="calendar-days">
-    **Use EVENT**
-
-    For event coordinators and activity managers.
-  </Card>
-  <Card title="Sending communications?" icon="envelope">
-    **Use COMMUNICATION**
-
-    For communications officers and community managers.
-  </Card>
-  <Card title="Helping with validation?" icon="clipboard-check">
-    **Use HR_ASSISTANT**
-
-    For volunteers helping with identity checks and gamification.
-  </Card>
-</CardGroup>
+| Source | Set where | Best for |
+|---|---|---|
+| **Role** | Permissions attached to a role, then the role assigned to the member | Ongoing responsibilities. Ending the role removes the permissions. |
+| **Direct** | Checkboxes on the member's **Permissions** tab | One-off exceptions that do not match any role. |
+| **Multi chapter access** | The **Roles** tab, when **Multi local center access** is on | One person who administers more than one chapter. |
 
 ---
 
-## Assigning Permissions
+## Recommended assignments
 
-### Via Roles (Recommended)
+| Position | Permission | Why |
+|---|---|---|
+| President, executive director | Orgo administrator | Full control, including Settings |
+| Vice president | `ADMIN_TENANT` or `HR_TENANT` | Depends on their remit |
+| Secretary general | `HR_TENANT` | Members across the organization |
+| Treasurer | `FINANCIAL_TENANT` | Fees, products, payments, billing |
+| Communications lead | `COMMUNICATION_TENANT` | Campaigns, templates, lists, moderation |
+| Regional director | `ADMIN_PARENT_LOCAL` | Their anchor chapter and every chapter beneath it, at any depth |
+| Regional membership officer | `HR_PARENT_LOCAL` | Members across that same branch |
+| Chapter president | `ADMIN_LOCAL` | Their chapter only |
+| Chapter secretary | `HR_LOCAL` | Chapter members |
+| Chapter treasurer | `FINANCIAL_LOCAL` | Chapter fees and payments |
+| Event coordinator | `EVENT_LOCAL` or `EVENT_TENANT` | Match the reach of their events |
+| Membership assistant | `HR_ASSISTANT_LOCAL` | Badges, hours, identity checks |
+| Regular member | none | Member access is the default |
 
-Attach permissions to roles, then assign roles to users:
+---
+
+## Attaching permissions to a role
 
 <Steps>
-  <Step title="Create or edit a Role">
-    Go to **Settings** → **Roles**
+  <Step title="Open Roles">
+    **Settings → Users & Profiles → Roles & User types**.
   </Step>
-  <Step title="Attach permissions">
-    Select which permissions this role grants
+  <Step title="Add or edit a role">
+    Give it a name and a plural, then pick a level: None, User type, Chapter, Parent chapter, Organization, or one of your unit types. Only the levels your modules support are offered.
   </Step>
-  <Step title="Assign role to users">
-    Users with this role automatically get the attached permissions
+  <Step title="Tick the permissions">
+    The checkboxes are grouped **Organization level**, **Local group level** and **Parent local center level**. Only the groups your modules support appear.
+  </Step>
+  <Step title="Assign the role to members">
+    On a member's **Roles** tab. They pick up the role's permissions immediately.
   </Step>
 </Steps>
 
-### Direct Assignment
+<Note>
+A role marked as a **user type** cannot carry permissions. Ticking the user type level clears the permission list. Use a separate role for the responsibility, or assign the permission directly.
+</Note>
 
-For exceptions, assign permissions directly to a user's profile.
+<Note>
+A **Parent chapter** role attaches to the member's own chapter when that chapter is flagged **It's a parent chapter**, and otherwise to the chapter directly above it. It never attaches further up than that, so giving a district officer a parent-chapter role never files them against the region. A member whose chapter is neither a parent nor has one cannot be given a parent-chapter role at all, and the assignment is refused with "Members is not part of any parent local center".
+</Note>
+
+<img src="/images/platform/users/roles-list.png" alt="Roles list with Level and Permissions filters, a Level column showing Organisation, Parent chapter, Chapter and User type badges, and a Permissions column of permission tags" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Assigning directly on a member
+
+Open **Members**, the person, **Edit**, then the **Permissions** tab. It is visible if you hold HR or higher for that member's chapter and local administrators have not been restricted (below). Checkboxes are grouped under **Organization**, **Chapter** and **Parent chapter**, each heading naming the actual organization, chapter or region. Changes apply on the member's next page load, so ask them to reload if they had Orgo open.
+
+A permission that comes from a role shows a second, locked checkbox beside it with the role's name on an orange tag. You cannot untick that one here; end the role instead.
+
+<img src="/images/platform/users/permissions-member-tab.png" alt="Member Permissions tab showing the Orgo administrator switch and permission checkboxes grouped by Organization and Chapter, with a role-derived permission locked" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Rules on who may grant what
+
+These are enforced on save, not just hidden in the interface.
+
+| Rule | What it means |
+|---|---|
+| Nobody edits their own permissions | Your own checkboxes and the Orgo administrator switch are disabled on your own profile, and a save is rejected if attempted another way. Another administrator has to make the change. |
+| You cannot grant above your own level | You only see checkboxes at or below your own level, and only within your own scope. A chapter administrator does not see organization-scope checkboxes at all. |
+| Organization-scope changes need `ADMIN_TENANT` | Adding or removing any `_TENANT` permission is rejected unless you hold `ADMIN_TENANT`. This applies to removals as well as grants. |
+| Only an Orgo administrator can create another one | The **Orgo administrator** switch is only rendered for members who already hold it. |
+| Local admins can be locked out entirely | Turn off **Allow Local Admins to Modify User Permissions** (**Settings → Users & Profiles → Configuration**, under Privacy & Visibility) and permission changes, status changes and chapter role changes are restricted to `HR_TENANT` and `ADMIN_TENANT`. Local administrators can still manage roles on units below chapter level. The setting is on by default. |
+
+### Worked example: what at or below your own level means
+
+Your own level is a rank, and the rank comes from the permission's family first and
+its scope second. Families, highest first:
+
+| Rank | Family |
+|---|---|
+| 1 | Admin |
+| 2 | HR |
+| 3 | Financial |
+| 4 | HR Assistant |
+| 5 | Events and Communication, level with each other |
+
+Within a family, organisation beats parent chapter beats chapter. Across families it
+does not: the whole Admin family sits above the whole HR family, and so on down.
+Separately, you can never grant at a wider scope than your own, whatever your rank.
+
+Two things fall out of that, and both surprise people:
+
+- **Being organisation-wide does not put you above every chapter permission.** The
+  organisation's secretary general holding `HR_TENANT` ranks below `ADMIN_LOCAL`,
+  so they cannot tick **Chapter administrator** on anyone's Permissions tab: the
+  checkbox is simply not rendered for them. Nor can the treasurer holding
+  `FINANCIAL_TENANT` tick `HR_LOCAL`. The communications lead holding
+  `COMMUNICATION_TENANT` ranks at the very bottom and can hand out nothing except
+  Events and Communication permissions.
+- **A chapter-scope person cannot reach out of their scope at all**, whatever their
+  rank. A chapter president holding `ADMIN_LOCAL` can grant every chapter permission
+  up to and including `ADMIN_LOCAL`, and nothing at parent chapter or organisation
+  scope, because scope is checked before rank.
+
+The **Orgo administrator** flag skips the whole comparison, which is why appointing
+chapter administrators usually lands back with an Orgo administrator.
+
+<Note>
+Assigning a **role** is not gated this way. Any role, including one carrying
+`ADMIN_LOCAL`, can be assigned by anyone holding `HR_LOCAL` on that member's chapter.
+So attaching a permission to a role and letting chapter secretaries hand that role out
+delegates the permission far more widely than ticking the same box directly ever would.
+Review the Permissions column on **Settings → Users & Profiles → Roles & User types**
+and decide deliberately which permissions are allowed to travel by role.
+</Note>
+
+---
+
+## Giving one person access to several chapters
+
+Turn on **Multi local center access** in **Settings → Groups & Teams → Local Centers**. A **Multi chapter access** section then appears on each member's **Roles** tab, visible to `HR_TENANT` and `ADMIN_TENANT`.
+
+Each row pairs a chapter with a permission level: User, HR, Admin, Financial, HR Assistant, Event Manager or Communication Manager, all at chapter scope. Use **Add Local Center Access** for each extra chapter; the grant applies only to that chapter, so someone can be an HR manager in one and a plain member in another.
+
+---
+
+## Testing permissions with impersonation
+
+Impersonation lets an administrator browse Orgo with a reduced permission set, to see what a chapter treasurer or a plain member actually sees.
+
+<Steps>
+  <Step title="Open Permission Impersonation">
+    Your profile menu, **Permission Impersonation**. It is offered to Orgo administrators, and hidden while a session is already running.
+  </Step>
+  <Step title="Choose what to simulate">
+    Tick domains and scopes, or choose **Regular user**, which excludes everything else. You can also pick a user type, on its own or alongside permissions.
+  </Step>
+  <Step title="Browse">
+    The page reloads and a banner reads **Permission Impersonation Active** with the simulated permissions listed.
+  </Step>
+  <Step title="Stop">
+    Click **Exit** in the banner.
+  </Step>
+</Steps>
+
+<img src="/images/platform/users/permission-impersonation.png" alt="Permission Impersonation dialog listing Regular user plus Admin, HR, HR Assistant, Financial, Events and Communication with Organization, Regional and Local checkboxes" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 <Warning>
-  Direct assignment is harder to audit. Use roles whenever possible.
+`ADMIN_TENANT` cannot be impersonated, and the administrator shortcut is switched off for the whole session. That is the point: while impersonating you genuinely lose your own access, so plan to exit before doing admin work. A session lasts 60 minutes, starting a new one ends the previous one, and starts are limited to five per minute. Every start and end is recorded with the simulated permissions, your real permissions, your IP address and your browser.
 </Warning>
 
 ---
 
-## Testing Permissions (Impersonation)
+## Auditing who holds what
 
-Administrators can test the platform with different permissions:
+Open **Members** and use the **Permissions** filter: it lists **Orgo administrator** first, then every permission grouped under Organization, Chapter and Regional. Tick several to see everyone holding any of them. It reads effective permissions, so it catches role-derived grants as well as those ticked directly on a profile, and it is `ADMIN_TENANT` only; anyone else asking is refused.
 
-<Steps>
-  <Step title="Click impersonation icon">
-    Shield icon in the header
-  </Step>
-  <Step title="Select permissions to test">
-    Choose which permission level to simulate
-  </Step>
-  <Step title="Browse as that user">
-    See exactly what users with those permissions see
-  </Step>
-  <Step title="Exit impersonation">
-    Click the badge to return to normal
-  </Step>
-</Steps>
+For the other direction, which roles carry which powers, **Settings → Users & Profiles → Roles & User types** has a **Permissions** filter and a Permissions column showing each role's grants as tags.
+
+<Note>
+Run the member filter whenever someone leaves. Ending a member's role removes the permissions it carried, but a directly ticked checkbox survives a role ending and survives a change of chapter.
+</Note>
 
 ---
 
 ## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="User can't access a feature">
-    Check if they have the correct **domain** permission. Use the [Domain Comparison](#domain-comparison) table to find which permission controls that feature.
+  <Accordion title="They have ADMIN_TENANT but Settings is missing">
+    Settings screens require the **Orgo administrator** flag, which is a separate switch above the permission checkboxes. Turn it on.
+  </Accordion>
+  <Accordion title="A permission checkbox is not in the list">
+    Either the module it belongs to is off (Financial needs Fees, Event Manager needs Events), or the scope is unavailable (chapter permissions need Local Centers, parent chapter permissions need Enable Parent Centers), or it is above your own level.
+  </Accordion>
+  <Accordion title="A chapter manager sees the wrong chapter's data">
+    Check their chapter on the profile, and check the **Multi chapter access** rows on their Roles tab. A regional permission covers an anchor chapter and every chapter beneath it at any depth, so with a three-layer structure it can reach further than the layer you had in mind. Work the anchor out from their own chapter using [What a parent-scope permission reaches](/platform/groups/local-groups#what-a-parent-scope-permission-reaches).
   </Accordion>
 
-  <Accordion title="User sees too much data">
-    They probably have `_TENANT` scope instead of `_LOCAL`. Change to the appropriate scope level.
+  <Accordion title="A checkbox is missing even though I clearly outrank the person">
+    Ranking is by permission family, not by reach. `HR_TENANT` outranks `HR_LOCAL`
+    but not `ADMIN_LOCAL`, because Admin sits above HR in the family order.
+    `FINANCIAL_TENANT` does not reach `HR_LOCAL`. `COMMUNICATION_TENANT` reaches
+    almost nothing.
+
+    This is the intended rule, not a bug, and it is enforced on save as well as in
+    the interface, so working around it by other means fails too. Worked through in
+    [What at or below your own level means](#worked-example-what-at-or-below-your-own-level-means).
+    If you need someone to be able to appoint chapter administrators, either give them
+    the **Orgo administrator** flag or make the appointment yourself.
   </Accordion>
 
-  <Accordion title="Permission seems to not work">
-    Check if it's automatically included by another permission. For example, HR already includes HR_ASSISTANT.
+  <Accordion title="Starting impersonation on a Settings page shows the login screen">
+    Impersonation switches off your Orgo administrator status for the whole session,
+    and every Settings screen requires it. Because starting a session reloads the page
+    you are on, starting it from anywhere under Settings immediately fails the check
+    and lands you on the login page.
+
+    You are not signed out. Navigate back to a page your simulated permissions can
+    open, such as the dashboard, and the **Permission Impersonation Active** banner
+    with its **Exit** button is there again. That banner is part of the normal
+    application layout, so it is not drawn on the login page, which is what makes this
+    look worse than it is. Start impersonation from an ordinary page and this does not
+    arise.
   </Accordion>
 
-  <Accordion title="Can't find LOCAL/PARENT_LOCAL options">
-    Local center features might be disabled. Enable in **Settings** → **Modules** → **Local Centers**.
+  <Accordion title="One Settings page opens for someone the rest refuse">
+    **Settings → Users & Profiles → Roles & User types** checks the `ADMIN_TENANT`
+    permission, while every other Settings screen checks the **Orgo administrator**
+    flag. Someone who holds the permission but not the flag has no way into Settings
+    from the interface, since both entry points (the cog in the header and the item in
+    the profile menu) are drawn only for the flag. Send them a direct link, though, and
+    Roles & User types opens while every neighbouring link on that same sidebar bounces
+    them to the login page.
+
+    Treat it as one page having a looser gate than intended, not as a supported way to
+    delegate role editing. If someone needs to manage roles, give them the Orgo
+    administrator flag knowingly, or make the change yourself.
+  </Accordion>
+
+  <Accordion title="Being refused looks like being signed out">
+    When a route refuses you, Orgo sends you to the login page rather than showing an
+    access denied message. Your session is intact and the page you wanted is
+    remembered, so this reads as a random sign-out when it is really a permission
+    refusal.
+
+    If a colleague reports being logged out at a specific link, do not start with their
+    session. Compare the permission the page requires against what they actually hold,
+    using the **Permissions** filter on the member list to confirm their effective
+    permissions rather than trusting the checkboxes on one profile.
   </Accordion>
 </AccordionGroup>
 
 ---
 
-## Seeing who currently holds which permissions
-
-Assigning and removing permissions is done per member, which makes it easy to
-lose track of who has what across a whole organisation. To review:
-
-<Steps>
-  <Step title="Open the member list">
-    **Members**, then filter by role.
-  </Step>
-  <Step title="Filter to each administrative role in turn">
-    Work through the roles you care about — organisation administrator, HR,
-    financial — rather than scanning the full list.
-  </Step>
-</Steps>
-
-There is no single report today that lists every member with elevated
-permissions in one view. If you audit access periodically, for example when
-someone leaves, the practical approach is to check each administrative role in
-turn and remove what is no longer needed.
-
-<Note>
-Do this whenever someone leaves the organisation. Removing a member's account
-does not by itself guarantee that every permission they were granted has been
-reviewed, and a departing administrator is the case where a stale permission
-matters most.
-</Note>
-
----
----
-
 ## Related
 
-- [Permissions](/platform/permissions) — the permission model itself
-- [Roles](/platform/users/user-types) — organizational positions
-- [Role Groups](/platform/groups/role-groups) — automatic role assignment
+- [Permissions](/platform/permissions) - the permission model itself
+- [User Types & Roles](/platform/users/user-types) - creating the roles you attach permissions to
+- [Role Groups](/platform/groups/role-groups) - groups that fill themselves from roles
+- [Local Groups](/platform/groups/local-groups) - chapters, parents, and what chapter scope means
+- [Troubleshooting Access](/platform/users/troubleshooting-access) - when someone cannot sign in at all

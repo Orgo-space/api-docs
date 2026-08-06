@@ -1,0 +1,152 @@
+---
+title: 'Activity Log'
+description: 'A read-only record of who changed what in your organization, with the before and after values'
+"og:title": 'Activity Log | Orgo'
+"og:description": 'A read-only record of who changed what in your organization, with the before and after values'
+"twitter:title": 'Activity Log | Orgo'
+"twitter:description": 'A read-only record of who changed what in your organization, with the before and after values'
+---
+
+The activity log answers "who changed this, and when". Every entry names the person who acted, the record they acted on, and, for edits, exactly which fields changed and what they changed from.
+
+**Built for** answering member disputes, audits, and the moment someone asks why a profile no longer says what it said last week.
+
+**Replaces** guessing from database backups.
+
+**Settings → Developers → Logs**
+
+<Note>
+  Requires **ADMIN_TENANT**. There is no local-admin view of the tenant-wide log, and the same permission gates the log tabs that appear on individual records.
+</Note>
+
+<img src="/images/platform/logs/activity-log-list.png" alt="Activity log table with filter pills for action, entity, author, user and date above rows showing date, action, author and entity" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Reading an entry
+
+| Column | What it holds |
+|---|---|
+| **ID** | The entry's own identifier |
+| **Date** | When it happened, to the minute |
+| **Action** | What kind of change it was |
+| **Author** | The person who made the change, linked to their profile |
+| **User** | The member the change was about, when the entry concerns one person |
+| **Entity** | The record type and its name, or its id when there is no name |
+| **IP** | The address the request came from |
+
+Click the arrow at the start of a row to expand the details. For an edit, the details show only the fields that actually changed, each with its old and new value. Fields whose value did not really change are dropped before storage, as is the automatic "last updated" timestamp, so the detail block is the real diff rather than a dump of the whole record. For a deletion, the details hold a snapshot of the key fields as they were just before the record went away.
+
+Entries are 15 to a page, newest first.
+
+---
+
+## Filtering
+
+The pills above the table combine, and the result is written into the page URL, so a filtered view can be bookmarked or pasted to a colleague.
+
+| Filter | Notes |
+|---|---|
+| **Action** | The kinds of change listed below |
+| **Entity** | Record type. See the caveat below: it matches deletions and query exports, not every edit |
+| **Author** | Search by name or email from two characters up |
+| **User** | The member the entry is about, same search |
+| **Date** | A "date after" and a "date before" picker, either or both |
+
+**Refresh** re-runs the current filter.
+
+---
+
+## What gets recorded
+
+| Action | Written when |
+|---|---|
+| **create** | An adhesion, an identity submission, a unit or group, or an event attendance is created |
+| **update** | A member profile is edited (the diff of changed fields), an adhesion or identity changes status, a unit or group is edited, an attendance changes, a contract is updated, a member's email is changed or their password is reset, an administrator unsubscribes a contact from the newsletter |
+| **remove** | A record is deleted through the application: newsletters and newsletter templates, email templates, events, courses and lessons, products, forms, users, adhesions, identities, contracts, contacts, roles, role groups, groups, local centers and units, plus discussions, posts and comments |
+| **moderate** / **unmoderate** | A discussion post or comment is hidden or restored |
+| **csv** | Members, role-group members, contacts, or a saved query are exported |
+| **upload_identity** | A member uploads an identity document |
+| **confirm_identity** | An identity is confirmed before a subscription charge |
+| **custom_field_encryption_enabled** / **custom_field_encryption_disabled** | Encryption is switched on or off for a custom field |
+| **decrypt_custom_field** / **decrypt_custom_field_failed** | An encrypted custom field value is read, or a read fails |
+
+Record merges are logged too, but they are not offered in the Action filter. Review them on the merge history page instead.
+
+### What is not recorded here
+
+<Warning>
+  Deletions are logged only when they come through the application. A cascade (deleting a group that takes its memberships with it), a bulk operation run by Orgo support, and background jobs do not each write a row. This is deliberate: one cascade should not produce thousands of entries.
+</Warning>
+
+- **Logins** are not in this log.
+- **Email delivery** is not in this log. Use the [email log](/platform/emails/email-log).
+- **Webhook deliveries** have their own log on each webhook subscription.
+- **Imports** report per-row results on the import itself, not here.
+- **Changes made without a signed-in account** produce no entry. A visitor registering for a public event, for example, creates the attendance but no log row, because there is nobody to attribute it to.
+
+### The Entity filter is narrower than the table
+
+The **Entity** column and filter are populated for deletions and for saved-query exports. Most edit entries identify their subject through the **User** column instead and carry no entity type, so filtering by, say, `User` will not return profile edits. To review edits to one member, filter by **User**, or open that member's profile and use its own log tab.
+
+---
+
+## The IP and impersonation columns
+
+The IP address is captured from the browser request that made the change, so entries written from an asynchronous handler rather than directly from the request carry no IP in that column. Encrypted custom field reads are the notable case: they are recorded asynchronously, and their IP is stored inside the details block instead.
+
+Deletion entries also record an **impersonator** when the deletion happened while an administrator was viewing the platform as another user. That tells you the account the action was attributed to and the account that actually performed it.
+
+---
+
+## The same log, scoped to one record
+
+The tenant-wide page is not the only way in. The same entries appear filtered on:
+
+- a **member profile**, on its logs tab;
+- an **event attendance**, on the attendees screen;
+- an **adhesion**, on its log view.
+
+All three read the same store and need the same ADMIN_TENANT permission, so a local admin will not see them.
+
+<img src="/images/platform/logs/activity-log-detail.png" alt="The expanded details panel of an activity log row, showing the JSON diff with the old and new value for each changed field" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Retention and export
+
+Entries are kept for as long as your organization exists. Nothing prunes them on a schedule, and deleting your organization removes them along with everything else.
+
+The log is strictly read-only: entries cannot be edited or deleted from the interface, and there is no endpoint that would let anyone do so. There is no export button on this page; if you need the entries outside Orgo, read them through the API.
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="A change I know happened is not in the log">
+    Three common reasons. It was a cascade or a background job, which are not logged per record. It was a kind of change that has no log action at all (see the table above; not every screen writes an entry). Or the Entity filter is hiding it, because edits generally carry no entity type: clear the filters and narrow by **User** and date instead.
+  </Accordion>
+  <Accordion title="The IP column is empty on some rows">
+    The address is taken from the browser request that made the change. Entries written from an asynchronous handler rather than directly from the request, such as reading an encrypted custom field, carry no IP. The author is still recorded.
+  </Accordion>
+  <Accordion title="I need to know who deleted a member">
+    Filter Action = **remove** and Entity = **User**, then expand the row. The snapshot holds the email, first and last name and status the account had at deletion, and the Author column names who did it.
+  </Accordion>
+  <Accordion title="A local admin says the log is empty for them">
+    It is not visible to them. The log requires ADMIN_TENANT, and that includes the log tabs on individual profiles.
+  </Accordion>
+  <Accordion title="Who read an encrypted custom field?">
+    Filter Action = **decrypt_custom_field**. Failed attempts are recorded separately as **decrypt_custom_field_failed**, and switching encryption on or off for a field is recorded as its own action.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related
+
+- [Permissions](/platform/permissions)
+- [Email log](/platform/emails/email-log)
+- [Merging duplicates](/platform/users/merging-duplicates)
+- [Custom fields](/platform/users/custom-fields)
+- [Workflows](/platform/workflows)

@@ -1,75 +1,169 @@
 ---
 title: 'Merging Duplicates'
-description: 'Find and combine duplicate members and contacts, review what will change, and undo a merge'
+description: 'Find and combine duplicate members and contacts, choose which values survive, and undo a merge within 30 days'
 "og:title": 'Merging Duplicates | Orgo'
-"og:description": 'Find and combine duplicate members and contacts, review what will change, and undo a merge'
+"og:description": 'Find and combine duplicate members and contacts, choose which values survive, and undo a merge within 30 days'
 "twitter:title": 'Merging Duplicates | Orgo'
-"twitter:description": 'Find and combine duplicate members and contacts, review what will change, and undo a merge'
+"twitter:description": 'Find and combine duplicate members and contacts, choose which values survive, and undo a merge within 30 days'
 ---
 
 Duplicates accumulate. Someone registers twice with two email addresses, a
 contact imported from a spreadsheet already exists as a member, or an event
 attendee signs up again the following year without logging in.
 
-Merging combines two records into one, keeping the history attached to both.
+Merging folds two records into one and moves the history of both onto the record
+you keep.
+
+**Built for** organisations whose data came from more than one place.
+**Replaces** deleting one of the two records and losing everything attached to it.
+
+Merge Records is at **Settings** → **Developers** → **Merge Records**
+(`/admin/merge`). It needs `HR_TENANT`, and the **Merge Profiles** toggle under
+**Settings** → **Users & Profiles** must be on. With the toggle off, the page
+redirects to the dashboard.
+
+<img src="/images/platform/users/merge-records.png" alt="Merge Records page with the manual source and target selectors above a Duplicate Suggestions table showing match scores and reasons" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## What can merge into what
+
+| Direction | Allowed |
+|---|---|
+| Contact into contact | yes |
+| Member into member | yes |
+| Contact into member | yes |
+| Member into contact | no |
+
+A member is never folded into a contact. If you pick that combination the page
+tells you to swap the two: select the contact as source and the member as target.
+
+The **source** is the record that goes away. The **target** is the record you
+keep. The page labels them exactly that way: **Source (will be deleted)** and
+**Target (will be kept)**.
 
 ---
 
 ## Finding duplicates
 
-**Administration** → **Merge**. Orgo suggests likely duplicate pairs it has
-found in your organisation, so you do not have to hunt for them yourself. You can
-also merge a specific pair you already know about.
+**Duplicate Suggestions** at the bottom of the page has three tabs, searched
+separately:
 
-<Note>
-If the suggestion list looks empty when you expect matches, check whether you are
-looking at contacts or at members. They are searched separately, and a member
-duplicated as a contact is a common case worth checking on its own.
-</Note>
+- **Contact Duplicates** and **User Duplicates** find records that share an email
+  address (scored 100%) or share a name while having different emails (scored
+  70%).
+- **Contact-User Matches** finds a contact and a member with the same email
+  (scored 95%). This is the common case after importing a mailing list.
+
+Each tab shows up to 50 pairs, highest score first, with the reason for the
+match. Deleted members are excluded. **Merge** on a row loads the comparison
+straight away.
+
+If you already know the pair, use **Manual Merge** at the top instead: pick
+Contact or User for each side, then search by name or email.
 
 ---
 
 ## Reviewing before you merge
 
-Every merge shows a preview first. The preview is the point of the feature: it
-tells you which record survives, which values are kept where the two disagree,
-and what history moves across.
+The comparison is the point of the feature. It puts source and target side by
+side, one row per field.
 
-<Steps>
-  <Step title="Pick the two records">
-    Choose the pair from the suggestions, or select them yourself.
-  </Step>
-  <Step title="Read the preview">
-    Check the surviving record, and check each field where the two disagree. An
-    email address or a phone number that differs is exactly the kind of thing
-    worth a second look before you commit.
-  </Step>
-  <Step title="Confirm">
-    The merge runs, and history from both records is attached to the survivor:
-    event registrations, payments, and memberships.
-  </Step>
-</Steps>
+Fields where the two agree are ticked and left alone. Fields where they disagree
+are tagged **Conflict** and get a pair of radio buttons: keep the source value or
+keep the target value. Orgo preselects a suggestion for every field, preferring a
+filled value over an empty one, and the longer text when both are filled. Read
+the conflicts anyway, particularly email and phone.
+
+For member-to-member merges, profile custom field values are compared in the same
+table alongside the built-in fields.
+
+Underneath, **Related Records to Transfer** counts everything attached to the
+source: event attendance, payments, invoices, subscriptions, fee payments, roles,
+badges, adhesions, course enrolments, form submissions, identity documents, tags,
+company memberships, family links, posts and discussions, files, votes, tasks and
+more. Those counts are what will move.
+
+<img src="/images/platform/users/merge-compare.png" alt="Merge comparison table with source and target columns, Conflict tags and radio buttons for choosing which value to keep, above the related record counts" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## What happens when you confirm
+
+Everything below runs in a single transaction. If any part fails, nothing
+changes.
+
+- The field values you chose are written to the target.
+- Related records are re-pointed at the target. Where both records already have
+  the same thing, the duplicate is dropped rather than doubled: one attendance
+  per event (the source's status and payment win), one value per custom field,
+  one tag, one company membership.
+- The source's sign-in material is destroyed, not moved: sessions, API tokens,
+  push tokens and any active impersonation session are deleted.
+- A source **contact** is deleted outright.
+- A source **member** is kept as a tombstone so nothing breaks: their status
+  becomes inactive, their email and username are prefixed so the address is free
+  for reuse, their identity link is cleared, and their first name is prefixed
+  with `[MERGED]`.
+- Both profiles get a merge entry in their Logs tab, recording who did it and
+  which record it was merged into.
 
 ---
 
 ## Undoing a merge
 
-A merge can be rolled back. Every merge is logged, and the log is what makes the
-undo possible.
-
-**Administration** → **Merge** → **History**, find the merge, and roll it back.
+**Merge History** (top right of the page, `/admin/merge/history`) lists every
+merge with its date, direction, both record names, who performed it, and its
+status.
 
 <Warning>
-Roll back promptly if a merge was wrong. The longer the merged record stays in
-use, the more new activity attaches to it, and new activity created after the
-merge is not part of what the rollback restores.
+A merge can be undone once, within 30 days. After that the **Undo** button is
+replaced by **Expired** and the merge is permanent.
 </Warning>
+
+Undo restores the source from the snapshot taken at merge time and points the
+transferred records back at it. A source contact that was deleted is recreated,
+which means it comes back with a new id.
+
+It also rewinds the surviving record. Every field you took from the source goes
+back to the survivor's own pre-merge value: profile fields, custom field values,
+the username the merge regenerated from the new email address, and the identity
+record and payment customer reference it was handed. A value is only put back
+while it still holds exactly what the merge wrote into it, so anything you edited
+on the survivor after the merge is left as you left it.
+
+What undo does not do is remove activity. Anything created on the survivor since
+the merge stays there. Roll back promptly if a merge was wrong, before new
+activity piles up on the record you would have to sort out by hand.
+
+<Note>
+If the source's old email address was claimed by a new account while the merge
+stood, the source comes back under a suffixed username so the live account keeps
+its own sign-in; the restored person still signs in with their email address as
+normal. If undo cannot proceed at all because it would duplicate a unique value,
+it is refused with a message naming that value and nothing is changed.
+</Note>
+
+<img src="/images/platform/users/merge-history.png" alt="Merge History table listing past merges with date, type, source and target records, who performed them and their status, with an Undo button while the rollback window is open and Expired once it has closed" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## What merging does not fix
+## What merging is not for
 
-Merging combines records that represent the same person. It is not the tool for
-tidying up people who should not be in your database at all. To remove someone
-entirely, delete the record rather than merging it into another one, so their
-history is not silently attached to somebody else.
+Merging is for two records that are the same person. It is not the way to remove
+someone from your database: use deletion, so their history is not silently
+attached to somebody else.
+
+It is also not a bulk tool. There is no "merge all suggestions" action, and each
+pair is reviewed on its own. If an import created thousands of duplicates, roll
+the import back instead.
+
+---
+
+## Related
+
+- [Data Import](/platform/customization/import) - the usual source of duplicates, and how to undo one
+- [Contacts](/platform/contacts) - what a contact is, and how it differs from a member
+- [Deletion of Account](/platform/users/deletion-of-account) - removing a record instead of merging it
+- [Custom Fields](/platform/users/custom-fields) - the profile values compared during a merge
+- [Permissions](/platform/permissions) - what HR_TENANT unlocks

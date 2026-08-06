@@ -1,133 +1,130 @@
 ---
-title: 'Local Center Fees'
-description: 'Collect branch-level membership fees with separate Stripe accounts'
-"og:title": 'Local Center Fees | Orgo'
-"og:description": 'Collect branch-level membership fees with separate Stripe accounts'
-"twitter:title": 'Local Center Fees | Orgo'
-"twitter:description": 'Collect branch-level membership fees with separate Stripe accounts'
+title: 'Chapter Fees'
+description: 'Let each chapter charge its own membership fee alongside the organisation fee'
+"og:title": 'Chapter Fees | Orgo'
+"og:description": 'Let each chapter charge its own membership fee alongside the organisation fee'
+"twitter:title": 'Chapter Fees | Orgo'
+"twitter:description": 'Let each chapter charge its own membership fee alongside the organisation fee'
 ---
 
-Local Centers can collect their own membership fees independently from the national organization. Each center connects its own Stripe account, sets its own pricing, and receives payments directly into its own bank account. National admins can still see all payments across all centers.
+A chapter (local center) can charge its own membership fee on top of the organisation fee. It picks its own fee product and its own default price, and when it has its own Stripe account the money settles into that account. A member then carries two independent fee validity dates: one for the organisation, one for the chapter.
 
-<img src="/images/platform/fees/products-list.png" alt="Fee products list for local center fees" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+**Built for** federations where chapters keep their own budget: scout districts, regional branches, county associations.
 
----
-
-## When to use Local Center fees
-
-| Your situation | Recommendation |
-|---------------|----------------|
-| Each branch charges its own membership fee in addition to national dues | Set up local fee products per center |
-| Local branches are financially independent | Each center needs its own Stripe account |
-| National org collects everything and distributes | Don't use local fees — use one national product and distribute manually |
-| Fees are the same everywhere, only collected nationally | Don't use local fees |
+**Replaces** the parallel spreadsheet each branch treasurer keeps.
 
 ---
 
-## Prerequisites
+## Turning it on
 
-1. **[Local Centers](/platform/groups/local-groups) enabled** — you need geographic branches set up
-2. **Local admin permissions** — the person setting this up needs ADMIN_LOCAL or FINANCIAL_LOCAL
-3. **Stripe account for the center** — separate from the national Stripe account
+**Settings** → **Payments & Fees** → **Membership fees**, section **Local Center Fees**. Requires `ADMIN_TENANT`.
+
+| Setting | What it does |
+|---|---|
+| **Local Center Fees Enabled** | Master switch. Everything on this page is hidden until it is on. |
+| **Local Center Members Table** | Adds the per-chapter [Member fees table](/platform/local-group-fees/member-fees) used to record offline payments. |
+| **Minimum Members per Local Center** | Flags chapters below this member count on the chapter fee statistics screen (`/fee/stats`, `FINANCIAL_TENANT`). |
+| **Minimum Active Members Percentage** | Same flag, expressed as a share of the chapter's active members. |
 
 ---
 
-## Setting up local fee collection
+## Setting up one chapter
+
+<img src="/images/platform/fees/local-fee-settings.png" alt="Chapter fee settings showing the Product and Default price selectors with Add price and Save" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 <Steps>
-  <Step title="Go to Local Group Settings">
-    **Sidebar** → **Resources** → **Local Group Settings** (as a local admin).
+  <Step title="Open the chapter's Fees settings">
+    **Finance** → **Fees settings** in the sidebar, or open the chapter and pick **Fees settings** in its settings sidebar. The screen itself requires `ADMIN_LOCAL` on that chapter (`ADMIN_TENANT` qualifies everywhere).
   </Step>
-  <Step title="Connect the center's Stripe account">
-    Click **Connect with Stripe**. Log in to (or create) a Stripe account for this center. Complete identity verification. Return to Orgo.
+  <Step title="Create the chapter fee product">
+    With no chapter fee product yet you get **Start local fees by adding your first product** and an **Add product** button. A fee product created by anyone who is not `FINANCIAL_TENANT` is stamped with their own chapter, and if that chapter has no fee product yet it is set as the chapter's fee product automatically.
   </Step>
-  <Step title="Create a fee product">
-    In **Fee Settings**, create a fee product for the center (e.g., "Berlin Chapter Membership 2026").
+  <Step title="Add the price tiers">
+    **Add price** opens the product's **Prices** tab. Each price is one membership level (for example Youth, Adult, Family). Archived prices are not offered.
   </Step>
-  <Step title="Add price tiers">
-    Open the product → **Prices** tab → add tiers for different membership levels:
-    - Student — €25/year
-    - Regular — €50/year
-    - Family — €75/year
+  <Step title="Select Product and Default price, then Save">
+    **Product** lists only products belonging to this chapter. **Default price** lists that product's non-archived prices with their amount and the organisation currency symbol.
   </Step>
-  <Step title="Set the default">
-    Select the product and default price tier in **Fee Settings**. This is what new members see when registering for this center.
+  <Step title="Connect the chapter's Stripe account (optional)">
+    Without one, chapter fee charges fall back to the organisation's Stripe account. See [Stripe Integration](/platform/fees/stripe-integration).
   </Step>
 </Steps>
 
----
-
-## How payments flow
-
-When a member pays their local fee:
-
-1. Member selects the local membership product
-2. Payment is processed through the **Local Center's Stripe account** (not national)
-3. Funds are deposited to the **Local Center's bank account**
-4. Payment is recorded in both the local and national systems
-
-National admins can view all payments across all centers from the main Fees dashboard using the Local Center filter.
+<Note>
+  The chapter settings sidebar shows **Fees settings** to `FINANCIAL_LOCAL`, but the screen behind it needs `ADMIN_LOCAL`. A finance-only chapter admin will see the entry and land on an empty page.
+</Note>
 
 ---
 
-## Fee distribution models
+## What the default price does
 
-| Model | How it works | Best for |
-|-------|-------------|----------|
-| **100% local** | All payment goes to the Local Center's account | Financially independent branches |
-| **Split** | Automatic division — e.g., 70% local, 30% national — via Stripe Connect | Federated organizations sharing costs |
-| **National collects** | National org receives all payments, distributes to centers manually | Centrally managed finances |
+The default price is not just a suggestion. Whenever the [Member fees table](/platform/local-group-fees/member-fees) or a member's fee view loads, every fee-eligible member of the chapter who has no chapter fee tier yet is given the chapter's **Default price**. With **Enable Age Restrictions on Prices** on, the age-appropriate variant of that price is chosen instead.
 
-The split model is configured at the national level and happens automatically through Stripe Connect.
+Change an individual member's tier from the Member fees table, or from the member's **Fee** tab (needs `FINANCIAL_LOCAL` on their chapter, or the member changing their own).
 
 ---
 
-## Bank details for manual payments
+## How a member pays both fees
 
-For members who pay by bank transfer:
+A member's profile **Fee** tab shows two cards side by side, **Organisation fee** and **Local fee**. The local card only appears when chapter fees are on, the member's chapter has a fee product, and the member has a chapter fee tier.
 
-| Setting | What it does |
-|---------|-------------|
-| **IBAN (local currency)** | Bank account for local currency transfers |
-| **IBAN (EUR)** | Separate account for EUR transfers (if different) |
+<img src="/images/platform/fees/chapter-fee-member-cards.png" alt="Member profile Fee tab with a summary card splitting the total fee into an organisation line and a chapter line, above an Organisation fee card and a Local fee card side by side, each showing its tier, validity and payment history" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-These details can be displayed on invoices and payment pages so members know where to send transfers.
+The two are charged separately, never in one checkout:
 
----
+- The chapter fee charge is routed to the chapter's own Stripe account when it has one, otherwise to the organisation account.
+- The amount is charged in the chapter's currency when the chapter has its own currency override, otherwise in the organisation currency.
+- The one-time registration fee is organisation-level only. It is never added to a chapter fee.
+- The local fee card offers one-off payment only. Recurring subscriptions are not available for chapter fees.
+- Members can start a chapter fee payment for themselves only. Admins record payments on a member's behalf instead of paying for them.
 
-## Viewing and managing payments
-
-### As a Local Admin
-
-**Local Center** → **Fees** → **Payments**
-
-See all payments made to your center — filter by status, member, date, amount. Send reminders to unpaid members. Export for local accounting.
-
-### As a National Admin
-
-**Fees** → **Payments** → filter by **Local Center**
-
-See all payments across all centers. Compare collection rates between branches. Export organization-wide financial reports.
+Online payment of the chapter fee also needs the **Online Payments** module active with **Membership Fees** on, plus either **All Members Fee Eligible** or, on the chapter's own edit form, **Enable members in this chapter to pay membership fees by online payments**.
 
 ---
 
-## Common scenarios
+## Fee validity
+
+Paying the chapter fee stamps a billing period and sets the member's **chapter fee validity date** to the end of that period. It is stored and evaluated separately from the organisation fee validity date, so a member can be current on one and expired on the other. A lifetime price with no amount sets the date 100 years out.
+
+---
+
+## Recording offline payments
+
+Cash and bank transfers collected by the chapter are recorded in the [Member fees table](/platform/local-group-fees/member-fees), which stages the amounts as a draft and then writes them as one pending fee payment batch for an organisation admin to approve.
+
+---
+
+## Who can do what
+
+| Action | Permission |
+|---|---|
+| Turn chapter fees on for the organisation | `ADMIN_TENANT` |
+| Choose the chapter's fee product and default price | `ADMIN_LOCAL` on the chapter |
+| Create or edit the chapter's fee product and prices | `FINANCIAL_LOCAL` on the chapter |
+| Change a member's chapter fee tier | `FINANCIAL_LOCAL` on their chapter (or the member, for themselves) |
+| Mark a chapter fee period as paid | `FINANCIAL_LOCAL` on the member's chapter, and **Allow Mark as Paid** must be on |
+| Record a chapter fee payment batch | `FINANCIAL_LOCAL` on the chapter, or an active unit-admin role in it |
+| Approve a pending batch | `ADMIN_TENANT` |
+
+---
+
+## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="Can one member pay both national and local fees?">
-    Yes. National and local fee products are independent. A member might pay $100/year national + €50/year local. Each payment goes to the respective Stripe account.
+  <Accordion title="The Product dropdown is empty on Fees settings">
+    It lists only products that belong to this chapter. A product created by a `FINANCIAL_TENANT` user is an organisation product and will not appear. Create the product from the chapter's Fees settings so it is stamped with the chapter.
   </Accordion>
 
-  <Accordion title="All our branches charge the same fee — do I need separate products?">
-    You can either create one product at the national level with a Local Center option (members choose their branch at checkout), or create identical products per center. The first approach is simpler; the second gives branches more autonomy.
+  <Accordion title="Members of the chapter have no local fee showing">
+    Check that the chapter has both a **Product** and a **Default price** saved, that the member is fee eligible, and that their member type is not flagged as not eligible for fees. Members with no chapter fee tier get one assigned automatically the next time the fee views load.
   </Accordion>
 
-  <Accordion title="A branch can't set up Stripe — they don't have a bank account">
-    The national organization can collect on their behalf. Don't connect a local Stripe account — instead, use the national fee product and track which center the payment is for. Distribute funds to the branch manually.
+  <Accordion title="Chapter fee money is landing in the organisation account">
+    That chapter has not connected its own Stripe account. Charges fall back to the organisation account by design until it does.
   </Accordion>
 
-  <Accordion title="The fee product isn't showing for members of my center">
-    Check that: (1) the product isn't archived, (2) it's set as the default fee product in Local Group Settings, (3) the member is actually assigned to your Local Center.
+  <Accordion title="The chapter's IBAN is not on any invoice">
+    The IBAN fields on a chapter record are reference details. The native-currency one is shown on the chapter's info page under **Legal details**, but bank-transfer invoices and PDF payment proofs use the organisation IBAN.
   </Accordion>
 </AccordionGroup>
 
@@ -135,7 +132,8 @@ See all payments across all centers. Compare collection rates between branches. 
 
 ## Related
 
-- [Local Centers](/platform/groups/local-groups) — Setting up geographic branches
-- [Products](/platform/fees/products) — Creating fee products and price tiers
-- [Stripe Integration](/platform/fees/stripe-integration) — Connecting payment processing
-- [Membership Fees](/platform/fees/fees) — National fee collection and management
+- [Member fees table](/platform/local-group-fees/member-fees): recording chapter payments member by member
+- [Membership Fees](/platform/fees/fees): the organisation-level fee and its settings
+- [Products](/platform/fees/products): fee products, prices and tiers
+- [Stripe Integration](/platform/fees/stripe-integration): chapter Stripe accounts and currency rules
+- [Chapters](/platform/groups/local-groups): chapter records, settings sidebar and waitlist

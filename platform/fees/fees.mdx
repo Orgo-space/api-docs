@@ -35,286 +35,245 @@ description: 'Collect membership dues, track who has paid, send reminders, and m
 }
 `}</script>
 
-Orgo Membership Fees is the dues collection and billing module within Orgo that lets organizations charge, track, and reconcile recurring and one-time member payments.
+Orgo Membership Fees is the dues collection and billing module that charges, tracks and reconciles member payments.
 
-**Built for** membership-based organizations that collect dues from a distributed member base, including professional associations, alumni networks, youth organizations, and faith communities, and similar groups managing member contributions.
+**Built for** membership organisations collecting dues from a distributed member base: professional associations, alumni networks, youth organisations, faith communities and federated nonprofits.
 
-**Replaces** spreadsheets and manual invoicing for tracking who has paid, not for full accounting or bookkeeping (payment exports feed into those systems).
-
-Fees handles annual dues, monthly subscriptions, and one-time payments through Stripe or manual recording (cash/bank transfers), with a dashboard showing who's paid and who hasn't.
-
-<img src="/images/platform/fees/product-detail.png" alt="Fee payments list showing 43 member payments with statuses, amounts, and local centers" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+**Replaces** the spreadsheet that tracks who has paid. It is not accounting software; payment data feeds into that.
 
 ---
 
-## Setting up fees
+## How the pieces fit
 
-<img src="/images/platform/fees/fees-module-config.png" alt="Fees module settings showing toggles for membership fees, event ticket sales, and local center payments" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+A membership fee is a product of type **Membership Fee** with one price per membership level. Each member is assigned one of those prices. A successful payment stamps a billing period on the member, and the end of that period becomes their **valid fee date**, which reminders, mandatory-fee gating and chapter statistics all read.
 
-Three things need to be in place before you can collect:
+---
+
+## Setting up
+
+<img src="/images/platform/fees/fees-module-config.png" alt="Payments and Fees module settings with Membership Fees, All Members Fee Eligible and Event Ticket Sales toggles" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+All three steps require `ADMIN_TENANT`.
 
 <Steps>
   <Step title="Connect Stripe">
-    **Settings** → **Fees** → **Stripe Integration**. Follow the setup wizard to link your Stripe account. See [Stripe Integration](/platform/fees/stripe-integration).
+    **Settings** → **Payments & Fees** → **Payment Gateway**. Without it you can still record payments by hand, but members cannot pay online. See [Stripe Integration](/platform/fees/stripe-integration).
   </Step>
-  <Step title="Create a fee product">
-    **Settings** → **Fees** → **Products** → create a product of type "Fee". Add price tiers for different membership levels. See [Products](/platform/fees/products).
+  <Step title="Create the fee product and its prices">
+    **Finance** → **Products** → **Create Product** → **Membership Fee**. Set **Period** and **Cycle beginning**, then add one price per membership level. See [Products](/platform/fees/products).
   </Step>
-  <Step title="Enable the Fees module">
-    **Settings** → **Fees** → **Module Settings**. Turn on the module and optionally make fees mandatory for membership.
+  <Step title="Point the organisation at it">
+    **Settings** → **Payments & Fees** → **Membership fees** → **Enable Membership Fees**, then pick the **Membership Fee Product** and its **Default Price**. Nothing charges until it is selected here.
   </Step>
 </Steps>
 
 ---
 
-## The fees dashboard
+## Membership fee settings
 
-**Sidebar** → **Fees**
+<img src="/images/platform/fees/membership-fee-settings.png" alt="Membership fees settings showing Enable Membership Fees, the Membership Fee Product and Default Price selectors, and the Payment Options and Local Center Configuration sections" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-<img src="/images/platform/fees/products-fee-list.png" alt="Products list showing annual membership fee, donation fund, and local center membership products" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+| Setting | Section | Default | What it does |
+|---------|---------|---------|--------------|
+| **Membership Fee Product** / **Default Price** | Product Configuration | none | The fee product members are billed against and the price new members get. |
+| **Allow Bank Transfer Payments** | Payment Options | off | Shows your IBAN as a payment option. |
+| **Enable Membership Payments via Bank Transfer** | Payment Options | off | Extends bank transfer to membership fees specifically. |
+| **Allow Mark as Paid** | Payment Options | on | Lets HR record a fee as paid without a card charge. |
+| **Local Center Fees Enabled** | Local Center Configuration | off | Turns on a second, chapter-level fee. |
+| **Minimum Members per Local Center** | Local Center Configuration | 25 | Below this paid count, a chapter is flagged on the Stats table. |
+| **Minimum Active Members Percentage** | Local Center Configuration | 100% | Same flag, expressed as a share of the chapter's active members. |
+| **Lifetime Membership Available** | Validity Period | off | Allows a price to be marked lifetime. |
+| **Fee Valid Days** / **Fee Valid Months** | Validity Period | 0 / 0 | Grace kept after expiry. Zero means no grace. |
+| **Fixed Starting Date for Fees** | Validity Period | off | Anchors periods to the product's cycle month instead of the payment date. |
+| **Allow Next Year Payment** | Eligibility Rules | on | Lets members pay the next period before the current one ends. |
+| **Advance Payment Window (Months)** | Eligibility Rules | 1 month | How early a multi-month fee may be paid. |
+| **Advance Payment Window (Days)** | Eligibility Rules | 7 days | How early a monthly fee may be paid. |
+| **Minimum Cycles to Pay** | Eligibility Rules | none | Forces members with arrears to settle several cycles at once. |
+| **Who Can See User Fee Status** | Eligibility Rules | Any User | Any User, Local HR, Tenant HR or Tenant Admin. |
+| **Enable Age Restrictions on Prices** | Pricing Options | off | Adds age-conditioned prices. |
+| **Enable VAT on Fees** | Pricing Options | off | While off, no VAT is charged, even on prices that store a rate. |
+| **Enable One-time Registration Fee** | Pricing Options | off | While off, no registration fee is charged. |
+| **Fee Payment Mandatory** | Membership Requirements | off | Restricts the platform for members whose fee has expired. |
+| **Continuity Mandatory** | Membership Requirements | off | Requires an unbroken payment history. |
+| **Require Contract for Membership** | Membership Requirements | off | Members must sign the membership contract before paying. |
+| **Company Fee Payment Mandatory** | Membership Requirements | off | Gates company members on the company's fee instead of their own. |
+| **Auto-deactivate on Fee Expiry** | Membership Requirements | off | Sets members inactive after expiry. Requires **Fee Payment Mandatory**. |
+| **Days Until Deactivation** | Membership Requirements | none | Grace before deactivation, 1 to 365 days. The job runs daily at 07:00 UTC. |
 
-The dashboard gives you a complete picture:
-
-| Section | What it shows |
-|---------|-------------|
-| **Overview** | Total collected, collection rate, breakdown by method |
-| **Payments** | All payments — filterable by status, product, member, date, amount, Local Center |
-| **Pending** | Payments awaiting admin action (manual payments to approve) |
-| **Subscriptions** | Active recurring subscriptions with next billing dates |
-| **Unpaid** | Members who haven't paid for the current period |
+A **Checkout donation** section adds an optional gift to the membership checkout, with an optional custom amount and prompt.
 
 ---
 
-## Payment statuses
+## What a payment buys
 
-| Status | What it means |
-|--------|-------------|
-| **Success** | Paid — Stripe processed the charge or admin confirmed manual payment |
-| **Open** | Payment initiated but not completed (abandoned checkout, pending bank transfer) |
-| **Pending Accept** | Manual payment (cash, bank transfer) recorded — needs admin approval |
-| **Refunded** | Payment returned to the payer |
-| **Canceled** | Payment was canceled before completion |
+**Fixed Starting Date for Fees** decides the period:
+
+- **Off (anniversary):** the period runs from the payment date for the product's number of months, ending the day before the anniversary. An annual fee paid on 1 September covers to 31 August.
+- **On (fixed cycle):** the period is anchored to the product's **Cycle beginning** month, so a September-anchored annual fee always runs 1 September to 31 August and a January payment buys only the remainder.
+
+Proration decides the price, not the end date. With **Enable pro-ratio for shorter first cycle** off, a mid-cycle payer still ends on the cycle boundary and pays in full; with it on the amount is reduced for the remaining months, unless **Number of months after cycle begining to start pro-rate** vetoes it for members who join in the opening months of the cycle.
+
+### Worked example: joining mid-cycle
+
+**An example, not a default.** An annual membership priced at 120, **Period** 12 months, **Cycle beginning** September, with **Fixed Starting Date for Fees** and **Enable pro-ratio for shorter first cycle** both on.
+
+| The member joins | The period on offer | Charged |
+|---|---|---|
+| September 2025 | 1 Sep 2025 to 31 Aug 2026 | 120, the whole cycle |
+| January 2026 | 1 Jan 2026 to 31 Aug 2026 | 80, eight months of twelve |
+| June 2026 | 1 Jun 2026 to 31 Aug 2026 | 30, three months of twelve |
+
+Every partial period still ends on the cycle boundary, so everyone renews together on 1 September.
+
+Now set **Number of months after cycle begining to start pro-rate** to 3. Anyone joining in the first three months of the cycle (September, October, November) is charged the full 120 instead, and proration only starts with a December join. The setting exists so that a member joining a few weeks late does not get a discount for it.
+
+Proration is measured from the member's join date, not from the day they pay: a member who joined in January but only settles in June still buys the January to August period at 80.
 
 ---
 
-## Member fee status
+## Which price a member pays
 
-Each member has a fee status for the current period:
+Each member carries an assigned membership price, per level, plus an optional local one. For a given date Orgo resolves the amount in this order:
 
-| Status | What it means | What to do |
-|--------|-------------|-----------|
-| **Paid** | Current period fee is paid in full | Nothing — they're good |
-| **Partial** | Some amount paid, but not the full fee | Contact member for remaining balance |
-| **Unpaid** | No payment for the current period | Send a reminder |
-| **Exempt** | Member is exempt from fees (e.g., honorary members) | Nothing — manually set by admin |
-| **Expired** | Fee period has passed without payment | Decide: send late reminder, or take action |
+1. The effective-dated assignment covering that date.
+2. The member's current assigned price.
+3. The version of that price that was valid on the date.
+4. The organisation **Default Price** (age-appropriate, when age restrictions are on).
 
-View a member's payment history: **Members** → select member → **Fee** tab to see their current fee level and history, or **Payments** tab for the full transaction log.
+Raising a price therefore never reprices history: a 2024 payment still resolves against the 2024 version.
 
-<img src="/images/platform/users/user-profile-fees.png" alt="Fee tab on a member profile showing active Organisation fee and Local fee with payment period history" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+On **Finance** → **Local members fees** the fee column is a per-member dropdown, and the change is recorded against the fee year on screen, so a member can sit on one level this year and another next. The first future-dated change pins the member's current level to the current cycle, so promoting the new level later cannot reprice earlier periods. The change is refused with a conflict once a successful payment covers the target cycle or any later one; the lock icon marks the rows the server would refuse.
+
+**Example.** With **Cycle beginning** September, the fee year labelled 2026 means 1 September 2026 to 31 August 2027, and in July 2026 the current fee year is still 2025. So in July 2026 you can move a member from Student to Standard for 2026 even though they have paid 2025 in full: the earliest period the change touches is 1 September 2026, and no payment reaches it yet. Once that member pays 2026, the 2026 dropdown locks and only 2027 onwards remains editable.
+
+---
+
+## The valid fee date
+
+Fee validity is not hand-set. It is the end of the billing period of the member's most recent successful payment for the fee product, recomputed whenever a payment is approved or refunded. Local fees keep a separate date.
+
+Two prices bypass payment: a **lifetime** price with no amount sets validity 100 years out, and a price marked **Is only assignable by admins (hidden for members)** with no amount extends validity by the product period each time it is applied. That covers honorary and free memberships.
+
+Exemption comes from the user type, not the individual: a user type with **Not eligible for fee** on, the organisation's designated non-eligible user type, or an active user-type role carrying that flag. Exempt members are never assigned a fee and see "You are not eligible for paying fees" on their profile.
 
 ---
 
 ## Collecting payments
 
-### Online payments (Stripe)
+| Method | How it works |
+|---|---|
+| **Online** | Members pay from their profile's fee tab or a payment link, but only once their fee has expired or the advance-payment window has opened. |
+| **Bank transfer** | With **Allow Bank Transfer Payments** on, members get your account details and a reference identifier to quote. The payment lands pending until an admin approves it. |
+| **Mark as paid** | With **Allow Mark as Paid** on, an admin picks the periods to settle on the member's fee tab. If part of the period is already covered, Orgo charges only the remainder. |
+| **By someone else** | A parent listed as managing a member can pay for them, and companies can cover their members. A company-covered member sees "Membership managed by" instead of a pay button. |
 
-Members pay directly through Orgo — either from the product payment page or from their profile. Stripe handles cards, bank transfers, Apple Pay, Google Pay, and other local methods.
+An admin may only record a payment for a member they manage: chapter and organisation finance admins for their whole scope, unit admins only for members in their own units.
 
-### Manual payment recording ("Mark as paid")
+### Worked example: recording a part-paid year
 
-For cash, bank transfers, or checks received outside Stripe:
+**An example, not a default.** A member on a 120 level with a September cycle already paid 30 by card for 1 June to 31 August 2026. An administrator now ticks the whole 1 September 2025 to 31 August 2026 cycle under **Mark as paid**.
 
-1. **Fees** → **Record Manual Payment** (or from the member's profile → Payments tab)
-2. Select the member
-3. Choose the fee product and tier
-4. Select payment method: **Card**, **Check**, or **Bank transfer (IBAN)**
-5. Enter the amount received
-6. Add a note (e.g., "Cash received at AGM", "Bank transfer ref #1234")
-7. Save — payment appears as **Pending Accept**
+Orgo works out what the cycle costs (120), subtracts the overlapping part of what is already paid (the 30), and records a single 90 row. The member's periods do not double up and the totals still add up to what was actually collected. If the selection turns out to be fully covered, nothing is recorded for that member at all and they simply do not appear in the batch.
 
-An admin or HR user then reviews and accepts the payment, moving it to **Success**. The system records who marked the payment and who accepted it for audit purposes.
-
-For bank transfers, you can also display your organization's IBAN on the member payment page so members can initiate transfers themselves — these arrive as pending payments for admin approval.
-
-### Bulk recording
-
-If you received many payments at once (e.g., bank transfer batch):
-
-1. **Fees** → **Bulk Actions**
-2. Upload a CSV with member IDs and amounts
-3. Review and confirm
-4. All payments recorded at once
+An early renewal is stacked the same way. When a member pays while their membership is still valid, the new period starts at their current validity date rather than at the payment date, so paying two weeks early costs them nothing in days.
 
 ---
 
-## Billing cycles and proration
+## Approving recorded payments
 
-Fees aren't just flat charges — they support full cycle-based billing with automatic proration for mid-cycle joins.
+**Finance** → **Fee payments** (route `/fee/payments`) is the queue of recorded fee batches. It requires `FINANCIAL_LOCAL`; unit fee admins also reach it, scoped to their own chapter.
 
-### Cycle settings
+<img src="/images/platform/fees/fee-payments.png" alt="Fee payments queue with Organisation and Local toggles, a chapter filter, status filters and columns for ID, date, value, payer, chapter, method and status" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-Configure these on each fee product:
+Filter by **Organisation** or **Local**, by chapter, and by **All Statuses**, **Pending** or **Approved**. Each row shows the batch total, payer, chapter, method (card, check or IBAN) and status.
 
-| Setting | What it does | Example |
-|---------|-------------|---------|
-| **Billing period** | How many months per cycle | 12 (annual), 3 (quarterly), 1 (monthly) |
-| **Cycle day** | Day of month the cycle starts | 1 (first of month) |
-| **Cycle month** | Month the annual cycle starts | 1 (January) or 9 (September for fiscal year) |
-| **Recurrences** | Number of cycles before subscription ends | Empty = indefinite, 3 = three cycles then stops |
-
-### Proration
-
-When a member joins mid-cycle, proration calculates a fair partial amount for the remaining period.
-
-**Example:** Annual fee is $120, cycle runs January–December. A member joins in April.
-- Remaining months: 9 (April–December)
-- Prorated amount: $120 × (9/12) = **$90**
-
-Enable proration per product with the **Prorate mid-cycle joins** toggle. You can also set a minimum months threshold — if the member joins late enough in the cycle, they pay full price for the next cycle instead.
-
-<Tip>
-  Most membership organizations use a yearly cycle starting January 1 with proration enabled. Members who join mid-year pay a fair partial amount, then full price from the following January.
-</Tip>
-
-### Advance payment
-
-Enable **Allow payment for next year** so members can pay ahead before their current period expires. This is useful during renewal season — members can pay for next year without waiting for their current membership to expire.
+Card batches arrive approved. Everything else arrives pending for a tenant admin: approving marks every payment in the batch successful and recalculates each affected member's valid fee date. A local admin can instead cancel and delete a pending batch.
 
 ---
 
-## Making fees mandatory
+## Watching collection
 
-Fees can be mandatory at two levels — organization-wide and per local center.
+**Finance** → **Local members fees** shows one row per member and one column per fee period: which periods each member has settled, a switch between the organisation and local fee, filters for year, member status and unit, and recording payment for the selection. Requires `FINANCIAL_LOCAL` and the **Local Center Members Table** setting.
 
-### Organization-level mandatory fees
+**Finance** → **Stats** shows fees by chapter for a chosen period: chapter, status, active member count and fees paid, with a total. Requires `FINANCIAL_TENANT`; for `ADMIN_TENANT` it also highlights chapters below **Minimum Members per Local Center** or **Minimum Active Members Percentage**.
 
-**Settings** → **Fees** → **Module Settings** → enable **Mandatory Fees**
+<img src="/images/platform/fees/fee-stats.png" alt="Local groups fees table listing chapters with status, active member count and paid fee count, with under-target rows highlighted" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-When enabled:
-- Members must pay their fee to access full platform features
-- Unpaid members see restricted functionality until they pay
-- Fee status becomes a key part of member management
-- Enable **Continuity mandatory** to require uninterrupted payment history
+Per-member history lives on **Members** → open a member → **Fee**: the organisation and local fee side by side with every period.
 
-### Local center-level fees
+<img src="/images/platform/users/user-profile-fees.png" alt="Fee tab on a member profile with the status and total fee summary above the organisation fee and local fee cards, each showing its plan and its paid periods" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-<img src="/images/platform/fees/local-fee-settings.png" alt="Local center fee settings showing Northeast Council membership product and $30 annual default price" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+The payment screens have no built-in CSV export. To pull payment data out, use the Ask Orgo assistant (**Ask Orgo** in the sidebar, `ADMIN_TENANT` only), which exports query results as CSV.
 
-Each [local center](/platform/groups/local-groups) can have its own fee product with independent pricing and its own Stripe Connect account. This supports federated organizations where chapters collect their own dues.
+---
 
-| Setting | Where to configure | What it does |
-|---------|-------------------|-------------|
-| **Local center fee product** | Local center settings | Separate fee product with local pricing |
-| **Local Stripe account** | Local center settings | Payments go directly to the chapter's bank account |
-| **Local fee is mandatory** | Tenant fee settings | Members must pay both org-level AND local-level fees |
+## Reminders and renewal
 
-This means a member in the "Northeast Council" might pay:
-- **$100/year** to the national organization (org Stripe account)
-- **$50/year** to the Northeast Council (local Stripe account)
+Renewal reminders run automatically once a day; there is no "send reminder" button on a member list. Company-covered members are excluded from the personal ladder. See [Renewals](/platform/fees/renewals).
 
-Both payments are tracked independently with separate statuses.
+---
+
+## When fees are mandatory
+
+With **Fee Payment Mandatory** on, a member whose valid fee date has passed is redirected to the payment page and cannot use the rest of the platform until they pay. Organisation HR and finance administrators are never gated, and neither are fee-exempt user types. With **Company Fee Payment Mandatory** on, a member who belongs to a company is gated on the company's fee instead of their own.
 
 <Info>
-  Making fees mandatory is a significant decision. It means members with unpaid fees have a degraded experience. Most organizations use this for annual membership renewal — you're essentially saying "pay your dues to maintain full membership."
+  Making fees mandatory degrades the experience for every unpaid member. Pair it with **Days Until Deactivation** rather than **Auto-deactivate on Fee Expiry** alone, so members get a grace window before their account is deactivated.
 </Info>
-
----
-
-## Sending reminders
-
-For members with unpaid fees:
-
-1. **Fees** → **Unpaid**
-2. Filter by period, Local Center, or member type
-3. Select members (or select all)
-4. Click **Send Reminder**
-
-The reminder email includes the fee amount, payment link, and your customized message. Customize the email template in **Settings** → **Emails** → **Templates**.
-
----
-
-## Managing subscriptions
-
-Active recurring subscriptions are managed in **Fees** → **Subscriptions**:
-
-| Info shown | Detail |
-|-----------|--------|
-| Member name | Who's subscribed |
-| Product | Which fee product |
-| Amount | Recurring charge amount |
-| Frequency | Monthly, quarterly, yearly |
-| Next billing | When Stripe will charge next |
-| Payment method | Card type/last 4 digits |
-
-Members can manage their own subscription from their profile:
-- Update payment method (expired card, new bank account)
-- View billing history
-- Cancel subscription (if allowed)
 
 ---
 
 ## Refunds
 
-1. Find the payment in **Fees** → **Payments**
-2. Click to open payment details
-3. Click **Refund**
-4. Enter full or partial refund amount
-5. Confirm
-
-<Warning>
-  Refunds are processed through Stripe — the money returns to the payer's original payment method. Ensure your Stripe account has sufficient balance. Stripe's processing fee is not refunded.
-</Warning>
+Open the payment on **Finance** → **Payments** and choose **Refund**. Orgo refunds exactly that payment row through Stripe, so refunding a membership charge does not claw back the registration fee booked alongside it. The member's valid fee date is then recalculated from what remains, and any event attendance paid by that charge is cancelled. Refunds are always the full row amount; there is no partial-amount field.
 
 ---
 
-## Fee reports and export
-
-### Export payments
-
-**Fees** → **Payments** → apply filters → **Export** → CSV or Excel
-
-Use exports for:
-- Accounting and bookkeeping
-- Bank reconciliation
-- Tax filing
-- Board financial reports
-
-### Collection statistics
-
-<img src="/images/platform/fees/stats-finance.png" alt="Finance statistics chart showing $18,020 in payments over the last 90 days with trend line" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
-The dashboard overview shows:
-- Total collected for any period
-- Collection rate (paid ÷ total members)
-- Breakdown by payment method (online vs. manual)
-- Breakdown by Local Center
-
-<img src="/images/platform/fees/fee-stats.png" alt="Local groups fees table showing 8 councils with active member counts and fee collection bars" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
----
-
-## Common scenarios
+## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="A member says they paid but it's not showing">
-    Check if the payment was linked to the correct member. Search by payment date, amount, or check the Stripe dashboard directly. For bank transfers, the admin who records it may have missed the entry.
+  <Accordion title="A member paid but their fee still shows as expired">
+    Validity is the end of the paid period, not the payment date, so a payment recorded against last year's period will not clear this year. Also check the batch was approved on **Finance** → **Fee payments**; pending batches do not count.
   </Accordion>
 
-  <Accordion title="Member status shows 'Unpaid' but they have a subscription">
-    Check the fee period dates on the payment. Status is calculated from current date vs. payment period. If the subscription payment was recorded for a different period, it won't clear the current period's status.
+  <Accordion title="A member cannot pay yet">
+    Payment opens when the fee expires or the advance-payment window opens, one month before expiry for multi-month fees and seven days for monthly ones unless you changed it under **Eligibility Rules**.
   </Accordion>
 
-  <Accordion title="A subscription isn't renewing">
-    Check the Stripe dashboard for the subscription. Common causes: expired card, insufficient funds, or the member's bank declined the charge. The member may need to update their payment method.
+  <Accordion title="I cannot change a member's fee level">
+    The level locks once a successful payment covers that cycle or a later one. Change it for a later year instead.
   </Accordion>
 
-  <Accordion title="I want different fees for different Local Centers">
-    Each Local Center can have its own fee products with local pricing. See [Local Center Fees](/platform/local-group-fees/create-local-fees). Or create one national product with price tiers labeled by center.
+  <Accordion title="VAT or the registration fee is not being charged">
+    Both are opt-in: **Enable VAT on Fees** and **Enable One-time Registration Fee** under **Pricing Options**. While either is off it is never charged, whatever the price row stores. See [VAT](/platform/fees/vat).
   </Accordion>
 
-  <Accordion title="Some members should be exempt from fees (honorary members, board)">
-    Set their fee status to **Exempt** on their member profile. Exempt members won't appear in unpaid lists or receive reminders.
+  <Accordion title="A member should not pay fees at all">
+    Do not delete their price. Mark their user type **Not eligible for fee**, or assign an admin-only price with no amount to keep an active membership without paying.
+  </Accordion>
+
+  <Accordion title="Chapters need their own dues on top">
+    Turn on **Local Center Fees Enabled** and configure each chapter's fee product. Members then hold two independent validity dates. See [Local Center Fees](/platform/local-group-fees/create-local-fees).
+  </Accordion>
+
+  <Accordion title="I am on a member's fee tab and there is no pay button">
+    Working as designed: the online payment buttons only ever appear to the member looking at their own fee tab. An administrator settles someone else's fee with **Mark as paid**, or sends them the payment link to pay themselves. Before digging further, confirm whether it is you or the member who cannot see the button, because the two have completely different causes.
+  </Accordion>
+
+  <Accordion title="The member has no way to pay at all, not even the advance window">
+    Three conditions close the member's own payment route regardless of dates. An active, uncancelled subscription on the fee product, because they are already being charged automatically. A bank transfer already in progress, because Orgo is waiting for that money to land. And, with **Require Contract for Membership** on, an unsigned or lapsed membership contract, which also fails on the server with "Please sign the mandatory membership contract before any payments". The last two block **Mark as paid** as well, so an administrator cannot work around them; an active subscription does not, which is how you settle a period for a subscriber whose charge went astray.
+  </Accordion>
+
+  <Accordion title="A member is told to select more periods before paying">
+    Two arrears settings do this. **Minimum Cycles to Pay** produces "You must select at least N cycles to pay", and only bites when the member actually has that many unpaid periods. **Continuity Mandatory** produces "Your account has unpaid balances from previous fee periods": the selection has to start at the oldest unpaid period and run without gaps, so a member cannot pay this year while last year is open. One checkout also covers at most 12 periods; a member further behind than that pays in two goes.
+  </Accordion>
+
+  <Accordion title="A pending batch has no Approve button">
+    **Approve** is shown only to `ADMIN_TENANT`, and only while the batch is still pending. A chapter administrator with `ADMIN_LOCAL` sees **Cancel and delete** instead. If you hold neither, the batch stays pending and the members it covers stay unpaid.
+  </Accordion>
+
+  <Accordion title="A returning member was not charged the registration fee">
+    The one-time registration fee is due only to a member who has never had a membership validity date. Any date at all in their history exempts them, including one that came from a lapsed membership, a level switch, or a free or lifetime price an administrator assigned. There is no way to charge it a second time.
   </Accordion>
 </AccordionGroup>
 
@@ -322,7 +281,8 @@ The dashboard overview shows:
 
 ## Related
 
-- [Products](/platform/fees/products) — Creating fee products and price tiers
-- [Stripe Integration](/platform/fees/stripe-integration) — Payment processing setup
-- [Donations](/platform/fees/donations) — Fundraising campaigns
-- [Local Center Fees](/platform/local-group-fees/create-local-fees) — Branch-level fee collection
+- [Products](/platform/fees/products): fee products, prices and price versions
+- [Renewals](/platform/fees/renewals): the reminder schedule and what expiry does
+- [VAT](/platform/fees/vat): VAT and the one-time registration fee
+- [Record a payment](/platform/fees/record-payment): recording offline payments
+- [Local Center Fees](/platform/local-group-fees/create-local-fees): chapter-level dues

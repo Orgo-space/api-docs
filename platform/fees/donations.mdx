@@ -1,182 +1,152 @@
 ---
 title: 'Donations'
-description: 'Run fundraising campaigns with public pages, donation goals, A/B testing, donor comments, and embeddable widgets'
+description: 'Run fundraising campaigns with suggested amounts, goals, price A/B testing, donor messages, and embeddable widgets'
 "og:title": 'Donations | Orgo'
-"og:description": 'Run fundraising campaigns with public pages, donation goals, A/B testing, donor comments, and embeddable widgets'
+"og:description": 'Run fundraising campaigns with suggested amounts, goals, price A/B testing, donor messages, and embeddable widgets'
 "twitter:title": 'Donations | Orgo'
-"twitter:description": 'Run fundraising campaigns with public pages, donation goals, A/B testing, donor comments, and embeddable widgets'
+"twitter:description": 'Run fundraising campaigns with suggested amounts, goals, price A/B testing, donor messages, and embeddable widgets'
 ---
 
-Orgo Donations is the fundraising module within Orgo that runs donation campaigns through public pages, goal tracking, and embeddable widgets.
+A donation campaign in Orgo is a product of type **Donation**. It gets a public payment page, suggested amounts, an optional goal, donor messages, and embeddable widgets, and every gift lands in the same payments ledger as your fees and ticket sales.
 
-**Built for** membership organizations and nonprofits that fundraise from supporters, including youth organizations, faith communities, alumni networks, and advocacy groups, plus any group running campaigns alongside membership dues.
+**Built for** membership organizations and nonprofits that fundraise from supporters alongside membership dues: youth organizations, faith communities, alumni networks, advocacy groups.
 
-**Replaces** standalone donation-page tools like Donorbox and GoFundMe Charity for goal-based campaigns, price-tier A/B testing, and embeddable widgets, not for peer-to-peer or team fundraising.
+**Replaces** standalone donation-page tools for goal-based campaigns, suggested-amount A/B testing, and embeddable widgets. It is not a peer-to-peer or team fundraising tool.
 
-Donations also lets you collect donor messages and embed widgets on any website, all backed by Stripe.
-
-<img src="/images/platform/fees/donation-public-page.png" alt="Public donation page showing hero image, 67% progress bar toward $35,000 goal, 30 donations totaling $23,650, campaign description" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/fees/donation-product-detail.png" alt="Donation product detail on the Prices and Options tab, showing the suggested amount tiers with their amounts, descriptions and a default marker, recurring tiers tagged Recurring, and the start of the Product options card" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Donations vs. fees
+## Before you start
+
+- **Online Payments** must be on (**Settings → Modules → Online Payments**). It is on by default.
+- A **Stripe account must be connected**, or the one-off payment option cannot be enabled at all; a campaign owned by a local center needs that chapter's own account. See [Stripe Integration](/platform/fees/stripe-integration).
+- **FINANCIAL_TENANT**, or **FINANCIAL_LOCAL** for a local-center campaign, to create, edit or delete one. The same permission gates the payments list, widgets, and message moderation.
+
+---
+
+## Donations vs fees
 
 | Use **Donations** when | Use **[Fees](/platform/fees/fees)** when |
 |----------------------|--------------------------------------|
 | Contributions are voluntary | Payment is required for membership |
-| Amount is flexible (donor chooses) | Amount is fixed per tier |
-| Open to the public (non-members too) | Only for existing members |
-| Goal-based (raise $35,000 for a project) | Period-based (annual dues) |
-| Tax-deductible charitable giving | Membership subscription |
+| The donor chooses the amount | The amount is fixed per tier |
+| Anyone can give, members and non-members | Only existing members pay |
+| Goal-based (raise a target for a project) | Period-based (annual dues) |
 
-Many organizations use both: fees for membership dues, donations for fundraising on top.
-
----
-
-## Creating a donation campaign
-
-**Finance** → **Products** → **Create Product** → type: **Donation**
-
-<img src="/images/platform/fees/product-create.png" alt="Create Product form showing Donation type selected, title field, Recurring and One-off frequency options, custom amount toggle with min/max, and campaign goal settings" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
-<Steps>
-  <Step title="Choose Donation type">
-    Select **Donation** as the product type. This unlocks campaign features like goals, public pages, donor comments, and widgets.
-  </Step>
-  <Step title="Name and frequency">
-    Give the campaign a title. Choose **Recurring** (monthly subscription), **One-off** (single payment), or both.
-  </Step>
-  <Step title="Custom amounts">
-    Toggle on **Custom amount** to let donors enter any value. Set optional minimum and maximum to keep it reasonable.
-  </Step>
-  <Step title="Set a goal">
-    Choose **Total goal** or **Monthly goal** and enter a target amount. The public page shows a live progress bar.
-  </Step>
-  <Step title="Save and configure">
-    After saving, the product detail page opens with tabs for **Prices & Options**, **Landing page**, **Widgets**, and **Stats**.
-  </Step>
-</Steps>
+Both are products, so both share prices, payments, invoices, and Stripe. Only donations get goals, donor messages, the donor wall, and widgets.
 
 ---
 
-## Prices & options
+## Creating a campaign
 
-Each donation campaign can have preset price tiers and product options. The **Prices & Options** tab manages both.
+**Finance → Products → Create Product**, then pick the **Donation** card.
 
-<img src="/images/platform/fees/donation-product-detail.png" alt="Donation product detail showing Prices & Options tab with seven tiers from Starter $10 to Legacy $1,000, A/B Testing toggle enabled, and Product options panel" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/fees/donation-product-edit.png" alt="Donation product form showing the Donation and Membership Fee type cards, the title with its generated URL slug and public address preview, the Recurring and One-off frequency cards, the custom amount minimum and maximum, and the start of the Campaign block" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-### Price tiers
+| Step | What to set |
+|---|---|
+| Name it and check the URL | The **URL Slug** is generated from the title as you type, and the form previews the public address `https://<your payment host>/pay/<slug>`. Slugs are unique per organization. |
+| Choose the frequency | **Recurring** (a monthly subscription) and **One-off** are independent toggles; turn on either or both. Once a campaign has been saved with only one of them, you cannot switch it off without turning the other on first. |
+| Allow a custom amount | **Enable custom amount** is on by default for donations. Set an optional **Minimum** and **Maximum** in your organization's currency; with multiple currencies, the same limits apply to all of them. |
+| Add a campaign goal (optional) | Under **Campaign**, pick **Total goal** (cumulative one-off donations) or **Monthly goal** (recurring revenue per month), enter the **Goal value**, and optionally a **Target date**. The goal type selector appears only when both frequencies are enabled, and goals are not available for multi-currency campaigns. |
 
-Create suggested donation amounts that appear as quick-select buttons on the public page:
+### Campaign settings
 
-| Tier | Amount | Purpose |
-|------|--------|---------|
-| Starter | $10 | Low-barrier entry |
-| Friend | $25 | Entry-level giving |
-| Supporter | $50 | Mid-range contribution |
-| Champion | $100 | Major donor level |
-| Patron | $250 | Sustainer |
-| Benefactor | $500 | Leadership giving |
-| Legacy | $1,000 | Top-tier gift |
-| Custom | Donor enters | For any amount outside presets |
+Donation products only, on the create and edit form:
 
-One tier is marked as the **Default price** — it's pre-selected when the page loads. You can also enable **custom price value** so donors can type any amount (with optional min/max).
+| Setting | What it does |
+|---------|-------------|
+| **Disable newsletter subscription** | Hides the newsletter checkbox on the payment page |
+| **Messages of support from donors** | Lets donors leave a message with their gift |
+| **Display top 50 recent donations** | Shows the anonymized donor wall on the public page |
+| **Disable register checkbox for non-members** | Hides the "create an account" option (only shown when **Create Accounts for External Buyers** is enabled for the organization) |
+| **Require full address** | Asks for full name, address, and postal code before payment |
+| **Enable payment confidentiality** | Gives the donor a checkbox to keep their name off the donor wall and comments |
+| **Has local center option** | Lets the donor pick a chapter to designate the gift to (needs **Products with Local Center Option** enabled) |
+| **Belongs to a local center** | Scopes the whole campaign to one chapter |
 
-### A/B testing
-
-Toggle **Pricing A/B Testing** to experiment with different price tier configurations. Each variation shows a different set of preset amounts to donors, and Orgo tracks performance metrics per variation so you can see what works.
-
-<img src="/images/platform/fees/donation-ab-testing.png" alt="A/B Testing section showing two enabled variations — Variation A with lower tiers ($10, $25, $50, $100) showing 18 transactions and $592 average, and Variation B with higher tiers ($50, $100, $250, $500) showing 12 transactions and $1,083 average" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
-Each variation tracks:
-- **Total revenue** collected through that variation
-- **Average donation** amount
-- **Transaction count** (number of completed donations)
-
-In this example, Variation A (lower tiers) drives more conversions (18 vs. 12), while Variation B (higher tiers) produces a higher average donation ($1,083 vs. $592). Use these insights to optimize your pricing strategy.
-
-### Product options
-
-Add optional choices for donors — like designating their gift to a specific program, selecting a thank-you gift tier, or choosing which project to support.
+<Note>
+  The first donation product you create is registered as the organization's default donation product. That default is what the shortcut URLs `/donate`, `/doneaza`, and `/presedinte` resolve to. You can change it later under **Settings → Online Payments → Donation Product**.
+</Note>
 
 ---
 
-The public donation page, embeddable widgets, donor comments and goal tracking
-are covered in [Donation Pages & Widgets](/platform/fees/donation-pages).
+## Suggested amounts and options
+
+The **Prices & Options** tab holds everything the donor picks from.
+
+**Prices** are the suggested amount buttons: name, amount, currency, description, tagged **One-time** or **Recurring**. Mark one as the **default** (pre-selected on load), and archive retired ones rather than deleting them so past payments keep resolving.
+
+On a campaign with no prices yet, **Generate** reads your organization's country and currency and the campaign title and description, then creates three A/B variations of three amounts each, registers the prices in Stripe, and switches A/B testing on. It disappears as soon as any price exists.
+
+**Product options** are the designations a donor chooses from, such as which program the gift funds. Add them inline, drag to reorder, rename in place, and archive when a designation closes; each has its own shareable link that pre-selects it on the public page. They appear under **Designate to** at checkout, and when **Has local center option** is on a **Support chapter** entry is appended to the same dropdown and opens a chapter picker.
+
+### A/B testing suggested amounts
+
+Turn on **Pricing A/B Testing** to run more than one set of suggested amounts side by side. Add a variation, drop prices into it, and enable it. Traffic is split evenly between the enabled variations, and the split percentage is shown on each row.
+
+<img src="/images/platform/fees/donation-ab-testing.png" alt="Pricing A/B Testing card with two enabled variations, each showing its assigned suggested amounts, traffic share, and total, average, and transaction count" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+Each variation reports **total** raised, **average** donation, and **transaction** count, and one that has already collected money cannot be deleted. While A/B testing is on, "Make default" on individual prices is hidden: the variation decides what a donor sees.
 
 ---
 
-## Payments & tracking
+## Tracking the money
 
-The **Payments** view shows every donation with full details.
+**Payments** lists every donation with its status, donor, location, designation, amount, date, confidentiality flag, and type (one-time or recurring). Filter by payment ID, user ID, payer name, email, date range, type, status, or local center; the payment-ID and email filters are only offered to FINANCIAL_TENANT.
 
-<img src="/images/platform/fees/donation-payments.png" alt="Donation payments list showing 30 payments with donor names, local center affiliations, amounts ranging from $100 to $5,000, payment dates, and one-time/recurring type indicators" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/fees/donation-payments.png" alt="Donation payments list with filter pills for payer name, payment ID, user ID, email, status, type and date, and rows showing the amount, status, donor, chapter, date and whether the gift was one-time or a subscription" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-Filter by date range, amount, donor name, payment type (one-time vs. recurring), or local center.
+**Refund**, from the row actions, returns the full amount through Stripe and moves the payment to `refunded`; only a payment already in `success` can be refunded, and one still on hold is cancelled instead. Both actions need FINANCIAL_LOCAL on the chapter the donation was designated to, or FINANCIAL_TENANT when it was not designated to one. ADMIN_TENANT covers both. A chapter treasurer cannot refund an undesignated gift.
 
-### Stats
+**Subscribers** lists the recurring donors on the campaign: name, status, chapter, designation, amount, and identity-validation state where that is required. Statuses are Active, Canceled, Canceling, No identity upload, Identity validation pending, Waiting for subscription, and Pending. An admin can cancel a subscription from here with **Unsubscribe**.
 
-The **Stats** tab shows donation trends over time with a payments chart and all-time totals.
+<img src="/images/platform/fees/donation-subscribers.png" alt="Subscribers list for a donation campaign with filters for ID, name, email and status, and rows showing recurring donors with their amount and subscription status" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-<img src="/images/platform/fees/donation-stats-tab.png" alt="Stats tab showing payment amount chart over last 90 days with trend line and moving average, and all-time stats summary" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+**Stats** is page analytics rather than a payments chart: all-time **Views**, **Clicked**, and **Shared**, views over time (daily or monthly), device distribution, sessions, a widget-versus-public-page comparison for both views and donations, and UTM source, medium, and campaign breakdowns for both views and donations. Charts can be downloaded as images.
 
-### Export
-
-Export donation data as CSV for:
-- Accounting and bookkeeping
-- Tax receipt generation
-- Donor acknowledgment letters
-- Grant reporting
+<img src="/images/platform/fees/donation-stats-tab.png" alt="Stats tab for a donation campaign showing all-time views, clicked and shared counters above a views-over-time chart" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Covering processing fees
+## What the donor pays
 
-Donors can optionally cover Stripe's processing fees so 100% of their intended amount goes to your organization. When enabled, the checkout shows the fee amount and lets the donor add it to their total.
+**Cover the processing fee** lets the donor add the payment processing cost on top, so the full intended amount reaches you. The fee shown is 2.9% of the amount plus a fixed per-currency component, for example 0.30 USD, 0.25 EUR, 0.20 GBP, or 1.20 RON.
 
-Processing fee formula: **(amount x 2.9%) + fixed fee** (varies by currency).
+Donations are supported in 19 currencies: USD, EUR, GBP, CAD, AUD, CHF, DKK, NOK, SEK, PLN, CZK, HUF, BGN, RON, HRK, JPY, MXN, SGD, HKD. Each carries its own minimum charge (0.50 USD and EUR, 0.30 GBP, 2.00 RON), so a very small custom amount can be rejected even when your own minimum allows it.
 
----
+After a successful one-off donation the donor sees your thank-you message on the page and, as soon as Stripe confirms, gets a **donation thank-you email** with the amount and the campaign name, customizable per language under **Email Templates**.
 
-## Supported currencies
-
-Donations support 19 currencies:
-
-USD, EUR, GBP, CAD, AUD, CHF, DKK, NOK, SEK, PLN, CZK, HUF, BGN, RON, HRK, JPY, MXN, SGD, HKD
-
-The currency is set per product and determines the payment processing.
+Offline gifts (cash, cheque, bank transfer) are not handled by the public page. Record them from the member's payments view instead, which requires FINANCIAL_TENANT. See [Recording payments](/platform/fees/record-payment).
 
 ---
 
-## Common scenarios
+## Two other places donations show up
+
+**Supporters.** Nominate one campaign as the **Recurring Donation Product** under **Settings → Online Payments**. A member with an active, non-confidential subscription to it is flagged as a supporter on their profile and in the member directory. Cancelling clears the flag; a subscription the donor marked confidential never sets it.
+
+**Donation ask at fee checkout.** A membership fee product can carry an optional donation prompt on its own checkout, configured under **Settings → Modules → Membership Fees** with its own prompt text, minimum and maximum. Separate from a donation campaign; see [Membership Fees](/platform/fees/fees).
+
+---
+
+## Common questions
 
 <AccordionGroup>
-  <Accordion title="I want to run a time-limited fundraiser">
-    Create the donation product, set a **max date** (expiry), share the URL, and promote it. When the date passes, the page stops accepting donations. Combine with a goal to create urgency.
+  <Accordion title="How do I run a time-limited fundraiser?">
+    Set a **Target date**. When a goal is set, the public progress bar shows that date instead of the completion percentage, which is what creates the deadline pressure. The date does not stop payments by itself; archive the campaign to close it, which replaces the form with a "payments disabled" notice.
   </Accordion>
 
-  <Accordion title="How do I encourage monthly giving over one-time?">
-    Enable both options but set the **default donation type** to "monthly" in your widget settings. Use lower suggested amounts for monthly ($10, $25, $50) vs. one-time ($50, $100, $250). Enable the **monthly upsell** feature to prompt one-time donors to consider recurring.
+  <Accordion title="How do I push monthly giving over one-off?">
+    Enable both frequencies. The public page then shows a **Give once / Monthly** toggle with a "Boost your impact by giving monthly" prompt. In widgets, set **Default Donation Type** to monthly and leave **Show Monthly Upsell** on.
   </Accordion>
 
-  <Accordion title="I want to embed donations on our existing website">
-    Create a donation **widget** (embed or popup type) from the Widgets tab. Copy the embed code and paste it into your site's HTML. The widget handles the entire checkout flow. Track performance per widget to see which placements work best.
+  <Accordion title="Can a donor give anonymously?">
+    Yes, if **Enable payment confidentiality** is on. The donor ticks the box and their name becomes "anonymous" on the donor wall and on their message; their identity is still recorded on the payment for your records.
   </Accordion>
 
-  <Accordion title="A donor wants a refund">
-    Find the donation in the payments list and process a refund through Stripe. The refund returns to the donor's original payment method.
-  </Accordion>
-
-  <Accordion title="Can I accept donations without Stripe?">
-    The public donation page and widgets require Stripe for online checkout. For offline donations (cash, check, wire transfer), record them manually in the payments module.
-  </Accordion>
-
-  <Accordion title="How do I moderate donor comments?">
-    Go to the donation product's comments view. All new comments start as **Pending**. Review each one and approve or reject. Only approved comments appear on the public page. Use the filter to quickly find pending comments.
-  </Accordion>
-
-  <Accordion title="I want donors to support specific local branches">
-    Enable **local center option** on the donation product. The public page and widgets will show a dropdown where donors select which branch receives their gift.
+  <Accordion title="Why can I not delete a campaign?">
+    A campaign with any recorded payment cannot be deleted. Archive it instead, which keeps the history and stops new donations.
   </Accordion>
 </AccordionGroup>
 
@@ -184,7 +154,8 @@ The currency is set per product and determines the payment processing.
 
 ## Related
 
-- [Products](/platform/fees/products) — Product types, pricing, and payment settings
-- [Stripe Integration](/platform/fees/stripe-integration) — Connecting payment processing
-- [Membership Fees](/platform/fees/fees) — For required (non-voluntary) payments
-- [Local Center Fees](/platform/local-group-fees/create-local-fees) — Branch-level fee collection
+- [Donation pages and widgets](/platform/fees/donation-pages) - the public page, donor messages, embeds
+- [Products](/platform/fees/products) - product types, prices, and payment settings
+- [Stripe Integration](/platform/fees/stripe-integration) - connecting payment processing
+- [Membership Fees](/platform/fees/fees) - required, non-voluntary payments
+- [Local Center Fees](/platform/local-group-fees/create-local-fees) - chapter-level collection

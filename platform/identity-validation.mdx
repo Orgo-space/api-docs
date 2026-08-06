@@ -1,173 +1,128 @@
 ---
 title: 'Identity Validation'
-description: 'Verify member identities with document scanning, OCR, and admin review'
+description: 'Collect ID document scans, read Romanian IDs automatically, and have an admin approve or reject each one'
 "og:title": 'Identity Validation | Orgo'
-"og:description": 'Verify member identities with document scanning, OCR, and admin review'
+"og:description": 'Collect ID document scans, read Romanian IDs automatically, and have an admin approve or reject each one'
 "twitter:title": 'Identity Validation | Orgo'
-"twitter:description": 'Verify member identities with document scanning, OCR, and admin review'
+"twitter:description": 'Collect ID document scans, read Romanian IDs automatically, and have an admin approve or reject each one'
 ---
 
-Identity Validation ensures your members are who they say they are. Members upload an ID document, the system extracts data via OCR, and an admin verifies everything matches. Verified members get a badge on their profile.
+Identity validation collects a scan of a member's ID document, stores the details read off it, and puts the record in front of an admin who approves or rejects it. It exists mainly for organisations that must know who is behind a payment, which is why most of the flow is wired to online payments and recurring donations.
 
-**When to enable this:**
-- Professional associations that need to verify credentials or qualifications
-- Organizations handling sensitive activities (working with children, financial services)
-
-<img src="/images/platform/users/identity-validation-settings.png" alt="Identity validation module settings" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-- Regulatory requirements for member identification
-- Any situation where you need to confirm someone's real identity
-
-**When you don't need it:**
-- Casual communities, hobby groups, or social clubs where identity verification is overkill
+<Warning>
+  Automatic document reading only understands Romanian documents: the old Romanian ID card, the new Romanian ID card, and the Romanian passport. It keys off the CNP (the 13 digit Romanian personal number) and fails if it cannot find one. For every other country the upload and review flow still works, but an admin types the document details in by hand, and Orgo only requires a first and last name before the record can be approved.
+</Warning>
 
 ---
 
-## How to enable
+## Enabling it
 
-**Settings** → **Modules** → **Identity Validation**
+**Settings** → **Modules** → **Identity Validation**. Requires `ADMIN_TENANT`.
+
+<img src="/images/platform/users/identity-validation-settings.png" alt="Identity Validation module settings with Enable Identity Validation on and toggles for Require for Users, Require for Online Payments, Automated Identity Validation, Hide Address Fields and Cancel Subscriptions Without Identity Reconfirmation" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 | Setting | What it does |
-|---------|-------------|
-| **Require ID validation** | Make identity verification mandatory for all members |
-| **Accepted document types** | Choose which documents you accept: national ID, passport, driver's license, residence permit |
-| **Require selfie** | Members must take a selfie that's compared against their document photo |
-| **Auto-expire reminder** | Days before document expiry to notify the member (e.g., 30 days) |
+|---|---|
+| **Enable Identity Validation** | Master switch for the module. Also controls whether the identity emails appear in the email template list. |
+| **Require for Online Payments** | Ties identity to payments. Payments wait for an identity, renewal reminder emails go out, and the checkout flow asks for a document. |
+| **Automated Identity Validation** | After a successful read, marks the record **Orgo validated** and lets a pending donation subscription proceed to Stripe checkout without waiting for a human. Applies to subscriptions only, not to one-off payments, and never to the new Romanian ID card, which always needs its back side uploaded first. |
+| **Hide Address Fields** | Removes the address street and address details fields from the admin review form. |
+| **Cancel Subscriptions Without Identity Reconfirmation** | Cancels a subscription whose renewal is less than a day away when the identity has not been reconfirmed. |
+| **Require for Users** | Nothing in the product reads this setting. Turning it on has no effect today. |
 
 ---
 
 ## What the member does
 
-**Path:** Profile → Identity Documents
+A member reaches the upload page from their own profile, where the identity row shows **Upload identity** if nothing has been submitted. Payment and renewal emails link to the same form with the payment attached.
 
-![User-facing identity upload page with document scan option](/images/platform/users/identity-upload.png)
-
-The member-facing upload page presents a clean form with upload areas for the front and back of their ID document, plus a separate area for a profile photo or selfie. Each upload area shows a drag-and-drop zone or file picker button. Below the uploads, any OCR-extracted data appears in editable form fields (first name, last name, date of birth, document number) so the member can review and correct before submitting.
+<img src="/images/platform/users/identity-upload.png" alt="Validate your identity page with an Upload identity scan image button and a Document has information on the backside toggle" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 <Steps>
-  <Step title="Upload document">
-    Member uploads photos of the front and back of their ID document (national ID, passport, or driver's license).
+  <Step title="Upload the front of the document">
+    PNG, GIF and JPEG are accepted. PDFs are rejected.
   </Step>
-  <Step title="Upload profile photo">
-    If a selfie is required, they also upload a current photo for comparison.
+  <Step title="Turn on Document has information on the backside if needed">
+    A second upload button appears. The new Romanian ID card needs this, because the address and issue date are on the back.
   </Step>
-  <Step title="Review OCR data">
-    The system automatically extracts data from the document: name, date of birth, document number, expiry date. The member reviews and corrects any OCR errors.
-  </Step>
-  <Step title="Submit">
-    The verification request is sent to the admin queue.
+  <Step title="Send">
+    The record is created with status Pending and the reading runs in the background.
   </Step>
 </Steps>
 
-### What OCR extracts
+There is no selfie step, no liveness check, and no field for the member to correct what was read. Everything after the upload is done by an admin.
 
-| Field | Source |
-|-------|--------|
-| **First name, Last name** | From the document |
-| **Date of birth** | From the document |
-| **Document number** | ID or passport number |
-| **Expiry date** | Document expiration |
-| **Address** | If present on the document |
+### What automatic reading extracts
 
-If OCR misreads anything (it's not perfect), the member can correct the values before submitting.
+From the front: first name, last name, date of birth (derived from the CNP), document series, document number, CNP, expiry date and document type. From the back: issue date, town, county, street and address details.
+
+Reading is best effort. If it fails, the record is still created and an admin fills in the details. Two cases do stop the upload with an error: the document has no readable CNP, or the CNP shows the person is under 18.
 
 ---
 
 ## What the admin does
 
-### Review queue
+There is no central review queue. You open an identity record from wherever it is referenced:
 
-Admins see pending verifications in their review queue. Each entry shows the member's name, submission date, document type, and status.
+- a member profile or contact record, where the status tag links straight to it;
+- **Payments** and **Subscribers** on a product;
+- the adhesion list.
 
-### Verification process
+Reviewing checks `HR_ASSISTANT_LOCAL` over the member's local center. That is the widest of the HR levels, so it is satisfied by `HR_LOCAL`, `FINANCIAL_LOCAL` and `ADMIN_LOCAL`, by their parent center equivalents, and by the tenant-wide `HR_TENANT`, `FINANCIAL_TENANT` and `ADMIN_TENANT`. If you want identity documents seen by fewer people than that, review who holds local finance and HR permissions before turning the module on.
 
-When reviewing a submission:
+<img src="/images/platform/users/identity-admin-review.png" alt="Identity validation review screen showing the uploaded document on the left and the extracted first name, last name, personal number, birth date, document serial and number, issue and expiry dates on the right, with Validate, Reject and Change identity data controls" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-1. **Check the document** — Is it clear, readable, and appears authentic?
-2. **Compare photos** — Does the profile photo match the document photo?
-3. **Review extracted data** — Does the OCR data match what's visible on the document?
-4. **Take action:**
+The review screen shows the uploaded images with a rotate control, who uploaded them and when, and the extracted fields. **Change identity data** unlocks the fields so you can correct them. Green and red markers next to the issue and expiry dates flag dates that do not make sense.
 
-| Action | When to use |
-|--------|------------|
-| **Approve** | Document is valid, photos match, data is correct. Member gets a verified badge. |
-| **Reject** | Document is invalid, expired, or photos don't match. Provide a reason — the member can resubmit. |
-| **Request resubmit** | Images are blurry or partially obscured. Asks for better quality without rejecting outright. |
+| Action | Result |
+|---|---|
+| **Validate** | Sets the record to Validated, stamps who approved it and when. Any pending subscription moves on, and a payment held for review is captured. The member is emailed. |
+| **Reject** | Requires one of three reasons: **Id type not eligible**, **Id expired**, **Id not readble**. The member is emailed with the reason and can upload again. |
+| **Reopen** | Returns a validated or rejected record to Pending so the member or an admin can replace the document. |
 
-### Verification statuses
+For organisations registered in Romania, **Validate** refuses the record unless the first name, last name, document number, CNP, document type, issue date, expiry date and date of birth are all filled in, the document is not expired, the issue date is in the past, and the person is at least 18. Everywhere else only first and last name are required.
 
-| Status | What it means |
-|--------|--------------|
-| **Not submitted** | Member hasn't uploaded documents yet |
-| **Pending** | Submitted, awaiting admin review |
-| **Verified** | Identity confirmed — badge displayed on profile |
-| **Rejected** | Verification failed — member can resubmit |
-| **Expired** | Document has passed its expiry date — member needs to resubmit |
+### Statuses
 
----
+| Status | Meaning |
+|---|---|
+| **Pending** | Uploaded, waiting for a human |
+| **Orgo validated** | Read automatically and accepted provisionally, still open for an admin to confirm or reject |
+| **Validated** | Approved by an admin |
+| **Rejected** | Turned down, with one of the three reasons |
 
-## Combining with adhesion
-
-For maximum vetting, combine identity validation with [Adhesion](/platform/users/adhesion):
-
-1. Applicant submits a membership application (adhesion)
-2. As part of the application, they upload identity documents
-3. OCR pre-fills form fields from the document data
-4. Admin verifies identity as part of the application review
-5. Approval confirms both the application and the identity
+There is no expired status. An expired document keeps its old status, and expiry is enforced at the moment someone tries to validate it.
 
 ---
 
-## Document expiry management
+## Reminders and renewals
 
-When you set an **auto-expire reminder** (e.g., 30 days), the system:
-- Tracks document expiry dates
-- Sends reminders to members before expiry
-- Changes status to **Expired** when the document expires
-- The member must upload a new document to regain verified status
+All of these only run when **Require for Online Payments** is on.
 
----
-
-## Privacy and security
-
-- Uploaded documents are encrypted at rest
-- Access is restricted to administrators only
-- You can configure retention policies (delete after verification, keep for X months/years, or manual deletion only)
-- Members can delete their own documents from their profile
+- Upload reminders for a payment or subscription with no document go out on an hourly job, up to three times: about two hours after the payment, again after a day, and again after three days. The ladder stops at ten days.
+- For an active subscription, Orgo emails the member 7, 4 and 2 days before the renewal date asking them to confirm or replace their document. The email offers both "same document" and "upload a different one".
+- With **Cancel Subscriptions Without Identity Reconfirmation** on, a subscription renewing within a day and still unconfirmed is cancelled.
+- A member can only replace a subscription document inside the last 7 days before renewal, and not at all while the current one is in the **Orgo validated** state.
+- Every upload attached to a payment emails everyone holding `FINANCIAL_TENANT`.
 
 ---
 
-## Common scenarios
+## Data handling
 
-<AccordionGroup>
-  <Accordion title="A member's verification was rejected — what should I tell them?">
-    When rejecting, provide a clear reason: "Document expired", "Photo doesn't match profile", "Image too blurry to read". The member receives a notification with your reason and can resubmit. Specific feedback prevents repeated failures.
-  </Accordion>
+The document number and the CNP are written to the database twice: once as plain text and once encrypted. Document images go to Orgo's S3 media bucket under an unguessable file name. Every create and every change to an identity record writes an audit entry naming the admin and the fields that changed.
 
-  <Accordion title="OCR extracted the wrong name from a document">
-    OCR isn't perfect, especially with non-Latin scripts or damaged documents. The member can correct OCR errors before submitting. If they missed an error, reject with "Name doesn't match document" and ask them to resubmit with corrected data.
-  </Accordion>
+Orgo has no delete operation for an identity record and no retention timer. The record is only removed when the underlying member or contact row is deleted from the database, which closing an account does not do on its own. If your retention policy requires ID scans to be purged after a period, that has to be arranged outside the product, through Orgo support.
 
-  <Accordion title="Should I require selfies?">
-    Require selfies if you need to verify that the person uploading the document is actually the person on the document. Skip it for lower-stakes verification where the document itself is sufficient (e.g., confirming they have a valid professional license, regardless of who uploaded it).
-  </Accordion>
-
-  <Accordion title="A member's document expired — do they lose access?">
-    That depends on your configuration. If identity validation is mandatory, an expired document may restrict their access until they resubmit. If it's optional, expiry just removes the verified badge but doesn't affect access.
-  </Accordion>
-</AccordionGroup>
-
----
-
-## Technical requirements
-
-- **OCR processing:** Requires AWS Lambda configuration
-- **Document storage:** AWS S3 for uploaded files
-- Both are part of the standard Orgo cloud setup — no additional services needed.
+<Note>
+  Identity data is not part of the member privacy switches. A member cannot hide their identity record, and other members never see it: only the permission levels listed above can open one.
+</Note>
 
 ---
 
 ## Related
 
-- [Adhesion](/platform/users/adhesion) — Combine identity verification with membership applications
-- [Profile Fields](/platform/users/profile-fields) — Additional member data
-- [Privacy Settings](/platform/users/privacy-settings) — Data visibility controls
+- [Privacy Settings](/platform/users/privacy-settings) governs the rest of a profile
+- [Adhesion](/platform/users/adhesion) can pair a membership application with a document check
+- [Permissions](/platform/permissions) explains the roles named above
+- [Donations](/platform/fees/donations) is where the payment-linked flow is most used
+- [Stripe Integration](/platform/fees/stripe-integration) covers the checkout side of the same flow

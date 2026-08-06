@@ -1,0 +1,36 @@
+[
+  {
+    "id": "templates-communication-email-campaigner",
+    "image": "/images/platform/templates/communication-email-campaigner.png",
+    "usedOn": [
+      "platform/templates/communication.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/emails",
+    "routeHint": "Settings -> Modules -> Emails & Notifications -> Email Campaigner (the first item in the Notifications & Email Campaign card). Route name ModuleEmailsConfig, client/src/router.js:1996, guarded by ROLE_ADMIN_TENANT.",
+    "actions": [],
+    "waitFor": "text=Enable Email Campaign Module",
+    "viewport": "desktop",
+    "alt": "Email Campaigner settings with the Enable Email Campaign Module switch turned on and the Newsletter Management section holding the Default Newsletter Widget UUID field",
+    "status": "new",
+    "notes": "EmailsModuleConfig.vue renders a single switch card (Enable Email Campaign Module, help text 'Manage newsletters, email campaigns, and announcements') followed by the Newsletter Management settings-section whose only field is the Default Newsletter Widget UUID text input. The left module menu (Email Campaigner / Notification Preferences / Emails Config / Email Templates) must be in frame because the setup playbook routes readers through all four."
+  },
+  {
+    "id": "templates-communication-campaign-report",
+    "image": "/images/platform/templates/communication-campaign-report.png",
+    "usedOn": [
+      "platform/templates/communication.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/newsletter/31cbvdmvtl9svp18cqbmbu1eqt",
+    "routeHint": "Email campaigns -> open a campaign whose status is Sent; the Report tab opens by default. Campaign id 624 in tenant 282 (t187c) is the only t187c campaign whose metrics cache holds real delivery figures. The other sent campaigns have all-zero caches, which is why the existing newsletter-show.png shows an empty report.",
+    "actions": [
+      "wait 4000"
+    ],
+    "waitFor": "text=Campaign details",
+    "viewport": "desktop",
+    "alt": "Campaign report for a sent campaign with Sent 50 at 100 percent delivered, Opened 25 at 50 percent of sent, Clicks 6 at 12 percent of sent, Bounce 1 at 2 percent and Unsubscribed 0, above a campaign details card naming the subject, sender, recipients, author and sent date",
+    "status": "new",
+    "notes": "Report tiles read rateSent/rateOpen/rateClick, which NewsletterMetricsService::formatMetricsForBackwardCompatibility maps from sent/unique_opens/unique_clicks. The cache row for 624 currently yields Sent 50, Opened 25, Clicks 6, Bounce 1, Unsubscribed 0; re-read the tiles after any reseed rather than trusting these figures. Identity scrub 2026-08-05: campaign 624 was titled 'Preserving Our Heritage: Historic Preservation Initiatives Take Root Across Virginia' with a matching subject and body, which is the source organization's subject matter and not Northwind's. Name, subject and html were rewritten in the demo DB to neutral professional-association copy (campaigns 625, 626 and 627 carried the same theming and were rewritten with it). Follow up with non-openers is absent from the capture: the button needs nonOpenersCount above zero (Show.vue:1228) and EmailEventRepository::countNonOpenerRecipients anti-joins email_log against email_event, neither of which the seed populates for this campaign. The button exists in code (Show.vue:225-233, NewsletterCloneNonOpenersController); it is the demo data that cannot show it."
+  }
+]

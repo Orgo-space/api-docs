@@ -1,0 +1,120 @@
+[
+  {
+    "id": "invoice-list",
+    "image": "/images/platform/fees/invoice-list.png",
+    "usedOn": [
+      "platform/fees/invoices.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/invoice/62",
+    "routeHint": "Sidebar -> FINANCE -> Invoices. Needs Settings -> Modules -> Payments -> Invoice Product active (enabled on this tenant). InvoiceList.mounted() reads tenant.settingFeatures.invoices.isActive before the tenant is in the store on a hard page load and bounces to the dashboard, so land on an invoice and use Back to invoices for a client-side navigation instead.",
+    "actions": [
+      "click text=Back to invoices",
+      "waitFor text=PSWSH",
+      "wait 2500"
+    ],
+    "waitFor": "text=PSWSH",
+    "viewport": "desktop",
+    "alt": "Invoice list with filter pills for customer name, invoice number, series, Orgo ID and status, and a table of invoices with paid and unpaid tags",
+    "status": "new"
+  },
+  {
+    "id": "invoice-create",
+    "image": "/images/platform/fees/invoice-create.png",
+    "usedOn": [
+      "platform/fees/invoices.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/invoice/create",
+    "routeHint": "Invoices -> create invoice. Do NOT click Additional Options: the tenant default template now carries tax, memo, footer and custom fields, so Create.vue applyTemplate() -> Form.vue updateToggleStates() opens the section on load and a click CLOSES it. The customer autocomplete cannot be driven by the capture runner: it only reacts to real keystrokes and fill() leaves the suggestion list empty, so the shot is the empty form plus its live preview.",
+    "actions": [],
+    "waitFor": "text=Line Items",
+    "viewport": "desktop",
+    "alt": "Invoice creation form with customer, line item and date sections beside a live preview of the invoice document",
+    "status": "new"
+  },
+  {
+    "id": "invoice-detail",
+    "image": "/images/platform/fees/invoice-detail.png",
+    "usedOn": [
+      "platform/fees/record-payment.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/invoice/63",
+    "routeHint": "Invoice 63 on t187c is an UNPAID manual membership invoice (Chapter Dues - Virginia Beach, 60.00 $, payer Elena Vargas), so the hero shows TO PAY with Mark as paid, Edit and Void together. Invoice 62, which this spec used before, is paid: it renders Mark as refunded and the page teaches Mark as paid, so the one control the section documents was missing.",
+    "actions": [],
+    "waitFor": "text=Mark as paid",
+    "viewport": "desktop",
+    "alt": "Unpaid invoice detail page showing the Mark as paid, Edit and Void buttons above the amount and billing summary",
+    "status": "new"
+  },
+  {
+    "id": "invoice-templates",
+    "image": "/images/platform/fees/invoice-templates.png",
+    "usedOn": [
+      "platform/fees/invoices.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/payments/invoice-templates",
+    "routeHint": "Settings -> Modules -> Payments -> Invoice Templates, then the edit button on the first template card. t187c has one template (invoice_template id 3, 'Standard invoice', is_default). Its tax name/rate, memo, footer and custom-field rows are all populated, which is what makes the Tax / Footer / Custom Fields switches render their bodies - with them empty the editor shows bare toggles and the alt over-claims.",
+    "actions": [
+      "click .card .button.is-small.is-rounded",
+      "wait 2000"
+    ],
+    "waitFor": "text=Template Name",
+    "viewport": "desktop",
+    "alt": "Invoice template editor with template name, default template switch, tax name and rate, memo, footer and custom field rows",
+    "status": "new"
+  },
+  {
+    "id": "invoice-settings",
+    "image": "/images/platform/fees/invoice-settings.png",
+    "usedOn": [
+      "platform/fees/invoices.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/payments/invoice-product",
+    "routeHint": "Settings -> Modules -> Payments -> Invoice Product. All three controls the alt describes are on screen without touching anything; do not flip the membership-fee switch just for the shot.",
+    "actions": [],
+    "waitFor": "text=Manual Invoice Product",
+    "viewport": "desktop",
+    "alt": "Invoice Product settings showing the automatic email switch, the membership fee invoicing switch and the manual invoice product picker",
+    "status": "new"
+  },
+  {
+    "id": "record-payment-modal",
+    "image": "/images/platform/fees/record-payment-modal.png",
+    "usedOn": [
+      "platform/fees/record-payment.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/user/209212?tab=payments",
+    "routeHint": "Member profile -> Payments tab -> Record payment (top right). Use /user/:id, not /users/edit/:id: the edit screen has no Payments tab. The button only renders for an admin with FINANCIAL_TENANT viewing someone else's profile. The price picker only appears once a product is selected, which the runner cannot do.",
+    "actions": [
+      "click text=Record payment",
+      "wait 2000"
+    ],
+    "waitFor": "text=Payment date",
+    "viewport": "desktop",
+    "alt": "Record payment modal with the custom item switch, the product picker, the amount field and the payment date picker",
+    "status": "new",
+    "notes": "The Price picker is deliberately absent from the alt. It only renders once a product is chosen, and the product control is a native b-select: the runner cannot pick an option (click opens an OS dropdown that headless Chromium never paints, and focus + ArrowDown + Enter leaves the selection on the placeholder - both verified). The prose step about choosing the price stays; the image just cannot show it."
+  },
+  {
+    "id": "invoice-refund-confirm",
+    "image": "/images/platform/fees/invoice-refund-confirm.png",
+    "usedOn": [
+      "platform/fees/cancelling-invoices.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/invoice/80",
+    "routeHint": "Invoice 80 on t187c is a paid event-registration invoice (Corporate Partnership - 1x Corporate Silver, 1500.00 $), so the hero card shows Mark as refunded. Click it to raise the confirmation dialog and capture the dialog WITHOUT confirming (confirming would really unwind the membership). The printed document is the stored invoice.body HTML rendered in an iframe, NOT the live InvoicePreview component, so anything wrong on it (logo, issuer, currency, line description, memo) has to be fixed in the data and the body regenerated with PATCH /api/v1/invoices/80.",
+    "actions": [
+      "click text=Mark as refunded"
+    ],
+    "waitFor": "text=Mark Invoice as Refunded",
+    "viewport": "desktop",
+    "alt": "Confirmation dialog asking the administrator to confirm the customer was already refunded externally before marking the invoice as refunded",
+    "status": "new"
+  }
+]

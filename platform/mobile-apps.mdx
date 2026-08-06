@@ -1,127 +1,125 @@
 ---
 title: 'Mobile Apps'
-description: 'Orgo on iOS and Android — push notifications, event check-in, and community on the go'
+description: 'The Orgo iOS and Android apps, push notification setup, deep links, and branded apps'
 "og:title": 'Mobile Apps | Orgo'
-"og:description": 'Orgo on iOS and Android — push notifications, event check-in, and community on the go'
+"og:description": 'The Orgo iOS and Android apps, push notification setup, deep links, and branded apps'
 "twitter:title": 'Mobile Apps | Orgo'
-"twitter:description": 'Orgo on iOS and Android — push notifications, event check-in, and community on the go'
+"twitter:description": 'The Orgo iOS and Android apps, push notification setup, deep links, and branded apps'
 ---
 
-Orgo Mobile Apps is the native iOS and Android application within Orgo that gives members push notifications, event QR check-in, and on-the-go access to discussions and groups.
+Orgo ships native iOS and Android apps that wrap the same Orgo interface your members use in a browser, plus the two things a browser cannot do: push notifications to the lock screen, and links that open straight into the app.
 
-**Built for** membership organizations whose members expect to engage on the go, including alumni networks, professional associations, faith communities, and trade unions, as well as any organization that runs regular in-person events.
+**Built for** organizations whose members engage between meetings: alumni networks, professional associations, scouting and youth groups, unions, and anyone running frequent in-person events.
 
-**Works alongside** the rest of Orgo rather than replacing it: the mobile app handles day-to-day engagement (discussions, notifications, event check-in), while administration and configuration remain on the web app.
-
-Members can also view upcoming events from the app.
-
----
-
-## Getting started
-
-<Steps>
-  <Step title="Download the app">
-    Get **Orgo** from the [App Store](https://apps.apple.com) (iOS) or [Google Play](https://play.google.com) (Android).
-  </Step>
-  <Step title="Find your organization">
-    Enter your organization's workspace name or scan the QR code your admin provided.
-  </Step>
-  <Step title="Log in">
-    Sign in with the same email and password you use on the web.
-  </Step>
-  <Step title="Enable notifications">
-    Allow push notifications when prompted — this is how you'll stay informed.
-  </Step>
-</Steps>
+**Works alongside** the web app rather than replacing it. Every screen in the app is the Orgo web interface, so a feature that exists on the web exists in the app, and there is nothing separate to configure per screen.
 
 ---
 
-## What you can do on mobile
+## Which app your members install
 
-| Feature | What it does |
-|---------|-------------|
-| **Discussions** | Read, post, and reply in group discussions |
-| **Events** | Browse upcoming events, RSVP, and check in |
-| **Notifications** | Receive push alerts for important updates |
-| **Profile** | View and edit your profile |
-| **Groups** | Access your groups and their content |
-| **Files** | View shared documents |
-| **QR Check-in** | Scan or show QR codes at events |
+Most organizations use the shared **Orgo Community** app. There is nothing to enable: any member of any Orgo organization can install it and sign in.
+
+| Platform | Store listing |
+|----------|--------------|
+| iOS | `apps.apple.com/us/app/orgo-community/id1484759378` |
+| Android | `play.google.com/store/apps/details?id=com.orgoapp` |
+
+Orgo also builds **branded apps**: a separate App Store and Play Store listing under your own name and icon, with its own push credentials and its own deep links. A branded app is provisioned by Orgo, not self-served, because it needs entries in your Apple Developer and Google Play accounts. Contact Orgo if you want one.
+
+Once a branded app exists, your organization record stores its two store URLs, and every "Download app" link in the product points at your listing instead of the shared one.
+
+---
+
+## How members find the app
+
+Two places surface the download, both automatic:
+
+- **Download app** in the user menu (sidebar on desktop, profile menu on mobile). It opens a submenu with **Download iOS App** and **Download Android App**. Hidden when the member is already inside the app.
+- An **install banner** at the top of the screen on mobile browsers, showing your app name and **Install app**. On a device that already has the app, the button becomes **Open app** and hands the current page over to it. Dismissing the banner is remembered on that device. It keys off the device, not the window: a phone or tablet browser shows it, a narrow desktop window does not, because there is nothing to install there.
+
+<img src="/images/platform/mobile-apps/download-app-menu.png" alt="Sidebar user menu with the Download app submenu open showing Download iOS App and Download Android App" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+<img src="/images/platform/mobile-apps/install-app-banner.png" alt="Install banner at the top of a mobile browser showing the app name, the line Faster smoother in the app, and an Install app button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Signing in
+
+Members sign in with the same email and password they use on the web, or with any other method your organization allows (one-time code, MFA). There is no separate app account and no workspace code to type.
+
+If a member belongs to more than one Orgo organization under the same email address, signing in through the shared app signs them into all of them at once and they switch between organizations from the workspace switcher. Signing in through a branded app or a custom domain signs them into that organization only.
+
+Non-member ticket holders do not use this login at all. They reach the Event App through a one-time code sent to the email on their ticket. See [Event App](/platform/events/event-app).
 
 ---
 
 ## Push notifications
 
-### What triggers notifications
+Push has three moving parts, and all three must be true for a notification to arrive.
 
-- New posts in your group discussions
-- Event reminders
-- Direct messages
-- Administrative announcements
-- Membership updates (role changes, approvals)
+<Steps>
+  <Step title="The organization allows push">
+    **Settings → Emails & Notifications → Notification Preferences → Push Notifications** sets the default for new members. Requires `ADMIN_TENANT`.
+  </Step>
+  <Step title="The member has push on">
+    **Push notification, mobile app & web browser** on the **Notifications** tab of their profile (`/me/update`). Members who never touched the toggle are treated as opted in.
+  </Step>
+  <Step title="The device is registered">
+    The app registers the device automatically the first time the member opens it while signed in, and again whenever the device's push identity changes. Nothing to do by hand.
+  </Step>
+</Steps>
 
-### If notifications aren't arriving
+<img src="/images/platform/mobile-apps/push-notification-toggle.png" alt="Notifications tab of a member profile showing the Push notification, mobile app and web browser switch turned on" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-1. Check that the app has notification permission in your device settings
-2. Make sure notifications aren't muted in the app's settings
-3. On Android, check that battery optimization isn't blocking background activity
-4. On iOS, check that notifications aren't in "Scheduled Summary" mode
+A device is registered per organization. A member in two organizations who only ever opens one of them in the app receives push for that one until they open the other.
 
----
-
-## Event check-in
-
-The mobile app makes event check-in fast:
-
-### As event staff (scanning)
-
-1. Open the event in the app
-2. Tap **Scan**
-3. Point your camera at the attendee's QR code
-4. Confirmation appears on screen
-
-### As an attendee (showing your code)
-
-1. Open the event in the app
-2. Tap **My QR Code** or **Check In**
-3. Show your screen to the event staff
-4. They scan it and you're checked in
-
-No printed tickets needed. Works offline for the QR display.
-
----
-
-## Offline access
-
-Limited functionality works without internet:
-- View recently accessed content
-- Queue discussion posts (sent when back online)
-- Access downloaded files
-- Display your QR code for event check-in
+Browsers get push too, through a different mechanism, on Chrome, Edge, Firefox and other Chromium browsers. Safari is excluded, so a member whose only Orgo access is Safari on a Mac or iPhone gets email notifications but not push. Installing the app is the fix.
 
 <Note>
-Most features require an internet connection. The app will sync automatically when connectivity returns.
+Turning the toggle on inside Orgo is not enough on its own: the member must also grant notification permission to the app or browser when the operating system asks. The setting screen says so.
 </Note>
+
+### Testing that push works
+
+Admins with `ADMIN_TENANT` can open `/demo-notification` and send a test push to their own devices or to a specific member id, with a title, body and target link. It is the fastest way to prove a device is registered before debugging anything else.
 
 ---
 
-## Common scenarios
+## Deep links
+
+Links Orgo sends to a mobile-capable surface are built as **smart links** on the `l.orgo.space` domain. Opened on a phone with the app installed, the operating system hands them to the app; on any other device they fall through to the web. Orgo publishes the Apple and Android verification files for that domain automatically, including one entry per branded app.
+
+Smart links are used for:
+
+- **Push notifications** for discussions and mentions, events and event feed posts, event networking invitations, connection requests, local center and unit membership, task assignment and status changes, and new media files.
+- **Email links** for event invitations and registrations, discussion notifications, task assignment, and event networking invitations.
+- **Event ticket QR codes** and **vote share links**, which always prefer the app.
+
+Everything else, including all other emails and notifications, links to your normal Orgo address.
+
+---
+
+## Known limits
 
 <AccordionGroup>
-  <Accordion title="I can't find my organization in the app">
-    Double-check the workspace name with your admin. It's case-sensitive and usually matches your organization's Orgo URL (e.g., "my-org" from my-org.orgo.space).
+  <Accordion title="Members cannot pay fees inside the iOS app">
+    Payment buttons are hidden in the iOS app and replaced with "To make a payment, please access app in browser." This is Apple's in-app purchase policy, not an Orgo setting. Members pay from a mobile or desktop browser; the payment then shows in the app like any other.
   </Accordion>
 
-  <Accordion title="Login isn't working on mobile">
-    Try resetting your password via the web app first. If you use SSO (Google, Microsoft), make sure you're using the same sign-in method. Check your internet connection.
+  <Accordion title="Audio and video recording is disabled in the app">
+    Screens that record audio or video are blocked in current app builds and offer to reopen the page in the device browser instead. Uploading an already-recorded file works normally.
   </Accordion>
 
-  <Accordion title="The camera won't work for QR scanning">
-    Grant camera permission to the Orgo app in your device settings (Settings → Apps → Orgo → Permissions on Android; Settings → Orgo → Camera on iOS).
+  <Accordion title="There is no offline mode">
+    The app needs a connection for every screen. Nothing is cached for offline reading and posts are not queued while offline.
   </Accordion>
 
-  <Accordion title="Should I tell members to use the app or the website?">
-    Both. The website is better for admin tasks, creating content, and detailed configuration. The app is better for daily engagement — checking discussions, receiving notifications, and event check-in. Most active members use both.
+  <Accordion title="Adding Orgo to the home screen from a browser shows the Orgo icon">
+    The web app's install metadata carries Orgo's own name and icon, so a browser "Add to Home Screen" shortcut is branded Orgo even for organizations with custom branding elsewhere. A branded app is the way to get your own icon on the home screen.
+  </Accordion>
+
+  <Accordion title="Notifications are not arriving on one device">
+    Check, in order: notification permission for the app in the device's system settings; the member's **Push notification** toggle; that the member has opened the app at least once while signed in to that organization. Then send a test from `/demo-notification`. Signing out of the app removes that device's registration.
   </Accordion>
 </AccordionGroup>
 
@@ -129,6 +127,8 @@ Most features require an internet connection. The app will sync automatically wh
 
 ## Related
 
-- [Notifications](/platform/notifications) — Configure what triggers alerts
-- [Events](/platform/events) — Event management and attendance
-- [Attendance](/platform/events/attendance) — QR check-in system
+- [Notifications](/platform/notifications) - notification types, channels and digests
+- [Event App](/platform/events/event-app) - the attendee experience and its separate login
+- [Check-in](/platform/events/check-in) - scanning ticket QR codes at the door
+- [Branding](/platform/organisation/branding) - logos and theming across the product
+- [Custom domain](/platform/custom-domain) - your own address for the web app

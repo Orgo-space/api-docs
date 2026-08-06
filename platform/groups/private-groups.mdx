@@ -1,169 +1,132 @@
 ---
 title: 'Private Groups'
-description: 'Member-created spaces for project teams, committees, interest groups, and working groups'
+description: 'Invite-only spaces for committees, boards and project teams, and the open alternative'
 "og:title": 'Private Groups | Orgo'
-"og:description": 'Member-created spaces for project teams, committees, interest groups, and working groups'
+"og:description": 'Invite-only spaces for committees, boards and project teams, and the open alternative'
 "twitter:title": 'Private Groups | Orgo'
-"twitter:description": 'Member-created spaces for project teams, committees, interest groups, and working groups'
+"twitter:description": 'Invite-only spaces for committees, boards and project teams, and the open alternative'
 ---
 
-Private Groups are the flexible, member-driven group type. Unlike Local Centers (geographic) or Role Groups (automatic), Private Groups are created by members, have manually controlled membership, and can serve any purpose — project teams, committees, interest communities, event planning, board governance.
+**Built for** committees, boards, working groups and project teams that need a space nobody else can see.
+**Replaces** the private Slack channel that lives outside your member records.
 
-<img src="/images/platform/groups/groups-browse.png" alt="Browse groups page showing private groups" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+A private group is a group whose **Access** is set to **Private**, described in the app as "Only invited members have access". Members who are not in it cannot open it, cannot see its discussions and do not see it listed. It is the default a member gets when they create a group without organization admin rights.
 
-They're the closest thing to a Slack channel or Microsoft Teams group: create one, invite people, start collaborating.
+Private groups are listed under **Private groups** on the Groups page.
 
----
-
-## Do I need Private Groups?
-
-| Your situation | Use |
-|---------------|-----|
-| A committee needs a space to collaborate | Private Group |
-| A project team needs task tracking and file sharing | Private Group with Issues enabled |
-| Members want to form interest-based communities (Photography, Hiking) | Private Group with "joinable" enabled |
-| You're planning a specific event and the team needs a workspace | Private Group — archive it when the event is done |
-| A board needs a confidential discussion space | Private Group — restrict to board members only |
-| You want a space that auto-includes all members of a type | [Role Group](/platform/groups/role-groups) instead |
-| You need geographic branches | [Local Center](/platform/groups/local-groups) instead |
+<img src="/images/platform/groups/groups-browse-private.png" alt="Bottom of the Groups page showing the Community groups section and the Private groups section, each group listed with its member count" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Creating a Private Group
+## Private or open to join
 
-Any member with permission can create a group. Click **+ New Group** in the sidebar, or go to **Groups** → **Create Group**.
+These are the two member-run access modes. Pick deliberately, because they behave very differently.
+
+| | **Private** | **Open to join** |
+|---|---|---|
+| Description in the app | Only invited members have access | Anyone in community can join |
+| Who can create it | Anyone allowed to create groups | `ADMIN_TENANT` only |
+| Visible to non-members | No | Yes, under **Community groups** |
+| How people get in | A group admin adds them | They join themselves, or an admin adds them |
+| Approval step | None, adding is immediate | None, joining is immediate |
+| Can be filed under a category | No | Yes |
+| Shareable join link | No | Yes |
+
+<Warning>
+  Joining an open group never waits for approval. Any member who follows the link or clicks **Join** is in straight away. If you need to vet people, use **Private** and add them yourself.
+</Warning>
+
+You can switch a group between the two modes later by editing it, provided you have `ADMIN_TENANT` for the open modes. Starting private and opening up later is safer than the reverse.
+
+---
+
+## Creating a group
+
+**Groups** → **Create group**, or the **+** in the sidebar's Groups section.
 
 <Steps>
-  <Step title="Name and description">
-    Give the group a clear name that explains its purpose. "Q4 Marketing Campaign" is better than "Marketing Group". Add a description so members know what to expect.
+  <Step title="Name it">
+    A name that explains the purpose. "Q4 Marketing Campaign" beats "Marketing Group". Optionally pick a **Menu emoji** that shows beside it in the sidebar.
   </Step>
-  <Step title="Choose visibility">
-    **Private** — only members can see the group and its content. **Joinable** — any member can discover the group and join without an invitation.
+  <Step title="Set Access">
+    **Private** for invite-only. Organization admins also see **Open to join**, **Auto-enroll all members** and **Role group**. Members without `ADMIN_TENANT` do not see the Access selector at all and get a private group.
   </Step>
-  <Step title="Select a category (optional)">
-    If your organization uses [group categories](/platform/groups), pick one: Working Group, Committee, Interest Group, Project Team, etc. This helps members find groups.
+  <Step title="Pick a category">
+    Only offered on open and auto-enroll groups, and only when **Enable Group Categories** is on. You only see the categories you are allowed to create in.
   </Step>
-  <Step title="Enable features">
-    Toggle on only what you need:
-
-    | Feature | Enable when |
-    |---------|------------|
-    | **Discussions** | The group needs conversations — updates, decisions, Q&A |
-    | **Events** | The group schedules meetings or activities |
-    | **Files** | The group shares documents, presentations, or resources |
-    | **Issues** | The group tracks tasks, action items, or deliverables |
+  <Step title="Choose Features">
+    **Discussions**, **Files** and **Events**. At least one must stay on. Each one also needs its module enabled organization-wide to appear.
   </Step>
-  <Step title="Save and invite members">
-    Create the group, then add members from the Members tab.
+  <Step title="Set Who can post?">
+    **Everyone in the group** or **Only admins**. This one control covers discussions, files and events together.
+  </Step>
+  <Step title="Add a description">
+    Rich text, with images. Once set, it becomes the group's **About** tab.
+  </Step>
+  <Step title="Save">
+    You become the group's owner and its first admin, and you land on the Members tab ready to add people.
   </Step>
 </Steps>
 
 <Tip>
-  Only enable the features you actually need. A board meeting group probably needs Discussions + Files. A hiking club needs Discussions + Events. A software project needs all four. Fewer features = less clutter.
+  Turn on only the features you need. A board needs Discussions and Files. A hiking club needs Discussions and Events. Fewer tabs means less clutter.
 </Tip>
-
----
-
-## Private vs. joinable
-
-This is the key decision when creating a group:
-
-| Mode | How members join | Best for |
-|------|-----------------|----------|
-| **Private** | Invited by the group owner or admin only | Committees, boards, sensitive projects — you control exactly who's in |
-| **Joinable** | Any member can find and join on their own | Interest groups, social clubs, open communities — members self-organize |
-
-You can change this setting later. Starting private and opening it up is safer than starting open and needing to restrict.
 
 ---
 
 ## Managing members
 
-### Adding members
+Open the group and go to the **Members** tab.
 
-1. Go to the group → **Members** tab
-2. Click **Add Members**
-3. Search by name and select people
-4. They're added immediately
+### Adding people
 
-### Group roles
+Group admins get a search box on the Members tab. Type a name, pick the member, and they are added immediately. There is no email invitation and no pending state, so the person must already have an account in your organization.
 
-| Role | What they can do |
-|------|-----------------|
-| **Owner** | Full control — manage members, settings, and features. Can delete the group. The person who created the group is the owner. |
-| **Admin** | Can manage members and settings, but cannot delete the group. Promote trusted members to admin for shared management. |
-| **Member** | Can participate based on group permission settings (post, upload, create events — unless restricted to admins only). |
+For an **Open to join** group, the **Join group link** button copies a URL you can paste into an email or chat. Anyone in your organization who opens it is joined on the spot and taken to the group's discussions.
 
-### Removing members
+### Roles inside a group
 
-Go to **Members** tab → find the member → remove. Removed members lose access to all group content immediately.
+| Role | What it is | What it can do |
+|------|-----------|----------------|
+| **Owner** | The member who created the group | Everything an admin can do, and delete the group. Cannot be removed from the group. |
+| **Admin** | A member promoted with **Make Admin** | Add and remove members, promote others, edit the group's settings, archive it |
+| **Member** | Everyone else | Take part according to **Who can post?** |
 
----
+Promote or demote from the row menu on the Members tab: **Make Admin** and **Dismiss as Admin**.
 
-## Issue tracking
+Adding someone to a group requires an active admin role inside that group. Removing a member and changing who is an admin is also open to organization moderators (`HR_TENANT`), and `ADMIN_TENANT` can edit, archive and delete any group whether or not they are in it.
 
-Private Groups with Issues enabled become lightweight project management spaces. This is one of the most powerful features for teams that need to track work.
+### Leaving and removing
 
-### Creating issues
+Members can leave from **Leave group** in the group's header menu. The owner cannot leave their own group, and nobody can leave an auto-enroll group.
 
-Go to the group → **Issues** tab → **Create Issue**
-
-Each issue can have:
-
-| Field | Description |
-|-------|-------------|
-| **Title** | What needs to be done |
-| **Description** | Details, context, acceptance criteria |
-| **Assignee** | Who's responsible |
-| **Priority** | High, Medium, Low (if enabled) |
-| **Due date** | Deadline (if enabled) |
-| **Type** | Task, Bug, Feature, Question (if enabled) |
-| **Status** | Open → In Progress → Done |
-
-### Configure issue tracking
-
-When enabling Issues on a group, you can toggle:
-
-| Setting | What it does |
-|---------|-------------|
-| **Priority levels** | Allow High/Medium/Low priority on issues |
-| **Due dates** | Allow setting deadlines |
-| **Issue types** | Categorize issues (Task, Bug, Feature, etc.) |
-| **Status tracking** | Track progress through workflow stages |
-
-<Tip>
-  For simple groups (a committee tracking action items), enable Issues with just priorities. For project teams, enable everything — types, due dates, and statuses give you a mini project management tool.
-</Tip>
+Admins remove members from the row menu on the Members tab. Removal takes effect immediately and the person loses access to everything in the group.
 
 ---
 
-## Controlling who can do what
+## Who can see what
 
-| Setting | ON | OFF |
-|---------|-----|-----|
-| **Only admins can post** | Group is announcement-only — admins post, members read | Any member can start discussions |
-| **Only admins can create events** | Admins schedule all meetings and activities | Any member can create events |
-| **Only admins can upload files** | Document management is controlled | Any member can share files |
-| **Only admins can add members** | Only admins invite new people | Any member can invite others |
-
-For most project teams, leave everything open — everyone contributes. For boards and governance groups, restrict posting and file uploads to admins.
+| Situation | Result |
+|-----------|--------|
+| A non-member opens a private group | Access denied. The group is not listed for them either. |
+| A non-member opens an open group | They see it and can join |
+| An organization admin (`ADMIN_TENANT`) opens any group | Full access, including editing and deleting it |
+| A member is removed | Immediate loss of access to discussions, files and events |
 
 ---
 
-## Group lifecycle
+## Archiving and deleting
 
-Private Groups are often temporary. Here's how to manage them through their lifecycle:
+Open the group's **Settings** from its header, or edit it from the Groups page.
 
-| Phase | What to do |
-|-------|-----------|
-| **Create** | Set up the group, invite members, enable features |
-| **Active use** | Members collaborate — discussions, files, issues, events |
-| **Wind down** | When the project ends or the committee finishes its work |
-| **Archive** | Archive the group — content is preserved for reference, but the group is hidden from the sidebar. Members are removed from the active roster. |
-| **Delete** | If the content isn't worth preserving, delete the group entirely. This is permanent. |
+| Action | Who | What happens |
+|--------|-----|--------------|
+| **Archive** | Owner, group admin, or `ADMIN_TENANT` | The group moves to the **Archived** tab. Members stay members and no content is removed. |
+| **Unarchive** | `ADMIN_TENANT` | Restores it from the **Archived** tab, exactly as it was |
+| **Delete** | Owner or `ADMIN_TENANT` | Permanent. Confirm dialog only, no recovery. |
 
 <Info>
-  Always prefer archiving over deleting. Archived groups preserve institutional knowledge — meeting notes, decisions, files. You can always delete later, but you can't un-delete.
+  Prefer archiving. Archived groups keep their discussions, decisions and files, and an organization admin can bring them back at any time. A group with a newsletter attached refuses to delete until you remove the newsletter, so archive it instead.
 </Info>
 
 ---
@@ -171,28 +134,32 @@ Private Groups are often temporary. Here's how to manage them through their life
 ## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="Members want to create interest groups (Photography Club, Book Club) — should I let them?">
-    Yes — this is exactly what joinable Private Groups are for. Members create the group, set it as joinable, and others discover and join on their own. You get organic community building with zero admin work. If you want some oversight, require a group category and review new groups occasionally.
+  <Accordion title="Should I let members create their own interest groups?">
+    Members can already create groups if **Who can create** is left at its `USER` default, but what they get is a **Private** group only they can see until they add people. To let members discover and self-join interest communities, an organization admin has to create the group as **Open to join**.
   </Accordion>
 
-  <Accordion title="A project finished — what do I do with the group?">
-    Archive it. The group disappears from the sidebar but all content (discussions, files, issues) is preserved. If someone needs to reference old project files or decisions six months later, an admin can find the archived group.
+  <Accordion title="A project finished, what do I do with the group?">
+    Archive it. It leaves the main list but everything is preserved, and it can be unarchived later.
   </Accordion>
 
-  <Accordion title="Can I convert a Private Group into a Role Group?">
-    No — they're fundamentally different. Private Groups have manual membership; Role Groups have criteria-based automatic membership. If you realize the membership should be automatic (e.g., "all people with User Type = Board Member"), create a new Role Group and archive the Private Group.
+  <Accordion title="Can I convert a private group into a role group?">
+    Not by editing it. The **Role group** option in the Access selector is a different kind of space with criteria-based membership. Create a [role group](/platform/groups/role-groups) and archive the private one.
   </Accordion>
 
-  <Accordion title="Too many groups — members can't find the right one">
-    Enable [Group Categories](/platform/groups) to organize groups by type (Working Group, Committee, Interest Group, etc.). Also consider archiving inactive groups — a clean list is easier to navigate than a cluttered one.
+  <Accordion title="The group owner left the organization">
+    Any member with `ADMIN_TENANT` can open the group's settings and manage it, including archiving or deleting it. Ownership itself stays with the original account and is not reassignable from the interface.
   </Accordion>
 
-  <Accordion title="A group owner left the organization — who controls the group now?">
-    A national admin can access any group and reassign ownership. Go to the group settings and promote another member to owner.
+  <Accordion title="I want a group everyone can find but only admins post to">
+    Create it as **Open to join** and set **Who can post?** to **Only admins**. Members find it, join it and read it; only group admins and organization moderators post.
   </Accordion>
 
-  <Accordion title="I want a group visible to everyone but only admins can post">
-    Create the group as joinable (so everyone can find and join it), then enable "Only admins can post". This gives you a broadcast channel where admins share updates and members can read — similar to a Slack announcement channel.
+  <Accordion title="Someone was added to a private group by mistake">
+    Remove them from the row menu on the Members tab. Access ends immediately, though anything they already read or downloaded is obviously already out.
+  </Accordion>
+
+  <Accordion title="Why does the group have no Discussions tab?">
+    Either **Discussions** is off in the group's Features, or the Discussions module is off for the whole organization. The same applies to Files and Events. Non-members never see the tabs at all.
   </Accordion>
 </AccordionGroup>
 
@@ -200,7 +167,8 @@ Private Groups are often temporary. Here's how to manage them through their life
 
 ## Related
 
-- [Groups Overview](/platform/groups) — All group types and when to use each
-- [Issues](/platform/issues) — Task tracking within groups
-- [Role Groups](/platform/groups/role-groups) — For automatic, criteria-based membership
-- [Local Centers](/platform/groups/local-groups) — For geographic branches
+- [Groups & Teams](/platform/groups) - all access modes and when to use each
+- [Role Groups](/platform/groups/role-groups) - criteria-based automatic membership
+- [Main Group](/platform/groups/main-group) - the organization-wide space
+- [Local Centers](/platform/groups/local-groups) - geographic branches
+- [Permissions](/platform/permissions) - what `ADMIN_TENANT` and `HR_TENANT` cover

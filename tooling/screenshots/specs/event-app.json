@@ -1,0 +1,119 @@
+[
+  {
+    "id": "event-app-details",
+    "image": "/images/platform/events/event-app-details.png",
+    "usedOn": [
+      "platform/events/event-app.mdx"
+    ],
+    "tenant": "eventapp",
+    "route": "/event-app/2ld07n8veu9v6bvh3u0gfrfe34/details",
+    "routeHint": "PREREQUISITE: sign in as a member who has an active registration (EventAttend, status success/invited, canceledAt null) on an event that has a location filled in. Then Events list -> open that event -> the mobile header 'Open in Event App' button (or the 'Event app' entry in the event sidebar) -> Details tab. Note: the shortcut only renders when the event has a location. t187c (id 282) is the only local tenant with sub-events (3), so its parent event is the best candidate.",
+    "actions": [
+      "click text=Details"
+    ],
+    "waitFor": "text=Profile",
+    "viewport": "mobile",
+    "alt": "Event App on a phone showing the event cover, title, tab strip and the Details tab with date, location and description",
+    "status": "new"
+  },
+  {
+    "id": "event-app-my-events",
+    "image": "/images/platform/events/event-app-my-events.png",
+    "usedOn": [
+      "platform/events/event-app.mdx"
+    ],
+    "tenant": "eventappcontact",
+    "route": "/event-app/my-events",
+    "routeHint": "PREREQUISITE: this page only renders for a Contact (non-member) session. /api/v1/event-app/my-events throws AccessDenied for a User principal (EventAppMyEventsController), which is why the shared 'eventapp' member session lands on the platform Home dashboard instead. Contact Dana Fielding (contact 26797, dana.fielding@example.org, tenant 282) has three EventAttend rows via event_attend.external_id. Build the session with: EVENT_APP_EMAIL=dana.fielding@example.org EVENT_APP_STATE=state-eventappcontact.json ORGO_DB_CONTAINER=orgo-1-database node event-app-login.mjs",
+    "actions": [],
+    "waitFor": "text=My events",
+    "viewport": "mobile",
+    "alt": "My events screen on a phone listing event cards grouped under an organisation logo, with a Signed in as line and a My profile button",
+    "status": "new"
+  },
+  {
+    "id": "event-app-networking",
+    "image": "/images/platform/events/event-app-networking.png",
+    "usedOn": [
+      "platform/events/event-app-networking.mdx"
+    ],
+    "tenant": "eventapp",
+    "route": "/event-app/2ld07n8veu9v6bvh3u0gfrfe34/networking",
+    "routeHint": "PREREQUISITE: the event must have 'Visibility of attendee list' ON (event.hasPublicAttendeeList) and several attendees with profiles; turn on 'Enable 1:1 networking' too so the Book 1:1 buttons render. NO local event currently has either flag set (verified by query), so the capture run must enable them on a well-populated event first: Events -> open event -> Edit -> Features section -> toggle both. Then open the Event App -> Networking tab -> Participants sub-tab.",
+    "actions": [
+      "click text=Networking"
+    ],
+    "waitFor": "text=Participants",
+    "viewport": "mobile",
+    "alt": "Networking tab on a phone showing attendee cards with headline, Connect and Book 1:1 buttons, and search and country filters",
+    "status": "new",
+    "notes": "Recaptured 2026-08-06: participant avatars render again, so the cards no longer show blank circles."
+  },
+  {
+    "id": "event-app-networking-spaces",
+    "image": "/images/platform/events/event-app-networking-spaces.png",
+    "usedOn": [
+      "platform/events/event-app-networking.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/events/networking-spaces/2ld07n8veu9v6bvh3u0gfrfe34",
+    "routeHint": "PREREQUISITE: the same event needs 'Enable 1:1 networking' ON, otherwise the sidebar entry is hidden. Sign in as the event owner or an ADMIN_TENANT. Events -> open the event -> 'Networking spaces' in the event sidebar. Summer Social Arlington (event id 200250, t187c) already has both flags on and three spaces (Riverside Lounge 4, Atrium Tables 2, Library Corner 2). The :item route param is the event UUID, not the numeric id - passing the id 404s on /events/{id} and renders an empty shell, which is why this image came out blank.",
+    "actions": [
+      "click text=Add space"
+    ],
+    "waitFor": "text=Capacity per slot",
+    "viewport": "desktop",
+    "alt": "Networking spaces admin screen listing spaces with name and capacity per slot, and the Add space form open",
+    "status": "new",
+    "notes": " Checked alongside event-app-networking on 2026-08-06: three spaces with capacities, unaffected by the avatar fix."
+  },
+  {
+    "id": "event-app-agenda",
+    "image": "/images/platform/events/event-app-agenda.png",
+    "usedOn": [
+      "platform/events/event-app-feed.mdx"
+    ],
+    "tenant": "eventapp",
+    "route": "/event-app/1avnl2qibo932pkmh1inkl7nsu/agenda",
+    "routeHint": "PREREQUISITE: the event must have sub-events (sessions), otherwise the Agenda tab does not render and the app redirects to Details. t187c (id 282) is the only local tenant with sub-events (3 rows). Sign in as a member registered for that parent event, open the Event App, Agenda tab. Mark one session as attending first so the 'My Agenda' toggle shows a count. The route lands on this tab already, and the tab is labelled Program in the Event App bar, not Agenda, so a 'click text=Agenda' action always fails and there is no 'All sessions' toggle to wait for.",
+    "actions": [],
+    "waitFor": "text=Program",
+    "viewport": "mobile",
+    "alt": "Agenda tab on a phone with day chips, a session list showing times, stage and speakers, and the All sessions and My Agenda toggle",
+    "status": "new"
+  },
+  {
+    "id": "event-app-feed",
+    "image": "/images/platform/events/event-app-feed.png",
+    "usedOn": [
+      "platform/events/event-app-feed.mdx"
+    ],
+    "tenant": "eventapp",
+    "route": "/event-app/2ld07n8veu9v6bvh3u0gfrfe34/feed",
+    "routeHint": "PREREQUISITE: no event feed posts exist in any local tenant (verified by query), so the capture run must create two or three posts first: sign in as the event owner or ADMIN_TENANT, open the Event App -> Feed tab -> compose a post, add an image to one of them, pin one, and create a feed category so the filter chips appear. Then capture the feed list.",
+    "actions": [
+      "click text=Feed"
+    ],
+    "waitFor": "text=Pinned",
+    "viewport": "mobile",
+    "alt": "Feed tab on a phone showing category chips, a pinned announcement, an image post with reactions and a reply count",
+    "status": "new"
+  },
+  {
+    "id": "event-app-badge",
+    "image": "/images/platform/events/event-app-badge.png",
+    "usedOn": [
+      "platform/events/event-app-feed.mdx"
+    ],
+    "tenant": "eventapp",
+    "route": "/event-app/2ld07n8veu9v6bvh3u0gfrfe34/profile",
+    "routeHint": "The Badge button sits in the Event App header on every tab, but it only renders when the signed-in principal has an EventAttend row on this event (currentEventAttend.hash). Sign in as a registered attendee, open any tab, tap 'Badge'. The QR encodes a smart link to the registration, so the obfuscated tenant data is safe to show.",
+    "actions": [
+      "click text=Badge"
+    ],
+    "waitFor": "canvas, img[alt*='QR'], .event-app-badge",
+    "viewport": "mobile",
+    "alt": "Attendee badge modal on a phone showing the event name, the attendee photo and name, and a large QR code",
+    "status": "new"
+  }
+]

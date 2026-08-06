@@ -1,0 +1,168 @@
+---
+title: 'Sharing Events'
+description: 'Short share links with social previews, the public event directory, and embedding events or an agenda on your own site'
+"og:title": 'Sharing Events | Orgo'
+"og:description": 'Short share links with social previews, the public event directory, and embedding events or an agenda on your own site'
+"twitter:title": 'Sharing Events | Orgo'
+"twitter:description": 'Short share links with social previews, the public event directory, and embedding events or an agenda on your own site'
+---
+
+Once an event has a [public page](/platform/events/public-page), there are three ways to put it in
+front of people: a short link built for social media, a directory of everything coming up, and
+embeds for your own website.
+
+**Built for** organisers who post events to Facebook or LinkedIn, keep an events page on their own
+site, and want both to stay current without copying details around.
+
+**Replaces** manually maintained "upcoming events" pages and hand-built social cards.
+
+---
+
+## The short share link
+
+Open the event and use **Copy link** in the event sidebar. It appears once the event is published
+and public.
+
+The first time you use it, the event is given a permanent seven-character code and a small preview
+page is published for it. You get a link shaped like:
+
+```
+https://<your app domain>/share/<code>
+```
+
+The preview page exists for one reason: social platforms and messaging apps read a page's preview
+tags before showing a card, and they do not run the event page's JavaScript. It carries the event
+name as the title, the first 256 characters of the description as the summary, the event cover image,
+and your organisation's icon. A visitor who clicks it is forwarded to the event about a second later.
+
+It forwards to the event's public page with your organisation and interface language already set in
+the address, so nothing else needs to be appended by hand.
+
+<Note>
+Copying the link again republishes the preview page, so a new title or cover image is picked up.
+Facebook, LinkedIn and X cache previews aggressively, so use their own preview debugging tools if an
+old card keeps appearing.
+</Note>
+
+Visitors can share too. The public event page has a **Share** button that copies the link or hands it
+to Facebook, WhatsApp or LinkedIn.
+
+---
+
+## The public event directory
+
+Every organisation has a page listing its public events:
+
+```
+https://<your app domain>/public/events?workspace=<your slug>&upcoming=1
+```
+
+From inside the app, open **Events** and use **Public events** in the header to jump to it. Visitors
+reach it by clicking your logo on any public event page, or "Explore events" on a phone.
+
+<img src="/images/platform/events/event-public-directory.png" alt="Public event directory showing the next event as a large hero card, a list of upcoming events with dates and cover images, and a month calendar with event dates marked" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+It shows only events that are both **published** and **public**. A ticketed event that was never
+marked public has a working page of its own but is never listed here.
+
+| Element | Behaviour |
+|---------|-----------|
+| Hero card | The next upcoming event, shown large above the list |
+| Upcoming / Past | Two pills; past events stay browsable indefinitely |
+| Calendar | Inline month calendar on desktop, with dates that have events marked |
+| Event cards | Date, title, location and cover image, each opening the event's public page |
+
+Visitors get no search box and no filters. Those controls are for signed-in members on the internal
+event list.
+
+---
+
+## Embedding on your own website
+
+The directory and the agenda are both embeddable in an `iframe`. Adding `iframe=true` to the address
+strips the page down for embedding: it hides your logo and the "built with Orgo.space" line, and
+forces the light theme so the embed does not turn dark on a visitor whose device prefers dark mode.
+
+```html
+<iframe
+  src="https://<your app domain>/public/events?workspace=<your slug>&upcoming=1&iframe=true"
+  width="100%"
+  height="1600"
+  frameborder="0"
+  loading="lazy">
+</iframe>
+```
+
+Give it generous height. The embed does not resize its parent frame, so a short frame cuts the list
+off rather than scrolling neatly.
+
+<Note>
+If your organisation uses the built-in website, its "Upcoming events" section already embeds this
+exact page for you, so you do not need to paste anything.
+</Note>
+
+---
+
+## Embedding the agenda
+
+For a conference the agenda is often what people want on the website. Open the event, go to
+**Program**, and use **Iframe URL**. The button only appears when the event is public or ticketed.
+
+It copies an address of the form
+`https://<your app domain>/public/event-agenda/<event uuid>?workspace=<your slug>&iframe=true`,
+ready to drop into an `iframe`. The embed shows the sessions grouped by day with their times, stages
+and locations, and speaker cards that open a profile with the speaker's bio and their other sessions.
+The event title is hidden in embed mode so it sits under your own heading.
+
+<img src="/images/platform/events/event-agenda-embed.png" alt="Embedded event agenda showing sessions grouped by day with start and end times, stage labels and speaker avatars, without the event title" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+Session data is cached for five minutes, so a change to the schedule shows up on the embed shortly
+after you save it. For events that are neither public nor ticketed the address returns "not found",
+which is the same rule the public page follows.
+
+---
+
+## Print and QR codes
+
+The public page address is a plain URL, so any QR code generator can turn it into a code for posters
+and flyers. Nothing in Orgo needs to be configured for that, and the code keeps working as long as
+the event exists.
+
+Do not confuse it with the QR code an attendee receives after registering. That one identifies the
+person, not the event, and is what gets scanned at
+[check-in](/platform/events/check-in).
+
+---
+
+## Search engines
+
+Crawling is not blocked, but do not plan a search strategy around it. The public event page is a
+JavaScript application whose browser tab title is your organisation name, not the event name. The
+only page that serves proper title, description and image tags to a machine reading the raw HTML is
+the short share link's preview page, which is what makes social cards work.
+
+If search visibility matters, publish the event on your own site and link out to the Orgo page for
+registration.
+
+---
+
+## Permissions
+
+| Action | Needs |
+|--------|-------|
+| Mark an event public | The level set in **Settings → Events → Who Can Create Public Events** |
+| Enable ticketing | `EVENT_TENANT` (or `FINANCIAL_TENANT` when creating the event) |
+| Copy the share link, publish the preview page | Event owner, `EVENT_LOCAL` on the event's group, or `EVENT_TENANT` |
+| Copy the agenda embed address | Access to the event's **Program** screen: owner, `EVENT_LOCAL` or `EVENT_TENANT` |
+
+`ADMIN_TENANT` satisfies all of these organisation-wide.
+
+---
+
+## Related
+
+- [Public event page](/platform/events/public-page) - what the page shows and what it never exposes
+- [Ticketing](/platform/events/ticketing) - tickets, pricing and checkout
+- [Create an event](/platform/events/create-event) - visibility, cover image and description
+- [Custom domain](/platform/custom-domain) - serving public pages from your own domain
+- [Check-in](/platform/events/check-in) - the attendee QR code and scanning at the door

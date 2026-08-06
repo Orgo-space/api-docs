@@ -7,220 +7,126 @@ description: 'Categorize members by type and model your organizational structure
 "twitter:description": 'Categorize members by type and model your organizational structure with positions'
 ---
 
-User Types and Roles live on the same page but serve different purposes:
+User types and roles are the same object in Orgo, separated by one setting called **level**. A role with the level **User type** is a membership category. A role with any other level is a position in your structure.
 
-- **User type** = What kind of member they are (Scout, Volunteer, Student). A label for categorization and filtering.
-- **Role** = What position they hold (President, Team Leader, Treasurer). About organizational structure and optionally granting permissions.
-- **Permission** = What they can do in the platform (Admin, HR, Financial). System access. See [Permissions](/platform/permissions).
+- **User type**: what kind of member someone is (Scout, Student, Honorary Member). One per member.
+- **Role**: a position they hold (President, Treasurer, Troop Leader). A member can hold several, each with its own term.
+- **Permission**: what they can do in the software. See [Permissions](/platform/permissions).
 
-A member can be a "Volunteer" (type) who serves as "Team Leader" (role) with "HR Local" permission. These are three separate concepts.
+**Built for** organizations whose members are not interchangeable, either because they pay different fees, see different menus, or fill in different forms. **Replaces** a "category" column in a spreadsheet and a separate document listing who holds which office.
 
-<img src="/images/platform/users/roles-list.png" alt="User types and roles configuration page" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
----
-
-## How to access
-
-**Settings** → **Users & Profiles** → **Roles & User Types**
-
-User types and roles share the same management page. User types are marked with a **User Type** badge; entries without the badge are organizational roles.
+<img src="/images/platform/users/roles-list.png" alt="Roles list with Level and Permissions filters, and columns for role, plural name, level tag and attached permissions" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## User Types
+## Where it lives
 
-### Do I need user types?
+**Settings** → **Users & Profiles** → **Roles & User types**, which requires `ADMIN_TENANT` and appears when **Enable Roles** is on. Every role is listed with its plural name, a **Level** tag and any attached permissions. Filter by **Level** or **Permissions**, open the [organisational chart](/platform/organisational-chart), or press **Add role**.
 
-**Yes, if** your members fall into meaningfully different categories:
-- Different fee structures (Student pays less than Professional)
-- Different registration requirements (Leaders need qualifications, Scouts don't)
-- Different communication needs (Volunteers get different newsletters than Alumni)
-- Different access or privileges (only Full Members can vote)
+---
 
-**No, if** all your members are essentially the same. You can always add them later.
-
-### Creating a user type
+## Creating a role or user type
 
 <Steps>
-  <Step title="Go to Roles & User Types">
-    **Settings** → **Users & Profiles** → **Roles & User Types** → click **Create Role**
+  <Step title="Name it">
+    **title** and **Plural title**. The plural, prefilled from the title as you type, is used wherever Orgo lists several holders.
   </Step>
-  <Step title="Enable 'Is User Type'">
-    Toggle **Is User Type** on. This makes it a membership category rather than an organizational role.
+  <Step title="Pick the level">
+    One choice only: **None**, **User type**, **Chapter**, **Parent chapter**, **Organisation**, or one of your unit types. Chapter and Parent chapter need local centers enabled, unit types need units enabled, User type needs **Enable User Types** on.
   </Step>
-  <Step title="Set the name and description">
-    Choose a clear, self-explanatory name. "Active Member" is better than "Type A".
+  <Step title="Attach permissions">
+    Available for every level except User type. Holders gain the ticked permissions and lose them when the role ends.
   </Step>
   <Step title="Save">
-    The user type is now available for assignment.
+    The role is assignable immediately.
   </Step>
 </Steps>
 
-### Assigning user types to members
+<Warning>
+A user type can never carry permissions. The permissions section is hidden as soon as you set the level to **User type**. If a category also needs access, create a separate role for the position and attach the permissions there.
+</Warning>
 
-| Method | How it works | Best for |
-|--------|-------------|----------|
-| **During registration** | Include the "User Type" field on the [Registration Form](/platform/users/registration-form). Members self-select. | When members know their category |
-| **After adhesion approval** | Configure a "User type after approval" in [Adhesion](/platform/users/adhesion) settings. Type is auto-assigned when the application is approved. | Formal membership processes |
-| **Manual assignment** | Admin goes to the member's profile and assigns a type | One-off changes, corrections |
-| **Bulk import** | Assign types during CSV member import | Initial setup, migrations |
+### Extra settings on a user type
 
-### What user types affect
+| Setting | What it does |
+|---|---|
+| **Not eligible for fee** | Never assigned a membership fee, at organization or chapter level |
+| **Parent** | Marks the type used for parent accounts. Requires **Enable Family Members** |
+| **Volunteer** | Marks the type used for volunteers. Requires **Enable Volunteer Roles** |
+| **Select a font color**, **Select a background color** | Colors the type's tag wherever it is displayed |
+| **URL Slug** | Gives the type its own registration page at `/join/<slug>`. A per-type [registration form](/platform/users/registration-form) will not save until the slug is set |
 
-| Feature | How user types interact |
-|---------|----------------------|
-| [Registration Form](/platform/users/registration-form) | Each user type gets its own form with different fields. |
-| [Adhesion](/platform/users/adhesion) | Auto-assign a type when an application is approved. |
-| **Filtering** | Filter the member directory, event attendees, and newsletters by type. |
-| **Fees** | Different types can have different fee structures. |
-| **Reporting** | Generate reports segmented by type. |
-| **Communication** | Send targeted newsletters to specific types. |
-
-<Note>
-  User types don't automatically grant permissions. A "Leader" user type doesn't give someone admin access. For that, use roles with permissions or assign permissions directly.
-</Note>
-
-### User type visibility
-
-Control who can see user type labels in **Settings** → **Users & Profiles** → **Configuration**:
-
-| Setting | Who sees the type label |
-|---------|----------------------|
-| **User** | Everyone |
-| **HR Local** | Local HR and above |
-| **HR Tenant** | Organization-wide HR and above |
-| **Admin Tenant** | Only organization admins |
+<img src="/images/platform/users/user-type-edit.png" alt="Role editor with the level radio group set to User type, and the user type controls below it: Not eligible for fee, Parent, font and background colour, and URL Slug" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Roles
+## Assigning a user type
 
-### Role scopes
+A member has exactly one user type; if someone fits two categories, pick the primary and use a role or tag for the other.
 
-Every role has a scope that determines where it applies:
+- **On the member's profile**: edit the member → **roles** tab → the **userType** selector.
+- **When an admin creates a member**: a user type selector on the create form.
+- **Automatically on registration**: **Default User Type After Registration** stamps a type on every self-registration.
+- **From the registration link**: signing up through `/join/<slug>` applies that type and the matching role.
+- **The applicant chooses**: add the **User Types** field to the general registration form.
+- **On adhesion approval**: approving an [adhesion](/platform/users/adhesion) sets the type configured for successful applications, and emails the member if their type changed.
+- **Bulk import**: set the type during a member [import](/platform/customization/import).
 
-| Scope | Where it applies | Examples |
-|-------|-----------------|----------|
-| **National** | Organization-wide | National President, Secretary General, Board Member |
-| **Local Center** | One specific branch | Branch President, Local Treasurer, Membership Officer |
-| **Parent Local Center** | A parent center and all its children | Regional Director, Area Coordinator |
-| **Unit** | A specific unit or team | Team Leader, Project Manager, Committee Chair |
-
-### Creating a role
-
-<Steps>
-  <Step title="Go to Roles & User Types">
-    **Settings** → **Users & Profiles** → **Roles & User Types** → click **Create Role**
-  </Step>
-  <Step title="Set the basics">
-    **Name** (e.g., "Branch President"), **Plural name** (e.g., "Branch Presidents"), and optionally a **Description**.
-  </Step>
-  <Step title="Choose the scope">
-    Enable one or more: **Is National**, **Is Local Center**, **Is Local Center Parent**, or associate with a Unit Type.
-  </Step>
-  <Step title="Attach permissions (optional)">
-    Select system permissions this role should grant. Everyone assigned this role automatically gets these permissions.
-  </Step>
-  <Step title="Save">
-    The role is now available for assignment.
-  </Step>
-</Steps>
-
-### Role properties
-
-| Property | Description |
-|----------|-------------|
-| **Name** | Role title displayed everywhere |
-| **Name Plural** | Used in listings (e.g., "Presidents") |
-| **Position** | Display order — lower numbers appear first |
-| **Chart Name** | Name shown in organizational charts (if different) |
-| **Description** | Explanation of responsibilities |
-| **Is User Type** | Marks this as a membership category instead of a position |
-
-### Assigning roles to members
-
-**Manual:** Open the member's profile → Edit → **Roles** tab → add the role with optional start/end dates.
-
-**Via Role Groups:** Automatically assign roles based on criteria. [Learn more →](/platform/groups/role-groups)
-
-**Via import:** Bulk-assign roles during CSV member imports.
-
-### Roles with permissions
-
-Instead of assigning permissions to individuals, attach permissions to roles. Everyone with that role automatically gets those permissions.
-
-| Role | Attached permission | What it grants |
-|------|-------------------|---------------|
-| Branch President | ADMIN_LOCAL | Full control of their local center |
-| Regional Director | ADMIN_PARENT_LOCAL | Admin over a region |
-| Membership Officer | HR_LOCAL | Local member management |
-| National Treasurer | FINANCIAL_TENANT | Organization-wide financial access |
-
-**Why this matters:** When someone steps down and a new person takes over, you just reassign the role. The old person loses permissions, the new person gains them. No manual permission juggling.
-
-<Info>
-  For the full list of permission levels, see [Permissions](/platform/permissions).
-</Info>
-
-### Using start and end dates
-
-When assigning a role, set **start** and **end dates** to track terms:
-
-- The role is active only between those dates
-- Permissions attached to the role are only active during the term
-- After the end date, the role becomes historical (visible in history but no longer active)
-
-This is useful for elected positions with fixed terms (President 2025-2026).
+Editing roles on a profile requires `HR_TENANT`, or `HR_LOCAL` over the member's chapter. Local admins can view but not change them unless **Allow Local Admins to Modify User Permissions** is on.
 
 ---
 
-## Common scenarios
+## What a user type actually changes
+
+- **Fees**: a type flagged **Not eligible for fee**, or the type chosen as fee-exempt, drops the member out of fee assignment entirely.
+- **Registration**: each type can have its own [registration form](/platform/users/registration-form), public URL and preselected membership price.
+- **Menu**: categories and items can be shown only to selected types. See [Menu Organizer](/platform/customization/menu-organizer).
+- **Dashboard**: widgets can carry a different image per user type. See [Dashboard Organizer](/platform/customization/dashboard-organizer).
+- **Directory**: the member list can be filtered by type, subject to **Who Can Filter Users by Type**.
+- **Guest accounts**: the type chosen as **Guest User Type** marks its members as guests; approving a resignation switches the member to it.
+- **Units**: a unit type can require its members to hold a specific user type.
+
+---
+
+## Roles and terms
+
+Assign a role from the member's **roles** tab, where each assignment has a **dateBegin** and an optional **dateEnd**. Ending a role ends the permissions it carried, and the assignment stays visible as history. That is why permissions belong on roles rather than people: a handover is one assignment ended and another started.
+
+Where each level applies: **Organisation** is the whole organization, **Chapter** one local center, **Parent chapter** a parent local center and every local center beneath it at any depth, a unit type a specific unit or team of that type, and **None** a label with no scope and no permissions.
+
+A chapter role attaches to the member's own chapter when assigned. A parent-chapter role attaches to the member's own chapter when that chapter is flagged **It's a parent chapter**, and otherwise to the chapter directly above it, never higher. A member whose chapter is neither a parent nor has one cannot hold a parent-chapter role at all. [Role Groups](/platform/groups/role-groups) can also fill groups from role, age, gender, chapter, region or fee tier with no manual assignment.
+
+---
+
+## Settings reference
+
+Under **Settings** → **Users & Profiles** → **Configuration**.
+
+| Setting | Options and effect |
+|---|---|
+| **Enable User Types** | Turns the whole concept on. Off hides the level option, the profile selector and every user type filter |
+| **Enable Roles** | Turns positions on and reveals the Roles & User types screen |
+| **Enable Volunteer Roles** | Adds the **Volunteer** flag to user types |
+| **Who Can See User Types** | All Users, HR Local, HR Tenant, Admin Local, Admin Tenant. Controls where the type label shows (member list, member profile, unit member lists); it does not remove the type from exports or the API |
+| **Who Can Filter Users by Type** | All Users or Admin Tenant. Enforced on the server: filtering by type without the right level is refused |
+| **Default User Type After Registration** | The type stamped on every new self-registration |
+| **Guest User Type** | The type that marks someone as a guest rather than a member |
+
+---
+
+## Common questions
 
 <AccordionGroup>
-  <Accordion title="What's a good set of user types for a typical organization?">
-    Keep it to 3-5 types. Examples:
-
-    **Sports club:** Athlete, Coach, Volunteer, Alumni
-    **Professional association:** Full Member, Associate, Student, Honorary
-    **Youth org:** Scout, Leader, Parent, Volunteer
-    **Community:** Member, Volunteer, Supporter
-
-    You can always add more later. Starting with too many creates confusion.
+  <Accordion title="How many user types should we have?">
+    Add a type when it changes something concrete: a different fee, registration form, menu or report. If it only changes what you call someone, use a tag.
   </Accordion>
 
-  <Accordion title="How do I model my organization's structure with roles?">
-    Think about positions, not people:
-
-    1. **National level:** President, VP, Secretary, Treasurer, Board Members → National roles
-    2. **Regional level:** Regional Directors → Parent Local Center roles
-    3. **Local level:** Branch President, Local Treasurer → Local Center roles
-    4. **Team level:** Team Leader, Project Manager → Unit roles
-
-    Assign people to roles. The [organizational chart](/platform/organisational-chart) auto-generates from this structure.
+  <Accordion title="Is 'Leader' a user type or a role?">
+    A category of member is a user type; a post someone is elected or appointed to is a role with the right level and permissions. Need both, create both: they are separate rows on the same screen.
   </Accordion>
 
-  <Accordion title="Should I attach permissions to roles or assign them directly?">
-    **Role-based permissions** when the permission should follow the position. Every Branch President should have ADMIN_LOCAL — attach it to the role.
-
-    **Direct permissions** for exceptions. Someone who needs temporary financial access — assign FINANCIAL_LOCAL directly on their profile.
-
-    Role-based is cleaner. Direct is for one-offs.
-  </Accordion>
-
-  <Accordion title="Can a member have multiple user types?">
-    No — a member has one user type. If someone is both a "Volunteer" and an "Alumni", decide which is primary, or create a combined type like "Active Alumni". For multiple labels, consider using Tags instead.
-  </Accordion>
-
-  <Accordion title="I'm confused — is 'Leader' a user type or a role?">
-    It depends on context:
-    - If "Leader" is a **membership category** (like Scouts who've graduated), it's a **user type**
-    - If "Leader" is a **position** (like Team Leader of Unit 5), it's a **role**
-
-    If you need both, create a "Leader" user type AND specific role positions like "Unit Leader" with the right scope and permissions.
-  </Accordion>
-
-  <Accordion title="A member is changing positions — how do I handle it?">
-    Go to their profile → Roles tab → set an end date on the old role → add the new role with a start date. If both roles have permissions, the transition happens automatically.
+  <Accordion title="The /join link for a type does not work">
+    The type has no **URL Slug**, or its registration form is not saved and active. Set the slug on the type, then configure the form under **Registration Form**.
   </Accordion>
 </AccordionGroup>
 
@@ -228,8 +134,8 @@ This is useful for elected positions with fixed terms (President 2025-2026).
 
 ## Related
 
-- [Permissions](/platform/permissions) — System permission levels and access control
-- [Registration Form](/platform/users/registration-form) — Per-type registration forms
-- [Role Groups](/platform/groups/role-groups) — Automatic role assignment based on criteria
-- [Organizational Chart](/platform/organisational-chart) — Visual representation of your role structure
-- [Adhesion](/platform/users/adhesion) — Auto-assign user type on approval
+- [Permissions](/platform/permissions): what each permission level unlocks
+- [Registration Form](/platform/users/registration-form): per-type forms and public sign-up links
+- [Role Groups](/platform/groups/role-groups): groups that fill themselves from roles and member data
+- [Organizational Chart](/platform/organisational-chart): the structure your roles produce
+- [Adhesion](/platform/users/adhesion): assigning a type when an application is approved

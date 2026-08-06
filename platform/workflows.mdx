@@ -1,0 +1,170 @@
+---
+title: 'Workflows'
+description: 'Automate emails and tagging: pick an event in Orgo, add a delay if you want one, and let the platform do the rest'
+"og:title": 'Workflows | Orgo'
+"og:description": 'Automate emails and tagging: pick an event in Orgo, add a delay if you want one, and let the platform do the rest'
+"twitter:title": 'Workflows | Orgo'
+"twitter:description": 'Automate emails and tagging: pick an event in Orgo, add a delay if you want one, and let the platform do the rest'
+---
+
+A workflow watches for something happening in your organization (a member registers, a contract is signed, a membership expires) and reacts: send an email, add a tag, remove a tag. You build it on a canvas by dragging a trigger, connecting an action to it, and switching it on.
+
+**Built for** onboarding sequences, renewal nudges, and any follow-up you currently send by hand.
+
+**Replaces** exporting a list every Monday and pasting it into a mail tool.
+
+**Settings → Customization → Workflows**
+
+<Note>
+  Requires **ADMIN_TENANT**. Every workflow endpoint, including the trigger and action catalogues the builder loads, checks the tenant admin role server side.
+</Note>
+
+<img src="/images/platform/workflows/workflows-list.png" alt="Workflows list showing workflow cards with trigger and action counts and an active toggle on each" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## The list
+
+Each card shows the workflow's name, description, trigger and action counts, when it was last saved, and an **Active** / **Inactive** switch you can flip without opening it. Clicking the card opens the builder; the three-dot menu offers:
+
+- **View Logs**: every run of that workflow.
+- **Clone**: a full copy, always created inactive, with " (Copy)" appended to the name.
+- **Delete**: permanent, and it takes the triggers, conditions and actions with it.
+
+---
+
+## Building a workflow
+
+<Steps>
+  <Step title="Name it">
+    The name sits in the top bar, beside Save. An unnamed workflow saves as "Untitled Workflow".
+  </Step>
+  <Step title="Drag a trigger onto the canvas">
+    The left sidebar lists every trigger, grouped by category and searchable. Drop one on the canvas and it becomes a **When** node.
+  </Step>
+  <Step title="Add an action under it">
+    Drag **Send Email**, **Add Tag** or **Remove Tag** from the sidebar, or click **Add action** on the prompt below a node. Actions become **Then** nodes wired to the trigger above them.
+  </Step>
+  <Step title="Configure each node">
+    Click a node to open its settings, then **Done** to apply.
+  </Step>
+  <Step title="Save, then test">
+    **Save** persists the workflow and the canvas layout. **Test** only becomes available once the workflow is saved and has at least one trigger and one action.
+  </Step>
+  <Step title="Switch it on">
+    Flip the **Active** switch. Activation is refused server side unless the workflow has at least one trigger and at least one action, so a canvas holding only a trigger, or only notes, stays inactive.
+  </Step>
+</Steps>
+
+A **Text Note** can also sit on the canvas: an annotation for whoever edits the workflow next, never executed.
+
+<img src="/images/platform/workflows/workflow-builder.png" alt="Workflow canvas with a trigger node connected to a send email action node, and the trigger and action palette in the left sidebar" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Triggers
+
+The catalogue, grouped as it appears in the dropdown:
+
+| Category | Triggers |
+|---|---|
+| User Events | User Registered, Email Verified, User Status Changed, User Approved, User Activated, User Deactivated, Profile Updated, Profile Completed, User Inactive (X Days), Tag Added, Tag Removed |
+| Adhesion Events | Adhesion Created, Adhesion Submitted, Adhesion Status Changed, Adhesion Approved, Adhesion Rejected |
+| Course Events | Course Enrolled, Course Completed, All Onboarding Courses Completed |
+| Contract Events | Contract Assigned, Contract Signed, Contract Completed, Contract Expiring Soon, Contract Expired |
+| Membership Events | Membership Payment Success, Membership Payment Failed, Membership Expiring Soon, Membership Expired, Membership Renewed |
+| Identity Events | Identity Submitted, Identity Validated, Identity Rejected |
+| Donation Events | Donation Payment Success |
+| Event Attendance | Event Attendance |
+
+Three triggers narrow further with a filter on a specific record: **Donation Payment Success** by donation product, **Event Attendance** by event, and **Tag Added** / **Tag Removed** by tag. An empty selection means "any". The event picker loads up to 500 events alphabetically, so a very large calendar will not offer every event as a filter option.
+
+**User Inactive (X Days)** asks for a number of days between 1 and 365. It fires once, on the day a member crosses that threshold, based on the last time their record changed, and is evaluated by a daily job at 06:00 UTC.
+
+Person-related triggers can also be restricted **by user type** with checkboxes; all unchecked means every type.
+
+<img src="/images/platform/workflows/workflow-trigger-config.png" alt="Trigger configuration panel with the event type selector set to User Approved and, below it, the Filter by User Type checkboxes for every user type the organization uses" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Actions
+
+| Action | What it does |
+|---|---|
+| **Send Email** | Sends an email you write in the editor, to the person the trigger was about |
+| **Add Tag** | Adds a tag to the member's profile. You can pick an existing tag or type a new name and create it inline |
+| **Remove Tag** | Removes a tag from the member's profile |
+
+**Send Email** needs a **Subject Line** and **Email Content** in the rich editor; the builder refuses to save without both, as tag actions refuse to save without a tag. These placeholders are replaced per recipient at send time, in the subject line as well as in the body. The **Insert Placeholder** control writes into the body editor only, so type them by hand in the subject.
+
+`{{firstName}}` · `{{lastName}}` · `{{fullName}}` · `{{userEmail}}` · `{{userCompanyName}}` · `{{platformLink}}` · `{{profileLink}}` · `{{unsubscribeUrl}}`
+
+### Delays
+
+Every action has an optional **Delay**: days, hours (0 to 23), minutes (0 to 59). Without one the action runs as soon as the trigger fires. With one, Orgo records the action as scheduled and a job picks it up every 5 minutes once it is due, so it runs within about five minutes of its scheduled time.
+
+<Warning>
+  A delayed action that fails is recorded as failed and is not retried automatically.
+</Warning>
+
+<img src="/images/platform/workflows/workflow-action-config.png" alt="Send Email action configuration with the action type chosen, a subject line carrying a placeholder, the email body in the rich text editor, and the delay section expanded showing the days, hours and minutes inputs set to 0, 0 and 5" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Testing before you switch it on
+
+**Test** is a dry run against yourself: it checks the configuration and reports whether the workflow would run, without sending anything or changing any record. It tests the stored version, not the unsaved canvas, so save first.
+
+A dry run is not a delivery test. To confirm an email's wording and placeholders, trigger the workflow once on a real test account.
+
+---
+
+## Execution logs
+
+Open **View Logs** from the list, or **Logs** from the builder's top bar. Each row is one run: the date, which trigger fired, who it ran for, the status, and how long it took. Filter by status, or hit **Refresh**.
+
+| Status | Meaning |
+|---|---|
+| **Pending** | Queued, not started yet |
+| **In Progress** | Running now |
+| **Completed** | Every action either ran or was scheduled |
+| **Partial** | At least one action failed |
+| **Failed** | The run itself errored out |
+
+The eye icon opens the detail view: start and finish timestamps, the person, any error message, a timestamped step-by-step execution log, and the raw trigger payload. A run for a non-member (an external event attendee held as a contact) shows the person with an **External** tag.
+
+Workflows run in the background, so a run appears in the log a moment after the triggering event.
+
+<img src="/images/platform/workflows/workflow-execution-logs.png" alt="Workflow execution log table with date, trigger, user, status and duration columns, one row per run covering Completed, Partial, Failed, In Progress and Pending, above a status filter and a Refresh button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Things worth knowing
+
+- **Actions belong to the trigger they are connected to.** With two triggers on one canvas, only the actions wired to the trigger that fired will run.
+- **A clone does not carry those connections over.** The drawing is copied, the links are not, so every action in the copy would run for every trigger. Open the copy, check the wiring, save once before activating.
+- **Editing replaces, it does not merge.** Saving rewrites the workflow's triggers and actions from what is on the canvas.
+- **Deactivating keeps everything.** An inactive workflow stops reacting to events but keeps its configuration and its logs.
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="The workflow is active but nothing happens">
+    Check the execution log first. No rows means the trigger never matched: confirm the event really occurs in your organization, and that the user type filter or the product/event/tag filter is not excluding everyone. **Completed** rows with no email mean the action was configured but delivery failed, which the detail view's execution log names.
+  </Accordion>
+  <Accordion title="A delayed email never arrived">
+    Open the run in the execution log. A delayed action is logged as scheduled with its target time. If it failed, the reason is stored against it and it is not retried on its own: fix the cause and trigger the workflow again.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related
+
+- [Email templates](/platform/emails/email-templates)
+- [Notifications](/platform/notifications)
+- [Activity log](/platform/logs)
+- [Permissions](/platform/permissions)
+- [Webhooks and the API](/platform/api)

@@ -1,143 +1,115 @@
 ---
 title: 'Dashboard Organizer'
-description: 'Choose which widgets appear on the member dashboard and in what order'
+description: 'Build the member dashboard from content sections and widget grids, by drag and drop'
 "og:title": 'Dashboard Organizer | Orgo'
-"og:description": 'Choose which widgets appear on the member dashboard and in what order'
+"og:description": 'Build the member dashboard from content sections and widget grids, by drag and drop'
 "twitter:title": 'Dashboard Organizer | Orgo'
-"twitter:description": 'Choose which widgets appear on the member dashboard and in what order'
+"twitter:description": 'Build the member dashboard from content sections and widget grids, by drag and drop'
 ---
 
-The dashboard is the first thing members see after logging in. The Dashboard Organizer lets you create categories of widgets, choose layout types, and arrange everything by drag-and-drop so the most important information is front and center.
+**Built for** organizations that want the dashboard to lead with their own priorities.
+**Replaces** a fixed home page everyone scrolls past.
 
-<img src="/images/platform/customization/dashboard-organizer.png" alt="Dashboard organizer with widget toggles and drag ordering" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+The Dashboard Organizer composes the member dashboard from categories. A category is either a **content section** Orgo fills automatically (latest discussions, upcoming events, groups, member suggestions) or a **widget grid** you fill with your own tiles.
+
+<img src="/images/platform/customization/dashboard-organizer.png" alt="Dashboard organizer in edit mode with the Dashboard Elements palette on the right, holding Available Categories, Widget Grids and Available Widgets, and the placed dashboard sections on the left: Latest Discussions, a Member Shortcuts widget grid and Latest Events" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 **Settings → Customization → Dashboard Organizer**
 
 <Note>
-  Requires **Tenant Admin** permissions.
+  Requires **ADMIN_TENANT** and **Use Custom Dashboard**, a switch under **Settings → Modules → Users & Profiles → Advanced Settings**. Its own help text says it: *when enabled, the home page shows the configurable dashboard with widgets instead of the default feed*. While it is off, this page is hidden from Settings and redirects to the dashboard.
 </Note>
 
 ---
 
-## How to configure the dashboard
+## Building the dashboard
 
 <Steps>
-  <Step title="Enter edit mode">
-    Go to **Settings → Customization → Dashboard Organizer** and click the **Edit** toggle in the top-right corner to switch from preview to edit mode.
+  <Step title="Open the page">
+    It opens in edit mode already, with the palette on the right and a grip handle and delete button on every category. After you press **Save Changes** it drops back to a plain preview, and an **Edit Dashboard Layout** button brings the palette back.
   </Step>
-  <Step title="Add or manage categories">
-    Categories are sections on the dashboard, each with a name and a layout type. Click **Add Category** to create a new section. Edit the category name inline by clicking on it.
+  <Step title="Drag a category onto the page">
+    Drop it between existing categories to control where it lands. A blue line shows the insertion point.
   </Step>
-  <Step title="Choose a layout type for each category">
-    Each category has a layout that determines how its content displays:
-    - **Discussions** — shows recent discussion threads
-    - **Events** — shows upcoming events
-    - **Groups** — shows the member's group memberships
-    - **User Recommendations** — suggests members to connect with
-    - **Grid (3/4/6/8/16 items)** — a grid of custom widgets (links, photos, weather, discussions)
+  <Step title="Fill widget grids">
+    A grid shows empty slots. Click one to open the widget picker, or drag a widget straight from the palette into a slot. Drag a placed widget onto another slot to swap them.
   </Step>
-  <Step title="Add widgets to grid categories">
-    For grid-layout categories, add individual widgets:
-    - **Link** — custom shortcut buttons with icons (e.g., "Create Event", "View Members")
-    - **Discussion Namespace** — embed a specific discussion topic
-    - **Weather** — local weather widget
-    - **Photo** — image display widget
+  <Step title="Configure each widget">
+    Click a placed widget to open its settings: title, icon, background colour and its type-specific options.
   </Step>
-  <Step title="Reorder by dragging">
-    Drag categories up or down to set their display order. The first category appears at the top of the dashboard. Within grid categories, drag individual widgets to reorder them.
+  <Step title="Rename and reorder">
+    Click a category name to edit it inline. Drag the grip handle to move a category up or down. The first category is the top of the dashboard.
   </Step>
-  <Step title="Toggle categories active/inactive">
-    Each category has an active/inactive toggle. Inactive categories are hidden from the dashboard but preserved in the organizer for easy re-activation.
-  </Step>
-  <Step title="Save">
-    Click **Save**. The updated dashboard layout applies to all members immediately.
+  <Step title="Save Changes">
+    The button stays disabled until something has actually changed. Nothing is applied to members until you press it.
   </Step>
 </Steps>
 
 ---
 
-## Category layout types
+## Content sections
 
-| Layout type | What it shows | Best for |
-|------------|---------------|----------|
-| **Discussions** | Latest discussion threads from the member's groups | Active community forums |
-| **Events** | Upcoming events chronologically | Organizations that run regular events |
-| **Groups** | The member's group memberships with quick access | Members in multiple groups |
-| **User Recommendations** | Suggested members to connect with | Growing communities, networking |
-| **Grid (3 items)** | 3 custom widgets in a row | Quick action buttons |
-| **Grid (4 items)** | 4 custom widgets in a row | Feature shortcuts |
-| **Grid (6 items)** | 6 custom widgets in two rows | Balanced shortcuts grid |
-| **Grid (8 items)** | 8 custom widgets in two rows | Extended link collection |
-| **Grid (16 items)** | Up to 16 widgets in a multi-row grid | Comprehensive link board |
+Orgo fills these; there is nothing to configure inside them.
+
+| Palette name | What members see |
+|---|---|
+| **Latest Discussions** | Recent discussion cards from the groups they belong to |
+| **Latest Events** | Upcoming events as a horizontal card strip |
+| **Community Groups** | The groups available to them, as a grid |
+| **Discover members** | Suggested members to connect with, each with a connect button |
+
+Each can be added once. Once it is on the dashboard it disappears from the palette. **Discover members** only appears in the palette when **User Recommendations** is on (**Settings → Modules → Users & Profiles → Advanced Settings**), and it is hidden from the dashboard again if that switch is later turned off.
 
 ---
 
-## Recommended setups
+## Widget grids
 
-### Activity-focused organization (events, meetups)
+The palette offers one grid category, **Widget Grid (3-16 widgets)**. It starts with three slots and grows a slot at a time as you fill it, up to sixteen. Add as many grid categories as you need.
 
-1. Welcome Message category
-2. Events category (upcoming events)
-3. Grid (3) with quick links: "Create Event", "My Calendar", "Browse Groups"
-4. Discussions category
+| Widget | What it does | Configuration |
+|---|---|---|
+| **Link Widget** | A tile that opens an address | **Link URL**, plus an optional **Widget Image** you upload |
+| **Weather Widget** | Current weather for a place | **Location** (city search) and **Temperature Unit**: Celsius, Fahrenheit or Kelvin |
+| **Discussion Category** | A tile that jumps into discussions | **Discussion Category** to open, or **All Discussions**, plus an optional image |
+| **Photo Widget** | An image tile, rendered double width | A **Default Photo**, plus optional **User Type Specific Photos** so different member types see different images in the same slot |
 
-### Communication-focused organization (forums, updates)
+Every widget also takes a **Widget Title**, an **icon** picked from a searchable list (or none), and a **Background Color**. Deleting a widget removes any images it held.
 
-1. Welcome Message category
-2. Discussions category
-3. Events category
-4. Grid (4) with links to key resources
+<Note>
+  Organizations set up before the dynamic grid may still have fixed grids of 3, 4, 6, 8 or 16 slots. Those keep working exactly as before; only new grids use the flexible one.
+</Note>
 
-### Simple community
+---
 
-1. Welcome Message category
-2. Events category
-3. Groups category
+## Where the configured dashboard appears
+
+With the Custom Dashboard feature on, the member dashboard at **/dashboard** renders your configured categories at the top, followed by the standard dashboard content. Without the feature, members get Orgo's default feed dashboard and this page is unavailable.
+
+The layout is responsive: grids sit side by side on desktop and stack into fewer columns on mobile. Category order is the same on both, so put the thing you most want seen first.
 
 <Tip>
-  Less is more. 3-5 categories is plenty. An overloaded dashboard is as useless as an empty one — members don't know where to look.
+  Three to five categories is usually enough. A long dashboard is scrolled past as fast as an empty one.
 </Tip>
-
----
-
-## Layout and responsiveness
-
-The dashboard renders in a responsive grid:
-- **Desktop:** Categories display in their full layout (grids show columns side-by-side)
-- **Mobile:** Single column, categories stacked vertically. Grid items wrap into fewer columns.
-
-The order you set determines priority — top categories appear first on both desktop and mobile. On mobile, this matters most since members scroll vertically through all content.
-
----
-
-## Real-world example
-
-> **Scenario**: A youth organization with 3,000 members, focused on events and group activities.
-
-1. **Welcome Message** — a personalized greeting using `{firstName}` so each member sees their own name.
-2. **Events** (system layout) — Shows next 5 upcoming activities automatically
-3. **Grid (4)** — Four quick links: "Join an Event", "My Group", "Discussion Forum", "My Profile"
-4. **Groups** (system layout) — Shows the member's patrol/troop memberships
-5. **Discussions** (system layout) — Latest 5 discussion posts from their groups
-
-Result: Members log in and immediately see what's happening, can take action with one click, and catch up on group conversations — all without navigating away from the dashboard.
 
 ---
 
 ## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="Members skip the dashboard and go straight to events">
-    That's fine — it means they know where they're going. Keep the dashboard useful for members who don't yet have a specific destination. Upcoming Events and Recent Discussions are good default categories for casual browsing.
+  <Accordion title="Dashboard Organizer is not in my Settings menu">
+    Turn on **Use Custom Dashboard** under **Settings → Modules → Users & Profiles → Advanced Settings**. Until then the dashboard is Orgo's default feed and cannot be composed.
   </Accordion>
-  <Accordion title="I want different dashboards for admins and members">
-    The Dashboard Organizer creates one layout for everyone. However, some widgets and content adapt automatically based on the member's role — admins may see additional statistics or management shortcuts that regular members don't.
+  <Accordion title="Save Changes is greyed out">
+    Nothing has changed yet. The button enables on the first real edit. Renaming a category only counts once you confirm the inline edit.
   </Accordion>
-  <Accordion title="The dashboard feels stale — nothing changes">
-    Enable dynamic categories: Events (changes as events approach), Discussions (changes as people post), and User Recommendations (changes as the community grows). Update the Welcome Message regularly. Static grid links don't change — balance them with dynamic content.
+  <Accordion title="A content section is missing from the palette">
+    Each is single-use: if it is already on the dashboard it will not appear again. **Discover members** additionally requires member recommendations to be enabled.
   </Accordion>
-  <Accordion title="A category I created isn't showing on the dashboard">
-    Check that the category is set to **Active**. Inactive categories are hidden from members but remain in the organizer. Also verify that the category has at least one widget or content source — empty categories may not render.
+  <Accordion title="A section shows nothing for some members">
+    Content sections render each member's own data. Latest Discussions is empty for someone in no groups; Latest Events is empty when nothing upcoming is visible to them. Pair a content section with a widget grid so the dashboard is never blank.
+  </Accordion>
+  <Accordion title="I want a different dashboard per role">
+    The layout is one for the whole organization. Only the **Photo Widget** varies by audience, through its user type specific photos. For role-specific messaging use [Dashboard Welcome](/platform/customization/dashboard-welcome), which does target by user type.
   </Accordion>
 </AccordionGroup>
 
@@ -145,5 +117,8 @@ Result: Members log in and immediately see what's happening, can take action wit
 
 ## Related
 
-- [Dashboard Welcome](/platform/customization/dashboard-welcome) — The welcome message widget
-- [Menu Organizer](/platform/customization/menu-organizer) — Sidebar navigation customization
+- [Dashboard Welcome](/platform/customization/dashboard-welcome) - the greeting above the dashboard
+- [Menu Organizer](/platform/customization/menu-organizer) - the sidebar equivalent
+- [Discussions](/platform/discussion) - what the discussion sections and widgets point at
+- [Events](/platform/events) - what the events section shows
+- [Customization](/platform/customization) - everything under Settings → Customization

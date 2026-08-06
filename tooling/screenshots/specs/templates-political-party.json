@@ -1,0 +1,78 @@
+[
+  {
+    "id": "party-application-steps",
+    "image": "/images/platform/templates/political-party-application-steps.png",
+    "usedOn": [],
+    "tenant": "t187c",
+    "route": "/adeziune?u=312715",
+    "routeHint": "DROPPED, not capturable from the obfuscated demo database. Two blockers found: (1) client/src/router.js registers the name 'Adhesion' twice, on '/adhesion' (:431) and on '/adeziune' (:449); Vue Router drops the earlier record when a duplicate name is added, so '/adhesion' 404s and only '/adeziune' resolves. (2) AdhesionNew.vue:912 reads the stepper's application from response.data.adhesion of GET /users/{id}, which maps to user.adhesion_id (User.php:488). Every user row in tenant 282 has adhesion_id NULL even where an adhesion row exists (4114 for user 312715), so the page renders the 'Start adherence' card instead of the numbered step cards. Rendering the steps would mean writing user.adhesion_id in the demo database or pressing Start adherence, both of which mutate demo data.",
+    "actions": [
+      "wait 2500"
+    ],
+    "waitFor": "text=Complete the adhesion profile form",
+    "viewport": "desktop",
+    "alt": "Membership application page showing the numbered step cards for uploading the identity document, completing the adhesion profile form, signing and sending",
+    "status": "dropped",
+    "notes": "Superseded by party-adhesion-review-log, which shows one application and its review chain from the queue."
+  },
+  {
+    "id": "party-adhesion-review-log",
+    "image": "/images/platform/templates/political-party-adhesion-review-log.png",
+    "usedOn": [
+      "platform/templates/political-party.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/adhesions",
+    "routeHint": "Management -> Adhesions, then the Log action on the first queue row (adhesion 4146, status success, the full chain: sent Jan 16 2023, validated Jan 18, interviewed Jun 12, decided Jul 31). The log opens as a modal over the queue: List.vue:600 embeds Logs.vue with :adhesion-id and :is-embedded=true. Do NOT navigate to /adhesion/4146/log directly: Logs.vue:254 defines itemIdentifier() as 'return this.adhesionId || this.itemIdentifier', which is self-referential, so with no adhesionId prop the standalone route requests /api/v1/adhesion/undefined and renders an empty screen. That is why the earlier capture of this id came out blank.",
+    "actions": [
+      "wait 2500",
+      "click Log",
+      "wait 2500"
+    ],
+    "waitFor": "text=Decision by",
+    "viewport": "desktop",
+    "alt": "Adhesions queue with the Log panel open over it, listing the dated entries for one application: validated by, interview by, decision by with a success tag, and updated by",
+    "status": "new",
+    "notes": "The System logs block underneath renders only when log rows exist for this adhesion_id; the obfuscated demo database has none for tenant 282, so the field-level change list is absent. The alt text must not describe it."
+  },
+  {
+    "id": "party-identity-review",
+    "image": "/images/platform/templates/political-party-identity-review.png",
+    "usedOn": [
+      "platform/templates/political-party.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/identity/admin/29472",
+    "routeHint": "Management -> Adhesions -> the Identity control on a queue row, or a member's identity record. Route ValidateIdentityAdmin, client/src/router.js:731; the :item param is the numeric identity id (List.vue:396). Identity 29472 belongs to member 312669 and is one of the three records still in 'pending' status in tenant 282, which is what makes the Validate button and the Reject reason dropdown render (ValidateIdentityByAdmin.vue:162 and :190).",
+    "actions": [
+      "wait 2500"
+    ],
+    "waitFor": "text=Validate",
+    "selector": ".columns > .column.pl-6",
+    "viewport": "desktop",
+    "alt": "Review column of a pending identity record, with the Validate button beside the Reject reason picker and a Change identity data button, above the locked first name, last name, personal number, date of birth, document serial and number, and issue and expiry date fields",
+    "status": "new",
+    "notes": "Recaptured 2026-08-05 with two fixes. (1) Crop: every identity row in the obfuscated demo tenant has media_id NULL, so ValidateIdentityByAdmin.vue's left column (the img bound to mediaSrc(item.media), plus the rotate glyph and the 'Select a new identity image' upload) rendered as roughly 45% of empty white, while the prose above the image in political-party.mdx promised a document. Seeding a document is not reachable from here: media.content_url is varchar(255) so a data URI does not fit, and pointing it at a real hosted scan would be an identity leak. The capture is therefore cropped to the review column and the prose reworded to say so. (2) Data: the record showed three different people, heading 'Ines Whitfield' (from member 312669), form fields 'Marcus Bennett', uploader 'Amelia Bennett' (contact 9), with date_birth, id_start_date and id_end_date all 27/10/2022 and placeholder serial XX / 000026. Identity 29472 now reads Ines Whitfield throughout, DOB 1996-04-02 matching user 312669, serial NW number 482913, issued 2021-05-18 and expiring 2031-05-17, so the two validity ticks render green. uploaded_by_id was set to 312669 and uploaded_by_external_id cleared, so the member uploaded her own document. Note for whoever holds users/identity-admin-review.png: that spec targets identity 29447, a different row (member 209219, status rejected), so the two do not collide."
+  },
+  {
+    "id": "party-privacy-visibility",
+    "image": "/images/platform/templates/political-party-privacy-visibility.png",
+    "usedOn": [
+      "platform/templates/political-party.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/users",
+    "routeHint": "Settings (gear) -> Users & Profiles -> Configuration -> Privacy & Visibility. The selector crops to that one settings-section, the same way the existing adhesion-settings capture crops to Adhesion & Membership. The Custom Fields -> Configuration bounce is the same workaround: UsersModuleConfig copies the tenant into local data in created() and the capture session starts from a vuex-persistedstate snapshot, so re-entering the tab rebuilds the section from the refreshed store.",
+    "actions": [
+      "wait 2500",
+      "click text=Custom Fields",
+      "click text=Configuration"
+    ],
+    "waitFor": "text=Restrict Profiles to Shared Local Centers",
+    "selector": ".settings-section:has(h3:text-is(\"Privacy & Visibility\"))",
+    "viewport": "desktop",
+    "alt": "Privacy and Visibility settings section with the Who Can See Members in General Groups and Who Can See Local Center Members selectors above the Restrict Profiles to Shared Local Centers and Allow Local Admins to Modify User Permissions switches",
+    "status": "keep",
+    "notes": "Verified visually 2026-08-05: the crop shows all four settings from client/src/config/module-settings/users.js:273-300 (seeMembersInGeneralUnitGroup, seeMembersInLocalCenter, privatizeUserProfiles, allowLocalAdminsToModifyUserPermissions), which is exactly the set the playbook's table names."
+  }
+]

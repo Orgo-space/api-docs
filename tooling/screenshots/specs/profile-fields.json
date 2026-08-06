@@ -1,0 +1,70 @@
+[
+  {
+    "id": "profile-form-builder",
+    "image": "/images/platform/users/profile-form-builder.png",
+    "usedOn": [
+      "platform/users/profile-fields.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/users/forms/profile",
+    "routeHint": "Settings (gear) -> Modules -> Users & Profiles -> Profile Form",
+    "actions": [],
+    "waitFor": "text=Available Fields",
+    "viewport": "desktop",
+    "alt": "Profile Form builder with an Available Fields panel split into System Fields and Custom Fields, and a Profile Fields panel listing the chosen fields with Required checkboxes",
+    "status": "new",
+    "note": "Existing image matches master exactly (two-panel builder, System Fields / Custom Fields segmented control, Required checkboxes, sticky Save). No recapture needed. If it is recaptured anyway, scroll so at least one CUSTOM field row is visible, because the Immutable checkbox only renders on custom rows and is currently not shown in the frame."
+  },
+  {
+    "id": "custom-fields-list",
+    "image": "/images/platform/users/custom-fields-list.png",
+    "usedOn": [
+      "platform/users/custom-fields.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/users/custom-fields",
+    "routeHint": "Settings (gear) -> Modules -> Users & Profiles -> Custom Fields",
+    "actions": [],
+    "waitFor": "text=Create Custom Field",
+    "viewport": "desktop",
+    "alt": "Custom fields settings listing the organisation's custom fields with their field types and custom_field_<id> reference tags, plus the Interest Custom Field selector",
+    "status": "new",
+    "note": "Existing image matches master, including the custom_field_<id> reference tags and the Interest Custom Field selector at the bottom, both of which the page now documents."
+  },
+  {
+    "id": "tags-list",
+    "image": "/images/platform/users/tags-list.png",
+    "usedOn": [
+      "platform/users/custom-fields.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/users/tags",
+    "routeHint": "Settings (gear) -> Modules -> Users & Profiles -> Tags",
+    "actions": [],
+    "waitFor": "text=Create tag",
+    "viewport": "desktop",
+    "alt": "Tags settings page listing the organisation's tags with edit controls",
+    "status": "new",
+    "note": "Matches master. Confirms tags carry a name only (no colour), which is why the old colour claim was deleted from the page."
+  },
+  {
+    "id": "custom-field-editor",
+    "image": "/images/platform/users/custom-field-editor.png",
+    "usedOn": [
+      "platform/users/custom-fields.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/users/custom-fields",
+    "routeHint": "Settings (gear) -> Modules -> Users & Profiles -> Custom Fields, then click the pencil button on a choice-type field. The row expands into an inline editor and the selector crops to that card. The pencil is addressed through the row text ('T-Shirt Size', a dropdown field) rather than by index: the old '.button.is-small.is-rounded >> nth=2' never landed, so this shot came out byte-identical to custom-fields-list.",
+    "actions": [
+      "wait 2000",
+      "click .card:has-text(\"T-Shirt Size\") button.is-small.is-rounded"
+    ],
+    "waitFor": "text=Visibility",
+    "selector": ".card:has(section.o-minwidth.p-4)",
+    "viewport": "desktop",
+    "alt": "Custom field editor showing the Title input, the Field type dropdown, the draggable option list, the Visibility selector set to Public, and the Save, Cancel and Remove buttons",
+    "status": "new",
+    "note": "Must be captured while signed in as an ADMIN_TENANT user: the encryption toggle only renders for ADMIN_TENANT and only on input/number/textarea/date fields. Ideal frame: a Dropdown or Checkboxes field so the draggable option list is visible, scrolled far enough to include the Visibility selector. If the encryption toggle is wanted in frame too, open an 'input' type field such as 'Troop Number' or 'Emergency Contact Phone' instead (options list will be absent), and update the alt text accordingly."
+  }
+]

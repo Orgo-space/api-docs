@@ -1,0 +1,54 @@
+[
+  {
+    "id": "chapter-fee-settings",
+    "image": "/images/platform/fees/local-fee-settings.png",
+    "usedOn": [
+      "platform/local-group-fees/create-local-fees.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/local/settings/fee?localCenter=15658",
+    "routeHint": "Log in as a tenant admin, open the Virginia Beach chapter (local_center 15658: fee_product_id 973, fee_default_product_price_id 2102, its own Stripe account), then Fees settings in the chapter settings sidebar. Sidebar entry labels changed since the previous capture: the first entry now reads Chapter, not Local group.",
+    "actions": [],
+    "waitFor": "text=Default price",
+    "viewport": "desktop",
+    "selector": ".o-content",
+    "alt": "Chapter fee settings showing the Product and Default price selectors with Add price and Save",
+    "status": "new",
+    "notes": "This spec used to point at localCenter=1475, which is NOT a Northwind chapter - it is a real Romanian scout group (aventurapitesti.ro, its own live Stripe account) carried over in the shared local_center table. Repointed to 15658, which genuinely belongs to t187c. Cropped to .o-content the same way stripe-connect-start is: the whole subject is a heading, two selects and two buttons, so a full 1920x1080 frame is about 85 percent empty grey."
+  },
+  {
+    "id": "chapter-member-fees-table",
+    "image": "/images/platform/fees/chapter-member-fees.png",
+    "usedOn": [
+      "platform/local-group-fees/member-fees.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/fee/members-local-center?localCenter=15658&localCenterName=Virginia Beach",
+    "routeHint": "Sidebar Finance -> Local members fees, or open the Virginia Beach chapter (id 15658, tenant 282) and click Fees in the chapter header. The previous route pointed at local center 1475, which belongs to a different tenant, so the table came back empty. Leave the Organisation/Local toggle on Local so the chapter fee columns are shown, keep the year at the current one and the status filter on Active.",
+    "actions": [
+      "click text=Local",
+      "wait 2500"
+    ],
+    "waitFor": "text=Member fees",
+    "viewport": "desktop",
+    "alt": "Member fees table for a chapter with member, unit and fee tier columns and one column per fee period, several periods ticked and the running total and Pay button above the table",
+    "status": "new",
+    "notes": "Every Virginia Beach member now points at that chapter's own fee price, so the Fee column resolves instead of rendering an empty select, and five periods are staged in fee_temporary so the total and the Pay button are not zero. The Unit column stays empty: this tenant has no sub-units under a chapter. Recaptured 2026-08-06 for PRODUCT-BUGS #12: all four Virginia Beach chapter-fee payments on product 973 were stored with is_refunded = 0 and rendered as unsettled. Julian Sorensen and Nora Vargas now carry green settled ticks (73.64 and 24.55). This route has no hasAppSidebarMenu in router.js:2261, so the app renders it without the left sidebar; that is the product's layout, not a broken capture."
+  },
+  {
+    "id": "chapter-fee-member-cards",
+    "image": "/images/platform/fees/chapter-fee-member-cards.png",
+    "usedOn": [
+      "platform/local-group-fees/create-local-fees.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/user/312708?tab=fees",
+    "routeHint": "Open member 312708 (Oliver Ashford, Virginia Beach chapter 15658, tenant 282) and select the Fee tab. He carries both an organisation fee tier and a chapter fee tier and is not covered by a company, so the summary card breaks the total into an organisation line and a chapter line. The previous route pointed at member 10447, who belongs to a different tenant, so the content pane rendered empty.",
+    "actions": [],
+    "waitFor": "text=TOTAL FEE",
+    "viewport": "desktop",
+    "alt": "Member profile Fee tab with a summary card splitting the total fee into an organisation line and a chapter line, above an Organisation fee card and a Local fee card side by side, each showing its tier, validity and payment history",
+    "status": "new",
+    "notes": "Chapter fee prices carried a valid_from stamped at seed time, so every historic period fell outside the tier's validity window and the history rows fell back to the Corporate Bronze price (950 USD) against an 85 USD plan. valid_from is now null on the fee products, and the card reads 85 + 30 = 115. Recaptured 2026-08-06 for PRODUCT-BUGS #12: Oliver Ashford's 120 USD payment was stored with is_refunded = 0 and was invisible to the Fee tab, so both history rows read Unpaid. The 2026 row now reads 'Partially paid 72 / 85', which is that payment pro-rated across its 2026-04-18 to 2027-06-28 period."
+  }
+]

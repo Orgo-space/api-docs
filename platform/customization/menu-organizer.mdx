@@ -1,139 +1,169 @@
 ---
 title: 'Menu Organizer'
-description: 'Rearrange, hide, and rename sidebar navigation items — with permission-based visibility and custom categories'
+description: 'Reorder, rename, hide and permission-scope the sidebar, and add your own links'
 "og:title": 'Menu Organizer | Orgo'
-"og:description": 'Rearrange, hide, and rename sidebar navigation items — with permission-based visibility and custom categories'
+"og:description": 'Reorder, rename, hide and permission-scope the sidebar, and add your own links'
 "twitter:title": 'Menu Organizer | Orgo'
-"twitter:description": 'Rearrange, hide, and rename sidebar navigation items — with permission-based visibility and custom categories'
+"twitter:description": 'Reorder, rename, hide and permission-scope the sidebar, and add your own links'
 ---
 
-The Menu Organizer lets you control what members see in the sidebar. Organize items into categories, hide features you don't use, reorder by drag-and-drop, and restrict visibility by role or user type.
+**Built for** organizations that use a subset of Orgo and want a sidebar that reflects it.
+**Replaces** telling members to ignore half the menu.
+
+The Menu Organizer edits the sidebar: the order of categories and items, their names and icons, who sees each one, and any custom links you add on top.
+
+<img src="/images/platform/customization/menu-organizer.png" alt="Menu organizer with draggable categories, per-item permission dropdowns and the desktop and mobile preview toggle" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 **Settings → Customization → Menu Organizer**
 
 <Note>
-  Requires **Tenant Admin** permissions.
+  Requires **ADMIN_TENANT**. Changes are held locally until you press **save**; nothing is applied as you drag.
 </Note>
 
 ---
 
-## How to organize the menu
+## How the sidebar is built
+
+The sidebar has two sections, and members switch between them:
+
+- **Community**: the Main category, Groups and Projects.
+- **Administration**: Communication, Finance and Management.
+
+The Menu Organizer edits the **Community** categories. The three Administration categories are managed by Orgo and are not listed in the editor: their contents are already permission-scoped so that a member only sees what their role unlocks.
+
+**CRM Mode (unified menu without groups)** is a switch at the top of the page. Turning it on merges everything into a single list and drops the Groups category, which suits organizations that use Orgo as a contact database rather than a community. In CRM mode the Communication, Finance and Management categories become editable in the organizer too.
+
+---
+
+## Editing the menu
 
 <Steps>
-  <Step title="Open the Menu Organizer">
-    Go to **Settings → Customization → Menu Organizer**. You'll see your current menu structure organized into categories, each containing menu items.
+  <Step title="Reorder">
+    Drag a category by its grip handle to move it, or drag an item between categories. Categories with a padlock instead of a handle cannot be moved.
   </Step>
-  <Step title="Reorder categories and items">
-    Use the **drag handles** (the grip icon on the left) to drag categories or individual items up or down. Items at the top appear first in the sidebar.
+  <Step title="Rename">
+    Click a category name to edit it inline. For an item, click the pencil next to it (or double-click the name) and type a replacement. Enter confirms, Escape discards.
   </Step>
-  <Step title="Edit category names">
-    Click on a category name to edit it inline. Categories act as section headers in the sidebar — name them to help members find what they need.
+  <Step title="Change an icon">
+    Click the icon next to an item. The picker has an **Icons** tab with a searchable icon list and an **Emoji** tab.
   </Step>
-  <Step title="Set permission-based visibility">
-    Each category can be restricted by role level. Click the permission dropdown on a category to choose who sees it:
-    - **All permissions** — visible to everyone
-    - **Tenant Admin** — only organization-level admins
-    - **HR** — HR managers at organization, local, or regional level
-    - **Financial** — financial managers at any level
-    - **Local Center Admin** — local group administrators
-    - **Regional Admin** — parent local center administrators
+  <Step title="Restrict who sees it">
+    Every category and every item has a permission dropdown. Tick one or more permissions; the entry then shows for anyone holding **any** of them. Leave it empty for **All permissions**, meaning every member.
   </Step>
-  <Step title="Filter by user type (optional)">
-    If your organization uses user types, you can restrict categories to specific user types. Only members with that user type will see the category in their sidebar.
+  <Step title="Restrict by user type">
+    Where your organization uses user types, a second dropdown limits the entry to selected types. The default is **allUserTypes**.
   </Step>
-  <Step title="Add new categories">
-    Click the **Add Category** button to create a new section. Name it and drag menu items into it.
+  <Step title="Hide an item">
+    The **x** on an item hides it without deleting it. Hidden items stay in the list, greyed out, with a **+** to restore them.
   </Step>
   <Step title="Save">
-    Click **Save** to apply changes. The new menu structure appears for all members immediately.
+    Click **save**. The new sidebar applies for everyone.
   </Step>
 </Steps>
 
----
-
-## Default menu items
-
-| Item | What it links to | Module required |
-|------|-----------------|-----------------|
-| **Dashboard** | Home page with widgets | Always available |
-| **Members** | Member directory | Users module |
-| **Groups** | Group listings | Groups module |
-| **Events** | Event calendar | Events module |
-| **Discussions** | Discussion forum | Discussions module |
-| **Files** | Document storage | Drive module |
-| **Fees** | Payment and fee management | Payments module |
-| **Newsletter** | Email campaigns | Newsletter module |
-| **Courses** | Learning management | Courses module |
-| **Settings** | Configuration | Admin only |
-
-<Tip>
-  Only enabled modules show in the menu. If you don't see an expected item, check that the corresponding module is enabled in **Settings → Organization → Modules**.
-</Tip>
+<Note>
+  An item's permission cannot be looser than its category's. The dropdown greys out any permission weaker than the one already set on the category above it.
+</Note>
 
 ---
 
-## Common setups
+## Permissions you can assign
 
-### Minimal menu (simple community)
+The dropdown groups permissions by tier. Which ones appear depends on your enabled modules and structure.
 
-Show only what members need:
-- Dashboard, Members, Events, Discussions
-- **Hide:** Files, Fees, Newsletter, Courses, Contacts
+| Tier | Permissions | Shown when |
+|---|---|---|
+| Organization | `ADMIN_TENANT`, `HR_TENANT`, `HR_ASSISTANT_TENANT`, `COMMUNICATION_TENANT` | Always |
+| Organization | `FINANCIAL_TENANT` | Payments module on |
+| Organization | `EVENT_TENANT` | Events module on |
+| Chapter | `ADMIN_LOCAL`, `HR_LOCAL`, `HR_ASSISTANT_LOCAL`, `FINANCIAL_LOCAL`, `COMMUNICATION_LOCAL`, `EVENT_LOCAL` | Local centers enabled |
+| Regional | the same six as `_PARENT_LOCAL`, reaching an anchor chapter and every chapter beneath it | Parent chapters enabled |
 
-A clean sidebar with 5-6 items is easier to navigate than 12.
+`ROLE_ADMIN_TENANT` is offered as a separate top entry: it restricts an entry to organization administrators only.
 
-### Events-focused (activity-heavy organization)
-
-Move Events to the top of the menu since it's the most-used feature. Create a category called "Activities" and place Events, Calendar, and Groups inside it.
-
-### Role-separated menu (large organization)
-
-Create separate categories:
-- **"For Everyone"** — Dashboard, Events, Discussions (all permissions)
-- **"Management"** — Members, Stats, Newsletter (HR/Admin permissions only)
-- **"Finance"** — Fees, Products, Donations (Financial permissions only)
-
-This way, regular members see a clean 3-item menu while admins see the full set.
+The two dropdowns at the top left of the page are **filters**, not settings. Pick a permission or a user type there to preview which entries that audience would see.
 
 ---
 
-## Restoring defaults
+## Default menu contents
 
-Click the **Restore Defaults** button at the top of the Menu Organizer to reset the menu to the platform default layout. This undoes all reordering, category changes, and permission restrictions.
+This is what a new organization starts with. Items whose module is off never render, whatever the Menu Organizer says.
+
+**Community → Main**
+
+| Item | Needs |
+|---|---|
+| Home | Always (desktop only; hidden on mobile) |
+| Members | **Who Can See Members in General Groups** permits it |
+| Events | Events module |
+| Files | Drive module |
+| Voting | Voting module |
+| Local Centers | Local centers module |
+| Organization (flyout: Courses, Gazette, Organisational Chart, Analytics) | Per child: courses, gazette, analytics |
+
+**Community → Groups** and **Community → Projects** are generated from your actual groups and projects. The editor shows their headers only, never their contents, so neither can be reordered internally. In the default menu both are also marked as not modifiable, which is why they carry a padlock instead of a grip handle. Projects requires the project management module. The Groups header carries three extra buttons: **Manage group categories**, **Colors** (the bullet colour per group kind) and **Emojis** (an emoji per group, replacing its bullet).
+
+**Administration → Communication**: Email campaigns, Campaign templates, Lists & Segments, Newsletter subscription, Email Log, Moderation queue.
+
+**Administration → Finance**: Products, Payments, Subscribers, Local products, Fee payments, Local members fees, Fee settings, Local online payments settings, Invoices.
+
+**Administration → Management**: Adhesions, Contacts, Badges, Resignation requests, Merge Records, Waitlist, Transfer requests, Queries, e-Documents, Forms, Local center settings, Companies, Settings.
+
+<Note>
+  Home cannot be renamed, moved, hidden or permission-scoped. It is the fixed entry point.
+</Note>
+
+---
+
+## Adding your own links
+
+**Add new category** creates an empty category you can name, order, permission-scope and fill.
+
+**New link** on a category adds a custom entry. Two kinds:
+
+| Kind | You provide | Behaviour |
+|---|---|---|
+| **Link** | A title and a **Full URL** | Opens that address |
+| **Discussion Category** | A title, a **Group**, and optionally a **Category** | Jumps straight into that group's discussions, filtered to the chosen category or **All categories** |
+
+<img src="/images/platform/customization/menu-organizer-new-link.png" alt="Inline New link form on a menu category with the title field, the Link and Discussion Category radio options and the Full URL input" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+Custom links carry the same permission and user type controls as built-in items, and can be renamed and re-iconed the same way.
+
+---
+
+## Previewing and resetting
+
+The **Desktop** and **Mobile** buttons at the top switch the preview. The mobile view is read-only: it shows the Community and Administration tabs as members see them, with the reminder that changes are made in Desktop mode.
+
+**Reset to defaults** reloads Orgo's standard menu. It asks for confirmation, then stages the reset like any other edit: nothing is applied until you press **save**, so you can navigate away to abandon it.
 
 <Warning>
-  Restoring defaults removes all your custom categories and permission settings. This cannot be undone — you'd need to reconfigure everything manually.
+  Resetting discards every custom category, custom link, rename, icon change and permission restriction. There is no undo once saved.
 </Warning>
-
----
-
-## Real-world example
-
-> **Scenario**: A sports federation with 10,000 members — athletes, coaches, referees, and administrative staff.
-
-1. **Category: "My Sport"** (all permissions) — Dashboard, Events (renamed "Competitions"), Groups (renamed "Teams")
-2. **Category: "Community"** (all permissions) — Discussions, Files
-3. **Category: "Coaching"** (user type: Coach only) — Courses, Stats
-4. **Category: "Administration"** (HR/Admin permissions) — Members, Newsletter, Fees, Settings
-
-Result: Athletes see a simple 5-item menu. Coaches see an extra "Coaching" section. Administrators see everything including management tools.
 
 ---
 
 ## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="Members are confused by too many menu items">
-    Hide modules you're not actively using by removing them from visible categories. You can always add them back later. Aim for 5-7 items maximum for regular members — put admin tools in permission-restricted categories.
+  <Accordion title="An item vanished for everyone">
+    Check, in order: the module it belongs to is still enabled under **Settings → Modules** (a disabled module hides its entries regardless of this page), the item is not hidden (greyed with a **+**), and its category's permission is not narrower than you intended.
   </Accordion>
-  <Accordion title="I want different menus for different member types">
-    Use the **permission level** and **user type filter** on each category. Create separate categories for different audiences and set the appropriate restrictions. Members only see categories they have access to.
+  <Accordion title="I cannot drag or rename Groups or Projects">
+    Both are generated categories, built from your live groups and projects. The editor never lists their contents, and the default menu marks them as not modifiable, so they show a padlock. Groups gets its own colour, emoji and category tools from the buttons on its header.
   </Accordion>
-  <Accordion title="A menu item disappeared for all members">
-    Check three things: (1) the item is still in a visible category, (2) the category doesn't have a restrictive permission level set, (3) the corresponding module is still enabled in **Settings → Organization → Modules**. Disabling a module hides its menu items regardless of Menu Organizer settings.
+  <Accordion title="Communication, Finance and Management are missing from the editor">
+    Expected in normal mode: those Administration categories are managed by Orgo. Turn on **CRM Mode** if you need them in the editable list.
   </Accordion>
-  <Accordion title="The menu labels aren't matching my custom terminology">
-    Menu item names follow your [Labels](/platform/customization/labels) customizations automatically. If you renamed "Members" to "Scouts" in Labels, it should appear as "Scouts" in the sidebar too. If it doesn't, try a hard refresh (Ctrl+Shift+R) to clear the browser cache.
+  <Accordion title="A permission is greyed out on an item">
+    The category above it is already restricted to a stronger permission. An item cannot be visible to a wider audience than its category. Loosen the category first.
+  </Accordion>
+  <Accordion title="My renamed item shows the old name in another language">
+    A rename here is a single piece of text used in every language. If you need per-language wording, use [Texts](/platform/customization/labels) instead, which has a column per language.
+  </Accordion>
+  <Accordion title="Nothing I changed took effect">
+    The organizer is a staging area. Every action, including Reset to defaults, only applies after **save**.
   </Accordion>
 </AccordionGroup>
 
@@ -141,6 +171,8 @@ Result: Athletes see a simple 5-item menu. Coaches see an extra "Coaching" secti
 
 ## Related
 
-- [Dashboard Organizer](/platform/customization/dashboard-organizer) — Customize the dashboard layout
-- [Labels & Terminology](/platform/customization/labels) — Rename default terms platform-wide
-- [Modules](/platform/organisation/modules) — Enable/disable features (controls which items are available to organize)
+- [Texts](/platform/customization/labels) - per-language wording changes across the whole interface
+- [Modules](/platform/organisation/modules) - what is available to put in the menu at all
+- [Permissions](/platform/permissions) - what each permission actually unlocks
+- [Dashboard Organizer](/platform/customization/dashboard-organizer) - the dashboard equivalent
+- [Customization](/platform/customization) - everything under Settings → Customization

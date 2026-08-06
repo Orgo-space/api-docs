@@ -1,0 +1,92 @@
+[
+  {
+    "id": "voting-list",
+    "image": "/images/platform/voting/vote-list.png",
+    "usedOn": [
+      "platform/e-voting.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/vote",
+    "routeHint": "Sidebar -> Voting. Needs the Voting module active (Settings -> Modules -> Voting). Sign in as a member with ADMIN_TENANT so the Create Voting button is visible.",
+    "actions": [],
+    "waitFor": "text=Create Voting",
+    "viewport": "desktop",
+    "alt": "Voting list showing live, draft, upcoming and finished votes with question count, target group and a turnout bar per vote",
+    "status": "new",
+    "notes": "Turnout was 4% on the live vote and 10% on the finished one, so the bars were a few pixels of colour in a full-width track. Ballots are reseeded to 237 of 348 on the live board election and 255 of 348 on the finished funding vote. Make sure the filter row under the title is in frame: keyword search, the status dropdown and the Archived checkbox. The Draft row is a by-product of the voting-create-modal spec: opening Create Voting persists a draft. It is left in place because it gives the list all four lifecycle states the page documents; capture this spec after voting-create-modal."
+  },
+  {
+    "id": "voting-create-modal",
+    "image": "/images/platform/voting/vote-create.png",
+    "usedOn": [
+      "platform/e-voting.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/vote",
+    "routeHint": "Sidebar -> Voting -> Create Voting. The form is a modal, not a page: capture the modal with its header Save and Publish buttons.",
+    "actions": [
+      "click text=Create Voting",
+      "wait 3000",
+      "waitFor .vfq-q-input",
+      "fill .vfq-q-input | Should the association adopt the revised statutes?",
+      "fill .vfq-opts .vfq-opt-row:nth-child(1) .vfq-opt-input | Approve",
+      "fill .vfq-opts .vfq-opt-row:nth-child(2) .vfq-opt-input | Reject",
+      "click text=Add start date",
+      "click text=Add end date",
+      "wait 5000"
+    ],
+    "waitFor": "text=Anonymous voting",
+    "viewport": "tall",
+    "alt": "Create Voting modal with the question builder filled in, the single and multiple answer toggle, start and end dates with timezone, the audience cards and all three settings switches",
+    "status": "new",
+    "notes": "Two separate faults in the old spec. (1) The three fill actions used a space between selector and value; the runner splits on a pipe, so none of them ran and the question builder was captured on its placeholders. (2) The modal is taller than a 1080 frame, so it was cut just below the first Settings switch, leaving out Hide voters list, Anonymous voting and the green encryption banner. Anonymous voting is the setting this page's Anonymity section depends on, so the shot has to reach it: tall viewport plus a crop to the modal itself. The runner treats a selector as CSS only when it starts with . # or [ , so 'input.vfq-q-input' was matched as page text and never resolved; '.vfq-q-input' does. Opening the modal persists a draft, and the autosave leaves Save and Publish as spinners for a few seconds, so the trailing wait has to outlast it. Each run leaves one more draft vote_collection behind; prune them back to a single draft before capturing voting-list, which shows it."
+  },
+  {
+    "id": "voting-live-ballot",
+    "image": "/images/platform/voting/vote-live.png",
+    "usedOn": [
+      "platform/e-voting.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/vote/247",
+    "routeHint": "Voting list -> open a vote whose status tag is Live and where the signed-in member has not voted yet (the ballot with the Vote now button only renders for eligible members who have not voted).",
+    "actions": [],
+    "waitFor": "text=Vote now",
+    "viewport": "tall",
+    "alt": "Live vote showing the three question ballot with radio options, the Vote now button, and the participation panel with turnout percentage and the voter roster",
+    "status": "new",
+    "notes": "Three questions with four, three and three options push the Vote now button below a 1080 frame; the old capture cut off inside question three. Tall viewport puts the whole ballot, the button and the Participation card in one shot. Turnout is now 237 of 348."
+  },
+  {
+    "id": "voting-results",
+    "image": "/images/platform/voting/vote-results.png",
+    "usedOn": [
+      "platform/e-voting.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/vote/248",
+    "routeHint": "Voting list -> filter status Finished -> open a finished vote that has two or more questions (the list card shows the question count).",
+    "actions": [],
+    "waitFor": "text=Finished",
+    "viewport": "desktop",
+    "alt": "Finished two question vote showing per-option result bars with counts and percentages next to the participation panel",
+    "status": "new",
+    "notes": "The finished vote is the funding ballot, not a board election, so the e-voting.mdx alt that promised two board positions was corrected rather than the image repointed. Its headline result used to be Abstain at 50%; the reseed gives question one a 77% Yes and question two a clear leading programme."
+  },
+  {
+    "id": "voting-integrity",
+    "image": "/images/platform/voting/vote-integrity.png",
+    "usedOn": [
+      "platform/e-voting.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/vote/integrity/248",
+    "routeHint": "Open a finished vote -> ellipsis Actions menu -> Integrity verification. The menu entry appears only when the vote has available results.",
+    "actions": [],
+    "waitFor": "text=Validate",
+    "viewport": "desktop",
+    "alt": "Integrity verification page with the validation code field and the Validate button",
+    "status": "new",
+    "notes": "Field label is 'Your validation code'; page heading is 'Verify the integrity of the vote' with the vote name below it. Leave the field empty so no real seal is baked into the image."
+  }
+]

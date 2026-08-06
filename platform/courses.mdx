@@ -1,170 +1,163 @@
 ---
-title: 'Courses & LMS'
-description: 'Build online courses for your members — lessons, quizzes, progress tracking, and certificates'
-"og:title": 'Courses & LMS | Orgo'
-"og:description": 'Build online courses for your members — lessons, quizzes, progress tracking, and certificates'
-"twitter:title": 'Courses & LMS | Orgo'
-"twitter:description": 'Build online courses for your members — lessons, quizzes, progress tracking, and certificates'
+title: 'Courses'
+description: 'Build self-paced courses with lessons and quizzes, enrol members, and track progress'
+"og:title": 'Courses | Orgo'
+"og:description": 'Build self-paced courses with lessons and quizzes, enrol members, and track progress'
+"twitter:title": 'Courses | Orgo'
+"twitter:description": 'Build self-paced courses with lessons and quizzes, enrol members, and track progress'
 ---
 
-Orgo Courses is the built-in Learning Management System (LMS) within Orgo, letting organizations build courses from modules and lessons (text, video, quizzes, assignments), track member progress, and award certificates and badges automatically.
+Courses lets you publish structured learning inside Orgo. A course holds sections; each section holds lessons (rich text plus optional video, audio, embed and file attachments) and quizzes. Members work through it at their own pace, and their progress is stored against their membership record.
 
-**Built for** membership organizations that run training or certification programs for their members, such as professional associations running certification programs, trade unions certifying skills, faith communities onboarding volunteers, and youth organizations tracking badge progress, and any group needing enrollment tied to member type.
+**Built for** organisations that train their own members: onboarding for new joiners, role-specific training, and refresher material tied to a user type or a local group.
 
-**Replaces** Teachable, Thinkific, or Moodle for training tied to member status, since enrollment can be automatic by user type or group and completion links to certificates and badges on the member profile, not for public multi-tenant academic course delivery.
+**Replaces** a shared folder of PDFs and videos for internal member training. It is not a public course marketplace: only signed-in members of your organisation can open a course.
 
-Create structured learning paths. Track who's progressing and who's completed.
+<img src="/images/platform/resources/courses-list.png" alt="Courses list showing course cards with lesson, quiz and student counts, an All Courses and My Courses tab, and a Create a course button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
----
-
-## Do I need Courses?
-
-| You want to... | Courses? |
-|----------------|---------|
-| Train new members on organization basics | Yes — onboarding course |
-| Certify members in specific skills | Yes — courses with quizzes and certificates |
-| Offer optional learning for professional development | Yes — open enrollment courses |
-| Ensure everyone completes compliance training | Yes — mandatory enrollment with tracking |
-| Share a few training videos | Maybe — a discussion post or Files section might be simpler |
-| Run in-person-only workshops | No — use [Events](/platform/events) to manage registration and attendance |
+An organisation with nothing published yet sees an empty list inviting a first course. If the list cannot be loaded at all, the page says **Courses could not be loaded** and offers **Try again**, so a failed request does not read as a catalogue with nothing in it.
 
 ---
 
-## Course structure
+## Turning it on
 
-A course is organized into **modules** containing **lessons**:
-
-```
-Course: First Aid Basics
-├── Module 1: Introduction
-│   ├── Lesson: What is First Aid?  (text)
-│   ├── Lesson: Legal Considerations  (text)
-│   └── Lesson: Knowledge Check  (quiz)
-├── Module 2: Emergency Response
-│   ├── Lesson: Assessing the Scene  (video)
-│   ├── Lesson: Calling for Help  (text)
-│   └── Lesson: Practical Exercise  (assignment)
-└── Module 3: Final Assessment
-    └── Lesson: Final Quiz  (quiz)
-```
-
-### Lesson types
-
-| Type | What it is | Use for |
-|------|-----------|---------|
-| **Text** | Rich text with images, formatting, links | Explanations, procedures, guidelines |
-| **Video** | YouTube, Vimeo, or uploaded video | Demonstrations, lectures, walkthroughs |
-| **Document** | Downloadable PDF or file | Reference materials, handouts |
-| **Quiz** | Multiple choice, true/false, short answer, matching | Knowledge checks and assessments |
-| **Assignment** | Practical exercise with submission | Hands-on tasks members complete |
-
----
-
-## Creating a course
-
-**Courses** → **Create Course**
+Courses is a module, on by default. **Settings** → **Gamification & Courses** → **Courses** has two switches:
 
 | Setting | What it does |
 |---------|-------------|
-| **Title** | Course name displayed to learners |
-| **Description** | Overview — what they'll learn and why it matters |
-| **Cover image** | Visual for the course catalog |
-| **Duration** | Estimated time to complete |
-| **Difficulty** | Beginner, Intermediate, or Advanced |
-| **Category** | For organizing courses in the catalog |
+| **Enable Courses** | Shows the Courses entry in the sidebar and enables every course screen. |
+| **Enforce onboarding courses** | Blocks members from the rest of the platform until they finish their onboarding courses. Off by default. |
 
-After creating the course, add modules and lessons using the course builder.
+Toggling the module requires `ADMIN_TENANT`.
 
 ---
 
-## Enrollment
+## Who can do what
 
-| Enrollment type | How it works | Use when |
-|----------------|-------------|----------|
-| **Open** | Anyone can self-enroll | Optional learning, professional development |
-| **Approval required** | Admin approves enrollment requests | Limited spots, selective programs |
-| **Invite only** | Admin enrolls specific members | Mandatory training, targeted programs |
-| **Automatic** | Based on user type or group | Onboarding courses for new members |
+| Action | Permission |
+|--------|-----------|
+| Browse and take courses | Any signed-in member |
+| Create, edit, delete a course, add lessons and quizzes | `HR_TENANT`, or `HR_LOCAL` on the course's local group |
+| Enrol other members, view the Students tab, export | `HR_TENANT`, or `HR_LOCAL` on the course's local group |
 
-### Prerequisites
-
-Require members to complete other courses before enrolling. This creates structured learning paths — e.g., "Level 2" requires completing "Level 1" first.
+A local manager (`HR_LOCAL`) must keep the course inside a local group they belong to. If they do not pick one when creating, their own group is filled in automatically, and they cannot later move the course to a group they have no rights over or make it organisation-wide.
 
 ---
 
-## Progress tracking
+## Building a course
 
-### What's tracked per learner
+**Courses** → **Create a course**. The Course tab holds the settings; the Lessons and Students tabs unlock once the course is saved.
 
-| Metric | Description |
-|--------|-------------|
-| **Lessons completed** | Which lessons they've finished |
-| **Quiz scores** | Results from assessments |
-| **Time spent** | How long they've engaged |
-| **Last activity** | When they last accessed the course |
+| Field | What it does |
+|-------|-------------|
+| **Course Title** | Name shown on the card and course page. |
+| **Course availability** | **Available for all users**, or **Available for specific user types**. Members whose user type is not selected never see the course, not in the list and not by direct link. |
+| **Local center** | Appears when the local groups module is active. Members see organisation-wide courses plus courses of the groups they belong to. |
+| **description** | Shown on the course page and truncated on the card. |
+| **Award badge on completion** | Appears when the Gamification module is active and the course is saved. |
+| **Image thumbnail** | Card image, 16:9. |
 
-### Completion criteria
+Two dropdowns sit in the header:
 
-Define what "complete" means for your course:
+- **Status**: **Draft** or **Published**. Draft courses are visible only to `HR_TENANT` and to a local manager of that course's group. Everyone else gets a not-found.
+- **Course type**: **Self-paced** or **User onboarding**. See [Onboarding courses](#onboarding-courses).
 
-- All lessons viewed
-- Minimum quiz score achieved (e.g., 80%)
-- Assignments submitted
+### Sections, lessons and quizzes
+
+On the **Lessons** tab, add a section, then use **Add new** on that section for a **Lesson** or a **Quiz**. Sections and items are reordered by dragging. Each item has its own Draft or Published state and a menu with View, Edit, Duplicate, Rename and Delete.
+
+<img src="/images/platform/resources/course-builder-lessons.png" alt="Course builder Lessons tab showing sections with nested lessons and quizzes, drag handles, per-item Draft and Published tags, and an Add new menu" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+**Lesson editor**
+
+| Field | What it does |
+|-------|-------------|
+| **Status** | Draft or Published. |
+| **Require completion to proceed** | Locks every later item until this lesson is completed. |
+| **Enable featured media** | Shows the media block at the top of the lesson. |
+| **Featured Media** | Upload a video (.MP4, .MOV, .WEBM, .AVI) or audio file (.MP3, .M4A, .WAV) up to 200MB, or paste an embed URL. YouTube, Vimeo, Loom and Wistia links are rendered; other hosts render nothing. |
+| **Lesson Content** | Rich text editor. |
+| **Attachments** | PDF, Word, Excel, PowerPoint, TXT, CSV, PNG, JPEG, WEBP, GIF and ZIP, up to 50MB per file. |
+
+**Quiz editor**
+
+| Field | What it does |
+|-------|-------------|
+| **Status** | Draft or Published. |
+| **Enforce passing grade** | When on, the member must reach the score below before later items unlock. They may retake the quiz. |
+| Passing grade | Percentage, defaults to 80. Only shown when Enforce passing grade is on. |
+| **Question type** | **Single answer** or **Multiple answers**. These are the only two types. |
+| **Responses** | At least two options per question, with the correct one or ones marked. Questions can carry an image. |
+
+Scoring is done on the server: each question is worth its points value (1 by default) and the score is the percentage of points earned. Nothing is graded by hand.
 
 ---
 
-## Certificates and badges
+## Enrolling members
 
-When a learner completes a course:
+Members enrol themselves with **Enroll in course** on the course page. They can leave a self-paced course they have not finished with **Drop Course**.
 
-1. **Completion is recorded** in their profile
-2. **Certificate is generated** (if enabled) — branded with your org name, the course title, learner name, and date
-3. **Badge is awarded** (if linked) — appears on their profile
+Managers enrol people from the **Students** tab: **Add member**, pick one or more members, then **Add**. Enrolling somebody who is already on the course is rejected rather than duplicated.
 
-Certificates can include your organization's branding and a digital signature.
+<Warning>
+The **Notify member** checkbox in the Add member dialog does not currently send anything. The enrolment itself is created normally, but the notification email fails silently. Tell newly enrolled members yourself, or announce the course through a [newsletter](/platform/newsletter).
+</Warning>
 
----
-
-## Course analytics
-
-| Metric | What it tells you |
-|--------|------------------|
-| **Total enrollments** | Interest level in the course |
-| **Completion rate** | Whether learners finish (low = course may be too long or too hard) |
-| **Average quiz score** | Whether content is being understood |
-| **Time to complete** | Whether your duration estimate is accurate |
-| **Drop-off points** | Where learners stop — helps identify problem areas |
+There is no approval queue, no invite-only mode and no prerequisites between courses. Access is controlled by the course's user types and local group.
 
 ---
 
-## Common scenarios
+## Progress and completion
 
-<AccordionGroup>
-  <Accordion title="How do I make a course mandatory for all new members?">
-    Set enrollment to **Automatic** based on user type. New members are enrolled when they join. Track completion in the analytics view and follow up with members who haven't started.
-  </Accordion>
+Progress is the share of published lessons and quizzes the member has completed. An enrolment moves from **Enrolled** to **In progress** on the first completed item, and to **Completed** at 100 percent.
 
-  <Accordion title="Members start courses but don't finish">
-    Check where they drop off using analytics. Shorten lessons — 5-10 minutes each is ideal. Mix content types (text, video, quiz) to maintain engagement. Send completion reminders.
-  </Accordion>
+When an enrolment reaches Completed and the course has a badge (and Gamification is on), the badge is awarded automatically. Deleting a completed enrolment takes the badge back.
 
-  <Accordion title="Can I reuse a course each year?">
-    Yes. You can reset completions and re-enroll members. Or duplicate the course and update content for the new year.
-  </Accordion>
+Course completion does not produce a certificate: nothing is generated, and there is no certificate download.
 
-  <Accordion title="How are quizzes graded?">
-    Multiple choice and true/false are auto-graded immediately. Short answer and assignments may need manual review by the course administrator.
-  </Accordion>
+### Tracking members
 
-  <Accordion title="Can members retake a quiz?">
-    This depends on your quiz settings. You can allow unlimited retakes, set a maximum number, or allow only one attempt.
-  </Accordion>
-</AccordionGroup>
+The **Students** tab lists everyone enrolled, filterable by All, Enrolled, In progress and Completed, and searchable by name. The table shows Member, Enrolled, Last update, Progress and Status. Row actions are View Profile, View Progress (opens the course in read-only mode as that member sees it) and Remove.
+
+<img src="/images/platform/resources/course-students.png" alt="Students tab of a course showing the status filter, student count, Export menu and a table with member, enrolled date, last update, progress bar and status" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+Two exports sit behind the **Export** button:
+
+- **Export Students (CSV)**: Name, Email, Enrolled Date, Last Accessed, Progress (%), Status, Completed Date.
+- **Export Quiz Results**, one file per quiz: Student Name, Email, Attempt #, Score (%), Passed, Time Spent (s), Started, Submitted.
+
+There is no completion-rate dashboard or drop-off chart. Use the exports for reporting.
+
+---
+
+## Onboarding courses
+
+Set **Course type** to **User onboarding** to make a course part of the joining flow.
+
+<Warning>
+Saving any course as **User onboarding** switches the tenant setting **Enforce onboarding courses** on for you if it was off. From that point, members with an unfinished onboarding course are redirected away from the rest of the platform.
+</Warning>
+
+Once enforcement is on, a member who opens Orgo is sent to a mandatory-course screen listing every published onboarding course that matches their user type and that they have not completed. The gate does not apply to `HR_TENANT` users, to the Event App, or to a member who owes a mandatory fee (the fee gate takes priority and runs first).
+
+---
+
+## Deleting a course
+
+A course with even one enrolment cannot be deleted. Remove the enrolments first, or set the course back to Draft to take it out of circulation.
+
+---
+
+## Automating around courses
+
+If you use Workflows, three course triggers are available: **Course Enrolled**, **Course Completed** and **All Onboarding Courses Completed**. Use them to send a message, apply a tag or move a member forward once training is done.
 
 ---
 
 ## Related
 
-- [Badges](/platform/badges) — Award badges for course completion
-- [Events](/platform/events) — For in-person training sessions
-- [Groups](/platform/groups) — Control course access by group membership
+- [Badges & Gamification](/platform/badges) - award a badge on course completion
+- [User types](/platform/users/user-types) - the audience filter on every course
+- [Permissions](/platform/permissions) - what `HR_TENANT` and `HR_LOCAL` unlock
+- [Local groups](/platform/local-group-fees/create-local-fees) - scoping a course to one group
+- [Events](/platform/events) - for training that happens in person

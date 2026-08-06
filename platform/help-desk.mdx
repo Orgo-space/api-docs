@@ -1,155 +1,168 @@
 ---
 title: 'Help Desk'
-description: 'A support ticket system — members submit requests, your team resolves them'
+description: 'A support desk inside Orgo: members raise tickets, your support team answers and closes them'
 "og:title": 'Help Desk | Orgo'
-"og:description": 'A support ticket system — members submit requests, your team resolves them'
+"og:description": 'A support desk inside Orgo: members raise tickets, your support team answers and closes them'
 "twitter:title": 'Help Desk | Orgo'
-"twitter:description": 'A support ticket system — members submit requests, your team resolves them'
+"twitter:description": 'A support desk inside Orgo: members raise tickets, your support team answers and closes them'
 ---
 
-Help Desk gives your organization an internal support system. Members submit tickets when they need help, your support team responds, and everything is tracked from submission to resolution. No external tools needed.
+**Built for** organisations whose admins answer the same member questions over email.
+**Replaces** a shared inbox or an external ticketing tool.
 
----
+Members open a ticket from inside Orgo, a named support team picks it up, and the whole
+exchange stays on one page with the member's identity already attached. Tickets use the
+same board as [project issues](/platform/issues), scoped to the whole organisation instead
+of to a group.
 
-## Do I need Help Desk?
-
-| Your situation | Help Desk? |
-|---------------|-----------|
-| Members email you with questions and requests | Yes — centralizes everything |
-| You need to track who's handling what | Yes — assignment and status tracking |
-| Multiple people handle support | Yes — team assignment and handoffs |
-| You want to measure response times | Yes — built-in metrics |
-| You only get 1-2 questions a month | Probably not — just handle via email |
-| You need to track internal project tasks | No — use [Issues](/platform/issues) instead |
+<img src="/images/platform/support/helpdesk-tickets.png" alt="Support ticket board listing tickets with type, assignee, priority and status" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Setting up
+## Turning it on
 
-**Settings** → **Modules** → enable **Help Desk**, then configure at **Settings** → **Features** → **Support**.
+**Settings → Modules → Helpdesk → Enable Helpdesk Module** (needs `ADMIN_TENANT`).
+
+Once it is on, a **Support** entry appears in every member's profile menu (top-right
+avatar). Nothing else has to be configured for members to start writing in, but a ticket
+with no support team behind it notifies nobody.
+
+<img src="/images/platform/support/helpdesk-config.png" alt="Helpdesk module settings with the Members, Issue statuses and Issue types tabs" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Configuration
+
+The Helpdesk configuration page has three tabs.
+
+### Members
+
+Search for a member and add them to the support team. Each row has a **Notifications**
+switch: only team members with it on are notified when a new ticket arrives. Removing
+someone from the team also clears them as the default assignee on issue types and unassigns
+every issue they were assigned to.
+
+<Warning>
+Removing a support team member unassigns them from all issues, not only from support
+tickets. Reassign their open work first.
+</Warning>
+
+### Issue statuses
+
+Your ticket workflow. Add a status, click its name to rename it, pick a colour, drag rows
+to reorder. A new status starts out named **New status**. Unless your organisation was set
+up with sample data, this tab starts empty, so define your statuses before inviting members
+to write in.
+
+Closing is separate from status: a closed ticket loses its status and is filed under
+**Closed** instead.
+
+### Issue types
+
+The categories members choose from when raising a ticket, with the same rename, colour and
+reorder controls. Each type can carry a **Default assignee**, picked from the support team.
+When a ticket of that type is created (or edited) with nobody assigned, Orgo assigns that
+person automatically.
+
+---
+
+## How a member raises a ticket
 
 <Steps>
-  <Step title="Add support team members">
-    Select who will handle tickets. They'll get notifications for new submissions.
+  <Step title="Open Support">
+    Profile menu (top-right avatar) → **Support**.
   </Step>
-  <Step title="Create issue types">
-    Categorize tickets so they route to the right person.
+  <Step title="Click Add issue">
+    A form opens with a **Request type** dropdown, a subject line and a description.
   </Step>
-  <Step title="Configure statuses">
-    Set up your ticket lifecycle — New, In Progress, Waiting, Resolved, Closed.
+  <Step title="Attach anything relevant">
+    Photos, videos and files can be added to the description.
   </Step>
-  <Step title="Set up auto-assignment">
-    Optionally assign default team members per issue type.
+  <Step title="Send">
+    The ticket appears in the list, and the member is subscribed to it automatically so
+    every reply reaches them.
   </Step>
 </Steps>
 
----
-
-## Issue types
-
-Create categories that make sense for your organization:
-
-| Type | Route to | Example questions |
-|------|----------|-------------------|
-| **General Inquiry** | Support coordinator | "How do I update my profile?" |
-| **Technical Issue** | IT team member | "I can't log in" |
-| **Membership** | HR team member | "I want to change my Local Center" |
-| **Billing** | Finance team member | "I was charged twice" |
-| **Feedback** | Admin | "Suggestion for improvement" |
-
-Auto-assignment routes tickets by type — technical issues go straight to IT, billing to finance.
+A member who is not on the support team sees only the tickets they opened, and cannot
+change type, status, assignee or priority. Support team members and anyone with
+`HR_TENANT` see every ticket in the organisation.
 
 ---
 
-## Ticket statuses
+## Working a ticket
 
-| Status | Meaning |
-|--------|---------|
-| **New** | Just submitted, nobody's looked at it |
-| **In Progress** | Support team is working on it |
-| **Waiting** | Waiting for the member to respond |
-| **Resolved** | Issue fixed, awaiting confirmation |
-| **Closed** | Done — no further action needed |
+Open a ticket to read it, reply in the comment thread, and set the fields in the sidebar.
+From the list you can change type, status, assignee and priority inline without opening the
+ticket.
 
-Customize statuses in **Settings** → **Support** → **Issue Statuses**.
+| Field | Notes |
+|---|---|
+| **Request type** | One of the types you configured |
+| **Assignee** | A support team member. Set automatically if the type has a default assignee |
+| **Priority** | Highest, High, Medium, Low, Lowest. New tickets start at Medium |
+| **Status** | One of your configured statuses, or **Close** |
 
----
+Closing offers two options: **Close**, or **Close and comment**, which asks for a closing
+message before archiving. Closed tickets drop out of the default list and come back with
+the **Closed** status filter.
 
-## How members submit tickets
+<Note>
+There are no private replies. Every comment on a ticket is visible to the member who opened
+it, so keep internal discussion somewhere else.
+</Note>
 
-Members go to **Help Desk** in the sidebar:
+### Finding tickets
 
-1. Click **Submit Ticket**
-2. Select the issue type
-3. Enter a subject and description
-4. Attach files if relevant (screenshots, documents)
-5. Submit
-
-They receive a confirmation and can track their ticket's status.
-
----
-
-## Handling tickets
-
-### Ticket actions
-
-| Action | What it does |
-|--------|-------------|
-| **Assign** | Route to a specific team member |
-| **Reply** | Send a response visible to the member |
-| **Add Note** | Internal note — only the support team sees it |
-| **Update Status** | Move through the workflow (New → In Progress → Resolved) |
-| **Close** | Mark as complete |
-
-### Working a ticket
-
-1. Open the ticket from the dashboard
-2. Read the member's description and any attachments
-3. Add an internal note if you need to discuss with the team
-4. Reply to the member with your response
-5. Update the status as you go
-6. Close when resolved
-
-### Filtering
-
-Filter the ticket dashboard by status, type, assignee, member, or date range to focus on what needs attention.
+The board defaults to **Opened**. Support team members get the full filter row: free-text
+search over the subject, a **Task type** filter, a status filter (Opened, any individual
+status, or Closed), assignee avatars including **unassigned**, and a mentions-of-me toggle.
+Everyone gets column sorting by creation date, priority, type or status, and an **author**
+button that shows or hides the requester column. The list updates live as colleagues change
+tickets, without a refresh.
 
 ---
 
 ## Notifications
 
-| Event | Who gets notified |
-|-------|------------------|
-| **New ticket** | Assigned team member (or all team if unassigned) |
-| **Ticket assigned to you** | The assigned team member |
-| **Member replied** | The assigned team member |
-| **Support team replied** | The member who submitted |
-| **Status changed** | The member |
-| **Ticket resolved** | The member |
+| Event | Who is notified |
+|---|---|
+| **New ticket** | Support team members whose **Notifications** switch is on |
+| **New comment** | Everyone following the ticket, which includes the member who opened it and anyone who has commented |
+| **Ticket assigned** | The new assignee, unless they assigned it to themselves |
+| **Ticket closed or reopened** | The member who opened it, or the assignee when the requester is the one doing the closing |
+
+Changing a ticket's status, type or priority notifies nobody. Comment notifications follow
+each member's own comment preference; see [Notifications](/platform/notifications) for the
+per-member controls.
 
 ---
 
-## Common scenarios
+## Common questions
 
 <AccordionGroup>
-  <Accordion title="Tickets are piling up unanswered">
-    Check that notifications are working. Assign default team members per issue type so tickets don't sit unassigned. Set an SLA expectation (e.g., first response within 24 hours) and review open tickets regularly.
+  <Accordion title="Members cannot find the Support link">
+    It only appears when the Helpdesk module is enabled, and it lives in the profile menu behind the avatar, not in the sidebar.
   </Accordion>
 
-  <Accordion title="Members keep emailing instead of using Help Desk">
-    Promote the Help Desk in your welcome message and onboarding. When you receive email requests, create tickets on their behalf (admins can do this) and reply pointing them to the Help Desk for next time.
+  <Accordion title="Nobody was notified about a new ticket">
+    Check the **Notifications** switch on each row of the support team list. A team member with it off still sees tickets but is not alerted.
   </Accordion>
 
-  <Accordion title="I want to see how our support team is performing">
-    The Help Desk tracks metrics: tickets by status, average resolution time, tickets by type, and team member workload. Use these to identify bottlenecks and balance the load.
+  <Accordion title="Tickets have no status">
+    The Issue statuses tab starts empty on a fresh organisation. Create your statuses under **Settings → Modules → Helpdesk → Issue statuses**.
   </Accordion>
 
-  <Accordion title="Can I create response templates?">
-    Not built-in, but keep a shared document with common responses your team can copy-paste. This speeds up replies and ensures consistency.
+  <Accordion title="Can I route tickets automatically?">
+    Yes, through issue types. Give each type a default assignee and every new ticket of that type lands on that person.
   </Accordion>
 
-  <Accordion title="What's the difference between Help Desk and Issues?">
-    Help Desk is for member-to-admin support (questions, problems, requests). Issues is for team-to-team project management (tasks, action items, bugs). Different workflows, different audiences.
+  <Accordion title="What is the difference between Help Desk and Issues?">
+    Same board, different scope. The help desk is organisation-wide and members write into it; issues belong to a project group and only its members see them.
+  </Accordion>
+
+  <Accordion title="Are there response-time reports?">
+    No. Orgo does not compute resolution times or per-agent workload for the help desk.
   </Accordion>
 </AccordionGroup>
 
@@ -157,6 +170,8 @@ Filter the ticket dashboard by status, type, assignee, member, or date range to 
 
 ## Related
 
-- [Issues](/platform/issues) — Internal task management within groups
-- [Notifications](/platform/notifications) — Configure alert preferences
-- [Members](/platform/users) — Member information for ticket context
+- [Issues](/platform/issues) - the same board scoped to a project group
+- [Notifications](/platform/notifications) - how members control what reaches them
+- [Permissions](/platform/permissions) - what `ADMIN_TENANT` and `HR_TENANT` unlock
+- [Members](/platform/users) - member records behind each ticket
+- [Contacts](/platform/contacts) - people without an account, who cannot raise tickets

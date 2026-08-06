@@ -1,122 +1,133 @@
 ---
 title: 'Official Gazette'
-description: 'Publish and archive formal decisions, announcements, and official records'
+description: 'A dated, numbered register of your organization decisions and official documents'
 "og:title": 'Official Gazette | Orgo'
-"og:description": 'Publish and archive formal decisions, announcements, and official records'
+"og:description": 'A dated, numbered register of your organization decisions and official documents'
 "twitter:title": 'Official Gazette | Orgo'
-"twitter:description": 'Publish and archive formal decisions, announcements, and official records'
+"twitter:description": 'A dated, numbered register of your organization decisions and official documents'
 ---
 
-The Official Gazette is your organization's formal record. Publish board decisions, policy changes, election results, and regulatory updates in a permanent, searchable archive. Think of it as your organization's official newspaper — the record of what was decided and when.
+The Official Gazette is a register of your organization's formal documents: board decisions, resolutions, statutes, minutes, anything your bylaws require you to record. Each entry has a type, a date, an optional number, searchable text, and one attached file.
 
-<img src="/images/platform/features/gazette-list.png" alt="Official Gazette with published decisions and announcements" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+**Built for** associations, federations and professional bodies whose statutes require decisions to be recorded and made available to members.
 
----
+**Replaces** the shared folder of scanned PDFs that nobody can search and nobody can date reliably.
 
-## Do I need the Official Gazette?
+<Note>
+The feature is called **Official Gazette** in Settings. In the member menu and on the page itself the English label is **Official documents**. Both refer to the same register.
+</Note>
 
-| Your situation | Gazette? |
-|---------------|---------|
-| Your board makes formal decisions that need to be published | Yes |
-| You need a permanent record of policy changes | Yes |
-| Election results and appointments need official publication | Yes |
-| Bylaws require formal publication of certain decisions | Yes |
-| You just need to send announcements to members | No — use [Newsletter](/platform/newsletter) or [Notifications](/platform/notifications) |
-| You want to share documents with members | No — use [Files](/platform/files) |
+<img src="/images/platform/features/gazette-list.png" alt="Official documents list with type filter, text search, and rows showing document date, download icon, title, type and who added it" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Publication types
+## Turning it on
 
-| Category | What goes here |
-|----------|---------------|
-| **Decisions** | Board resolutions, council decisions |
-| **Announcements** | Official organizational announcements |
-| **Regulations** | New rules, policy updates, bylaw amendments |
-| **Reports** | Annual reports, audit summaries, financial statements |
-| **Elections** | Election results, appointments, role changes |
-| **Amendments** | Changes to previously published regulations |
+**Settings** → **Modules** → **Files & eDocuments** → **Official Gazette** → **Enable Official Gazette Module**
 
-Create custom categories at **Settings** → **Features** → **Official Gazette** → **Manage Categories**.
+The toggle requires `ADMIN_TENANT` and is off by default. Once it is on, **Official documents** appears in the sidebar under **Organization**.
 
 ---
 
-## Publishing a document
+## Who can do what
 
-**Official Gazette** → **Create Publication**
+| Action | Permission |
+|---|---|
+| Read the list and open any entry | Any signed in member of your organization |
+| Create an entry | `HR_TENANT` |
+| Edit an entry | `HR_TENANT` |
+| Upload or replace the attached file | `HR_TENANT` |
+| Delete an entry | `HR_TENANT` |
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| **Title** | Yes | The official title — "Resolution 2025-03: Budget Approval" |
-| **Category** | Yes | Decision, Announcement, Regulation, etc. |
-| **Publication date** | Yes | The official date (may differ from upload date) |
-| **Reference number** | No | Official numbering — "RES-2025-03" |
-| **Content** | No | Full text of the publication |
-| **Attachments** | No | Supporting documents — signed PDFs, appendices |
+`ADMIN_TENANT` includes all of these.
 
 <Warning>
-Once published, gazette entries should not be modified to maintain their integrity as official records. Use amendments or correction publications for updates.
+The register is not public and not selectively private. There is no anonymous access to it, and every signed in member of your organization can open every entry. The **Private** / **Public** choice on the form records a status on the entry, it does not restrict who can read it. Do not put material there that some of your members should not see.
 </Warning>
 
 ---
 
-## Browsing and searching
+## Document types
 
-Members access the gazette via **Menu** → **Official Gazette**.
-
-### How to find publications
-
-| Method | How |
-|--------|-----|
-| **Chronological** | Browse newest-first (default view) |
-| **By category** | Filter to see only Decisions, or only Reports, etc. |
-| **By date range** | Find publications from a specific period |
-| **Full-text search** | Search titles and content |
-| **By year** | Browse the archive by year |
-
-All publications are permanently archived. Nothing gets deleted — the gazette is your organization's institutional memory.
+Every entry must be given a type, chosen from a list your organization already has ("Decision", "Resolution", "Minutes", or whatever your statutes use). Types are reference data: they are read only in the app, so there is no screen for adding or renaming one. If you need a new type, ask Orgo support to add it.
 
 ---
 
-## Visibility
+## Adding an entry
 
-| Setting | Who can read |
-|---------|-------------|
-| **Public** | Anyone, including non-members |
-| **Members only** | Logged-in members |
-| **Specific groups** | Only members of selected groups |
-| **Administrators** | Internal publications |
+**Official documents** → **Add Official Documents**
 
-### Notifications
+The record is created first and the file is uploaded afterwards. The form says so: "You will be able to upload the file after you create the record". Saving takes you straight to the edit screen where the upload button appears.
 
-When a new publication is posted, notify:
-- All members (email or push)
-- Specific groups only
-- Discussion announcement (auto-post)
+<img src="/images/platform/features/gazette-entry-form.png" alt="Official document form with Status radio buttons, Type select, Subject, Document number, Document date and Content fields" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+| Field | Required | What it does |
+|---|---|---|
+| **Status** | Yes | **Private** or **Public**. Recorded on the entry as a label. It does not change who can read it |
+| **Type** | Yes | One of your organization's document types |
+| **Subject** | Yes | The title, shown in the list and at the top of the entry |
+| **Document number** | No | A whole number. Use it for your own numbering series |
+| **Document date** | Yes | The official date of the document, which can differ from the day you upload it. This is what the list sorts by |
+| **Content** | No | Free text. The form labels it "For internal search purpose": it makes the entry findable by its wording |
+| **Document file** | No | One file per entry, added after saving. Uploading again replaces it |
+
+<Note>
+Numbering is yours to define. Orgo stores the number you type and never generates one, so an entry with no number simply shows none.
+</Note>
 
 ---
 
-## Common scenarios
+## Finding an entry
+
+The list opens newest first, by document date. Sort by **Document date** or **Type** by clicking the column header.
+
+| Tool | How it works |
+|---|---|
+| **Type filter** | The dropdown beside the page title, defaulting to **Any** |
+| **Search by text** | Free text box. Searching starts at three characters. Choose **Title** or **Content** with the radio buttons beside it to pick which field is matched |
+| **Download** | The cloud icon in the list downloads the attached file without opening the entry |
+
+Searching matches anywhere inside the field, so "budget" finds "2025 budget approval".
+
+<img src="/images/platform/features/gazette-entry.png" alt="Single official document showing subject, who created it, document number and date, and a download link for the attached file" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+Opening an entry shows the subject, who created it, the number (when one was given), the document date, a download link labelled with the original file name, and the content underneath. If the entry is tied to a chapter, that chapter is shown as a link at the top.
+
+---
+
+## Editing and deleting
+
+Open an entry and choose **Modify**, or use the pencil in the list's **Actions** column. Every field including the attached file can be changed, and there is no version history: an edit overwrites what was there.
+
+Deleting an entry from the edit screen also deletes its attached file. Nothing is archived and nothing is recoverable from the app afterwards.
+
+<Note>
+For a correction that has to stay auditable, publish a second entry that references the first rather than editing the original. The register has no built in amendment link, so say it in the subject: "Correction to Decision 14/2025".
+</Note>
+
+---
+
+## Common questions
 
 <AccordionGroup>
-  <Accordion title="How should I number publications?">
-    Use a consistent system — e.g., "RES-2025-01" for the first resolution of 2025, "ANN-2025-05" for the fifth announcement. Include the year so numbers don't repeat and references stay unambiguous.
+  <Accordion title="The menu entry is missing">
+    The module is off. Turn it on at **Settings** → **Modules** → **Files & eDocuments** → **Official Gazette**.
   </Accordion>
 
-  <Accordion title="I need to correct a published gazette entry">
-    Don't edit the original — publish a new entry as an "Amendment" or "Correction" that references the original. This preserves the historical record while making the correction official.
+  <Accordion title="I can see the edit pencil but opening it sends me to the login screen">
+    The edit screen requires `HR_TENANT`. The pencil is also shown to the member who created the entry, so someone who added an entry before losing that permission still sees the icon without being able to use it. Ask an administrator to make the change.
   </Accordion>
 
-  <Accordion title="Nobody reads the gazette">
-    Enable email notifications for new publications. Reference gazette entries in newsletters ("See Gazette Decision RES-2025-03 for details"). Make the gazette the authoritative source so people have a reason to check it.
+  <Accordion title="The type dropdown is empty">
+    Your organization has no document types yet, and they cannot be created from the app. Contact Orgo support with the list of types your statutes use.
   </Accordion>
 
-  <Accordion title="Can I use this for meeting minutes?">
-    You can, but consider whether every set of minutes needs to be an official gazette entry. Reserve the gazette for formal decisions and outcomes. Store routine meeting minutes in [Files](/platform/files) instead.
+  <Accordion title="Members are not told when something is published">
+    Publishing an entry sends nothing. There is no notification, email or digest tied to the register. Announce new entries through a [newsletter](/platform/newsletter) or a [discussion](/platform/discussion) post and link to them.
   </Accordion>
 
-  <Accordion title="Our bylaws require public posting of certain decisions">
-    Set the visibility to **Public** for those categories. The gazette page is accessible without login, satisfying public posting requirements.
+  <Accordion title="Should meeting minutes go here or in Files?">
+    Use the register for documents that need a date, a number and a permanent public record inside the organization. Use [Files](/platform/files) for working documents, drafts and anything you want scoped to a single group.
   </Accordion>
 </AccordionGroup>
 
@@ -124,6 +135,8 @@ When a new publication is posted, notify:
 
 ## Related
 
-- [Files](/platform/files) — General document storage
-- [Newsletter](/platform/newsletter) — Announce publications to members
-- [Notifications](/platform/notifications) — Configure gazette notifications
+- [Files](/platform/files) - document storage with folder and group level permissions
+- [Contracts](/platform/contracts) - documents that members sign
+- [Organizational Chart](/platform/organisational-chart) - the officers who take these decisions
+- [E-Voting](/platform/e-voting) - the votes behind a decision
+- [Newsletter](/platform/newsletter) - announcing a new entry to members

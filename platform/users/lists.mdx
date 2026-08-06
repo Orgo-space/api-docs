@@ -7,15 +7,24 @@ description: 'Build reusable groups of members and contacts by criteria, and use
 "twitter:description": 'Build reusable groups of members and contacts by criteria, and use them as newsletter audiences'
 ---
 
-A list is a reusable set of members and contacts. Lists answer questions like
-"who joined in the last 60 days", "which members have an active donation", and
-"who has not paid this year", and they double as the audience when you send a
-newsletter.
+A list is a reusable set of members and contacts: everyone who joined this year
+and has not paid, everyone with an active recurring donation, everyone who
+attended last year's conference. Lists are what you pick as the audience when you
+send a newsletter.
 
-**Use a list when you need to:**
-- Send a newsletter to part of your organisation rather than all of it
-- Keep a group up to date automatically as people join, pay, or lapse
-- Pull a recurring report without rebuilding the same filter each time
+**Built for** organisations that send to parts of their base rather than all of
+it. **Replaces** the spreadsheet you re-filter before every mailing.
+
+Lists live under **Administration** → **Communication** → **Lists & Segments**
+(`/email-lists`). They require the newsletter module, and the menu entry appears
+for COMMUNICATION_TENANT. HR_TENANT also has full access.
+
+<img src="/images/platform/users/lists-index.png" alt="Lists and Segments index with All, Dynamic and Static chips and a table of lists showing type, audience, subscribed and total counts" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+The index has five columns: **Name**, **Type** (Automated or Static), **Audience**
+(the profile type), **Subscribed** and **Total**, plus edit and delete buttons on
+each row. Chips at the top filter to **All**, **Dynamic** or **Static**, a search
+box appears once you have more than ten lists, and the table pages at 20.
 
 ---
 
@@ -24,13 +33,13 @@ newsletter.
 **Automated** lists are defined by criteria and re-evaluate themselves. Someone
 who becomes eligible tomorrow is in the list tomorrow, with no action from you.
 
-**Manual** lists contain exactly the people you add, and change only when you
-change them.
+**Manual** lists contain exactly the people you put in them, and change only when
+you change them.
 
 <Warning>
-The type is fixed when the list is created and cannot be changed afterwards. If
-you build a manual list and later want it to maintain itself, you have to create
-a new automated list. Decide which you need before you save.
+The type and the audience scope are fixed when the list is created. Both controls
+are locked on the edit screen. If you build a manual list and later want it to
+maintain itself, create a new automated list.
 </Warning>
 
 ---
@@ -38,66 +47,180 @@ a new automated list. Decide which you need before you save.
 ## Creating a list
 
 <Steps>
-  <Step title="Open Lists">
-    **Administration** → **Lists**, then **Create list**.
+  <Step title="Describe the audience, or skip straight to criteria">
+    The **Describe your audience** panel takes a plain-language description of up
+    to 1000 characters, for example "active members in Norfolk who joined this
+    year and have not paid", and turns it into a name, a scope and a set of criteria,
+    with an estimate of how many people match. It is a starting point, not the
+    saved definition: review what it produced before saving.
   </Step>
-  <Step title="Describe who should be in it">
-    You can type the audience in plain language, for example "members in Cluj who
-    joined this year and have not paid". Orgo suggests criteria from that
-    description, which you can then review and adjust. The suggestion is a
-    starting point, not the saved definition, so always check the criteria it
-    produced before saving.
+  <Step title="Name the list and pick the type">
+    **Automated by criteria** or **Manual selection**. This cannot be changed later.
   </Step>
-  <Step title="Choose automated or manual">
-    Automated for anything you want kept current. Manual for a fixed set, such as
-    a working group or an invitation list. Remember this cannot be changed later.
+  <Step title="Set the profile type">
+    **Members & Contacts**, **Members Only** or **Contacts Only**. Contacts are
+    people in your database who are not members: newsletter subscribers, past
+    attendees, donors who never joined. See [Contacts](/platform/contacts).
   </Step>
-  <Step title="Set the scope">
-    Decide whether the list covers **members only**, **contacts only**, or
-    **both**. Contacts are people in your database who are not members, such as
-    newsletter subscribers and past attendees.
-  </Step>
-  <Step title="Set the membership status">
-    **Active**, **inactive**, or **all**. Active is the default, so a list will
-    silently exclude lapsed members unless you widen this.
+  <Step title="Set the member status">
+    **Active Only**, **Inactive Only** or **All (Active & Inactive)**. Active Only
+    is the default, so a list silently excludes lapsed members until you widen it.
+    This is the one audience setting you can still change after creation.
   </Step>
   <Step title="Add criteria">
-    Combine as many conditions as you need. See below for what you can filter on.
+    Add as many as you need. Criteria always combine with **AND**: every condition
+    must be true. There is no OR and no grouping.
   </Step>
 </Steps>
+
+<Note>
+You can also start from **Ask Orgo**. When an answer there is a set of people, it
+offers **Save as segment** (or **Open in editor** on a list proposal), which opens
+this builder with your question already in the describe box and the suggestion
+already running.
+</Note>
+
+<img src="/images/platform/users/list-builder.png" alt="List builder with the Describe your audience panel, list type cards, profile type and member status choices, and two filter criteria joined by AND" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
 ## What you can filter on
 
-| Criterion | Typical use |
-|---|---|
-| Status | Members at a particular stage of their membership |
-| Age | Age-banded groups, for example members under 18 |
-| Tags | Anything you tag people with yourself |
-| Name, email | Narrowing to a known set |
-| Donations | Has an active donation, a past donation, any donation, or none |
-| Fees | Has paid, or has not paid |
+Available criteria depend on the profile type, because members and contacts do
+not carry the same data.
 
-Text and number criteria support equals, not equals, greater than, less than,
-and contains, so age and date-style questions can be expressed as ranges rather
-than exact matches.
+| Criterion | Members Only | Contacts, or mixed | Values |
+|---|---|---|---|
+| **Status** | yes | yes | One of your profile statuses, or No status |
+| **Tags** | yes | yes | Has tag, Has all tags, Doesn't have tag |
+| **Date joined** | yes | yes | A date, with before/after/equals comparisons |
+| **Age** | yes | yes | A whole number of years, with comparisons |
+| **Has Payment** | yes | yes | Has donation, No donation, Any payment, No payments |
+| **Has Recurring Payment** | yes | yes | Active, past or any recurring donation, the negations of each, any active or past recurring payment, or none |
+| **Event Attendance** | yes | yes | Attended any event, Never attended any event, Attended specific event, Not attended specific event |
+| **Local center** | yes | yes | A specific center, Has no local center, Has any local center |
+| **Valid fee date** | yes | no | A date |
+| **Date joined as full member** | yes | no | A date |
+| **Only full members** | yes | no | Yes or No |
+| **Membership Fee Status** | yes | no | Paid, Not Paid |
+| **Donation dropout** | no | Contacts Only | Started but never donated |
+
+**Local center** only appears when your organisation uses local centers.
+**Status** is always offered on Members Only; on the contact scopes it appears
+only when contact statuses are turned on.
+
+For the two donation criteria, picking a donation value reveals a **Product**
+selector so you can narrow to one donation campaign rather than all of them.
+Choosing "Attended specific event" reveals an event search.
+
+### Operators
+
+Which comparisons you get depends on the criterion, and the **Operator** dropdown
+is hidden when only one applies:
+
+| Criterion | Operators |
+|---|---|
+| The three dates, **Age** and **Only full members** | Equals, Not equals, Greater than, Greater than or equals, Less than, Less than or equals, Contains, Is null, Is not null |
+| **Tags** | Has tag, Has all tags, Doesn't have tag |
+| **Local center** | Equals, Has no local center, Has any local center |
+| Everything else | Equals only |
+
+So "under 18" or "joined after March" are comparisons rather than exact matches.
+There is no free-text criterion: you cannot build a list by name or email address.
 
 ---
 
-## Using a list as a newsletter audience
+## Working with a saved list
 
-When composing a newsletter, pick the list as the audience instead of selecting
-recipients by hand. With an automated list, the audience is resolved when the
-newsletter is sent, so a list that grew since you drafted it reaches the people
-who qualify at send time.
+<img src="/images/platform/users/list-detail.png" alt="List detail with total contacts, subscribed, unsubscribed and member status tiles, the active criteria card, and the recipients table with subscription filter chips" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+The detail page opens with four tiles: the total, how many are **Subscribed**,
+how many are **Unsubscribed**, and the member status the list applies. Below them,
+**Active criteria** spells out the saved definition in plain terms, and
+**Recipients** lists the people themselves with chips to switch between
+Subscribed, All and Not subscribed.
+
+Subscribed means the person has not opted out of email. Campaigns only reach
+subscribed addresses, so a list whose total is much larger than its subscribed
+count will send to fewer people than it appears to hold.
+
+Lists over 100 people do not load their members automatically: use **Show
+recipients**. The recipients table pages at 50 at a time.
+
+On a manual list you also get **Add**, which searches members or contacts by name
+and adds the ones you tick, **Add CSV** for bulk additions from a file, and a
+remove button per row. Adding someone who is already in the list is harmless: the
+existing entry is kept and the row is reported as skipped rather than failing.
+
+<Warning>
+Adding and removing people on a manual list requires **ADMIN_TENANT**, which is a
+higher bar than the rest of this page. A COMMUNICATION_TENANT holder can open the
+list and see the **Add**, **Add CSV** and remove controls, but those calls are
+refused. If you manage manual lists, you need ADMIN_TENANT.
+</Warning>
+
+<Note>
+Automated lists have no add or remove buttons. To change who is in one, change
+its criteria.
+</Note>
+
+---
+
+## A list is not the same thing as an audience
+
+When you compose a newsletter you pick one audience, and a saved list is only one
+of the choices:
+
+| Option | Who it sends to |
+|---|---|
+| **All members and contacts** | Everyone subscribed in the database |
+| **Members from a group** | One group |
+| **All subscribed contacts** | Contacts only, no members |
+| **From a list** | A saved list, the subject of this page |
+| **Event attendees** | Participants of one event |
+| **Non-openers of "..."** | People who did not open an earlier campaign, offered only on a follow-up |
+
+The other five are derived from the platform's own structures and cannot be saved
+or reused. Reach for a list when the audience is a question about the people
+themselves rather than a group, an event or a previous campaign.
+
+<Note>
+Someone whose only communication permission is COMMUNICATION_LOCAL sees just one
+option, **Members from a group**. **From a list** is hidden from them, along with
+the two database-wide options and event attendees. Local campaign managers send to
+a group they manage, not to a saved list.
+</Note>
+
+Choose **From a list** and pick the list. The count shown next to the option is
+the subscribed count, not the total.
+
+For an automated list, the audience is resolved again when the newsletter is
+actually sent, so people who became eligible after you drafted it are included and
+people who no longer qualify are not. If the newsletter belongs to a local center,
+that center's boundary is applied on top of the list, so a list cannot be used to
+reach members outside it.
+
+One exception is worth knowing: a list built on **Event Attendance** ignores the
+subscribed and unsubscribed split entirely, because event mail is treated as
+informational rather than marketing.
 
 ---
 
 ## When a list is not enough
 
-List criteria cover the questions organisations ask most often, but they are not
-a general query language. If you need something they cannot express, such as a
-report combining several years of payment history, contact support and describe
-the question you are trying to answer. Custom queries are set up for your
-organisation and then appear alongside your lists.
+List criteria cover the questions organisations ask most often, and they only
+combine with AND. If you need something they cannot express, such as a report
+across several years of payment history, ask about custom database queries: those
+are set up for your organisation and appear on the statistics page rather than
+here, behind the analytics query feature and FINANCIAL_TENANT or explicit query
+access.
+
+---
+
+## Related
+
+- [Newsletter](/platform/newsletter) - composing and sending to a list
+- [Users & Profiles](/platform/users) - the member directory the criteria draw on
+- [Contacts](/platform/contacts) - non-member people who can be in a list
+- [Custom Fields](/platform/users/custom-fields) - extra data on a profile
+- [Permissions](/platform/permissions) - what COMMUNICATION_TENANT and HR_TENANT unlock

@@ -1,0 +1,66 @@
+[
+  {
+    "id": "fundraising-landing-page-editor",
+    "image": "/images/platform/templates/fundraising-landing-page-editor.png",
+    "usedOn": [
+      "platform/templates/fundraising.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/product/1gjk4l2d48amoo6pku74kb4h2?tab=style",
+    "routeHint": "Finance -> Products -> open the donation campaign 'Support Northwind's Mission' (id 1gjk4l2d48amoo6pku74kb4h2, has hero media, goal and description) -> Landing page tab. The tab is selectable straight from the URL with ?tab=style (client/src/views/Product/Show.vue:785-790 and :2712), which avoids the ambiguous 'Landing page' text that also matches the header button.",
+    "actions": [
+      "wait 7000",
+      "scrollto text=Hero media",
+      "wait 4000"
+    ],
+    "waitFor": "text=Hero media",
+    "viewport": "desktop",
+    "alt": "Landing page tab of a donation campaign, with the hero media, appearance and campaign content editors on the left and a live preview of the public donation page on the right",
+    "status": "new",
+    "notes": "The existing /images/platform/fees/donation-landing-page-tab.png is a mis-capture: it shows the Prices & Options tab, because 'click text=Landing page' matched the header button rather than the tab. Capture the real editor here instead of overwriting that file. Data prep: product 969 had slug NULL, and landingPreviewUrl (client/src/views/Product/Show.vue:3907) builds /pay/{slug || uuid}, which resolves through the by-slug route only, so the live preview iframe rendered an empty page. Set product 969 slug to 'support-northwinds-mission' in the local obfuscated DB before capturing."
+  },
+  {
+    "id": "fundraising-donation-product-shortcuts",
+    "image": "/images/platform/templates/fundraising-donation-product-shortcuts.png",
+    "usedOn": [
+      "platform/templates/fundraising.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/payments/product-setup",
+    "routeHint": "Settings -> Modules -> Payments & Fees -> Donation Product (route name ModulePaymentsProductSetup, client/src/router.js:1919-1924).",
+    "actions": [
+      "wait 2500",
+      "click text=Online Payments",
+      "wait 1500",
+      "click text=Donation Product",
+      "wait 5000"
+    ],
+    "waitFor": "text=Recurring Donation Product",
+    "selector": "section.module-layout-with-menu",
+    "viewport": "desktop",
+    "alt": "Donation Product settings with both the Donation Product and the Recurring Donation Product selector naming the campaign Support Northwind's Mission, beside a Manage Products link",
+    "status": "new",
+    "notes": "Recurring Donation Product was left on its 'Select product' placeholder, against a 'Done when' line in fundraising.mdx that asks for both selectors to be filled. Fixed in the demo DB 2026-08-05: tenant 282 settingFeatures.onlinePayments.subscriptionSupportProductId now points at product 969 'Support Northwind's Mission' (uuid 1gjk4l2d48amoo6pku74kb4h2), which carries has_subscription 1 and has_one_time_payment 1, so one campaign genuinely answers both shortcuts. Both selectors therefore read the same campaign, which is the configuration the fundraising page already describes as 'the same campaign with Recurring on'. Do NOT reach for products 1167 'Annual Fund' or 1168 'Annual Fund (monthly giving)' to make the two selectors differ: both carry tenant_id 282 but organisation_id 87, and ProductRepository::getProductsByTenant filters on p.organisation, so they never appear in the /my-products?type=donation&exists[localCenter]=0 list this select is built from. Setting the shortcut to a uuid that is not in that list renders the select blank rather than showing a name, which is exactly what the first recapture produced. Re-parenting them to organisation 282 would fix the select but would add rows to /products/tenant and change the donations.json specs that use both uuids, so it was left alone. PaymentGatewayProductSetup.vue:109-117 copies tenant.settingFeatures.onlinePayments into local data in created(), and the capture session hydrates vuex from a persisted localStorage snapshot, so the page must be re-entered (click another item in the module menu and back) for a freshly changed setting to render. The selector crop drops the empty lower two thirds of the page body. This spec is race prone: fetchProducts() fills the option list from an XHR, and a native select whose v-model holds a uuid with no matching option renders blank rather than falling back to the placeholder, so one run out of two produced two empty boxes. The trailing wait was raised to 5000 for that reason; if a future run ships blank selects, it is this race and not the data, so re-run before changing anything."
+  },
+  {
+    "id": "fundraising-campaign-stats",
+    "image": "/images/platform/templates/fundraising-campaign-stats.png",
+    "usedOn": [
+      "platform/templates/fundraising.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/product/1gjk4l2d48amoo6pku74kb4h2?tab=stats",
+    "routeHint": "Same campaign as fundraising-landing-page-editor -> Stats tab. Switch the range to 12 months: the demo payments are 6 to 24 months old, so the default 90-day window draws an empty chart.",
+    "actions": [
+      "click text=12 months",
+      "wait 3500",
+      "hover text=Payments total",
+      "wait 1200"
+    ],
+    "waitFor": "text=12 months",
+    "viewport": "desktop",
+    "alt": "Stats tab of a donation campaign with the range buttons above the chart and 12 months selected, showing the payments total and an amount line with a seven-day moving median",
+    "status": "new",
+    "notes": "Two faults fixed 2026-08-05. (1) The old 'scroll 300' pushed the Stats tab bar and the range buttons out of frame, while both the alt and the sentence under the image in fundraising.mdx are about those range buttons; the scroll is gone so the control the prose names is visible. (2) The runner's scroll verb parks the mouse in the middle of the content pane, which left a frozen Chart.js tooltip over the plot reading '2026-04-12 / Amount: 25,00 / Moving median (7 days): 100,00'. Removing the scroll removes the cause, and the hover on the 'Payments total' label parks the pointer off the canvas. waitFor moved from 'All time stats' to '12 months' because the all-time counters now sit below the fold; if the alt is ever widened to name them again, the crop has to change with it."
+  }
+]

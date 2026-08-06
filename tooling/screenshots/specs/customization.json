@@ -1,0 +1,157 @@
+[
+  {
+    "id": "customization-settings-section",
+    "image": "/images/platform/customization/customization-settings-section.png",
+    "usedOn": [
+      "platform/customization/index.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/languages",
+    "routeHint": "Any tenant settings page shows the settings sidebar. The subject is the sidebar's CUSTOMIZATION section, which sits below the long MODULES list and is therefore below the fold on load: the earlier capture had no scroll action at all and shot the top of the sidebar. The scrollto below drives the sidebar's own scroll container down to its last entry, which brings the whole CUSTOMIZATION block into frame. Dashboard Organizer only appears while 'Use Custom Dashboard' is on. Captured while hasCustomDashboard was on, so the Dashboard Organizer entry is in frame and the shot matches the page table one for one; the flag is off again now, so this spec is parked at status keep rather than dropping that entry on the next run.",
+    "actions": [
+      "scrollto text=API Documentation",
+      "wait 800"
+    ],
+    "waitFor": "text=Menu Organizer",
+    "viewport": "desktop",
+    "alt": "Settings sidebar scrolled to the Customization section, listing Workflows, eDocuments templates, Custom Domain, Languages, Texts, Menu Organizer, Dashboard Organizer, Dashboard Welcome and Import, with the demo-only Demo Data and AI Provisioning entries below them and the Developers section underneath",
+    "status": "keep"
+  },
+  {
+    "id": "languages-settings",
+    "image": "/images/platform/customization/languages.png",
+    "usedOn": [
+      "platform/customization/languages.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/languages",
+    "routeHint": "Settings -> Customization -> Languages. IMPORTANT: the existing image was captured with multi-language support off, which hides the language list. Switch 'Enable Multi-language Support' on before capturing so the 'Available Languages' checkbox grid and the narrowed 'Select default language' dropdown are both visible. Do not press Save.",
+    "actions": [
+      "click text=Enable Multi-language Support"
+    ],
+    "waitFor": "text=Available Languages",
+    "viewport": "desktop",
+    "alt": "Language Settings page with multi-language support enabled, showing the Available Languages checkbox grid and the default language selector",
+    "status": "keep"
+  },
+  {
+    "id": "text-replacements-table",
+    "image": "/images/platform/customization/labels.png",
+    "usedOn": [
+      "platform/customization/labels.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenant/texts",
+    "routeHint": "Settings -> Customization -> Texts. The table must hold saved rows at the moment of capture, otherwise it renders the 'No text replacements yet' empty state, which teaches nothing. Seed tenant.setting_label with the four rows the page documents (Unit -> Team, Units -> Teams, Local center -> Chapter, Local centers -> Chapters) before capturing. RESET setting_label to [] immediately after this capture and after text-replacement-search: those overrides rename menu entries in every other screenshot taken from this tenant. SETUP/TEARDOWN REQUIRED, so this spec is parked at status keep: re-running it without the setup reproduces exactly the defect it fixed. Setup: UPDATE tenant SET setting_label = '{\"Unit\": {\"en\": \"Team\", \"system\": {\"en\": \"Unit\"}}, \"Units\": {\"en\": \"Teams\", \"system\": {\"en\": \"Units\"}}, \"Local center\": {\"en\": \"Chapter\", \"system\": {\"en\": \"Local center\"}}, \"Local centers\": {\"en\": \"Chapters\", \"system\": {\"en\": \"Local centers\"}}}' WHERE id = 282; Teardown, immediately after the capture: UPDATE tenant SET setting_label = '[]' WHERE id = 282. The teardown is not optional: those overrides rename interface phrases in every other screenshot taken from this tenant.",
+    "actions": [],
+    "waitFor": "text=Text Replacements",
+    "viewport": "desktop",
+    "alt": "Text Replacements table with four saved rows pairing a System Expression EN value with the organization's Custom Expression EN replacement",
+    "status": "keep"
+  },
+  {
+    "id": "text-replacement-search",
+    "image": "/images/platform/customization/text-replacement-search.png",
+    "usedOn": [
+      "platform/customization/labels.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenant/texts",
+    "routeHint": "Settings -> Customization -> Texts -> click 'Add Text Replacement', type into the search box, then tick two results so the footer button shows a real count. TRAP: the old waitFor 'text=Add (' matched 'Add (0)' the instant the modal rendered, so the capture fired before anything was typed and the result area was blank. The fill also has to be written 'fill <selector> | <value>' with a pipe, or run.mjs passes an empty value. waitFor 'text=Add (2)' cannot match until both ticks have landed. SETUP/TEARDOWN REQUIRED, so this spec is parked at status keep: re-running it without the setup reproduces exactly the defect it fixed. Setup: UPDATE tenant SET setting_label = '{\"Unit\": {\"en\": \"Team\", \"system\": {\"en\": \"Unit\"}}, \"Units\": {\"en\": \"Teams\", \"system\": {\"en\": \"Units\"}}, \"Local center\": {\"en\": \"Chapter\", \"system\": {\"en\": \"Local center\"}}, \"Local centers\": {\"en\": \"Chapters\", \"system\": {\"en\": \"Local centers\"}}}' WHERE id = 282; Teardown, immediately after the capture: UPDATE tenant SET setting_label = '[]' WHERE id = 282. The teardown is not optional: those overrides rename interface phrases in every other screenshot taken from this tenant.",
+    "actions": [
+      "click text=Add Text Replacement",
+      "fill input[placeholder*='Search expressions'] | local center",
+      "waitFor .dropdown-content-full .checkbox-item",
+      "click .dropdown-content-full .checkbox-item:nth-child(7)",
+      "click .dropdown-content-full .checkbox-item:nth-child(8)"
+    ],
+    "waitFor": "text=Add (2)",
+    "viewport": "desktop",
+    "alt": "Add Text Replacement panel searching for local center, with a checkbox list of matching interface phrases and the capitalised and lowercase forms of the same phrase both ticked so the footer button reads Add (2)",
+    "status": "keep"
+  },
+  {
+    "id": "menu-organizer",
+    "image": "/images/platform/customization/menu-organizer.png",
+    "usedOn": [
+      "platform/customization/menu-organizer.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenant/custom-menu",
+    "routeHint": "Settings -> Customization -> Menu Organizer. The existing image predates the current editor, which no longer lists individual groups under the GROUPS category. Capture the Main category expanded with its per-item permission and user type dropdowns, plus the collapsed GROUPS and PROJECTS headers below it, and the Save / Reset to defaults / CRM Mode controls at the top.",
+    "actions": [],
+    "waitFor": "text=Menu organizer",
+    "viewport": "desktop",
+    "alt": "Menu organizer showing the Main category with draggable items and per-item permission dropdowns, above the locked Groups and Projects category headers",
+    "status": "keep"
+  },
+  {
+    "id": "menu-organizer-new-link",
+    "image": "/images/platform/customization/menu-organizer-new-link.png",
+    "usedOn": [
+      "platform/customization/menu-organizer.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenant/custom-menu",
+    "routeHint": "Settings -> Customization -> Menu Organizer -> click 'New link' on the Main category. A full-viewport shot here repeats about ninety percent of menu-organizer.png earlier on the same page, so crop to the inline form itself. A bare 'form' selector is wrong: it matches the app header's search form first. Anchor the crop on the form that contains the Full URL label. Do not save.",
+    "actions": [
+      "click text=New link"
+    ],
+    "waitFor": "text=Full URL",
+    "selector": "xpath=//form[.//label[normalize-space()='Full URL']]",
+    "viewport": "desktop",
+    "alt": "Inline New link form on a menu category with the title field, the Link and Discussion Category radio options and the Full URL input",
+    "status": "new"
+  },
+  {
+    "id": "dashboard-organizer-edit",
+    "image": "/images/platform/customization/dashboard-organizer.png",
+    "usedOn": [
+      "platform/customization/dashboard-organizer.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/languages",
+    "routeHint": "Settings -> Customization -> Dashboard Organizer. Requires 'Use Custom Dashboard' under Settings -> Modules -> Users & Profiles -> Advanced Settings, and the tenant needs at least one dashboard category or the left pane is empty. TRAP 1: navigating straight to /tenants/dashboard/configure fails even with the flag on, because the route's beforeEnter reads the tenant out of the persisted Vuex state, which is still the stale copy from the saved session when the guard runs, and it redirects to /dashboard. Land on another settings page first, let App.vue refetch the tenant, then click through the sidebar so the guard sees the fresh flag. TRAP 2: do not add a 'click Edit Dashboard Layout' action. ConfigureDashboard.vue initialises isEditMode to true, so the page already opens in edit mode and that button is not rendered; the click times out and the runner flags an action that did not run. The grey blocks inside the content sections are the organizer's own wireframe placeholders for auto-filled content, not unloaded data. SETUP/TEARDOWN REQUIRED, so this spec is parked at status keep. Setup: UPDATE tenant SET setting_features = JSON_SET(setting_features, '$.users.hasCustomDashboard', TRUE) WHERE id = 282. Teardown, immediately after the capture: JSON_SET(..., FALSE). The teardown is not optional: while the flag is on, Dashboard.vue redirects /dashboard to the configurable widget dashboard, which would silently change index-home/home-member-dashboard, permissions/permissions-impersonation-modal and both mobile-apps specs. The seeded dashboard_category and dashboard_widget rows for tenant 282 are left in place and are inert while the flag is off.",
+    "actions": [
+      "click text=Dashboard Organizer",
+      "wait 2500"
+    ],
+    "waitFor": "text=Dashboard Elements",
+    "viewport": "desktop",
+    "alt": "Dashboard organizer in edit mode with the Dashboard Elements palette on the right and placed content sections on the left",
+    "status": "keep"
+  },
+  {
+    "id": "dashboard-welcome-list",
+    "image": "/images/platform/customization/dashboard-welcome.png",
+    "usedOn": [
+      "platform/customization/dashboard-welcome.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/dashboard-welcome-template",
+    "routeHint": "Settings -> Customization -> Dashboard Welcome. The page is headed 'Welcome Messages by User Type', so it has to show user-type messages: with only the default message present, DashboardWelcomeTemplate.loadData() auto-opens that one card in edit mode and the list view is never seen. Seed at least two non-default messages with selectedUserTypeIds pointing at real user types before capturing.",
+    "actions": [],
+    "waitFor": "text=Welcome Messages by User Type",
+    "viewport": "desktop",
+    "alt": "Welcome Messages by User Type page with the Create New Message button, the Hide welcome message toggle, the Default message card and two user-type-targeted cards showing their user type tags, sticky switches and Delete buttons",
+    "status": "new"
+  },
+  {
+    "id": "dashboard-welcome-editor",
+    "image": "/images/platform/customization/dashboard-welcome-editor.png",
+    "usedOn": [
+      "platform/customization/dashboard-welcome.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/dashboard-welcome-template",
+    "routeHint": "Settings -> Customization -> Dashboard Welcome, then click 'edit' on the first card. The auto-open that used to make this shot free only happens when the default message is the only message, which is no longer true now that user-type messages are seeded, so the click is required. The selector crops to the card being edited: rich text editor, the 'Available Placeholders: {firstName} {lastName}' hint, the 'Welcome message Image URL' field and the Sticky switch next to Save and cancel.",
+    "actions": [
+      "click text=edit"
+    ],
+    "waitFor": "text=Available Placeholders",
+    "selector": ".welcome-message-card.is-editing",
+    "viewport": "desktop",
+    "alt": "Welcome message editor with the rich text area, the placeholder hint, the image URL field and the sticky switch",
+    "status": "new"
+  }
+]

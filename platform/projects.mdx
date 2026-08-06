@@ -1,0 +1,114 @@
+---
+title: 'Projects'
+description: 'Run projects inside Orgo with tasks, a kanban board, a Gantt timeline and goals'
+"og:title": 'Projects | Orgo'
+"og:description": 'Run projects inside Orgo with tasks, a kanban board, a Gantt timeline and goals'
+"twitter:title": 'Projects | Orgo'
+"twitter:description": 'Run projects inside Orgo with tasks, a kanban board, a Gantt timeline and goals'
+---
+
+A project is a workspace for a piece of work your organisation is delivering. It holds tasks, its own set of task statuses and task types, an optional list of goals and objectives, and its own member list. Every project has five views: Overview, Tasks, Board, Gantt and (when it has a description) About.
+
+**Built for** committees, working groups and staff teams that plan work in Orgo rather than in a separate tool, so the people, groups and permissions are already there.
+
+**Replaces** a spreadsheet of action items or a standalone task tracker for internal work. It is not a client-facing or billable project tool: there is no time tracking, no budget and no external sharing.
+
+<img src="/images/platform/projects/projects-list.png" alt="Projects page showing Active and Archived tabs and project cards with a coloured tile, a description and a completed task count with a progress bar" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Turning it on
+
+Projects is a module, **off** by default: **Settings** → **Modules** → **Projects** → **Enable Project Management** (`ADMIN_TENANT`). The same switch also enables project groups, described at the end of this page.
+
+A **Projects** section then appears in the sidebar listing the projects you can open, with a search box past two. Its label can be renamed in the menu organiser.
+
+<img src="/images/platform/projects/projects-module-config.png" alt="Projects module settings with the Enable Project Management switch turned on and its helper text" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Who can do what
+
+| Action | Who |
+|--------|-----|
+| Create a project | Any signed-in member, from the plus button on the sidebar **Projects** section. The Projects page **Create project** button shows only to `HR_TENANT` and above. Guests cannot create projects when a guest user type is configured. |
+| Open a project | The owner, individual members, members of a group it grants access to, `ADMIN_TENANT` and `HR_TENANT`. Everyone else gets a not-found and never sees it in the sidebar. |
+| Rename, restyle, archive, delete, manage members, statuses and types | `ADMIN_TENANT` or the owner in the interface. The API also accepts a member of one of the project's access groups. |
+| Create tasks | Anyone who can open the project. Editing an existing task is narrower: see [Tasks](/platform/tasks). |
+
+---
+
+## Creating a project
+
+**Projects** → **Create project**. Everything on the form can be changed later in project settings.
+
+| Field | What it does |
+|-------|-------------|
+| **Project name** | Required. Shown in the sidebar, on the card and in the header. |
+| **Emoji** / **Color** | Pick one or the other. It identifies the project everywhere it is listed. |
+| **Description** | Free text. Filling it in adds the **About** tab. |
+| **Project owner** | Defaults to you; search any member to hand it over. The owner always has full rights. |
+| **Group access** | One or more groups whose members can all open the project. |
+| **Task options** | Five checkboxes controlling which fields and filters appear on tasks here: **Goals** (off by default), **Priority**, **Due date**, **Task types** and **Custom statuses** (all on). |
+
+Saving creates three task statuses: **To do**, **In Progress** and **Done**, with **Done** marked as a closed status.
+
+### Giving people access
+
+Owner, individual members and group access stack. Add **individual members** one at a time under **Settings** → **Members**: only active accounts qualify, and nobody twice. A member of an access group counts as an editor to the API, so use group access for the people running the project and individual members for people who only follow it. `ADMIN_TENANT` and `HR_TENANT` see every project regardless.
+
+<img src="/images/platform/projects/project-settings-members.png" alt="Project settings Members tab showing the project owner, an individual members list with avatars and a group access tag input" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## The project views
+
+| Tab | What it shows |
+|-----|--------------|
+| **Overview** | **Status distribution** and **Priority breakdown** pie charts, a **Needs attention** panel (overdue, unassigned, due in 3 days, no dates), recent tasks, a completion ring, **Team** workload by assignee, and **Upcoming** due dates and goals. Clicking a slice or counter filters the Tasks tab. |
+| **Tasks** | The full task list with filters, grouping and column options. See [Tasks](/platform/tasks). |
+| **Board** | Kanban: one column per task status, plus optional **Overdue** and **No status** columns. Drag a card between columns to change its status. |
+| **Gantt** | Tasks and goals on a timeline at **Day**, **Week** or **Month** scale, with zoom and a **Tasks** / **Goals** / **Both** filter. Drag a bar to move it, or its edges to change start and due dates. |
+| **About** | The project description, edited in place by anyone who can edit the project. Appears once a description exists. |
+
+Dropping files anywhere on a project opens the new task form with those files attached.
+
+<img src="/images/platform/projects/project-overview.png" alt="Project Overview tab with status and priority pie charts, a needs attention panel, recent tasks and a team workload list" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Goals and objectives
+
+Switch on **Goals** in the project's task options, then open **Objectives & Goals** from the project header.
+
+A **goal** groups tasks into a phase or milestone: a name, an optional description, an optional parent objective, optional start and end dates. Tasks then carry a **Goal** field, the task list groups and filters by goal, and goals get their own Gantt bars.
+
+An **objective** sits a level above goals, for projects with several strands of work; turn them on with the **Objectives** switch on the goals screen. An objective has a name, description, colour and date range, and goals are dragged into it. With objectives off you get one flat list. Both reorder by dragging, and deleting a goal leaves its tasks in place without a goal.
+
+<img src="/images/platform/projects/project-goals.png" alt="Objectives and goals screen with two expandable objective sections, each with a colour dot, its goals nested underneath, and add objective and add goal buttons" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Project settings
+
+The cog in the project header opens **General** (the create-form fields plus the danger zone), **Members** (owner, individual members, group access) and **Statuses & types**. Statuses and types are specific to this project: each status has a name, a colour and a **Mark as closed** switch deciding whether tasks in it count as complete; each type has a name and a colour.
+
+**Archive project** moves it to the **Archived** tab, still readable and unarchivable from there. Its tasks stop sending assignment, status, comment and reminder emails and drop off the dashboard **My Tasks** card, but still appear in the daily task digest. **Delete project** is permanent and takes the tasks, goals, objectives, statuses and types with it.
+
+---
+
+## Projects and project groups
+
+The same module switch also turns on an older feature that uses the word project. A **project group** is an ordinary group with issue tracking switched on, created from **Issues** → **New**: it gains an **Issues** tab with its own issue statuses and types, lives with the group rather than on the Projects page, and issue tracking can only be set at group creation. See [Issues](/platform/issues).
+
+A project in the sense of this page is a separate record with its own members, tasks, board, Gantt and goals, listed under **Projects** in the sidebar. It can grant access to groups, but it is not one. Starting fresh, use Projects; project groups remain for organisations already tracking issues inside their groups.
+
+---
+
+## Related
+
+- [Tasks](/platform/tasks) - everything a task holds and how the reminders work
+- [Issues](/platform/issues) - the group issue tracker and project groups
+- [Groups](/platform/groups) - the groups a project can grant access to
+- [Permissions](/platform/permissions) - what `ADMIN_TENANT` and `HR_TENANT` unlock
+- [Notifications](/platform/notifications) - the member-side notification switches

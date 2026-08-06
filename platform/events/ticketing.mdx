@@ -1,300 +1,425 @@
 ---
 title: 'Event Ticketing'
-description: 'Sell tickets with multiple price tiers, member discounts, and Stripe checkout'
+description: 'Sell tickets with multiple price tiers, member pricing, addons, vouchers and QR check-in'
 "og:title": 'Event Ticketing | Orgo'
-"og:description": 'Sell tickets with multiple price tiers, member discounts, and Stripe checkout'
+"og:description": 'Sell tickets with multiple price tiers, member pricing, addons, vouchers and QR check-in'
 "twitter:title": 'Event Ticketing | Orgo'
-"twitter:description": 'Sell tickets with multiple price tiers, member discounts, and Stripe checkout'
+"twitter:description": 'Sell tickets with multiple price tiers, member pricing, addons, vouchers and QR check-in'
 ---
 
-Orgo Event Ticketing is a built-in ticketing module within the Orgo membership platform that lets organizations sell event tickets with member pricing, capacity limits, add-ons, and QR code check-in.
+Orgo Event Ticketing sells event tickets from inside your membership platform, with member-only
+pricing tied to your fee levels, addons, discount vouchers, and QR code check-in.
 
-**Built for** membership organizations running paid events for members and non-members, including professional associations, youth organizations, alumni networks, and trade unions, and similar member-based groups coordinating events from small workshops to large conferences across chapters.
+**Built for** membership organisations running paid events for members and non-members: professional
+associations, youth organisations, alumni networks, trade unions, and similar member-based groups.
 
-**Replaces** separate tools like Eventbrite, Ticket Tailor, or Cvent with ticketing tied directly to your member database and payment processing, with no per-ticket fees from Orgo, only Stripe's standard rate.
+**Replaces** Eventbrite, Ticket Tailor or Cvent with ticketing tied directly to your member database
+and your own Stripe account. Orgo charges no per-ticket fee, you pay only Stripe's rate.
 
-Attendees pay via Stripe, receive a QR code ticket by email, and check in at the door by scanning it.
+Buyers pay by card in an inline Stripe checkout, receive a ticket by email, and check in at the door
+by QR scan.
 
-Even for free events, ticketing is useful when you need different registration categories (e.g., "Member" vs "Guest" vs "Speaker").
+<img src="/images/platform/events/event-tickets.png" alt="Tickets page for an event showing the Allow only one ticket per order switch, three ticket types with price, availability tags and seat counts, and the start of the Addons section" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-<img src="/images/platform/events/event-tickets.png" alt="Ticket types showing Scout Registration ($150, 350 seats), Adult Leader ($100, 100 seats), and Staff/Volunteer (Free, 50 seats)" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
----
-
-## Prerequisites
-
-<Warning>
-  Paid tickets require Stripe. Set up your payment integration first at **Settings** → **Payments** → **Online Payments**. See [Stripe Setup](/platform/fees/stripe-integration).
-</Warning>
-
-Also ensure:
-- **Online Payments** module is enabled
-- **Event Ticket Payments** is enabled in **Settings** → **Events**
-
-For free-only ticketing (multiple registration categories without payment), you don't need Stripe.
+The same screen continues below the fold with the rest of [Addons](#addons) and then
+[Vouchers](#vouchers).
 
 ---
 
-## Setting up tickets
+## Turning ticketing on
 
-When creating or editing an event, go to the **Ticket Settings** tab.
+Ticketing is a property of the individual event, not a module you switch on once.
 
 <Steps>
-  <Step title="Enable ticketing">
-    Toggle on "Enable Ticket Payment" in the event settings.
+  <Step title="Connect Stripe">
+    The **Online Payments** module must be active and your Stripe account connected, otherwise the
+    **Paid** option does not appear on the event form. See
+    [Stripe Setup](/platform/fees/stripe-integration).
   </Step>
-  <Step title="Create ticket types">
-    Add one or more ticket types with name, price, and optional quantity limits.
+  <Step title="Set the event to Paid">
+    On the event form, under **Access**, choose **Paid** instead of **Free**. This section is only
+    visible to users with `FINANCIAL_TENANT` or `EVENT_TENANT`.
   </Step>
-  <Step title="Configure availability">
-    Set start/end dates for each ticket type to control when they're purchasable.
+  <Step title="Add ticket types">
+    A **Tickets** entry appears in the event sidebar. Open it and add one or more ticket types.
   </Step>
-  <Step title="Save">
-    Tickets appear on the [event page](/platform/events/public-page) immediately.
+  <Step title="Publish">
+    Tickets appear on the [event page](/platform/events/public-page) as soon as they are within their
+    availability window.
   </Step>
 </Steps>
+
+<Note>
+Switching an event to **Paid** also forces **Require registration form for members** on, and the
+toggle becomes read only. Every ticket buyer goes through the
+[registration form](/platform/events/registration-forms), never a simple RSVP.
+</Note>
+
+<Warning>
+The **Max capacity** field disappears from the event form once ticketing is on, and event-level
+capacity is not applied to ticket sales. Cap attendance with **Max Seats** on each ticket type
+instead.
+</Warning>
+
+The **Tickets** and **Payments** sidebar entries appear only for `FINANCIAL_TENANT` or
+`EVENT_TENANT`, and only once the event is Paid. Every write on the Tickets page (ticket types,
+addons and vouchers alike) requires `EVENT_TENANT`, which `ADMIN_TENANT` satisfies. `EVENT_LOCAL`
+alone can run the event and edit its [registration form](/platform/events/registration-forms) but
+cannot change what is on sale.
 
 ---
 
 ## Ticket type settings
 
-Each ticket type has these options:
+Open the event, then **Tickets** in the sidebar, then **Add ticket**.
 
 | Setting | What it does |
 |---------|-------------|
-| **Name** | What attendees see: "General Admission", "Early Bird", "VIP" |
-| **Description** | What's included: "Includes lunch and networking session" |
-| **Price** | Amount in your currency. Set to 0 for free registration categories. |
-| **Max seats** | Maximum tickets available for this type. Leave empty for unlimited. When sold out, the ticket shows "Sold Out" while other types remain available. |
-| **Members only** | Only logged-in members can purchase. Non-members won't see this ticket. |
-| **Start date** | When this ticket becomes available for purchase. |
-| **End date** | When this ticket stops being available. |
+| **Title** | What buyers see: "Member Ticket", "Guest Ticket", "Early Bird". |
+| **Price** | Amount in your organisation's currency. Set to 0 for a free registration category. |
+| **Description** | Longer text shown under the ticket name on the event page. |
+| **Availability** | **Members & external** (anyone) or **Members only**. |
+| **Restrict to specific membership levels** | Members-only tickets only. Pick one or more membership fee levels; empty means every member. |
+| **Max Seats** | Seats for this ticket type. Empty means unlimited. |
+| **Available from** / **Available until** | Purchase window. Cannot start before the event was created or end after the event ends. |
+
+<Warning>
+The **Price** field is read only once a ticket has been created. To change a price, add a new ticket
+type and let the old one expire.
+</Warning>
+
+**Allow only one ticket per order**, a switch at the top of the Tickets page, hides the quantity
+controls so a buyer can select one ticket per checkout.
+
+### Availability tags
+
+The ticket list labels each ticket automatically: **Active**, **Upcoming** (start date in the
+future), **Expired** (end date passed), **Sold Out**, **Only N left!** (fewer than 10 seats),
+**Limited availability** (fewer than 20 seats), and **archived**. The public page is vaguer: the
+exact count at 10 seats or fewer, "limited" between 11 and 20, nothing above 20.
 
 ---
 
-## Common pricing strategies
+## Member pricing
 
-### Early bird + regular pricing
+**Members only** tickets stay visible to logged-out visitors but cannot be selected. They carry a
+**members only** badge, and the page shows a notice with **login** and **register** buttons.
 
-Create two tickets with overlapping availability:
+Adding levels under **Restrict to specific membership levels** narrows this further: the buyer needs
+an active tenant fee whose level is in the allowlist, or they are refused with "This ticket is
+reserved for specific membership levels." **Only one membership-restricted ticket is allowed per
+attendee per event**, counted across the whole event and not per ticket type.
 
-| Ticket | Price | Available |
-|--------|-------|-----------|
-| Early Bird | $50 | Now → March 1 |
-| Regular | $75 | March 1 → Event date |
+Both checks are skipped when the person doing the booking holds `EVENT_TENANT`, holds `EVENT_LOCAL`
+on the event's group, or owns the event, so an organiser can still book on someone's behalf.
 
-The early bird sells out or expires, then regular pricing kicks in. This creates urgency and rewards early commitment.
+<Note>
+The membership level list is read from your organisation's [membership fee](/platform/fees/fees)
+product. If no membership fee product is configured the dropdown is empty, and **Members only** then
+simply means any signed-in member.
+</Note>
 
-### Member vs. non-member pricing
-
-| Ticket | Price | Members only? |
-|--------|-------|--------------|
-| Member | $40 | Yes |
-| Non-Member | $60 | No |
-
-Members see both options but the member price is clearly a benefit. Non-members only see the public price.
-
-### Tiered access
-
-| Ticket | Price | Quantity | Includes |
-|--------|-------|----------|----------|
-| General | $50 | Unlimited | Standard entry |
-| VIP | $100 | 50 | Front row, meet & greet, swag bag |
-| Speaker | $0 | 20 | Complimentary for speakers |
-
-### Free event with categories
-
-| Ticket | Price | Members only? |
-|--------|-------|--------------|
-| Member | $0 | Yes |
-| Guest | $0 | No |
-
-No money changes hands, but you track who's a member and who's an external guest. Useful for networking events.
+Two tickets with adjoining availability windows give you early bird then regular pricing; a
+members-only ticket beside a members-and-external one gives you member and non-member prices;
+tickets priced 0 still separate members from guests.
 
 ---
 
-## Managing capacity
+## Common ticket structures
 
-### Per-ticket limits
+Every structure below is built from the same ticket type fields. The amounts and dates are
+**examples**, not defaults: nothing here is preconfigured.
 
-Limit individual ticket types independently:
-- VIP: 50 available
-- General: Unlimited
+| What you want | How to build it |
+|---|---|
+| **Early bird, then regular** | Two ticket types on the same event. "Early Bird" at 60, **Available until** 31 March 23:59. "Regular" at 80, **Available from** 1 April 00:00. Both stay listed all along: the early bird turns **Expired** and the regular sits at **Upcoming** until its window opens. Neither is selectable outside its window. |
+| **Member versus non-member** | "Member" at 40 with **Availability** set to **Members only**, "Standard" at 70 with **Members & external**. A logged-out visitor sees both, can select only Standard, and gets the login and register prompt on the member one. |
+| **Tiered access by membership level** | Start from a members-only ticket, then add levels under **Restrict to specific membership levels**: "Student rate" at 25 restricted to your Student level, "Full rate" at 55 restricted to Standard and Senior. A member whose level is not listed is refused. Because only one membership-restricted ticket is allowed per attendee per event, these tiers are mutually exclusive by construction. |
+| **Free event with categories** | Price every type 0: "In person" with **Max Seats** 120, "Online" with no seat limit. A zero-priced ticket goes through free registration with no card step, so the attendee still fills in the registration form and still gets a QR ticket. An event where every ticket has a price cannot be used for free registration. |
+| **Paid event with one free category** | Mix them: a paid ticket type and a 0 priced one on the same event. The free one is completed without a card; the paid ones go to Stripe. |
+| **One ticket per person** | Turn on **Allow only one ticket per order** at the top of the Tickets page. For anything larger, note that one browser session can hold at most 10 tickets per event, so a company buying 12 places has to do it in two checkouts. |
 
-When a ticket type sells out, it shows "Sold Out" on the event page. Other types remain available.
-
-### Event-level capacity
-
-Set an overall maximum in the event settings. This caps total registrations across all ticket types combined. When the event is full:
-- All tickets show "Sold Out"
-- If waitlist is enabled, new registrants join the waitlist
-- When someone cancels, the next waitlisted person is notified
-
----
-
-## Orders and payments
-
-Once tickets start selling, track all orders from the event sidebar → **Payments**.
-
-<img src="/images/platform/events/event-payments.png" alt="Event orders list showing 31 orders with paid and refunded statuses, amounts, and dates" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
-Each order shows the attendee's name, status (Paid, Refunded), ticket type, amount, and date. Filter by name, email, or status to find specific orders. Refunds can be processed directly from this view.
-
----
-
-## The purchase flow
-
-What your attendees experience:
-
-<Steps>
-  <Step title="Select tickets">
-    Choose ticket type and quantity on the event page.
-  </Step>
-  <Step title="Enter details">
-    Provide name, email, and any required registration fields.
-  </Step>
-  <Step title="Pay">
-    Secure checkout via Stripe — credit/debit cards, Apple Pay, Google Pay, and local payment methods depending on your Stripe configuration.
-  </Step>
-  <Step title="Receive ticket">
-    Confirmation email with event details and a QR code for check-in.
-  </Step>
-</Steps>
-
-<img src="/images/platform/events/event-checkout.png" alt="Checkout form showing email, full name, order summary with ticket selection, GDPR privacy policy checkbox, terms and conditions checkbox, and Complete Registration button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<Note>
+A ticket priced 0 is not the same as a members-only ticket priced 0. Price decides whether Stripe is
+involved; **Availability** decides who can select it. You can combine them freely.
+</Note>
 
 ---
 
 ## Addons
 
-Addons are optional extras that attendees can purchase alongside their ticket — lunch, a workshop session, parking, a +1 guest, merchandise. Each addon has its own price and capacity, independent of the ticket.
+Addons are extras sold alongside a ticket: a meal, a workshop track, parking, a partner place. They
+live in the **Addons** section of the Tickets page, and you need at least one ticket type first.
 
 | Setting | What it does |
 |---------|-------------|
-| **Name** | What attendees see: "Lunch Package", "Workshop: Advanced Track", "Parking Pass" |
-| **Description** | What's included |
-| **Price** | Cost per unit. Set to 0 for free extras. |
-| **Max quantity per ticket** | How many of this addon a single attendee can buy (default: 10) |
-| **Max total** | Overall capacity for this addon across all attendees. When sold out, it's no longer available. Leave empty for unlimited. |
-| **Creates attendee** | If enabled, purchasing this addon creates a child attendee record — useful for "+1 Guest" addons where the extra person needs their own QR code and check-in. |
-
-Addons are linked to specific ticket types, so you can offer different extras for VIP vs. General Admission.
-
-### Example: Conference with addons
-
-| Addon | Price | Max per ticket | Max total | Creates attendee? |
-|-------|-------|---------------|-----------|-------------------|
-| Lunch (Day 1) | $25 | 1 | 200 | No |
-| Lunch (Day 2) | $25 | 1 | 200 | No |
-| Workshop: AI Track | $50 | 1 | 40 | No |
-| Workshop: Leadership | $50 | 1 | 40 | No |
-| +1 Guest | $30 | 1 | 100 | Yes |
-| Parking Pass | $15 | 1 | 50 | No |
-| Event T-Shirt | $20 | 3 | — | No |
-
-The workshop addons have a max total of 40, so once 40 people across all ticket types select that workshop, it shows as sold out.
-
----
-
-## QR code check-in
-
-Every registered attendee receives a unique QR code — visible on their event page and sent in their confirmation email. On event day, check people in by scanning it.
-
-<img src="/images/platform/events/event-qr-ticket.png" alt="Event page showing ticket confirmation with QR code, 'Registration confirmed' status, and Download button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
-### How it works
-
-1. Attendee shows their QR code (on phone or printed)
-2. An admin opens the **QR Scanner** from the event's participant list
-3. Scan the code — the system instantly shows:
-   - Attendee name and profile photo
-   - Ticket type and price paid
-   - Payment status (paid, pending, invited)
-   - Addon purchases
-   - Whether they've already checked in
-4. Confirm check-in with one tap
-
-The QR code is a SHA-256 hash unique to each registration — it can't be guessed or duplicated.
+| **Tickets** | Which ticket types the addon is offered with. At least one is required, and the selection is locked once the addon exists. |
+| **Name** | What buyers see, for example "Spouse/Partner". |
+| **description** | Detail line under the name. |
+| **price** | Cost per unit, read only after creation. Set to 0 for a free extra. |
+| **Max per ticket** | How many of this addon one ticket can carry. Empty means unlimited. |
+| **Total inventory** | Overall stock across all buyers. Empty means unlimited. When it runs out the addon shows **Sold Out**. |
+| **Creates a separate attendee** | The buyer fills in a separate name and email, producing its own attendee record, ticket and check-in, linked back to the ticket that bought it. This is how you sell a "+1". |
 
 <Note>
-  QR scanning requires **HR Tenant** [permissions](/platform/permissions) or higher. Any admin with event management access can check people in.
+An addon that has been purchased cannot be deleted. Set **Archived** on it instead, which hides it
+from checkout while keeping the sales history. Archiving is available on the older addon editor at
+`/events/edit/addons/<event uuid>`, which you have to reach by typing the URL.
 </Note>
 
-### Manual check-in
-
-For walk-ins or when QR scanning isn't practical, open the **Participants** tab and mark attendees as "Attended" manually. You can also record walk-ins who weren't pre-registered.
-
 ---
 
-## Ticket holds
+## Vouchers
 
-When an attendee starts the checkout process, their seats are temporarily held for **8 minutes**. This prevents overselling — if someone is filling in payment details, those seats aren't available to others.
-
-- Holds expire automatically if checkout isn't completed
-- Maximum 10 holds per session to prevent abuse
-
----
-
-## Speakers
-
-Add speakers to your event to display them on the event page. Speakers can be existing members or external contacts.
-
-<img src="/images/platform/events/event-speakers.png" alt="Event speakers tab showing three speakers with profile photos, names, and bios" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+Vouchers are per-event discount codes, listed under **Vouchers** on the Tickets page. Buyers enter
+the code at checkout under **Have a voucher code?**.
 
 | Setting | What it does |
 |---------|-------------|
-| **Internal speaker** | Select an existing Orgo member — their name, bio, and photo are pulled from their profile |
-| **External speaker** | Select from your [contacts](/platform/contacts) list — name and bio from the contact record |
+| **Voucher code** | Stored and matched in upper case, and unique within the event. |
+| **Active** | Turns the code off without deleting it. Shown when editing. |
+| **Discount type** | **Percentage** or **Fixed amount**. |
+| **Discount value** | The percentage (max 100) or the fixed amount. |
+| **Currency** | Fixed-amount vouchers only. Defaults to your organisation currency. |
+| **Max uses** | Number of separate checkouts that may use the code. Each checkout counts once whatever the ticket quantity. Empty means unlimited. |
+| **Max tickets per use** | Percentage vouchers only. Caps how many tickets in one order the percentage applies to. |
+| **Max discount amount** | Percentage vouchers only. A ceiling on the money taken off. |
+| **Restrict to ticket types** | Empty applies the code to every ticket type. |
+| **Valid from** / **Valid to** | Optional date window. |
 
-Speakers appear on the public event page with their photo, name, and headline. This is useful for conferences, webinars, and panel events.
+The list shows each voucher's status (**Active**, **Upcoming**, **Expired**, **Limit reached** or
+**Inactive**) and its usage count. A voucher that takes the order to zero completes without a card
+payment. Deleting a voucher does not change discounts already applied to past orders, and a refund
+does not give a use back.
+
+### How the discount is worked out
+
+A fixed-amount voucher comes off the order total once, not off each ticket. A percentage voucher is
+the one that surprises people, because the percentage is applied to the order's **average** ticket
+price, multiplied by the number of tickets it is allowed to cover.
+
+**Example.** An order of two Regular tickets at 80 and one Student ticket at 25 totals 185.
+
+| Voucher | Discount taken | Why |
+|---|---|---|
+| 20%, no other limits | 37.00 | 20% of the whole 185. |
+| 20%, **Max tickets per use** 2 | 24.67 | The average ticket is 61.67; two of them is 123.34; 20% of that. Not 20% of the two dearest tickets. |
+| 20%, **Max tickets per use** 2, **Max discount amount** 20 | 20.00 | The cap wins. |
+| 20%, **Restrict to ticket types** Regular | 32.00 | Only the two Regular lines count, so the average is 80. |
+
+If you want a percentage to apply to specific tickets, set **Restrict to ticket types**. **Max
+tickets per use** limits how many tickets are covered but does not choose which ones.
 
 ---
 
-## Invitations and complimentary tickets
+## Seat holds
 
-Not everyone pays. For speakers, sponsors, VIPs, or staff:
+When a buyer starts selecting tickets, the seats are held so two people cannot buy the last one at
+the same time.
 
-1. Go to the event → **Participants** tab
-2. Click **Invite Member** (for Orgo members) or **Invite External** (for non-members)
-3. Select people or enter email addresses
-4. They receive an invitation email with an RSVP link
-5. Invited guests bypass ticket purchase entirely
-
-Invited attendees are marked as "Invited" in the participant list — easy to distinguish from paying attendees.
+- A hold lasts **8 minutes**, reset to a fresh 8 minutes when the buyer adds more of the same ticket.
+- One browser session can hold at most **10 tickets** per event, counted across ticket types. Beyond
+  that the buyer is told how many more they can hold.
+- Holds are released when the buyer leaves the page, when the purchase completes, or by the
+  `app:cleanup-expired-holds` job once they expire.
+- Held seats are unavailable to everyone else, so a ticket can read "Sold Out" while carts are open
+  and free up again when they expire.
 
 ---
 
-## Refunds
+## What a buyer sees
 
-Process refunds through:
-- **Event participant management** — find the attendee and process a refund
-- **Stripe dashboard** — for more complex refund scenarios
+<img src="/images/platform/events/event-checkout.png" alt="Event checkout with the registration form on the left (email, full name) and an order summary on the right showing the ticket, total, the newsletter and company invoice options, and Pay with Card" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-Refunded attendees have their registration cancelled and the spot opens up (or goes to the waitlist).
+<Steps>
+  <Step title="Pick tickets">
+    Listed cheapest first. Sold out, upcoming and expired tickets are shown but not selectable.
+  </Step>
+  <Step title="Fill in the registration form">
+    One card per ticket, collecting every attendee's details; logged-in members arrive prefilled. See
+    [Registration Forms](/platform/events/registration-forms).
+  </Step>
+  <Step title="Add extras and a voucher">
+    Addons appear under **Extras** in the order summary. A voucher code can be applied and removed
+    before paying.
+  </Step>
+  <Step title="Consent and pay">
+    The buyer confirms your GDPR policy and terms, then pays inline through Stripe without leaving
+    the page.
+  </Step>
+  <Step title="Get the tickets">
+    A paid order sends the buyer one confirmation email with every ticket attached as its own PDF,
+    including tickets created by addons. On a free order each attendee registered under a different
+    email address gets their own confirmation too.
+  </Step>
+</Steps>
+
+With the **Invoices** module on, the checkout also offers **I want company invoice**. Ticking it
+adds a billing step for company details, after which the buyer can still pay by card or choose
+**Pay via bank transfer**, which issues an invoice and confirms the tickets once payment arrives.
+Hide the option with **Settings → Events → Disable Company Invoice in Checkout**.
+
+---
+
+## Orders
+
+The **Payments** entry in the event sidebar opens the order list, headed **Orders**.
+
+<img src="/images/platform/events/event-payments.png" alt="Event orders table with order id, status, buyer name, amount and created date columns, and a Generate Invoice action per paid order" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+Each row shows the order id, status, the buyer (member or contact), amount, the voucher code if one
+was used, and the payment date. Filter by name, email, or status (**open**, **paid**, **refunded**);
+rows can also read **on-hold** or **canceled**. Where a Stripe account is connected, an arrow link
+opens the payment or invoice in the Stripe dashboard.
+
+The **Ticket type** column stays empty for event ticket orders. It reads a product *option*, which is
+a fee-product concept; event ticket purchases record the ticket tier as the product *price* instead.
+To see which tier someone bought, use the Ticket column on
+[the participant list](/platform/events/attendance) or the Revenue by ticket table in
+[Analytics](/platform/events/analytics).
+
+**Refund** appears on paid orders that were paid by card and requires `FINANCIAL_LOCAL` or higher. It
+refunds the full amount, with no partial refund in the interface, and on success cancels every
+attendee record created by that order, returns their seats to the ticket type, and returns any addon
+quantities to stock. Voucher usage is not returned. Orders paid by bank transfer have no Refund
+button: handle those in Stripe or through
+[invoice cancellation](/platform/fees/cancelling-invoices).
+
+With the Invoices module on, an `ADMIN_TENANT` user gets a **Generate Invoice** button on paid orders
+that have no invoice yet, and a **View Invoice** link once one exists.
+
+---
+
+## Tickets and check-in
+
+Every attendee record carries a random token that becomes their QR code, delivered in the
+confirmation email and shown on the event page. Scanning it at the door opens the check-in screen
+with the attendee's name, ticket type, payment status and addons.
+
+<img src="/images/platform/events/event-qr-ticket.png" alt="Attendee view of a confirmed registration on the public event page, with the Registration confirmed badge and the QR code to show at the entrance" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+<Note>
+Scanning requires `HR_TENANT` or `EVENT_TENANT`. A local event admin with only `EVENT_LOCAL` cannot
+scan. The full flow, walk-ins and manual check-in are covered in
+[Check-in](/platform/events/check-in).
+</Note>
+
+A member can download their own ticket as a PDF from the internal event page, and an administrator
+can download someone else's only with `HR_LOCAL` over that person. The public event page above has no
+download button: it renders the status badge and the QR code only.
 
 ---
 
 ## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="I want different prices for different user types (students, seniors)">
-    Create separate ticket types for each price tier. Use the "Members only" toggle if some tiers should only be visible to logged-in members. For honor-system tiers (like "Student"), add a note in the description saying verification may be required at check-in.
+  <Accordion title="I need a discount code rather than a separate cheap ticket">
+    Use a [voucher](#vouchers). It is the only discount mechanism in Orgo: there is no automatic
+    group or bulk pricing.
   </Accordion>
 
-  <Accordion title="How do I offer a group discount?">
-    Orgo doesn't have built-in group discount pricing. Workarounds: (1) create a "Group of 5" ticket at a discounted total, (2) share a promo code manually, or (3) handle group registrations offline and invite the group as complimentary attendees.
+  <Accordion title="Someone bought a ticket but cannot attend, can they transfer it?">
+    There is no self-service transfer. An administrator cancels and refunds the original
+    registration, then invites the replacement as a complimentary attendee or has them buy a ticket.
   </Accordion>
 
-  <Accordion title="Someone bought a ticket but can't attend — can they transfer it?">
-    There's no self-service transfer. An admin can cancel the original registration (and refund if needed), then invite the replacement person as a complimentary attendee or have them purchase a new ticket.
+  <Accordion title="I set a ticket price wrong and it is already saved">
+    Prices are locked after creation because payments reference them. Add a corrected ticket type and
+    set the wrong one's **Available until** to now, or delete it if nobody has bought it.
   </Accordion>
 
-  <Accordion title="I want to test the purchase flow before going live">
-    Create the event as a draft, enable ticketing, and test using Stripe's test mode. Once you've verified everything works, switch Stripe to live mode and publish the event.
+  <Accordion title="A ticket says Sold Out but I know seats are free">
+    Seats in other people's carts count as taken. Wait for the 8 minute hold to clear before raising
+    **Max Seats**.
   </Accordion>
 
-  <Accordion title="Tickets are selling slowly — what can I do?">
-    Share the public event URL on social media and in newsletters. Consider extending the early bird deadline. Send reminders to members who haven't registered. Ask group admins to promote the event in their Local Center discussions.
+  <Accordion title="A member cannot select the members-only ticket">
+    Check that their membership fee is active and on a matching level, then whether they already hold
+    another membership-restricted ticket for this event: only one is allowed.
+  </Accordion>
+
+  <Accordion title="I want to stop sales without deleting anything">
+    Turn on **Close registrations** on the event form. No new registrations or ticket purchases are
+    accepted, and existing attendees keep their tickets.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Orgo will not let me delete a ticket type">
+    Deletion is blocked as soon as the ticket type has history, and the message names the reason:
+    payments taken against it, attendees registered on it, or use by a ticket bundle. The records
+    that point at it have to keep pointing at something. Set its **Available until** to now instead:
+    it stops selling, keeps its history, and shows as **Expired** in the list.
+  </Accordion>
+
+  <Accordion title="Saving a ticket is rejected because of its dates">
+    The purchase window has to sit inside the event's own lifetime: **Available from** cannot be
+    earlier than the date the event was created, and **Available until** cannot be later than the
+    event's end (its start, if no end is set). The form also nudges the two dates apart by an hour if
+    you set them so that the end falls before the start.
+  </Accordion>
+
+  <Accordion title="A buyer is told they cannot hold more than 10 tickets">
+    One browser session can hold at most 10 tickets per event across all ticket types, and the
+    message tells the buyer how many more they may take. This is a cap on a single cart, not on the
+    event: they complete that checkout and start another one for the rest.
+  </Accordion>
+
+  <Accordion title="A voucher code is rejected as invalid">
+    "Invalid voucher code" covers four cases at once: the code does not exist on **this** event
+    (vouchers are per event, so a code created on last year's event will not carry over), it is
+    switched off with **Active**, it is outside its **Valid from** / **Valid to** window, or it has
+    reached **Max uses**. Codes are stored and matched in upper case, so capitalisation in the email
+    you sent does not matter.
+  </Accordion>
+
+  <Accordion title="The voucher took off less than the buyer expected">
+    See [How the discount is worked out](#how-the-discount-is-worked-out). The usual causes are
+    **Max discount amount** capping the money, **Max tickets per use** limiting how many tickets the
+    percentage covers, or the percentage landing on the order's average ticket price rather than on
+    the dearest tickets.
+  </Accordion>
+
+  <Accordion title="Checkout fails with a message about the name">
+    "Name can only contain letters, spaces, hyphens, apostrophes and periods." Something that is not
+    a name went into a name box, most often a phone number. Orgo checks every buyer, attendee and
+    addon-attendee name before the card is charged rather than after, so the money is never taken.
+  </Accordion>
+
+  <Accordion title="Checkout fails because the tickets use different currencies">
+    One order cannot mix currencies. This only happens when ticket types on the same event were
+    saved with different currencies; rebuild the odd one out in the event's currency.
+  </Accordion>
+
+  <Accordion title="An addon cannot be added to an order">
+    Three separate limits produce three different messages: **Max per ticket** ("Maximum N of X per
+    ticket allowed"), **Total inventory** ("Only N X available"), and an archived addon ("no longer
+    available"). Inventory counts sales across all buyers, so it can run out mid-event.
+  </Accordion>
+
+  <Accordion title="An attendee lost the confirmation email, can I resend it?">
+    There is no resend button. A signed-in member can open the event page and download their own
+    ticket as a PDF; an administrator with `HR_LOCAL` over that member can download the same PDF and
+    forward it. The QR code is fixed when the attendee record is created and never regenerated, so a
+    re-downloaded ticket scans exactly like the original, and an attendee who shows the QR from the
+    original email is equally valid.
+  </Accordion>
+
+  <Accordion title="The Tickets page and the public event page disagree about how many seats are left">
+    They count differently, and both are right. The **Sold Out** and **Only N left!** tags on the
+    admin ticket list subtract only tickets already sold. The public page also subtracts seats
+    currently held in other people's carts, so it can warn buyers, or refuse them outright, while
+    your list still looks comfortable. The two converge once the open carts are paid for or their
+    8 minute holds expire.
+  </Accordion>
+
+  <Accordion title="I refunded an order but the voucher still counts as used">
+    Refunding returns seats and addon stock but never a voucher use. On a limited-use code, raise
+    **Max uses** by the number of orders you refunded, otherwise the code retires early.
   </Accordion>
 </AccordionGroup>
 
@@ -302,7 +427,8 @@ Refunded attendees have their registration cancelled and the spot opens up (or g
 
 ## Related
 
-- [Create Event](/platform/events/create-event) — Event creation basics
-- [Public Event Pages](/platform/events/public-page) — The page where tickets are sold
-- [Attendance](/platform/events/attendance) — QR code check-in at the event
-- [Stripe Setup](/platform/fees/stripe-integration) — Payment configuration
+- [Create Event](/platform/events/create-event) - the event form and its Access setting
+- [Registration Forms](/platform/events/registration-forms) - what buyers are asked
+- [Public Event Pages](/platform/events/public-page) - where tickets are sold
+- [Check-in](/platform/events/check-in) - QR scanning and walk-ins
+- [Stripe Setup](/platform/fees/stripe-integration) - connecting the payment account

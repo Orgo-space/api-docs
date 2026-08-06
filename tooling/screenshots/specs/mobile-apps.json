@@ -1,0 +1,54 @@
+[
+  {
+    "id": "mobile-download-app-menu",
+    "image": "/images/platform/mobile-apps/download-app-menu.png",
+    "usedOn": [
+      "platform/mobile-apps.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/events",
+    "routeHint": "Click the user avatar at the bottom of the left sidebar to open the user menu -> hover 'Download app' so the side panel with 'Download iOS App' and 'Download Android App' opens (it is a hover submenu, teleported to body, not a click target). The sidebar menu is the same on every page, so this deliberately opens it over the events list rather than over the dashboard: shot on the dashboard it was pixel-identical to home/member-dashboard.png, which is the documentation home page hero.",
+    "actions": [
+      "wait 9000",
+      "click .sidebar-user-trigger",
+      "hover text=Download app"
+    ],
+    "waitFor": ".sidebar-user-side-panel-fixed",
+    "viewport": "desktop",
+    "alt": "Sidebar user menu with the Download app submenu open showing Download iOS App and Download Android App",
+    "status": "new"
+  },
+  {
+    "id": "mobile-install-app-banner",
+    "image": "/images/platform/mobile-apps/install-app-banner.png",
+    "usedOn": [
+      "platform/mobile-apps.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/",
+    "routeHint": "Load the dashboard at a mobile viewport while signed in. The banner renders at the very top of AppLayout. It is suppressed inside the native app, in iframes, and once dismissed: clear the localStorage key 'orgoInstallAppBannerDismissed' before capture. CRITICAL: the banner's shouldShow gate calls $isMobile(), which vue-mobile-detection derives from the User-Agent, not from the viewport width. Playwright's isMobile viewport flag leaves the desktop UA in place, so without the iPhone userAgent below the banner never renders and Dashboard.vue also picks NewDashboardDesktop, whose welcome card collapses into a ~110px vertical sliver at 390px. That combination is what produced the earlier broken shot.",
+    "actions": [],
+    "waitFor": ".install-app-banner",
+    "viewport": "mobile",
+    "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1",
+    "alt": "Install banner at the top of a mobile browser showing the app name, the line Faster smoother in the app, and an Install app button",
+    "status": "new"
+  },
+  {
+    "id": "mobile-push-notification-toggle",
+    "image": "/images/platform/mobile-apps/push-notification-toggle.png",
+    "usedOn": [
+      "platform/mobile-apps.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/me/update",
+    "routeHint": "Own profile -> Notifications tab. The push switch is the first card, labelled 'Push notification, mobile app & web browser'. Turn it on so the helper line under it is visible. Crop to the top two or three cards.",
+    "actions": [
+      "click text=Notifications"
+    ],
+    "waitFor": "text=Push notification, mobile app & web browser",
+    "viewport": "desktop",
+    "alt": "Notifications tab of a member profile showing the Push notification, mobile app and web browser switch turned on",
+    "status": "new"
+  }
+]

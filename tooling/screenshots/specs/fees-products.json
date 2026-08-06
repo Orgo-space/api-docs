@@ -1,0 +1,137 @@
+[
+  {
+    "id": "products-list",
+    "image": "/images/platform/fees/products-list.png",
+    "usedOn": [
+      "platform/fees/products.mdx",
+      "platform/local-group-fees/create-local-fees.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/products/tenant",
+    "routeHint": "Sidebar -> FINANCE -> Products. Log in as a tenant admin so the Create Product button is visible.",
+    "actions": [
+      "click text=Display totals(slower)",
+      "wait 4000",
+      "click .prod-sort-btn",
+      "wait 2500"
+    ],
+    "waitFor": "text=Create Product",
+    "viewport": "desktop",
+    "alt": "Products list showing an organisation membership fee, a donation product and several local group fee products, with Active and Archived tabs",
+    "status": "new",
+    "notes": "The default sort is Recent (id desc), which fills the whole frame with chapter fee rows and pushes the organisation membership fee below the fold. .prod-sort-btn toggles to name-asc (toggleSort only alternates id-desc / name-asc), which brings Northwind Annual Membership and the Support Northwind's Mission donation into frame alongside the chapter fees the alt describes. Display totals(slower) is ticked on purpose: without it every REVENUE / PAYMENTS cell reads '-' and the list looks unused. SUBSCRIBERS stays '-' because these are one-time prices, not subscriptions."
+  },
+  {
+    "id": "product-create",
+    "image": "/images/platform/fees/product-create.png",
+    "usedOn": [
+      "platform/fees/products.mdx",
+      "platform/fees/donations.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/product/create",
+    "routeHint": "Products -> Create Product.",
+    "actions": [],
+    "waitFor": "text=Product type",
+    "viewport": "desktop",
+    "alt": "Create Product form with the Donation and Membership Fee type cards, Title, Frequency, Custom amount and Campaign sections",
+    "status": "new",
+    "notes": "Matches client/src/views/Product/Form.vue as of master 63bb87246. No recapture needed."
+  },
+  {
+    "id": "product-prices-tab",
+    "image": "/images/platform/fees/product-detail.png",
+    "usedOn": [
+      "platform/fees/products.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/product/49chv4d86h835pnuag3b3ptc8s?tab=prices",
+    "routeHint": "Products -> open the membership fee product -> Prices & Options tab.",
+    "actions": [],
+    "waitFor": "text=Prices & Options",
+    "viewport": "desktop",
+    "alt": "Prices and Options tab listing membership prices with names, amounts, a default badge and valid-from dates",
+    "status": "new",
+    "notes": "The existing capture shows Name / Value / Stripe columns. The current table is name (with default, archived, One-time, Recurring, Company price tags), Amount, optional Registration fee and Age columns, Valid From / Valid To when version history exists, and description (client/src/views/Product/Show.vue:227-400). Ideally capture a product that has at least one price with a previous version so the Valid From / Valid To columns render."
+  },
+  {
+    "id": "product-stats-tab",
+    "image": "/images/platform/fees/finance-stats.png",
+    "usedOn": [
+      "platform/fees/products.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/product/49chv4d86h835pnuag3b3ptc8s?tab=stats",
+    "routeHint": "Products -> open the membership fee product -> Stats tab.",
+    "actions": [],
+    "waitFor": "text=Payments total",
+    "viewport": "desktop",
+    "alt": "Product Stats tab showing payments total for the last 90 days with an amount line and a seven-day moving median",
+    "status": "new",
+    "notes": "Same chart component (client/src/views/Product/FinanceStats.vue). Do NOT click text=Stats: ?tab=stats already selects the tab, and the extra click landed on a re-rendering tab pill and left the whole content pane blank (the previous file was a single flat grey). No actions - just let the chart paint."
+  },
+  {
+    "id": "fees-module-config",
+    "image": "/images/platform/fees/fees-module-config.png",
+    "usedOn": [
+      "platform/fees/fees.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/payments",
+    "routeHint": "Settings -> Modules -> Payments & Fees -> Online Payments.",
+    "actions": [],
+    "waitFor": "text=Enable Online Payments",
+    "viewport": "desktop",
+    "alt": "Payments and Fees module settings with Membership Fees, All Members Fee Eligible and Event Ticket Sales toggles",
+    "status": "new",
+    "notes": "Matches client/src/views/Tenant/Modules/PaymentsModuleConfig.vue and client/src/config/module-settings/payments.js."
+  },
+  {
+    "id": "membership-fee-settings",
+    "image": "/images/platform/fees/membership-fee-settings.png",
+    "usedOn": [
+      "platform/fees/fees.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/payments/membership-fees",
+    "routeHint": "Settings -> Modules -> Payments & Fees -> Membership fees (route name ModulePaymentsMembershipFees).",
+    "actions": [],
+    "waitFor": "text=Enable Membership Fees",
+    "viewport": "desktop",
+    "alt": "Membership fees settings showing Enable Membership Fees, the Membership Fee Product and Default Price selectors, and the Payment Options and Local Center Configuration sections",
+    "status": "new",
+    "notes": "Replaces the unusable fees-tenant-settings.png, which is a blank page capture. The page is far taller than one 1920x1080 frame: Enable Membership Fees + Product Configuration + Checkout donation + Payment Options + Local Center Configuration fill the viewport, and Eligibility Rules / Pricing Options / Validity Period / Membership Requirements are all below the fold. Frame the top (no scroll) and keep the alt to the sections actually visible - the fees.mdx alt was amended to match."
+  },
+  {
+    "id": "fee-payments-queue",
+    "image": "/images/platform/fees/fee-payments.png",
+    "usedOn": [
+      "platform/fees/fees.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/fee/payments",
+    "routeHint": "Sidebar -> FINANCE -> Fee payments. Requires FINANCIAL_LOCAL; log in as a tenant admin so the Approve action column is populated.",
+    "actions": [],
+    "waitFor": "text=Fee payments",
+    "viewport": "desktop",
+    "alt": "Fee payments queue with Organisation and Local toggles, a chapter filter, status filters and rows showing value, payer, chapter, method and status",
+    "status": "new",
+    "notes": "The existing capture has an empty table. Recapture on a tenant that has recorded fee batches so at least a few pending and approved rows are visible."
+  },
+  {
+    "id": "fee-stats-by-chapter",
+    "image": "/images/platform/fees/fee-stats.png",
+    "usedOn": [
+      "platform/fees/fees.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/fee/stats",
+    "routeHint": "Sidebar -> FINANCE -> Stats (requires FINANCIAL_TENANT).",
+    "actions": [],
+    "waitFor": "text=Local groups fees",
+    "viewport": "desktop",
+    "alt": "Local groups fees table listing chapters with status, active member count and paid fee count, with under-target rows highlighted",
+    "status": "new",
+    "notes": "Matches client/src/views/Fee/FeeStats.vue."
+  }
+]

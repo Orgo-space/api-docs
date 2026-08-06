@@ -1,228 +1,135 @@
 ---
 title: 'Create Event'
-description: 'Step-by-step guide to creating events, from simple meetings to ticketed conferences'
+description: 'Every field on the event form, what it controls, and what happens when you publish'
 "og:title": 'Create Event | Orgo'
-"og:description": 'Step-by-step guide to creating events, from simple meetings to ticketed conferences'
+"og:description": 'Every field on the event form, what it controls, and what happens when you publish'
 "twitter:title": 'Create Event | Orgo'
-"twitter:description": 'Step-by-step guide to creating events, from simple meetings to ticketed conferences'
+"twitter:description": 'Every field on the event form, what it controls, and what happens when you publish'
 ---
 
-Creating an event in Orgo covers everything from a 10-person committee meeting to a 500-person ticketed conference. This guide walks through every option so you know what to use and what to skip.
+The event form is the same for a 10-person committee meeting and a 500-person ticketed conference. Sections appear or stay hidden depending on your permissions and which modules your organization has enabled, so most people see a shorter form than the one described here.
 
-<img src="/images/platform/events/event-create.png" alt="Create Event form with group selector, event type, title, location, dates, access (Free/Paid), audience (Members only/Public), and description" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+**Built for** anyone in your organization who runs events: national staff, local center coordinators, and group admins.
+
+<img src="/images/platform/events/event-create.png" alt="Create Event form with cover image on the left and group, event type, title, location, online meetup, start and end times with timezone on the right" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## How to create an event
+## Before you start
 
-**Events** → **Create Event**, or from the Dashboard quick actions.
+Go to **Events** and select **Create an event**, or open a group and use its Events tab.
 
-<Steps>
-  <Step title="Basic details">
-    Enter the event title, start/end dates and times, and select the hosting group.
-  </Step>
-  <Step title="Description and location">
-    Write the event description (rich text with images and links). Add a physical address, an online meeting link, or both.
-  </Step>
-  <Step title="Registration settings">
-    Decide whether people can register, set capacity, configure ticket types, and choose which fields to collect.
-  </Step>
-  <Step title="Visual customization">
-    Upload a hero image, set accent colors, and configure the public page appearance.
-  </Step>
-  <Step title="Publish">
-    Review everything, then publish. The event goes live and members are notified.
-  </Step>
-</Steps>
+You can reach the form if you either hold the permission set in **Settings → Modules → Events → Who Can Create Public Events**, or belong to at least one group. If neither is true, the page tells you so and offers a link to browse groups.
+
+Reaching the form is not the same as being allowed to save into every group it offers. Each chapter carries its own **Who can create events in this chapter** setting, and a group can be set so that only its admins create events; either is checked when you save and refuses with a permission message. See [Local Centers](/platform/groups/local-groups#creating-a-chapter).
+
+---
+
+## Cover image
+
+The image panel sits on the left of the form. Upload a PNG or JPEG and a cropper opens: position and scale the image there, then confirm.
+
+Covers are **square (1:1) and saved at 800 by 800 pixels**. If you keep design templates for event artwork, build them at 1:1. A 16:9 banner gets cropped to the centre square, so text near the left and right edges disappears. The same file is reused at several sizes across the event list, the event page, the public page, and the mobile app.
 
 ---
 
 ## Event details
 
-### Required fields
+| Field | What it does |
+|---|---|
+| **Group** | Who the event belongs to. The dropdown has two sections: **Main groups** (your organization as a whole, local centers, role groups, and unit-typed groups) and **groups** (regular groups you belong to). The organization-wide option only appears if you hold the **Who Can Create Public Events** permission. A chapter is offered whether or not you may create events in it, so picking one is only accepted on save if you meet that chapter's own threshold. Once the event is published the group is locked and shown as a tag. |
+| **Event type** | Optional category. Admins get a **Manage types** shortcut next to the label. See [Event Types](/platform/events/event-types). |
+| **Title** | Required. |
+| **Custom Status** | Only when **Enable Custom Statuses** is on. Pick one of your organization's statuses, or None. |
+| **Location** | Address autocomplete backed by Google Places. Picking a suggestion stores coordinates and draws a map preview on the event page. You can also type a plain address. |
+| **Online meetup** | A URL for Zoom, Meet, Teams, or anything else. You can fill in both this and a physical location for a hybrid event. |
+| **Start** and **End** | Date picker plus a time dropdown. The end row is optional: use **Add end time** and **Remove end time**. Moving the start past the end pushes the end to start plus two hours. |
+| **Timezone** | Set per event, defaulting to your own profile timezone. Choose from a shortlist of popular zones or search the full list. |
+| **Description** | Collapsed by default. Rich text with formatting, links, and pasted images. |
 
-| Field | What to enter |
-|-------|-------------|
-| **Title** | Clear, descriptive name — "Annual Leadership Conference 2026" not "Event" |
-| **Start date/time** | When the event begins, including time and timezone |
-| **End date/time** | When the event ends |
-| **Group** | Which group is hosting — this determines who sees it in their calendar. You must have posting permissions in the selected group. |
+Choosing the event type set as **Training Event Type** in module settings adds a **Training type** selector. Choosing the type set as **General Meeting Event Type** adds the general meeting checkboxes (general meeting, elective, extraordinary).
 
-### Optional but recommended
-
-| Field | When to use |
-|-------|------------|
-| **Description** | Always — this is your event's sales pitch. Rich text formatting, images, and links supported. |
-| **Location** | Physical events — enter the venue name and address |
-| **Online link** | Virtual events — paste your Zoom, Teams, or Meet link |
-| **Event type** | Always, if you've set up [Event Types](/platform/events/event-types) — enables filtering and reporting |
-| **Hero image** | Public events and any event you want to look polished. Recommended: 1200x675px, 16:9 ratio. |
-| **Timezone** | Multi-timezone organizations — defaults to your profile timezone |
+<Note>
+There is no recurrence feature. For a weekly meeting, create the first event and use **Duplicate Event** from the event sidebar for each later date, or build an [event template](/platform/events/event-templates) so each new instance starts pre-filled.
+</Note>
 
 ---
 
-## Visibility: public vs. private
+## Access and audience
 
-This is a key decision:
+This block only appears if you can manage events (`EVENT_LOCAL` or the tenant's public-posting permission).
 
-| Setting | What it means |
-|---------|-------------|
-| **Public** | Anyone can view the event page — even without an Orgo account. The event gets a shareable URL. Use for open events you want to promote externally. |
-| **Private** (default) | Only members of the hosting group can see the event. Use for internal meetings, member-only activities. |
+**Access** is **Free** or **Paid**. Paid is only offered when the Online Payments module is active, and only to holders of `FINANCIAL_TENANT` or `EVENT_TENANT`. Choosing Paid turns the event into a ticketed one and creates a linked product behind the scenes, plus a Stripe product when a Stripe account is connected. See [Ticketing](/platform/events/ticketing).
 
-### Attendable vs. informational
+**Audience** is **Members only** or **Public**. The Public option is shown only if you hold the permission named in **Who Can Create Public Events**, and it is hidden entirely for non-joinable (private) groups. The server enforces both rules, so a request that sets Public without the permission is saved as Members only rather than rejected.
 
-| Setting | What it means |
-|---------|-------------|
-| **Attendable** — ON | People can register or RSVP. Enables capacity, tickets, waitlist. |
-| **Attendable** — OFF | The event is informational only — it shows on the calendar but nobody registers. Use for holidays, deadlines, or reminders. |
+<img src="/images/platform/events/event-create-form.png" alt="Access and Audience option cards followed by the Registration and Features setting rows with toggles" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
----
-
-## Registration settings
-
-When "Attendable" is enabled, configure how registration works:
-
-### Capacity
+### Registration
 
 | Setting | What it does |
-|---------|-------------|
-| **Max attendees** | Hard limit on registrations. Leave empty for unlimited. |
-| **Waitlist** | When capacity is reached, new registrants join a waitlist instead of being rejected. |
+|---|---|
+| **Require registration form for members** | Members fill in a form instead of a one-click RSVP. Forced on and locked for paid events. |
+| **Max capacity** | A cap on registrations. Empty means unlimited. Hidden for paid events, where seats are set per ticket type instead. |
+| **Close registrations** | Stops all new registrations and ticket purchases without deleting anything. |
 
-### Registration deadline
+### Features
 
-Set a date/time after which registration closes automatically. Useful for events with preparation requirements (name badges, catering headcount, etc.).
-
-### Registration fields
-
-Choose what information to collect when someone registers:
-
-| Field | Collect when |
-|-------|-------------|
-| **Name** | Always (usually required) |
-| **Email** | Always (usually required) |
-| **Phone** | You need to contact attendees directly |
-| **Organisation** | External attendees from various companies |
-| **Role/Title** | Networking events, professional conferences |
-| **Town** | Geographic spread matters |
-| **LinkedIn / X / Instagram** | Networking events where social connections matter |
-
-<Tip>
-  Fewer registration fields = more registrations. Only ask for what you'll actually use. You can always collect more information at check-in.
-</Tip>
+| Setting | What it does |
+|---|---|
+| **Enable speakers** | Adds the Speakers tab to the event sidebar. |
+| **Visibility of attendee list** | Off: admins only. On: admins and event attendees. |
+| **Enable 1:1 networking** | Lets attendees book 15-minute meetings with each other in the [event app](/platform/events/event-app). Requires the attendee list to be visible, and turning that off again clears this. |
+| **Send reminder 1 hour before event starts** | Emails registered attendees an hour ahead. |
 
 ---
 
-## Ticketing
+## Optional sections
 
-For paid events or events with multiple registration tiers, enable ticketing. This is a deep topic — see [Ticketing](/platform/events/ticketing) for the full guide.
+**Gamification** (when tiers are enabled and you hold `EVENT_TENANT`): award **Points** for the event, and optionally a badge granted to participants marked as attended.
 
-Quick overview: you create ticket types (General Admission, Early Bird, VIP, Member, Student), set prices, and optionally limit quantities. Attendees pay via Stripe checkout and receive a QR code ticket.
+**SDG** (when the SDG setting is on): tag the event with any of the 17 UN Sustainable Development Goals. **Detect SDGs** proposes tags from the title and description, and needs a title plus at least 20 characters of description. Admins get a **Disable SDG functionality** link that switches the setting off organization-wide.
 
-<Warning>
-  Paid tickets require [Stripe setup](/platform/fees/stripe-integration). Without Stripe configured, you can only create free ticket types.
-</Warning>
+**Send attendance reminder 24 hours after event ends** appears when the module setting is on: the reminder goes to you, the host, so attendance actually gets recorded.
 
----
+**Restrict editing to user type** appears when **Restrict Event Editing by User Type** is on and you hold `EVENT_TENANT` or `ADMIN_TENANT`. Local users then need the chosen user type to edit the event, and deleting it requires `EVENT_TENANT`.
 
-## Event page customization
-
-Every event has a page — for public events, this is what the world sees. Customize it to match your brand:
-
-| Setting | What it controls |
-|---------|-----------------|
-| **Organization logo** | Show/hide your org logo on the event page |
-| **Show title** | Display event title prominently over the hero image |
-| **Hero image corners** | None, Small, Medium, or Large border radius |
-| **Accent color** | Affects buttons, links, and highlights throughout the page |
-| **Button color** | Specific color for the register/purchase button |
-| **Light theme only** | Force light theme even if the visitor uses dark mode |
-| **Hide newsletter checkbox** | Remove the "subscribe to updates" checkbox from the form |
-| **Disable registration** | Show event info but no registration form (info-only mode) |
+**Propagate event to all local centers** appears on creation only, for `EVENT_TENANT` holders, when both the Local Centers module and **Propagate Events to Local Centers** are on, and the selected group is not private. Saving then creates one **published** copy in every active local center rather than a single event, and returns you to the events list. A second toggle, **Send invites to members**, emails the members of all those centers.
 
 ---
 
-## SDG tagging
+## Draft, publish, invite
 
-If your organization tracks impact against the UN Sustainable Development Goals (common for NGOs and civil society organizations), you can tag each event with the relevant SDGs (1-17). These tags feed into [Annual Reports](/platform/events/annual-report) for impact reporting.
+New events are saved as **drafts** and are visible only to people who can manage them. An event whose dates are already in the past is published immediately on save.
 
----
+Open the event and the draft banner reads "Only you can see this event" with a **Publish Event** button.
 
-## Draft vs. published
-
-Events start as **drafts**:
-
-| State | Visibility | Notifications |
-|-------|-----------|---------------|
-| **Draft** | Only you and admins can see it | None sent |
-| **Published** | Visible based on public/private setting | Members notified, event appears in calendars |
-
-Work on drafts until everything looks right, then publish. You can still edit most fields after publishing — dates, description, location, tickets.
+<Steps>
+  <Step title="Publish">
+    Publishing a future event notifies the members of its group. Publishing a past event does not notify anyone.
+  </Step>
+  <Step title="Choose whether to invite">
+    If **Bulk Invites** is enabled, publishing asks whether to invite all members of the group, with **Send Invites** and **Skip Invites**.
+  </Step>
+  <Step title="Invite later">
+    A published event shows **Send Invites to All Members** until invites go out. Sending switches to "Sending invites..." and then to a confirmation. Invites cannot be sent while the event is still a draft.
+  </Step>
+</Steps>
 
 ---
 
 ## After publishing
 
-Once live, you can:
+Editing is at **Modify** in the event sidebar. Everything stays editable except the hosting group, which locks on publish. Attendees are not told automatically when you change details, so send them a message from the event's **Messages** entry.
 
-- **Track registrations** — see who signed up in the Participants tab
-- **Send invitations** — invite specific members or entire groups
-- **Send updates** — notify registered attendees of changes
-- **Manage waitlist** — approve waitlisted people when spots open
-- **Cancel the event** — registrants are notified automatically
-
----
-
-## Common scenarios
-
-<AccordionGroup>
-  <Accordion title="How do I create a recurring weekly meeting?">
-    Orgo doesn't have a built-in recurrence feature. Create each instance individually, or create the first one and duplicate it for future dates. For recurring meetings, some organizations create a Private Group with the meeting info pinned as a discussion post, and only create formal events for special sessions.
-  </Accordion>
-
-  <Accordion title="Can I edit an event after people have registered?">
-    Yes. You can update the title, description, location, times, and hero image. Registered attendees won't be automatically notified of changes — use the "Send update" feature to notify them explicitly.
-  </Accordion>
-
-  <Accordion title="How do I create a hybrid event (in-person + online)?">
-    Add both a physical location and an online meeting link. The event page shows both. You might create separate ticket types: "In-Person" and "Online" to track attendance mode.
-  </Accordion>
-
-  <Accordion title="I want to create an event on behalf of a local center">
-    You need posting permissions in that Local Center. Select the center as the hosting group when creating the event. Or have the local admin create it — they have the permissions by default.
-  </Accordion>
-
-  <Accordion title="Can non-members register for events?">
-    Yes, if the event is **public**. Non-members register as guests — they provide their name, email, and any required fields. They receive a ticket/QR code by email. They don't need an Orgo account.
-  </Accordion>
-</AccordionGroup>
-
----
-
-## Cover images
-
-Event cover images are **square, 1:1, output at 800 by 800 pixels**.
-
-You do not need to crop before uploading. A cropper appears when you add the
-image and keeps the ratio for you, so upload the original and position it there.
-
-<Note>
-If you keep a set of design templates for event artwork, build them at 1:1. A
-16:9 banner will be cropped to square, and the crop takes the centre, so text
-positioned along the edges of a wide image disappears.
-</Note>
-
-The same image is displayed at several sizes across the event list, the event
-page and the mobile app. Keep the important content near the centre and it will
-survive every one of them.
+Deleting is blocked while any attendee has a payment attached.
 
 ---
 
 ## Related
 
-- [Events Overview](/platform/events) — Module setup and configuration
-- [Event Types](/platform/events/event-types) — Categorize your events
-- [Ticketing](/platform/events/ticketing) — Paid tickets and pricing strategies
-- [Public Event Pages](/platform/events/public-page) — Shareable branded event pages
-- [Attendance](/platform/events/attendance) — Check-in and tracking
+- [Events overview](/platform/events) - module settings and the event workspace
+- [Event Types](/platform/events/event-types) - categories and custom statuses
+- [Event Templates](/platform/events/event-templates) - pre-filled events, tickets, and forms
+- [Ticketing](/platform/events/ticketing) - ticket types, add-ons, and checkout
+- [Attendance](/platform/events/attendance) - invitations, RSVPs, and check-in

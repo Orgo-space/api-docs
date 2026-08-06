@@ -1,0 +1,98 @@
+[
+  {
+    "id": "org-chart-main",
+    "image": "/images/platform/features/org-chart.png",
+    "usedOn": [
+      "platform/organisational-chart.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/chart",
+    "routeHint": "Sidebar -> Organization -> Organisational Chart. Requires Settings -> Modules -> Users & Profiles -> Profile Settings -> Organizational Chart to be ON and User Types & Roles -> Enable Roles to be ON. Pick a tenant whose roles have members assigned so the boxes show counts and avatars; oncr has 27k users and 1545 units.",
+    "actions": [],
+    "waitFor": "text=Organisational Chart",
+    "viewport": "desktop",
+    "alt": "Organizational chart with Central, Parent local centers, Chapters and Team sections, each role shown as a box with the number of members holding it",
+    "status": "new",
+    "notes": "Central roles carry distinct titles (chart_name cleared on the demo tenant); every section in frame has at least one populated role box."
+  },
+  {
+    "id": "org-chart-role-members",
+    "image": "/images/platform/features/org-chart-role-members.png",
+    "usedOn": [
+      "platform/organisational-chart.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/chart",
+    "routeHint": "Open the chart, then click a role box in the Chapters section that shows a member count. Chapter level roles are the ones that render the chapter dropdown plus the Group column, which is what this image needs to show.",
+    "actions": [
+      "click .tree--local .tag-container.has-users"
+    ],
+    "waitFor": "text=Chapter Leader (",
+    "viewport": "desktop",
+    "alt": "Role member list showing the role name and holder count, a chapter filter, and rows with member name, group and date",
+    "status": "new"
+  },
+  {
+    "id": "org-chart-edit-mode",
+    "image": "/images/platform/features/org-chart-edit-mode.png",
+    "usedOn": [
+      "platform/organisational-chart.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/chart",
+    "routeHint": "Open the chart as a user with ADMIN_TENANT, then click Edit Positions in the top left. The Add level buttons, the plus buttons on each row and the row drag handles only render in this mode.",
+    "actions": [
+      "click text=Edit Positions"
+    ],
+    "waitFor": "text=Done Editing",
+    "viewport": "desktop",
+    "alt": "Chart in edit mode showing Add level buttons, plus buttons on each row and drag handles on role boxes",
+    "status": "new"
+  },
+  {
+    "id": "gazette-list",
+    "image": "/images/platform/features/gazette-list.png",
+    "usedOn": [
+      "platform/official-gazette.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/gazette",
+    "routeHint": "Sidebar -> Organization -> Official documents. Requires Settings -> Modules -> Files & eDocuments -> Official Gazette -> Enable Official Gazette Module to be ON. preper (Civic Renewal Alliance) has gazette rows locally.",
+    "actions": [],
+    "waitFor": "text=Official documents",
+    "viewport": "desktop",
+    "alt": "Official documents list with type filter, text search, and rows showing document date, download icon, title, type and who added it",
+    "status": "new",
+    "notes": "The existing file shows an empty list (No documents available at this moment). Capture a tenant with real rows so the Document date, Download, Title, Type, Added by and Actions columns are all visible."
+  },
+  {
+    "id": "gazette-entry-form",
+    "image": "/images/platform/features/gazette-entry-form.png",
+    "usedOn": [
+      "platform/official-gazette.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/gazette/edit/2149",
+    "routeHint": "Official documents -> click the pencil in the Actions column of any row (needs HR_TENANT). Use the edit screen rather than /gazette/create, so the Download document and Upload document buttons at the top of the form are visible alongside the fields.",
+    "actions": [],
+    "waitFor": "text=Document date",
+    "viewport": "desktop",
+    "alt": "Official document form with Status radio buttons, Type select, Subject, Document number, Document date and Content fields",
+    "status": "new"
+  },
+  {
+    "id": "gazette-entry",
+    "image": "/images/platform/features/gazette-entry.png",
+    "usedOn": [
+      "platform/official-gazette.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/gazette/2149",
+    "routeHint": "Official documents -> click a title in the Title column. Pick a row that has a file attached (a download icon in the Download column) and a document number, so the Download link and Document number lines both render.",
+    "actions": [],
+    "waitFor": "text=Document date",
+    "viewport": "desktop",
+    "alt": "Single official document showing subject, who created it, document number and date, and a download link for the attached file",
+    "status": "new"
+  }
+]

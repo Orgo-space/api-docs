@@ -1,0 +1,101 @@
+[
+  {
+    "id": "federation-company-record",
+    "image": "/images/platform/templates/federation-company-record.png",
+    "usedOn": [
+      "platform/templates/federations.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/companies/bb3a75e4-3482-4bc0-9a3c-f48b3e82ee99",
+    "routeHint": "Companies in the sidebar -> open 'Clearwater Logistics' (company id 317, 5 active members, plan Corporate Silver, 25 slots, valid until 30 Sep 2026). The whole page: status header, seat counter, Billing Details, Financial Contact, Team Members, Payment & Plan.",
+    "actions": [],
+    "waitFor": "text=Clearwater Logistics",
+    "viewport": "desktop",
+    "alt": "Company record page showing the Active status header, a member counter of 5 of 25 with the plan name, Billing Details and Financial Contact cards, an About card, and the Team Members panel listing five people",
+    "status": "new",
+    "notes": "Identity scrub 2026-08-05: the About card read 'A leading Historic Preservation organization providing innovative solutions and services to our members.' on a company that is a freight business in every other field, which is the source organization's sector rather than anything of Northwind's. Company 317's description now describes a freight and distribution business. The same seed template had put a mission pillar of the source organization into companies 303 to 317 (Historic Preservation, Patriotism, Membership Records, Education, Community Service); all fifteen were rewritten to match what each company is, so the next audit does not find a sibling on another company page."
+  },
+  {
+    "id": "federation-company-members",
+    "image": "/images/platform/templates/federation-company-members.png",
+    "usedOn": [
+      "platform/templates/federations.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/companies/bb3a75e4-3482-4bc0-9a3c-f48b3e82ee99",
+    "routeHint": "Same company page, Team Members panel only (selector .members-list-container). Company 317 has one PRIMARY_CONTACT and four ordinary members.",
+    "actions": [],
+    "waitFor": "text=Team Members",
+    "selector": ".members-list-container",
+    "viewport": "desktop",
+    "alt": "Team Members panel listing five people, one carrying a Primary Contact badge, with Add Member and Invite buttons in the panel header",
+    "status": "new"
+  },
+  {
+    "id": "federation-invite-member",
+    "image": "/images/platform/templates/federation-invite-member.png",
+    "usedOn": [
+      "platform/templates/federations.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/companies/bb3a75e4-3482-4bc0-9a3c-f48b3e82ee99",
+    "routeHint": "Company page -> Invite (the primary button in the Team Members panel header). Captures the Invite Member dialog over the company page.",
+    "actions": [
+      "wait 1500",
+      "click .members-list-header .header-actions .button.is-primary"
+    ],
+    "waitFor": "text=Send Invitation",
+    "viewport": "desktop",
+    "alt": "Invite Member dialog with Email, First Name and Last Name fields, a Role dropdown and a Message box, over the company page",
+    "status": "new"
+  },
+  {
+    "id": "federation-companies-module",
+    "image": "/images/platform/templates/federation-companies-module.png",
+    "usedOn": [
+      "platform/templates/federations.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/company",
+    "routeHint": "Settings -> Modules -> Companies -> Configuration. Tenant 282 has company.isActive true, whoCanCreateCompany ADMIN_TENANT and feesEnabled true, so all three controls and the 'How company fees work' note render.",
+    "actions": [],
+    "waitFor": "text=Enable Company Fees",
+    "viewport": "desktop",
+    "alt": "Companies module configuration with the Enable Companies Module switch on, a Who can create companies dropdown set to Organization admins only, and Enable Company Fees on with an explanatory note",
+    "status": "new"
+  },
+  {
+    "id": "federation-company-price",
+    "image": "/images/platform/templates/federation-company-price.png",
+    "usedOn": [
+      "platform/templates/federations.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/product/49chv4d86h835pnuag3b3ptc8s?tab=prices",
+    "routeHint": "Finance -> Products -> 'Northwind Annual Membership' (product 968, route param is the product uuid, not the id) -> Prices & Options -> click the price name 'Corporate Silver' (product_price 2508, is_company_price 1, company_slots 25) to open the Edit price dialog. The Company only switch only renders while company.feesEnabled is true on the tenant, so state-t187c.json must be refreshed after that setting changes (vuex is persisted to localStorage).",
+    "actions": [
+      "wait 4000",
+      "click text=Corporate Silver"
+    ],
+    "waitFor": "text=Company slots",
+    "viewport": "desktop",
+    "alt": "Price dialog for a corporate tier with the Company only switch on and a Company slots field set to 25, above the hint that 0 means unlimited slots",
+    "status": "new"
+  },
+  {
+    "id": "federation-payment-plan",
+    "image": "/images/platform/templates/federation-payment-plan.png",
+    "usedOn": [
+      "platform/templates/federations.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/companies/b54072cf-7dfe-46d6-96ab-439d8030b3ae",
+    "routeHint": "Companies -> open 'Ironwood Logistics' (company id 316, no valid_fee_date so the fee is unpaid, plan Corporate Silver selected). Capture the Payment & Plan card only (selector .card:has(.payment-section)): the selected tier shows Pay and Mark as Paid, the other tiers show Select.",
+    "actions": [],
+    "waitFor": "text=Payment & Plan",
+    "selector": ".card:has(.payment-section)",
+    "viewport": "desktop",
+    "alt": "Payment and Plan card listing three corporate tiers with their seat allowance and annual price, Select buttons on the unselected tiers and Pay plus Mark as Paid on the current one",
+    "status": "new"
+  }
+]

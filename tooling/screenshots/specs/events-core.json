@@ -1,0 +1,156 @@
+[
+  {
+    "id": "events-workspace-sidebar",
+    "image": "/images/platform/events/event-show-simple.png",
+    "usedOn": [
+      "platform/events/index.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/event/a2a3284c8fc711f19aed9e396b",
+    "routeHint": "Events in the main menu -> open any published event from the list. The left sidebar (Modify, View event, Event app, Participants, Program, Votes, Tickets, Payments, Analytics, Messages, Landing page, Report, Duplicate Event, Save as Template, Email Templates, Delete) must be visible next to the event hero. Use an UPCOMING ticketed event: a past event shows 'The event has passed' and no registration panel at all. Annual General Meeting Springfield (event 200432, 2026-09-07, product 971) is upcoming, ticketed and public.",
+    "actions": [],
+    "waitFor": "text=View event",
+    "viewport": "desktop",
+    "alt": "Event page with the event sidebar on the left and the event hero, date, location and registration panel on the right",
+    "status": "new",
+    "note": "Current image predates the reworked sidebar (Agenda, Votes, Analytics, Networking spaces, Duplicate Event, Save as Template, Email Templates are all new entries). Prefer an event owned by the logged-in admin so every sidebar entry renders."
+  },
+  {
+    "id": "events-module-config",
+    "image": "/images/platform/events/events-module-config.png",
+    "usedOn": [
+      "platform/events/index.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/events",
+    "routeHint": "Settings (gear) -> Modules -> Events. Capture with the inner module menu visible on the left (Configuration, Event Types, Templates, and, when enabled, Event Statuses and Attendance Reminder).",
+    "actions": [],
+    "waitFor": "text=Who Can Create Public Events",
+    "viewport": "tall",
+    "alt": "Events module settings showing Event Configuration, Ticketing and Payments, Reporting and Analytics, and Additional Features sections",
+    "status": "new",
+    "note": "Current image is missing the Templates entry in the module menu and the newer Additional Features toggles (Restrict Event Editing by User Type, Disable Company Invoice in Checkout). Scroll so at least the Event Configuration and Ticketing and Payments sections are in frame."
+  },
+  {
+    "id": "event-create-top",
+    "image": "/images/platform/events/event-create.png",
+    "usedOn": [
+      "platform/events/create-event.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/events/create",
+    "routeHint": "Events -> Create an event. Capture the top of the form: cover image panel on the left, then Group, Event type, Title, Location, Online meetup, and the Start/End timeline with the timezone chip.",
+    "actions": [
+      "fill input[required] | Autumn Governance Forum",
+      "fill input[placeholder=\"Location\"] | Norfolk, Virginia, United States",
+      "press Escape",
+      "wait 1000"
+    ],
+    "waitFor": "text=Online meetup",
+    "viewport": "desktop",
+    "alt": "Create Event form with cover image on the left and group, event type, title, location, online meetup, start and end times with timezone on the right",
+    "status": "new",
+    "note": "Run this file with TZ=America/New_York. The Start select renders in browser-local time while the End select renders in the event timezone (America/New_York for this tenant), so any other host timezone makes End look earlier than Start on the same day. Log in as an admin so the Access/Audience block renders."
+  },
+  {
+    "id": "event-create-settings-block",
+    "image": "/images/platform/events/event-create-form.png",
+    "usedOn": [
+      "platform/events/create-event.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/events/create",
+    "routeHint": "Events -> Create an event, then scroll to the settings card: the Access (Free/Paid) and Audience (Members only/Public) option cards, followed by the Registration section (Require registration form for members, Max capacity, Close registrations) and the Features section (Enable speakers, Visibility of attendee list, Enable 1:1 networking, Send reminder 1 hour before event starts).",
+    "actions": [
+      "scroll 620",
+      "wait 1000"
+    ],
+    "waitFor": "text=Enable 1:1 networking",
+    "viewport": "desktop",
+    "alt": "Access and Audience option cards followed by the Registration and Features setting rows with toggles",
+    "status": "new",
+    "note": "Must be captured as an ADMIN_TENANT or FINANCIAL_TENANT user, otherwise the Access block is hidden. Leave Access on Free so Max capacity is visible."
+  },
+  {
+    "id": "event-types-settings",
+    "image": "/images/platform/events/event-types-config.png",
+    "usedOn": [
+      "platform/events/event-types.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/events/event-types",
+    "routeHint": "Settings -> Modules -> Events -> Event Types. The ACTIONS column is opacity:0 until the row is hovered (List.vue .row-actions), so the capture must hover a row or the column reads as empty on every line.",
+    "actions": [
+      "hover .event-types-table tbody tr",
+      "wait 600"
+    ],
+    "waitFor": "text=Create Event type",
+    "viewport": "desktop",
+    "alt": "Event types settings page listing type names with inline editing and delete actions, and a Create Event type button",
+    "status": "new",
+    "note": "Current image shows a Color column that no longer exists; the table is now Type name plus Actions only, and the module menu now sits on the left."
+  },
+  {
+    "id": "event-statuses-settings",
+    "image": "/images/platform/events/event-statuses.png",
+    "usedOn": [
+      "platform/events/event-types.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/events/event-statuses",
+    "routeHint": "Requires Enable Custom Statuses to be ON in Settings -> Modules -> Events -> Configuration; turn it on first, then Event Statuses appears in the module menu. Create two or three statuses (for example Planned, Confirmed, Finalized with Finalized marked as final) before capturing.",
+    "actions": [],
+    "waitFor": "text=Event Statuses",
+    "viewport": "desktop",
+    "alt": "Event statuses settings listing named statuses with their colors and a final-status marker",
+    "status": "new"
+  },
+  {
+    "id": "event-templates-list",
+    "image": "/images/platform/events/event-templates-list.png",
+    "usedOn": [
+      "platform/events/event-templates.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/events/event-templates",
+    "routeHint": "Settings -> Modules -> Events -> Templates. If the tenant has no templates, create two first (one free members-only, one paid public with two ticket types) so the badges and ticket counts on the cards are visible.",
+    "actions": [],
+    "waitFor": "text=Create Template",
+    "viewport": "desktop",
+    "alt": "Event templates list showing template cards with Free or Ticket badges, audience badges, ticket counts, and cover thumbnails",
+    "status": "new"
+  },
+  {
+    "id": "event-template-form",
+    "image": "/images/platform/events/event-template-form.png",
+    "usedOn": [
+      "platform/events/event-templates.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/events/event-templates/3/edit",
+    "routeHint": "Settings -> Modules -> Events -> Templates -> open the 'Professional development day' template (id 3). The create route renders a completely empty form, so edit a seeded template instead: Template Name, Event Defaults, Description and the Access/Audience cards are all filled, and the ticket types are set.",
+    "actions": [],
+    "waitFor": "text=Event Defaults",
+    "viewport": "tall",
+    "alt": "Event template editor showing Template Name, Event Defaults, Description, Access and Audience cards, and the registration form builder",
+    "status": "new"
+  },
+  {
+    "id": "event-template-picker",
+    "image": "/images/platform/events/event-template-picker.png",
+    "usedOn": [
+      "platform/events/event-templates.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/events",
+    "routeHint": "Requires at least one event template to exist. Events -> Create an event (opens a panel over the list) -> Start from template in the panel header. Capture the template picker modal with its template cards, the preview (eye) buttons, and the No template / Done footer.",
+    "actions": [
+      "click text=Create an event",
+      "click text=Start from template"
+    ],
+    "waitFor": "text=Choose a template",
+    "viewport": "desktop",
+    "alt": "Template picker modal listing templates with badges and a preview button, plus No template and Done actions",
+    "status": "new"
+  }
+]

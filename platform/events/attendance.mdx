@@ -1,184 +1,174 @@
 ---
 title: 'Event Attendance'
-description: 'Check in attendees with QR codes, track who showed up, and manage no-shows'
+description: 'Run the participant list: registration status, RSVP, invitations, walk-ins, check-in and the attendee export'
 "og:title": 'Event Attendance | Orgo'
-"og:description": 'Check in attendees with QR codes, track who showed up, and manage no-shows'
+"og:description": 'Run the participant list: registration status, RSVP, invitations, walk-ins, check-in and the attendee export'
 "twitter:title": 'Event Attendance | Orgo'
-"twitter:description": 'Check in attendees with QR codes, track who showed up, and manage no-shows'
+"twitter:description": 'Run the participant list: registration status, RSVP, invitations, walk-ins, check-in and the attendee export'
 ---
 
-Attendance tracking closes the loop on events: you know not just who registered, but who actually showed up. Check people in at the door with QR code scanning or manual lookup, record walk-ins, mark no-shows, and use the data for reporting and future planning.
+Every event has a **Participants** screen listing everyone attached to it: members who registered,
+non-members who bought a ticket, people you invited, and guests riding on somebody else's ticket. It
+is where you invite, chase, check in and export.
 
-<img src="/images/platform/events/event-attendees.png" alt="Participants list showing 34 attendees with membership type, name, town, ticket type, RSVP status, and invite/export options" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+**Built for** organisers who need the turnout figure to come from the same system that holds the
+member records, so attendance feeds profiles, reports and the next mailing without a re-import.
 
----
+**Replaces** the shared spreadsheet that lists who said yes and the separate clipboard that records
+who actually came.
 
-## Participant statuses
-
-Every registered person progresses through these statuses:
-
-| Status | What it means |
-|--------|-------------|
-| **Registered** | Signed up (and paid, if ticketed) — hasn't attended yet |
-| **Checked In** | Confirmed as attended — marked at the event |
-| **Invited** | Received a complimentary invitation — bypassed normal registration |
-| **Waitlist** | Capacity was full — waiting for a spot to open |
-| **Cancelled** | Registration withdrawn (by the attendee or admin) |
-| **No Show** | Registered but didn't attend — marked after the event |
+<img src="/images/platform/events/event-attendees.png" alt="Participants screen listing attendees with name, town, ticket, RSVP and invited status" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Checking people in
+## Who can open it
 
-### QR code scanning (fastest)
+**Participants** appears in the event sidebar for the event owner, `EVENT_LOCAL` or `ADMIN_LOCAL` on
+the event's group, `EVENT_TENANT` or `ADMIN_TENANT` organisation-wide, and admins of a private group
+for that group's events.
 
-Every registered attendee receives a QR code in their confirmation email. At the event:
-
-<Steps>
-  <Step title="Open the Orgo mobile app (or web scanner on a tablet)">
-    Navigate to the event and tap "Scan".
-  </Step>
-  <Step title="Scan the attendee's QR code">
-    Point the camera at their phone screen or printed ticket.
-  </Step>
-  <Step title="Confirm check-in">
-    The system shows the attendee's name, ticket type, and confirms the check-in.
-  </Step>
-</Steps>
-
-### Manual check-in (backup)
-
-For attendees who forgot their QR code:
-
-1. Open the event → **Participants** tab
-2. Search for the person by name or email
-3. Click the check-in button
-4. Status changes to "Checked In"
-
-### Bulk check-in
-
-For small events or informal gatherings where individual scanning isn't practical:
-- Select multiple participants from the list
-- Apply "Check In" to all selected
-- Done in seconds
+Attendees never reach it. They get the **Participants** block on the event page, and only when they
+are registered themselves and the event has **Visibility of attendee list** on (event → **Modify** →
+**Features**). With it off, the attendee list is organisers only.
 
 ---
 
-## Before the event
+## Two statuses, not one
 
-### Prepare for check-in
+Each participant carries two independent statuses. Confusing them is the most common source of "the
+numbers are wrong".
 
-| Task | Why |
-|------|-----|
-| **Test the QR scanner** | Make sure it works on your phone/tablet |
-| **Brief your check-in team** | Show them how to search and manually check in |
-| **Download the participant list** | Have a printed backup if internet is unreliable |
-| **Set up check-in stations** | One station per 100-150 expected attendees for smooth flow |
+**Registration status** is where the person sits in the sign-up workflow. The column only appears on
+events that require registration.
 
-### Send reminders
-
-Remind registered attendees about the event and ask them to have their QR code ready. If you enabled **attendance reminders** in module settings, the system sends these automatically.
-
-### Manage the waitlist
-
-Before the event, review the waitlist:
-- If spots opened up (cancellations), approve waitlisted people
-- If the event is full, you may want to close the waitlist
-
----
-
-## During the event
-
-### Handling common situations
-
-| Situation | What to do |
-|-----------|-----------|
-| **Attendee lost their QR code** | Search by name in the participant list, check in manually |
-| **Name not on the list** | Check for typos, try email search, check if they registered under a different name |
-| **Walk-in (no registration)** | Register them on the spot — add as a new participant and check in immediately |
-| **Scanner not working** | Switch to manual check-in from the participant list. Always have this as backup. |
-| **VIP attendee** | VIP ticket holders are flagged in the participant list. Direct them to any priority handling. |
-
----
-
-## After the event
-
-### Record attendance (if you didn't check in live)
-
-Not every event has a check-in station. For casual meetups or small meetings, record attendance after the fact:
-
-1. Go to the event → **Participants** tab
-2. Mark each person as "Checked In" or "No Show"
-3. Add any walk-ins who weren't pre-registered
-
-<Info>
-  If you enabled **attendance reminders** in module settings, event hosts receive an email 24 hours after the event ends reminding them to record attendance. This solves the common problem of forgetting to track who showed up.
-</Info>
-
-### Mark no-shows
-
-People who registered but didn't attend should be marked "No Show". This data helps you:
-- Set realistic capacity for future events (plan for 70-80% of registrations showing up)
-- Identify chronic no-shows
-- Prioritize waitlist management
-
----
-
-## Viewing participant data
-
-The participant list shows:
-
-| Column | Content |
+| Status | Meaning |
 |--------|---------|
-| **Name** | Attendee's full name |
-| **Email** | Contact email |
-| **Ticket type** | Which ticket they registered with (if ticketed) |
-| **Registration date** | When they signed up |
-| **Status** | Registered, Checked In, No Show, etc. |
-| **Payment** | Paid, Free, Complimentary |
+| **Invited** | Added by an organiser, has not confirmed yet |
+| **Registered** | Sign-up complete, and paid if the event is ticketed |
+| **Pending approval** | Waiting for an organiser to accept the registration |
+| **Waiting list** | Parked by an organiser. Nothing moves people on or off it automatically |
+| **Awaiting payment** | An invoice was issued and is not settled yet |
+| **Canceled** | Withdrawn by the attendee or the organiser |
 
-### Filtering
+**RSVP status** is the person's own answer, and after the event it is where attendance is recorded.
 
-Filter participants by status, ticket type, registration date, or payment status. Combine filters to find specific groups (e.g., "VIP ticket holders who haven't checked in yet").
+| Status | Meaning |
+|--------|---------|
+| **Attending** | Coming |
+| **Maybe** | Undecided. Not offered on events that use a registration form |
+| **Not attending** | Declined |
+| **Attended** | Present. This is what check-in sets |
 
-### Exporting
+<img src="/images/platform/events/event-attendees-simple.png" alt="Participant list of an event without ticketing, showing only the RSVP column with Attending, Attended and Not attending values" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-Export the participant list as CSV for:
-- Name badges — export names before the event
-- Attendance certificates — export checked-in attendees after
-- External reporting — share with sponsors or funders
-- Follow-up emails — contact attendees or no-shows
+<Note>
+Checking somebody in sets RSVP to **Attended**. There is no separate "checked in" flag, so an
+attendance figure is a count of participants whose RSVP is Attended.
+</Note>
 
----
-
-## How attendance connects to other features
-
-| Feature | Connection |
-|---------|-----------|
-| **[Event Reports](/platform/events/event-report)** | Attendance numbers feed directly into post-event reports |
-| **[Annual Report](/platform/events/annual-report)** | Yearly attendance statistics aggregated across all events |
-| **Badges/Gamification** | Award points or badges for event attendance (if gamification enabled) |
-| **Training records** | Attendance at training events can trigger course completion records |
+Both are editable from the dropdowns in the list. The registration dropdown greys out once a payment
+is attached: cancel or refund the payment first, since the status follows the money.
 
 ---
 
-## Common scenarios
+## Adding people
+
+Use **Invite** at the top right. The **Member** tab searches the directory; the **External** tab takes
+a name and email, matching the address against members first, then contacts, and creating a new
+contact only if neither exists. **Guest tickets** takes a number from 0 to 20: each guest is a
+separate registration and ticket issued to the same person, with its own QR code, so they can bring
+people whose names you do not need.
+
+<img src="/images/platform/events/event-attendee-invite.png" alt="Invite participant dialog with Member and External tabs, a member search box, and the guest tickets number control" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+Either route confirms immediately: registration **Registered**, RSVP **Attending**, and an emailed
+ticket with a QR code and a calendar invite, so speakers, sponsors and staff get in without paying.
+
+### Everyone in the group at once
+
+With **Bulk Invites** enabled (**Settings → Modules → Events → Additional Features → Bulk Invites**),
+a published event shows **Send Invites to All Members**, and publishing offers the same. It adds
+every active member of the event's group as **Invited** with RSVP **Maybe**, or of the whole
+organisation when the event has no group. People already listed are skipped, and it runs once per
+event.
+
+<Warning>
+Bulk invite fills the participant list. It does not currently send the invitation email, so announce
+the event separately (a [newsletter](/platform/newsletter) or the event's Messages tab) rather than
+assuming everybody has been contacted.
+</Warning>
+
+### Capacity
+
+On an event with **Max capacity** set and no ticketing, registration is refused with "This event is
+full" once **Registered** participants reach the limit. Nobody is queued automatically: move people
+to **Waiting list** yourself, then promote them with the confirm action on their row when a place
+opens, which also sends a ticket.
+
+---
+
+## Recording who came
+
+- **Scan the QR code** at the door. See [QR check-in](/platform/events/check-in).
+- **Set RSVP to Attended** in the list, one participant at a time: there is no multi-select or bulk
+  check-in action.
+- **Walk-ins** must exist on the list first: add them with **Invite**, then set them to Attended.
+
+The **Logs** button on a row shows every status change with a timestamp and who made it, for the
+event owner and `HR_TENANT`.
+
+---
+
+## Filtering, columns and export
+
+The control bar filters by name, email, RSVP, registration status, ticket type and an **Invited**
+checkbox; events with an agenda add a session selector. The list paginates at 100 rows, and the count
+above it includes guest tickets while the rows show only the people they were issued to.
+
+**Columns** offers Membership and Membership Fee (only with the fees module on), Organisation, Role,
+Email, Phone, LinkedIn, Date, and one column per custom field on the event's registration form, with
+**Show all** and **Hide all** at the bottom of the menu.
+
+**Export** downloads `attendees_<event>_<date>.csv` and needs `EVENT_TENANT`, `EVENT_LOCAL` on the
+event, or event ownership; a session selected in the agenda filter narrows it to that session. Its
+columns are Name, Email, every standard profile field on the event's
+[registration form](/platform/events/registration-forms), Ticket Type, Ticket Price, Registration
+Status, RSVP Status, Date Registered, and one per event custom field (dropdown and checkbox answers
+written as their labels), plus Discount Code when at least one attendee used a voucher and Partner
+Name and Partner Email when add-ons created extra attendees.
+
+---
+
+## Attendance reminders
+
+Switch on **Settings → Modules → Events → Additional Features → Enable Attendance Reminder** and each
+event gains **Send attendance reminder 24 hours after event ends**, on by default. It goes to the
+**event owner**, not to attendees, links back to the event so they can fill in the RSVP column, and
+is sent once per event.
+
+The wording lives in **Settings → Modules → Events → Attendance Reminder**, a full email editor with
+preview and test send. Placeholders: `{{firstName}}`, `{{eventName}}`, `{{eventDate}}`,
+`{{eventLocation}}`, `{{attendanceLink}}`, `{{organizationName}}`.
+
+---
+
+## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="We don't formally check people in — is attendance tracking still useful?">
-    Yes. Even without QR scanning, recording attendance after the event (even approximate headcounts) gives you data for reporting, capacity planning, and understanding engagement. It takes 5 minutes and pays off in your annual reports.
+  <Accordion title="I cannot remove an attendee">
+    Registrations holding a ticket cannot be deleted, because that would orphan the payment. Set them
+    to **Canceled** and refund through [payments](/platform/fees/record-payment) if money changed
+    hands.
   </Accordion>
 
-  <Accordion title="The event had way more people than registered — how do I track walk-ins?">
-    Add them as participants after the event. Go to the participant list, add new entries for walk-ins, and mark them as "Checked In". Or use the actual attendance count in the event report to override the registered-only number.
+  <Accordion title="Adding a member fails with 'Member is already attending this event'">
+    They are already on the list, possibly as Canceled or Invited. Change the existing row instead of
+    adding a second one.
   </Accordion>
 
-  <Accordion title="Can attendees check themselves in?">
-    Not directly — check-in is done by event organizers or staff. This prevents people from marking themselves present without actually attending. The QR scan requires someone at the event to scan the code.
-  </Accordion>
-
-  <Accordion title="Internet went down at the event — can I still check people in?">
-    If you have the mobile app, offline check-in may be supported. Otherwise, use a printed participant list and manually update statuses after the event when you're back online.
+  <Accordion title="A member cannot register themselves on a form event">
+    Events with a registration form only accept sign-ups through the form. Organisers can still add
+    people with **Invite**.
   </Accordion>
 </AccordionGroup>
 
@@ -186,7 +176,8 @@ Export the participant list as CSV for:
 
 ## Related
 
-- [Create Event](/platform/events/create-event) — Setting up registration and capacity
-- [Ticketing](/platform/events/ticketing) — Ticket types and purchases
-- [Event Reports](/platform/events/event-report) — Post-event documentation
-- [Annual Report](/platform/events/annual-report) — Yearly attendance statistics
+- [QR Check-in](/platform/events/check-in): scanning at the door and who is allowed to
+- [Registration Forms](/platform/events/registration-forms): what you collect and what exports
+- [Ticketing](/platform/events/ticketing): paid registration, add-ons and refunds
+- [Speakers and Trainers](/platform/events/speakers-trainers): the other people lists on an event
+- [Event Reports](/platform/events/event-report): turning attendance into a report

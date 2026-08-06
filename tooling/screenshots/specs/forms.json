@@ -1,0 +1,73 @@
+[
+  {
+    "id": "forms-list",
+    "image": "/images/platform/forms/forms-list.png",
+    "usedOn": [
+      "platform/forms.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/forms",
+    "routeHint": "Sign in as an ADMIN_TENANT user, then open /forms directly. The sidebar entry lives under the Management section of the admin sidebar but is gated on COMMUNICATION_TENANT/EVENT_TENANT, so navigating by URL is more reliable.",
+    "actions": [],
+    "waitFor": "text=Annual General Meeting Registration",
+    "viewport": "desktop",
+    "alt": "Forms list showing status filter pills and a grid of form cards with field counts and Published, Draft and Closed status tags",
+    "status": "new",
+    "notes": "Five forms: three Published (Volunteer Application Form, Event Feedback Survey, Membership Records Research Inquiry), one Draft (Annual General Meeting Registration) and one Closed (2025 Member Survey), so all three status tag colours appear and the filter pills all have something to filter to. Capture without hover so the preview and delete buttons stay hidden."
+  },
+  {
+    "id": "form-builder-questions",
+    "image": "/images/platform/forms/form-builder-questions.png",
+    "usedOn": [
+      "platform/forms.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/form/update/52kbk3gjlc95h9roedhk3fi4ik",
+    "routeHint": "Forms list -> click the 'Event Feedback Survey' card. The Questions tab is the default tab.",
+    "actions": [
+      "click text=Overall Event Experience",
+      "waitFor .gf-required-label",
+      "wait 1200"
+    ],
+    "waitFor": ".gf-required-label",
+    "viewport": "desktop",
+    "alt": "Form builder Questions tab with the header card, a multiple choice question expanded for editing next to collapsed ones, and the add question toolbar",
+    "status": "new",
+    "notes": "Use form 53 (Event Feedback Survey). Clicking the question title opens edit mode on that card (showFieldEdit), which is the only state that renders the type selector, the Required switch and the duplicate and delete icons. .gf-required-label exists only inside an open editor, so it is a safe assertion; the old spec asserted on 'Questions', which is the tab label and matches before any click. The header card now has a contentTitle so it no longer reads the grey 'Untitled form' placeholder."
+  },
+  {
+    "id": "form-responses-summary",
+    "image": "/images/platform/forms/form-responses-summary.png",
+    "usedOn": [
+      "platform/forms.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/form/update/52kbk3gjlc95h9roedhk3fi4ik",
+    "routeHint": "Forms list -> 'Event Feedback Survey' -> Responses tab in the builder's tab row.",
+    "actions": [
+      "click .builder-sections .builder-section-btn:nth-child(2)",
+      "wait 2500"
+    ],
+    "waitFor": "text=Table View",
+    "viewport": "tall",
+    "alt": "Responses tab Summary view with the response count, Download CSV button, a chart per choice question and the text answers grouped underneath",
+    "status": "new",
+    "notes": "The previous shot was the Questions tab published a second time: 'click text=Responses' did not land, and the Download CSV assertion passes on the hidden pane because the tabs use v-show. Target the second button in .builder-sections instead and assert on Table View, which only exists inside the Responses card. This form has 30 submissions so the Summary sub-tab renders real charts."
+  },
+  {
+    "id": "form-public-page",
+    "image": "/images/platform/forms/form-public-page.png",
+    "usedOn": [
+      "platform/forms.mdx"
+    ],
+    "tenant": "anon",
+    "route": "/public/form/52kbk3gjlc95h9roedhk3fi4ik?workspace=t187c",
+    "routeHint": "Open in a signed-out browser context. Alternatively, from the builder top bar click the link icon and open the copied /share/form/<code> URL.",
+    "actions": [],
+    "waitFor": "text=Submit",
+    "viewport": "desktop",
+    "alt": "Public form page showing the title card, the email address card a respondent fills in, and the first questions each in their own card",
+    "status": "new",
+    "notes": "tenant 'anon' gives the runner a context with no storage state at all, which is the only way to get the email address card: signed in, the page skips it and prints the member's own address with a Switch account link instead. That is what the previous capture showed."
+  }
+]

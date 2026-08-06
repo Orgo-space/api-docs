@@ -1,166 +1,265 @@
 ---
 title: 'Custom Fields'
-description: 'Create organization-specific data fields for profiles, registration, and applications'
+description: 'Create your own profile fields, control who can see and edit each one, and encrypt the sensitive ones'
 "og:title": 'Custom Fields | Orgo'
-"og:description": 'Create organization-specific data fields for profiles, registration, and applications'
+"og:description": 'Create your own profile fields, control who can see and edit each one, and encrypt the sensitive ones'
 "twitter:title": 'Custom Fields | Orgo'
-"twitter:description": 'Create organization-specific data fields for profiles, registration, and applications'
+"twitter:description": 'Create your own profile fields, control who can see and edit each one, and encrypt the sensitive ones'
 ---
 
-Custom Fields let you capture information that doesn't exist in Orgo's standard field set. Emergency contact, T-shirt size, license number, dietary restrictions — whatever your organization needs to track about members.
+Custom fields capture information Orgo does not ship a column for: emergency contact, T-shirt size, licence number, dietary restrictions, whatever your organisation actually tracks. A field is defined once and reused across the profile form, the registration form, the adhesion form and contact records.
 
-<img src="/images/platform/users/custom-fields-list.png" alt="Custom Fields settings showing six fields — Troop Number, Years in Scouting, Current Rank, Areas of Interest, Emergency Contact Phone, Dietary Restrictions — with field types and edit buttons" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
----
-
-## How to access
-
-**Settings** → **Users & Profiles** → **Custom Fields**
+<img src="/images/platform/users/custom-fields-list.png" alt="Custom fields settings listing the organisation's custom fields with their field types and custom_field_<id> reference tags, plus the Interest Custom Field selector" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Creating a custom field
+## Creating a field
+
+**Settings** → **Users & Profiles** → **Custom Fields**. Creating, editing, reordering and deleting fields all require `ADMIN_TENANT`.
 
 <Steps>
   <Step title="Click Create Custom Field">
-    Go to **Settings** → **Custom Fields** → **Create Custom Field**.
+    The form opens inline at the top of the list.
   </Step>
-  <Step title="Choose the field type">
-    Pick the type that matches your data. See the field types table below.
+  <Step title="Enter a title and choose a field type">
+    Both are required before Save is enabled.
   </Step>
-  <Step title="Set the name and description">
-    **Name** is what members see as the label. **Description** appears as help text below the field — use it to explain what you're asking for.
-  </Step>
-  <Step title="Add options (for dropdowns and multi-select)">
-    Enter each option on a new line.
+  <Step title="Add options or allowed file types">
+    Dropdown, Checkboxes and Radio choice fields start with two placeholder options: add, rename, remove and drag to reorder. File Upload fields need at least one allowed file type before saving.
   </Step>
   <Step title="Set visibility">
-    Toggle **Admin only** if this field should be hidden from members and only visible to administrators.
+    **Public**, **User** or **Admin**, described below.
   </Step>
-  <Step title="Save, then enable on forms">
-    After creating the field, go to [Registration Form](/platform/users/registration-form) and/or [Profile Fields](/platform/users/profile-fields) to enable it where you need it.
+  <Step title="Save, then put it on a form">
+    A new field exists but is not shown anywhere yet. Add it to the [profile form](/platform/users/profile-fields), the [registration form](/platform/users/registration-form) or the [adhesion form](/platform/users/adhesion).
   </Step>
 </Steps>
+
+<img src="/images/platform/users/custom-field-editor.png" alt="Custom field editor showing the Title input, the Field type dropdown, the draggable option list, the Visibility selector set to Public, and the Save, Cancel and Remove buttons" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+Drag rows in the list to reorder them. Order matters where a form does not define its own arrangement.
 
 ---
 
 ## Field types
 
-| Type | Best for | Example |
-|------|----------|---------|
-| **Text** | Short single-line values | Membership Number, Emergency Contact |
-| **Textarea** | Longer text, descriptions | Skills, Bio, Medical Notes |
-| **Number** | Numeric values you might sum or filter | Years of Experience, Age at Joining |
-| **Date** | Calendar dates | Certification Expiry, Join Date |
-| **Select** | One option from a list | Department, Region, Skill Level |
-| **Multi-select** | Multiple options from a list | Interests, Languages Spoken, Committees |
-| **Checkbox** | Yes/No | Newsletter Opt-in, Volunteer Availability |
-| **URL** | Web links | Portfolio, Personal Website |
-| **Email** | Email addresses | Secondary Email, Work Email |
+| Type | Stores | Good for |
+|---|---|---|
+| **Input text** | One line of text | Membership number, emergency contact |
+| **Input numeric** | A number | Years of experience |
+| **Textarea** | Multi-line text | Notes, medical information |
+| **Dropdown** | One option from a list | Region, skill level |
+| **Checkboxes** | Several options from a list | Interests, languages, committees |
+| **Radio choice** | One option from a list, all shown at once | Short either-or questions |
+| **Switcher(True/False)** | On or off | Consent, opt-in |
+| **Date** | A calendar date | Certification expiry |
+| **File Upload** | An uploaded file | Certificates, ID scans, signed forms |
+
+There is no dedicated URL or email type. Use **Input text** for those.
+
+<Note>
+Choice fields store the option's position, not its text. Renaming an option therefore updates it everywhere, including in answers members already gave. Deleting an option does not delete the answers that pointed at it, but those answers no longer resolve to a label and display as a bare number. Prefer renaming over delete-and-recreate.
+</Note>
+
+**File Upload fields:** pick at least one allowed type per field from **PDF**, **Images (PNG, JPG)** and **Videos (MP4, WebM)**. Maximum file size is per field, 1 MB to 50 MB, default 50 MB. An optional **Example File** gives members a template to download.
 
 ---
 
-## Where custom fields appear
+## Visibility
 
-After creating a field, you choose where it's used:
+Every field carries one of three levels, enforced on the server for both reading and writing.
 
-| Location | How to enable | What happens |
-|----------|--------------|-------------|
-| **Registration Form** | Go to [Registration Form](/platform/users/registration-form) → find the field → toggle on | New members see it during sign-up |
-| **Profile Fields** | Go to [Profile Fields](/platform/users/profile-fields) → find the field → toggle on | Members can fill it on their profile page |
-| **Adhesion Form** | Go to [Adhesion](/platform/users/adhesion) form builder → find the field → toggle on | Applicants see it on the membership application |
+| Level | Who can read the value | Who can write it |
+|---|---|---|
+| **Public** | Any signed-in member of your organisation, plus the member and your staff | The member and your staff |
+| **User** | The member and your staff. Other members do not see it at all. | The member and your staff |
+| **Admin** | Your staff only. The member cannot see it on their own profile. | Your staff only |
 
-On profile fields, you get additional options:
-- **Required** — Triggers the [splash screen](/platform/users/profile-fields) on login if empty
-- **Immutable** — Members can set it once, then only admins can change it
+"Your staff" means `HR_ASSISTANT_TENANT` (implied by `HR_TENANT` and `FINANCIAL_TENANT`) organisation-wide, or `HR_ASSISTANT_LOCAL` (implied by `HR_LOCAL`, `HR_PARENT_LOCAL`, `FINANCIAL_LOCAL` and `ADMIN_LOCAL`) over a member in their own local center. Guest accounts see no custom field values at all.
+
+Forms label User and Admin fields "(user only)" and "(admin only)". Admin fields are excluded from the profile completion screen's required-field check, so a member is never blocked by a field they cannot see.
+
+Visibility is organisation-wide, not per user type; to vary the questions by type, use per-type [registration forms](/platform/users/registration-form).
+
+### Where a value actually saves
+
+Visibility gates writing as strictly as it gates reading, and the write check asks
+who is signed in at that moment. On the public registration pages nobody is signed
+in yet, so nothing above Public passes. The value is dropped without an error: the
+applicant sees a normal success screen and the answer is simply not there.
+
+| Where the value is entered | Public | User | Admin |
+|---|---|---|---|
+| A member editing their own profile | Saved | Saved | The field is not shown to them |
+| Your staff editing a member's profile | Saved | Saved | Saved |
+| A member's [adhesion](/platform/users/adhesion) form | Saved | Saved | Rejected unless staff are filling it in |
+| The public registration form at `/register` | Saved | **Field renders, answer discarded** | **Field renders, answer discarded** |
+| A per-user-type form at `/join/<slug>` | Saved | **Field renders, answer discarded** | Field is stripped before the page loads |
+| [Import](/platform/customization/import) from a spreadsheet | Saved | Saved | Saved |
+
+"Your staff" is drawn slightly tighter on the profile edit form than elsewhere: the
+form only offers Admin fields to `HR_LOCAL` and above. Someone holding
+`FINANCIAL_LOCAL` or `HR_ASSISTANT_LOCAL` can read an Admin field's value on a
+member's profile but will not find it among the fields they can edit. Give them
+`HR_LOCAL` on that chapter if editing is part of their job.
+
+The practical rule: **only Public fields belong on a registration form.** If you need
+the answer at sign-up but not on public display, collect it as Public and then
+control who sees the member's profile at all with
+[Privacy settings](/platform/users/privacy-settings), or ask for it after joining on
+the [profile form](/platform/users/profile-fields), where the member is signed in
+and User visibility works as intended.
 
 ---
 
-## Admin-only fields
+## Encryption at rest
 
-Fields marked as **Admin Only** are invisible to members. Only administrators can see and edit them.
+Toggle **encryption** while creating or editing a field. Only `ADMIN_TENANT` sees the toggle.
 
-**Use admin-only fields for:**
-- Internal notes about a member
-- Admin-assigned categories or scores
-- Verification status or approval notes
-- Sensitive information that members shouldn't edit
+- Only **Input text**, **Input numeric**, **Textarea** and **Date** can be encrypted. Choice, switch and file fields cannot.
+- **5 encrypted fields per organisation.** To go past the cap, decrypt or delete an existing one; for identity documents use [Identity Validation](/platform/identity-validation), which has its own encrypted storage.
+- AES-256-GCM, bound to your organisation and to that specific field, so a value cannot be transplanted between fields or tenants.
+- Turning it on re-encrypts stored values, turning it off decrypts them. Both run in the background after you save and are recorded in your organisation's activity log.
+- Every decrypting read is logged: who read it, from which address, through which endpoint.
+
+<Warning>
+Switching encryption off asks you to type the field's name to confirm. It is not a display setting: it rewrites every stored value back to plain text.
+</Warning>
+
+Reading and editing an encrypted field is no different from any other; the encryption is invisible in the interface.
 
 ---
 
-## The Interest Custom Field
+## Where custom fields are used
 
-At the bottom of the custom fields list, you'll find the **Interest Custom Field** dropdown. Selecting a multi-select field here makes it the source for Orgo's interest-matching feature — members with overlapping interests are suggested as connections.
+| Surface | How to enable it | Notes |
+|---|---|---|
+| [Profile form](/platform/users/profile-fields) | Add the field in the profile form builder | Also offers **Required** and **Immutable** |
+| [Registration form](/platform/users/registration-form) | Tick the field on the registration form | Available on per-user-type registration forms too |
+| [Adhesion form](/platform/users/adhesion) | Tick the field on the adhesion form | |
+| Contact records | Contacts reuse the fields already on the profile form | |
+| Member directory | Turn the column on from the column menu | Table view only. `HR_TENANT` anywhere, or `ADMIN_LOCAL` on that administrator's own chapter list |
+| Imports | Use a `custom_field_<id>` column header | The id is the reference tag shown next to each field in the list |
+| E-document templates | Use a `{custom_field_<id>}` placeholder | |
 
-To set this up:
-1. Create a multi-select custom field (e.g., "Interests" with options like Hiking, Photography, Cooking, etc.)
-2. Enable it on Profile Fields so members can select their interests
-3. Select it as the Interest Custom Field
+To collect something from every existing member, add the field to the profile form and mark it **Required**: members are prompted the next time they open Orgo.
+
+Event registration forms and the standalone form builder create their own fields, scoped to that event or that form. Those do not appear on this settings page and are managed where they were created.
+
+---
+
+## The Interest field
+
+The selector at the bottom of the list designates one Dropdown, Checkboxes or Radio choice field as your interests field. That adds an interests filter to the member directory and an interests breakdown to organisation statistics, and gives the field its own section on member profiles instead of a plain form row. Create a Checkboxes field with your options, add it to the profile form, then select it here.
+
+**Enable Skills Field** (**Settings** → **Users & Profiles** → **Configuration**) does the same for skills, except Orgo creates the field and seeds it with a catalogue. While the setting is on the field cannot be deleted, though its options stay editable. Turning it off preserves members' existing selections.
+
+---
+
+## Deleting a field
+
+Deleting removes every answer members gave and strips the field from the profile, registration and adhesion form configurations, plus any per-user-type registration form. It is not reversible. To stop collecting a field without losing data, take it off the forms and leave the definition in place.
 
 ---
 
 ## Tags
 
-Tags are simpler than custom fields — they're labels that admins apply to member profiles for filtering and segmentation. Members don't see or edit tags themselves.
+Tags are a lighter alternative: a name administrators apply to member profiles for filtering and segmentation. Members never see or set their own tags, tags carry no value or type, and tag names are unique within your organisation regardless of capitalisation. Manage them at **Settings** → **Users & Profiles** → **Tags**.
 
-![Tags management page showing organization tags with edit options](/images/platform/users/tags-list.png)
+<img src="/images/platform/users/tags-list.png" alt="Tags settings page listing the organisation's tags with edit controls" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-The tags management page shows all tags as a simple list. Each tag has a name and a color indicator. You can create, edit, or delete tags from this page. Tags are applied to user profiles by administrators and can be used to filter and segment the member directory.
-
-Manage tags at **Settings** → **Users & Profiles** → **Tags**.
-
-**Tags vs custom fields:** Use tags when admins need to categorize members (e.g., "VIP", "Needs Follow-up", "Founding Member"). Use custom fields when members need to provide information themselves (e.g., "T-Shirt Size", "Emergency Contact").
+Use a tag when staff need to label people ("VIP", "needs follow-up"). Use a custom field when you need a member to answer a question.
 
 ---
 
-## Real-world examples
-
-### Youth scouting organization
-
-| Field | Type | Settings | Purpose |
-|-------|------|----------|---------|
-| Scout ID | Text | Admin-only, Immutable | Official scout number assigned by HQ |
-| Current Rank | Select | Required on profile | Eagle Scout, Star, Life, etc. |
-| Parent Contact | Text | Required on registration | Emergency contact for minors |
-| Allergies/Medical | Textarea | Admin-only | Medical information for events |
-
-### Professional association
-
-| Field | Type | Settings | Purpose |
-|-------|------|----------|---------|
-| License Number | Text | Required, Immutable | Professional license verification |
-| Specializations | Multi-select | Required on profile | Areas of expertise for directory search |
-| CPD Hours | Number | Admin-only | Continuing education tracking |
-| Firm Name | Text | On registration | Current employer |
-
-### Community group
-
-| Field | Type | Settings | Purpose |
-|-------|------|----------|---------|
-| How did you hear about us? | Select | On registration only | Track acquisition channels |
-| Dietary Restrictions | Multi-select | On profile | Event catering planning |
-| T-Shirt Size | Select | On profile | Merchandise orders |
-| Volunteer Availability | Checkbox | On profile | Who's available to help |
-
----
-
-## Common scenarios
+## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="I need to collect something from all existing members">
-    Create the custom field, enable it on [Profile Fields](/platform/users/profile-fields), and mark it as **Required**. Every member will see a splash screen on their next login prompting them to fill it out.
+  <Accordion title="Answers from the registration form are missing for everyone">
+    Check the field's visibility. Anything above **Public** is discarded on the public
+    registration pages, because the write check asks who is signed in and, at
+    registration, nobody is. There is no error: the applicant fills the box, the
+    account is created, and the answer never reaches the profile.
+
+    Set the field to **Public** if you need it at sign-up, or move the question to the
+    [profile form](/platform/users/profile-fields), where the member is signed in and
+    User visibility behaves as documented. See the table under
+    [Where a value actually saves](#where-a-value-actually-saves).
+
+    The same field on a `/join/<slug>` form behaves slightly differently: Admin fields
+    are stripped before the page is built, so the applicant never sees them, while
+    User fields still render and are still discarded.
   </Accordion>
 
-  <Accordion title="I want a dropdown but the options might change">
-    Create a **Select** field. You can edit the options at any time — go to Custom Fields, click Edit on the field, and modify the options list. Existing values aren't affected when you add or remove options.
+  <Accordion title="A regional officer sees only Public fields on chapter members">
+    Reading User and Admin values on someone else's profile requires the **Orgo
+    administrator** flag or an organisation-wide staff permission (`ADMIN_TENANT`,
+    `HR_TENANT`, `FINANCIAL_TENANT` or `HR_ASSISTANT_TENANT`), or a chapter staff
+    permission **plus the reader and the member being in the same chapter**.
+    The chapter comparison is a direct match, not
+    a walk up the hierarchy, so someone holding `HR_PARENT_LOCAL` over a region does
+    not pick up User and Admin values on members of the chapters below them: on those
+    profiles they see the Public fields only, like any other member.
+
+    If a regional officer genuinely needs those values across the region, the only
+    permission that delivers them today is an organisation-wide one such as
+    `HR_TENANT`. Weigh that against the reach it grants, and prefer keeping the
+    sensitive questions in an organisation-level workflow instead.
   </Accordion>
 
-  <Accordion title="I need a field that only certain user types see">
-    Custom fields are either visible to all members or admin-only. If you need per-type visibility, the workaround is: create the field as admin-only, then have admins fill it out for the relevant members. Alternatively, use per-type [Registration Forms](/platform/users/registration-form) to collect type-specific data at sign-up.
+  <Accordion title="The custom field columns are not in the member directory">
+    The column menu is the table icon above the list, and it only exists in the table
+    view, so a person sitting in **Gallery** will not see it at all. Both the menu and
+    the custom-field columns need `HR_TENANT`, or `ADMIN_LOCAL` while looking at that
+    administrator's own chapter list.
+
+    A chapter administrator can therefore put a custom field on their own chapter's
+    list, but not on the organisation-wide directory or on another chapter's. For
+    those, use the profile, export the list, or ask an organisation administrator.
   </Accordion>
 
-  <Accordion title="Can I reorder the fields?">
-    Yes — use the drag handles in the custom fields list to reorder. The order here determines the display order on forms and profiles.
+  <Accordion title="I imported values into an encrypted field">
+    Import writes custom field values straight to storage and does not run them through
+    encryption, so values loaded from a spreadsheet into an encrypted field are stored
+    as they were typed. Everything still reads back correctly in the interface, which
+    is exactly why this is easy to miss: nothing looks wrong.
+
+    To bring imported rows under encryption, open the field, switch **encryption** off,
+    save, then switch it back on and save again. Each flip queues a background pass over
+    every stored value for that field, and the second pass encrypts everything it finds
+    in plain text, including the imported rows. Note what the first flip does: it writes
+    every value for the field back as plain text before the second flip re-encrypts them.
+
+    If that window is unacceptable for the data in question, do not import into that
+    field. Collect the values through a form, or use
+    [Identity Validation](/platform/identity-validation) for identity documents, which
+    has its own encrypted storage.
+  </Accordion>
+
+  <Accordion title="I switched encryption on and off quickly and I am not sure what is stored">
+    Each flip queues a background pass, and a pass that notices the flag has changed
+    under it stops where it is rather than fighting the newer instruction. Flip twice
+    in quick succession and the first pass can end part-way, leaving some values
+    converted and some not.
+
+    This is safe to read: every value carries its own marker, so Orgo decrypts the ones
+    that need it and returns the rest untouched, whatever state the field is in. It is
+    only untidy at rest. To settle it, leave the toggle alone for a few minutes, then
+    check your organisation's [Logs](/platform/logs) for the encryption entries, and if
+    you want certainty that every row matches the flag, flip it off and on once more
+    and let that pass finish.
+  </Accordion>
+
+  <Accordion title="Who read an encrypted value, and when">
+    Every request that decrypts at least one value files one entry in your
+    organisation's [Logs](/platform/logs), recording who made the request, their IP
+    address, the endpoint they hit and how many values were decrypted.
+
+    Read it as one entry per request, not one per value. Opening a member's profile
+    files a single entry covering every encrypted field on it, and a screen that lists
+    many members at once files one entry with a large count. The entry is written just
+    after the response is sent, so allow a moment before it appears. Turning encryption
+    on or off is logged separately, with the field name and the direction of the change.
   </Accordion>
 </AccordionGroup>
 
@@ -168,6 +267,8 @@ Manage tags at **Settings** → **Users & Profiles** → **Tags**.
 
 ## Related
 
-- [Registration Form](/platform/users/registration-form) — Enable custom fields on the sign-up form
-- [Profile Fields](/platform/users/profile-fields) — Enable custom fields on member profiles
-- [Adhesion](/platform/users/adhesion) — Include custom fields in membership applications
+- [Profile Fields](/platform/users/profile-fields) for putting fields on member profiles
+- [Registration Form](/platform/users/registration-form) for collecting them at sign-up
+- [Adhesion](/platform/users/adhesion) for membership applications
+- [Privacy Settings](/platform/users/privacy-settings) for the built-in profile data members control themselves
+- [Permissions](/platform/permissions) for the permission names used above

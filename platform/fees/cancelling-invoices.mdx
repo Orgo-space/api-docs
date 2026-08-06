@@ -1,32 +1,50 @@
 ---
 title: 'Cancelling & Correcting Invoices'
-description: 'Void an invoice raised in error, handle duplicates, and correct a test registration'
+description: 'Void an invoice raised in error, mark a paid one as refunded, and return money through Stripe'
 "og:title": 'Cancelling & Correcting Invoices | Orgo'
-"og:description": 'Void an invoice raised in error, handle duplicates, and correct a test registration'
+"og:description": 'Void an invoice raised in error, mark a paid one as refunded, and return money through Stripe'
 "twitter:title": 'Cancelling & Correcting Invoices | Orgo'
-"twitter:description": 'Void an invoice raised in error, handle duplicates, and correct a test registration'
+"twitter:description": 'Void an invoice raised in error, mark a paid one as refunded, and return money through Stripe'
 ---
 
 Invoices get raised in error. Someone books twice because the first confirmation
 never arrived, an administrator creates a test registration to check the payment
 flow, or a member is invoiced on the wrong plan.
 
-The action you want is almost always **void**, not delete.
+Which action you need depends entirely on whether money changed hands.
+
+| Situation | Action | Where |
+|---|---|---|
+| The invoice is unpaid and should not exist | **Void** | The invoice |
+| The invoice was paid and you have already returned the money yourself | **Mark as refunded** | The invoice |
+| The customer paid by card and you need Stripe to send the money back | **Refund** | **Payments** |
+
+All three need administrator rights: voiding and marking refunded need
+`ADMIN_TENANT`, and the Stripe refund needs `FINANCIAL_LOCAL` for the payment's
+local centre, or `FINANCIAL_TENANT` when the payment has no local centre on it.
 
 ---
 
-## Voiding an invoice
+## Voiding an unpaid invoice
 
-**Invoices**, open the invoice, then **Void**.
+**Invoices**, open the invoice, then **Void**. The button only appears while the
+invoice is unpaid, and the action cannot be undone.
 
-Voiding does two things. The invoice moves to a voided state, and the payment
-record attached to it is cancelled, so the amount stops counting toward what the
-member owes and stops appearing in financial totals.
+Voiding sets the invoice to **voided** and leaves it in the list. That is the
+point: an invoice that vanishes leaves an unexplained gap in your numbering and
+no answer to the question "what happened to invoice 214?". A voided one answers
+it.
+
+For an **event registration** invoice, voiding also unwinds the booking. Every
+registration still waiting on that invoice is cancelled and the seats it held are
+released back to the ticket, along with any add-ons. The payment record attached
+to the invoice is cancelled too. You do not need to remove the attendee
+separately.
 
 <Note>
-Voiding keeps the invoice in the record. That is the point. An invoice that
-vanishes leaves an unexplained gap in your numbering and no answer to the
-question "what happened to invoice 214?". A voided invoice answers it.
+A plain unpaid invoice has no payment record to cancel. One is only created when
+the invoice is marked as paid, so voiding an unpaid manual invoice touches
+nothing but the invoice itself.
 </Note>
 
 ---
@@ -38,27 +56,20 @@ When someone registers twice, void the duplicate rather than removing the person
 <Steps>
   <Step title="Identify which one to keep">
     Keep the invoice the member has already paid or already sent to their finance
-    department. Ask if you are unsure, because the reference number they quoted
+    department. Ask if you are unsure, because the reference they quoted
     internally is the one that must survive.
   </Step>
   <Step title="Void the other">
-    The cancelled payment record stops the duplicate counting toward revenue.
+    If it is unpaid, **Void** removes it from your totals and, for an event
+    invoice, frees the seat.
   </Step>
-  <Step title="Remove the duplicate attendance">
-    Voiding the invoice does not by itself remove the second registration from the
-    attendee list. Remove the duplicate attendee separately so check-in and
-    attendee reports are correct.
+  <Step title="Check the attendee list">
+    Voiding releases seats held by registrations that were still awaiting
+    payment. A registration that was already confirmed is not touched by a void,
+    because a confirmed registration means the invoice was paid, and a paid
+    invoice cannot be voided.
   </Step>
 </Steps>
-
----
-
-## Test registrations
-
-If you create a test registration to check a payment flow, void its invoice and
-remove the attendance afterwards. Test rows left in place inflate attendee counts
-and revenue totals, and they are hard to spot later because they look exactly
-like real ones.
 
 <Warning>
 Do not use a real member's account to test a payment flow. If you later mark that
@@ -68,26 +79,66 @@ they never bought.
 
 ---
 
-## When money actually changed hands
+## Marking a paid invoice as refunded
 
-Voiding is for an invoice that should not have existed. **Voiding does not return
-any money.** If a member has genuinely paid and needs it back, that is a refund,
-which is a separate operation: **Fees** → **Payments**, open the payment, then
-**Refund**, for the full amount or part of it.
+A paid invoice cannot be voided. The action offered instead is **Mark as
+refunded**, and it is exactly what it says: **it does not move any money.** Use it
+after you have already returned the money yourself, by bank transfer or in
+Stripe.
 
-The money returns to the card or account it came from. Note that the payment
-processor's own fee is not returned, so a refunded transaction still costs your
-organisation that fee.
+<img src="/images/platform/fees/invoice-refund-confirm.png" alt="Confirmation dialog asking the administrator to confirm the customer was already refunded externally before marking the invoice as refunded" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+What it does do is unwind everything the payment set off:
+
+- The invoice becomes **refunded**, with your name and the date recorded, and a
+  **REFUNDED** badge added to the document.
+- The linked payment record is marked refunded, so it drops out of your totals.
+- On a **membership** invoice, the member's fee validity date is recalculated
+  from the payments that survive, and a company's membership is rolled back to
+  what its remaining payments justify.
+- On an **event registration** invoice, the confirmed registrations are cancelled
+  and their seats and add-on places are released.
+
+A refunded invoice reports nothing as settled and its full total as still
+outstanding, rather than continuing to read as paid in full.
+
+<Note>
+Marking as refunded does not email the customer. Tell them yourself.
+</Note>
+
+A paid invoice with no payment record behind it cannot be marked refunded: the
+action stops with an error rather than changing the invoice and leaving the
+payment untouched.
+
+---
+
+## Returning money through Stripe
+
+If the customer paid by card and you want Stripe to send the money back, do it
+from **Payments**. Open the row menu on the payment and choose **Refund**. The
+option only appears on a successful payment that has a Stripe charge behind it.
+
+The refund covers that payment row in full. There is no partial-amount option in
+the interface, and where one charge produced several payment rows (a membership
+fee and its separate joining fee, for example) only the row you acted on is
+refunded.
+
+Refunding through Stripe also cancels any event registrations paid for by that
+payment, releasing their seats and add-on places, and recalculates the member's
+fee validity if the payment was for a membership fee.
 
 <Warning>
-Do not void a paid invoice expecting the member to be refunded. The invoice will
-show as cancelled while the money stays where it is, and nobody will notice until
-the member asks.
+Do not mark an invoice as refunded and expect the customer to get their money.
+The invoice will read refunded while the money stays where it is, and nobody will
+notice until they ask.
 </Warning>
 
 ---
 
 ## Related
 
-- [Recording a payment](/platform/fees/record-payment) — marking an invoice paid
-- [VAT & Invoice Templates](/platform/fees/vat) — tax details on the document
+- [Recording a payment](/platform/fees/record-payment) marking an invoice paid
+- [Invoices](/platform/fees/invoices) creating invoices, numbering and templates
+- [VAT and invoice templates](/platform/fees/vat) tax details on the document
+- [Stripe integration](/platform/fees/stripe-integration) card payments and payouts
+- [Membership fees](/platform/fees/fees) how fee validity is calculated

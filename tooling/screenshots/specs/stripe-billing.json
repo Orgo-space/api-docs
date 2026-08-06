@@ -1,0 +1,34 @@
+[
+  {
+    "id": "stripe-settings-connected",
+    "image": "/images/platform/fees/stripe-settings.png",
+    "usedOn": [
+      "platform/fees/stripe-integration.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenant/settings/online-payments",
+    "routeHint": "Settings -> Modules -> Payments & Fees -> Payment Gateway. Requires a tenant that already has a Stripe account connected.",
+    "actions": [],
+    "waitFor": "text=Stripe account status",
+    "viewport": "desktop",
+    "alt": "Online payments settings showing a connected Stripe account id, Fully connected status, Complete account status, and buttons for View Stripe Dashboard and Change Stripe account",
+    "status": "new"
+  },
+  {
+    "id": "stripe-connect-start",
+    "image": "/images/platform/fees/stripe-connect-start.png",
+    "usedOn": [
+      "platform/fees/stripe-integration.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/local/settings/online-payments?localCenter=15668",
+    "routeHint": "Settings -> Modules -> Payments & Fees -> Payment Gateway on a context with NO Stripe account linked. The two connect buttons only render when no account is stored, and every local tenant already has tenant.stripeAccount set, so this is captured as the chapter variant: chapter 15668 (Falls Church, t187c) had its local_center.stripe_account cleared for the capture. A tenant admin may open any chapter through ?localCenter=X.",
+    "actions": [],
+    "waitFor": "text=Connect existing Stripe account",
+    "viewport": "desktop",
+    "selector": ".o-content",
+    "alt": "Online payments settings with no Stripe account linked, showing the Connect existing Stripe account and Generate Stripe Account buttons",
+    "status": "new",
+    "notes": "In the unconnected state the page is only a heading, the Stripe logo and two buttons, so a full 1920x1080 shot is about 95 percent empty and the runner flags it as blank. Crop to .o-content (the single content pane, roughly 1618x255 here) so the frame is just the connect controls."
+  }
+]

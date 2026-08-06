@@ -7,178 +7,169 @@ description: 'Connect Stripe to accept online payments for fees, donations, tick
 "twitter:description": 'Connect Stripe to accept online payments for fees, donations, tickets, and merchandise'
 ---
 
-Orgo Stripe Integration is the payment processing connection within Orgo that links your organization's Stripe account to accept online payments for membership fees, event tickets, donations, and merchandise.
+Stripe is the payment processor behind every card payment in Orgo. You connect your own Stripe account, money lands in your own bank account, and Orgo records each payment against the right member, ticket, or donation.
 
-**Built for** organizations that collect any form of online payment from members, including professional associations, alumni networks, faith communities, and trade unions, and any group needing card, bank transfer, or digital wallet payments handled securely.
+**Built for** organisations that collect membership fees, event tickets, donations, or product payments online.
 
-**Works alongside** Stripe, connecting it directly to membership dues, ticketing, and donations so payments and member records stay in sync, without replacing Stripe's own payment processing infrastructure.
+**Works alongside** Stripe: Orgo never handles card data, it only tells Stripe what to charge and reads back what happened.
 
 ---
 
-Members pay with credit cards, bank transfers, Apple Pay, Google Pay, and other local payment methods. You need a Stripe account — everything else (card handling, security, PCI compliance) is managed for you.
+## Where it lives
+
+| Screen | How to reach it | Permission |
+|---|---|---|
+| Organisation Stripe account | **Settings → Modules → Payments & Fees → Payment Gateway** | `ADMIN_TENANT` |
+| Chapter Stripe account | **Chapter settings → Local online payments settings** | `ADMIN_LOCAL` |
+
+Both open the same screen, titled **Online payments** followed by the organisation or chapter name. Its direct addresses are `/tenant/settings/online-payments` and `/local/settings/online-payments`, which is also where Stripe returns you after authorisation.
+
+The chapter screen is only listed in the sidebar when the **Online Payments** module is on, **Local Center Payments** is on, and the chapter is eligible (either **All Local Centers Eligible** is on, or that chapter is individually flagged).
+
+<img src="/images/platform/fees/stripe-settings.png" alt="Online payments settings showing a connected Stripe account id, Fully connected status, Complete account status, and buttons for View Stripe Dashboard and Change Stripe account" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Before you connect
+
+Your organisation must have a **country** set in **Settings → Organisation info**. Without it the connect buttons are disabled and the API refuses to create or authorise an account, because Stripe needs the country at account creation time and it cannot be changed afterwards.
 
 ---
 
 ## Connecting Stripe
 
-**Settings** → **Fees** → **Stripe Integration**
+Two buttons appear while no account is linked:
 
 <Steps>
-  <Step title="Create a Stripe account">
-    If you don't have one, go to [stripe.com](https://stripe.com) and sign up. Complete their identity verification and add your organization's banking details.
+  <Step title="Connect existing Stripe account">
+    Sends you to Stripe's authorisation page (`connect.stripe.com`). Log in, pick the account, and approve. Orgo stores the resulting account id and returns you to the settings page with a confirmation.
   </Step>
-  <Step title="Click Connect with Stripe">
-    In Orgo, click the connect button. You'll be redirected to Stripe.
-  </Step>
-  <Step title="Authorize the connection">
-    Log in to Stripe and authorize Orgo to connect to your account.
-  </Step>
-  <Step title="Return to Orgo">
-    You'll be redirected back. The status should show "Connected" and "Active".
+  <Step title="Generate Stripe Account">
+    Creates a Stripe Standard account in your organisation's country with card payments and transfers requested, then sends you straight into Stripe's onboarding form.
   </Step>
 </Steps>
 
-### Account status
+<img src="/images/platform/fees/stripe-connect-start.png" alt="Online payments settings with no Stripe account linked, showing the Connect existing Stripe account and Generate Stripe Account buttons" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-| Status | What it means |
-|--------|-------------|
-| **Active** | Ready to accept payments |
-| **Pending** | Stripe is still verifying your identity — complete any open requirements |
-| **Restricted** | Some features limited — check Stripe dashboard for required actions |
-| **Disabled** | Account disabled — contact Stripe support |
+The authorisation round trip is protected by a signed, single-use token that expires after **1 hour**. If you leave the Stripe tab open too long, or reload the return URL, you get an error toast and simply start again.
 
----
-
-## What Stripe powers
-
-Once connected, Stripe handles:
-
-| Feature | Stripe's role |
-|---------|-------------|
-| **Membership fees** | Online payment and recurring subscriptions |
-| **Event tickets** | Checkout for paid events |
-| **Donations** | One-time and recurring giving |
-| **Commerce** | Merchandise purchases |
-| **Refunds** | Returns processed through Stripe |
+<Note>
+  A tenant admin can complete onboarding on behalf of a chapter by opening the chapter, then **Local online payments settings**. The chapter is carried through the Stripe round trip and back.
+</Note>
 
 ---
 
-## Accepted payment methods
+## Reading the status
 
-What your members can pay with depends on your Stripe account's country:
+Once an account is linked the page shows three things.
 
-| Method | Availability |
-|--------|-------------|
-| **Credit/debit cards** (Visa, Mastercard, Amex) | Worldwide |
-| **Apple Pay / Google Pay** | Most countries |
-| **SEPA Direct Debit** | Europe |
-| **iDEAL** | Netherlands |
-| **Bancontact** | Belgium |
-| **Bank transfers** | Varies by country |
-| **Link** (Stripe's one-click checkout) | Stripe-supported countries |
+**Connection status with Orgo**
 
----
+| Badge | Meaning |
+|---|---|
+| **Fully connected** | Stripe reports `charges_enabled`, the account can take money |
+| **Partially connected** | The account is linked but Stripe is not letting it charge yet |
 
-## Transaction fees
+**Stripe account status**
 
-Stripe charges per transaction — you don't pay Orgo for payment processing:
+| Badge | Meaning |
+|---|---|
+| **Complete** | Details submitted, charges and payouts both enabled |
+| **Charges enabled** | Can take payments, payouts still blocked |
+| **Pending verification** | Details submitted, Stripe has not enabled charges yet |
+| **Incomplete** | Onboarding was never finished |
+| **Unknown** | Stripe returned a combination Orgo does not map |
 
-| Method | Typical fee |
-|--------|------------|
-| Cards (EU) | ~1.4% + €0.25 |
-| Cards (non-EU) | ~2.9% + €0.25 |
-| SEPA Direct Debit | ~0.35% (capped at €5) |
-| Apple Pay / Google Pay | Same as card rates |
+**Requirements needed** lists whatever Stripe currently asks of you (identity documents, bank details, business information). Clear them in Stripe and the badges update on the next page load.
 
-Exact rates depend on your Stripe account configuration and country. See [stripe.com/pricing](https://stripe.com/pricing) for current rates.
-
----
-
-## Payouts
-
-Stripe transfers collected funds to your bank account:
-
-| Setting | Options |
-|---------|---------|
-| **Frequency** | Daily (default), weekly, monthly, or manual |
-| **Timing** | Typically 2 business days after payment (7+ days for new accounts) |
-
-Configure payout schedule in the Stripe Dashboard. Orgo doesn't control payout timing — that's between Stripe and your bank.
-
----
-
-## Local Center Stripe accounts
-
-For organizations where branches collect their own fees:
-
-Each Local Center can connect its own Stripe account separately. When a member pays a local fee, the payment goes directly to the local center's bank account — not through the national organization.
-
-Fee distribution options:
-- **100% local** — all payment goes to the Local Center
-- **Split** — automatic division between national and local (e.g., 70/30)
-- **National collects** — national org receives everything, distributes manually
-
-See [Local Center Fees](/platform/local-group-fees/create-local-fees) for the full setup.
-
----
-
-## Security
-
-| Protection | How it works |
-|-----------|-------------|
-| **PCI compliance** | Card data never touches Orgo's servers — Stripe handles all card processing |
-| **Encryption** | All communication encrypted with TLS |
-| **Tokenization** | Card details stored as secure tokens, not raw numbers |
-| **3D Secure** | Strong customer authentication for EU regulations (SCA/PSD2) |
-
-You don't need to worry about payment security compliance — Stripe is a certified PCI Level 1 Service Provider.
-
----
-
-## Testing before going live
-
-Use Stripe's test mode to verify everything works:
-
-1. Enable test mode in the Stripe Dashboard
-2. Use test card numbers:
-   - `4242 4242 4242 4242` — successful payment
-   - `4000 0000 0000 0002` — card declined
-3. Test subscriptions, refunds, and checkout flows safely
-4. When ready, switch to live mode
+The buttons change with the status: **Add Stripe details** while onboarding is unfinished, **View Stripe Dashboard** once it is done, and **Change Stripe account** at any time to re-authorise a different account.
 
 <Warning>
-  Never use real card numbers in test mode, and never use test cards in live mode.
+  There is no disconnect action. To stop using an account, connect a different one with **Change Stripe account**, or switch off the Online Payments module.
 </Warning>
 
 ---
 
-## Disconnecting Stripe
+## What breaks if onboarding is incomplete
 
-**Settings** → **Fees** → **Stripe Integration** → **Disconnect**
+- **No account at all:** product, ticket, and donation checkouts refuse to start. The products list shows "Stripe account is not configured in organisation settings" with a link to the settings page, and the membership payment modal redirects there.
+- **Account linked but charges disabled:** members see "Payments are temporarily unavailable for this account. Please try again later or contact support."
+- **Open requirement with a future deadline:** payments keep working. Stripe only blocks charges once the deadline passes.
+
+---
+
+## Payment methods
+
+Orgo pins no list. Checkouts use Stripe's automatic payment methods, so members are offered exactly what your Stripe account has enabled for that currency and country (cards, wallets, local methods). Turn methods on or off in the Stripe Dashboard, not in Orgo.
+
+Bank transfer is separate: an offline method you record by hand. See [Recording payments](/platform/fees/record-payment).
+
+---
+
+## Chapter accounts
+
+A chapter (local center) can connect its **own** Stripe account. When it has one, local fees charged to that chapter settle there. When it does not, the charge falls back to the organisation's account, so the chapter is never blocked, its money simply lands centrally.
+
+Event ticket and donation checkouts always charge the organisation account, even when a chapter owns the product. Only fee payments follow chapter routing.
 
 <Warning>
-  Disconnecting immediately stops all payment processing, cancels active subscriptions, and removes stored payment methods. Export any needed data before disconnecting. This is not reversible without reconnecting.
+  A chapter can only be given its own currency once it has its own Stripe account, and that currency is immutable afterwards. Both rules exist to prevent double currency conversion.
 </Warning>
 
 ---
 
-## Common scenarios
+## Commission, fees and payouts
+
+Orgo takes **no commission**. The platform application fee is present in code but forced to zero on every charge, and the per-organisation rate defaults to 0. What you pay is Stripe's own processing fee, deducted before payout: see [stripe.com/pricing](https://stripe.com/pricing). The settings page also links Stripe's discounted pricing for qualifying non-profits.
+
+Payouts are between Stripe and your bank. Orgo does not set the schedule, does not hold funds, and does not display payout history: use the Stripe Dashboard.
+
+---
+
+## Refunds
+
+Refund from the payment's row in the payments list. Orgo refunds exactly that row's amount, which matters when one card charge produced several records (a membership payment plus its registration fee, for example). A refund also cancels any linked event attendance, releases the seat, and recalculates the member's fee validity date. Refunds issued in the Stripe Dashboard are picked up and marked in Orgo too.
+
+Refunding requires `FINANCIAL_LOCAL` on the payment's chapter, and `FINANCIAL_TENANT` when the payment carries no chapter, which is the case for every organisation-level payment. `ADMIN_TENANT` qualifies either way. It only works on a payment that succeeded.
+
+---
+
+## Staying in sync
+
+You configure no webhook. Orgo listens on a single platform endpoint and updates records when Stripe reports a successful payment, a failed or action-required invoice, a subscription created, updated or cancelled, a cancelled payment intent, or a refunded charge.
+
+Two settings control receipts, under **Settings → Modules → Payments & Fees**:
+
+| Setting | What it does |
+|---|---|
+| **PDF Receipts/Proofs** | Orgo generates its own PDF receipt for payments |
+| **Stripe Email Receipts** | Lets Stripe send its own receipt email. Needs customer emails enabled on your Stripe account, and Stripe never sends receipts in test mode |
+
+---
+
+## Test mode
+
+Test mode is not a switch in your settings. Orgo runs against live Stripe keys; only demo organisations provisioned by Orgo are wired to Stripe's test mode. Switching your own Stripe Dashboard to test mode changes nothing about what Orgo charges, so ask Orgo for a demo organisation if you want to rehearse a checkout.
+
+---
+
+## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="Stripe connect button doesn't work / popup blocked">
-    Ensure your browser allows popups from stripe.com. Try a different browser. Clear cookies if the redirect loop fails.
+  <Accordion title="The connect buttons are greyed out">
+    Your organisation has no country set. Fill it in under **Settings → Organisation info** and reload.
   </Accordion>
 
-  <Accordion title="Payments are failing for members">
-    Check the Stripe Dashboard → Payments for specific error details. Common causes: card declined by bank, 3D Secure authentication not completed, insufficient funds, expired card.
+  <Accordion title="I get an error after returning from Stripe">
+    The one-hour authorisation token expired, was already used, or the return landed on an unexpected domain. Start the connection again from the settings page.
   </Accordion>
 
-  <Accordion title="Payouts aren't arriving in my bank">
-    Check the Stripe Dashboard → Payouts. Verify bank details are correct. New Stripe accounts have a longer payout delay (7+ days). Check if Stripe has flagged any issues requiring your response.
+  <Accordion title="Members say payments are temporarily unavailable">
+    Stripe has disabled charges on the account. Open **Requirements needed** on the settings page, or the Stripe Dashboard, and clear the outstanding items.
   </Accordion>
 
-  <Accordion title="Account shows 'Restricted' status">
-    Stripe needs more information from you. Check the Stripe Dashboard for outstanding requirements — usually identity documents, business information, or website URL. Complete them to remove restrictions.
+  <Accordion title="A chapter's fees are landing in the national account">
+    That chapter has not connected its own Stripe account. Until it does, its charges fall back to the organisation account by design.
   </Accordion>
 </AccordionGroup>
 
@@ -186,7 +177,9 @@ Use Stripe's test mode to verify everything works:
 
 ## Related
 
-- [Products](/platform/fees/products) — Creating fee products that use Stripe
-- [Membership Fees](/platform/fees/fees) — Fee collection and management
-- [Donations](/platform/fees/donations) — Fundraising campaigns
-- [Local Center Fees](/platform/local-group-fees/create-local-fees) — Multi-account setup for branches
+- [Products](/platform/fees/products) - what you sell through Stripe
+- [Membership Fees](/platform/fees/fees) - fee collection and validity
+- [Donations](/platform/fees/donations) - one-off and recurring giving
+- [Recording payments](/platform/fees/record-payment) - offline and manual payments
+- [Local Center Fees](/platform/local-group-fees/create-local-fees) - chapter-level fee setup
+- [Usage & Billing](/platform/usage-billing) - paying Orgo, not your members

@@ -1,0 +1,160 @@
+[
+  {
+    "id": "newsletter-campaign-list",
+    "image": "/images/platform/communication/newsletter-list.png",
+    "usedOn": [
+      "platform/newsletter.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/newsletter/list",
+    "routeHint": "Administration sidebar -> COMMUNICATION -> Email campaigns",
+    "actions": [
+      "wait 12000",
+      "waitFor text=Avg. open rate",
+      "wait 2000"
+    ],
+    "waitFor": "text=Avg. open rate",
+    "viewport": "desktop",
+    "alt": "Email campaigns page with four summary tiles, a status filter, and a table of campaigns showing recipients, open and click rates",
+    "status": "new",
+    "notes": "Capture with the status filter left on All so Draft, Scheduled and Sent rows are all visible. Campaign names and subjects were rewritten as coherent Northwind pairs (internal name vs recipient-facing subject); the two event campaigns now point at Northwind events instead of another tenant's convention."
+  },
+  {
+    "id": "newsletter-configure-tab",
+    "image": "/images/platform/communication/newsletter-edit.png",
+    "usedOn": [
+      "platform/newsletter.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/newsletter/c724e68b8ff511f1832cde84ab",
+    "routeHint": "Email campaigns -> open a campaign whose status is Draft -> Configure tab (the default tab for drafts). This is draft 631 'Events Roundup June 2026', retargeted to All members and contacts so the recipient count badge is populated.",
+    "actions": [
+      "wait 8000",
+      "waitFor text=Campaign details",
+      "wait 2500",
+      "click text=Configure",
+      "wait 3500",
+      "click .sidebar-toggle-button",
+      "wait 2500"
+    ],
+    "waitFor": "text=All members and contacts",
+    "viewport": "desktop",
+    "alt": "Campaign Configure tab showing campaign title, subject, sender name, reply-to, and the five recipient options with the recipient count on the selected one",
+    "status": "new",
+    "notes": "Newsletter/Show.vue collapses the app sidebar on purpose when a draft or scheduled campaign loads (Show.vue:693), which is why this shot and the builder shot used to show a bare icon rail while every sibling screenshot shows the labelled sidebar. The first action clicks the header toggle (.sidebar-toggle-button) to put it back, matching the rest of the section."
+  },
+  {
+    "id": "newsletter-report-tab",
+    "image": "/images/platform/communication/newsletter-show.png",
+    "usedOn": [
+      "platform/newsletter.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/newsletter/c724c34c8ff511f1832cde84ab",
+    "routeHint": "Email campaigns -> open a campaign whose status is Sent; the Report tab opens automatically (a sent campaign ignores ?tab= entirely). This is campaign 630, 314 recipients, 144 opens, 32 clicks.",
+    "actions": [
+      "wait 4000"
+    ],
+    "waitFor": "text=Top links",
+    "viewport": "desktop",
+    "alt": "Campaign report with Sent, Opened, Clicks, Bounce and Unsubscribed tiles above a campaign details card and a Top links panel",
+    "status": "new",
+    "notes": "Top links is served by NewsletterMetricsService::getLinkClickStats, which for a finalized cache reads newsletter_metrics_cache.details.link_stats (a JSON object keyed by URL with total/unique), not newsletter_user.click_link. The seeded cache for 630 had link_stats [], so the panel was hidden and the frame ended after the details card; it now holds six links totalling the 42 recorded clicks. Follow up with non-openers only appears when nonOpenersCount is above zero, which this seed does not produce."
+  },
+  {
+    "id": "newsletter-builder-content-tab",
+    "image": "/images/platform/communication/newsletter-builder.png",
+    "usedOn": [
+      "platform/newsletter-builder.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/newsletter/c724e68b8ff511f1832cde84ab",
+    "routeHint": "Email campaigns -> open a Draft campaign -> Content tab. Draft 631 carries a saved design, so the canvas is not blank. The old /newsletter/builder/:item URL only redirects here.",
+    "actions": [
+      "wait 8000",
+      "waitFor text=Campaign details",
+      "wait 2000",
+      "click text=Content",
+      "wait 30000",
+      "click .sidebar-toggle-button",
+      "wait 3000"
+    ],
+    "waitFor": "text=Placeholders",
+    "viewport": "desktop",
+    "alt": "Email builder with the design canvas in the middle, the content block palette on the right, and the Placeholders dropdown in the toolbar above the canvas",
+    "status": "new",
+    "notes": "The canvas and the right-hand palette live inside the Unlayer iframe, so no waitFor can see them: the only lever is the wait, and 12s was not enough under three-way concurrency (it captured a spinner). Keep it at 30s and eyeball the result. The saved design's heading and body were replaced with demo copy; the previous one rendered another organization's convention letter, hashtag and sponsor on the canvas. First action re-expands the sidebar that Show.vue collapses for drafts."
+  },
+  {
+    "id": "newsletter-template-gallery",
+    "image": "/images/platform/communication/newsletter-templates.png",
+    "usedOn": [
+      "platform/newsletter-builder.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/newsletter/templates",
+    "routeHint": "Administration sidebar -> COMMUNICATION -> Campaign templates",
+    "actions": [],
+    "waitFor": "text=Email templates",
+    "viewport": "desktop",
+    "alt": "Email templates gallery with All, Orgo and Custom tabs and template cards showing rendered previews",
+    "status": "new",
+    "notes": "One tenant-owned template (Northwind Chapter Bulletin) now exists so the Custom tab is not 0 and one card carries the tenant badge the paragraph above the image describes."
+  },
+  {
+    "id": "newsletter-create-form",
+    "image": "/images/platform/communication/newsletter-create.png",
+    "usedOn": [
+      "platform/newsletter-builder.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/newsletter/create",
+    "routeHint": "Email campaigns -> New Campaign",
+    "actions": [
+      "fill input[placeholder=\"e.g. Newsletter March 2026\"] | Autumn Programme Announcement",
+      "fill input[placeholder=\"e.g. News from March\"] | Autumn programme: courses, events and awards",
+      "scrollto text=Choose a template",
+      "wait 1500"
+    ],
+    "waitFor": "text=Choose a template",
+    "viewport": "desktop",
+    "alt": "New campaign form scrolled to the recipient options, with the recipient count on the selected one and the Choose a template carousel below them",
+    "status": "new",
+    "notes": "Auto-selecting the first template on load copies that template entity into the form (Create.vue setTemplate), so the Campaign title field arrives pre-filled with the template's own name, 'Blank'. The fill actions replace it with a plausible campaign so the frame does not read as leftover junk. The template carousel sits below the Recipients card, so scroll to it or it is out of frame - which is what the surrounding paragraph is about."
+  },
+  {
+    "id": "newsletter-widget-list",
+    "image": "/images/platform/communication/newsletter-widgets.png",
+    "usedOn": [
+      "platform/newsletter-widgets.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/newsletter-widgets",
+    "routeHint": "Administration sidebar -> COMMUNICATION -> Newsletter subscription. Use t187c: it has three newsletter widgets (Main Newsletter, Events Newsletter, Monthly Digest). ila has none and renders the empty state.",
+    "actions": [],
+    "waitFor": "text=Newsletter Subscription Widgets",
+    "viewport": "desktop",
+    "alt": "Newsletter subscription widgets page with widget cards showing the default star, subscriber counts, and public URLs",
+    "status": "new",
+    "notes": "The list is served by NewsletterWidgetListController from the widget table (widgetType = newsletter), not the legacy newsletter_widget table. The three throwaway records (test, Widget, WIdget #1, all with 0 subscribers) are gone. The Public subscription page line under the grid should be in frame."
+  },
+  {
+    "id": "newsletter-widget-editor",
+    "image": "/images/platform/communication/newsletter-widget-editor.png",
+    "usedOn": [
+      "platform/newsletter-widgets.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/newsletter-widgets",
+    "routeHint": "Administration sidebar -> COMMUNICATION -> Newsletter subscription -> Edit on any existing widget (the styling panel only appears for a saved widget).",
+    "actions": [
+      "click .widget-card .button:has-text(\"Edit\")",
+      "wait 2000"
+    ],
+    "waitFor": "text=Integration",
+    "viewport": "desktop",
+    "alt": "Widget editor with content and styling settings on the left and the live preview with embed code on the right",
+    "status": "new",
+    "notes": "Slide-in panel. Left column: Widget name, Widget Content, Subscriber Tag, Container Styling, Input Styling, Button Styling. Right column (sticky): Preview and Integration with the JavaScript Embed tab selected. KNOWN LIMITATION: the embed snippet's script host is window.location.origin (Widgets.vue cdnBaseUrl), so on this documentation instance it renders http://localhost:8105 and there is no data or spec lever that changes it. The prose on newsletter-widgets.mdx says the host is whatever address you use Orgo at."
+  }
+]

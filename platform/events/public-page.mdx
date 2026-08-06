@@ -1,155 +1,147 @@
 ---
 title: 'Public Event Page'
-description: 'Shareable, branded event pages for promoting events outside your organization'
+description: 'The standalone event page anyone can open without an account, and exactly what it exposes'
 "og:title": 'Public Event Page | Orgo'
-"og:description": 'Shareable, branded event pages for promoting events outside your organization'
+"og:description": 'The standalone event page anyone can open without an account, and exactly what it exposes'
 "twitter:title": 'Public Event Page | Orgo'
-"twitter:description": 'Shareable, branded event pages for promoting events outside your organization'
+"twitter:description": 'The standalone event page anyone can open without an account, and exactly what it exposes'
 ---
 
-Every event in Orgo can have a public page — a standalone, branded URL that anyone can access without an Orgo account. Share it on social media, embed it on your website, or include it in email campaigns. Visitors see the event details and can register or buy tickets directly.
+Some events have a page that anyone can open without signing in: cover image, description, speakers,
+an agenda when the event has sessions, and a card to register or buy a ticket.
 
-<img src="/images/platform/events/event-public-page.png" alt="Public event page showing event title, date, location, ticket types with prices and quantity selectors, Continue button, and event description" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+**Built for** organisers promoting an event to people who are not members yet, and who should be able
+to register without creating an account first.
+
+**Replaces** a separate event site or ticketing page that has no idea who your members are.
+
+<img src="/images/platform/events/event-public-page.png" alt="Public event page with the cover image and Hosted by block on the left, and the event title, date, location and Get tickets card with ticket types on the right" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## How it works
+## Which events have one
 
-When you create a **public** event, it gets a URL:
+Exactly two kinds, and this is the rule that matters:
+
+- events marked **Public**, and
+- events with **ticketing** enabled, whether or not they are public.
+
+Anything else refuses the request. A members-only event with no ticketing returns nothing at the
+public address: the visitor gets an empty page, not a login prompt and not the event details.
+
+<Warning>
+Turning on ticketing makes the event page publicly readable even if the event itself is not public.
+If an event should stay internal, keep it free and use RSVP rather than tickets, and share the
+in-app link instead.
+</Warning>
+
+Marking an event public is gated by **Settings → Events → Who Can Create Public Events**. That
+setting is a ceiling, not an alternative route: if it is set to `EVENT_TENANT`, someone with only
+`EVENT_LOCAL` who ticks "Public" has the flag silently dropped on save. Events hosted by a private
+(non-joinable) group can never be public. Ticketing needs `EVENT_TENANT` (or `FINANCIAL_TENANT` at
+creation time).
+
+---
+
+## The address
 
 ```
-https://app.orgo.space/public/event/{event-uuid}
+https://<your app domain>/public/event/<event uuid>
 ```
 
-This page is:
-- Accessible without login
-- Mobile-friendly and responsive
-- Optimized for social sharing (Open Graph tags for Facebook, X, LinkedIn)
-- Brandable with your colors and logo
+On the shared domain `app.orgo.space` the link also needs `?workspace=<your slug>` so the page knows
+which organisation it belongs to. On a [custom domain](/platform/custom-domain) the organisation is
+resolved from the domain and no parameter is needed.
+
+Open the event and use **Landing page** in the event sidebar to see the page as a visitor does, with
+the right parameters already attached. The entry appears once the event is public or ticketed.
 
 ---
 
-## What the page shows
+## What a visitor sees
 
-| Section | Content |
-|---------|---------|
-| **Hero image** | Your event's cover photo — full-width at the top |
-| **Title and dates** | Event name, start/end times with timezone |
-| **Location** | Physical address and/or online meeting link |
-| **Description** | Full rich text description |
-| **Organizer** | Your organization name and logo |
-| **Tickets** | Available ticket types with prices (if ticketing enabled) |
-| **Registration form** | Name, email, and any custom fields you've configured |
+| Area | Content |
+|------|---------|
+| Cover image | The event image, falling back to the last photo in the event gallery, then to a coloured placeholder |
+| Hosted by | Your organisation logo (clicking it opens your public event list) |
+| Share | Copy the link, or post to Facebook, WhatsApp or LinkedIn. Desktop only |
+| Title, date, time | With a timezone switcher, so a visitor can read the times in their own zone |
+| Location | Address, plus a map when the venue was picked from the place search |
+| Online event | An "online" marker only. The joining link is never sent to the public page |
+| About | Description, event videos, and SDG icons when **Sustainable Development Goals** is on |
+| Program | Sessions on their own tab, with times, stages, and session speakers |
+| Speakers | Speaker cards with photo, headline and bio, grouped by day on multi-day events |
+| Tickets or registration | Ticket types and prices, or a single **Register** button on free events |
 
----
+Someone who already registered sees their own status instead of the ticket picker: their ticket or
+registration, a button to show the QR code, and, when the event runs votes, a **Votes** tab. That
+also works for a non-member ticket holder, whose emailed link carries a personal `hash` parameter
+that identifies them without an account. The `{eventAgendaUrl}` placeholder in emails and newsletters
+produces exactly that personalised link.
 
-## Customizing the appearance
-
-When editing an event, access the page settings to match your brand:
-
-| Setting | What it controls |
-|---------|-----------------|
-| **Organization logo** | Show/hide your logo at the top of the page |
-| **Show title** | Display the event title over the hero image |
-| **Hero image corners** | Square, slightly rounded, or fully rounded corners |
-| **Accent color** | Buttons, links, and highlights throughout the page |
-| **Button color** | The register/purchase button specifically |
-| **Light theme only** | Force light theme even if the visitor uses dark mode — useful for maintaining consistent branding |
-
----
-
-## Registration form customization
-
-Choose which fields to show on the registration form:
-
-| Field | Show when |
-|-------|----------|
-| **Name** | Always (usually required) |
-| **Email** | Always (usually required) |
-| **Phone** | You need to call or text attendees |
-| **Organisation** | Attendees come from different companies |
-| **Role/Title** | Professional networking events |
-| **Town** | You want to know where attendees are coming from |
-| **LinkedIn / X / Instagram** | Networking events where social profiles matter |
-
-Additional form controls:
-
-| Setting | What it does |
-|---------|-------------|
-| **Hide newsletter checkbox** | Removes the "subscribe to updates" checkbox — use if you don't want to grow your mailing list from event registrations |
-| **Disable registration** | Shows event info only, no form — use for past events or announcements |
-
-<Tip>
-  Keep forms short. Every additional field reduces registrations. Only ask for what you'll actually use — you can always collect more at check-in.
-</Tip>
+Registration is covered in [Ticketing](/platform/events/ticketing) and
+[Registration forms](/platform/events/registration-forms). The page also shows state: "Registrations
+are closed" when the organiser closed them, "This event is full" when capacity is reached, and no
+registration card at all once the event has ended (after its end time, or 24 hours after the start
+when no end time was set).
 
 ---
 
-## Sharing the event
+## What is never exposed
 
-### Social media
+The public payload is a deliberately narrow slice of the event. These are left out entirely, so they
+cannot leak through the page or through the underlying request:
 
-Copy the public URL and share it on Facebook, LinkedIn, X, Instagram, etc. The page includes Open Graph meta tags, so platforms show a preview with:
-- Event title
-- Description preview
-- Hero image
-- Event date
+- the online meeting link (visitors see only that the event is online),
+- the attendee list, and the organiser and hosting group,
+- the event's draft or published state, and any internal report fields,
+- **member-only ticket types**, which are fetched separately after sign-in. An anonymous visitor sees
+  a notice that member-only tickets exist, with Login and Register buttons, but never their prices.
 
-### Email campaigns
-
-Include the public URL in your newsletters or marketing emails. The link goes directly to the event page with registration.
-
-### Website embedding
-
-Embed the registration form on your own website:
-
-```html
-<iframe
-  src="https://app.orgo.space/public/event/{uuid}?embed=true"
-  width="100%"
-  height="800"
-  frameborder="0">
-</iframe>
-```
-
-This shows the event page within your site — visitors don't leave your domain to register.
-
-### QR codes
-
-Generate a QR code from the public URL for posters, flyers, and printed materials. Any QR code generator works — just paste the URL.
-
-Once someone registers (and pays, if ticketed), they see a unique QR code on the event page that serves as their ticket. See [QR code check-in](/platform/events/ticketing#qr-code-check-in) for details.
+Cover images and agenda images are copied into a public storage folder when an event becomes public
+or ticketed, so they can be served to signed-out visitors.
 
 ---
 
-## Public vs. members-only
+## Appearance
 
-| Setting | Who can see | Registration |
-|---------|-----------|-------------|
-| **Public** | Anyone with the link | Guest checkout — no account needed |
-| **Members-only** | Only logged-in members | Redirects to login, then shows event details |
-
-Members-only events still have a URL, but it redirects non-members to the login page. Useful for internal events where you want a shareable link within the organization but not publicly.
+Colours and the hero image rounding are set per event under **Registration form → Appearance**
+(**Selected color**, **Button color**, **Hero image border radius**, **Display title**). That editor
+only exists on events that require a registration form, which every ticketed event does. See
+[Registration forms](/platform/events/registration-forms) for the full table. There is no per-event
+logo control and no theme picker: the page uses your organisation logo and follows the visitor's
+light or dark preference unless the link carries `?light` or `?iframe`.
 
 ---
 
-## Common scenarios
+## Common questions
 
 <AccordionGroup>
-  <Accordion title="I shared the link but the social media preview looks wrong">
-    Make sure your event has a hero image and description — those feed the Open Graph tags. If you updated them recently, social platforms may have cached the old preview. Use Facebook's Sharing Debugger or X's Card Validator to force a refresh.
+  <Accordion title="The page is blank for people I send it to">
+    The link is missing `?workspace=<slug>` and the visitor has never opened your organisation in
+    that browser. Copy the link from **Landing page** in the event sidebar rather than from your
+    address bar.
   </Accordion>
 
-  <Accordion title="Can I use a custom domain for event pages?">
-    Not natively — event pages are hosted on `app.orgo.space`. You can embed the page on your website using the iframe approach, which shows the registration form within your domain.
+  <Accordion title="Can I use my own domain for event pages?">
+    Yes, if your organisation has a custom domain. The page is then served from it and the workspace
+    parameter is unnecessary. Otherwise it lives on `app.orgo.space`.
   </Accordion>
 
-  <Accordion title="I want to show past events as an archive">
-    Past public events remain accessible at their URL. Disable registration (toggle "Disable registration") so the page shows details and photos but no form. This turns it into a record of the event.
+  <Accordion title="The social preview shows my organisation name, not the event">
+    The `/public/event/...` address has no per-event preview data. Use the short share link instead:
+    it serves a preview page carrying the event title, description and cover image, then forwards to
+    the event. See [Sharing events](/platform/events/sharing).
   </Accordion>
 
-  <Accordion title="The registration form is too long — attendees are dropping off">
-    Remove optional fields. Name and email are usually enough for registration. Collect additional information at check-in or via a follow-up email after registration.
+  <Accordion title="Members cannot see their discounted price">
+    Member-only tickets are only returned to a signed-in member whose current membership level
+    matches the ticket. Ask them to sign in on the same page, then reload.
+  </Accordion>
+
+  <Accordion title="I want the page to stay up after the event">
+    It does. Past events keep their address and keep showing the description, agenda and speakers.
+    Only the registration card disappears.
   </Accordion>
 </AccordionGroup>
 
@@ -157,6 +149,8 @@ Members-only events still have a URL, but it redirects non-members to the login 
 
 ## Related
 
-- [Create Event](/platform/events/create-event) — Setting up event details and page
-- [Ticketing](/platform/events/ticketing) — Ticket types displayed on the page
-- [Attendance](/platform/events/attendance) — What happens after registration
+- [Sharing events](/platform/events/sharing) - short links, embeds and the public event directory
+- [Ticketing](/platform/events/ticketing) - ticket types, pricing and checkout
+- [Registration forms](/platform/events/registration-forms) - the questions asked at registration
+- [Create an event](/platform/events/create-event) - visibility, capacity and cover image
+- [Attendance](/platform/events/attendance) - what happens after someone registers

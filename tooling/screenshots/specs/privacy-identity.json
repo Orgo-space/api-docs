@@ -1,0 +1,85 @@
+[
+  {
+    "id": "privacy-defaults",
+    "image": "/images/platform/users/privacy-defaults.png",
+    "usedOn": [
+      "platform/users/privacy-settings.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/users/privacy-defaults",
+    "routeHint": "Settings (gear) -> Modules -> Users & Profiles -> Privacy Defaults in the inner left list",
+    "actions": [],
+    "waitFor": "text=Default Privacy Settings",
+    "viewport": "desktop",
+    "alt": "Default Privacy Settings with toggles for Name, Email, Phone, Age, Town, Profile Image, Profession and Social Media",
+    "status": "new"
+  },
+  {
+    "id": "privacy-user-controls",
+    "image": "/images/platform/users/privacy-user-controls.png",
+    "usedOn": [
+      "platform/users/privacy-settings.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/users/edit/209212?tab=settings",
+    "routeHint": "Members -> open any member -> Edit -> Settings & Privacy tab -> Privacy chip in the right-hand list. The existing capture is on the member edit screen with the Settings & Privacy tab active.",
+    "actions": [
+      "click text=Settings & Privacy",
+      "click text=Privacy"
+    ],
+    "waitFor": "text=Make my profile completely private",
+    "viewport": "desktop",
+    "alt": "Member privacy panel with the Make my profile completely private master switch above toggles for Name, Email, Phone, Age, Profile image and town, and Profession and social media",
+    "status": "new"
+  },
+  {
+    "id": "identity-validation-settings",
+    "image": "/images/platform/users/identity-validation-settings.png",
+    "usedOn": [
+      "platform/identity-validation.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/identity-validation",
+    "routeHint": "Settings (gear) -> Modules -> Identity Validation -> Configuration. Enable Identity Validation must be ON for the settings card below it to render.",
+    "actions": [],
+    "waitFor": "text=Identity Validation Settings",
+    "viewport": "desktop",
+    "alt": "Identity Validation module settings with Enable Identity Validation on and toggles for Require for Users, Require for Online Payments, Automated Identity Validation, Hide Address Fields and Cancel Subscriptions Without Identity Reconfirmation",
+    "status": "new"
+  },
+  {
+    "id": "identity-upload",
+    "image": "/images/platform/users/identity-upload.png",
+    "usedOn": [
+      "platform/identity-validation.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/identity/user",
+    "routeHint": "Signed in as any member, go to /identity/user directly. It is also reachable from a member profile: the Identity row shows an Upload identity link when no document exists.",
+    "actions": [],
+    "waitFor": "text=Upload identity scan image",
+    "viewport": "desktop",
+    "alt": "Validate your identity page with an Upload identity scan image button and a Document has information on the backside toggle",
+    "status": "new",
+    "selector": ".o-minwidth",
+    "notes": "The page is genuinely this small: title, one upload button and the backside switch. Cropped to the .o-minwidth content section so the shot is not 90% empty canvas."
+  },
+  {
+    "id": "identity-admin-review",
+    "image": "/images/platform/users/identity-admin-review.png",
+    "usedOn": [
+      "platform/identity-validation.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/identity/admin/29454",
+    "routeHint": "Needs an Identity row that is still pending, so the Validate button, the Reject reason select and the Change identity data button all render. Record 29454 belongs to member 312711 (Mia Ashford). The old target, 29447, was already rejected (only a red tag and a lone Reopen button) and its header name contradicted the extracted fields. Not 29472 either: templates-political-party/party-identity-review shoots that one.",
+    "actions": [
+      "wait 3000"
+    ],
+    "waitFor": "text=Change identity data",
+    "viewport": "desktop",
+    "alt": "Identity validation review screen showing the uploaded document on the left and the extracted first name, last name, personal number, birth date, document serial and number, issue and expiry dates on the right, with Validate, Reject and Change identity data controls",
+    "status": "new",
+    "notes": "Every identity row in the obfuscated tenant had media_id NULL, so the left half of the frame rendered as empty white where the document belongs. media.content_url is varchar(255), which is too short for a raster data URI, but mediaSrc (client/src/utils/functions.js:152) returns contentUrl.replace('demo__','') for any value containing demo__, so a 248-character 'demo__data:image/svg+xml;utf8,<svg ...>' placeholder does fit and renders locally with no network call and no real document. Media 990002 (blue) is on 29454 and 990003 (green) on 29472 so the two identity screenshots do not share artwork. Separately, identity.first_name/last_name were seeded from an unrelated 'Bennett' pool; all 30 records on tenant 282 were resynced to their member's name, and 29454 was given a plausible personal number, serial, issue and expiry date, so the header and the extracted fields agree."
+  }
+]

@@ -1,0 +1,57 @@
+[
+  {
+    "id": "ask-orgo-welcome",
+    "image": "/images/platform/insights/ask-orgo-welcome.png",
+    "usedOn": [
+      "platform/insights.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/ask-orgo",
+    "routeHint": "Sign in as an ADMIN_TENANT user. The sidebar shows 'Ask Orgo' with a sparkles icon at the top of the administration section (or between the community and administration sections in CRM mode). The welcome state renders without calling the AI, so no API key is needed for this shot.",
+    "actions": [],
+    "waitFor": "text=what would you like to know?",
+    "viewport": "desktop",
+    "alt": "Ask Orgo welcome screen with a greeting, a question box, and suggested question chips such as active members per local center",
+    "status": "new"
+  },
+  {
+    "id": "ask-orgo-result",
+    "image": "/images/platform/insights/ask-orgo-result.png",
+    "usedOn": [
+      "platform/insights.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/ask-orgo",
+    "routeHint": "Click the suggestion chip 'Active members count per local center', wait for the answer, then click the chart/table toggle (.nlq-viz-btn, the icon left of the expand arrow in the result card header) so the card shows the table rather than the bar chart. The section this illustrates is 'Working with a result', which promises a summary sentence, a table with column headers and a row count. The card header line IS that summary sentence plus the count, so only the table view is missing. This shot DOES call the Anthropic API, so the capture environment needs a working ANTHROPIC_API_KEY in api/.env.docker; without it the chat returns an error bubble and the shot must be skipped. Capture only from t187c; the run adds one conversation to RECENTS each time, so delete stale duplicates on the tenant before recapturing.",
+    "actions": [
+      "click text=Active members count per local center",
+      "wait 15000",
+      "waitFor .nlq-viz-btn",
+      "click .nlq-viz-btn"
+    ],
+    "waitFor": ".nlq-viz-btn:not(.is-active)",
+    "viewport": "desktop",
+    "alt": "Ask Orgo conversation showing a summary sentence above a result table with column headers and a row count",
+    "status": "new"
+  },
+  {
+    "id": "analytics-platform",
+    "image": "/images/platform/insights/analytics-platform.png",
+    "usedOn": [
+      "platform/insights.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/stats?tab=platform",
+    "routeHint": "Sidebar item 'Analytics'. The Platform tab is the first visible tab for an ADMIN_TENANT user. Leave the period selector on its default 30 days. Use the tall viewport: at 1080px the Activity row of sparkline tiles is cut through the middle of the charts. The tile values are derived from tenant_metrics snapshots joined to today's live counts, so the seed has to agree with the live user, contact and product_payment tables or tiles read zero: Members Lost and New Contacts are last-minus-first over the window, and Non-paying members is activeMembers minus payingUsersCount, which goes to zero the moment more users hold a paid fee period than are ACTIVE.",
+    "actions": [
+      "wait 3000",
+      "click text=Reset cache",
+      "wait 22000"
+    ],
+    "waitFor": "text=Active Members",
+    "viewport": "wide",
+    "alt": "Analytics Platform tab showing the membership and financial cards, contact, chapter and subscriber tiles, and the daily activity sparklines below them",
+    "status": "new",
+    "notes": " Recaptured 2026-08-06: the Membership card's sparkline is a rising trend rather than a flat line, so the tile now reads as a chart."
+  }
+]

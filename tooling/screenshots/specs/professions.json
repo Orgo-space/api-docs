@@ -1,0 +1,81 @@
+[
+  {
+    "id": "professional-network-directory",
+    "image": "/images/platform/professions/professional-network-directory.png",
+    "usedOn": [
+      "platform/professional-network.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/professional-network",
+    "routeHint": "Type the URL directly; the item is not in the default sidebar. t187c now has 348 active members carrying a profession_industry_id across 22 industries and interest custom field 452 populated, so both the industry list and the Interests panel render with real counts. KNOWN LIMIT: the Interests and Industries panels share one sticky left column (.column.is-one-quarter, max-height 100vh, overflow-y auto) and each table is styled height:calc(100vh - 300px), so together they always exceed the column by design and no viewport fits both whole. The Interests panel renders first, which is why an unscrolled shot ends at the Industries header. This spec scrolls the column to the industry rows, because the zero-count industry list was the defect being fixed; the alt text on professional-network.mdx was reworded to match what is in frame.",
+    "actions": [
+      "scrollto .card.py-4.pl-4 tbody tr:nth-child(4)"
+    ],
+    "waitFor": "text=All industries",
+    "viewport": "desktop",
+    "alt": "Professional network page with the interests and industry lists in the left column, each row showing its member count, next to a grid of member cards with name and profession headline",
+    "status": "new"
+  },
+  {
+    "id": "professions-module-config",
+    "image": "/images/platform/professions/professions-module-config.png",
+    "usedOn": [
+      "platform/professional-network.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/professions",
+    "routeHint": "Settings -> Modules -> Professions. Requires ADMIN_TENANT. preper has isActive, hasIndustry, hasJob and hasExpertise all true so every switch shows on.",
+    "actions": [],
+    "waitFor": "text=Enable Professions Module",
+    "viewport": "desktop",
+    "alt": "Professions module settings with the master Enable Professions Module switch and a Professional Information section holding Enable Industry Tracking, Enable Job Information and Enable Expertise",
+    "status": "new"
+  },
+  {
+    "id": "profession-industries",
+    "image": "/images/platform/professions/profession-industries.png",
+    "usedOn": [
+      "platform/professional-network.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/professions/industries",
+    "routeHint": "Settings -> Modules -> Professions -> Profession Industries in the left menu. The menu entry only appears when Enable Industry Tracking is on. Scroll so both a Custom and a Global row are visible if the tenant has custom industries.",
+    "actions": [],
+    "waitFor": "text=Industries",
+    "viewport": "desktop",
+    "alt": "Industries admin table with Industry Name, type tagged Custom or Global, an enabled checkbox per row, and bulk buttons for enabling or disabling all custom and all default industries",
+    "status": "new"
+  },
+  {
+    "id": "profile-profession-tab",
+    "image": "/images/platform/professions/profile-profession-tab.png",
+    "usedOn": [
+      "platform/professional-network.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/users/edit/209212?tab=profession",
+    "routeHint": "Open any member with a filled profession from /professional-network, then Edit on the Profession card. t187c now has hasJob and hasExpertise on, so the job and expertise pickers both render alongside industry and sector. Member 209212 (Theo Vargas) has a headline, industry, sector and a current organisation, so the Current profession card is filled. NO click action: ?tab=profession selects the tab via initTab(). A `click text=Profession` matched the sidebar project link 'Northwind Professional Association Strategic Plan' and navigated away instead.",
+    "actions": [],
+    "waitFor": "text=Profession sector",
+    "viewport": "desktop",
+    "alt": "Profession tab of a member profile with profession headline, job and expertise pickers, industry, a public private non-governmental sector choice and a Current profession card",
+    "status": "new"
+  },
+  {
+    "id": "member-connections-tab",
+    "image": "/images/platform/professions/member-connections-tab.png",
+    "usedOn": [
+      "platform/professional-network.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/user/207128?tab=connections",
+    "routeHint": "Open your own profile and click the My Network tab. The tab only renders on your own profile and only when users.hasConnections is on (it is on for t187c). User 207128 (Julian Sorensen, the t187c session account) has 9 accepted connections. NO click action: ?tab=connections selects the tab. The tab header reads 'My Network', not 'Connections', so a `click text=Connections` matched nothing and the pane stayed blank.",
+    "actions": [
+      "wait 3000"
+    ],
+    "waitFor": "text=Most recent",
+    "viewport": "desktop",
+    "alt": "Connections tab on a member profile listing accepted connections as rows with a count, a search box and a sort dropdown",
+    "status": "new"
+  }
+]

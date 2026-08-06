@@ -1,225 +1,137 @@
 ---
 title: 'API Access'
-description: 'Integrate with Orgo using the REST API'
+description: 'Create API tokens, scope them to part of your data, and connect external systems to Orgo'
 "og:title": 'API Access | Orgo'
-"og:description": 'Integrate with Orgo using the REST API'
+"og:description": 'Create API tokens, scope them to part of your data, and connect external systems to Orgo'
 "twitter:title": 'API Access | Orgo'
-"twitter:description": 'Integrate with Orgo using the REST API'
+"twitter:description": 'Create API tokens, scope them to part of your data, and connect external systems to Orgo'
 ---
 
-Orgo provides a comprehensive REST API for integrating with external systems. Access member data, manage events, process payments, and automate workflows programmatically.
+An API token lets a script, an automation platform or an internal tool talk to Orgo without a browser session. Every REST endpoint the app itself uses is available, and each token can be narrowed to only the part of your data an integration actually needs.
 
-<img src="/images/platform/developers/api-tokens.png" alt="API tokens management page showing active and revoked tokens" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+**Built for** operations teams wiring Orgo into the rest of their stack.
+**Replaces** CSV exports and manual re-keying between systems.
 
-## How to access
-
-**Settings** → **Developers** → **API Access**
-
-Full API documentation: [API Reference](/api-reference)
+<img src="/images/platform/developers/api-tokens.png" alt="API Tokens page with the create form, the Full access and Restricted scope selector, and a table of existing tokens showing last used, expiry and status" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Prerequisites
+## Where it lives
 
-- Administrator access required
-- API access must be enabled for your organization
+**Settings → Developers → API Tokens**
+
+Creating, editing, revoking and deleting a token all require **ADMIN_TENANT**. The menu entry appears only when API access is switched on for your organization.
+
+The full endpoint catalogue, request and response shapes, and error formats are in the [API Reference](/api-reference/concepts/authentication).
 
 ---
 
-## API Authentication
-
-### API Keys
-
-Generate API keys for server-to-server integration:
+## Creating a token
 
 <Steps>
-  <Step title="Navigate to API Settings">
-    Go to **Settings** → **Developers** → **API Access**.
+  <Step title="Name it">
+    Use the integration's name, not a person's. The name is the only thing you will recognise it by later.
   </Step>
-  <Step title="Generate API Key">
-    Click **Generate New API Key**.
+  <Step title="Set an expiry (optional)">
+    Any date from tomorrow onwards. Leave it empty for a token that never expires.
   </Step>
-  <Step title="Copy and secure">
-    Copy the key immediately. It won't be shown again.
+  <Step title="Choose the access">
+    **Full access** (optionally **Read-only**), or **Restricted** with a per-area level. See below.
   </Step>
-  <Step title="Set permissions">
-    Configure what the key can access.
+  <Step title="Copy the token">
+    It is shown once, in a yellow banner. Orgo stores only a hash of it, so a lost token cannot be recovered: create a new one and revoke the old.
   </Step>
 </Steps>
 
-### Using API Keys
-
-Include in request headers:
+Send it on every request as a header:
 
 ```
-Api-Token: YOUR_API_KEY
+Api-Token: YOUR_TOKEN
 ```
-
----
-
-## API Endpoints
-
-Common endpoints:
-
-| Endpoint | Description |
-|----------|-------------|
-| `/api/v1/users` | Member data |
-| `/api/v1/events` | Event management |
-| `/api/v1/payments` | Payment records |
-| `/api/v1/groups` | Group information |
-| `/api/v1/adhesions` | Membership applications |
-
-See [API Reference](/api-reference) for complete documentation.
-
----
-
-## Rate Limits
-
-API requests are rate-limited:
-
-| Plan | Requests/minute |
-|------|-----------------|
-| Standard | 60 |
-| Professional | 300 |
-| Enterprise | Custom |
-
-Exceeding limits returns `429 Too Many Requests`.
-
----
-
-## Webhooks
-
-Receive real-time notifications when events occur:
-
-### Setting Up Webhooks
-
-1. Go to **Settings** → **Developers** → **Webhooks**
-2. Click **Add Webhook**
-3. Enter your endpoint URL
-4. Select events to subscribe to
-5. Save
-
-<img src="/images/platform/developers/webhook-create.png" alt="Webhook creation form with event type selection" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
-### Webhook Events
-
-| Event | Description |
-|-------|-------------|
-| `user.created` | New member registered |
-| `user.updated` | Member profile updated |
-| `payment.completed` | Payment successful |
-| `event.created` | New event created |
-| `adhesion.submitted` | New membership application |
-
-### Webhook Payload
-
-```json
-{
-  "event": "user.created",
-  "timestamp": "2024-01-15T10:30:00Z",
-  "data": {
-    "id": "abc123",
-    "email": "member@example.com"
-  }
-}
-```
-
----
-
-## Security
-
-### Best Practices
-
-<AccordionGroup>
-  <Accordion title="Secure your keys">
-    Never expose API keys in client-side code or public repositories.
-  </Accordion>
-
-  <Accordion title="Use HTTPS">
-    All API requests must use HTTPS.
-  </Accordion>
-
-  <Accordion title="Rotate keys regularly">
-    Generate new keys periodically and revoke old ones.
-  </Accordion>
-
-  <Accordion title="Minimal permissions">
-    Grant only the permissions each integration needs.
-  </Accordion>
-</AccordionGroup>
-
----
-
-## Common Integrations
-
-<AccordionGroup>
-  <Accordion title="CRM systems">
-    Sync member data with Salesforce, HubSpot, or other CRMs.
-  </Accordion>
-
-  <Accordion title="Email marketing">
-    Keep Mailchimp, Sendinblue, or other email lists updated.
-  </Accordion>
-
-  <Accordion title="Accounting software">
-    Export payment data to QuickBooks or Xero.
-  </Accordion>
-
-  <Accordion title="Custom dashboards">
-    Build internal reporting tools with your data.
-  </Accordion>
-</AccordionGroup>
 
 ---
 
 ## Limiting what a token can reach
 
-A token does not have to carry everything you can do. Tokens are scoped by
-category, so you can give an integration access to members without giving it
-access to money.
+A token does not have to carry everything you can do. The **Access** control has two modes.
 
-**Categories**
+**Full access** behaves like your own account. The **Read-only** switch then restricts it to `GET`, `HEAD` and `OPTIONS`; anything else is rejected with `403`.
 
-| Category | Covers |
+**Restricted** gives you a matrix: four areas, each set to **None**, **Read** or **Write**.
+
+| Area | Covers |
 |---|---|
-| `members` | Member profiles, memberships, badges, courses, contracts, companies |
-| `financial` | Products, fees, payments, invoices, billing profiles |
-| `events` | Events, registrations, attendance |
-| `communications` | Newsletters, discussions |
+| **Financial** | Products, prices, payments, fees, invoices and invoice templates, subscriptions, billing profile |
+| **Events** | Events and event types, tickets, addons, vouchers, attendance, speakers, networking spaces and sessions |
+| **Members** | Members and their roles, units, local centers, groups, families, companies, contacts, badges, courses, contracts, adhesions, identities, votes, waitlist, referrals |
+| **Communications** | Newsletters and templates, recipient lists, discussions, topics and posts |
 
-**Levels.** Each granted category is either **read** or **write**. A category you
-do not grant is not reachable at all.
+A few resources belong to more than one area: a contact is reachable with either **Financial** or **Members**, a newsletter with either **Communications** or **Events**.
 
 <Note>
-This is the answer to "can we let a developer or an external tool work with our
-member data without exposing payments?" Yes. Create a token granting `members`
-and leave `financial` out.
+This is the answer to "can we let a developer or an external tool work with our member data without exposing payments?" Yes. Grant **Members** and leave **Financial** on None.
 </Note>
 
-A scoped token can never exceed the permissions of the person who created it. The
-scope narrows that person's access; it does not widen it. So a token created by
-someone without financial permissions cannot reach financial data even if the
-category is granted.
+Three rules make a restricted token safe to hand out:
 
-Tokens can also be marked **read-only** across every granted category, and given
-an expiry date. For an integration that only reads, use both: the blast radius of
-a leaked token then stops at data it could already see, and stops entirely on the
-expiry date.
+- **Default deny.** Anything not covered by a granted area is refused, not merely filtered. Reference data (countries, towns, tags, custom-field definitions, the token owner's own notifications) stays readable, but not writable.
+- **Never administrative.** Tenant settings, OAuth apps, webhooks, email templates and the email log, imports, workflows, projects and tasks are out of reach for a restricted token whatever you grant it.
+- **No escalation.** A restricted token cannot assign a member a role carrying a permission the token does not itself hold at Write, and cannot rewrite role-group structures at all.
+
+A token can never exceed the permissions of the admin who created it. The scope narrows that person's access; it does not widen it.
 
 ---
 
-## Getting Help
+## Managing tokens
 
-- [API Reference](/api-reference) - Complete endpoint documentation
-- [OAuth Integration](/platform/oauth) - OAuth server setup
-- Contact support for enterprise integrations
+The table shows each token's name, creation date, last use, expiry, access and status.
+
+| Action | What it does |
+|---|---|
+| **Edit** | Change the name, expiry or scope of an active token. The token value never changes, and the new scope applies from the next request. |
+| **Revoke** | Stops the token working immediately. Integrations using it start failing. |
+| **Delete** | Available only after a token is revoked or expired. Removes it from the list permanently. |
+
+You see and manage the tokens you created, not other admins'. Every create, scope change and revoke is recorded internally with the actor and the before and after scope, so support can reconstruct who changed what.
+
+A token also stops working if the account that owns it is no longer active, so revoke tokens as part of offboarding rather than relying on the account alone.
 
 ---
 
-## Related Features
+## Volume and limits
 
-- [Orgo MCP](/platform/mcp) - Connect AI assistants to your Orgo data
+Requests are counted per token per day. **Settings → Usage & Billing** shows API requests over the last 30 days against your plan's allowance.
 
-- [OAuth](/platform/oauth) - OAuth authentication
+There is no per-minute quota tied to your plan. A handful of expensive or abuse-sensitive endpoints have their own limits and answer `429` with a `Retry-After` header: see [Rate limits](/api-reference/concepts/rate-limits) for the list and a retry pattern.
 
-- [Webhooks](#webhooks) - Real-time notifications
+---
+
+## Keeping tokens safe
+
+<AccordionGroup>
+  <Accordion title="Never put a token in client-side code">
+    A token carries the permissions of the admin who created it. Anything in a browser, a mobile app or a public repository is compromised the moment it ships. For user-facing sign-in, use [OAuth](/platform/oauth) instead.
+  </Accordion>
+
+  <Accordion title="One token per integration">
+    Separate tokens mean you can revoke one integration without breaking the others, and the Last Used column tells you which ones are actually in use.
+  </Accordion>
+
+  <Accordion title="Grant the narrowest scope that works">
+    Read-only where the integration only reads, and a restricted scope where it touches one area. The blast radius of a leaked token then stops at data it could already see.
+  </Accordion>
+
+  <Accordion title="Set an expiry on anything temporary">
+    Contractor access, a one-off migration, a proof of concept: give it a date and let it lapse on its own.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related
+
+- [API Reference](/api-reference/concepts/authentication) - every endpoint, parameter and response
+- [Webhooks](/platform/webhooks) - get pushed events instead of polling
+- [OAuth Server](/platform/oauth) - let members sign in to your own app with their Orgo account
+- [Orgo MCP](/platform/mcp) - connect AI assistants to your Orgo data
+- [Integrations](/platform/integrations) - HubSpot, n8n, analytics and SSO

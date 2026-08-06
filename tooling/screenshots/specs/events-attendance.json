@@ -1,0 +1,89 @@
+[
+  {
+    "id": "event-attendees",
+    "image": "/images/platform/events/event-attendees.png",
+    "usedOn": [
+      "platform/events/attendance.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/events/attend/2ld07n8veu9v6bvh3u0gfrfe34",
+    "routeHint": "Events in the main sidebar -> open a published event that has ticketing and a registration form (Nordic Food Alliance has many) -> Participants in the left event sidebar. The route param is the event UUID, the same one used by /event/:item.",
+    "actions": [],
+    "waitFor": "text=Columns",
+    "viewport": "desktop",
+    "alt": "Participants screen listing attendees with name, town, ticket, RSVP and invited status",
+    "status": "new",
+    "notes": "Control bar: <n> persons, filter icon, Name box, Email box, RSVP select, Ticket select, Invited checkbox, refresh, Columns, Export, Invite. No t187c event has both ticketing and a registration form, so the Registration column cannot appear here; Summer Social Arlington is the ticketed contrast shot."
+  },
+  {
+    "id": "event-attendees-simple",
+    "image": "/images/platform/events/event-attendees-simple.png",
+    "usedOn": [
+      "platform/events/attendance.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/events/attend/7ghqhr5a6e82mp7m0s1s6a8tkv",
+    "routeHint": "Events -> Annual General Meeting Arlington (event 200240, past, no ticketing, no registration form) -> Participants. The contrast with the ticketed shot: only the RSVP column, no Ticket and no Registration column. 37 participants, 20 already set to Attended.",
+    "actions": [],
+    "waitFor": "text=Columns",
+    "viewport": "desktop",
+    "alt": "Participant list of an event without ticketing, showing only the RSVP column with Attending, Attended and Not attending values",
+    "status": "new",
+    "notes": "Do NOT reuse the Summer Social Arlington UUID here: that is the ticketed event captured by event-attendees. RSVP values render as native <select> options, invisible to a text= waitFor, so wait on the Columns button."
+  },
+  {
+    "id": "event-attendee-invite",
+    "image": "/images/platform/events/event-attendee-invite.png",
+    "usedOn": [
+      "platform/events/attendance.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/events/attend/2ld07n8veu9v6bvh3u0gfrfe34",
+    "routeHint": "Events -> open a published event -> Participants -> Invite (top right), then expand Guest tickets at the bottom of the dialog. Use the class selector for Invite: text=Invite matches the Invited filter checkbox first and silently toggles the filter instead of opening the dialog.",
+    "actions": [
+      "click .button.is-primary.is-rounded.is-small",
+      "wait 2000",
+      "click .guest-tickets-toggle",
+      "wait 1500"
+    ],
+    "waitFor": "text=Invite participant",
+    "viewport": "desktop",
+    "alt": "Invite participant dialog with Member and External tabs, a member search box, and the guest tickets number control",
+    "status": "new",
+    "notes": "Show the Member tab selected with the search field visible, plus the expanded Guest tickets control. Do not type a real member name into the search box."
+  },
+  {
+    "id": "event-qr-ticket",
+    "image": "/images/platform/events/event-qr-ticket.png",
+    "usedOn": [
+      "platform/events/check-in.mdx",
+      "platform/events/ticketing.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/event/a2a328fc8fc711f19aed9e396b",
+    "routeHint": "Superseded. events-ticketing/event-qr-ticket writes the same file from the public event page, where the confirmed-registration box actually renders.",
+    "actions": [],
+    "waitFor": "canvas, svg",
+    "viewport": "desktop",
+    "alt": "Event page showing a confirmed registration with its QR code",
+    "status": "dropped",
+    "notes": "DROPPED: two specs wrote /images/platform/events/event-qr-ticket.png and whichever ran last won. This one pointed at event 200436, which is now a session (sub-event) of the Annual Awards Dinner with no registrations, so it captured a bare event page with no QR code at all. events-ticketing/event-qr-ticket is the surviving source."
+  },
+  {
+    "id": "event-speakers",
+    "image": "/images/platform/events/event-speakers.png",
+    "usedOn": [
+      "platform/events/speakers-trainers.mdx",
+      "platform/events/ticketing.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/events/speakers/a2a27a3e8fc711f19aed9e396b",
+    "routeHint": "Events -> open an event that has Enable speakers switched on (event -> Modify -> Features) -> Speakers in the left event sidebar.",
+    "actions": [],
+    "waitFor": "text=Add speaker",
+    "viewport": "desktop",
+    "alt": "Speakers tab of an event listing speakers with profile photos, names and bios",
+    "status": "new",
+    "notes": "Layout is unchanged but each card now carries an edit (pencil) button next to the delete button for anyone who can manage the event, and a helper line under the list reading 'Speaker card shows role, current company and bio'. Recapture as event owner so both buttons appear."
+  }
+]

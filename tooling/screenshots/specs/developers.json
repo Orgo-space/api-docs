@@ -1,0 +1,134 @@
+[
+  {
+    "id": "developers-api-tokens",
+    "image": "/images/platform/developers/api-tokens.png",
+    "usedOn": [
+      "platform/api.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/api-tokens",
+    "routeHint": "Settings -> Developers -> API Tokens. Requires ADMIN_TENANT and settingFeatures.api.isActive. Seed 2-3 tokens first (one full access, one read-only, one restricted with e.g. members:read + events:write) so the Access column shows both the Full access tag and the per-area scope tags.",
+    "actions": [
+      "click text=Restricted"
+    ],
+    "waitFor": "text=Communications",
+    "viewport": "desktop",
+    "alt": "API Tokens page with the create form showing the Restricted access matrix (Financial, Events, Members, Communications each set to None, Read or Write) above a table of existing tokens",
+    "status": "new",
+    "why": "The stored image predates the scope matrix. Current UI (client/src/views/Developer/App/ApiTokens.vue + components/ScopeMatrix.vue) has an Access field with Full access / Restricted modes, an Access column showing scope tags, and an Edit action per row."
+  },
+  {
+    "id": "developers-oauth-apps",
+    "image": "/images/platform/developers/oauth-apps.png",
+    "usedOn": [
+      "platform/oauth.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/apps",
+    "routeHint": "Settings -> Developers -> OAuth Apps. Requires ADMIN_TENANT and settingFeatures.api.isActive. Seed 2 apps so the table is not empty.",
+    "actions": [],
+    "waitFor": "text=OAuth Apps",
+    "viewport": "desktop",
+    "alt": "OAuth Apps page listing registered applications with their App ID and redirect URI, the legacy-token-exchange deprecation notice, and the Create App and OAuth documentation buttons",
+    "status": "new",
+    "why": "The stored image predates the yellow deprecation notice that List.vue now renders unconditionally between the header and the table (client/src/views/Developer/App/List.vue:34-38)."
+  },
+  {
+    "id": "developers-oauth-dev-docs",
+    "image": "/images/platform/developers/oauth-dev-docs.png",
+    "usedOn": [
+      "platform/oauth.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/dev-docs",
+    "routeHint": "Settings -> Developers -> OAuth Apps -> OAuth documentation button (top right).",
+    "actions": [],
+    "waitFor": "text=OAuth 2.0 authorization code flow (current)",
+    "viewport": "desktop",
+    "alt": "In-app OAuth documentation page leading with the deprecation notice and the OAuth 2.0 authorization code flow, with the organization's own domain filled into the example URLs",
+    "status": "new",
+    "why": "The stored image shows only the old legacy SSO handshake. Docs.vue now leads with the deprecation warning and a full OAuth 2.0 section; the legacy flow is demoted to the bottom (client/src/views/Developer/Docs.vue:25-99).",
+    "note": "KNOWN COSMETIC DEFECT, not fixable from a spec: the step-1 authorization URL is one long unbroken run of text in a plain <p> (Docs.vue:40) with no overflow-wrap or word-break, so it runs past the card and clips at '...&code_challenge_method=S2'. A narrower viewport does not help, because the run has no break opportunity the browser will take. The real fix is product CSS (overflow-wrap: anywhere on that paragraph), which is out of scope for a screenshot pass.",
+    "notes": " Recaptured 2026-08-06: the page now opens with the legacy-token-exchange deprecation callout above the OAuth 2.0 authorization code flow."
+  },
+  {
+    "id": "developers-integrations",
+    "image": "/images/platform/developers/integrations.png",
+    "usedOn": [
+      "platform/integrations.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenant/settings/integrations",
+    "routeHint": "Settings -> Developers -> Third-party Integrations.",
+    "actions": [],
+    "waitFor": "text=Available Integrations",
+    "viewport": "desktop",
+    "alt": "Third-party Integrations page with the available integrations list on the left and the HubSpot configuration panel on the right",
+    "status": "new",
+    "why": "Matches the current view exactly: the same seven sidebar entries in the same order and the HubSpot pane with the token field and setup instructions."
+  },
+  {
+    "id": "developers-webhooks-list",
+    "image": "/images/platform/developers/webhooks-list.png",
+    "usedOn": [
+      "platform/webhooks.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenant/settings/webhooks",
+    "routeHint": "Settings -> Developers -> Webhooks. t187c had no webhook_subscription rows at all, so this page rendered the 'No webhooks configured yet' empty state and was byte-identical to webhook-logs.png; three subscriptions (CRM sync, Finance ledger, Event check-in bridge) were seeded for the demo tenant.",
+    "actions": [],
+    "waitFor": "text=Last Triggered",
+    "viewport": "desktop",
+    "alt": "Webhooks page listing subscriptions with their URL, subscribed events, status, success and failure counts, last trigger time and per-row test, logs, edit and delete actions",
+    "status": "new",
+    "why": "Matches the current List.vue columns and actions."
+  },
+  {
+    "id": "developers-webhook-create",
+    "image": "/images/platform/developers/webhook-create.png",
+    "usedOn": [
+      "platform/webhooks.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenant/settings/webhooks/create",
+    "routeHint": "Settings -> Developers -> Webhooks -> Add Webhook.",
+    "actions": [],
+    "waitFor": "text=Create Webhook",
+    "viewport": "desktop",
+    "alt": "Create Webhook form with the Active switch, name, endpoint URL, description and the six event type groups",
+    "status": "new",
+    "why": "Matches Form.vue: same fields and the same six event groups (User, Contact, Payment, Event Attendance, Contract, Role)."
+  },
+  {
+    "id": "developers-webhook-logs",
+    "image": "/images/platform/developers/webhook-logs.png",
+    "usedOn": [
+      "platform/webhooks.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenant/settings/webhooks/24/logs",
+    "routeHint": "Settings -> Developers -> Webhooks -> list icon on a subscription that has delivery history. Subscription 24 (CRM sync, t187c) carries 26 seeded deliveries including two 502 failures and their retries, so the Status, Response Code and Attempt columns all show more than one value. An id with no subscription behind it bounces back to the list, which is how this file came to duplicate webhooks-list.png.",
+    "actions": [],
+    "waitFor": "text=Recent Deliveries",
+    "viewport": "desktop",
+    "alt": "Webhook delivery log table showing status, event type, response code, response time, attempt number, delivery ID and timestamp for recent attempts",
+    "status": "new",
+    "why": "Matches DeliveryLogs.vue: same header card, same columns, same 50-per-page selector."
+  },
+  {
+    "id": "developers-mcp-chat",
+    "image": "/images/platform/developers/orgo-mcp-chat.png",
+    "usedOn": [
+      "platform/mcp.mdx"
+    ],
+    "tenant": "n/a",
+    "route": "n/a",
+    "routeHint": "Not an Orgo screen: an AI assistant chat window using the Orgo MCP connector. Captured outside the app.",
+    "actions": [],
+    "waitFor": "",
+    "viewport": "desktop",
+    "alt": "AI assistant chat using Orgo MCP to check chapter renewal rates and send reminders to chapter leaders",
+    "status": "new",
+    "why": "Captured 2026-07-17, still current, and not an app screen so it cannot drift with the UI."
+  }
+]

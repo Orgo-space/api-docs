@@ -7,196 +7,244 @@ description: 'Design what new members fill out when joining your organization'
 "twitter:description": 'Design what new members fill out when joining your organization'
 ---
 
-The registration form is the first thing new members interact with. It determines what information you collect up front, how long the sign-up takes, and whether people actually finish it. Get it right and you'll have a smooth onboarding pipeline. Overload it and people will abandon the form.
+The registration form decides what a new person fills in before they have an account. Orgo gives you one **General Registration Form** at `/register`, plus an optional form per [user type](/platform/users/user-types) at `/join/<slug>`.
 
-**The golden rule:** Only require what you absolutely need to get someone started. You can always collect more data later through [Profile Fields](/platform/users/profile-fields).
+**Built for** any organization that lets people sign up themselves, and for organizations that need to ask different questions of different kinds of member. **Replaces** a website form plus a spreadsheet plus manual account creation.
 
-<img src="/images/platform/users/registration-form-builder.png" alt="Registration form builder showing available fields" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
----
-
-## How to access
-
-**Settings** → **Users & Profiles** → **Registration Form**
-
-If [User Types](/platform/users/user-types) are configured, each type gets its own registration form — so you can ask different questions of Scouts vs Leaders, Students vs Professionals.
-
-<img src="/images/platform/users/registration-form-list.png" alt="Registration forms page showing layout selector, user type forms with slugs, active status, and URL/Iframe links" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
-When user types are configured, this page shows a list of all user types (e.g., "Scout", "Leader", "Volunteer") with each type's slug, status, and public URL. Each user type can have different fields enabled.
-
-Click **Configure** to open the form builder:
+<img src="/images/platform/users/registration-form-builder.png" alt="Registration form builder: System Fields and Custom Fields tabs, ordered form fields with Required checkboxes, and the Form Settings card" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Designing your form
+## Where it lives
 
-### What to require vs what to skip
+**Settings** → **Users & Profiles** → **Registration Form**. Requires `ADMIN_TENANT`.
 
-| Field | Require it if... | Skip it if... |
-|-------|-----------------|--------------|
-| **Email** | Always required (used for login) | — |
-| **First Name, Last Name** | Almost always | Never — you need a name |
-| **Phone** | Your org calls members, or for emergency contacts | It's a casual community |
-| **Birthday** | You serve minors (age restrictions), or need age data | It feels invasive for your audience |
-| **Local Center** | You have local branches and members need to be assigned | You don't have local branches |
-| **Address** | You mail physical items or need location data | You're online-only |
-| **Profession fields** | You're a professional association | You're a hobby/social community |
-| **Social profiles** | You want members to connect outside the platform | They add friction for no payoff |
+The entry appears only when **Enable Registration Form** is on (**Settings** → **Users & Profiles** → **Configuration** → Registration & Membership). While it is off, self-registration is refused with "Registration is not possible." and the Register link disappears from the login page. [Invitation](/platform/users/invitations) links are the exception: a valid one opens the form as normal, so you can close the door to the public and still admit the people you invite.
 
-<Tip>
-  A 3-field registration form (email, first name, last name) will get dramatically higher completion than a 15-field form. Collect the rest through [Profile Fields](/platform/users/profile-fields) — members fill those out after they're already invested.
-</Tip>
+<img src="/images/platform/users/registration-form-list.png" alt="Registration Forms page showing a table of forms with slug, status, URL and Iframe copy buttons and Configure actions, and the Floating and Side Panel layout choices below it" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+The table lists the General Registration Form first (tagged **Default**, always active), then one row per user type showing **Active**, **Inactive**, or **Not configured**. **URL** and **Iframe** copy buttons appear once the type has a slug; without one the row reads "Set slug first".
 
 ---
 
-## Available fields
+## Registration page layout
 
-### Basic Information
+| Layout | What it looks like |
+|---|---|
+| **Floating** | Centered card on a background |
+| **Side Panel** | Image on the left, form on the right (the default) |
 
-| Field | Description |
-|-------|-------------|
-| **Email** | Always enabled and required — this is how members log in |
-| **First Name** | Member's first name |
-| **Last Name** | Member's last name |
-| **Birthday** | Date of birth — triggers [age restrictions](/platform/users/family-members) if configured |
-| **Gender** | Gender selection |
-| **Phone Number** | Contact phone |
-
-### Location
-
-| Field | Description |
-|-------|-------------|
-| **Town Born** | City/town of birth |
-| **Town Current** | Current city/town |
-| **Address** | Street address |
-| **Postal Code** | ZIP/postal code |
-| **Location on Map** | Pin on the members map |
-| **Local Center** | Affiliated local center/branch |
-
-### Professional
-
-| Field | Description |
-|-------|-------------|
-| **Profession Headline** | Job title or professional summary |
-| **Profession Industry** | Industry/sector |
-| **Current Company/Organization** | Employer |
-| **Current Role** | Position |
-| **Company Legal Name** | Official company name |
-| **Company Identifier** | Tax/registration ID |
-| **Company Address** | Office address |
-| **Commerce Registry Number** | Business registration |
-
-### Social
-
-| Field | Description |
-|-------|-------------|
-| **Website** | Personal website |
-| **Facebook, Twitter/X, LinkedIn, Instagram** | Social profiles |
-| **Telegram, TikTok, Signal, Bluesky** | Messaging and social |
-
-### Other
-
-| Field | Description |
-|-------|-------------|
-| **ID Serial & Number** | National ID document |
-| **Personal Number** | Personal identification number |
-| **User Type** | Let members choose their category during registration |
-| **Register as Member** | Checkbox to confirm membership intent |
-| **Fee Level** | Select membership fee tier |
-
-Plus any [Custom Fields](/platform/users/custom-fields) you've created — they appear at the bottom of the form builder.
+The side image is the login background image set in [Branding](/platform/organisation/branding). Phones and iframe embeds always render the centered layout regardless of this setting.
 
 ---
 
-## Per-type registration forms
+## Building a form
 
-If you've created [User Types](/platform/users/user-types), each type gets its own form. This means you can:
-- Ask Scouts for their parent's contact info, but not Leaders
-- Require Professional members to provide a license number
-- Keep the Volunteer form short and simple
+Two panels: **Available Fields** on the left with a **System Fields** and a **Custom Fields** tab, **Form Fields** on the right. Click or drag a field to add it, drag the handle to reorder, tick **Required**, and use the X to remove it.
 
-To set this up:
-1. Create your user types in **Settings** → **Users & Profiles** → **Roles & User Types**
-2. Go back to **Registration Form** — you'll see one form per type
-3. Configure each form independently
+**Email is permanent**: always in the form, always required, never removable or optional, and the login identifier.
+
+### System fields
+
+| Field | Notes |
+|---|---|
+| **Email** | Always present and required |
+| **First Name**, **Last Name** | Rendered side by side on the public page |
+| **Birthday** | Day, month and year selectors |
+| **Gender** | Female, Male, Other |
+| **Phone number** | Country prefix plus number, normalized to international format on save |
+| **Address**, **Postal code** | Free text |
+| **Town current**, **Town born** | Searchable town lookup; if empty, both are filled from the chosen chapter |
+| **Chapter** | Searchable chapter (local center) selector |
+| **User Types** | General form only. Lets the applicant pick their own type |
+| **Fee level** | Membership price selector. Appears only if a membership fee product is configured |
+| **Profession headline**, **Profession industry**, **Current organization**, **Current role** | Professional profile |
+| **Company identifier**, **Company name**, **Company address**, **Company registry number** | Company details on the member record. For Romanian organizations the identifier gets a **Search** button that looks the company up |
+| **Website**, **Facebook**, **Twitter**, **LinkedIn**, **Instagram**, **Telegram**, **TikTok** | Links on the member profile |
+
+These are the default labels. Rename vocabulary in [Labels](/platform/customization/labels) and both the builder and the public form show your wording, from the same catalogue.
+
+<Warning>
+**Signal** and **Bluesky** appear in the builder's field list but are not rendered by either public registration page. Adding them has no effect. Collect those handles with a [custom field](/platform/users/custom-fields) instead.
+</Warning>
 
 <Note>
-  The "User Type" field on the registration form lets members self-select their type during sign-up. If you don't include this field, you'll need to assign types manually or through [Adhesion](/platform/users/adhesion) approval.
+Some older forms contain fields the builder no longer offers, such as a members-map location pin or a personal identification number. They keep working on `/register` if they were already enabled, but you cannot add them to a new form. Use a [custom field](/platform/users/custom-fields) for identification numbers, which also lets you encrypt the value.
 </Note>
 
----
+### Custom fields
 
-## Customizing the registration page
+Every profile [custom field](/platform/users/custom-fields) is on the **Custom Fields** tab and can sit anywhere in the order, including between system fields. Two exclusions: file-upload custom fields cannot be used on a registration form, and admin-only custom fields never reach the public page.
 
-Choose between two layouts for your registration page:
-
-| Layout | Description |
-|--------|-------------|
-| **Floating** | Centered card with a background — clean and focused |
-| **Side Panel** | Image on the left, form on the right — more visual and branded |
-
-<img src="/images/platform/users/registration-page.png" alt="Side panel registration page with camping photo on the left and registration form on the right showing email, name, phone, birthday, gender, town, local center, and custom fields" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+### Form settings
 
 | Setting | What it does |
-|---------|-------------|
-| **Title** | Custom title at the top of the registration page. Leave empty for the default. |
-| **Text before form** | Introductory text above the form. Welcome new members, explain what they're joining, or set expectations. |
-| **Text after form** | Text below the form, before submit. Good for terms reminders or next-step info. |
-| **Volunteer opt-in text** | Text for the volunteer opt-in switch (if volunteer roles are enabled). |
+|---|---|
+| **Company registration form** | Adds a Company Details block (company name, legal name, registration number, VAT number, address, website, town) and creates a company alongside the member account |
+| **Title** | Heading above the form. Leave empty for the default |
+| **Text displayed above the form** | Intro text |
+| **Text displayed below the form** | Text between the last field and the submit button |
+| **Default Membership Fee Price** | User type forms only. Preselects a membership price; the applicant can still choose another |
+
+<img src="/images/platform/users/registration-form-user-type.png" alt="Registration form builder for a single user type, with the Active switch and the Copy URL and Iframe buttons in the header, and the Title, intro texts and Default Membership Fee Price selector in Form Settings" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+Consent checkboxes are added automatically and are required when the matching link is filled in on your [organisation profile](/platform/organisation/organisation-info): GDPR policy, terms of service, and internal rules.
 
 ---
 
-## Embedding on your website
+## Publishing and embedding
 
-You can embed the registration form on any external website using an iframe:
+| Form | Public URL |
+|---|---|
+| General | `https://<your-app-host>/register` |
+| User type | `https://<your-app-host>/join/<slug>` |
 
-1. Click the **Iframe URL** button in the form builder to copy the embed link
-2. Add it to your website:
+Set the slug on the user type itself (**Roles & User types** → edit the type → **URL Slug**). Use the **Copy URL** and **Iframe** buttons to grab either address.
 
 ```html
 <iframe
-  src="https://app.orgo.space/register?iframe=true&workspace=your-slug&lang=en"
+  src="https://app.orgo.space/register?iframe=1&workspace=your-slug&lang=en"
   width="100%"
   height="800"
   frameborder="0">
 </iframe>
 ```
 
-Change the `lang` parameter for different languages (en, de, fr, es, it, nl, ro, bg, ua).
+`iframe=1` strips the logo and outer chrome. `workspace=<your-slug>` names the organization, which matters when you embed on your own domain. `lang=` forces the interface language: `bg`, `cs`, `de`, `en`, `es`, `et`, `fr`, `it`, `lt`, `nl`, `pr`, `ro`, `sk`, `ua`.
 
 ---
 
-## How registration connects to other features
+## What happens after someone submits
 
-| Feature | How it interacts |
-|---------|-----------------|
-| [User Types](/platform/users/user-types) | Each type gets its own registration form. Members can self-select if you include the User Type field. |
-| [Adhesion](/platform/users/adhesion) | When adhesion is mandatory, registration alone doesn't grant full access — a separate application process follows. |
-| [Waitlist](/platform/users/waitlist) | When the waitlist is active, visitors join a queue instead of registering directly. They register after being invited from the waitlist. |
-| [User Statuses](/platform/users/statuses) | **Status After Register** determines whether new members are Active immediately or Unapproved (requiring admin approval). |
-| [Custom Fields](/platform/users/custom-fields) | Custom fields you create appear as additional options in the form builder. |
-| [Profile Fields](/platform/users/profile-fields) | Fields not on the registration form can be collected post-registration through profiles. |
+<Steps>
+  <Step title="Spam checks">
+    A hidden field must stay empty and the form must take at least three seconds to fill in. Failing either returns "Invalid submission detected".
+  </Step>
+  <Step title="Account created, email unverified">
+    No password is asked for. Orgo generates one and requires the member to set their own at first login. A six digit code is emailed, valid for five minutes.
+  </Step>
+  <Step title="Status resolved on verification">
+    In this order: eligible for the [waitlist](/platform/users/waitlist) becomes **Waiting list** with a queue position; a [referral program](/platform/users/referral) requiring referrals becomes **Awaiting referral** with a personal referral link; **Manual Approval** on becomes **Unapproved**; otherwise **Active**.
+  </Step>
+  <Step title="Notifications go out">
+    Organization admins and the member's chapter admins are emailed about the new registration. At Active, the welcome message goes out if **Send Welcome Message** is on.
+  </Step>
+  <Step title="Member continues">
+    An Active member is signed in immediately. Anything else lands on a status screen explaining what happens next.
+  </Step>
+</Steps>
+
+<img src="/images/platform/users/registration-page.png" alt="Side panel registration page: photo left, form right with email, name, phone, date of birth, gender, town, chapter and two custom fields" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Common scenarios
+## Settings that change registration
+
+Found under **Settings** → **Users & Profiles** → **Configuration**.
+
+| Setting | Effect |
+|---|---|
+| **Enable Registration Form** | Off blocks all self-registration and hides the Register link. [Invitation](/platform/users/invitations) links still open the form |
+| **Manual Approval** | New members land in Unapproved after verifying their email, and wait for an admin |
+| **Default User Type After Registration** | Stamps this user type on every account created through a registration route, and overrides any type chosen on the form or implied by a `/join` slug. See the troubleshooting entry below before setting it |
+| **Send Welcome Message** | Sends the welcome email the moment a member becomes Active |
+| **Notify Admins of New Registrations** | Listed here, but the admin notification currently goes out for every new registration regardless of this switch |
+| **Default Status for Admin-Created Users** | Applies to members an admin creates, not to self-registration |
+
+<Note>
+The registration form has no age gate. Birthday is collected as data only. The minimum-age value is used only when a parent registers a child from inside the app, where a child below the threshold is flagged as underage on their waitlist entry, and the parent's action is recorded as the consent. That value is not editable in the settings screens today.
+</Note>
+
+---
+
+## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="I changed the registration form but existing members aren't affected">
-    Correct — the registration form only applies to new sign-ups. To collect new information from existing members, add the field to [Profile Fields](/platform/users/profile-fields) and mark it as required. Members will see a splash screen on their next login.
+  <Accordion title="Visitors see 'Registration is not possible.'">
+    **Enable Registration Form** is off. Turn it on to reopen self-registration, or leave it off and [invite](/platform/users/invitations) the people you want: a valid invitation link opens the same page and is not refused.
   </Accordion>
 
-  <Accordion title="I want different registration forms for different member types">
-    Create [User Types](/platform/users/user-types) first, then configure each type's registration form separately. Include the "User Type" field so members can self-select during registration.
+  <Accordion title="A /join link shows 'This registration form is not available or has been disabled.'">
+    Three causes: the user type form has never been saved, its **Active** switch is off, or the slug in the URL does not match a user type. Check the row's status on the Registration Forms page.
   </Accordion>
 
-  <Accordion title="Members are abandoning the registration form">
-    Your form is probably too long. Reduce required fields to the minimum (email, name). Move everything else to [Profile Fields](/platform/users/profile-fields). You can always collect data later through the splash screen mechanism.
+  <Accordion title="The URL and Iframe buttons say 'Set slug first'">
+    The user type has no **URL Slug**. Open **Roles & User types**, edit the type, and set one. Orgo refuses to save a user type registration form while the type has no slug.
   </Accordion>
 
-  <Accordion title="I need to collect a field that doesn't exist in the standard list">
-    Create a [Custom Field](/platform/users/custom-fields) (**Settings** → **Users & Profiles** → **Custom Fields**), then come back to the registration form builder — your custom field will appear at the bottom of the field list.
+  <Accordion title="Someone says their email already exists">
+    That email already has an account in this organization. The form offers a **Sign in here** link unless that account is inactive, suspended, excluded, or deleted. Emails are per organization, so one address can belong to several.
+  </Accordion>
+
+  <Accordion title="I changed the form but existing members are unaffected">
+    Correct: the form applies only to new sign-ups. To collect something from existing members, use the [profile form](/platform/users/profile-fields) instead.
+  </Accordion>
+
+  <Accordion title="Everyone gets the same user type, whatever the form says">
+    **Default User Type After Registration** is applied last and wins. It is applied
+    after the type the applicant picked in the **User Types** field, after the type
+    implied by a `/join/<slug>` form, and after the type an administrator chose while
+    creating a member by hand. Whatever any of those said, the finished profile carries
+    the default.
+
+    The clue that this is what happened: the member still holds the *role* for the type
+    they signed up under, visible on their Roles tab, while the **User type** on their
+    profile shows the default. The role was granted at sign-up and never touched.
+
+    Clear the setting if you use per-type forms or let applicants pick their own type.
+    A default only makes sense when there is exactly one answer for everyone, which is
+    precisely the case where the form does not ask.
+  </Accordion>
+
+  <Accordion title="A field marked Required came through empty">
+    **Required** on a registration form is enforced by the browser. That is enough for
+    someone filling the form on your registration page, and it is not enforced anywhere
+    else, so an account created by any other route arrives without those answers:
+
+    - A member an administrator creates with **Register member** from the directory
+    - Anyone loaded through [Import](/platform/customization/import)
+    - A child registered by their parent from inside the app
+
+    None of these pass through the form, so none of them are asked. People arriving
+    through an [invitation](/platform/users/invitations) link are the exception: they
+    do fill in this form, so their required fields are collected normally.
+
+    If a field must genuinely be present on every profile, put it on the
+    [profile form](/platform/users/profile-fields) and mark it required there: that one
+    is re-checked on every visit and members are redirected until it is filled in.
+
+    A separate cause for the public form specifically: custom fields set to **User** or
+    **Admin** visibility render on the page and are then discarded, whether or not they
+    are marked required. Only Public custom fields survive registration. See
+    [Custom Fields](/platform/users/custom-fields#where-a-value-actually-saves).
+  </Accordion>
+
+  <Accordion title="Settings search finds a setting the page does not have">
+    Search covers the settings catalogue rather than the page you land on, and a few
+    entries in the catalogue are for controls that are not currently built into the
+    Configuration screen. **Minimum Registration Age** and **Children Auth Restriction
+    Age** are the two you will meet from this page: both are findable in search, both
+    take you to **Users & Profiles** → **Configuration**, and neither has a control
+    there to scroll to. Nothing is broken and nothing is hidden by your permissions.
+
+    For an age limit on the public form, there is nothing to configure: the form has no
+    age gate at all, as noted above. Collect the birthday and review applications with
+    **Manual Approval**, or gate joining behind [Adhesion](/platform/users/adhesion).
+  </Accordion>
+
+  <Accordion title="I turned registration off but the /join links still show a form">
+    **Enable Registration Form** is checked when the account is created, not when the
+    page is served. The `/join/<slug>` pages keep loading and keep looking completely
+    normal while the switch is off; the applicant fills everything in, presses submit,
+    and only then is refused with "Registration is not possible."
+
+    So switching registration off is not a way to take a campaign link down. If you are
+    closing sign-ups for one user type, turn off that form's **Active** switch on the
+    Registration Forms page, which makes the link show "This registration form is not
+    available or has been disabled." before anyone types anything. If you are closing
+    sign-ups altogether, turn off every user type form as well as the master switch, or
+    put people in a queue with the [waitlist](/platform/users/waitlist) instead of
+    turning them away after the fact.
   </Accordion>
 </AccordionGroup>
 
@@ -204,7 +252,8 @@ Change the `lang` parameter for different languages (en, de, fr, es, it, nl, ro,
 
 ## Related
 
-- [Profile Fields](/platform/users/profile-fields) — Collect additional data after registration
-- [User Types](/platform/users/user-types) — Per-type forms and member categories
-- [Custom Fields](/platform/users/custom-fields) — Organization-specific data fields
-- [Adhesion](/platform/users/adhesion) — Formal application process (separate from registration)
+- [User Types & Roles](/platform/users/user-types): per-type forms, slugs and what a type changes
+- [Custom Fields](/platform/users/custom-fields): organization-specific questions
+- [Profile Fields](/platform/users/profile-fields): what members fill in after joining
+- [Waitlist](/platform/users/waitlist): queueing sign-ups instead of admitting them
+- [Adhesion](/platform/users/adhesion): formal membership application after registration

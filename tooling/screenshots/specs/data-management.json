@@ -1,0 +1,102 @@
+[
+  {
+    "id": "import-steps-list",
+    "image": "/images/platform/customization/data-import.png",
+    "usedOn": [
+      "platform/customization/import.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/import",
+    "routeHint": "Settings (gear) -> Customization -> Import",
+    "actions": [],
+    "waitFor": "text=Data Import System",
+    "viewport": "desktop",
+    "alt": "Data Import System page showing the recommended import order as numbered steps, each with a Choose CSV button and an example file download",
+    "status": "keep",
+    "notes": "Existing file already matches the current view (title, Recommended Import Order banner, numbered cards, Choose CSV + download icon). Only recapture if the run wants a tenant with more modules on, which would also show Units, Products, Events and Companies steps."
+  },
+  {
+    "id": "import-history",
+    "image": "/images/platform/customization/import-history.png",
+    "usedOn": [
+      "platform/customization/import.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/import",
+    "routeHint": "Settings (gear) -> Customization -> Import, then scroll to Import History at the bottom. Do NOT capture this from tenant 214: its import_log still holds un-obfuscated company names, addresses and a real contact email. Seed the demo tenant instead. The rows have to cover more than one status and show a results count that includes failures, otherwise the table contradicts the alt text and the six-status list in the prose below it. The selector crops to the Import History block, because a full-viewport shot spends its top two thirds on import steps 13-17.",
+    "actions": [
+      "scrollto text=Import History",
+      "wait 1200"
+    ],
+    "waitFor": "text=Import History",
+    "viewport": "desktop",
+    "alt": "Import History table listing past imports by type and status, including a processing import, a failed import and a completed import whose results count shows three failed rows, with a Rollback button on the completed imports",
+    "status": "new",
+    "notes": "Do NOT expand any row. The seeded demo imports have no import_log rows behind them, and on other tenants the detail panel prints raw imported data.",
+    "selector": "xpath=//h3[normalize-space()='Import History']/.."
+  },
+  {
+    "id": "merge-records",
+    "image": "/images/platform/users/merge-records.png",
+    "usedOn": [
+      "platform/users/merging-duplicates.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/import",
+    "routeHint": "Settings (gear) -> Developers -> Merge Records. MergeIndex.created() reads tenant.settingFeatures.users.hasMergeProfiles before the tenant is in the store on a hard page load and bounces to the dashboard, so land on another settings page and click Merge Records in the settings sidebar. Contact Duplicates is empty on this tenant; User Duplicates has ~25 pairs at 70% Same name.",
+    "actions": [
+      "click text=Merge Records",
+      "wait 2500",
+      "click text=User Duplicates",
+      "wait 3000"
+    ],
+    "waitFor": "text=Duplicate Suggestions",
+    "viewport": "desktop",
+    "alt": "Merge Records page with the manual source and target selectors above a Duplicate Suggestions table showing match scores and reasons",
+    "status": "new"
+  },
+  {
+    "id": "merge-compare",
+    "image": "/images/platform/users/merge-compare.png",
+    "usedOn": [
+      "platform/users/merging-duplicates.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/import",
+    "routeHint": "Same navigation as merge-records, then Merge on the first suggested pair to load the comparison step. Do NOT press Execute Merge. text=Merge alone matches the Merge Records heading first, hence the class selector for the row button. Tall viewport so the conflict rows and Related Records to Transfer both fit.",
+    "actions": [
+      "click text=Merge Records",
+      "wait 2500",
+      "click text=User Duplicates",
+      "wait 3000",
+      "click .b-table .button.is-primary.is-small.is-rounded",
+      "wait 3000"
+    ],
+    "waitFor": "text=Related Records to Transfer",
+    "viewport": "tall",
+    "alt": "Merge comparison table with source and target columns, Conflict tags and radio buttons for choosing which value to keep, above the related record counts",
+    "status": "new",
+    "notes": "Custom field 454 'Professional Registration Number' held motivation-for-joining sentences on all 59 rows (seeder bug), which showed up as a paragraph of prose in a registration-number cell on the comparison grid. Replaced with PRN-<year>-<serial> values on 2026-08-05."
+  },
+  {
+    "id": "merge-history",
+    "image": "/images/platform/users/merge-history.png",
+    "usedOn": [
+      "platform/users/merging-duplicates.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/import",
+    "routeHint": "Settings (gear) -> Developers -> Merge Records -> Merge History. Same hard-load bounce as merge-records, so navigate through the settings sidebar. Tenant 282 had no completed merges and the page shipped as an empty state; three merge_log rows were seeded on 2026-08-05 instead of executing a real merge, which would have tombstoned a demo member. The endpoint (MergeController::logs) reads only merge_log columns, so the rows render fully without any record being touched.",
+    "actions": [
+      "click text=Merge Records",
+      "wait 2500",
+      "click text=Merge History",
+      "wait 3000"
+    ],
+    "waitFor": "text=Merge History",
+    "viewport": "desktop",
+    "alt": "Merge History table listing past merges with date, type, source and target records, who performed them and their status, with an Undo button while the rollback window is open and Expired once it has closed",
+    "status": "new",
+    "notes": "The three rows deliberately cover all three states the column renders: a Contact to User merge still inside its 30-day rollback window (Undo button), an older User to User merge past it (Expired), and a rolled back Contact to Contact merge."
+  }
+]

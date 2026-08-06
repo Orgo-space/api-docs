@@ -7,106 +7,177 @@ description: 'Let existing members invite new people to join your organization'
 "twitter:description": 'Let existing members invite new people to join your organization'
 ---
 
-The invitation system lets your existing members bring in new people by email. It's the simplest growth mechanism — a member enters someone's email, they get an invitation, they click the link and register. The referral is tracked so you know who brought who.
+Invitations let your existing members bring new people in by email, or by sharing
+a personal link. The invited person lands on your registration form with their
+email already filled in, and the invitation is credited to whoever sent it.
 
-<img src="/images/platform/users/users-config-page.png" alt="Users module settings with invitation configuration" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+**Built for** organisations that grow by word of mouth. **Replaces** forwarding a
+signup URL by hand and having no idea who brought whom.
 
 ---
 
-## How to enable
+## Turning invitations on
 
-**Settings** → **Users & Profiles** → **Configuration** → **User Invitations** section
-
-Two settings to configure:
+**Settings** → **Users & Profiles** → **Configuration** → **User Invitations**.
+Changing these settings requires ADMIN_TENANT. The same **Enable User
+Invitations** switch also appears on the **Referral Program** settings page, so
+you can find it from either place.
 
 | Setting | What it does |
-|---------|-------------|
-| **User Invitations** | Toggle on to enable. Members get access to an "Invite" button. |
-| **Minimum permission to invite** | Who can send invitations. Set to "User" to let everyone invite, or restrict to HR/Admin roles. |
+|---|---|
+| **Enable User Invitations** | Turns the feature on. Without it, the Referrals tab and the invitation endpoints are closed to everyone. |
+| **Who Can Send Invitations** | The minimum permission needed to send. Options are **All Users**, **HR Local**, **HR Tenant**, **Admin Local**, **Admin Tenant**. |
 
-### Who should be able to invite?
+Both the interface and the API check **Who Can Send Invitations**, so restricting
+it actually blocks sending rather than just hiding the button.
 
-| Setting | Best for |
-|---------|----------|
-| **User** (everyone) | Communities growing through word-of-mouth. Maximum reach. |
-| **HR Local** | Local chapter leaders control who gets invited to their branch. |
-| **HR Tenant** | Central HR manages all new member intake. |
-| **Admin Tenant** | Only top-level admins can invite. Maximum control. |
+<img src="/images/platform/users/invitations-config.png" alt="User Invitations section of the Users and Profiles configuration page with the Enable User Invitations switch and the Who Can Send Invitations selector" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## How it works
+## Where members invite from
 
-### For the member sending an invite
+Members invite from the **Referrals** tab on their own profile. The tab only
+appears if invitations are on and the member meets **Who Can Send Invitations**.
+There is also an **Invite a friend** button above the member directory, which
+opens the same tab.
 
-1. Click **Invite** from their dashboard or profile menu
-2. Enter the invitee's email address
-3. Optionally add a personal message
-4. Click Send
+The tab offers two mechanisms.
 
-### For the person receiving the invitation
+<img src="/images/platform/users/profile-referrals-tab.png" alt="Referrals tab on a member profile showing sent, joined and pending counters, the personal referrer link with copy and share buttons, the invite by email box and the invitation history list" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-1. They get an email from the organization (not a personal email — it's branded)
-2. The email includes the inviter's name, any personal message, and a registration link
-3. They click the link and land on the registration form with the invitation context pre-loaded
-4. They complete registration normally
-5. The referral is recorded — the system links them to their inviter
+### Your referrer link
 
-### What gets tracked
+A personal link of the form `https://<your app host>/register/<member id>`, with
+copy, WhatsApp, Email and Messenger share buttons. Anyone who registers through
+it is recorded as referred by that member. Nothing is sent by Orgo: the member
+shares the link themselves.
 
-- Who invited who (referral chain)
-- Date the invitation was sent
-- Whether it was accepted, pending, or expired
-- The inviter can see their invitation status
+### Invite by email
+
+The member types addresses into the email box and sends. Orgo emails each address
+a registration link tied to that specific invitation.
+
+| Limit | Value |
+|---|---|
+| Addresses accepted by the box | 20 |
+| Addresses processed per send | the first 10 |
+| Invitations per member per hour | 50, after which sending is refused until the hour rolls over |
+
+Malformed addresses are skipped silently, and an address that already has a
+pending invitation is reported back as already invited rather than emailed twice.
+Because only the first ten addresses in a send are processed, work in batches of
+ten rather than pasting twenty at once.
+
+If a local administrator opens the tab in their local center context, the
+invitations they send carry that local center, and people who accept are placed in
+it automatically.
 
 ---
 
-## Invitations + referral program
+## What the invited person experiences
 
-Invitations provide the mechanism (sending emails). The [Referral Program](/platform/users/referral) provides the tracking and incentive layer.
+<Steps>
+  <Step title="They receive the invitation email">
+    Sent from your organisation's address, naming the member who invited them and
+    the local center if there is one. The email is controlled by **Settings** →
+    **Emails & Notifications** → **System Emails** → **User Invitation**: turn that
+    off and no invitation emails go out.
+  </Step>
+  <Step title="They open the link">
+    The registration form loads with their email already filled in and locked to the
+    invited address. If they have no account yet, the form also asks them to set a
+    password.
+  </Step>
+  <Step title="They register">
+    An invited registration skips email confirmation: the account is created as
+    active with the email already confirmed, and they are signed in and taken to the
+    dashboard straight away.
+  </Step>
+  <Step title="The inviter is notified">
+    The invitation record is consumed, the inviter gets an in-app notification that
+    their invitation was accepted, and the person moves from Pending to Joined in
+    the inviter's history.
+  </Step>
+</Steps>
 
-When both are enabled:
-- Every accepted invitation counts as a referral
-- Referral stats are tracked per member
-- You can see who your best recruiters are
-- If you have [Gamification](/platform/badges), you can award points/badges for referrals
-
-If you also set "Referrals needed for signup" to 1 in [Referral settings](/platform/users/referral), registration becomes **invite-only** — new users can only register if they received an invitation.
+<Warning>
+Inviting an email address that already belongs to a member of your organisation
+does not fail at the invite step, but their registration will: the form rejects
+the email as already registered. Check the member directory before inviting.
+</Warning>
 
 ---
 
-## Invitations + adhesion
+## Tracking who brought whom
 
-If [Adhesion](/platform/users/adhesion) is mandatory, invited members still need to complete the application process:
+The Referrals tab shows the sender three counters: **Invitations sent**,
+**Joined** and **Pending**, plus a conversion percentage once there are more than
+two invitations and at least one join. Below them, **Invitation history** lists
+every invitation under **All**, **Joined** and **Pending** tabs, and the member can
+delete any of their own pending invitations.
 
-1. Existing member sends invitation
-2. Invitee receives email and clicks the link
-3. They complete registration
-4. They're prompted to fill out the adhesion form
-5. Admin reviews and approves the application
-6. They become active members
+Pending means the invitation was emailed and nobody has registered with it yet.
+Joined means someone registered through that member's link or invitation and the
+referral record is complete.
 
-The invitation gets them to registration faster, but adhesion still gates full access.
+<Note>
+If your organisation reviews new registrations (**Manual Approval** in
+**Settings** → **Users & Profiles**), the referral is not completed at
+registration. It completes when the member is activated, and that completion step
+also awards referral points. It currently only runs when the Gamification module
+with tiers is enabled, so on a manual-approval organisation without gamification
+the invitation stays in Pending.
+</Note>
+
+<Note>
+Invitations do not expire on their own. The tab shows a note about 30 days, but no
+job deletes old invitations: a link keeps working until the person registers with
+it or the inviter deletes it.
+</Note>
+
+---
+
+## Not the same thing as the referral program
+
+Invitations are an existing member reaching out to an outsider, and they make
+signup faster. The [Referral Program](/platform/users/referral) is other members
+vouching for someone who has already registered, and it makes signup slower on
+purpose. They share the Referrals tab and sit on the same settings page, but
+neither one turns the other on, and neither makes your organisation invite-only.
 
 ---
 
 ## Common scenarios
 
 <AccordionGroup>
-  <Accordion title="I want to grow through member referrals but don't need formal tracking">
-    Just enable Invitations with the permission set to "User". Every member can invite by email. If you later want to track who's bringing in the most people, enable the [Referral Program](/platform/users/referral) too.
+  <Accordion title="I want everyone to be able to invite">
+    Enable invitations and set **Who Can Send Invitations** to **All Users**. Every
+    active member gets the Referrals tab with the email box and their personal link.
   </Accordion>
 
-  <Accordion title="I want invite-only registration">
-    Enable Invitations, then go to [Referral Program](/platform/users/referral) settings and set "Referrals needed for signup" to 1. Public registration is disabled — only people with invitation links can register.
+  <Accordion title="Too many low-quality signups are coming through invitations">
+    Raise **Who Can Send Invitations** to **HR Local** or higher, so only chapter
+    staff can invite. To keep open invitations but add a review step, turn on
+    **Manual Approval** so new registrations land as Unapproved, or use
+    [Adhesion](/platform/users/adhesion) for a full application.
   </Accordion>
 
-  <Accordion title="Invitations are being misused — too many low-quality sign-ups">
-    Restrict the permission level. Change from "User" to "HR Local" or higher. This limits who can invite without disabling the feature entirely. You can also enable [Adhesion](/platform/users/adhesion) to add a review step for all new members regardless of how they found you.
+  <Accordion title="A member says the invitation email never arrived">
+    Check the spam folder first: the mail comes from your organisation, not from the
+    member's own address. Then check whether that address was already invited, in
+    which case the send is skipped and no second email goes out. Confirm the **User
+    Invitation** system email is still switched on, and look the address up in the
+    delivery log under Emails & Notifications. As a fallback, delete the pending
+    invitation from the history list and send it again.
   </Accordion>
 
-  <Accordion title="A member invited someone but the invitation email didn't arrive">
-    Check the invitee's spam/junk folder first. The email comes from the organization (not the member's personal address), so it may be filtered. If the invitation was sent, it appears in the member's invitation list. You can also invite the person directly using an admin account.
+  <Accordion title="Should I turn the registration form off and rely on invitations?">
+    Yes, that combination works. With **Enable Registration Form** off, the public
+    Register link disappears and self-registration is refused, while a valid invitation
+    link still opens the form for the person you sent it to. **Manual Approval** and the
+    [Waitlist](/platform/users/waitlist) are the alternatives if you want the form to stay
+    open and the intake reviewed instead.
   </Accordion>
 </AccordionGroup>
 
@@ -114,6 +185,8 @@ The invitation gets them to registration faster, but adhesion still gates full a
 
 ## Related
 
-- [Referral Program](/platform/users/referral) — Track referrals and enable invite-only mode
-- [Registration Form](/platform/users/registration-form) — What invitees see when they register
-- [Adhesion](/platform/users/adhesion) — Application review (still applies to invited members)
+- [Referral Program](/platform/users/referral) - members vouching for a new signup
+- [Registration Form](/platform/users/registration-form) - what invitees fill in
+- [Waitlist](/platform/users/waitlist) - queueing new registrations per local center
+- [Adhesion](/platform/users/adhesion) - application review for new members
+- [Permissions](/platform/permissions) - what each permission level covers

@@ -1,107 +1,302 @@
 ---
-title: 'Renewals & Recurring Membership'
-description: 'How membership renewal works, the difference between recurring and one-time fees, and how to change a member between them'
-"og:title": 'Renewals & Recurring Membership | Orgo'
-"og:description": 'How membership renewal works, the difference between recurring and one-time fees, and how to change a member between them'
-"twitter:title": 'Renewals & Recurring Membership | Orgo'
-"twitter:description": 'How membership renewal works, the difference between recurring and one-time fees, and how to change a member between them'
+title: 'Renewals & Reminders'
+description: 'The exact renewal reminder schedule, what a member with an expired fee can and cannot do, and how they renew'
+"og:title": 'Renewals & Reminders | Orgo'
+"og:description": 'The exact renewal reminder schedule, what a member with an expired fee can and cannot do, and how they renew'
+"twitter:title": 'Renewals & Reminders | Orgo'
+"twitter:description": 'The exact renewal reminder schedule, what a member with an expired fee can and cannot do, and how they renew'
 ---
 
-The single most common question organisations ask is what happens when a
-membership reaches its end date. The answer depends on how the membership fee was
-set up, and on how that particular member paid.
+Every member with a paid membership has a validity date. This page covers what
+Orgo does as that date approaches and passes: which emails go out and when, what
+changes for the member once it is in the past, and how they put it right.
 
 ---
 
 ## Recurring or one-time
 
-A membership fee is configured either as a **recurring subscription** or as a
-**one-time payment**, and this is a property of the fee, not of the member.
+A membership level is sold as a one-time price, as a recurring subscription, or
+as both. That distinction decides everything else here.
 
-**Recurring** means the member's card is charged automatically at the end of each
-period. The member stays active without doing anything, and stops only when the
-subscription is cancelled or the payment fails.
+**On a subscription**, the card is charged automatically at the end of each
+period. The member gets no renewal reminders, because the reminder job skips
+anyone with an active subscription on that fee product; they get a **Renewal
+Confirmed** or **Renewal Failed** email after each charge instead.
 
-**One-time** means the member pays for a period and, when that period ends, the
-membership lapses unless they pay again. Nothing is charged automatically.
+**On a one-time payment**, nothing is charged automatically and the membership
+lapses on the validity date unless the member pays again. That is what the ladder
+below exists for.
 
-The period length is set on the fee, so a fee can run monthly, quarterly, yearly,
-or any number of months you choose.
+A payment recorded by hand, a bank transfer entered by an administrator for
+example, is a one-time payment even when the level also supports subscriptions,
+because there is no card on file to charge next time. That is the usual reason a
+member you expected to renew automatically did not.
+
+---
+
+## The reminder schedule
+
+One job runs daily at 18:00 UTC and sends at most one email per member per day,
+to members whose validity date falls exactly on a milestone:
+
+| When | Email |
+|---|---|
+| About a month before expiry | **1 Month Reminder** |
+| 7 days before expiry | **7 Days Reminder** |
+| On the expiry date | **Renewal Day Notice** |
+| The day after expiry | **Lapsed Reminder** |
+| 7 days after expiry | **Lapsed Reminder** (again) |
+| 14 days after expiry | **14 Days After Reminder** |
+| 30 days after expiry | **30 Days After Reminder** |
+
+Nothing is sent between the rungs or after 30 days past expiry: a member who
+lapses and never returns hears from Orgo seven times, then stops.
+
+### Worked example: a membership expiring on 30 June
+
+Each rung is matched against the validity date exactly, so the whole ladder for
+one member is fixed the moment their validity date is known. For a membership
+valid to **30 June 2026**, and taking that date as an **example**:
+
+| Sent at 18:00 UTC on | Email |
+|---|---|
+| 30 May 2026 | 1 Month Reminder |
+| 23 June 2026 | 7 Days Reminder |
+| 30 June 2026 | Renewal Day Notice |
+| 1 July 2026 | Lapsed Reminder |
+| 7 July 2026 | Lapsed Reminder again |
+| 14 July 2026 | 14 Days After Reminder |
+| 30 July 2026 | 30 Days After Reminder |
+
+Nothing arrives on any other day, and the moment they pay, their validity date
+moves and the remaining rungs no longer match. Because the match is on the exact
+date, a rung the job misses is not sent late: it is skipped.
+
+<img src="/images/platform/fees/fee-renewal-reminder-templates.png" alt="Membership renewal reminder templates listed with their send timing, from 1 Month Reminder through 30 Days After Reminder" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 <Note>
-Two members on the same fee can be in different states. Someone whose payment was
-recorded manually, for example a bank transfer entered by an administrator, is on
-a one-time payment even if the fee also supports subscriptions. That is the usual
-reason a member you expected to renew automatically did not.
+The **1 Day Reminder** template appears in the template list and can be edited,
+but the daily job has no milestone that reaches it, so it is not currently sent
+to individual members. The company version of that reminder is sent normally.
 </Note>
 
+A member is skipped entirely when they have an active subscription on that fee
+product, their user type is marked as not eligible for a fee, their membership is
+covered by a company with its own validity date (the company is chased instead,
+not the member who cannot pay), or the fee period is under two months. Monthly
+fees get no ladder.
+
+**Company memberships.** A second job runs daily at 18:30 UTC on its own seven
+rungs. They are the same milestones with one swap: a company is chased the day
+before expiry rather than the day after, so the company version of the **1 Day
+Reminder** is the one that is actually sent, and nothing goes out on the day
+after expiry. Each email goes to the company's contact email
+address, or the first primary contact if none is set, copying the remaining
+primary contacts and any additional company addresses, so whoever can pay is
+always on the mail.
+
+The job chases companies that are **Active** or **Pending**, and only those with
+a membership plan and a renewal date. A company set to Inactive or deleted gets
+nothing: no reminder, and no renewal invoice raised for it either, since with the
+Invoices module on each reminder carries the company's unpaid renewal invoice as
+a PDF. The status is checked again at the moment of sending, so deactivating a
+company also stops a reminder already queued for that day.
+
+**Wording and switches.** All fourteen templates (seven individual, seven
+company) are editable at **Settings** → **Emails & Notifications** → **Email
+Templates**, under membership renewal reminders. **Settings** → **Emails &
+Notifications** → **System Emails** → **Membership Renewal Reminders** switches
+the category off, and a per-template override beats it, so you can silence one
+rung and keep the rest.
+
 ---
 
-## Moving a member from one-time to recurring
+## What an expired membership actually changes
 
-There is no switch on the member's profile that converts a past one-time payment
-into a subscription. What creates a subscription is the member completing a
-card payment against a fee configured as recurring.
+Two different things are tracked, and the difference explains most support
+questions. **The validity date has passed** the moment the date is behind you,
+and for anyone who never paid. **The fee is no longer active** only after grace:
+**Fee Valid Months** and **Fee Valid Days**, under **Settings** → **Payments &
+Fees** → **Membership fees** → **Validity Period**, extend the window in which a
+member still counts as paid, and a lifetime level stays active forever when
+**Lifetime Membership Available** is on. Without grace the two coincide.
 
-<Steps>
-  <Step title="Check the fee">
-    Confirm the fee itself is configured as a recurring subscription. If it is
-    not, no member paying it will ever renew automatically.
-  </Step>
-  <Step title="Ask the member to pay through the platform">
-    A subscription is created when they pay by card through Orgo. A payment you
-    record by hand does not create one, because there is no card on file to
-    charge next time.
-  </Step>
-</Steps>
+Once the fee is no longer active:
+
+- their status shows unpaid on their profile and in the member directory, and
+  **My Membership Fee** in their own menu carries a **Due** tag;
+- member-only ticket prices stop: events return an empty member-price list, so
+  they see the public price;
+- they cannot create a referral for someone else, and get "You cannot create
+  referrals at the moment" if they try;
+- with **Require Contract for Membership** on, their signed membership contract
+  is cancelled, so they must sign again before buying a new membership.
+
+Fee status is not part of the permission system, so on its own it does not stop a
+member logging in, reading discussions or attending events. Making fees mandatory
+does.
+
+### When fees are mandatory
+
+**Settings** → **Payments & Fees** → **Membership fees** → **Membership
+Requirements** → **Fee Payment Mandatory** redirects a member whose validity date
+has passed to their own fee page on every navigation until they pay. It keys on
+the validity date, not the grace window.
+
+Still reachable, so the payment can be completed: the profile fee and payments
+tabs, product payment pages, onboarding, document previews, donation pages and
+the payment confirmation page. The mandatory-course gate stands down while a fee
+is owed. The redirect never applies to `HR_TENANT` or `FINANCIAL_TENANT` holders,
+to user types not eligible for a fee, or inside the event app.
+
+With **Company Fee Payment Mandatory** on, a member of a company follows the
+company fee instead: primary contacts and financial representatives go to a
+company payment page, everyone else to a page explaining that the company fee is
+outstanding. `ADMIN_TENANT` holders are exempt.
+
+### Automatic deactivation
+
+Off by default, available only when fees are mandatory: **Auto-deactivate on Fee
+Expiry** plus **Days Until Deactivation** (1 to 365; a tenant with a delay outside
+that range is skipped rather than deactivated). A daily 07:00 UTC job sets any
+active member whose validity date is older than the delay to inactive, skipping
+user types not eligible for a fee and lifetime levels when lifetime membership is
+enabled.
+
+<Warning>
+The delay counts from the validity date itself, not from the end of the **Fee
+Valid Days** or **Fee Valid Months** grace window. If you set both, the
+deactivation delay is the number that decides when the account is switched off.
+</Warning>
 
 ---
 
-## Seeing who is on a subscription
+## How a member renews
 
-**Fees** → **Subscriptions** lists every active recurring subscription with the
-member, the product, the amount, the frequency, when it charges next, and the
-card it will charge.
+From the user menu, **My Membership Fee**, or from their profile's fee tab:
 
-This is the fastest way to answer "is this member set to renew automatically?",
-which is usually the real question behind a renewal query.
+<img src="/images/platform/fees/member-fee-card-due.png" alt="Member fee card showing an unpaid membership with its status, amount, membership level and Pay button, above a history list with the current year unpaid and the two previous years paid" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+| Option | Offered when |
+|---|---|
+| **Pay once** | The level is sold as a one-time price, there is no active subscription, no bank transfer is in progress, and either the membership has expired or the member is inside the advance-payment window. |
+| **Set up automatic renewal** | The level is sold as recurring, the membership has already expired, the member is paying for themselves, and the level's own period override, if it has one, is 12 months or less. Paying by card this way creates the subscription; an administrator recording a payment by hand does not, because there is no card on file. |
+| **Pay by bank transfer** | **Enable Membership Payments via Bank Transfer** is on and the invoices module has an invoice product configured. The membership is flagged as having a transfer in progress until the payment is confirmed. |
+| **Ask an administrator to record it** | **Allow Mark as Paid** is on. A `FINANCIAL_TENANT` holder records the organisation fee, a `FINANCIAL_LOCAL` holder the local center fee. |
+
+Members can switch membership level only while expired, and only when more than
+one level is available to them. A `FINANCIAL_LOCAL` holder can change someone's
+level at any time.
+
+**Renewing early.** Paying is always allowed once the membership has expired or
+was never paid. Before expiry it is allowed only inside the advance-payment
+window, at **Settings** → **Payments & Fees** → **Membership fees** →
+**Eligibility Rules**:
+
+| Setting | Applies to | Default |
+|---|---|---|
+| **Advance Payment Window (Months)** | Fees with a period of 2 months or more | 1 month |
+| **Advance Payment Window (Days)** | Monthly fees | 7 days |
+
+After any payment the validity date is set to the end of the last period paid
+for, so an early renewal extends the membership rather than restarting it from
+the payment date.
+
+**Example.** An annual membership valid to 30 June 2026, with the default one
+month advance window and **Fixed Starting Date for Fees** off, so periods follow
+the member rather than the calendar. The member pays on 12 June 2026. The new
+period does not start on 12 June: it starts where the old one ended, so the
+membership now runs
+to 30 June 2027 and the renewal date stays put year after year. The same holds
+inside a grace window: with **Fee Valid Months** set to 1, a member who pays on
+15 July 2026 still counts as active at that moment, so they too resume from
+30 June and lose nothing for being late.
 
 ---
 
 ## Stopping an automatic renewal
 
-Members who no longer want to be charged should cancel from their own profile,
-where they can also update an expired card and view their billing history.
-Administrators can stop a subscription on a member's behalf, which is the right
-course when someone has asked you by email and cannot find the setting.
+A subscriber's fee card reads "Auto-renewing membership" with an action to cancel
+it, then "Auto-renewal ending" with the last day they are covered. Only the
+member themselves or a `FINANCIAL_TENANT` holder can cancel.
 
-Cancelling stops future charges. It does not refund what has already been paid,
-and it does not end the current period early: the member stays active until the
-period they have paid for runs out.
-
----
-
-## Reminders before expiry
-
-Orgo sends automatic emails to members whose membership is approaching its end
-date. You control the wording.
-
-**Settings** → **Emails & Notifications** → **Email Templates** → **Fees &
-Membership**.
-
-Editing these templates is worth doing before a renewal season rather than
-during one, because the reminders are often a member's only prompt to act.
+Cancelling stops future charges. It does not refund anything already paid and it
+does not end the current period early: the member stays active until the period
+they paid for runs out, and from that point counts as a one-time payer, reminders
+included.
 
 ---
 
-## Trial periods and grace periods
+## Troubleshooting
 
-Orgo does not currently have a built-in trial period, nor an automatic grace
-period that keeps a lapsed member active for a fixed number of days after expiry.
+<AccordionGroup>
+  <Accordion title="A member says they never got a renewal reminder">
+    Work down the list. Do they have an active subscription on the fee product
+    (subscribers are skipped by design)? Is their membership covered by a company
+    (the company is chased instead)? Is their user type marked as not eligible
+    for a fee? Is the fee period shorter than two months? Then check that
+    **Membership Renewal Reminders** is on under **Settings** → **Emails &
+    Notifications** → **System Emails**, and that the individual template has not
+    been overridden off. Finally, look at their validity date: the ladder matches
+    it against the exact milestone dates, so a validity date that was edited or
+    recalculated in between can step over a rung entirely.
+  </Accordion>
 
-Organisations that need this today handle it manually, usually by recording a
-payment covering the trial window so the member is active for that period, or by
-extending the end date on the membership.
+  <Accordion title="Members on a monthly membership never hear anything">
+    Expected. The under-two-months rule is read from whichever period applies to
+    that member, so a level with a one-month **Cycle period (in months)** override
+    is skipped even on an annual product, and selling the level as a subscription does not
+    put it back in. Monthly subscribers still get their per charge **Renewal
+    Confirmed** or **Renewal Failed** email, which is the only mail they should be
+    getting.
+  </Accordion>
 
-We are aware this is a common request. If it matters to your organisation, tell
-support so it can be weighted properly.
+  <Accordion title="A member on automatic renewal was not renewed">
+    Either the card was declined, in which case Stripe's failure notice reaches
+    Orgo and the member is sent **Renewal Failed**, or there was never a
+    subscription in the first place. The second case is the common one: a payment
+    an administrator recorded by hand, or a bank transfer, leaves no card on file,
+    so a level being sold as recurring does not by itself make the member a
+    subscriber. Check the **Subscribers** tab of the fee product before assuming
+    a member is on automatic renewal.
+  </Accordion>
+
+  <Accordion title="A member cannot switch to the level I told them to pick">
+    The level chooser only offers prices that are not archived, not company only,
+    not hidden from members, and it only appears to the member while their
+    membership has expired and more than one level is open to them. A price marked
+    **Is only assignable by admins (hidden for members)** is invisible to them by
+    definition: a `FINANCIAL_LOCAL` holder has to assign it, and can do so at any
+    time rather than only at expiry.
+  </Accordion>
+
+  <Accordion title="Auto-deactivation ran but some expired members are still active">
+    The job only looks at members who have a validity date. Someone who never paid
+    at all has no date, so they are never deactivated by it, however long they have
+    been on the books. Also skipped: user types not eligible for a fee, and lifetime
+    levels while **Lifetime Membership Available** is on. If nothing at all
+    happened, check that **Fee Payment Mandatory** and **Auto-deactivate on Fee
+    Expiry** are both on and that **Days Until Deactivation** is between 1 and 365,
+    since a value outside that range skips the whole organisation.
+  </Accordion>
+
+  <Accordion title="A lapsed member is stuck on the payment page and cannot pay">
+    With **Fee Payment Mandatory** on, the redirect keys on the validity date, so
+    it starts the day the date passes even when a grace window is still running.
+    The pages needed to complete a payment stay reachable, so if the member is
+    truly stuck it is worth checking the blockers on the fee itself: an unsigned
+    membership contract when **Require Contract for Membership** is on, a bank
+    transfer already in progress, or an active subscription. See
+    [Membership Fees](/platform/fees/fees).
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related
+
+- [Membership Fees](/platform/fees/fees) for collecting and tracking dues
+- [VAT & Registration Fees](/platform/fees/vat) for what is added on top of the price
+- [Products](/platform/fees/products) for membership levels and periods
+- [Recording a payment](/platform/fees/record-payment) for offline payments
+- [Stripe Integration](/platform/fees/stripe-integration) for subscriptions and card charges

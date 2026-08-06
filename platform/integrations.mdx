@@ -1,212 +1,147 @@
 ---
 title: 'Integrations'
-description: 'Connect Orgo with Stripe, Google, HubSpot, n8n, and other tools your organization uses'
+description: 'Connect Orgo with Stripe, HubSpot, n8n, analytics tools and single sign-on providers'
 "og:title": 'Integrations | Orgo'
-"og:description": 'Connect Orgo with Stripe, Google, HubSpot, n8n, and other tools your organization uses'
+"og:description": 'Connect Orgo with Stripe, HubSpot, n8n, analytics tools and single sign-on providers'
 "twitter:title": 'Integrations | Orgo'
-"twitter:description": 'Connect Orgo with Stripe, Google, HubSpot, n8n, and other tools your organization uses'
+"twitter:description": 'Connect Orgo with Stripe, HubSpot, n8n, analytics tools and single sign-on providers'
 ---
 
-Orgo connects with third-party services so you don't have to switch between tools. Process payments with Stripe, let members log in with Google, sync contacts to HubSpot, automate workflows with n8n, and track analytics.
+Orgo connects to the tools your organization already uses: payments through Stripe, sign-in through Google or Microsoft, contact sync to HubSpot, automation through n8n, and the usual analytics tags.
 
-<img src="/images/platform/developers/integrations.png" alt="Integrations settings page with connected services" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+**Built for** administrators wiring Orgo into an existing stack.
+**Replaces** copy-paste between systems and bespoke glue scripts.
 
----
-
-## Available integrations
-
-<CardGroup cols={2}>
-  <Card title="SSO Authentication" icon="key">
-    Let members log in with Google, Facebook, Apple, LinkedIn, or Microsoft
-  </Card>
-  <Card title="Stripe" icon="credit-card">
-    Process payments, subscriptions, and donations
-  </Card>
-  <Card title="n8n" icon="diagram-project">
-    Automate workflows between Orgo and other apps
-  </Card>
-  <Card title="HubSpot" icon="hubspot">
-    Sync members to your CRM
-  </Card>
-  <Card title="Facebook Pixel" icon="facebook">
-    Track conversions for advertising
-  </Card>
-  <Card title="Google Analytics" icon="chart-line">
-    Understand how members use your platform
-  </Card>
-  <Card title="Google Tag Manager" icon="tags">
-    Manage all tracking scripts in one place
-  </Card>
-  <Card title="Webhooks" icon="webhook">
-    Send real-time data to any external system
-  </Card>
-</CardGroup>
+<img src="/images/platform/developers/integrations.png" alt="Third-party Integrations page with the available integrations list on the left and the HubSpot configuration panel on the right" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## SSO Authentication
+## Where it lives
 
-Let members sign in with accounts they already have — fewer passwords, faster login.
+**Settings → Developers → Third-party Integrations**. Requires **ADMIN_TENANT**.
 
-### Supported providers
+The list on the left shows every available integration with a switch indicating whether it is configured. The switch itself is a status light: you configure each integration in the panel on the right and press **Save Settings**.
 
-| Provider | Best for |
-|----------|---------|
-| **Google** | Organizations using Google Workspace |
-| **Microsoft** | Organizations using Microsoft 365 / Azure AD |
-| **Facebook** | Consumer-facing communities |
-| **Apple** | iOS-heavy member bases |
-| **LinkedIn** | Professional associations |
+| Integration | What it does |
+|---|---|
+| **SSO Authentication** | Members sign in with an account they already have |
+| **Stripe** | Card payments for fees, tickets, donations and products |
+| **n8n** | Visual automation between Orgo and other services |
+| **HubSpot** | Push members and contacts into HubSpot as CRM contacts |
+| **Facebook Pixel** | Page-view tracking for advertising |
+| **Google Analytics** | Usage analytics |
+| **Google Tag Manager** | One container for all your tags |
 
-### Setup
+Selecting **Stripe** takes you to the payment settings; see [Stripe Integration](/platform/fees/stripe-integration).
+
+---
+
+## Single sign-on
+
+Members can sign in with an account they already have instead of an Orgo password. **Google**, **Microsoft** and **Apple** appear as buttons on the login screen.
+
+You supply nothing: Orgo registers the applications with each provider centrally, so there is no client ID or secret to paste, and no per-domain restriction to configure.
+
+Where the switches on this page apply depends on the address members use:
+
+| Members sign in at | What the switches do |
+|---|---|
+| Your `.orgo.space` address | Nothing. Google, Microsoft and Apple are always offered |
+| Your own [custom domain](/platform/custom-domain) | **Enable SSO Login** turns the section on or off, and only the providers you switch on appear |
+
+<Note>
+The **LinkedIn** switch exists in this panel but there is no LinkedIn button on the login screen today, so turning it on changes nothing.
+</Note>
+
+Signing in with a provider matches on email address and signs the member into their existing Orgo account. It does not create accounts on its own: registration still goes through your [registration form](/platform/users/registration-form).
+
+---
+
+## HubSpot
+
+Sync members and contacts into HubSpot as CRM contacts.
 
 <Steps>
-  <Step title="Create an OAuth app with the provider">
-    Go to the provider's developer console (Google Cloud Console, Azure Portal, etc.) and register a new application.
+  <Step title="Create a private app in HubSpot">
+    Account Management → Integrations → Private Apps → Create new App, named Orgo.
   </Step>
-  <Step title="Get credentials">
-    Copy the Client ID and Client Secret.
+  <Step title="Grant the contact scopes">
+    `crm.objects.contacts.read`, `crm.objects.contacts.write`, `crm.schemas.contacts.read`, `crm.schemas.contacts.write`.
   </Step>
-  <Step title="Configure in Orgo">
-    Go to **Settings** → **Authentication** → **SSO**. Enter the credentials.
-  </Step>
-  <Step title="Test">
-    Log out and try signing in with the new provider.
+  <Step title="Paste the access token">
+    Copy it from the app's Auth tab into **HubSpot API Token** and press **Save Settings**.
   </Step>
 </Steps>
 
-You can optionally restrict SSO to specific email domains — e.g., only `@yourcompany.com` addresses can use Google SSO.
+Once the integration is active, every member and every contact created or updated in Orgo is pushed to HubSpot. Orgo matches on email address: an existing HubSpot contact is updated, otherwise a new one is created.
+
+| Sent to HubSpot | Notes |
+|---|---|
+| Email, first name, last name, phone, company | The matching key is email |
+| Address, city, country | Members also send state, postal code and website |
+| Lifecycle stage and lead status | Set to `lead` / `NEW` |
+
+The sync runs in the background, one direction only: changes made in HubSpot are never written back to Orgo, and deletions are not propagated.
+
+<Note>
+Saving a token is necessary but not always sufficient. If members and contacts are not appearing in HubSpot, ask support to confirm the HubSpot integration is switched on for your organization.
+</Note>
 
 ---
 
-## Stripe
+## n8n
 
-Stripe handles all payments in Orgo — membership fees, event tickets, donations, and product sales.
-
-For detailed setup instructions, see [Stripe Integration](/platform/fees/stripe-integration).
-
----
-
-## n8n (Workflow Automation)
-
-n8n lets you build automated workflows between Orgo and hundreds of other apps — no coding required.
-
-### What you can automate
-
-| Trigger | Action |
-|---------|--------|
-| New member registers | Add to Mailchimp list, notify Slack channel |
-| Payment completed | Update spreadsheet, send custom receipt |
-| Event created | Post to social media, notify team |
-| Discussion posted | Send digest to email |
-
-### Setup
+n8n is a visual automation tool with an official Orgo node, so you can connect Orgo to hundreds of other services without writing code.
 
 <Steps>
-  <Step title="Set up n8n">
-    Use [n8n cloud](https://n8n.io) or self-host an instance.
+  <Step title="Enable n8n in Orgo">
+    Toggle **Enable n8n**. It saves immediately.
   </Step>
-  <Step title="Generate an API key in Orgo">
-    Go to **Settings** → **Developers** to create API credentials.
+  <Step title="Create an API token">
+    **Settings → Developers → API Tokens**. Scope it to what the automation needs, see [API Access](/platform/api).
   </Step>
-  <Step title="Configure the Orgo node in n8n">
-    Add your Orgo API credentials to n8n.
-  </Step>
-  <Step title="Build workflows">
-    Use the visual editor to connect triggers and actions.
+  <Step title="Add the credential in n8n">
+    Your organization's host plus the token. Then build the workflow.
   </Step>
 </Steps>
 
----
-
-## HubSpot CRM
-
-Sync member data to HubSpot for advanced CRM, marketing automation, and reporting.
-
-| Feature | What syncs |
-|---------|-----------|
-| **Contacts** | Members → HubSpot contacts |
-| **Properties** | Custom fields → HubSpot properties |
-| **Lists** | Group memberships → HubSpot lists |
-| **Activities** | Engagement data → HubSpot timeline |
-
-### Setup
-
-1. Register an app in the HubSpot developer portal
-2. Generate a private app access token
-3. Go to **Settings** → **Integrations** → **HubSpot**
-4. Enter the token and configure field mapping
+Use n8n cloud or self-host it. Orgo's own [webhooks](/platform/webhooks) make good triggers for workflows that must react immediately.
 
 ---
 
-## Analytics & Tracking
+## Analytics and tracking
 
-### Google Analytics
+Each of these takes a single ID and applies to your member-facing pages.
 
-Track how members use your platform — page views, sessions, popular features.
+| Integration | Field | Where to find it |
+|---|---|---|
+| **Google Analytics** | Measurement ID (`G-XXXXXXX`) | Google Analytics admin, data stream |
+| **Google Tag Manager** | Container ID (`GTM-XXXXXXX`) | Google Tag Manager workspace |
+| **Facebook Pixel** | Pixel ID | Facebook Events Manager |
 
-**Setup:** Get your GA4 Measurement ID (`G-XXXXXXX`) from Google Analytics → go to **Settings** → **Integrations** → **Google Analytics** → paste the ID.
+Google Analytics and Tag Manager receive page views plus a small number of commerce events raised by Orgo itself, including checkout start and completed purchases on payment and donation pages. Facebook Pixel receives page views only.
 
-### Google Tag Manager
-
-Manage all tracking scripts (Analytics, Pixel, custom scripts) from one place without touching Orgo settings again.
-
-**Setup:** Get your Container ID (`GTM-XXXXXXX`) from Google Tag Manager → go to **Settings** → **Integrations** → **Google Tag Manager** → paste the ID.
-
-### Facebook Pixel
-
-Track conversions from Facebook/Instagram ads — registrations, purchases, page views.
-
-**Setup:** Get your Pixel ID from Facebook Events Manager → go to **Settings** → **Integrations** → **Facebook Pixel** → paste the ID.
-
-Tracked events: PageView, Lead (registration started), CompleteRegistration, Purchase (payment completed).
+If you already run several tags, put the Tag Manager container ID in and manage the rest from there rather than filling in each field here.
 
 ---
 
-## Webhooks
-
-Send real-time event data to any external system via HTTP POST.
-
-<img src="/images/platform/developers/webhooks-list.png" alt="Webhooks management page showing configured subscriptions with delivery stats" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
-### Available events
-
-| Event | Fires when |
-|-------|-----------|
-| `user.created` | A new member registers |
-| `user.updated` | A member's profile is updated |
-| `payment.completed` | A payment succeeds |
-| `event.created` | A new event is created |
-
-### Setup
-
-1. Go to **Settings** → **Developers** → **Webhooks**
-2. Click **Add Webhook**
-3. Enter your endpoint URL (must accept POST requests)
-4. Select which events to subscribe to
-5. Save
-
-Your endpoint receives a JSON payload with event data whenever the subscribed event occurs.
-
----
-
-## Common scenarios
+## Common questions
 
 <AccordionGroup>
-  <Accordion title="Which analytics tool should I use?">
-    If you already use Google Analytics, just add the Measurement ID. If you use multiple tracking tools (Analytics, Pixel, custom scripts), use Google Tag Manager to manage them all from one place.
+  <Accordion title="Analytics or Tag Manager?">
+    If Google Analytics is the only thing you run, the Measurement ID is enough. If you run several tags, use Tag Manager so you never have to come back to this page.
   </Accordion>
 
-  <Accordion title="Can I use multiple SSO providers?">
-    Yes — enable as many as you want. Members choose which provider to use on the login screen.
+  <Accordion title="Can members sign in with more than one provider?">
+    Yes. Enable as many as you want; members pick one on the login screen.
   </Accordion>
 
-  <Accordion title="Webhooks aren't firing">
-    Check that your endpoint URL is correct, publicly accessible, and accepts POST requests. Verify that the webhook is subscribed to the right events. Check your endpoint's logs for errors.
+  <Accordion title="I need an integration that is not listed">
+    Two routes. [Webhooks](/platform/webhooks) push events to any system that accepts an HTTPS POST, and the [API](/platform/api) covers everything else. For sign-in from your own application, see [OAuth Server](/platform/oauth).
   </Accordion>
 
-  <Accordion title="I need an integration that isn't listed">
-    Use webhooks to send data to any system, or use n8n for more complex workflows. For custom integrations, see the [OAuth Server](/platform/oauth) for authentication and the API documentation for data access.
+  <Accordion title="Does HubSpot sync historical members?">
+    No. The sync fires when a member or contact is created or updated, so existing records appear as they change. To backfill, export and import on the HubSpot side.
   </Accordion>
 </AccordionGroup>
 
@@ -214,7 +149,8 @@ Your endpoint receives a JSON payload with event data whenever the subscribed ev
 
 ## Related
 
-- [Orgo MCP](/platform/mcp) — Connect AI assistants like Claude to your Orgo data
-- [Stripe Integration](/platform/fees/stripe-integration) — Detailed payment setup
-- [OAuth Server](/platform/oauth) — Use Orgo as an identity provider for your apps
-- [Notifications](/platform/notifications) — Platform notification settings
+- [Stripe Integration](/platform/fees/stripe-integration) - payment setup in detail
+- [API Access](/platform/api) - tokens and scopes
+- [Webhooks](/platform/webhooks) - real-time event delivery
+- [OAuth Server](/platform/oauth) - Orgo as an identity provider
+- [Orgo MCP](/platform/mcp) - connect AI assistants to your Orgo data

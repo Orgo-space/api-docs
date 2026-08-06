@@ -1,0 +1,48 @@
+[
+  {
+    "id": "event-public-page",
+    "image": "/images/platform/events/event-public-page.png",
+    "usedOn": [
+      "platform/events/public-page.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/public/event/a2a3281d8fc711f19aed9e396b?workspace=t187c",
+    "routeHint": "Sign in, open Events, pick a published event that is Public and has ticketing (its sidebar shows Landing page), then click Landing page in the left event sidebar. The event MUST be in the future and MUST have ticketing: the Get tickets card is behind item.hasEventTicketing && !eventEnded(item), so a free or past event renders the description and then empty page. Strategy Away Day Arlington (event 200431, 2026-09-06, product 970) is public, ticketed and has three speakers.",
+    "actions": [],
+    "waitFor": "text=Get tickets",
+    "viewport": "desktop",
+    "alt": "Public event page with the cover image and Hosted by block on the left, and the event title, date, location and Get tickets card with ticket types on the right",
+    "status": "new",
+    "note": "Existing file is stale: the current page shows a Share button under Hosted by in the left sidebar and has no add-to-calendar control next to the date. Both must be visible/absent accordingly in the new capture."
+  },
+  {
+    "id": "event-public-directory",
+    "image": "/images/platform/events/event-public-directory.png",
+    "usedOn": [
+      "platform/events/sharing.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/public/events?workspace=t187c&upcoming=1",
+    "routeHint": "Anonymous page, no login needed. From inside the app it is reachable via Events -> Public events in the header. The workspace slug MUST be t187c: the previous value (ila) is a real organisation and its events carry no cover image and no location, which is what produced the broken-image glyphs and the location-free cards.",
+    "actions": [],
+    "waitFor": "text=Upcoming",
+    "viewport": "desktop",
+    "alt": "Public event directory showing the next event as a large hero card, a list of upcoming events with dates and cover images, and a month calendar with event dates marked",
+    "status": "new"
+  },
+  {
+    "id": "event-agenda-embed",
+    "image": "/images/platform/events/event-agenda-embed.png",
+    "usedOn": [
+      "platform/events/sharing.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/public/event-agenda/1avnl2qibo932pkmh1inkl7nsu?workspace=t187c&iframe=true",
+    "routeHint": "Pick a public or ticketed event that has agenda sessions (sub-events): open the event, click Agenda in the event sidebar, and use the Iframe URL button to copy the exact address, then open it directly. If no event has sessions, add two or three sessions on a public demo event first.",
+    "actions": [],
+    "waitFor": "text=:",
+    "viewport": "desktop",
+    "alt": "Embedded event agenda showing sessions grouped by day with start and end times, stage labels and speaker avatars, without the event title",
+    "status": "new"
+  }
+]
