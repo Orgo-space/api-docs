@@ -89,6 +89,14 @@ These are **not** touched:
 | Discussion posts, comments and reactions | Kept |
 | The account record itself | Kept. Deletion sets a status; it does not remove the row. |
 
+<Note>
+Both tables describe the **Delete account** action only. A record that was merged
+away also ends up on the Deleted status, but it is not shaped like a deleted
+account: its email is prefixed rather than cleared, its phone number and local
+group are kept, and its roles were transferred to the surviving record rather
+than deleted. See [Merging duplicates](/platform/users/merging-duplicates).
+</Note>
+
 <Warning>
 "Deleted" in Orgo is an anonymisation of contact identifiers plus a permanent
 access block. It is not erasure. If your organisation has to satisfy a right-to-
@@ -111,10 +119,11 @@ profile photo is not.
   and the action in your own system.
 - **It does not free places.** Event registrations, attendee lists and waitlist
   entries are untouched. Cancel those separately if the place should be released.
-- **It cannot be undone.** There is no restore action. An account can technically
-  be moved off the Deleted status by an administrator, but the email, phone and
-  local group are already gone and the roles are already deleted, so what comes
-  back is a shell.
+- **It cannot be undone.** There is no restore action, and a deleted account can
+  no longer be edited: an administrator who tries is refused with "User has been
+  deleted". The one exception is a merge, whose source record is also set to
+  Deleted and is put back on its previous status if the merge is undone within 30
+  days.
 
 ---
 

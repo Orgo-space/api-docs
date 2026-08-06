@@ -74,13 +74,21 @@ member login, and they carry no password. See
 |---|---|---|
 | Password | Any status, but the status is checked **before** the password | "The email or password you entered is incorrect" therefore means the password really is wrong; a blocked account gets a status message instead, whatever they typed |
 | One-time code by email | Any status except Deleted; the status check runs when the code is verified | A silent "if this email exists, a code has been sent" with no email arriving means the address is not registered in that workspace |
-| Google, Microsoft, Facebook, LinkedIn | Only Active, New request and Awaiting referral | An **Inactive** member is told there is no organisation for this email, and never sees the reactivation prompt they would get with a password |
+| Google, Microsoft, Apple | Only Active, New request and Awaiting referral | An **Inactive** member is told there is no organisation for this email, and never sees the reactivation prompt they would get with a password |
 
 <Warning>
 An Inactive member who only ever uses Google sign-in will keep hitting a dead
 end. Ask them to sign in with the one-time code instead: that path offers the
 reactivation prompt, or at least reports the real status.
 </Warning>
+
+<Note>
+A refused social sign-in always finishes on `app.orgo.space`, never on your own
+address. A member on your custom domain or inside your branded app who picks
+Google and is turned away will report being thrown onto a different website; that
+is the refusal, not a separate fault. The `auth_error` value in the address bar
+there names the real reason, and it is one of the reasons in the table above.
+</Note>
 
 Which method the login screen offers first is a setting: **Default to Password
 Login** (**Settings** → **Users & Profiles** → **Configuration**). Members can

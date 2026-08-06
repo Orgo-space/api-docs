@@ -1,0 +1,156 @@
+[
+  {
+    "id": "chapter-leader-dashboard",
+    "image": "/images/platform/chapter-leader/dashboard.png",
+    "usedOn": [],
+    "tenant": "t187c-chapter",
+    "route": "/",
+    "routeHint": "The anchor image of the chapter-leader kit: what a chapter officer sees the moment they sign in. Session slug t187c-chapter is Maya Costa (user 312917, maya.costa.312917@example.org), a Virginia Beach member of Northwind Professional Association who holds Chapter Vice-Leader (HR_LOCAL) and Chapter Treasurer (FINANCIAL_LOCAL) over local center 15658 and nothing else. Open it with: ORGO_DOCS_PASSWORD='...' node capture/login-member.mjs maya.costa.312917@example.org t187c-chapter. The sidebar here is the COMMUNITY mode sidebar and is deliberately almost identical to the administrator's - the difference between the two roles lives one click away, in Administration mode (see chapter-leader-sidebar-administration). The two visible differences on this screen are the missing settings gear beside the logo in the header, and the shorter group list.",
+    "actions": [],
+    "waitFor": "text=Start a post",
+    "viewport": "desktop",
+    "alt": "The Orgo dashboard as a chapter leader sees it: welcome banner and discussion feed in the centre, the community sidebar on the left with Home, Members, Events, Files, Courses, Voting, Chapters and Analytics, and voting, events and suggested-group widgets on the right",
+    "status": "new",
+    "notes": "Compare with /images/platform/home/member-dashboard.png, the same screen as an organisation administrator. The chapter leader has no settings gear in the header and no MY TASKS widget, and the sticky footer offers the Administration mode switch because hasAdminAccess in AppSidebarMenu.vue:1959 is satisfied by HR_LOCAL or FINANCIAL_LOCAL alone."
+  },
+  {
+    "id": "chapter-leader-sidebar-administration",
+    "image": "/images/platform/chapter-leader/sidebar-administration.png",
+    "usedOn": [],
+    "tenant": "t187c-chapter",
+    "route": "/",
+    "routeHint": "Dashboard, then the Administration link in the sticky footer of the sidebar. This is where the chapter leader's view actually narrows: eight entries in two sections (FINANCE: Local products, Fee payments, Local members fees, Fees settings; MANAGEMENT: Adhesions, Badges, Resignation requests, Transfer requests). The mode is Vuex state (setSidebarMode, store.js:368) persisted to localStorage by vuex-persistedstate, so a fresh session always starts in community mode and the click is required. Gate the shot on 'Local members fees', which cannot exist until the mode has switched.",
+    "actions": [
+      "click text=Administration",
+      "wait 2500"
+    ],
+    "waitFor": "text=Local members fees",
+    "viewport": "wide",
+    "alt": "The Administration sidebar as a chapter leader sees it, holding only a Finance section with Local products, Fee payments, Local members fees and Fees settings, and a Management section with Adhesions, Badges, Resignation requests and Transfer requests",
+    "status": "new",
+    "notes": "Pair this with admin-sidebar-administration, captured from the same route in the same viewport. Note the product defect this image records: Fees settings is shown to a FINANCIAL_LOCAL holder, but its route /local/settings/fee is gated ADMIN_LOCAL (router.js:1597), so clicking it returns the member to the sign-in screen."
+  },
+  {
+    "id": "admin-sidebar-administration",
+    "image": "/images/platform/chapter-leader/sidebar-administration-admin.png",
+    "usedOn": [],
+    "tenant": "t187c",
+    "route": "/",
+    "routeHint": "The same screen as chapter-leader-sidebar-administration, signed in as the organisation administrator (Julian Sorensen, user 207128, ROLE_ADMIN_TENANT), so the kit can put the two sidebars side by side. Same route, same viewport, same click. Gate the shot on 'Database Queries', which only a tenant admin gets.",
+    "actions": [
+      "click text=Administration",
+      "wait 2500"
+    ],
+    "waitFor": "text=Database Queries",
+    "viewport": "wide",
+    "alt": "The Administration sidebar as an organisation administrator sees it, with an Ask Orgo entry, a Finance section of ten items including Products, Payments, Stats, Invoices and Subscribers, and a Management section of a dozen more including Communication, Contacts, Waitlist, Database Queries, e-Documents, Form builder and Platform stats",
+    "status": "new",
+    "notes": "Captured 2026-08-06 for the chapter-leader kit. The administrator's menu is longer than the viewport and keeps scrolling past Platform stats; the crop is intentional and shows the point, which is that the list does not end."
+  },
+  {
+    "id": "chapter-leader-members-chapter",
+    "image": "/images/platform/chapter-leader/members-chapter.png",
+    "usedOn": [],
+    "tenant": "t187c-chapter",
+    "route": "/users?unit=15658&discriminator=local_center",
+    "routeHint": "Sidebar Chapters -> Virginia Beach -> Members, or the Members entry on the chapter page (LocalCenter/ShowContent.vue:102 pushes UserList with unit and discriminator). This is the chapter directory, 124 members of Virginia Beach and its three child chapters. The chapter leader lands in the card view, not the table: initIsGallery (User/List.vue:3074) defaults isGallery to !isGranted('ADMIN_TENANT'), so the gallery IS the permission-driven default and not a stale preference. Gate on 'Register member', which needs HR_LOCAL over this chapter and therefore cannot paint before the user payload has landed.",
+    "actions": [],
+    "waitFor": "text=Register member",
+    "viewport": "desktop",
+    "alt": "The Virginia Beach chapter member directory as a chapter leader sees it: 124 members as photo cards, a Register member button, and a filter row of Name or Keyword, Industry, Professional Interests, status and user type",
+    "status": "new",
+    "notes": "Pair with admin-members-chapter, the identical route as an organisation administrator. The chapter leader's filter row has no Fee status control and the header has no Moderation queue or Modify action; both are in the administrator's shot."
+  },
+  {
+    "id": "admin-members-chapter",
+    "image": "/images/platform/chapter-leader/members-chapter-admin.png",
+    "usedOn": [],
+    "tenant": "t187c",
+    "route": "/users?unit=15658&discriminator=local_center",
+    "routeHint": "The same chapter directory as chapter-leader-members-chapter, signed in as the organisation administrator, for the side-by-side comparison. Same 124 members. The administrator lands in the table view because initIsGallery defaults on ADMIN_TENANT. Gate on 'Moderation queue', a header action only a tenant admin gets - NOT on 'Fee status', which is a placeholder attribute on the filter control and therefore invisible to a Playwright text= locator.",
+    "actions": [],
+    "waitFor": "text=Moderation queue",
+    "viewport": "desktop",
+    "alt": "The same Virginia Beach chapter member directory as an organisation administrator sees it: a sortable table of member, age, town, county, fee validity and adhesion, with Fee status filtering, a Moderation queue and Modify in the header, and an export control",
+    "status": "new",
+    "notes": "Captured 2026-08-06. Replaces nothing: /images/platform/users/user-directory.png is a different route (the organisation-wide directory) and predates the demo tenant's own logo, so it cannot be used as the comparison half."
+  },
+  {
+    "id": "chapter-leader-member-record",
+    "image": "/images/platform/chapter-leader/member-record.png",
+    "usedOn": [],
+    "tenant": "t187c-chapter",
+    "route": "/user/312708",
+    "routeHint": "Chapter directory -> open a member. 312708 (Oliver Ashford) is a Virginia Beach member, so the chapter leader gets the full record: Edit profile, and the Fee, Payments, e-Documents, Files and Referrals tabs. There is no Logs tab, which an organisation administrator does get (compare /images/platform/users/user-profile-logs.png). Opening a member of another chapter instead - 209212 (Theo Vargas, Chesterfield) - returns a reduced profile with only Profile, Events and Referrals and no Edit profile.",
+    "actions": [
+      "wait 4000"
+    ],
+    "waitFor": "text=Edit profile",
+    "viewport": "desktop",
+    "alt": "A member record opened by a chapter leader, showing status, age, town, parent chapter, permissions, badges, profession and role history, with Edit profile available and the Profile, Fee, Payments, e-Documents, Events, Files and Referrals tabs",
+    "status": "new"
+  },
+  {
+    "id": "chapter-leader-local-fees",
+    "image": "/images/platform/chapter-leader/local-member-fees.png",
+    "usedOn": [],
+    "tenant": "t187c-chapter",
+    "route": "/fee/members-local-center?localCenter=15658&localCenterName=Virginia Beach",
+    "routeHint": "Administration mode -> Finance -> Local members fees. This is the chapter fee screen a chapter treasurer works in, not the organisation one: the Local toggle shows the Virginia Beach fee tiers with their own prices, tick boxes per period, a running total and Save and Pay. The route pins itself to the signed-in officer's own chapter - asking for localCenter=15665 (Chesterfield) still renders Member fees - Virginia Beach, which is the scope substitution the kit should explain. router.js:2261 has no hasAppSidebarMenu, so the app renders this route without the left sidebar; that is the product's layout, not a broken capture. Gate on the Pay button, which only exists on the Local tab: the Organisation tab totals 0 and shows Save alone. Do NOT gate on a fee-tier label such as 'Annual (30 usd)' - it is the selected option of a select element and a Playwright text= locator never sees it. If the amount on the button changes the run reports waitFor MISSED, which is the intended signal that the staged fee_temporary rows have moved.",
+    "actions": [
+      "click text=Local",
+      "wait 2500"
+    ],
+    "waitFor": "text=Pay 150 usd",
+    "viewport": "desktop",
+    "alt": "The chapter member fees screen as a chapter leader uses it, with the Organisation and Local toggle set to Local, a fee tier selector per member, tick boxes for the 2026 period, a running total and the Save and Pay buttons",
+    "status": "new"
+  },
+  {
+    "id": "chapter-leader-chapter-page",
+    "image": "/images/platform/chapter-leader/chapter-page.png",
+    "usedOn": [],
+    "tenant": "t187c-chapter",
+    "route": "/local-center/15658",
+    "routeHint": "Sidebar Chapters -> Virginia Beach, or the chapter name anywhere it is linked. Local center 15658 is a parent chapter (is_parent = 1, children Hampton, Springfield and Williamsburg), which is why the heading reads 'Parent chapter Virginia Beach' and the role holders are grouped as Regional Chair, Regional Coordinator, Regional Treasurer and Regional Secretary. Gate on 'Regional Chair', the first role block, so the shot is not taken before the role holders resolve.",
+    "actions": [],
+    "waitFor": "text=Regional Chair",
+    "viewport": "desktop",
+    "alt": "The Virginia Beach chapter page as a chapter leader sees it, with status, founding date, the Chapters, Members, Teams, Events, Discussions and Annual report navigation, contact and address cards, and the chapter's role holders shown as photo cards by office",
+    "status": "new",
+    "notes": "The administrator's version of this page (/images/platform/groups/local-center-detail.png) is the same layout; the difference to point out is what is missing from the header of the chapter directory and settings, not from this page."
+  },
+  {
+    "id": "chapter-leader-events",
+    "image": "/images/platform/chapter-leader/chapter-events.png",
+    "usedOn": [],
+    "tenant": "t187c-chapter",
+    "route": "/events?unit=15658",
+    "routeHint": "Chapter page -> Events. The four events that belong to Virginia Beach (200396-200399) are the only unit-scoped events in this tenant and they are all in June 2025, so the Upcoming tab renders 'No future events at this moment'. The click on 'View past events' is what makes the list show anything; without it the capture is an empty state. Gate on an event title so the shot cannot fire before the past list has loaded.",
+    "actions": [
+      "click text=View past events",
+      "wait 3000"
+    ],
+    "waitFor": "text=Strategy Away Day Virginia Beach",
+    "viewport": "desktop",
+    "alt": "The chapter's own event list as a chapter leader sees it, showing the four Virginia Beach events for June 2025 with date, time, venue, price and programme, beside the month calendar and the Upcoming and Past switch",
+    "status": "new"
+  },
+  {
+    "id": "chapter-leader-access-denied",
+    "image": "/images/platform/chapter-leader/access-denied.png",
+    "usedOn": [],
+    "tenant": "t187c-chapter",
+    "route": "/local-center/15659",
+    "routeHint": "Reached honestly: the chapter leader opens Richmond (local center 15659, a chapter she has no permission over) and clicks one of its role holders. Oliver Dubois (user 312676) keeps his profile private, so UserGetController::checkProfilePrivacy throws AccessDeniedException; the profile page cannot render, Show.vue:102 returns the member to the dashboard and the red toast is the only thing that says why. SETUP, already applied on the docs database: INSERT INTO user_option (user_id, created_at, updated_at, age, name, email, phone, social, image, town, profession, profile, has_seen_profile_completion_celebration) VALUES (312676, NOW(), NOW(), 0,1,0,0,0,1,1,0,1,0). A private member disappears from every member list and from search, which is why the capture is driven from the chapter page role-holder cards, the one surface that still links to them. The toast lives 5000 ms, so it MUST be triggered by the click at the end of the action list - a spec that navigates straight to /user/312676 shoots a dashboard with no toast on it at all, because the runner's own load waits are longer than the toast. The 'wait 2000' is load-bearing in the other direction: the runner adds 1200 ms after a click and 1500 ms before the shot, so the total 4700 ms is the only window in which the dashboard behind the toast has finished painting (at 3200 ms it is still grey skeleton bars) and the toast has not yet expired (about 5200 ms).",
+    "actions": [
+      "click text=Oliver Dubois",
+      "wait 2000"
+    ],
+    "waitFor": "text=You do not have permission to view this profile",
+    "viewport": "desktop",
+    "alt": "The permission refusal a chapter leader gets outside their own chapter: a red banner reading You do not have permission to view this profile, over the dashboard the member has just been returned to",
+    "status": "new",
+    "notes": "Orgo has no dedicated Access Denied page. Out of scope produces one of three things and this is the only one with words on it. The second is a bounce to the sign-in screen, which is what any route carrying a meta.role the member lacks does (App.vue:688 pushes Login, not an error page) - it cannot be captured by this runner at all, because run.mjs treats a final URL containing /login as a failed session and refuses to write the file. The third is silent scope substitution, as on the chapter fees route."
+  }
+]

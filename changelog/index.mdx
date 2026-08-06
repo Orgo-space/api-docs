@@ -4,10 +4,35 @@ description: "What's new in ORGO platform"
 ---
 
 <Update label="August 2026">
+**New Features**
+
+**Discussions**
+- **Block a Member**: Members can block another member from any post, comment or reply, and everything that member writes then disappears from their own view of the forum. The block is one way, private to the person who made it, and administrators cannot be blocked: [Blocking Members](/platform/discussion/blocking-members).
+
+**Support**
+- **Support Chat for Admins**: Organization admins get a support chat launcher in the corner of the app on desktop, so a question reaches Orgo support without leaving the page. It never appears while impersonating another member.
+
 **Changes**
 
 **Webhooks**
 - **Signed deliveries (action required)**: `X-Webhook-Signature` is now an HMAC-SHA256 of the delivery, keyed with your webhook secret, in the form `t=<timestamp>,v1=<hex>`. The timestamp is covered by the signature, so a captured delivery cannot be replayed. This replaces the previous checksum and is not sent alongside it: a receiver that compares the old value must be updated. Deliveries themselves are unchanged, so nothing stops arriving while you migrate. Verification recipe: [Webhooks](/platform/webhooks#verifying-the-signature).
+
+**Lists & Segments**
+- **Manual list counts now match what a campaign sends**: On a manual list, **Total** counts everyone in it and **Subscribed** counts only the people who explicitly opted in, so the two numbers can now differ where they used to be identical. The recipients table shows every person in the list rather than only the subscribed ones. Existing manual lists will show different figures than before, with no action from you.
+- **Merged and deleted members leave manual lists**: A member whose account was merged into another or deleted no longer counts towards a manual list, no longer appears in its recipients table, and no longer receives campaigns sent to it.
+
+**Members**
+- **Merged records are properly retired**: The record you merge away is now marked Deleted rather than Inactive, so it disappears from the member list, search, duplicate suggestions and email lists instead of lingering. Undoing the merge within 30 days puts it back exactly as it was.
+- **Role Dates Show the Right Day**: Role start and end dates on a member's profile now show the date they were recorded, whatever timezone you are viewing from. Editing a role no longer shifts its start date back a day when you save.
+
+**Mobile Apps**
+- **Social sign-in inside branded apps**: Continue with Google, Microsoft and Apple now complete inside a branded app instead of trying to hand the member back to the shared Orgo Community app. Nothing to configure.
+
+**Sign-in**
+- **Social sign-in returns to a known address**: A completed social sign-in now returns the member only to `app.orgo.space` or to your organization's own App host. A sign-in that is refused always finishes on `app.orgo.space`, so a member turned away on your custom domain or in your branded app lands there rather than on your own address.
+
+**Imports**
+- **Large Imports Finish Reliably**: Chapter, unit and member imports that look up many new town names now have time to complete instead of stalling partway through.
 
 </Update>
 

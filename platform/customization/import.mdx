@@ -45,7 +45,9 @@ instruction.
   </Step>
   <Step title="Watch the progress">
     A live percentage, refreshed every three seconds, with running counts of
-    successful, failed and skipped rows.
+    successful, failed and skipped rows. The counts move one batch at a time
+    rather than one row at a time, so a file small enough to fit in a single
+    batch stays at 0% until it finishes.
   </Step>
   <Step title="Read the errors">
     Expand the row in **Import History** for per-row failures: row number, message
@@ -180,6 +182,15 @@ imports.
     Skipped means the record already exists, the expected result when you re-run
     the same file. To update those records instead, use **Modify Users** or
     **Modify Contacts**.
+  </Accordion>
+  <Accordion title="The import sits at 0% and stays on Processing">
+    Progress is written when a batch finishes, so a minute or two at 0% is normal
+    on a file that fits in one batch. The slow case is a Local Centers, Units or
+    Users file whose town column names places Orgo has not seen before: each new
+    name is looked up against an external place-name service one row at a time.
+    Leave it running and reload the history table. If it is still **Processing**
+    after fifteen minutes with no counts, the batch did not finish and nothing was
+    written: split the file into smaller parts and run them one after another.
   </Accordion>
   <Accordion title="A column ended up as a custom field instead of the real profile field">
     The header did not match a system column for that step. Built-in names are

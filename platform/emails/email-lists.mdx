@@ -29,7 +29,9 @@ people.
 For email the difference is timing. An automated list is evaluated again at the
 moment the campaign is sent, not when you drafted it, so anyone who became
 eligible in between is included and anyone who no longer qualifies is dropped. A
-manual list sends to exactly the rows in it.
+manual list sends to the rows in it, less two subtractions: anyone who is not
+subscribed, and anyone whose member account has since been merged away or
+deleted. Nothing is ever added to it.
 
 That makes automated lists the right choice for anything recurring ("members who
 have not paid") and manual lists the right choice for anything deliberate ("the
@@ -111,9 +113,12 @@ a boundary that the sender does not have.
 
 <AccordionGroup>
   <Accordion title="The campaign reached fewer people than the list holds">
-    The difference is the unsubscribed. Open the list and compare **Total** with
-    **Subscribed**, then use the subscription chips on the recipients table to see
-    exactly who was skipped.
+    Open the list and compare **Total** with **Subscribed**. The gap is everyone
+    without an explicit opt-in: people who unsubscribed, and people who never
+    made a choice. On an automated list the subscription chips on the recipients
+    table show exactly who was skipped. A manual list has no such chips, so use
+    the [email log](/platform/emails/email-log) to see who actually received the
+    campaign, or open the individual records.
   </Accordion>
 
   <Accordion title="Someone new should be in an automated list but is not">

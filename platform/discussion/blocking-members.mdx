@@ -1,0 +1,166 @@
+---
+title: 'Blocking Members'
+description: 'Hide the discussions, posts and replies of one member from your own view of the forum'
+"og:title": 'Blocking Members | Orgo'
+"og:description": 'Hide the discussions, posts and replies of one member from your own view of the forum'
+"twitter:title": 'Blocking Members | Orgo'
+"twitter:description": 'Hide the discussions, posts and replies of one member from your own view of the forum'
+---
+
+Blocking is the personal counterpart to moderation. A member who does not want to read another member stops seeing them, without anybody having to take the content down for the whole organization.
+
+A block is one way, private to the person who made it, and limited to Discussions.
+
+---
+
+## What a block hides
+
+Once you block someone, every discussion list you open leaves their content out.
+
+| Where | Effect |
+|-------|--------|
+| Discussions feed, group and local center feeds | Threads they started disappear |
+| Dashboard discussion lists and widgets | Same |
+| Search box | Their threads no longer come back among discussion results |
+| Inside a thread | Their comments and replies disappear, everybody else's stay |
+| Paging | The list is filtered before it is counted, so page numbers and infinite scroll stay correct |
+
+Filtering happens on the server, so blocked content never reaches your browser.
+
+---
+
+## What a block does not do
+
+- **It does not restrict the blocked member.** They keep posting, commenting and replying, and their content is unchanged for everybody else.
+- **Nobody is told.** The member you blocked gets no notification and no marker on their posts, and no other member can see that the block exists.
+- **It does not touch support tickets or issues.** Both are excluded on purpose, so a personal block never removes a ticket from a queue somebody works. See [Help Desk](/platform/help-desk) and [Issues](/platform/issues).
+- **It does not follow the member around Orgo.** They still appear in the member directory, in group lists, in events and in the event app. Blocking only filters the forum.
+- **It does not stop notifications.** If somebody you blocked replies to your post or mentions you, the notification still arrives, even though the comment itself is hidden when you open the thread.
+
+<Note>
+Two side effects are worth knowing. The comment count shown on a thread is a stored total, so it still counts the comments that are now hidden from you: a card can read "8 comments" while you see 6. And a block filters lists, not links, so a direct link to a thread started by somebody you blocked still opens that thread.
+</Note>
+
+---
+
+## Blocking a member
+
+<Steps>
+  <Step title="Open the discussion">
+    The action lives inside a thread, not on the feed cards.
+  </Step>
+  <Step title="Open the three-dot menu">
+    On the post itself to block the person who started the thread, or on any comment or reply to block its author.
+  </Step>
+  <Step title="Choose Block user">
+    A confirmation dialog explains that you will no longer see posts and comments written by this member.
+  </Step>
+  <Step title="Confirm">
+    If you blocked the person who started the thread, you are returned to the discussions list, because there is nothing left on that page to show. Otherwise the comments reload without theirs.
+  </Step>
+</Steps>
+
+**Block user** is only offered where it would work: never on your own content, and never on a member who cannot be blocked. It is also kept off the post that opens an issue, since issues are never filtered by a block.
+
+---
+
+## Lifting a block
+
+<Steps>
+  <Step title="Open your own profile">
+    Then **Settings & Privacy**. The tab appears on your profile only, never on somebody else's.
+  </Step>
+  <Step title="Choose Blocked users">
+    The panel lists everybody you have blocked, with the date you blocked them.
+  </Step>
+  <Step title="Select Unblock">
+    Their discussions, comments and replies are visible again straight away.
+  </Step>
+</Steps>
+
+The list is also where a member checks whether a block is the reason somebody seems to have gone quiet.
+
+---
+
+## Who cannot be blocked
+
+Administrators are out of reach. The rule is Orgo's own permission ranking: anybody at or above `HR_LOCAL` cannot be blocked, and neither can a tenant admin.
+
+| Member | Can be blocked |
+|--------|----------------|
+| A member with no permissions | Yes |
+| `USER_LOCAL` | Yes |
+| `EVENT_LOCAL`, `COMMUNICATION_LOCAL`, `HR_ASSISTANT_LOCAL`, `FINANCIAL_LOCAL` | Yes |
+| `HR_LOCAL`, `ADMIN_LOCAL` | No |
+| Any `_PARENT_LOCAL` permission | No |
+| Any `_TENANT` permission, including `COMMUNICATION_TENANT` | No |
+| Tenant admins and super admins | No |
+
+A local center's discussion moderator holds `COMMUNICATION_LOCAL`, which ranks below the floor, so moderators can be blocked. The people who run the organization cannot.
+
+<Warning>
+Blocking somebody before they are promoted does not keep them hidden. When a member is given `HR_LOCAL` or anything above it, every block against them is dropped as their permissions are recalculated, and their content comes back for everybody who had blocked them.
+</Warning>
+
+Two more attempts are refused: blocking yourself, and blocking a member of another organization.
+
+---
+
+## How this differs from moderation
+
+| | Blocking | [Moderation](/platform/discussion/moderation) |
+|---|---|---|
+| Who it affects | Only the member who blocked | Everybody |
+| Who can do it | Any member | `COMMUNICATION_LOCAL` or `COMMUNICATION_TENANT` |
+| What it acts on | Everything one member writes | One post, comment or reply |
+| Is the author aware | No | Yes, the content is visibly held or hidden |
+| Who can undo it | The member who blocked | Any moderator for that scope |
+| Record kept | A private entry on the blocker's own list | The moderation queue and the audit log |
+
+Blocking is not a report. If content breaks your rules, it still has to be moderated or deleted, and blocking the author leaves it up for every other member.
+
+---
+
+## What administrators can see
+
+Nothing. There is no admin screen, no report and no export that lists who has blocked whom. Every member sees their own blocks and only their own, on their own profile. An administrator opening a member's profile does not get the tab, and asking the API for the block list returns the caller's own blocks even for a tenant admin.
+
+<Warning>
+Because blocks are invisible to administrators, "that member stopped posting" and "her comments never show up for me" can both be self-inflicted. Ask the member to check **Settings & Privacy** and then **Blocked users** on their own profile before you investigate anything else.
+</Warning>
+
+---
+
+## Common questions
+
+<AccordionGroup>
+  <Accordion title="A member says posts from one person never reach them">
+    Have them open their own profile, then **Settings & Privacy** and **Blocked users**. If the person is on the list, **Unblock** restores everything they wrote, everywhere in the forum, immediately.
+  </Accordion>
+
+  <Accordion title="Can a member block an administrator to hide announcements?">
+    No. Anybody ranked `HR_LOCAL` or above, and every tenant admin, cannot be blocked, and blocks made before somebody was promoted are dropped when the promotion takes effect.
+  </Accordion>
+
+  <Accordion title="Does blocking stop notifications and emails?">
+    No. Blocking filters the forum only. A reply or a mention from a blocked member still produces a notification, and it still follows the member's notification settings. See [Notifications](/platform/notifications).
+  </Accordion>
+
+  <Accordion title="Someone blocked a support agent. Do tickets disappear?">
+    No. Support tickets and issues are excluded from blocking, so a queue is never emptied by somebody's personal block.
+  </Accordion>
+
+  <Accordion title="Is the blocked member ever told?">
+    No. There is no notification, nothing changes on their side, and they keep seeing the blocker's content as before. A block is one way.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related
+
+- [Discussions](/platform/discussion) posting, comments and reactions
+- [Moderation](/platform/discussion/moderation) the organization-wide way to take content down
+- [Permissions](/platform/permissions) what the permission names above mean
+- [Privacy Settings](/platform/users/privacy-settings) the other member-owned controls on the same profile screen
+- [Notifications](/platform/notifications) what still reaches a member after a block

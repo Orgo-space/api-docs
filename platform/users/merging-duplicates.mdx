@@ -102,11 +102,23 @@ changes.
   push tokens and any active impersonation session are deleted.
 - A source **contact** is deleted outright.
 - A source **member** is kept as a tombstone so nothing breaks: their status
-  becomes inactive, their email and username are prefixed so the address is free
-  for reuse, their identity link is cleared, and their first name is prefixed
-  with `[MERGED]`.
-- Both profiles get a merge entry in their Logs tab, recording who did it and
-  which record it was merged into.
+  becomes **Deleted**, their email and username are prefixed so the address is
+  free for reuse, their identity link is cleared, and their first name is
+  prefixed with `[MERGED]`. A deleted record is hidden wherever deleted members
+  are hidden: the member list, search, duplicate suggestions, email lists and
+  campaigns. It cannot be opened or edited afterwards, so undo is the only route
+  back.
+- The source drops out of any manual list it was in: it stops being counted,
+  stops appearing in the recipients table, and stops receiving campaigns sent to
+  that list. Its place in the list is not moved to the target, so add the target
+  by hand if it should be on the list.
+- The chapter does not move. The survivor keeps its own chapter, even though the
+  source's roles do move across, so check the Roles tab afterwards when the two
+  records sat in different chapters.
+- For a member-to-member merge, both profiles get a merge entry in their Logs
+  tab, recording who did it and which record it was merged into. When the source
+  is a contact, only the surviving member gets an entry, and a contact-to-contact
+  merge writes none: **Merge History** is the record for those.
 
 ---
 
