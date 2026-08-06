@@ -114,5 +114,121 @@
     "alt": "Moderation queue with a Pending review table showing the post text, flagged words, author and group with Approve and Reject buttons, a Rejected posts table below, and the custom blocked words editor",
     "status": "new",
     "note": "Held posts must sit on discussions the account can moderate: general feed (no unit) and joinable groups are COMMUNICATION_TENANT, local centers are COMMUNICATION_LOCAL, and private groups never enter the queue at all. The seeded posts are on the general feed. Tall viewport so both tables and the words editor fit in one frame."
+  },
+  {
+    "id": "block-post-menu",
+    "image": "/images/platform/discussion/block-post-menu.png",
+    "usedOn": [
+      "platform/discussion/blocking-members.mdx"
+    ],
+    "tenant": "t187c-blocker",
+    "route": "/discuss/8947",
+    "routeHint": "Signed in as the ordinary member Adrian Whitfield (adrian.whitfield.209246@example.org, no permissions), open the Communications Committee thread 8947 'Refreshing the member newsletter: what should stay and what should go?' started by Iris Vargas (209201, no permissions, so blockable) and click the three-dot button at the top right of the post. The menu holds Report, Block user and Copy discussion link. Block user is only in the menu when the post owner is neither the viewer nor block protected, so a thread started by an HR_LOCAL or admin member (for example anything by Nora Vargas 209197) shows a two-item menu instead and is the wrong subject.",
+    "actions": [
+      "click [data-icon=\"ellipsis-vertical\"]"
+    ],
+    "waitFor": "text=Copy discussion link",
+    "viewport": "desktop",
+    "alt": "Open three-dot menu on a discussion post by Iris Vargas in the Communications Committee, listing Report, Block user and Copy discussion link",
+    "status": "new",
+    "note": "The post three-dot button is the only ellipsis-vertical icon on the page for an ordinary member, so [data-icon=\"ellipsis-vertical\"] with the runner's .first() resolves to it. waitFor uses Copy discussion link rather than Block user because it is the last item and only exists once the menu is painted."
+  },
+  {
+    "id": "block-comment-menu",
+    "image": "/images/platform/discussion/block-comment-menu.png",
+    "usedOn": [
+      "platform/discussion/blocking-members.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/discuss/8957",
+    "routeHint": "The comment three-dot menu is NOT rendered for an ordinary member. CommentItem.vue:54 gates the whole dropdown on `comment.owner.id === user.id || isModerator || canAdministerDiscussion`, so Block user on a comment is only reachable by the comment's own author, a moderator, or someone who can administer the discussion. This shot therefore uses the ADMIN_TENANT session on the organization-feed thread 8957 'Collaboration opportunities' (unit NULL, so isModerator resolves through COMMUNICATION_TENANT). The first comment is by Oliver Whitfield (209220, FINANCIAL_LOCAL, which ranks below HR_LOCAL and is blockable), which is why Block user appears beside the moderator actions. Pick a different thread and the first comment may be by an HR_LOCAL member, whose menu stops at Report.",
+    "actions": [
+      "scroll 900",
+      "click .button.is-small.is-white.p-2"
+    ],
+    "waitFor": "text=Block user",
+    "viewport": "desktop",
+    "alt": "Open three-dot menu on a comment by Oliver Whitfield inside a discussion, listing Remove, Moderate, Report and Block user",
+    "status": "new",
+    "note": "Comment menu buttons carry .button.is-small.is-white.p-2 while the post menu button is .button.is-white.is-rounded, so this selector skips the post menu and the runner's .first() lands on the first comment. The scroll is required: without it the first comment sits at the bottom edge and the menu opens downwards off-frame, so the capture showed only Remove and Moderate. Remove and Moderate are in frame because the session holds moderation rights, which is the only way this menu renders at all."
+  },
+  {
+    "id": "block-confirm-dialog",
+    "image": "/images/platform/discussion/block-confirm-dialog.png",
+    "usedOn": [
+      "platform/discussion/blocking-members.mdx"
+    ],
+    "tenant": "t187c-blocker",
+    "route": "/discuss/8947",
+    "routeHint": "Same thread and account as block-post-menu: open the post three-dot menu, then choose Block user. A Buefy confirm dialog opens titled Block user with the message 'You will no longer see posts and comments written by this member.' and Cancel plus a red Block user button. Capture stops here: confirming is what creates the block, and the block for the feed and settings shots is made separately so this spec can be re-run without writing anything.",
+    "actions": [
+      "click [data-icon=\"ellipsis-vertical\"]",
+      "click text=Block user",
+      "wait 1200"
+    ],
+    "waitFor": "text=You will no longer see posts and comments written by this member.",
+    "viewport": "desktop",
+    "alt": "Confirmation dialog titled Block user reading You will no longer see posts and comments written by this member, with Cancel and a red Block user button",
+    "status": "new",
+    "note": "waitFor is the dialog body text, which cannot exist until the dialog is open, so the shot cannot fire on the menu alone. The dialog's confirm button carries the same 'Block user' label as the menu item; the click action matches the menu item first because the dialog does not exist yet."
+  },
+  {
+    "id": "block-feed-before",
+    "image": "/images/platform/discussion/block-feed-before.png",
+    "usedOn": [
+      "platform/discussion/blocking-members.mdx"
+    ],
+    "tenant": "t187c-blocker",
+    "route": "/discuss?unit=15670",
+    "routeHint": "The before half of the before/after pair. Communications Committee (unit 15670) holds exactly three threads: two by Iris Vargas ('Upcoming activities and events' and 'Refreshing the member newsletter: what should stay and what should go?') and one by Freya Ashford ('Share your achievements'). The action clicks the layout toggle to the right of the Latest sort control, which switches the feed from image cards to compact rows so all three fit in one frame; in card layout only one and a half cards fit at 1080px. MUST be captured while Adrian Whitfield has no block on Iris Vargas.",
+    "actions": [
+      "click .discuss-sort-bar-controls > button.discuss-sort-btn",
+      "wait 1500"
+    ],
+    "waitFor": "text=Refreshing the member newsletter",
+    "viewport": "desktop",
+    "alt": "Communications Committee discussion list in compact layout showing three threads, two by Iris Vargas and one by Freya Ashford",
+    "status": "new",
+    "note": "Pairs with block-feed-after, which must be captured from the same route and viewport after the block exists. The layout toggle is the direct-child button of .discuss-sort-bar-controls; the other .discuss-sort-btn sits inside the sort dropdown's trigger."
+  },
+  {
+    "id": "block-feed-after",
+    "image": "/images/platform/discussion/block-feed-after.png",
+    "usedOn": [
+      "platform/discussion/blocking-members.mdx"
+    ],
+    "tenant": "t187c-blocker",
+    "route": "/discuss?unit=15670",
+    "routeHint": "The after half of the pair, identical route, viewport and actions to block-feed-before, captured once Adrian Whitfield has blocked Iris Vargas through the UI. Both Iris threads are gone and only Freya Ashford's 'Share your achievements' remains. Filtering is done by the Doctrine collection extension, so the list is filtered before it is counted. To reproduce: capture block-feed-before first, block Iris Vargas from the thread 8947 post menu, then capture this one, then unblock from Settings & Privacy if the instance should be left clean.",
+    "actions": [
+      "click .discuss-sort-bar-controls > button.discuss-sort-btn",
+      "wait 1500"
+    ],
+    "waitFor": "text=Share your achievements",
+    "viewport": "desktop",
+    "alt": "The same Communications Committee discussion list after blocking, with both Iris Vargas threads gone and only Freya Ashford's Share your achievements remaining",
+    "status": "new",
+    "note": "waitFor can only assert what remains, never what is absent, so this spec is verified by opening the PNG and confirming no Iris Vargas row is present."
+  },
+  {
+    "id": "blocked-users-panel",
+    "image": "/images/platform/discussion/blocked-users-panel.png",
+    "usedOn": [
+      "platform/discussion/blocking-members.mdx"
+    ],
+    "tenant": "t187c-blocker",
+    "route": "/users/edit/209246",
+    "routeHint": "Own profile -> Settings & Privacy -> Blocked users. The route is /users/edit/{id}; 209246 is Adrian Whitfield, the capture account itself, because the Blocked users button is rendered only when item.id === user.id, so this panel does not exist on anybody else's profile, not even for an administrator. Do NOT rely on the ?setting=blockedUsers deep link alone: it sets openedSettings and pre-loads /user_blocks, but the settings pills live inside the Settings & Privacy tab and the page still opens on Profile, so the capture came out as the name and date-of-birth form. Both clicks are required. Requires at least one live block, otherwise the panel reads 'You have not blocked anyone.'",
+    "actions": [
+      "click text=Settings & Privacy",
+      "wait 1200",
+      "click [class*=\"button\"]:has-text(\"Blocked users\"):visible",
+      "wait 1500"
+    ],
+    "waitFor": "text=Iris Vargas",
+    "viewport": "desktop",
+    "alt": "Blocked users panel on the member's own profile reading You do not see posts or comments written by these members, with a table listing Iris Vargas, the date she was blocked, and an Unblock button",
+    "status": "new",
+    "note": "User/Update.vue renders the Blocked users pill twice, once per layout branch, and only one of the two is visible. A bare 'click text=Blocked users' resolves to the hidden copy through the runner's .first() and times out, leaving a screenshot of the Profile tab, so the selector pins :visible. waitFor is the blocked member's name so the shot cannot fire on an empty panel."
   }
 ]
