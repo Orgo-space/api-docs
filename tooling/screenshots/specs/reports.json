@@ -1,0 +1,103 @@
+[
+  {
+    "id": "reports-empty",
+    "image": "/images/platform/reports/reports-empty.png",
+    "usedOn": [
+      "platform/reports.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/reports",
+    "routeHint": "Administration -> Reports in the sidebar (beside Ask Orgo). ADMIN_TENANT only. This is the state BEFORE any report exists, so it can only be captured while report_definition holds no row for tenant 282 - which is why it is parked at 'keep' after the first run: the three demo reports seeded by capture/seed-reports.mjs make the list non-empty and this spec would then photograph the populated table instead. To retake: DELETE FROM report_definition WHERE tenant_id = 282 (check docs_instance_marker first), capture, then re-run capture/seed-reports.mjs.",
+    "actions": [
+      "wait 1500"
+    ],
+    "waitFor": "text=No reports yet",
+    "viewport": "desktop",
+    "alt": "Reports page with no saved reports, showing the No reports yet empty state, the line Build a custom spreadsheet from your members, payments, events and more, and a Create your first report button under the New report button",
+    "status": "keep",
+    "notes": "Parked at 'keep' after its first capture on 2026-08-07: the demo tenant now holds three saved reports, so re-running this spec would photograph the populated table under the empty-state name. See routeHint for how to reach the empty list again."
+  },
+  {
+    "id": "reports-builder",
+    "image": "/images/platform/reports/reports-builder.png",
+    "usedOn": [
+      "platform/reports.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/reports/create",
+    "routeHint": "Reports -> New report. Members is the default starting point (Form.vue applyDefaultEntity prefers User), so no chip click is needed. The field groups start collapsed: the first .report-field-group-head is the root group ('Members'), the rest are the to-one relations. Address the group heads by CSS, never by text: the sidebar also carries 'Members', and the relation groups are labelled with the schema's long descriptions. Field labels come from GET /report_schema and are the descriptions too ('Date user joined the organization'). The preview never runs on its own - it loads only when Run preview is pressed - so the last action before the shot must be that button, and the waitFor must be a rendered preview row rather than the panel. Tick a checkbox by clicking its .control-label span, not the .report-field-option label: Playwright's :text-is() matches only the SMALLEST element holding the text, so `.report-field-option:text-is(\"Email\")` matches nothing and every tick is silently skipped (it cost one capture of an empty builder). Framing: the click on Run preview scrolls the pane down by ~275px, which is deliberate - at 1290 high the report name field and the preview rows cannot both be in frame (the builder is ~1900px tall), and the ticked columns plus real rows are what this image is for; the name field is visible in reports-field-groups and reports-filters instead. 'tall' fits the whole builder but drops the sidebar and leaves ~600px of empty canvas, and a selector crop to .report-builder tears (the element is taller than the viewport and the app scrolls an inner pane, so Playwright stitches the app header into the top and cuts the right edge).",
+    "actions": [
+      "fill .report-builder-config input.input | Member export by chapter",
+      "click .report-field-group-head",
+      "click .report-field-groups > div:nth-child(1) .control-label:text-is(\"First name\")",
+      "click .report-field-groups > div:nth-child(1) .control-label:text-is(\"Last name\")",
+      "click .report-field-groups > div:nth-child(1) .control-label:text-is(\"Email\")",
+      "click .report-field-groups > div:nth-child(1) .control-label:text-is(\"Date user joined the organization\")",
+      "click .report-field-groups > div:nth-child(2) .report-field-group-head",
+      "click .report-field-groups > div:nth-child(2) .control-label:text-is(\"Display name (used for LocalCenter, Group, etc.)\")",
+      "click .report-field-groups > div:nth-child(2) .report-field-group-head",
+      "click .report-preview-body button.is-primary",
+      "wait 2500"
+    ],
+    "waitFor": ".report-preview-body tbody tr",
+    "viewport": "wide",
+    "alt": "Report builder named Member export by chapter with Members chosen as the starting point, the Members field group expanded and First name, Last name, Email and Date user joined the organization ticked, and the preview below listing members with their local center name",
+    "status": "new",
+    "notes": "The preview count reads 'showing 10 of 10' for a report matching 382 members. That is the product, not a bad capture: ReportPreviewController forces limit=10, and QueryCompiler::execute() collapses totalCount to the number of returned rows whenever the limit differs from the default 50 (the 'top N' rule inherited from Ask Orgo). Do not re-capture chasing a real total."
+  },
+  {
+    "id": "reports-field-groups",
+    "image": "/images/platform/reports/reports-field-groups.png",
+    "usedOn": [
+      "platform/reports.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/reports/edit/507b7ce1-e2d8-4e07-a27f-ea901ddd32e9",
+    "routeHint": "Reports -> open 'Member export by chapter' (uuid from capture/seed-reports.mjs; re-seeding mints a new one, so update this route after a re-seed). Opening a saved report expands every group that holds a selected column (Form.vue hydrateFromItem), so both actions here CLOSE a group again - the subject is the collapsed row of groups with their count pills. Groups are addressed by CSS position because the sidebar also reads 'Members' and because the relation groups carry the schema's long descriptions as labels.",
+    "actions": [
+      "click .report-field-group-head",
+      "click .report-field-groups > div:nth-child(2) .report-field-group-head",
+      "wait 1200"
+    ],
+    "waitFor": ".report-field-count",
+    "viewport": "desktop",
+    "alt": "Field groups of a members report, all collapsed: the Members group with a count of 5 and the related-record groups below it, the local center group carrying a count of 1 and the member type, town and fee tier groups with no count",
+    "status": "new"
+  },
+  {
+    "id": "reports-list",
+    "image": "/images/platform/reports/reports-list.png",
+    "usedOn": [
+      "platform/reports.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/reports",
+    "routeHint": "Administration -> Reports. Three saved reports built through the builder by capture/seed-reports.mjs. The row actions (download, edit, delete) are always rendered, not hover-revealed, so the hover here is only to show the row highlight. The 'Based on' column prints the raw root entity name (User / ProductPayment / EventAttend) - that is the product, not a capture defect.",
+    "actions": [
+      "hover .orgo-table-wrap tbody tr",
+      "wait 800"
+    ],
+    "waitFor": "text=Payments export by date",
+    "viewport": "desktop",
+    "alt": "Reports list with three saved reports - Member export by chapter, Event attendee contact list and Payments export by date - each row showing what it is based on, when it was last updated, and download, edit and delete buttons",
+    "status": "new"
+  },
+  {
+    "id": "reports-filters",
+    "image": "/images/platform/reports/reports-filters.png",
+    "usedOn": [
+      "platform/reports.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/reports/edit/6e02e0a3-deb2-4f86-b000-4560b479e238",
+    "routeHint": "Reports -> open 'Payments export by date' -> Filters tab (uuid from capture/seed-reports.mjs; re-seeding mints a new one). The two conditions are saved on the report, not typed here: run.mjs has no verb for a native <select>, so a filter cannot be built by a spec - the report is built by the seeding script and the spec only opens the tab. The AND label between the rows is rendered by .rf-logic and is what this capture is for.",
+    "actions": [
+      "click .tabs-pill nav.tabs li:nth-child(2) a",
+      "wait 1200"
+    ],
+    "waitFor": ".rf-logic",
+    "viewport": "wide",
+    "alt": "Filters tab of the Payments export by date report with two stacked conditions, Date created after 2026-01-01 and Date created before 2026-07-01, joined by an AND label, above an Add filter button",
+    "status": "new"
+  }
+]
