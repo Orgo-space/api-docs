@@ -59,7 +59,7 @@ There is no recurrence feature. For a weekly meeting, create the first event and
 
 This block only appears if you can manage events (`EVENT_LOCAL` or the tenant's public-posting permission).
 
-**Access** is **Free** or **Paid**. Paid is only offered when the Online Payments module is active, and only to holders of `FINANCIAL_TENANT` or `EVENT_TENANT`. Choosing Paid turns the event into a ticketed one and creates a linked product behind the scenes, plus a Stripe product when a Stripe account is connected. See [Ticketing](/platform/events/ticketing).
+**Access** is **Free** or **Paid**. Paid is only offered when the Online Payments module is active, and only to holders of `FINANCIAL_TENANT` or `EVENT_TENANT`. Choosing Paid turns the event into a ticketed one and creates a linked product behind the scenes, plus a Stripe product when a Stripe account is connected. Saving a Paid event needs `EVENT_TENANT` specifically. `FINANCIAL_TENANT` reveals the option but the save is rejected with a permission error. See [Ticketing](/platform/events/ticketing).
 
 **Audience** is **Members only** or **Public**. The Public option is shown only if you hold the permission named in **Who Can Create Public Events**, and it is hidden entirely for non-joinable (private) groups. The server enforces both rules, so a request that sets Public without the permission is saved as Members only rather than rejected.
 
@@ -94,13 +94,13 @@ This block only appears if you can manage events (`EVENT_LOCAL` or the tenant's 
 
 **Restrict editing to user type** appears when **Restrict Event Editing by User Type** is on and you hold `EVENT_TENANT` or `ADMIN_TENANT`. Local users then need the chosen user type to edit the event, and deleting it requires `EVENT_TENANT`.
 
-**Propagate event to all local centers** appears on creation only, for `EVENT_TENANT` holders, when both the Local Centers module and **Propagate Events to Local Centers** are on, and the selected group is not private. Saving then creates one **published** copy in every active local center rather than a single event, and returns you to the events list. A second toggle, **Send invites to members**, emails the members of all those centers.
+**Propagate event to all local centers** appears on creation only, for `EVENT_TENANT` holders, when both the Local Centers module and **Propagate Events to Local Centers** are on, and the selected group is not private. Saving then creates one **published** copy in every active local center rather than a single event, and returns you to the events list. A second toggle, **Send invites to members**, adds every member of all those centres to each copy's participant list as **Invited**. It does not currently send any email, so announce the event separately.
 
 ---
 
 ## Draft, publish, invite
 
-New events are saved as **drafts** and are visible only to people who can manage them. An event whose dates are already in the past is published immediately on save.
+New events are saved as **drafts**. A draft appears in the events list only for the person who created it; other managers can open it by direct link, and ordinary members are turned away. An event whose dates are already in the past is published immediately on save.
 
 Open the event and the draft banner reads "Only you can see this event" with a **Publish Event** button.
 
@@ -120,9 +120,9 @@ Open the event and the draft banner reads "Only you can see this event" with a *
 
 ## After publishing
 
-Editing is at **Modify** in the event sidebar. Everything stays editable except the hosting group, which locks on publish. Attendees are not told automatically when you change details, so send them a message from the event's **Messages** entry.
+Editing is at **Modify** in the event sidebar. Everything stays editable except the hosting group, which the form locks on publish. Attendees are not told automatically when you change details, so send them a message from the event's **Messages** entry.
 
-Deleting is blocked while any attendee has a payment attached.
+Deleting behaves differently either side of five participants. Under five, the delete is refused if any attendee has a payment attached. From five upwards the event is hidden rather than erased: it disappears from every list and its address stops working, but the record and its attendees are kept. There is no undo button, so recovering one means asking Orgo support.
 
 ---
 

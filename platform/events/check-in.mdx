@@ -20,8 +20,9 @@ list, what they paid for, and whether they have already been let in.
 
 ## Where the code comes from
 
-Each registration gets its own code, generated when the registration is confirmed. Guest tickets each
-get their own, so a member bringing three people hands over four different codes.
+Each registration gets its own code the moment the row is created, whatever its status. What
+confirmation adds is the emailed ticket carrying that code. Guest tickets each get their own, so a
+member bringing three people hands over four different codes.
 
 Attendees find theirs in three places:
 
@@ -43,20 +44,23 @@ locationless event with simple RSVP still produces a code on screen, but no atta
 
 This is the thing to sort out before the doors open, not on the day.
 
-| How you scan | Permission needed |
-|--------------|-------------------|
-| Phone camera, opening the check-in page in a browser | `HR_TENANT` or `EVENT_TENANT` (`ADMIN_TENANT` covers both) |
-| Scanner inside the Orgo mobile app | `ADMIN_TENANT`, `EVENT_TENANT`, or `EVENT_LOCAL` on the event's group |
+| Which code you scan | Permission needed |
+|--------------------|-------------------|
+| The code on the emailed PDF ticket, scanned with any phone camera or from the Orgo mobile app | `HR_TENANT` or `EVENT_TENANT` (`ADMIN_TENANT` covers both) |
+| The Event App badge code, which opens the Event App scanner | Event App access to that event, plus `ADMIN_TENANT`, `EVENT_TENANT`, or `EVENT_LOCAL` on the event's group to check anyone in |
 
 <Warning>
-Local events permission is not enough for the plain camera route. Somebody with `EVENT_LOCAL` who
-scans with their phone camera gets an access error even though the ticket is perfectly valid. Give
-door staff `EVENT_TENANT`, or have them scan from inside the mobile app.
+Local events permission is not enough for the emailed ticket code. Somebody with `EVENT_LOCAL` who
+scans a PDF ticket gets an access error even though the ticket is perfectly valid. Give door staff
+`EVENT_TENANT`, or have them work in the Event App and scan attendees' badge codes there, where
+`EVENT_LOCAL` is enough. The Event App scanner refuses your own badge, so a helper needs someone
+else's code to test with.
 </Warning>
 
 Marking somebody present without a scan is wider: the event owner, `EVENT_LOCAL` on the event's group,
 `HR_TENANT` and admins of the event's group can all set an RSVP to **Attended** from the participant
-list.
+list, and the attendee can set their own row. A refunded registration is the exception: its row shows
+a static **Refunded** tag with no RSVP to change.
 
 ---
 
@@ -105,8 +109,10 @@ There is no way to issue a bare code without a registration behind it.
   </Accordion>
 
   <Accordion title="There is no Scan button on my laptop">
-    The in-app scanner is only rendered in the Orgo mobile app. On a laptop, scan with a phone camera
-    and use the page that opens, or check people in manually from the participant list.
+    The scanner on the event page is rendered only inside the Orgo mobile app. Two things still work
+    on a laptop: the Event App's own **Scan QR** button, which runs in any browser and accepts
+    `EVENT_LOCAL`, and checking people in by hand from the participant list. You can also scan an
+    emailed ticket with a phone camera and use the page it opens, which needs `EVENT_TENANT`.
   </Accordion>
 
   <Accordion title="The camera never starts">
@@ -121,9 +127,11 @@ There is no way to issue a bare code without a registration behind it.
   </Accordion>
 
   <Accordion title="An attendee says the code never arrived">
-    Check their registration first. Codes are issued when a registration is confirmed, so an
-    attendee sitting at **Invited**, **Pending approval** or **Awaiting payment** has nothing to
-    receive. Confirm the row, which reissues the ticket by email.
+    Check their registration first. The ticket email goes out when a registration is confirmed, so
+    an attendee sitting at **Invited** has a code but no email yet. Use the confirm action on their
+    row, which sends the ticket. A row at **Pending approval** or **Awaiting payment** has no
+    confirm action at all: move it to **Invited** first, or set it to **Registered** and accept
+    that no email is sent.
   </Accordion>
 
   <Accordion title="Internet drops at the venue">

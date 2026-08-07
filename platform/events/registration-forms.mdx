@@ -117,6 +117,7 @@ GDPR policy URL, the terms checkbox when it has a terms URL. Both come from
 
 | Setting | What it does |
 |---------|-------------|
+| **Display title** | A switch under its own **Display** heading at the top of the tab, on by default, recording whether the form's title is shown above the fields. |
 | **Selected color** | Highlight colour for the selected ticket and other accents on the public event page. Defaults to `#FFE089`. |
 | **Button color** | Colour of the primary buttons on the public event page. Defaults to `#3173EE`. |
 | **Hero image border radius** | Corner rounding of the event's hero image, for example `14px`. |
@@ -134,8 +135,11 @@ selected colour if you want the rounding to take effect.
   same person answering differently at two events keeps two answers.
 - **Standard answers** update the profile as in the table above.
 - **The participant export** contains exactly the standard fields on the form, plus every custom
-  field. Checkbox, radio and dropdown answers export as their visible labels, dates as `YYYY-MM-DD`.
-  Exporting needs `EVENT_TENANT` or `EVENT_LOCAL` on the event.
+  field, once a form layout has been saved. An event that requires a form but has no saved layout
+  exports all ten profile fields instead, and an event that does not require a form exports six
+  legacy fields: phone, organisation, role, LinkedIn, X and Instagram. Checkbox, radio and dropdown
+  answers export as their visible labels, dates as `YYYY-MM-DD`. Exporting needs `EVENT_TENANT`,
+  `EVENT_LOCAL` on the event, or event ownership.
 
 Decide what you need before the event: you cannot ask retrospectively. Be sparing with **required**,
 since every mandatory field is a reason to abandon registration, and on a paid event that is a lost

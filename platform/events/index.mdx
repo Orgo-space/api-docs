@@ -86,9 +86,9 @@ Every event belongs to one place, chosen in the **Group** field on the event for
 | A **local center** | People in that center. Creating here follows that chapter's own **Who can create events in this chapter** setting, which is `EVENT_LOCAL` until the chapter changes it. See [chapter event permissions](/platform/groups/local-groups#creating-a-chapter). |
 | A **group** | Group members. If the group is marked so that only its admins can create events, you need to be a group admin or owner, or hold `ADMIN_TENANT` or `EVENT_TENANT`. |
 
-Chapters set their own bar. **Who can create events in this chapter**, on the chapter edit form, is one of **Event managers (default)** (`EVENT_LOCAL`), **Any member of this chapter** (`USER`), or **Chapter admins only** (`ADMIN_LOCAL`). `ADMIN_TENANT` clears all three. `EVENT_TENANT` clears the first two, but not **Chapter admins only**: that one is satisfied by chapter admins and organization admins alone, so an organization-wide event manager is refused there. The setting covers only the chapter it is set on and is never inherited by the chapters below it, and anyone below the bar is refused on save with *You do not have permission to create events in this local center*.
+Chapters set their own bar. **Who can create events in this chapter**, on the chapter edit form, is one of **Event managers (default)** (`EVENT_LOCAL`), **Any member of this chapter** (`USER`), or **Chapter admins only** (`ADMIN_LOCAL`). **Any member of this chapter** in practice means any signed-in member of your organisation: chapter membership is not checked. `ADMIN_TENANT` clears all three. `EVENT_TENANT` clears the first two, but not **Chapter admins only**: that one is satisfied by chapter admins and organization admins alone, so an organization-wide event manager is refused there. The setting covers only the chapter it is set on and is never inherited by the chapters below it, and anyone below the bar is refused on save with *You do not have permission to create events in this local center*.
 
-Each event is also **Members only** or **Public**. Public needs the **Who Can Create Public Events** permission and is never offered for non-joinable (private) groups. Events start as **drafts**, visible only to people who can manage them, until someone publishes them. See [Create Event](/platform/events/create-event).
+Each event is also **Members only** or **Public**. Public needs the **Who Can Create Public Events** permission and is never offered for non-joinable (private) groups. Events start as **drafts** until someone publishes them. A draft appears in the events list only for the person who created it; other managers can open it by direct link, and ordinary members are turned away. See [Create Event](/platform/events/create-event).
 
 ---
 
@@ -114,14 +114,14 @@ The registration panel on the right only appears while the event is still ahead.
 | **Registration form** | the event requires a registration form | [The form builder](/platform/events/registration-forms) |
 | **Tickets** and **Payments** | ticketed event, plus `FINANCIAL_TENANT` or `EVENT_TENANT` | [Ticket types and orders](/platform/events/ticketing) |
 | **Analytics** | manager | [Registration and revenue metrics](/platform/events/analytics) |
-| **Messages** | `EVENT_TENANT`, `EVENT_LOCAL`, or `COMMUNICATION_TENANT` | Email the event's audience |
+| **Messages** | manager, and one of `EVENT_TENANT`, `EVENT_LOCAL` or `COMMUNICATION_TENANT` | Email the event's audience |
 | **Landing page** | the event is public or ticketed | Opens the [public page](/platform/events/public-page) |
 | **Copy link** | the event is published and public | Copies the shareable URL |
 | **Report** | **Event Reports** is on | [The post-event report](/platform/events/event-report) |
 | **Duplicate Event** | manager | Copies everything except attendees into a new draft, optionally in another group |
 | **Save as Template** | `ADMIN_TENANT` | Turns this event into a reusable [template](/platform/events/event-templates) |
 | **Email Templates** | `ADMIN_TENANT` | The email templates used by event mail |
-| **Delete** | manager | Blocked while any attendee has a payment attached |
+| **Delete** | manager | Refused if a payment is attached; from five participants up the event is hidden rather than erased |
 
 ---
 

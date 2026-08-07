@@ -24,8 +24,9 @@ who actually came.
 ## Who can open it
 
 **Participants** appears in the event sidebar for the event owner, `EVENT_LOCAL` or `ADMIN_LOCAL` on
-the event's group, `EVENT_TENANT` or `ADMIN_TENANT` organisation-wide, and admins of a private group
-for that group's events.
+the event's group, `EVENT_TENANT` or `ADMIN_TENANT` organisation-wide, and to the owner or an admin
+of the hosting group. When **Restrict Event Editing by User Type** is on, a local user whose type
+does not match the event's loses this even if they hold `EVENT_LOCAL`.
 
 Attendees never reach it. They get the **Participants** block on the event page, and only when they
 are registered themselves and the event has **Visibility of attendee list** on (event → **Modify** →
@@ -101,9 +102,18 @@ assuming everybody has been contacted.
 ### Capacity
 
 On an event with **Max capacity** set and no ticketing, registration is refused with "This event is
-full" once **Registered** participants reach the limit. Nobody is queued automatically: move people
-to **Waiting list** yourself, then promote them with the confirm action on their row when a place
-opens, which also sends a ticket.
+full" once **Registered** participants reach the limit.
+
+The **X / N Participants (M seats left)** line on the event page is not this number. It counts every
+participant row that has not been cancelled, including people who are only **Invited**, on the
+**Waiting list**, or awaiting payment, and including guest tickets. So the event page can say "This
+event is full" while sign-ups are still going through, most visibly after a bulk invite. The public
+event page and the refusal itself both count only **Registered**.
+
+Nobody is queued automatically: move people to **Waiting list** yourself. To let one in, set their
+registration to **Registered**, and note that this sends nothing. If they need a ticket by email, set
+them to **Invited** first and then use the confirm action on their row, which is the only status the
+confirm action accepts.
 
 ---
 
@@ -114,8 +124,10 @@ opens, which also sends a ticket.
   check-in action.
 - **Walk-ins** must exist on the list first: add them with **Invite**, then set them to Attended.
 
-The **Logs** button on a row shows every status change with a timestamp and who made it, for the
-event owner and `HR_TENANT`.
+A row-actions column carrying **Logs**, the confirm action, **Generate guest tickets** and **Remove**
+appears only for the person who owns the event and for `HR_TENANT`. An `EVENT_TENANT` or
+`EVENT_LOCAL` admin who does not own the event can still change statuses from the dropdowns but gets
+none of those four actions.
 
 ---
 
@@ -123,7 +135,8 @@ event owner and `HR_TENANT`.
 
 The control bar filters by name, email, RSVP, registration status, ticket type and an **Invited**
 checkbox; events with an agenda add a session selector. The list paginates at 100 rows, and the count
-above it includes guest tickets while the rows show only the people they were issued to.
+above it includes guest tickets and add-on attendees while the rows show only the people they were
+issued to.
 
 **Columns** offers Membership and Membership Fee (only with the fees module on), Organisation, Role,
 Email, Phone, LinkedIn, Date, and one column per custom field on the event's registration form, with
