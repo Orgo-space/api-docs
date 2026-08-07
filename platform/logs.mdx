@@ -61,9 +61,9 @@ The pills above the table combine, and the result is written into the page URL, 
 
 | Action | Written when |
 |---|---|
-| **create** | An adhesion, an identity submission, a unit or group, or an event attendance is created |
+| **create** | An adhesion, an identity submission, a unit or group, or an event attendance is created, or a tag is added to a member or contact profile |
 | **update** | A member profile is edited (the diff of changed fields), an adhesion or identity changes status, a unit or group is edited, an attendance changes, a contract is updated, a member's email is changed or their password is reset, an administrator unsubscribes a contact from the newsletter |
-| **remove** | A record is deleted through the application: newsletters and newsletter templates, email templates, events, courses and lessons, products, forms, users, adhesions, identities, contracts, contacts, roles, role groups, groups, local centers and units, plus discussions, posts and comments |
+| **remove** | A record is deleted through the application: newsletters and newsletter templates, email templates, events, courses and lessons, products, forms, users, adhesions, identities, contracts, contacts, roles, role groups, groups, local centers and units, plus discussions, posts and comments. Also written when a tag is removed from a member or contact profile, and when a [profile note](/platform/users/profile-activity) is deleted |
 | **moderate** / **unmoderate** | A discussion post or comment is hidden or restored |
 | **csv** | Members, role-group members, contacts, or a saved query are exported |
 | **upload_identity** | A member uploads an identity document |
@@ -88,6 +88,8 @@ Record merges are logged too, but they are not offered in the Action filter. Rev
 ### The Entity filter is narrower than the table
 
 The **Entity** column and filter are populated for deletions and for saved-query exports. Most edit entries identify their subject through the **User** column instead and carry no entity type, so filtering by, say, `User` will not return profile edits. To review edits to one member, filter by **User**, or open that member's profile and use its own log tab.
+
+The filter dropdown is also a fixed list, and it is shorter than the set of entity types the table displays. Tag changes (`ProfileTag`) and note deletions (`UserNote`, `ContactNote`) write rows that show their type in the **Entity** column but have no option in the filter, so they cannot be narrowed down that way. Filter by **User** and **Action** instead, or read them in order on that person's [Activity tab](/platform/users/profile-activity).
 
 ---
 

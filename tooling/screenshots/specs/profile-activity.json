@@ -1,0 +1,161 @@
+[
+  {
+    "id": "profile-activity-tab",
+    "image": "/images/platform/users/profile-activity-tab.png",
+    "usedOn": [
+      "platform/users/profile-activity.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/user/209251?tab=activity",
+    "routeHint": "Members -> open a member -> Activity tab (the ?tab query selects it). The tab only renders for a viewer holding HR_LOCAL or FINANCIAL_LOCAL over that member, or ADMIN_TENANT (client/src/views/User/ShowContent.vue canReadProfileActivity), AND with users.hasProfileActivity on for the tenant - it is enabled on tenant 282 only. A plain member sees no tab at all. 209251 (Emma Dubois, Williamsburg) was chosen because her donation (24 Feb 2026) and her form submission (11 Feb 2026) sit close together, so today's notes and tag changes plus one donation and one form all fit above the fold in three day groups. The notes and the tag add/remove were created through the UI on 2026-08-07 as julian.sorensen.207128@example.org (see capture/seed-activity.mjs and capture/seed-tags.mjs); tag Leadership was added and tag Sports removed, so 209251 now carries Arts + Leadership.",
+    "actions": [
+      "wait 2000"
+    ],
+    "waitFor": "text=Donated 50 usd",
+    "viewport": "wide",
+    "alt": "Activity tab on a member profile with the note composer at the top and the activity feed below it, showing tag, note, donation and form entries grouped by day",
+    "status": "new",
+    "notes": "The hero for the feature: it has to read as compose-above, history-below. Use 'wide' rather than 'tall' - tall (1920x2200) is treated as portrait by AppLayout and drops the left sidebar. Feed is newest-first with a 40-row page, so a member with a long donation history pushes the form entry off screen; keep to a member whose donation and form dates are close."
+  },
+  {
+    "id": "profile-activity-note-modal",
+    "image": "/images/platform/users/profile-activity-note-modal.png",
+    "usedOn": [
+      "platform/users/profile-activity.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/user/209251?tab=activity",
+    "routeHint": "Activity tab -> click a note row in the feed. A note row is clickable only when its meta carries text (ProfileTimeline.isNoteClickable), and the row label is the action name ('Called'/'Emailed') when the note has one, otherwise 'Note added'. Click the label span, not text=Called: the composer's Action <select> also contains an option reading 'Called' and sits earlier in the DOM, so a bare text match hits the option instead. Edit and Delete only render for the note's author or ADMIN_TENANT (canManageSelectedNote), mirroring the note PATCH/DELETE security expression - capture as the author.",
+    "actions": [
+      "click .timeline-label-text:text-is(\"Called\")",
+      "wait 1500"
+    ],
+    "waitFor": ".note-modal-text",
+    "selector": ".modal-card.note-modal",
+    "viewport": "wide",
+    "alt": "Note opened from the activity feed, showing the note text, a Called badge, the author name and avatar, the timestamp and the Edit and Delete buttons",
+    "status": "new",
+    "notes": "The author avatar needs the note author's logo to be a resolvable URL. The obfuscated demo data stores logo='demo_f'/'demo_m', and LogoThumbnail turns those into randomuser.me/<id>.jpg - but ProfileTimeline passes the avatar item as {logo, fullName} with no id, so the URL came out as women/NaN.jpg and the circle rendered blank. User 207128's logo was moved to the equivalent explicit form 'demo__https://randomuser.me/api/portraits/women/28.jpg' (the same image 207128 % 100 already resolved to, and the same demo__ convention DemoTenantDataController uses), which needs no id and leaves every other screenshot of that avatar pixel-identical. In production a logo is a real CDN filename, which also needs no id, so the blank was a demo-data artefact rather than a product defect."
+  },
+  {
+    "id": "profile-activity-setting",
+    "image": "/images/platform/users/profile-activity-setting.png",
+    "usedOn": [
+      "platform/users/profile-activity.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/users",
+    "routeHint": "Settings (gear) -> Modules -> Users & Profiles -> Configuration, Profile Settings section, last row. /settings is not a route and 404s. The switch is users.hasProfileActivity, which defaults to false: it gates the Activity tab AND closes the /user_notes, /contact_notes, /timeline and /timeline-actors endpoints server-side (ProfileActivityFeature). It is on for tenant 282 only - do not switch it on anywhere else.",
+    "actions": [
+      "scrollto text=Enable Profile Notes & Activity",
+      "wait 1500"
+    ],
+    "waitFor": "text=Enable Profile Notes & Activity",
+    "viewport": "desktop",
+    "alt": "Profile Settings section of the Users and Profiles module configuration, scrolled to the Enable Profile Notes and Activity switch with its help text",
+    "status": "new"
+  },
+  {
+    "id": "profile-activity-filters",
+    "image": "/images/platform/users/profile-activity-filters.png",
+    "usedOn": [
+      "platform/users/profile-activity.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/user/209251?tab=activity",
+    "routeHint": "Activity tab -> filter bar above the feed (TimelineFilters). Four type chips (Donations, Notes, Tags, Forms) toggle independently; Date, Author and Search are pill dropdowns and only one can be open at a time (each pill emits @open and the others close). Toggle the chips FIRST and open the Date pill LAST, otherwise the chip click closes the dropdown again. The Date pill offers exactly three presets: Last 7 days, Last 30 days, This year.",
+    "actions": [
+      "click [data-test=\"type-chip-note\"]",
+      "click [data-test=\"type-chip-tag\"]",
+      "click [data-test=\"date-pill\"] .pill-trigger",
+      "wait 1200"
+    ],
+    "waitFor": "text=Last 30 days",
+    "selector": ".profile-timeline",
+    "viewport": "wide",
+    "alt": "Activity filter bar with the Notes and Tags type chips active and the Date pill dropdown open on its three presets, over the filtered feed",
+    "status": "new"
+  },
+  {
+    "id": "profile-activity-form-answers",
+    "image": "/images/platform/users/profile-activity-form-answers.png",
+    "usedOn": [
+      "platform/users/profile-activity.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/user/209242?tab=activity",
+    "routeHint": "Activity tab -> click a 'Completed form' row; the modal loads GET /form_submissions/{id}/timeline-details. Deliberately a different member from the other captures: 209242 (Marcus Whitfield) submitted the Event Feedback Survey, whose demo answers are coherent and whose field types (dropdown, date, radio, textarea) all have explicit read-only branches in FormSubmissionAnswers.vue. The Volunteer Application Form that 209251 submitted is a poor subject here - the obfuscation pass left its answers in the wrong fields (Full Name reads 'I am very passionate about this community...'), and its email/phone/number fields fall through to the generic box branch.",
+    "actions": [
+      "click .timeline-label-text:has-text(\"Event Feedback Survey\")",
+      "wait 3500"
+    ],
+    "waitFor": "text=Areas for Improvement",
+    "selector": ".modal-card.form-modal",
+    "viewport": "tall",
+    "alt": "Form answers modal opened from a completed form entry, showing the form name and its answers as read-only fields",
+    "status": "new",
+    "notes": "Captured at the 'tall' viewport on purpose. The modal body is capped at max-height:70vh with its own scrollbar, so at 1290 high it opens on the first field and only ~290px of the form can be scrolled, which leaves an orphaned half radio group at the top of any scrolled crop; at 2200 high the whole submission fits in one shot and nothing is cut. Losing the sidebar at 'tall' does not matter here because the capture is cropped to the modal. Known demo-data defect visible in this image: the two radio groups (Overall Event Experience, Likelihood to Attend Future Events) render with nothing selected. FormSubmissionAnswers.vue:75 matches rawValue against the option KEY and the product's public form submits the key (FormPublicPage.vue:263), but the seeded answers store the option LABEL ('Excellent'), so nothing matches. A real submission renders the radio selected. Those rows were deliberately not rewritten: forms/form-responses-summary.png aggregates the same raw values by label, so changing one would put a stray '1' bucket into an already-published capture. Separately, no 'No answer' row is reachable on this data - FormSubmissionDetailsBuilder only writes that string for a field with no answer row, and every form_submission in tenant 282 answers every field of its form (verified by SQL); it would also only show for a field type with no explicit branch in FormSubmissionAnswers.vue (email, phone, number)."
+  },
+  {
+    "id": "contact-activity-panel",
+    "image": "/images/platform/users/contact-activity-panel.png",
+    "usedOn": [
+      "platform/contacts.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/contacts/show/23852",
+    "routeHint": "Contacts -> open a contact. A contact record has no tabs, so the Notes composer and the Activity panel are stacked cards in the left column rather than a tab (client/src/views/Contact/ShowContent.vue), which is the point of this capture. Both are gated by the same canReadProfileActivity computed as the member profile. They sit below the details, status and tags cards, so scroll them into view. 23852 (Hugo Vargas) carries three notes from different authors and one donation.",
+    "actions": [
+      "scrollto .profile-timeline",
+      "wait 1500"
+    ],
+    "waitFor": "[data-test=\"timeline-day\"]",
+    "viewport": "wide",
+    "alt": "Contact record with the Notes composer and the Activity panel stacked in the left column, the feed showing note and donation entries",
+    "status": "new",
+    "notes": "Scroll to the timeline, not to the Notes card: scrollIntoViewIfNeeded on the taller element parks its bottom at the viewport bottom, which leaves the Notes card above it in frame. Scrolling to the Notes card instead pins that card to the bottom and pushes the whole Activity panel below the fold, which is exactly what this capture must not do."
+  },
+  {
+    "id": "profile-activity-note-edit",
+    "image": "/images/platform/users/profile-activity-note-edit.png",
+    "usedOn": [
+      "platform/users/profile-activity.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/user/209251?tab=activity",
+    "routeHint": "Activity tab -> open a note -> Edit. Edit mode swaps the note text for a textarea and adds the Action select (—, Called, Emailed), with Cancel and Save replacing Edit and Delete. The Action control is a native <select> (Buefy b-select): its open dropdown is drawn by the browser outside the page, so Playwright cannot photograph it and this capture shows the control focused and closed instead. Do not fake it by setting size= on the select.",
+    "actions": [
+      "click .timeline-label-text:text-is(\"Called\")",
+      "wait 1200",
+      "click [data-test=\"edit-note\"]",
+      "wait 1000",
+      "click .note-modal select"
+    ],
+    "waitFor": "text=Cancel",
+    "selector": ".modal-card.note-modal",
+    "viewport": "wide",
+    "alt": "Note modal in edit mode with the note text in a textarea and the Action select below it, alongside Cancel and Save",
+    "status": "new"
+  },
+  {
+    "id": "profile-activity-empty-filtered",
+    "image": "/images/platform/users/profile-activity-empty-filtered.png",
+    "usedOn": [
+      "platform/users/profile-activity.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/user/209251?tab=activity",
+    "routeHint": "Activity tab -> Donations chip + Date = Last 7 days. That combination is empty for 209251 because her only donation is dated 24 Feb 2026 while the notes and tag changes are from today, and with only the donation type selected ProfileTimelineProvider skips the note and log sources entirely. The empty state renders the Clear filters button only when a filter is actually set (filtersActive); with no filters it reads 'No activity yet' instead.",
+    "actions": [
+      "click [data-test=\"type-chip-donation\"]",
+      "click [data-test=\"date-pill\"] .pill-trigger",
+      "click text=Last 7 days",
+      "wait 1500"
+    ],
+    "waitFor": "[data-test=\"timeline-empty-clear\"]",
+    "selector": ".profile-timeline",
+    "viewport": "wide",
+    "alt": "Activity feed filtered to donations in the last seven days, showing the no activity matches your filters empty state and the Clear filters button",
+    "status": "new"
+  }
+]

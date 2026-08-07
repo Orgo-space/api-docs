@@ -1,0 +1,352 @@
+---
+title: 'Reports'
+description: 'Build a report from your members, payments, events or votes, and download the whole result set as a CSV'
+"og:title": 'Reports | Orgo'
+"og:description": 'Build a report from your members, payments, events or votes, and download the whole result set as a CSV'
+"twitter:title": 'Reports | Orgo'
+"twitter:description": 'Build a report from your members, payments, events or votes, and download the whole result set as a CSV'
+---
+
+**Reports** is a builder for the exports your organisation runs again and again.
+You pick what the report is about, tick the columns you want, add filters, check
+the preview, and download a CSV. Nothing is typed as a query and nothing is
+capped at a page: the file holds every row that matched.
+
+**Built for** admins who need the same extract every month, or a one-off list
+with exactly the columns a colleague, an auditor or a funder asked for.
+
+**Replaces** exporting the member directory a page at a time, stitching several
+spreadsheets together, and asking a developer for a data pull.
+
+---
+
+## Where to find it
+
+| Surface | Route | Who can open it |
+|---|---|---|
+| **Reports** list | `/reports`, sidebar item **Reports** under Administration, beside **Ask Orgo** | `ADMIN_TENANT` only |
+| Build a report | `/reports/create` | `ADMIN_TENANT` only |
+| Edit a report | `/reports/edit/:item` | `ADMIN_TENANT` only |
+
+There is no module switch and no setting to turn on. Reports is available to
+every organisation on the platform, and the sidebar entry appears as soon as you
+hold `ADMIN_TENANT`.
+
+<Warning>
+`ADMIN_TENANT` is the only way in, for every part of the feature: building,
+previewing, exporting and downloading. There is no HR, finance or chapter
+version, so an `HR_TENANT` or `ADMIN_LOCAL` administrator cannot open Reports at
+all, and cannot be given a read-only or chapter-scoped copy of one. A report
+covers the whole organisation, so treat access to Reports as the same reach as
+access to every member record. [Scoped API tokens](/platform/api) are refused
+too: a scoped token never carries `ADMIN_TENANT`, whoever minted it.
+</Warning>
+
+---
+
+## Building a report
+
+<Steps>
+  <Step title="Choose what the report is about">
+    Pick one of seven starting points: members, contacts, payments, event
+    attendees, votes, companies or member roles. Everything else follows from
+    that choice, and one report has exactly one starting point. Each row in your
+    file will be one of these records.
+  </Step>
+  <Step title="Tick the columns">
+    Each starting point offers its own list of fields. Tick the ones you want and
+    they become the columns of the file, in the order you picked them.
+  </Step>
+  <Step title="Add columns from related records">
+    Alongside the record's own fields you can reach one step outwards, into a
+    record it belongs to: a payment's product and payer, a member's chapter and
+    membership type, an attendee's event. Those fields appear as extra columns
+    with the relation named in front of them, so the chapter's name arrives as
+    **Local Center Name** rather than a second column called **Name**.
+  </Step>
+  <Step title="Filter it down">
+    Add conditions until the report describes the group you mean. Filters are
+    typed to the field you chose, so a date field offers dates and a status field
+    offers its real list of values rather than a free text box.
+  </Step>
+  <Step title="Check the preview">
+    The preview runs as you build and shows the first 10 rows with the same
+    column headers the file will carry. Use it to confirm the shape before you
+    commit to a download.
+  </Step>
+  <Step title="Save it, then download">
+    Give the report a name and save it. From there, **Download** starts the
+    export.
+  </Step>
+</Steps>
+
+### Filters
+
+The operators you are offered depend on the type of the field, so you never have
+to know what a field is stored as.
+
+| Field | Operators |
+|---|---|
+| Text | **contains**, **equals** |
+| Number and amount | **equals**, **greater than**, **less than**, **at least**, **at most** |
+| Date | **on**, **after**, **before** |
+| Yes or no | **is** |
+| A field with a fixed list of values, such as a status | **is**, choosing from the real list |
+
+Every filter you add narrows the report further: they are combined with **and**,
+always. There is no **or**, no bracketing of one group of conditions against
+another, and no way to say "members in Berlin or Munich" in a single report. Run
+that as two reports, or filter on something the two have in common.
+
+The builder also has no sorting and no totals. A report is the rows and the
+columns you asked for; ordering, subtotalling and charting are things to do in
+your spreadsheet once the file has downloaded.
+
+---
+
+## What you can report on
+
+Seven starting points, each with its own fields and its own related records.
+
+| Report is about | Fields on the record | Related records you can add columns from |
+|---|---|---|
+| **Members** | 16 | Local Center, Type, Town current, Fee Tenant Product Price |
+| **Contacts** | 8 | Local Center |
+| **Payments** | 17 | Product, Subscription Profile, Contact, User, Price, Manual Fee Payment, Accepted By, Identity, Invoice, Company |
+| **Event Attendees** | 6 | Event, User, External contact, Product Payment, Product Price, Invoice |
+| **Votes** | 5 | Owner, Event |
+| **Companies** | 10 | Fee Tenant Product Price |
+| **Member Roles** | 4 | Role, User, Unit |
+
+Every related record in that table is one the row belongs to: a single product,
+a single chapter, a single event. That is the whole of what a report can reach.
+
+<Note>
+Lists of related records are deliberately left out. A member has many payments,
+many roles and many course enrolments, and adding one of those to a member
+report would turn one member into one row per payment, with the member's own
+details repeated down the file and every total inflated. So you cannot put
+members and their payments in one report, and you cannot step twice, from a
+payment to its payer to that payer's chapter.
+
+Turn it around instead: to see payments with member details, start the report
+from **Payments** and add columns from **User**. One payment has exactly one
+payer, so the row count stays honest. The same trick covers roles (start from
+**Member Roles**) and attendance (start from **Event Attendees**).
+</Note>
+
+---
+
+## Downloading the file
+
+**Download** hands the report to a background worker rather than making you wait
+at the screen, so a report matching a hundred thousand members behaves the same
+as one matching ten.
+
+A progress window opens and counts the rows as they are written. It updates
+live, and keeps checking on its own if the live connection drops, so the count
+keeps moving either way. You can leave it open or press **Continue in
+background** and carry on working. An export moves through **pending**, then
+**processing**, then **completed**, or **failed** if something went wrong.
+
+When it finishes you get the file two ways:
+
+| Where | How long the link lasts |
+|---|---|
+| **Download** in the progress window | About 15 minutes |
+| The **report is ready** email, sent to you whether or not the window is still open | 3 days |
+
+The email arrives every time, which is what makes a long export safe to walk
+away from. Come back to it tomorrow and the link still works.
+
+### The file itself
+
+- **CSV**, comma separated, UTF-8 with a byte order mark, so accented names and
+  non-Latin alphabets open correctly in Excel without an import step.
+- **Every matching row.** There is no row limit and nothing is truncated. Rows
+  are fetched 500 at a time behind the scenes and written straight to the file,
+  which is how a very large report stays within the worker's memory, but that
+  paging never reaches the file.
+- **Readable headers.** Field names are turned into words, and a column from a
+  related record is prefixed with the relation, for example `Local Center Name`
+  or `Product Name`. The headers match what the preview showed you.
+- **Named after the report**, so a saved report downloads under the same file
+  name every month.
+
+Every download is written to the [activity log](/platform/logs) with the report
+name and who asked for it.
+
+---
+
+## Saving, editing and re-running
+
+Saving a report stores the definition, not the data. Open it again next month,
+press **Download**, and it runs against today's records.
+
+The list at `/reports` shows each report's name, what it is about, and when it
+was last updated, with actions to open, edit or delete it.
+
+Editing a saved report changes what the next export contains. It does not touch
+files you have already downloaded, and it does not reach back into an export
+that is already running.
+
+<Warning>
+**Saved reports belong to the organisation, not to you.** Every report is
+visible to every `ADMIN_TENANT` administrator in your organisation, and any of
+them can open it, run it, edit it and delete it. The list shows no owner column,
+so there is no way to tell from the screen who built a report, and a report you
+rely on every month can be changed or removed by a colleague without warning.
+
+This is how the feature is meant to work: reports are a shared library of the
+organisation's standard extracts rather than private saved searches. Name them
+so their purpose is obvious to somebody who did not build them, and treat a
+report you depend on as shared infrastructure.
+</Warning>
+
+<Note>
+**Download exports the last saved version of the report.** If you change columns
+or filters on screen and press **Download** without saving first, you get the
+file the saved report describes, not what is in front of you. Save, then
+download.
+</Note>
+
+---
+
+## Limits
+
+| Limit | Value |
+|---|---|
+| Columns in one report | 20 |
+| Filters in one report | 20 |
+| Steps out to related records | 1 |
+| Related records joined | 6 |
+| Rows in the downloaded file | No limit |
+| Rows in the preview | 10 |
+
+---
+
+## How Reports differs from Ask Orgo and Database Queries
+
+Three features look adjacent on the sidebar and answer different questions.
+
+| | What you do | What comes back |
+|---|---|---|
+| **Reports** | Fill in a form: one of seven record types, columns, filters | A CSV of the whole result set, downloaded again whenever you need it |
+| **[Ask Orgo](/platform/insights)** | Type a question in your own words | A one-off answer on screen, as a table or chart, from a language model |
+| **[Database Queries](/platform/insights)** | Re-run a statement Ask Orgo wrote earlier and you saved | The saved query's results, exported a page at a time |
+
+**Database Queries** stores the statement Ask Orgo produced and replays it, so
+what it can answer is whatever the assistant managed to build that day. Reports
+is something you fill in yourself, from a fixed set of starting points, and its
+export walks the entire result set instead of one 500-row page.
+
+**Ask Orgo** is the right tool for a question you have not asked before, or one
+that needs grouping, a chart or arithmetic the report builder does not do. It
+involves a language model, which means it can reach further and can also
+misread you. Reports involves no model at all: you choose the columns, so the
+same report gives the same shape of file every time. Use Ask Orgo to explore,
+and a report for the file you download every month.
+
+---
+
+## Common questions
+
+<AccordionGroup>
+  <Accordion title="Can I give Reports to an HR admin or a chapter admin?">
+    No. Every route and every endpoint behind Reports requires `ADMIN_TENANT`,
+    and the sidebar entry is placed in code rather than drawn from your
+    configurable menu, so it cannot be moved onto another role's menu. There is
+    no chapter-scoped version and no read-only version.
+
+    If a colleague needs the numbers regularly, build the report, download it and
+    send them the file, or give them the [analytics
+    dashboards](/platform/insights) if a total is enough.
+  </Accordion>
+
+  <Accordion title="Why can I not put members and their payments in one report?">
+    Because a member has many payments, and a row can hold only one. Joining
+    them would give you one row per payment with the member's details repeated,
+    which is a fine list of payments and a badly wrong list of members: totals
+    and counts computed from it come out several times too high.
+
+    Start from **Payments** instead and add columns from **User**. You get every
+    payment with its payer's name, email and chapter beside it, and one row means
+    one payment. Roles and event attendance work the same way round.
+  </Accordion>
+
+  <Accordion title="I need columns from a record two steps away">
+    A report reaches one step out and stops. From a payment you can add the
+    payer's own fields, but not the payer's chapter, because that is a second
+    step.
+
+    Pick the starting point that puts what you need one step away. If the answer
+    genuinely needs two hops, run two reports and join them in a spreadsheet on
+    an id column, or ask the question in [Ask Orgo](/platform/insights), which
+    can follow a longer path.
+  </Accordion>
+
+  <Accordion title="Can I sort the report, or add a total row?">
+    Not in the builder. A report produces rows and columns; sorting, subtotals,
+    pivots and charts are spreadsheet work once the file is open. The one thing
+    worth deciding in Orgo is the filtering, because that is what keeps the file
+    to a size you can work with.
+  </Accordion>
+
+  <Accordion title="Can I write a filter that means one thing or another?">
+    No. Filters are always combined with **and**, and there is no grouping. A
+    report asking for members in Berlin or Munich has to be two reports.
+
+    Often there is a single condition that means the same thing: a chapter, a
+    tag, a membership type or a date range that both groups share. Look for that
+    before splitting the report in two.
+  </Accordion>
+
+  <Accordion title="Somebody else edited, or deleted, my report">
+    That is how saved reports work: they belong to the organisation, and every
+    organisation admin can open, edit and delete any of them. There is no owner
+    column and no per-report permission.
+
+    Rebuild it and give it a name that says what it is for and who relies on it.
+    If your organisation runs several standard extracts, agree a naming
+    convention so nobody tidies away a report they did not recognise.
+  </Accordion>
+
+  <Accordion title="I closed the progress window before the file was ready">
+    Nothing is lost. The export carries on running on its own, and the **report
+    is ready** email arrives when it finishes with a link that stays valid for 3
+    days. Open the report again afterwards if you would rather download it from
+    the screen.
+  </Accordion>
+
+  <Accordion title="The download link stopped working">
+    The link in the progress window is deliberately short lived, about 15
+    minutes, and the emailed one lasts 3 days. Both are meant to expire so a
+    forwarded link does not become a permanent open door to your organisation's
+    data.
+
+    Once a link has expired, open the report and press **Download** again. The
+    report re-runs against today's records, so the new file may differ from the
+    old one, which is usually what you wanted anyway.
+  </Accordion>
+
+  <Accordion title="I pressed Download twice">
+    The second press joins the run already in progress rather than starting a
+    second one, so you get one file and the report is not queried twice.
+  </Accordion>
+
+  <Accordion title="Can I schedule a report, or have it emailed every month?">
+    Not yet. A report runs when somebody presses **Download**. The email you get
+    is the delivery of that run, not a subscription.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related
+
+- [Insights & Ask Orgo](/platform/insights) for questions in plain language and the analytics dashboards
+- [Members](/platform/users) for the directory, its own filters and its paged export
+- [Membership fees](/platform/fees/fees) for the payment screens a payments report draws from
+- [Permissions](/platform/permissions) for what `ADMIN_TENANT` unlocks
+- [Activity log](/platform/logs) for the record of who downloaded what
+- [Email lists](/platform/emails/email-lists) for building a segment to send to, rather than a file to download

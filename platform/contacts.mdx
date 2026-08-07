@@ -86,19 +86,26 @@ Adding or editing a contact gives you these fields:
 Saving a contact with an email that already belongs to another contact, or to a member,
 is rejected. Orgo tells you which of the two it clashed with.
 
-<img src="/images/platform/support/contact-record.png" alt="Contact record showing details, status, newsletter state, tags and the notes thread" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/users/contact-activity-panel.png" alt="Contact record with Tags, Notes and Activity as stacked cards, the Notes card holding an Add a note about this contact box with an Action select, and the Activity card listing three Note added entries and a Donated 50 usd entry" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 The record page adds panels that are filled in as the contact interacts with you: **Status**,
-**Newsletter**, **Tags**, **Notes**, **Events**, **Payments & Subscriptions**, **Company
-Membership**, **e-Documents** (when that module is on), **Email logs**, and an **Identity**
-link when they uploaded an ID document.
+**Newsletter**, **Tags**, **Notes**, **Activity**, **Events**, **Payments & Subscriptions**,
+**Company Membership**, **e-Documents** (when that module is on), **Email logs**, and an
+**Identity** link when they uploaded an ID document.
 
-### Notes
+### Notes and Activity
 
-Notes are a thread, not a single box. Each note records its author and time, is capped at
-512 characters, and can be edited or deleted by the person who wrote it or by an
-`ADMIN_TENANT`. Older single-blob notes from before this change appear as notes without an
-author.
+The **Notes** card writes a note; the **Activity** card below it is where notes are read,
+along with the contact's donations, form submissions and tag changes on one feed. Both cards
+need **Enable Profile Notes & Activity** switched on and `HR_LOCAL` or `FINANCIAL_LOCAL` over
+that contact, or `ADMIN_TENANT`.
+
+Each note records its author and time, is capped at 512 characters, and carries an optional
+**Called** or **Emailed** action. Click a note in the Activity feed to read it in full, and
+to edit or delete it, which the person who wrote it or an `ADMIN_TENANT` may do. Older
+single-blob notes from before this change appear as notes without an author, so only an
+`ADMIN_TENANT` can edit those. Full detail:
+[Profile Activity & Notes](/platform/users/profile-activity).
 
 ### Statuses and tags
 
@@ -190,4 +197,5 @@ need the two records combined into one history, ask Orgo support to merge them.
 - [Newsletter](/platform/newsletter) - campaigns to contacts and members
 - [Import](/platform/customization/import) - bulk-loading contacts from a file
 - [Custom Fields](/platform/users/custom-fields) - extra fields on contact records
+- [Profile Activity & Notes](/platform/users/profile-activity) - the Notes and Activity cards in full
 - [Members](/platform/users) - the member directory contacts convert into
