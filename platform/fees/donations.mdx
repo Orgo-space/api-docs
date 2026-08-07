@@ -67,7 +67,7 @@ Donation products only, on the create and edit form:
 | **Belongs to a local center** | Scopes the whole campaign to one chapter |
 
 <Note>
-  The first donation product you create is registered as the organization's default donation product. That default is what the shortcut URLs `/donate`, `/doneaza`, and `/presedinte` resolve to. You can change it later under **Settings → Online Payments → Donation Product**.
+  The first **organisation-level** donation product you create is registered as the organization's default donation product. A campaign scoped to a chapter never claims it. That default is what the shortcut URLs `/donate`, `/doneaza`, and `/presedinte` resolve to. You can change it later under **Settings → Online Payments → Donation Product**.
 </Note>
 
 ---
@@ -78,7 +78,9 @@ The **Prices & Options** tab holds everything the donor picks from.
 
 **Prices** are the suggested amount buttons: name, amount, currency, description, tagged **One-time** or **Recurring**. Mark one as the **default** (pre-selected on load), and archive retired ones rather than deleting them so past payments keep resolving.
 
-On a campaign with no prices yet, **Generate** reads your organization's country and currency and the campaign title and description, then creates three A/B variations of three amounts each, registers the prices in Stripe, and switches A/B testing on. It disappears as soon as any price exists.
+A new campaign arrives with six suggested amounts already created (50, 100, 200, 300, 500 and 1000 in your organisation currency, with 100 pre-selected), plus a matching recurring set when **Recurring** is on. Edit or archive them to suit your campaign.
+
+**Generate** only appears while a campaign has no prices at all, so you have to clear the seeded ones first. It reads your organization's country and currency and the campaign title and description, then creates three A/B variations of three amounts each, registers the prices in Stripe, and switches A/B testing on.
 
 **Product options** are the designations a donor chooses from, such as which program the gift funds. Add them inline, drag to reorder, rename in place, and archive when a designation closes; each has its own shareable link that pre-selects it on the public page. They appear under **Designate to** at checkout, and when **Has local center option** is on a **Support chapter** entry is appended to the same dropdown and opens a chapter picker.
 
@@ -94,7 +96,7 @@ Each variation reports **total** raised, **average** donation, and **transaction
 
 ## Tracking the money
 
-**Payments** lists every donation with its status, donor, location, designation, amount, date, confidentiality flag, and type (one-time or recurring). Filter by payment ID, user ID, payer name, email, date range, type, status, or local center; the payment-ID and email filters are only offered to FINANCIAL_TENANT.
+**Payments** lists every donation with its status, donor, location, designation, amount, date, confidentiality flag, and type (one-time or recurring). Everyone who can open the list can filter by payment ID, payer name, user ID, date range, type and status. The email, designation and chapter filters, and the **Record payment** button, are shown only to FINANCIAL_TENANT.
 
 <img src="/images/platform/fees/donation-payments.png" alt="Donation payments list with filter pills for payer name, payment ID, user ID, email, status, type and date, and rows showing the amount, status, donor, chapter, date and whether the gift was one-time or a subscription" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 

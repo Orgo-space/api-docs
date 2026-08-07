@@ -106,9 +106,11 @@ outstanding, rather than continuing to read as paid in full.
 Marking as refunded does not email the customer. Tell them yourself.
 </Note>
 
-A paid invoice with no payment record behind it cannot be marked refunded: the
-action stops with an error rather than changing the invoice and leaving the
-payment untouched.
+A paid manual or membership invoice with no payment record behind it cannot be
+marked refunded: the action stops with an error rather than changing the invoice
+and leaving the payment untouched. An event registration invoice is more
+forgiving: if no payment or registration can be resolved it is still marked
+refunded, on the assumption the money was handled in Stripe.
 
 ---
 

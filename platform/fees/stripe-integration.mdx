@@ -110,7 +110,7 @@ Bank transfer is separate: an offline method you record by hand. See [Recording 
 
 A chapter (local center) can connect its **own** Stripe account. When it has one, local fees charged to that chapter settle there. When it does not, the charge falls back to the organisation's account, so the chapter is never blocked, its money simply lands centrally.
 
-Event ticket and donation checkouts always charge the organisation account, even when a chapter owns the product. Only fee payments follow chapter routing.
+A chapter's own Stripe account is used by any product the chapter owns, not just fees: a donation campaign or ticket product with **Belongs to a local center** set charges the chapter's account. The fall-back differs, though. Fee payments fall back to the organisation account when the chapter has none. Donation and ticket checkouts do not: connect the chapter's account before selling anything the chapter owns. Donation widgets are the exception and always charge the organisation account.
 
 <Warning>
   A chapter can only be given its own currency once it has its own Stripe account, and that currency is immutable afterwards. Both rules exist to prevent double currency conversion.

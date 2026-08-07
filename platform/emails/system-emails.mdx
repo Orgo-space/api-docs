@@ -60,8 +60,10 @@ locked out of their account is not a preference.
 
 ## Sign-in and security
 
-None of these can be switched off or edited. They render from the built-in
-templates only.
+None of these can be switched off or edited. Seven of them are refused by the
+platform outright if anyone tries to save a template for them; the event app code
+has no card on the Email Templates screen and renders from the built-in template
+like the rest.
 
 | Email | Sent when |
 |---|---|
@@ -74,10 +76,13 @@ templates only.
 | **Email change request** | A member asks to change the address on their account |
 | **Event app code** | A ticket holder signs in to the event app |
 
-These are the only emails Orgo keeps no readable copy of. Login and multi-factor
-codes are never written to the log; the rest are logged with the code stripped
+Login and multi-factor codes are never written to the log. The other
+code-carrying messages (email verification, password reset, password change,
+email change and the event app code) do get a row, but with the code stripped
 from the subject and no body stored, so an admin reading the log cannot lift a
-live code and take over an account.
+live code and take over an account. The two messages here that carry no code,
+**Password changed** and **Email change request**, are logged in full like any
+other email.
 
 ---
 
@@ -98,9 +103,9 @@ companies) sit under the **Membership Renewal Reminders** switch.
 | **30 Days After Reminder** | 15 to 30 days after |
 
 Company memberships have their own ladder at 18:30 UTC, addressed to the company's
-primary contact, on exact milestones rather than windows: more than 7 days before
-(the one-month message), 2 to 7 days before, 1 day before, on the day, and exactly
-7, 14 and 30 days after.
+contact email, with the primary contacts and any additional addresses in copy.
+When the company has no contact email, the first primary contact becomes the
+recipient instead. A company with neither is skipped and nothing is sent.
 
 | Other fee emails | Sent when | Category switch |
 |---|---|---|
@@ -157,7 +162,8 @@ lapses, and [Invoices](/platform/fees/invoices) for invoice delivery.
 | **Subscription payment received** | A recurring charge succeeds | Subscription Notifications |
 | **Subscription cancelled** | A recurring payment is cancelled | Subscription Notifications |
 | **Identity expiring** | Daily job at 07:00 UTC, for subscriptions whose identity document is about to expire | Subscription Notifications |
-| **Checkout reminder** | Daily job at 08:00 UTC, for an abandoned checkout | Subscription Notifications |
+| **Identity expiring (second run)** | A second daily job at 08:00 UTC sends the same message | none, always sends |
+| **Checkout reminder** | Daily job at 08:00 UTC, for an abandoned checkout | none, always sends |
 | **Donation thank you** | A donation payment completes | Payment Confirmations |
 | **Form submission confirmation** | Someone submits a form that has confirmation enabled | Payment Confirmations |
 
@@ -185,14 +191,15 @@ Three summary emails run on a schedule instead of reacting to one event.
 
 | Digest | Runs | Contains |
 |---|---|---|
-| **Daily discussion digest** | 06:00 UTC | Unread discussion notifications from the last 25 hours, for active members whose discussion preference is Daily |
-| **Weekly discussion digest** | Wednesdays 09:00 UTC | The same, over the last 7 days, for members set to Weekly |
+| **Daily discussion digest** | 06:00 UTC | Sent to active members whose discussion preference is Daily who have an unread discussion notification from the last 25 hours. The email itself lists their 10 most recent unread notifications of any kind |
+| **Weekly discussion digest** | Wednesdays 09:00 UTC | The same, selected over the last 7 days, for members set to Weekly |
 | **Daily task digest** | 06:00 UTC | Open tasks assigned to the member |
 
-The discussion digest deliberately covers discussions only. Other notification
-types reach members through in-app and push delivery, or as individual emails.
-Members choose Instant, Daily or Weekly in their own notification preferences,
-or switch discussion email off entirely.
+An unread discussion notification is what triggers the digest, but the email
+carries the member's ten most recent unread notifications whatever their type, so
+events, mentions and votes they have switched off individually still surface
+here. Members choose Instant, Daily or Weekly in their own notification
+preferences, or switch discussion email off entirely.
 
 <Note>
 Discussion email follows each member's notification preference rather than the

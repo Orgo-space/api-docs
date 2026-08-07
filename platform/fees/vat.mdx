@@ -92,7 +92,10 @@ Other things worth knowing:
   when **Enable VAT on Fees** is also on.
 - It is recorded as its own payment row and appears as its own invoice line, so
   reports separate joining income from recurring dues. It rides on the same card
-  charge as the first membership payment, so refunding that charge reverses both.
+  charge as the first membership payment, but it stays a separate row: **Refund**
+  in Orgo returns only the row you act on, so refunding the membership does not
+  return the joining fee. Refund both rows, or refund the whole charge in the
+  Stripe Dashboard, which marks both refunded in Orgo.
 - It buys no membership time. Only the membership portion extends the member's
   validity date.
 
@@ -132,9 +135,11 @@ When at least one line is exempt, the invoice prints the VAT exemption note,
 which is the free-text wording that states the legal basis for the exemption.
 
 <Note>
-The exemption note is stored on the invoice template and copied onto each
-invoice raised from it, but there is currently no field for it in the invoice
-template form. It can only be set through the API. If you need it on your
+The exemption note is stored on the invoice template and copied onto invoices
+Orgo generates itself for membership fee payments. It is not copied onto
+invoices you raise by hand, and there is no field for it in the invoice template
+form or the invoice form. It can only be set through the API, on the template
+(for automatic invoices) or on the individual invoice. If you need it on your
 documents, ask support to set it for you.
 </Note>
 

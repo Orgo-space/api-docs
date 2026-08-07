@@ -150,9 +150,9 @@ On **Finance** → **Local members fees** the fee column is a per-member dropdow
 
 ## The valid fee date
 
-Fee validity is not hand-set. It is the end of the billing period of the member's most recent successful payment for the fee product, recomputed whenever a payment is recorded, approved or refunded. Local fees keep a separate date.
+Fee validity is not hand-set. It is the furthest period end among the member's successful, unrefunded payments for the fee product, recomputed whenever a payment is recorded, approved or refunded. Recording an older period never pulls the date backwards. Local fees keep a separate date.
 
-Two prices bypass payment: a **lifetime** price with no amount sets validity 100 years out, and a price marked **Is only assignable by admins (hidden for members)** with no amount extends validity by the product period each time it is applied. That covers honorary and free memberships.
+Two prices bypass payment: a **lifetime** price with no amount sets validity 100 years out, and a price marked **Is only assignable by admins (hidden for members)** with no amount sets validity to today plus the product period each time it is applied. That covers honorary and free memberships. The admin-only price does not add to whatever the member already had, so re-applying it to a member with longer remaining validity shortens it.
 
 Exemption comes from the user type, not the individual: a user type with **Not eligible for fee** on, the organisation's designated non-eligible user type, or an active user-type role carrying that flag. Exempt members are never assigned a fee and see "You are not eligible for paying fees" on their profile.
 

@@ -76,7 +76,7 @@ action.
 |---|---|---|
 | In-app | Every notification | Always stored, whatever the member's other preferences say |
 | Push | Everything except file uploads | The member has **Push notifications** on and at least one registered device or browser |
-| Email | Discussions, comments and replies, mentions, events, votes, tasks and support tickets, and membership changes (added to a group or local center, roles changed, registration, invitation accepted) | Content notifications need the matching per-member toggle. Membership changes have no toggle and always email. Reactions, file uploads, networking 1:1 invitations and moderation alerts never email. |
+| Email | Discussions, comments and replies, mentions, events, votes, tasks and support tickets, and membership changes (added to a group or local center, roles changed, registration, invitation accepted) | Content notifications need the matching per-member toggle. Membership changes have no toggle and always email. Reactions, file uploads and networking 1:1 invitations never email. Moderation alerts are not emailed through this path either, but moderators do receive a separate email for each held post, capped at 50 moderators per post, with no toggle. See [Moderation](/platform/discussion/moderation). |
 
 Membership and role changes are the surprising row. When an administrator gives
 a member a new role, the member gets an email as well as the in-app entry, and
@@ -115,15 +115,19 @@ stops the email.
 </Note>
 
 Every notification email carries an unsubscribe link that switches off just that
-category, plus a one-click list-unsubscribe that switches off everything.
+category, plus a `List-Unsubscribe` header that opens a page switching off
+everything. True one-click unsubscribe, where the mail client acts without
+opening anything, exists on campaign email only.
 
 ### Daily and weekly digests
 
 Setting **New discussion** to **Daily** or **Weekly** replaces instant discussion
 emails with a summary.
 
-- Digests only ever contain discussion notifications. Events, mentions, votes,
-  and tasks are never batched: they send instantly or not at all.
+- A discussion notification is what triggers a digest, but the email itself
+  carries the ten most recent unread notifications of any type. A member who
+  switched off event or mention email still sees those items listed in their
+  digest, because nothing marked them read.
 - A digest carries at most 10 unread items.
 - Daily runs at 06:00 UTC looking back 25 hours; weekly runs at 09:00 UTC on its
   scheduled day looking back 7 days.
@@ -241,8 +245,9 @@ activity feed, not an audit trail: for a durable record of email, use the
     In-app and email are separate deliveries of the same record, so the record
     existing proves nothing about the email. Check, in order:
 
-    - the type, against the Channels table above. Reactions, file uploads,
-      networking invitations and moderation alerts have no email at all;
+    - the type, against the Channels table above. Reactions, file uploads and
+      networking invitations have no email at all, and moderation alerts are
+      emailed on their own path rather than this one;
     - the matching per-member toggle, and for discussions whether the frequency
       is **Daily** or **Weekly**, in which case the email is waiting for the
       next digest run;

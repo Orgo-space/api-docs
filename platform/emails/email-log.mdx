@@ -7,9 +7,14 @@ description: 'A record of every email Orgo sent, with the exact body, for answer
 "twitter:description": 'A record of every email Orgo sent, with the exact body, for answering "the member never got it"'
 ---
 
-The email log answers one question well: did we send it, and what did it say. Every
-email the platform sends is recorded with its recipient, subject, time and the
-exact rendered body.
+The email log answers one question well: did we send it, and what did it say. Most
+email the platform sends is recorded with its recipient, subject, time and, where
+available, the exact rendered body. Two gaps are worth knowing before you rely on
+the log as proof: notification email (discussions, comments, mentions, events,
+votes) is logged as **Transactional email** with the subject only and no body; and
+a handful of emails are produced outside the logging path and leave no row at all,
+among them the fee payment approval, the newsletter signup confirmation, waitlist
+messages, family invitations, the vote seal and the discussion digest.
 
 **Built for** whoever fields "I never got the renewal reminder". **Replaces**
 taking the member's word for it, or your own.
@@ -44,7 +49,10 @@ to them. ID, sent date and type are sortable.
 
 Opening an entry shows the recipient, the subject, the sent date, the type, and
 **Email Preview**: the message body exactly as it was rendered for that person,
-with their name, dates and links already substituted.
+with their name, dates and links already substituted. Rows tagged
+**Transactional email** that came from a notification (a discussion, comment,
+mention, event or vote alert) store the subject only, so their preview is empty.
+Everything else stores the full body.
 
 <img src="/images/platform/emails/email-log-detail.png" alt="Email log entry showing recipient, subject, sent date and type cards above a rendered preview of the email body" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -61,10 +69,12 @@ work, you can see the link that was in their copy.
     from the profile is usually faster and avoids picking the wrong person.
   </Step>
   <Step title="No row at all?">
-    Orgo did not send it. Either the email is switched off (check
+    Usually Orgo did not send it: either the email is switched off (check
     [Emails Config](/platform/emails/system-emails)) or the thing that triggers it
-    did not happen: no payment recorded, no invitation issued, no event
-    registration. Fix the cause, not the email.
+    did not happen. Check first that the email is one Orgo logs. Waitlist
+    messages, family invitations, the fee payment approval, the newsletter signup
+    confirmation and the discussion digest are never written to the log, so their
+    absence here is normal.
   </Step>
   <Step title="A row exists?">
     Orgo handed it to the mail service. Check the address on the row: an old
