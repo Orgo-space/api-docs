@@ -105,13 +105,34 @@ exact count at 10 seats or fewer, "limited" between 11 and 20, nothing above 20.
 **Members only** tickets stay visible to logged-out visitors but cannot be selected. They carry a
 **members only** badge, and the page shows a notice with **login** and **register** buttons.
 
-Adding levels under **Restrict to specific membership levels** narrows this further: the buyer needs
-an active tenant fee whose level is in the allowlist, or they are refused with "This ticket is
-reserved for specific membership levels." **Only one membership-restricted ticket is allowed per
-attendee per event**, counted across the whole event and not per ticket type.
+<Warning>
+  **Members only** checks that the browser is signed in, and nothing else. It does not check that
+  the person is one of your members, that their account is active, or that their fee is paid. Any
+  signed-in account can select the ticket.
 
-Both checks are skipped when the person doing the booking holds `EVENT_TENANT`, holds `EVENT_LOCAL`
-on the event's group, or owns the event, so an organiser can still book on someone's behalf.
+  Use it to put the right price in front of the right person and to stop your own members choosing
+  the wrong tier. Do not rely on it to keep a member rate away from non-members. If a price must
+  not reach the public, do not put it on a ticketed event.
+</Warning>
+
+Adding levels under **Restrict to specific membership levels** narrows this to buyers whose recorded
+membership level is on the allowlist. Two things about that comparison are worth knowing:
+
+- It reads the level stored on the member's record, **not whether that membership is still paid up**.
+  A lapsed member on a listed level still matches.
+- A member who does not qualify is **not refused, they simply never see the ticket**. It is absent
+  from the list with no badge and no explanation, which is why the usual report is "the members
+  ticket is not on the page".
+
+A member with no membership level assigned sees no level-restricted tickets at all.
+
+**Only one membership-restricted ticket is allowed per attendee per event**, counted across the whole
+event rather than per ticket type. That count includes only attendees linked to a member account, and
+only tickets that carry named levels.
+
+These checks are skipped when the person doing the booking holds `EVENT_TENANT`, holds `EVENT_LOCAL`
+on the event's group, or owns the event, so an organiser can still book on someone's behalf. The test
+is against the person doing the booking, not the person attending.
 
 <Note>
 The membership level list is read from your organisation's [membership fee](/platform/fees/fees)

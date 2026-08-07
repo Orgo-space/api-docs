@@ -95,8 +95,17 @@ cannot leak through the page or through the underlying request:
 - the online meeting link (visitors see only that the event is online),
 - the attendee list, and the organiser and hosting group,
 - the event's draft or published state, and any internal report fields,
-- **member-only ticket types**, which are fetched separately after sign-in. An anonymous visitor sees
-  a notice that member-only tickets exist, with Login and Register buttons, but never their prices.
+- **ticket types that name specific membership levels**, which are fetched separately after sign-in
+  and only for a member whose level is on the allowlist.
+
+<Warning>
+  A plain **Members only** ticket, one with no membership levels named, is **not** hidden from the
+  public page. Its name, price and remaining seats are served to anonymous visitors, greyed out with
+  a **members only** badge. Only tickets that name specific levels are withheld.
+
+  Treat a ticketed event page as public. If a price should not be seen by non-members, do not put it
+  on a ticketed event.
+</Warning>
 
 Cover images and agenda images are copied into a public storage folder when an event becomes public
 or ticketed, so they can be served to signed-out visitors.
