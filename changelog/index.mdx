@@ -3,36 +3,93 @@ title: "Changelog"
 description: "What's new in ORGO platform"
 ---
 
-<Update label="August 2026">
+<Update label="July 2026">
 **New Features**
 
+**Payments & Fees**
+- **VAT on Fees and Products**: Membership, registration fee and VAT are now itemised separately on the payment breakdown, the invoice and the invoice email, with the rate set per membership level: [VAT & Registration Fees](/platform/fees/vat).
+- **Advance Payment Window**: Choose how far ahead of expiry a fee may be paid — a number of months for yearly fees, a number of days for monthly ones. A member whose membership is not currently covered can still pay for the next period outside that window.
+- **Fee Tier per Year**: The tier you pick on a chapter's member fees table is now dated, so a member can move to a different tier next year without repricing the periods they have already paid: [Member Fees Table](/platform/local-group-fees/member-fees).
+- **Record a Payment Taken Outside Orgo**: A **Record payment** button on a member's payments tab logs a bank transfer, cash or cheque against a product, with the date it was actually taken. Fixed-price products lock the amount to the price: [Recording a Payment Made Outside Orgo](/platform/fees/record-payment).
+- **Invoice for a Fee Already Paid**: Generate an invoice for a membership fee payment that was recorded earlier, instead of only at the moment of payment: [Invoices](/platform/fees/invoices).
+- **Donations at Checkout**: Add an optional gift to the membership checkout, with suggested amounts, an optional custom amount within limits you set, and your own prompt. Each option chosen is recorded as its own payment and itemised on the charge: [Membership Fees](/platform/fees/fees).
+- **One-Time and Recurring on the Same Price**: A price can be offered as both a single payment and a subscription rather than one or the other.
+- **Unit Admins from the Member List**: Make or dismiss a unit admin straight from the member list. They get the fee payments list scoped to their own units: [Units](/platform/groups/units).
+- **Fee Tier as Role Group Criteria**: A role group can fill itself from the membership fee prices members are on: [Role Groups](/platform/groups/role-groups).
+
+**Invoices**
+- **Invoices in the Recipient's Language**: The invoice PDF is generated in the member's own language across all 14 platform languages, and Stripe receipts follow the same language.
+- **Renewal Invoice Attached to Company Reminders**: Company fee renewal reminders now carry the renewal invoice as an attachment.
+
+**Companies**
+- **Voting Representative**: Mark one member of a company as its voting representative, from the members list or when inviting them. Only one person holds it at a time, and assigning it moves it off the previous holder: [Companies](/platform/users/companies).
+- **Renewal Reminder Emails**: The seven company fee renewal reminders are now editable per organization, and a company can pay its renewal from the moment its renewal window opens.
+- **One Primary Contact**: Naming a new primary contact demotes the previous one instead of leaving two.
+
+**Voting**
+- **Non-Anonymous Votes**: Run a vote where administrators can see how each person voted. Voters are told before they cast a ballot, results open into an individual view, and a per-voter CSV export replaces the anonymous one. Anonymity is frozen once ballots exist, so a vote advertised as anonymous can never be turned: [E-Voting](/platform/e-voting).
+
+**Newsletter**
+- **Per-Recipient Statistics Export**: **Export CSV** on a campaign's Report tab gives one row per recipient per recorded action — delivered, opened, clicked, bounced, complained, unsubscribed, rejected and failed: [Newsletter](/platform/newsletter).
+- **One-Click Unsubscribe**: Campaign emails now carry one-click unsubscribe headers, so the Unsubscribe button mail clients show beside the sender works without opening the message.
+
+**Chapters**
+- **Newsletters, Courses and Contacts for Chapters**: Communication and HR roles at chapter level can now build and send their own campaigns, create and edit courses, and manage contacts, all scoped to their chapter.
+- **Parent Chapter Member Counts**: A parent chapter now counts the members of the chapters beneath it.
+- **Chapter Admins Manage Member Content**: Chapter admins can remove files and discussion content belonging to members of their own chapter.
+- **Chapter Products for Financial Roles**: Financial roles at chapter level reach the products and prices of their own chapter.
+
 **Discussions**
-- **Block a Member**: Members can block another member from any post, comment or reply, and everything that member writes then disappears from their own view of the forum. The block is one way, private to the person who made it, and administrators cannot be blocked: [Blocking Members](/platform/discussion/blocking-members).
+- **Moderation for Chapter Discussions**: The blocked-words filter and moderation queue now cover chapter discussions, and the moderators of that chapter are alerted once per held post: [Discussion Moderation](/platform/discussion/moderation).
 
-**Support**
-- **Support Chat for Admins**: Organization admins get a support chat launcher in the corner of the app on desktop, so a question reaches Orgo support without leaving the page. It never appears while impersonating another member.
+**Workflows**
+- **Four New Triggers**: Tag Added, Tag Removed, Donation Payment Success and Event Attendance can now start a workflow, with an optional filter on a specific tag, donation product or event: [Workflows](/platform/workflows).
 
-**Changes**
-
-**Webhooks**
-- **Signed deliveries (action required)**: `X-Webhook-Signature` is now an HMAC-SHA256 of the delivery, keyed with your webhook secret, in the form `t=<timestamp>,v1=<hex>`. The timestamp is covered by the signature, so a captured delivery cannot be replayed. This replaces the previous checksum and is not sent alongside it: a receiver that compares the old value must be updated. Deliveries themselves are unchanged, so nothing stops arriving while you migrate. Verification recipe: [Webhooks](/platform/webhooks#verifying-the-signature).
-
-**Lists & Segments**
-- **Manual list counts now match what a campaign sends**: On a manual list, **Total** counts everyone in it and **Subscribed** counts only the people who explicitly opted in, so the two numbers can now differ where they used to be identical. The recipients table shows every person in the list rather than only the subscribed ones. Existing manual lists will show different figures than before, with no action from you.
-- **Merged and deleted members leave manual lists**: A member whose account was merged into another or deleted no longer counts towards a manual list, no longer appears in its recipients table, and no longer receives campaigns sent to it.
+**API & Integrations**
+- **Scoped API Tokens**: Narrow a token area by area with a read and write matrix, change the scope of a token after it was created without reissuing it, and get an internal record of every create, scope change and revoke: [API Access](/platform/api).
+- **OAuth Consent and App Permissions**: The consent screen was rebuilt, members who belong to more than one organization pick which one they are granting access to, apps are registered as confidential clients bound to your organization, and each app declares whether it may act on the member's behalf or only read: [OAuth](/platform/oauth).
 
 **Members**
-- **Merged records are properly retired**: The record you merge away is now marked Deleted rather than Inactive, so it disappears from the member list, search, duplicate suggestions and email lists instead of lingering. Undoing the merge within 30 days puts it back exactly as it was.
-- **Role Dates Show the Right Day**: Role start and end dates on a member's profile now show the date they were recorded, whatever timezone you are viewing from. Editing a role no longer shifts its start date back a day when you save.
+- **Identity Validation on the Join Flow**: The membership application can require an ID document check before it is submitted: [Identity Validation](/platform/identity-validation).
+- **Encrypted Personal Identifiers**: National identifiers live in encrypted custom fields, numeric ones included, rather than a plain profile column: [Custom Fields](/platform/users/custom-fields).
+- **Switch Off Individual System Emails**: Each system email can now be turned off on its own: [System Emails](/platform/emails/system-emails).
 
-**Mobile Apps**
-- **Social sign-in inside branded apps**: Continue with Google, Microsoft and Apple now complete inside a branded app instead of trying to hand the member back to the shared Orgo Community app. Nothing to configure.
+**Lists & Segments**
+- **Donation Dropout**: Build a list of contacts who started a donation but never completed one: [Lists & Segments](/platform/users/lists).
 
-**Sign-in**
-- **Social sign-in returns to a known address**: A completed social sign-in now returns the member only to `app.orgo.space` or to your organization's own App host. A sign-in that is refused always finishes on `app.orgo.space`, so a member turned away on your custom domain or in your branded app lands there rather than on your own address.
+**Events**
+- **Speakers and Ticket Details**: Speakers open in a full list from the event page, tickets show their description, and agenda sessions with no stage get a readable default colour.
+- **Who Can Post Public Events**: The setting now governs both the create button and the event itself, and the public option is no longer offered inside private groups.
+
+**Languages**
+- **Czech and Estonian**: Both are available as interface languages, and all 14 languages are now complete against English: [Languages](/platform/customization/languages).
+
+**Improvements**
+
+**Payments & Fees**
+- **Amounts Read Correctly**: Prices show at most two decimals across fee cards, the pay modal and the invoice preview, and the membership pay buttons quote the amount that will actually be charged.
+- **Payments List**: Filter the payments list by product, and rows stay visible when a filter is applied.
+- **Membership Out of the Offline Recorder**: The offline payment recorder covers products and one-off charges; membership periods are recorded on the fees table instead.
+
+**Members & Profiles**
+- **Long Date Format**: Dates on profiles, task lists and the project and voting pickers now read as "July 15th 2026", and US organizations get month/day/year ordering throughout.
+- **Dates Stop Shifting**: Join dates, role dates and task dates no longer move a day back when saved.
+- **Merge Search**: The record picker when merging duplicates no longer hides candidates by age.
+- **User Type Filter**: The member list's user type filter sits beside the list rather than under More filters, and a setting controls who can use it.
 
 **Imports**
-- **Large Imports Finish Reliably**: Chapter, unit and member imports that look up many new town names now have time to complete instead of stalling partway through.
+- **Smarter Town Matching**: Imports resolve towns more reliably, with an extended search and case-insensitive names.
+- **Chapters by Name**: Member and role imports can reference a chapter by name instead of an ID.
+- **Refreshed Example Files**: Every example CSV was rebuilt with all importable fields and valid sample values.
+- **Cleaner Rollbacks**: Rolling back an import unwinds more of what it created: [Import](/platform/customization/import).
+
+**Projects & Tasks**
+- **Task Links Land on the Task**: Notification emails and push alerts open the task itself rather than the project.
+- **Quieter Archived Projects**: Archived projects stop sending task notifications.
+- **Task Board Details**: Tasks sort by name, the due date column is back, assignee dropdowns flip upward near the bottom of the screen, and descriptions keep their line breaks.
+
+**Geography**
+- **Empty Regions Are Clickable**: Clicking a region on the membership geography map opens the filtered member list even when nobody lives there yet.
 
 </Update>
 
