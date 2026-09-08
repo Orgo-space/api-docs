@@ -21,13 +21,15 @@ to register without creating an account first.
 
 ## Which events have one
 
-Exactly two kinds, and this is the rule that matters:
+One rule, and both halves of it must be true:
 
-- events marked **Public**, and
-- events with **ticketing** enabled, whether or not they are public.
+- the event is **published**, and
+- its audience is set to **Public**.
 
-Anything else refuses the request. A members-only event with no ticketing returns nothing at the
-public address: the visitor gets an empty page, not a login prompt and not the event details.
+Ticketing does not change this. A members-only event with ticketing enabled has no public page,
+because members buy their tickets on the event page inside the app. Anything that fails either
+half refuses the request: the visitor gets an empty page, not a login prompt and not the event
+details.
 
 <Warning>
 Turning on ticketing makes the event page publicly readable even if the event itself is not public.

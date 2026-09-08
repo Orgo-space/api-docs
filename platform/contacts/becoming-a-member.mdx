@@ -1,0 +1,239 @@
+---
+title: 'Turning a Contact into a Member'
+description: 'Merge is the conversion: what moves onto the member record, what is lost on the way, and why Create user account is a different thing'
+"og:title": 'Turning a Contact into a Member | Orgo'
+"og:description": 'Merge is the conversion: what moves onto the member record, what is lost on the way, and why Create user account is a different thing'
+"twitter:title": 'Turning a Contact into a Member | Orgo'
+"twitter:description": 'Merge is the conversion: what moves onto the member record, what is lost on the way, and why Create user account is a different thing'
+---
+
+Sooner or later a contact needs to do something only a member can do. Two buttons look
+like they will handle it. Only one of them combines the two records into a single
+history, and only one of them shows you what it is about to do.
+
+**Built for** organisations whose donors, subscribers and ticket buyers eventually join.
+**Replaces** retyping a contact's details into a new profile and losing everything that
+was attached to the old record.
+
+---
+
+## When a contact needs to become a member
+
+A contact is a person record without a login. Convert one when the person now has to:
+
+- sign in to the member area
+- hold a membership fee, renew it, and appear in fee reports
+- belong to a chapter, a group or a unit
+- take a course
+- vote in an e-voting session
+- hold a role or a permission
+
+Everything else, a contact can already do: buy a ticket, donate, receive the newsletter,
+sign an e-document, pay an invoice, hold a recurring subscription. The side-by-side
+comparison of what each one can do is on [Contacts](/platform/contacts). If nothing in
+the list above applies, leave them as a contact.
+
+---
+
+## Merge is the conversion
+
+**Merge Records** folds the contact into the member you keep. It moves the contact's
+history onto the member record, then deletes the contact.
+
+| | |
+|---|---|
+| **Where** | **Settings** → **Developers** → **Merge Records** |
+| **Permission** | `HR_TENANT` |
+| **Must be on** | the **Merge Profiles** toggle under **Settings** → **Users & Profiles**. With it off, the page redirects to the dashboard |
+
+The contact is the **source**, the record that goes away. The member is the **target**,
+the record you keep. The page labels them that way.
+
+<Steps>
+  <Step title="Find the pair">
+    **Duplicate Suggestions** at the bottom of the page has a **Contact-User Matches**
+    tab: a contact and a member sharing an email address, scored 95%. That is the usual
+    starting point. If you already know the two records, use **Manual Merge** at the top
+    and search each side by name or email.
+  </Step>
+  <Step title="Read the preview">
+    The comparison puts the two records side by side, one row per field. Fields that
+    agree are ticked. Fields that disagree are tagged **Conflict** with a pair of radio
+    buttons, and Orgo preselects a suggestion. Read the email and phone rows even so.
+    Underneath, **Related Records to Transfer** counts what will move.
+  </Step>
+  <Step title="Confirm">
+    Everything runs in one transaction. If any part of it fails, nothing changes.
+  </Step>
+  <Step title="Check the survivor">
+    Open the member profile and confirm the payments, tickets and tags landed. The
+    chapter does not move, so if the two records sat in different chapters, check the
+    Roles tab.
+  </Step>
+</Steps>
+
+<Note>
+A merge can be undone once, within 30 days, from **Merge History** at the top right of
+the page. After that the **Undo** button reads **Expired** and the merge is permanent.
+Undo recreates the deleted contact, with a new id.
+</Note>
+
+The full mechanics, including member-to-member merges, are on
+[Merging Duplicates](/platform/users/merging-duplicates).
+
+---
+
+## What transfers and what does not
+
+Read this before you merge, not after. Undo restores field values, but it cannot bring
+back records that were deleted with the contact.
+
+| What | Where it ends up |
+|---|---|
+| Payments, and the payment records behind them | Move to the member |
+| Invoices | Move to the member |
+| Recurring subscriptions | Move to the member |
+| Event registrations and tickets | Move to the member, one per event. Where both records attended the same event, the contact's status, payment and ticket win and the duplicate row is dropped |
+| Company membership | Moves to the member, and is dropped rather than doubled if the member already held that company |
+| Tags | Move, deduplicated |
+| Custom field answers | Move, and the member's own answer wins where both have one |
+| ID document and the payment customer reference | Move, when the member does not already have one |
+| Newsletter subscription record | Moves to the member |
+| Uploaded files | Move to the member |
+| Profile fields: name, email, phone, address, organisation, role, town, social links | You choose per field in the preview |
+| **Contact notes** | **Deleted with the contact. Not moved, and not restored by undo** |
+| **Form submissions** | **Detached. They stay in the form's results but belong to neither record afterwards** |
+| Event app sign-in devices | Deleted with the contact |
+
+<Warning>
+The contact's **Notes** are the one thing a merge destroys outright, and undo does not
+bring them back. If a note holds something you need, a phone call summary, a consent
+record, why the person was flagged, copy it onto the member profile before you merge.
+</Warning>
+
+---
+
+## Before you merge
+
+- [ ] Both records are the same person, confirmed on more than a shared name. Compare email, phone and town, and open each record if you are unsure.
+- [ ] Anything worth keeping from the contact's **Notes** is copied onto the member profile.
+- [ ] You know which of the two records holds the payment history, so you can confirm afterwards that it moved.
+- [ ] You have decided which email address the person keeps. The survivor signs in with it, and their username is regenerated from it.
+
+---
+
+## Create user account is not the merge screen
+
+**Create user account**, on the contact record and in the contact list row menu,
+registers a new member from that contact's email and sends the welcome message. It never
+opens the comparison: there is no preview, no field-by-field choice, and no undo.
+
+What happens to the contact afterwards is decided by **Settings** → **Users & Profiles**
+→ **Configuration** → **Default Status for Admin-Created Users**, not by anything the
+button asks you:
+
+| Default status | What happens to the contact |
+|---|---|
+| **Active**, the default | Orgo looks for a contact on the same email address and folds it into the new member. Payments, invoices, subscriptions, event registrations, custom field answers, the ID document, uploaded files and the newsletter record move across; name, social links, town, organisation, role, birthday, gender, bio and photo are copied; the contact record is then deleted. Notes, tags and company membership do not survive it, and form submissions detach |
+| Inactive, Unapproved, Waiting List, Suspended, Excluded | Nothing is folded in. The new member holds the email address, birthday, gender and joined dates, and nothing else. The contact stays exactly where it was, with no link to the new member and with the whole payment history still on it. The same person now exists twice |
+
+<Warning>
+Because the outcome hangs on a setting rather than on the button, do not use **Create
+user account** when the contact has payments, tickets or notes worth keeping. Use **Merge
+Records** instead: you see what will move before you commit, and you have 30 days to undo
+it. If you already pressed **Create user account**, search Contacts for that email
+straight away. If the contact is still listed, merge it into the new member and the
+history follows. If it is gone, the fold already happened.
+</Warning>
+
+Registering a member from scratch, and what the welcome email contains, is covered in
+[Adding Members](/platform/users/adding-members).
+
+---
+
+## What merge refuses to do
+
+**A member cannot be merged into a contact.** Pick that direction and the page tells you
+to swap the two: contact as source, member as target.
+
+**There is no route back.** Nothing turns a member into a contact. Deleting a member or
+processing a resignation leaves no contact behind, and the member record survives only as
+a hidden, deleted row. If your aim is to stop someone signing in while keeping their
+history, change their status instead of looking for a downgrade.
+
+---
+
+## What changes for the person
+
+The moment the merge completes:
+
+- **They can sign in.** They use the surviving member record's email address and its own
+  password or one-time code. A contact had no login of its own, apart from the one-time
+  code that opens the event app for an event they hold a ticket to.
+- **Their event history follows them.** Past registrations, tickets and check-ins sit on
+  the member profile and in the attendee exports, one row per event.
+- **Their money reads as a member's.** Payments, invoices and any recurring subscription
+  now belong to the member, so reports that count members stop disagreeing with reports
+  that count revenue.
+- **A membership fee can be assigned.** A contact never held one, so there is nothing to
+  move: you assign the fee on the member profile after the merge.
+- **Their newsletter subscription carries over**, so a subscribed contact stays subscribed
+  as a member.
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="The same person appears as both a contact and a member">
+    Normal, and it is what merge is for. It happens when someone bought a ticket or
+    donated before joining, or when a mailing list was imported. Open **Settings** →
+    **Developers** → **Merge Records**, look in the **Contact-User Matches** tab, and
+    merge the contact into the member. Do not delete the contact instead: its payments
+    and tickets would go with it, and a contact with a payment attached refuses to be
+    deleted anyway.
+  </Accordion>
+
+  <Accordion title="I used Create user account and now there are two records">
+    Search the Contacts list for that email address. If the contact is still there, the
+    new member holds only the email, birthday, gender and joined dates, and everything
+    else is still on the contact. Merge the contact into the new member and the history
+    moves across. If the contact is no longer listed, it was already folded into the
+    member and there is nothing left to merge.
+  </Accordion>
+
+  <Accordion title="Merge is not offered">
+    Three things gate it. The **Merge Profiles** toggle under **Settings** → **Users &
+    Profiles** must be on, or the page redirects to the dashboard. You need `HR_TENANT`,
+    which is above the `HR_LOCAL` that lets you edit contacts. And the page itself lives
+    under **Settings** → **Developers**, not in the Contacts screen. If you can open the
+    page but the pair is rejected, check the direction: a member cannot be the source
+    when a contact is the target.
+  </Accordion>
+
+  <Accordion title="Notes disappeared after a merge">
+    Contact notes belong to the contact record, and the contact record is deleted at the
+    end of a merge. They are not copied onto the member, and undo restores field values
+    rather than deleted notes. Copy anything you need onto the member profile before
+    merging. Notes written on a member profile are unaffected.
+  </Accordion>
+
+  <Accordion title="Can I undo a merge">
+    Once, within 30 days, from **Merge History**. Undo puts the transferred records back
+    on the source and rewinds the fields the merge changed on the survivor, unless you
+    edited them since. A contact that was deleted comes back with a new id, so anything
+    outside Orgo that stored the old id will not reconnect. Anything created on the
+    member since the merge stays there, so undo promptly if a merge was wrong.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related
+
+- [Contacts](/platform/contacts) - what a contact is, and what it can do without an account
+- [Merging Duplicates](/platform/users/merging-duplicates) - the merge screen in full, including member-to-member merges
+- [Adding Members](/platform/users/adding-members) - the four ways a person gets an account
+- [Profile Activity & Notes](/platform/users/profile-activity) - the notes a merge does not carry over
+- [Membership Fees](/platform/fees/fees) - the fee a member can hold and a contact cannot
+- [Permissions](/platform/permissions) - what HR_TENANT unlocks

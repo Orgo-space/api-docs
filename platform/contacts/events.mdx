@@ -1,0 +1,254 @@
+---
+title: 'Contacts at Events'
+description: 'How public event registration creates contacts, what they can do in the Event App, and how their event history follows them'
+"og:title": 'Contacts at Events | Orgo'
+"og:description": 'How public event registration creates contacts, what they can do in the Event App, and how their event history follows them'
+"twitter:title": 'Contacts at Events | Orgo'
+"twitter:description": 'How public event registration creates contacts, what they can do in the Event App, and how their event history follows them'
+---
+
+Public events are the largest single source of contacts in most organisations. Anyone who registers
+for one without an Orgo account becomes a contact, automatically, and from that point on they are a
+person in your records rather than a line on a ticket list.
+
+**Built for** organisers running open events, who end up with an audience far wider than their
+membership and need it to land somewhere useful.
+
+**Replaces** the exported attendee spreadsheet that nobody ever reconciles with the member database.
+
+---
+
+## What happens when someone with no account registers
+
+Every registration path that does not come from a signed-in member does the same three things with
+the email address entered on the form.
+
+<Steps>
+  <Step title="Match it against your members">
+    If a member of your organisation already uses that email, the registration is attached to their
+    member account and no contact is created.
+  </Step>
+  <Step title="Match it against your contacts">
+    If no member matches but a contact does, that existing contact is reused. The registration joins
+    the event history already on the record.
+  </Step>
+  <Step title="Create a contact">
+    If neither matches, a new contact is created with its **Source** set to **Event**, carrying the
+    name, email and whatever else the registration form asked for.
+  </Step>
+</Steps>
+
+This runs on the free registration form, on paid ticket checkout, on the payment and invoice paths
+that complete a purchase later, on the **External** tab of the organiser's **Invite** dialog, and on
+the "fill in your details" link sent with a ticket bought on someone else's behalf.
+
+<Note>
+There is no setting that turns this off. Contact creation from event registration happens whether or
+not the contacts module is switched on. The module switch controls the contacts screens, not what
+gets recorded.
+</Note>
+
+What decides whether a non-member can reach the registration form at all is the event itself: it has
+to be **published** with its **Audience** set to **Public**. See
+[Public event page](/platform/events/public-page) for that page and
+[Create event](/platform/events/create-event) for where Audience lives.
+
+Registrations created this way land on registration status **Registered** and RSVP **Attending**.
+
+---
+
+## Which statuses let a contact in
+
+A contact's registration carries the same statuses a member's does, described in full on
+[Event attendance](/platform/events/attendance). What matters here is that three gates read those
+statuses and they do not agree.
+
+| Registration status | Can open the Event App | Appears on their own **My events** list | Can vote |
+|---|---|---|---|
+| **Registered** | Yes | Yes | Yes |
+| **Invited** | Yes | Yes | Yes |
+| **Awaiting payment** | Yes | **No** | **No** |
+| **Pending approval** | No | No | No |
+| **Waiting list** | No | No | No |
+| **Canceled** | No | No | No |
+
+<Warning>
+An attendee waiting on an unpaid invoice can sign in to the Event App and open the event through the
+link in their email, but the event does not appear on their own **My events** list and they cannot
+see or cast event votes. If someone says the app works but the event has vanished from their list,
+check for an unsettled invoice before anything else.
+</Warning>
+
+---
+
+## The Event App for a contact
+
+A contact has no password, so they sign in with a code sent to their email address: six digits, valid
+for five minutes, reaching the Event App and nothing else in Orgo. The limits, and the alternative
+route through the link in their confirmation email, are on
+[Event App](/platform/events/event-app).
+
+Inside, a contact is a full participant on almost every surface.
+
+| In the Event App | A contact can |
+|---|---|
+| **My events** | Yes. This screen exists for them; members are sent to their dashboard instead |
+| **Program** | Yes, including saying they will attend individual sessions |
+| **Details** | Yes |
+| **Feed** | Read, reply and react. They cannot start a top-level post, which is an organiser action |
+| **Networking directory** | Yes, both seeing others and being listed |
+| **1:1 meetings** | Yes, book, accept, decline and cancel |
+| **Badge and QR scanning** | Yes, show their own badge and scan another attendee to save them |
+| **Vote** | Yes, on **Registered** or **Invited** registrations |
+| **Profile** | Yes, including the photo, headline, bio, links and their own privacy switches |
+| **Connection requests** | **No** |
+
+**Connections are member to member.** The **Connect** button creates a lasting relationship in your
+member network, so it is not offered to a contact and a contact cannot receive one either. The
+equivalent for them is the **1:1 meeting**, which works in both directions between any two attendees
+regardless of kind. See [Event App networking](/platform/events/event-app-networking).
+
+One more gap: the notification for a new feed post goes to member attendees only. Contacts see the
+post when they next open the Feed, but are not told about it.
+
+---
+
+## Privacy in the attendee directory
+
+The defaults are the opposite of what most people assume, and they differ by kind of attendee.
+
+| | Listed in the directory | Phone shown to other attendees | Email shown to other attendees |
+|---|---|---|---|
+| **Member** | Yes by default | **Yes** by default | **Yes** by default |
+| **Contact** | Yes by default | **No** by default | **No** by default |
+
+A contact never signed up for a profile and never agreed to share their details, so their card
+appears but the details on it stay withheld until they turn them on in the Event App **Profile** tab.
+A member's phone and email are shown unless they set them private themselves.
+
+Two rules apply to everyone: an attendee with **no email address on file gets no card at all**, for
+every viewer including organisers; and organisers see the full roster with phone and email unmasked,
+whatever each person chose.
+
+---
+
+## Badges and check-in
+
+There is no separate badge record. **The badge is the registration**, carried as a QR code that
+appears on the emailed PDF ticket, on the event page and on the **Badge** button in the Event App.
+Contacts get one exactly as members do.
+
+Scanning it at the door and confirming checks the attendee in, which sets their RSVP to **Attended**.
+The scanner card marks a contact as an external registration and shows no profile photo, but the flow
+is identical.
+
+<Warning>
+The code is the credential. For a contact it is also their way into the Event App, so anyone holding
+their ticket QR effectively holds their event session. Cancelling the registration invalidates it.
+</Warning>
+
+Full detail, including which permission each scanner needs, is on
+[QR check-in](/platform/events/check-in).
+
+---
+
+## Where the history lives
+
+Open a contact and scroll to the **Events** card: the events that contact attended, past events
+first, with the empty state "No events for this profile". The same registrations show on the event
+side in **Participants** and in the attendee CSV export, which includes contacts alongside members.
+
+**If the contact later becomes a member, the history follows them.** Both routes re-point the
+existing registrations at the new member account rather than recreating them, so ticket numbers, QR
+codes, statuses, payments, custom field answers and add-ons all survive:
+
+- **Creating a member account on the same email address** moves the registrations across at the
+  moment the account is created.
+- **Merging the contact into a member** moves them as part of the merge. Where both sides attended
+  the same event, the merge keeps one registration and records the pre-merge values of both, so it
+  can be rolled back.
+
+See [Becoming a member](/platform/contacts/becoming-a-member) for the difference between those two
+routes, which is larger than it looks.
+
+---
+
+## Behaviour to know about
+
+Three behaviours surprise people regularly. None is a setting you can change.
+
+**A second ticket on the same email creates a second, emailless contact.** Registering again on an
+email that already holds an active registration for that event creates a fresh contact with **no
+email address**, so the second ticket carries its own registration answers instead of overwriting the
+first person's. That contact is a real row in your contacts list, cannot be emailed, can never sign in
+to the Event App (the code has nowhere to go), and does not appear in the attendee directory. On the
+free registration path this also leaves an existing member account unlinked, so the second ticket is a
+contact even when the email belongs to a member. The first registration is unaffected, and filling in
+a different email per attendee at checkout avoids it entirely.
+
+**An attendee with no email address is left out of the directory.** However the registration was
+created, no email means no card, for organisers as well as attendees.
+
+**The "Event attendees" newsletter audience only reaches subscribed contacts.** It filters contacts
+down to those whose newsletter subscription is on, and registration sets that only when the person
+ticked the newsletter box. So a contact created by an event registration is, by default, outside the
+audience named after the event they attended. Members usually are inside it, because most
+organisations default members to subscribed. Check the recipient count against the participant count
+before sending, and see [Contacts and the newsletter](/platform/contacts/newsletter).
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="An attendee cannot sign in to the Event App">
+    In this order. Does the email on their registration match the one they are typing? A typo at
+    registration is invisible until this moment. Is their status one that grants access, and not
+    cancelled? **Pending approval** and **Waiting list** do not open the app. Does the registration
+    have an email address at all? A second ticket bought on an email that already had one produces an
+    emailless contact that can never sign in; add the address to that contact, or cancel the row and
+    re-register the person. Note that the code screen answers the same way for unknown and known
+    addresses, so silence proves nothing: confirm the address against **Participants** rather than by
+    retrying.
+  </Accordion>
+
+  <Accordion title="An attendee is missing from the attendee directory">
+    Four causes, worth checking in this order. The registration has no email address, which removes
+    them for everyone including you. Their status does not grant access. They turned profile
+    visibility off in the Event App **Profile** tab, in which case you still see them as an organiser
+    and other attendees do not. Or they are listed but hard to find: the directory is ordered by
+    surname and contacts have no separate surname, so they gather at one end of the list. Search by
+    name instead of scrolling.
+  </Accordion>
+
+  <Accordion title="A contact registered twice and appears twice">
+    Expected when the second registration used an email that already held an active one for that
+    event. The second contact is created without an email address on purpose, so the two tickets keep
+    separate answers. Both are valid and both scan at the door. In the contacts list, the emailless
+    row is the extra ticket: add the real address to it if that person needs the Event App and a
+    directory card, or merge it away if it was a duplicate you did not want.
+  </Accordion>
+
+  <Accordion title="An attendee did not receive the campaign sent to event attendees">
+    The **Event attendees** audience includes a contact only if their newsletter subscription is on,
+    and registration turns it on only when the attendee ticked the newsletter box. Open the contact
+    and check the newsletter card. To reach everyone who registered regardless of subscription, use
+    the event's own messages rather than a newsletter campaign, remembering that consent still applies
+    to anything promotional.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related
+
+- [Event attendance](/platform/events/attendance) - The participant list, both statuses, invitations and the export
+- [Public event page](/platform/events/public-page) - The page a non-member registers on
+- [Ticketing](/platform/events/ticketing) - Paid registration, add-ons and refunds
+- [QR check-in](/platform/events/check-in) - Scanning at the door and who is allowed to
+- [Event App](/platform/events/event-app) - Access, the email code sign-in and the tabs
+- [Event App networking](/platform/events/event-app-networking) - The directory, connections and 1:1 meetings
+- [Contacts](/platform/contacts) - What a contact is and how the module is switched on
+- [Where contacts come from](/platform/contacts/sources) - Every other path that creates one
+- [Contacts and the newsletter](/platform/contacts/newsletter) - Subscription, consent and audiences
+- [Becoming a member](/platform/contacts/becoming-a-member) - Merging a contact into a member account

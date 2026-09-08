@@ -1,0 +1,146 @@
+---
+title: 'Contacts'
+description: 'People you hold data about but who cannot log in: donors, subscribers, ticket buyers and partners'
+"og:title": 'Contacts | Orgo'
+"og:description": 'People you hold data about but who cannot log in: donors, subscribers, ticket buyers and partners'
+"twitter:title": 'Contacts | Orgo'
+"twitter:description": 'People you hold data about but who cannot log in: donors, subscribers, ticket buyers and partners'
+---
+
+A contact is someone you hold data about. A member is someone who can log in. That single
+line decides everything else in this section.
+
+Both live in the same organisation, side by side. A contact has a record, an email address
+and a history of what they paid, signed and attended. What a contact does not have is an
+account: no password, no permissions, no groups, and no membership fee. A member has all of
+that plus a login.
+
+**Built for** organisations whose audience is wider than their membership: donors,
+newsletter subscribers, event guests, partner staff, and people who have not joined yet.
+**Replaces** a separate CRM, or a spreadsheet kept alongside the member list.
+
+<img src="/images/platform/contacts/contacts-list.png" alt="Contacts list showing name, email and phone icons, newsletter state, source, status and tags columns, with search and filters for status, tags and newsletter above the table" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Contact or member
+
+|  | Contact | Member |
+|---|---|---|
+| **Login** | No account and no password. The one exception is the Event App, where a ticket holder signs in with a one-time code that works only there | Username and password, with optional two-factor |
+| **Roles and permissions** | None. The **Role** field on a contact record is a free-text job title, not a permission | Holds permissions (Admin, HR, Financial and so on) and a history of membership roles over time |
+| **Chapter membership** | One optional chapter, and only when **Enable Per-Chapter Contacts** is on | A chapter and a parent chapter, used across the whole platform |
+| **Groups and teams** | No | Yes |
+| **Membership fee** | **Never.** A fee payment records a member as its payer, and there is no route, import or setting that gives a contact fee status | Yes: fee validity dates, fee prices, renewals and reminders |
+| **Other payments** | Yes: donations, event tickets, invoices, and even a recurring subscription | Yes |
+| **Newsletter** | One flag with three states: subscribed, unsubscribed, or never asked | Per-topic subscription settings |
+| **Event registration** | Yes, as an external attendee, with a QR badge and Event App access | Yes |
+| **Company seats** | Yes, and the contact takes up a seat in the company's allowance | Yes |
+| **Courses** | No. A contact cannot be enrolled | Yes |
+| **Badges and points** | No. Gamification points are members-only (the Event App attendee badge, which is the QR pass, is a different thing and a contact does get one) | Yes |
+| **Governance votes** | Only Event App polls. The admin-run governance vote is members-only | Yes |
+
+<Note>
+**The deciding question.** If the person needs fee status, courses, badges or governance
+votes, they have to be a member. If they do not, a contact is enough, and it is cheaper to
+maintain: no invitation, no password reset, no seat in your member count.
+</Note>
+
+<Warning>
+There is no way to give a contact a membership fee. Marking a fee paid, importing fee rows
+or editing the record will not do it. Someone who must pay a membership fee needs a member
+account first: see [Becoming a member](/platform/contacts/becoming-a-member).
+</Warning>
+
+---
+
+## What a contact can do
+
+- **Pay you.** Donations, event tickets, invoices and recurring subscriptions all attach to
+  a contact. [Payments and the fee boundary](/platform/contacts/payments)
+- **Receive newsletters.** Contacts and members are drawn into the same audiences, and only
+  subscribed contacts are included. [Newsletter and consent](/platform/contacts/newsletter)
+- **Register for events.** A non-member attendee is a contact, holds the same QR badge, and
+  can sign in to the Event App. [Events and the Event App](/platform/contacts/events)
+- **Arrive on their own.** Contact forms, newsletter signups, public event registrations,
+  donation checkouts, form submissions, signing links, imports and Stripe all create
+  contacts. [Where contacts come from](/platform/contacts/sources)
+- **Carry a profile.** Status, tags, custom fields, notes and an activity feed.
+  [The contact record](/platform/contacts/record)
+- **Sign documents.** A contract or e-document can be assigned to a contact, and the signing
+  link can create the contact from the signer's own details. See
+  [e-Documents](/platform/e-documents)
+- **Trigger automations.** A contact is a workflow subject for the form-submitted and
+  event-attended triggers, and can be emailed or tagged by a workflow. See
+  [Workflows](/platform/workflows)
+- **Become a member.** Merging is the real conversion, and it moves their history across.
+  [Becoming a member](/platform/contacts/becoming-a-member)
+
+Who may see and edit any of this is a separate question with a longer answer:
+[Contact permissions](/platform/contacts/permissions).
+
+---
+
+## Turning the module on
+
+**Settings** → **Modules** → **Contacts**. Requires `ADMIN_TENANT`.
+
+| Setting | Key | Default | What it does |
+|---|---|---|---|
+| **Enable Contacts Module** | `contacts.isActive` | On | Turns contacts on and puts **Contacts** in the sidebar |
+| **Enable Contact Statuses** | `contacts.hasStatuses` | On | Adds a status field to every contact and a **Contact Statuses** page where you define the list, its colours and its order |
+| **Enable Per-Chapter Contacts** | `contacts.perChapterContacts` | Off | Lets a contact belong to a chapter, and adds the chapter filter and column. Needs the Local Centers feature on as well, and the switch stays disabled until it is |
+
+Both extra switches stay disabled while **Enable Contacts Module** is off.
+
+<Note>
+**Enable Per-Chapter Contacts** does more than add a column. While it is off, chapter-level
+managers cannot reach contacts at all, and only tenant-level managers see the list. Turning
+it on is what opens contacts to chapter admins, scoped to their own chapters.
+</Note>
+
+---
+
+## Where contacts live
+
+**Contacts** sits in the **MANAGEMENT** section of the sidebar by default, next to Companies.
+The entry opens the contacts list; each row opens a contact record, which is one scrolling
+page rather than a set of tabs. Configuration is elsewhere, under
+**Settings** → **Modules** → **Contacts**.
+
+The sidebar entry is hidden unless you hold a contact permission and, on top of that, either
+a tenant-level permission (`HR_TENANT`, `FINANCIAL_TENANT` or `ADMIN_TENANT`) or
+**Enable Per-Chapter Contacts** is on. A chapter HR manager in an organisation that has not
+turned per-chapter contacts on will not see **Contacts** in the sidebar at all, and that is
+the expected behaviour rather than a permission fault. The sidebar itself is editable, so
+your organisation may have moved or renamed the entry.
+
+---
+
+## How many contacts do we have
+
+The nightly metrics job records `contacts_count` for the whole organisation only. It is
+never written per chapter, because contacts have no chapter dimension in that job's model.
+Two consequences:
+
+- Contact growth per chapter cannot be read from the metrics tables or dashboards.
+- Adding up the per-chapter rows to get an organisation total gives zero contacts, not the
+  real number. Read the organisation-wide row instead.
+
+Member headcounts never include contacts. Revenue totals are the opposite case and mix the
+two, which matters when you divide one by the other: see
+[Payments](/platform/contacts/payments).
+
+---
+
+## Related
+
+- [The contact record](/platform/contacts/record) - fields, statuses, tags, custom fields, notes and activity
+- [Where contacts come from](/platform/contacts/sources) - every creation path, imports and duplicates
+- [Payments](/platform/contacts/payments) - donations, tickets, invoices, subscriptions, company seats and the fee boundary
+- [Newsletter](/platform/contacts/newsletter) - subscription states, consent, audiences, unsubscribes and bounces
+- [Events](/platform/contacts/events) - registration, badges, the Event App and attendee privacy
+- [Becoming a member](/platform/contacts/becoming-a-member) - merge, the Create user account button, and what transfers
+- [Contact permissions](/platform/contacts/permissions) - who sees what, chapter scoping, export and erasure
+- [Users and Profiles](/platform/users/index) - the member directory a contact converts into
+- [Permissions](/platform/permissions) - the permission set these rules are built from

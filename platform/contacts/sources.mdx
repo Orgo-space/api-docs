@@ -1,0 +1,283 @@
+---
+title: 'Where contacts come from'
+description: 'Every way a contact record is created in Orgo, from the import wizard to a donation checkout, and what each one fills in'
+"og:title": 'Where contacts come from | Orgo'
+"og:description": 'Every way a contact record is created in Orgo, from the import wizard to a donation checkout, and what each one fills in'
+"twitter:title": 'Where contacts come from | Orgo'
+"twitter:description": 'Every way a contact record is created in Orgo, from the import wizard to a donation checkout, and what each one fills in'
+---
+
+Most contacts are not typed in by hand. They arrive because someone bought a ticket,
+donated, subscribed, signed a document, or because you loaded a spreadsheet of ten
+years of history. Every contact records how it arrived, in a field called **Source**.
+
+**Built for** anyone who opens the contacts list and wonders where these people came
+from, and for the person planning a migration into Orgo.
+
+Source is a column in the contacts list and one of its filters, so it is also how you
+answer questions like "who came from the donation page this quarter" without tagging
+anyone.
+
+<img src="/images/platform/contacts/contact-import.png" alt="The import screen where a spreadsheet is uploaded and its columns are mapped onto contact fields" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Every way a contact is created
+
+| Source | What triggers it | What gets filled in |
+|---|---|---|
+| **Manual** | An admin uses **Add Contact** on the contacts list | Everything on the contact form, including custom fields. A chapter manager creating a contact without picking a chapter gets it filed under their own |
+| **Import** | A contact import runs from **Settings → Customization → Import** | Every column you mapped, plus tags and the newsletter flag when those columns are present |
+| **Contact form** | A visitor submits the contact form you embedded on your website | Email always. Name and phone are written on a new record, and on an existing one only where those fields are still empty. Nothing else is ever overwritten |
+| **Newsletter** | A visitor fills in a newsletter signup widget **and** clicks the confirmation link in the email | Email, name, subscription set to yes, and the tag configured on that widget |
+| **Form** | A non-member submits a form whose access is set to anyone with an email address | Email, name (first and last joined into one field), any answers you mapped onto profile fields, and the subscription flag if the opt-in box was ticked |
+| **Event** | A non-member registers for an event, buys a ticket, fills in a ticket details link, or is invited as an external guest | Name, email, phone, organisation, role, town, social profiles and company billing details, as far as the registration form asked for them |
+| **Donation** | Someone donates without signing in | Name, phone, address, plus middle name and personal identification number when the donation page collects them, and the subscription flag if they opted in |
+| **Stripe** | A payment or subscription arrives from Stripe for an address that matches no member and no contact | Email, name, and the Stripe customer id, which is what puts **Open in Stripe** on the record |
+| **Contract** | Someone outside your membership opens an e-document signing link and fills in their own details | Name, email, and whatever else the signing form collected |
+| **System** | Orgo itself creates the record, most often while checking whether an email address is already registered during a public signup or checkout | Email only. The name is set to the email address, and the contact is created not subscribed |
+
+Every path also stamps the date created and files the contact under your organisation.
+Records created before Orgo started recording provenance have an empty Source, which is
+why an old tenant can show a large group of blank rows in that column.
+
+<Note>
+The contact form and the newsletter widget are two different embeds. The contact form
+sends you a message and files the sender in Contacts. The newsletter widget does one
+thing: it collects confirmed subscribers. See
+[Newsletter signup widgets](/platform/newsletter-widgets).
+</Note>
+
+---
+
+## The import wizard
+
+Import is how most contacts arrive, especially in the first month. It lives at
+**Settings → Customization → Import** and needs `ADMIN_TENANT`. Contacts go through the
+column-mapping wizard rather than the plain upload used by the older import steps.
+
+<Steps>
+  <Step title="Upload the file">
+    `.csv` and `.txt`, up to 50 MB. Comma, semicolon and tab separators are detected for
+    you, and a UTF-8 byte order mark is stripped. A larger file is refused before it
+    uploads, so split it and run the parts one after another. Nothing is created yet.
+  </Step>
+  <Step title="Map your columns onto contact fields">
+    Orgo reads the first 200 rows of the file and opens a sheet-style preview: your
+    headers across the top, sample rows underneath, and a panel for the column you
+    clicked. For each column you choose one of four destinations: a contact field, an
+    existing custom field, a new custom field, or skip. Orgo suggests a destination per
+    column and marks it **Suggested**, so a tidy spreadsheet usually needs only a few
+    corrections.
+
+    Contact fields you can map to: email, name, phone, address, organisation, role, town,
+    country, chapter, newsletter subscription, gender, birth date, company name, company
+    identifier, company address, company registry number, professional role, LinkedIn,
+    Twitter, Instagram, status and tags. Each one can be filled by a single column, and
+    the wizard tells you when two columns compete for the same field.
+  </Step>
+  <Step title="Let anything else become a custom field">
+    A column that is neither a contact field nor an existing custom field can create a
+    new one: give it a name and a type (text, long text, number, date, yes/no, dropdown,
+    radio or checkboxes). For dropdown and radio columns you match the values in your
+    file to the options; a value the sample missed is added as a new option while the
+    import runs. Checkbox columns split on a separator you pick (comma, semicolon or
+    pipe), with a live split preview. Encrypted custom fields cannot be an import target.
+  </Step>
+  <Step title="Start the import">
+    Your mapping saves as a draft while you work, so closing the modal loses nothing.
+    **Start import** creates any new custom fields you declared, then processes the file
+    in the background in batches. **Discard** deletes the uploaded file and the mapping;
+    nothing has been imported at that point.
+  </Step>
+  <Step title="Read the results">
+    **Import History** shows a live percentage and running counts of successful, failed
+    and skipped rows, then a per-row log with the row number, the message and the raw row
+    data.
+  </Step>
+</Steps>
+
+**Email is the only required column.** Everything else is optional, so a one-column list
+of addresses is a valid contact import.
+
+### Rows that match somebody you already have
+
+Matching is on the email address, within your organisation.
+
+- A row whose email belongs to an existing **member** is skipped. The member record
+  always wins, so an import cannot split someone's history in two.
+- A row whose email belongs to an existing **contact** is also skipped, and the contact
+  is left as it is. Two things still apply: tags in the file are added, and a contact who
+  had never been asked about the newsletter is set to subscribed when the file says so.
+  A contact who is already subscribed or has unsubscribed is never changed.
+- A row with a **blank email cell** has nothing to match on, so it creates a new contact
+  every time you run that file. Re-running a file with blank emails is the one case where
+  an import reliably produces duplicates.
+
+Because creating imports skip rather than update, re-uploading a corrected spreadsheet of
+names and phone numbers changes nothing and reports a large skipped count. Use the
+**Modify Contacts** import type instead: it matches on email, then phone, and writes only
+the columns you filled in.
+
+### Rolling an import back
+
+Every completed import has a **Rollback** button in Import History, usable once. It runs
+as a single transaction, so it either completes or changes nothing.
+
+Rollback deletes the contacts that import created, along with the other records it
+created, in an order that leaves nothing pointing at a missing parent.
+
+<Warning>
+Rollback spares contacts that already existed before the import. A record the import only
+touched (a tag added, a newsletter flag raised) is kept, not deleted. Custom fields and
+dropdown options the import created are also left in place, so a rollback followed by a
+corrected re-run maps onto the same fields.
+</Warning>
+
+For a **Modify Contacts** import, Orgo stored a before-image of every row it changed, and
+rollback replays those values, including custom field answers. If somebody edited those
+records after the import, that later work is reverted too.
+
+Full mechanics of the import page, including the other seventeen import types and the
+order to run them in: [Data Import](/platform/customization/import).
+
+---
+
+## Which paths subscribe someone to the newsletter
+
+Being in Contacts and being on your mailing list are different things. Only contacts
+marked **Subscribed** receive campaigns.
+
+| Path | Subscribes them? |
+|---|---|
+| Newsletter signup widget | Yes, and only after they click the confirmation link |
+| Public form with the newsletter opt-in ticked | Yes, immediately |
+| Event registration with the opt-in ticked | Yes, immediately |
+| Donation checkout with the opt-in ticked | Yes, immediately |
+| Stripe checkout carrying a newsletter choice | Yes, immediately |
+| Import, where the file has a newsletter column | Yes for new contacts; for existing ones only from "never asked" to subscribed |
+| Manual creation | Only if you set the field yourself |
+| **Embedded contact form** | **No, never** |
+| Email-availability check (`System`) | No, the contact is created unsubscribed |
+
+Two of those deserve spelling out.
+
+**The contact form deliberately subscribes nobody.** Writing to you is not consent to be
+marketed to, and the consent checkbox on that form covers replying to the message. The
+sender lands in Contacts so you have their details and their history, with the newsletter
+field left exactly as it was: untouched on an existing contact, and never asked on a new
+one. If you want those people on the list, ask them separately.
+
+**The newsletter widget is the only double opt-in path.** Nothing is created when the
+form is submitted. Orgo stores a pending signup, emails a confirmation link, and only
+creates or subscribes the contact when that link is clicked. Every other path above is a
+single checkbox at the moment of a transaction.
+
+Details of consent, unsubscribes and bounces: [Newsletter](/platform/newsletter).
+
+---
+
+## Duplicates, honestly
+
+Contacts are matched by email address, and nothing in the database prevents two contacts
+sharing one. Every check happens as the record is created, and those checks are good but
+not perfect.
+
+What is handled: **capitalisation**. `Anna@example.org` and `anna@example.org` are the
+same person to every lookup in Orgo.
+
+What still slips through:
+
+- **Punctuation and spacing variants.** Some paths, notably paid event checkout and the
+  ticket details link, look the address up exactly as typed, so `anna..s@example.org`
+  misses the stored `anna.s@example.org` and creates a second record. The import path
+  normalises before it looks up, so it does not have this problem.
+- **Extra tickets on one order.** Registering a second ticket for a person who already
+  holds an active one creates a separate contact with no email address, on purpose, so
+  each ticket carries its own attendee details. Those records look like duplicates in the
+  contacts list and, having no address, cannot sign in to the event app.
+- **Import rows with a blank email**, as described above.
+- **Contacts who later become members.** Creating a member account from a contact does not
+  remove or link the contact, so the person exists twice until you merge them.
+
+The fix in every case is the same: merge the two records rather than deleting one, so the
+payments, tickets, documents and email history end up on a single record.
+[Becoming a member](/platform/contacts/becoming-a-member) covers merging in full, and
+[Merging duplicates](/platform/users/merging-duplicates) covers the equivalent for members.
+
+---
+
+## Choosing how to bring people in
+
+- **A backlog of history** goes through import. One file, one mapping, one rollback button
+  if the mapping was wrong. It is the only path that can create thousands of records and
+  undo them.
+- **Ongoing capture from your website** goes through the embedded contact form or the
+  newsletter widget. Use the contact form when you want the message and the person, and
+  the newsletter widget when you want a mailing list you can defend, since it is the only
+  path that proves the address belongs to the person who typed it.
+- **Event and donation contacts arrive on their own.** You do not set anything up: someone
+  who buys a ticket or donates without an account becomes a contact as part of the
+  checkout, with the details that page collected.
+- **Add Contact by hand** is for the handful of people who reach you by phone or in
+  person, and for filling in someone you already know is missing.
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="The import finished but rows are missing">
+    Compare the successful count with the skipped count in Import History. Skipped almost
+    always means the email already belongs to a member or to an existing contact, which is
+    the expected result when you re-run a file or when your spreadsheet overlaps your
+    membership. Open the per-row log to see the reason for each row. If you meant to update
+    those people rather than create them, run the file again as a **Modify Contacts**
+    import.
+  </Accordion>
+  <Accordion title="The same person appears twice">
+    Check the two email addresses character by character: a stray dot, a space or a
+    completely different address is the usual cause, since identical addresses are matched
+    regardless of capitalisation. A second record with no email address at all is normally
+    an extra event ticket rather than a duplicate person. Merge the records rather than
+    deleting one, so the payments and tickets survive. See
+    [Becoming a member](/platform/contacts/becoming-a-member).
+  </Accordion>
+  <Accordion title="A contact arrived with no name">
+    Look at the Source. A contact created by the **System** path carries the email address
+    as its name, because it was created while checking whether that address was already
+    registered and nobody had typed a name yet. Contacts from Stripe and from event
+    checkouts carry only what the payment or registration form asked for. Add the name by
+    editing the record; nothing later on will overwrite it.
+  </Accordion>
+  <Accordion title="Someone filled in the contact form but is not receiving the newsletter">
+    That is by design. The embedded contact form never sets the newsletter subscription:
+    writing to you is not consent to be marketed to. Their record shows the newsletter
+    field as never asked. Subscribe them from the contact record if you have their consent
+    another way, or point them at your newsletter signup widget so they confirm it
+    themselves.
+  </Accordion>
+  <Accordion title="The import is slow">
+    Contacts are processed in batches of several hundred rows, and the progress percentage
+    moves one batch at a time, so a small file can sit at 0% until it is done. Larger files
+    keep running after you close the tab; come back to Import History rather than waiting.
+    A file whose town column names places Orgo has not seen before is the slow case, as
+    each new place name is resolved one row at a time. If an import is still processing
+    after fifteen minutes with no counts moving at all, split the file into smaller parts
+    and run them one after another.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related
+
+- [Contacts](/platform/contacts) - what a contact is and how the directory works
+- [Becoming a member](/platform/contacts/becoming-a-member) - merging a contact into a member account
+- [Data Import](/platform/customization/import) - the import page in full, and the other import types
+- [Newsletter signup widgets](/platform/newsletter-widgets) - the double opt-in embed
+- [Newsletter](/platform/newsletter) - campaigns, consent and unsubscribes
+- [Forms](/platform/forms) - public forms that create contacts
+- [Donations](/platform/fees/donations) - donor records and donation checkout
+- [Ticketing](/platform/events/ticketing) - how ticket buyers become contacts
+- [Custom Fields](/platform/users/custom-fields) - the fields an import can create

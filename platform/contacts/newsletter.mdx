@@ -1,0 +1,322 @@
+---
+title: 'Contacts and the newsletter'
+description: 'The three subscription states on a contact, which campaign audiences reach contacts, and how people subscribe, unsubscribe and bounce'
+"og:title": 'Contacts and the newsletter | Orgo'
+"og:description": 'The three subscription states on a contact, which campaign audiences reach contacts, and how people subscribe, unsubscribe and bounce'
+"twitter:title": 'Contacts and the newsletter | Orgo'
+"twitter:description": 'The three subscription states on a contact, which campaign audiences reach contacts, and how people subscribe, unsubscribe and bounce'
+---
+
+For most organisations the contact list is the mailing list. One field on the
+contact record decides whether a campaign ever reaches that person, and a handful
+of audiences decide whether contacts are in the send at all. This page covers
+both, plus what happens on an unsubscribe and on a bounce.
+
+**Built for** the person who has to answer "why did they get this" and "why did
+they not".
+
+The campaign tool itself, its editor, scheduling and reporting, is covered on
+[Newsletter](/platform/newsletter).
+
+<img src="/images/platform/contacts/newsletter-audience.png" alt="The campaign recipients card showing the audience options, including the ones that send to contacts rather than members" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## Three states, not two
+
+The **Newsletter** field on a contact has three states, and the third one is
+real: a contact who has never been asked is not the same as a contact who said no.
+
+| State | How it arises | Receives campaigns |
+|---|---|---|
+| **Subscribed** | Someone said yes: a confirmed signup, a ticked box at registration or checkout, an import that carried a subscribed value, or an administrator pressing **Subscribe** on the record | Yes |
+| **Unsubscribed** | Someone said no: the unsubscribe link in a campaign, an administrator pressing **Unsubscribe**, an address that bounced or was reported as spam, an import that created the contact with a false value, or Orgo creating the record while checking whether an email already exists | No |
+| **Not subscribed** | Nobody ever asked. This is how most contacts start: a donor, a ticket buyer or a manually added record arrives with the field unset unless the path that created it carried an opt-in | No |
+
+Only an explicit yes is ever mailed. Every audience query tests for the
+subscribed state, so "never asked" and "unsubscribed" behave identically at send
+time. A contact with no email address is skipped as well.
+
+The **Newsletter** card on the record shows the current state with a single
+**Subscribe** or **Unsubscribe** button, and the **Newsletter** filter on the
+contacts list offers All, Subscribed, Not subscribed and Unsubscribed with a
+count beside each, which is the quickest way to see how the three states are
+spread across your database.
+
+<Note>
+The contacts list keeps the three states apart. [Lists and
+segments](/platform/users/lists) do not: there, **Not subscribed** covers both
+the people who said no and the people who were never asked, because neither group
+can be mailed.
+</Note>
+
+---
+
+## Which audiences include contacts
+
+This is the thing readers get wrong most often. Two of the six audiences never
+touch a contact, whatever the contact list holds.
+
+| Audience | Members | Contacts |
+|---|---|---|
+| **All members and contacts** | Yes | Yes, subscribed only |
+| **Members from a group** | Yes | **No.** Members only, and with no group selected it is still every member and no contact |
+| **All subscribed contacts** | **No** | Yes, subscribed only |
+| **From a list** | Yes | Yes, when the list holds contacts. Its audience scope decides |
+| **Event attendees** | Yes | Yes, subscribed attendees registered without an account |
+| **Follow up with non-openers** | Yes | Yes, but see the warning below |
+
+"All members and contacts" means everyone subscribed, not everyone in the
+database. A contact who was never asked, has no email address, or sits outside
+the local center the campaign belongs to is not in it.
+
+When a campaign carries a local center, the resolved recipients are filtered to
+that center at send time, whichever audience was chosen. Contacts with no chapter
+are filtered out by the same rule, so a chapter campaign never reaches them, and
+the recipient count applies the same filter and therefore agrees with the send.
+
+<Warning>
+**A follow-up send does not re-check the subscription field.** The non-openers
+audience is built from who received the original campaign, minus everyone the
+mail provider reported as bounced, complained or unsubscribed. It never reads the
+contact's own subscription state. Someone who received the first campaign, did
+not open it, and then used the unsubscribe link on your Orgo page is still in the
+follow-up and will receive it. Before sending a follow-up to an older campaign,
+check the contacts list for people who have unsubscribed since, and use **All
+subscribed contacts** or a list instead if that matters to you.
+</Warning>
+
+---
+
+## How someone subscribes
+
+| Path | Confirmation email | What it does |
+|---|---|---|
+| [Newsletter signup widget](/platform/newsletter-widgets) | Yes | Nothing is stored until the link in the confirmation email is clicked. Clicking it subscribes an existing member or contact, or creates a new contact with the source recorded as newsletter |
+| Registration, donation checkout, event checkout, public form | No | A checkbox reading "I want to subscribe to the newsletter". It subscribes at the moment the transaction completes |
+| [Import](/platform/customization/import) | No | An `is_newsletter_subscribed` column on the contact import |
+| Administrator | No | **Subscribe** on the Newsletter card of the contact record |
+
+The signup widget is the only path with a confirmation step. An address that
+never clicks the link is never subscribed, never appears in the contacts list
+through that route, and never appears in the widget's **Subscribers** panel.
+
+<Note>
+On the donation page, the event checkout and public forms, the subscribe checkbox
+is ticked by default. An event or a payment page can hide it entirely through its
+own settings, in which case that checkout subscribes nobody.
+</Note>
+
+<Warning>
+The embeddable **contact form** deliberately subscribes nobody. A submission
+creates or fills in a contact so you can reply, and leaves the newsletter field
+exactly as it found it. Writing to you is not consent to be marketed to, and the
+form's own consent checkbox covers the reply only.
+</Warning>
+
+An import can raise a contact from "never asked" to subscribed, but it will not
+push an already subscribed contact back down: a false value in the file is
+ignored for an existing subscribed contact. Use the record, or the unsubscribe
+paths below, to remove someone.
+
+---
+
+## Unsubscribing
+
+Every campaign carries an unsubscribe link, and Orgo appends one to the footer if
+your design has no placeholder for it. The same emails carry one-click
+unsubscribe headers, so a mail client can offer its own unsubscribe button.
+
+The link does not act on the click itself. It points at Orgo, which records
+nothing and redirects the browser to an unsubscribe page on your organisation's
+address. That page then makes the change: for a contact, who is never signed in,
+it completes on arrival and confirms; for a signed-in member it offers a choice
+between the newsletter and all notifications. Because the address in the email
+only produces the redirect, a mail client or security scanner that pre-fetches
+links cannot opt anybody out. The link is also replaced after each use, so a link
+forwarded from an old email cannot be replayed.
+
+An administrator can do the same from the record: **Unsubscribe** on the
+Newsletter card. Subscribing someone who previously unsubscribed asks you to
+confirm that you are overriding their opt-out. Both buttons need `HR_TENANT`.
+
+### Bounces and complaints
+
+When the mail provider reports a bounce or a spam complaint, Orgo switches that
+address off automatically.
+
+<Warning>
+**A bounce unsubscribes the address everywhere it appears on the platform, not
+only in your organisation.** The update is made by email address alone, so if the
+same person is a contact of three organisations on Orgo, one bounce reported to
+any of them unsubscribes all three. There is also no distinction between a
+permanent failure and a temporary one: a full mailbox unsubscribes the contact
+just as a closed mailbox does. Their subscription can be restored by hand once the
+address works again, from the Newsletter card on the record.
+</Warning>
+
+Bounced recipients are listed on the campaign's report, and the report's CSV
+export gives one row per recipient per recorded action, which is where to look
+before deciding whether a bounce was real.
+
+---
+
+## Lists and segments
+
+A [list](/platform/users/lists) is a saved audience, and it can hold members and
+contacts together. Its **profile type** is fixed when the list is created:
+Members & Contacts, Members Only, or Contacts Only.
+
+A contact joins a list in one of three ways:
+
+- **By hand**, through **Add** on a manual list. Adding someone already in the
+  list is reported as skipped rather than failing.
+- **By CSV**, importing into a manual list. Rows are matched to an existing
+  member or contact first, and a row that matches nothing creates a contact.
+- **By criteria**, on an automated list. There is no membership row at all: the
+  list is whoever matches when it is read.
+
+Two counts appear on every list, and they answer different questions:
+
+| Count | Meaning |
+|---|---|
+| **Total** | Everyone in the list, whatever their subscription state |
+| **Subscribed** | The ones who explicitly opted in, which is who a campaign to that list actually reaches |
+
+A manual list built from a search will usually show a Subscribed count well below
+its Total, because most of the people added were never asked. A list built on
+event attendance is the exception: it ignores the split entirely and reports its
+total as subscribed, because event mail is treated as informational rather than
+marketing.
+
+---
+
+## What is recorded when consent changes
+
+<Warning>
+**A change to the subscription field does not appear on the contact's Activity
+feed.** The feed shows notes, tags, donations and form submissions, but not
+subscribes and unsubscribes. Nothing at all is written when the change comes from
+the unsubscribe link, a signup confirmation, an import, a ticked box at checkout,
+a bounce, or an edit through the API. So the record does not answer "when and how
+did this person opt in, and when did they opt out".
+</Warning>
+
+The one place a change is written down is the organisation-wide [Activity
+Log](/platform/logs): pressing **Subscribe** or **Unsubscribe** on a contact
+record writes an entry there naming the administrator, the contact and the time.
+That log needs `ADMIN_TENANT` to read, and it covers only those two buttons.
+
+If you need to evidence how someone came to be on your mailing list, do not rely
+on the field:
+
+- Prefer the [newsletter signup widget](/platform/newsletter-widgets). Its
+  **Subscribers** panel lists everyone who confirmed through that widget with the
+  date they did it, which is the only dated subscription record Orgo keeps.
+- Read the record's **Source** and creation date together. They tell you which
+  path created the contact, which is a strong hint at how they arrived even
+  though it is not a consent record.
+- Write a note on the contact at the time, and keep the campaign CSV exports and
+  the [email log](/platform/emails/email-log), which are dated per recipient.
+- Keep your own record of the wording people agreed to, since Orgo stores the
+  answer but not the question.
+
+<Note>
+Orgo records what is described above and nothing more. Deciding what your
+organisation needs to keep, for how long, and under which rules is a question for
+your own advisers; using any part of the platform does not by itself make an
+organisation compliant with data protection law.
+</Note>
+
+---
+
+## Permissions
+
+| Action | Permission |
+|---|---|
+| Create and send a campaign, including one that reaches contacts | `COMMUNICATION_TENANT`, or `EVENT_TENANT` for event messages |
+| Send within one chapter | `COMMUNICATION_LOCAL` |
+| Subscribe or unsubscribe a contact from the record | `HR_TENANT` |
+| See the contacts list and its newsletter counts | `HR_LOCAL` or `FINANCIAL_LOCAL`, which every tenant-level and parent-level administrator also satisfies |
+| Add or remove someone on a manual list | `ADMIN_TENANT` |
+
+A chapter campaign manager, meaning someone holding `COMMUNICATION_LOCAL` and no
+tenant-wide communication permission, is offered only the **Members from a group**
+audience in the form. That is a convenience, not the control. The real control is
+applied when the campaign is sent: the resolved recipients are filtered down to
+the chapters that manager holds, whatever audience was stored, so a request made
+outside the interface still cannot reach another chapter's contacts. Recipient
+counts follow the same rule and are refused when they would not be capped.
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="A contact is not receiving campaigns">
+    Open the record and read the **Newsletter** card. Only **Subscribed** is
+    mailed, and a contact created by a donation, a ticket or by hand usually shows
+    **Not subscribed** because nobody asked. Then check the contact has an email
+    address, and that they fall inside the audience you used: **Members from a
+    group** never includes contacts. If your organisation uses chapters and the
+    campaign belongs to one, a contact with no chapter is filtered out. Once those
+    are ruled out, the [email log](/platform/emails/email-log) and the campaign's
+    CSV export show whether the message left and what the provider did with it.
+  </Accordion>
+
+  <Accordion title="Someone unsubscribed and still got a follow-up">
+    Follow-ups to non-openers are built from who received the earlier campaign,
+    minus the people the mail provider reported as bounced, complained or
+    unsubscribed. They do not re-read the contact's subscription field, so an
+    unsubscribe made through the link on your Orgo page does not remove that
+    person from the follow-up. For an audience that is checked against the field,
+    use **All subscribed contacts** or a list.
+  </Accordion>
+
+  <Accordion title="The audience count is smaller than my contact count">
+    Expected. The count includes only contacts that are subscribed and have an
+    email address, and, on a campaign that belongs to a chapter, only contacts
+    assigned to that chapter. Open the contacts list and use the **Newsletter**
+    filter: the counts beside All, Subscribed, Not subscribed and Unsubscribed
+    usually explain the gap in one glance, and a large **Not subscribed** number
+    means those people were never asked rather than that they refused.
+  </Accordion>
+
+  <Accordion title="Someone unsubscribed and I do not know when">
+    The subscription field carries no date and the contact's Activity feed does
+    not show the change, so the record cannot tell you. If an administrator used
+    the button on the record, the organisation-wide [Activity
+    Log](/platform/logs) has an entry with the administrator, the contact and the
+    time. Otherwise, narrow it down from the campaigns: the CSV export on each
+    campaign report lists unsubscribes per recipient, and a bounce or complaint on
+    a dated campaign explains an automatic opt-out.
+  </Accordion>
+
+  <Accordion title="A contact subscribed on the website but is not in the list">
+    The signup widget only stores someone once they click the link in the
+    confirmation email. Until then there is no contact and no subscriber row.
+    Ask the person to check their spam folder, and re-send by submitting the form
+    again, which is refused for five minutes after the previous attempt so a
+    double click does not send two emails. If they were already a member or a
+    contact, confirming switches that existing record to subscribed rather than
+    creating a second one, so look them up by email rather than by source.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related
+
+- [Newsletter](/platform/newsletter) - building, sending, scheduling and reporting on a campaign
+- [Newsletter signup widgets](/platform/newsletter-widgets) - the confirmed-opt-in form for your website
+- [Newsletter builder](/platform/newsletter-builder) - the editor, placeholders and templates
+- [Email lists](/platform/emails/email-lists) - how a saved audience behaves once email starts moving
+- [Lists & Segments](/platform/users/lists) - building a list criterion by criterion
+- [Email log](/platform/emails/email-log) - what was sent to one address and what happened to it
+- [Contacts](/platform/contacts) - what a contact is, and how it differs from a member
+- [The contact record](/platform/contacts/record) - every field, the Newsletter card, statuses and tags
+- [Where contacts come from](/platform/contacts/sources) - every path that creates a contact
+- [Contacts and money](/platform/contacts/payments) - what a contact can pay for
+- [Contacts at events](/platform/contacts/events) - registration, badges and the Event App
+- [Contact permissions](/platform/contacts/permissions) - who sees, edits, exports and deletes contacts
+- [Activity Log](/platform/logs) - the organisation-wide record of who changed what
