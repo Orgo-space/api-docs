@@ -39,6 +39,10 @@ https://mcp.orgo.space/mcp
 
 Add this URL to your AI tool and sign in with the user on your Orgo workspace when prompted. Your organization is detected automatically from the account you log in with.
 
+### Your organization's own address
+
+Inside Orgo, under **Website** → **Build by asking**, administrators see an address specific to their organization, `https://<your-org>.mcp.orgo.space/mcp`, ready to copy. It is the same server and the same sign-in: use whichever of the two you have at hand. Organizations on their own domain get the shared address above.
+
 <Tabs>
   <Tab title="Claude">
     1. Go to **Settings** → **Connectors** → **Add custom connector** (on claude.ai or in the Claude Desktop app)
@@ -125,6 +129,28 @@ An API token carries the access level of the administrator who created it, so ke
 | Auth helpers | `whoami`, login with OTP verification, token refresh |
 | Documentation resources | 21 resources under the `orgo://` scheme: concepts, recipes, webhooks |
 | Transports | stdio (local), HTTP with OAuth (hosted), SSE streaming |
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Couldn't register with Orgo's sign-in service">
+    Your AI tool could not reach the address you entered, so it never got as far as the Orgo login. Check the address for typos (it ends in `/mcp`), then remove the connector and add it again. If the organization-specific address keeps failing, use `https://mcp.orgo.space/mcp`: it is equivalent.
+  </Accordion>
+
+  <Accordion title="No login window appears">
+    Sign-in opens in a browser window that pop-up blockers sometimes hide. Look for a blocked pop-up notice in the address bar, allow it, and retry. In Claude Code, run `/mcp` and pick the Orgo server to start the sign-in by hand.
+  </Accordion>
+
+  <Accordion title="Signed in, but the assistant sees the wrong organization">
+    The assistant works inside the organization of the account you signed in with. If you belong to several, sign out of the connector and sign in again with the account for the organization you want.
+  </Accordion>
+
+  <Accordion title="The assistant says it is not allowed to do something">
+    It has exactly your permissions. Anything your own account cannot see or change in Orgo, the assistant cannot either.
+  </Accordion>
+</AccordionGroup>
 
 ---
 
