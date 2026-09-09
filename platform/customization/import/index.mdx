@@ -1,0 +1,178 @@
+---
+title: 'Data Import'
+description: 'Load members, contacts, events, payments, badges and companies from CSV files, mapping your own columns onto Orgo fields'
+"og:title": 'Data Import | Orgo'
+"og:description": 'Load members, contacts, events, payments, badges and companies from CSV files, mapping your own columns onto Orgo fields'
+"twitter:title": 'Data Import | Orgo'
+"twitter:description": 'Load members, contacts, events, payments, badges and companies from CSV files, mapping your own columns onto Orgo fields'
+---
+
+Import turns spreadsheets into Orgo records. It is how you migrate from another system,
+load a historical archive, or push a bulk correction across thousands of profiles without
+touching them one at a time.
+
+**Built for** organisations arriving with years of data in another tool or in spreadsheets.
+**Replaces** the manual re-typing, and the "can you just run this SQL" request.
+
+The page is at **Settings** → **Customization** → **Import** (`/tenants/import`),
+titled **Data Import System**.
+
+<Warning>
+**Uploading no longer starts anything.** Your file is parked as a draft, labelled **Mapping
+columns**, while you tell Orgo which column goes where. Nothing is written until you press
+**Start import**. If you are used to the old one-click upload, this is not a failure: the
+draft is waiting for you, and **Continue mapping** on the step card picks it up again.
+</Warning>
+
+<img src="/images/platform/import/import-page.png" alt="The Data import page listing numbered import steps, each with a Column mapping badge, an Example CSV link and a Choose file button, with one step showing a completed run and its successful row count" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+---
+
+## How an import runs
+
+<Steps>
+  <Step title="Choose what to import">
+    Each card on the page is one import type. They are ordered so that earlier runs create
+    the records later ones point at: structure first, then people, then the rows that link
+    them. Cards belonging to a module you have switched off do not appear. Each card also
+    offers an example file, which is the quickest way to see what that type can read.
+  </Step>
+  <Step title="Upload the file">
+    Pick a `.csv` or `.txt` file of up to 50 MB. Orgo reads the top of it, works out the
+    delimiter, and opens the mapping screen on the draft it just created.
+    See [Preparing your file](/platform/customization/import/preparing-your-file).
+  </Step>
+  <Step title="Check the match preview">
+    Payments, role assignments, company memberships and badge awards point at records you
+    already have. For those, the wizard runs a sample of your rows through the columns you
+    have chosen and shows you what each one would match, without creating anything.
+    See [Linking to existing records](/platform/customization/import/linking-records).
+  </Step>
+  <Step title="Map the columns">
+    A sheet-style view of your file, one settings panel per column. For every column you
+    choose where its values go, and Orgo proposes a destination from the header you wrote.
+    See [Mapping columns](/platform/customization/import/mapping-columns), and, on member
+    and contact files, [Custom fields](/platform/customization/import/custom-fields).
+  </Step>
+  <Step title="Start the import">
+    **Start import** becomes available once every required group has a column mapped to it;
+    until then the wizard names the ones still missing. Pressing it creates any custom
+    fields you declared, then runs the file in the background, in batches, so you can close
+    the tab.
+  </Step>
+  <Step title="Review the result">
+    The step card and the **Import History** table show progress while the run is going,
+    refreshed every three seconds, with counts of successful, failed and skipped rows.
+    Counts move one batch at a time, so a small file sits at 0% and then finishes. Expand a
+    history row to read the per-row messages. The history keeps the 50 most recent imports.
+  </Step>
+</Steps>
+
+<Note>
+Orgo does not email you when an import finishes. Keep the page open, or come back to the
+history table.
+</Note>
+
+---
+
+## What you can import
+
+| Group | Import steps |
+|---|---|
+| **Structure** | Local Centers, Units, Roles, Companies, Company Members |
+| **People** | Users, Contacts, User Roles, Modify Users, Modify Contacts |
+| **Catalogue** | Products, Product Prices |
+| **Money** | Product Payments |
+| **Events** | Events, Event Attendance |
+| **Badges** | Badge Types, Badges, Badge Assignments |
+
+Which cards you see depends on your modules, not on your permissions: Local Centers needs
+the Local Centers module, Units needs **Enable Organizational Units**, the three product
+steps need Payments and Fees, Events and Event Attendance need Events, Companies and
+Company Members need Companies, and the three badge steps need Gamification. Users,
+Contacts, Roles, User Roles and the two modify steps are always there.
+
+The nineteenth type, **List members**, is not on this page. To add people to a manual list
+from a spreadsheet, open the list itself and use the CSV import inside it. See
+[Lists and Segments](/platform/users/lists).
+
+What each type reads, which columns are required, and what it treats as the same record on
+a second run: [Import reference](/platform/customization/import/reference).
+
+---
+
+## File formats
+
+**CSV and TXT only.** Orgo does not read `.xlsx` or `.xls`. If your data is in Excel,
+Numbers or Google Sheets, use **Save as** or **Download as** and choose CSV first, one
+sheet per file.
+
+The limit is **50 MB** per file. A larger one is refused before the upload starts, with
+"File is larger than the 50 MB import limit". Split it and run the parts one after another.
+
+Comma, semicolon and tab are all fine: Orgo works out which one your file uses.
+[Preparing your file](/platform/customization/import/preparing-your-file) covers the rest,
+including where the header row may sit and how dates and yes/no columns are read.
+
+---
+
+## Who can run an import
+
+Every part of the import page, and every import action behind it, requires `ADMIN_TENANT`.
+Local, HR and financial admins do not see the Settings area at all, so importing is a
+tenant-admin job even for data that belongs to one chapter.
+
+---
+
+## Creating versus updating
+
+Sixteen of the steps only create. A row that matches a record you already have counts as
+**skipped**, and the existing record is left exactly as it was. A second run of the same
+file therefore adds very little, as long as its rows carry something to be recognised by:
+an email, a name, a legacy id. What counts as a match is listed per type in the
+[reference](/platform/customization/import/reference).
+
+The two steps under **Modify existing records**, **Modify Users** and **Modify Contacts**,
+are the ones that write over what is already there. They match a person first, then update
+only the columns you filled in: an empty cell leaves the stored value alone, so a blank
+cannot be used to clear a field. Usernames, passwords, permissions and API tokens are never
+written by any import.
+
+<Warning>
+Imported members get no email and no usable password: the import writes a placeholder
+nobody knows. Someone imported with their own address signs in with the email one-time code
+from the login page, or through a password reset. A row whose email already belongs to
+somebody else, and a row with no email at all, gets a generated placeholder address that
+cannot receive mail, so those members cannot sign in until you correct the address.
+</Warning>
+
+---
+
+## If you used the old importer
+
+Three habits are worth unlearning.
+
+- **Columns are chosen, not guessed.** The old page matched your headers against a fixed
+  list of exact names, so `E-mail address` missed and `email` hit. Now you pick the
+  destination for each column yourself, and Orgo only suggests.
+- **A legacy id column is no longer required.** Files that carry your old system's
+  identifiers still work and still dedupe on them, but a file that has never had them is
+  fine too: a member is found by email, a role or a chapter by name.
+- **A column you do not map is dropped.** It is not turned into a text custom field the way
+  an unrecognised header used to be. If you want a column stored, map it, and declare a new
+  custom field for it if there is nowhere obvious to put it.
+
+---
+
+## Related
+
+- [Preparing your file](/platform/customization/import/preparing-your-file) - formats, headers, dates, yes/no columns and example files
+- [Mapping columns](/platform/customization/import/mapping-columns) - the mapping screen, suggestions and what has to be filled in before you can start
+- [Custom fields](/platform/customization/import/custom-fields) - writing into fields you have, and declaring new ones from a column
+- [Linking to existing records](/platform/customization/import/linking-records) - how a payment finds its payer, and what the match preview is telling you
+- [Import reference](/platform/customization/import/reference) - every import type, column by column
+- [Adding Members](/platform/users/adding-members) - the other ways people get an account
+- [Where contacts come from](/platform/contacts/sources) - importing contacts, and how they differ from members
+- [Lists and Segments](/platform/users/lists) - importing people straight into a list
+- [Custom Fields](/platform/users/custom-fields) - the profile fields an import can fill or create
+- [Merging Duplicates](/platform/users/merging-duplicates) - cleaning up records an import doubled

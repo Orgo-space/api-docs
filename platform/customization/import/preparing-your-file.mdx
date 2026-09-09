@@ -1,0 +1,248 @@
+---
+title: 'Preparing your file'
+description: 'Get the spreadsheet right before you upload it: CSV format, the 50 MB limit, headers, dates, yes/no columns and choices'
+"og:title": 'Preparing your import file | Orgo'
+"og:description": 'Get the spreadsheet right before you upload it: CSV format, the 50 MB limit, headers, dates, yes/no columns and choices'
+"twitter:title": 'Preparing your import file | Orgo'
+"twitter:description": 'Get the spreadsheet right before you upload it: CSV format, the 50 MB limit, headers, dates, yes/no columns and choices'
+---
+
+Most import problems are decided in the spreadsheet, long before Orgo sees it. This
+page is what to fix while the file is still open in Excel, Numbers or Google Sheets.
+
+**Built for** the person holding an export from an old system, a membership register
+kept in a spreadsheet, or a list somebody else prepared. **Replaces** the guesswork of
+uploading, reading the errors, and trying again.
+
+---
+
+## Save it as CSV
+
+Orgo reads **CSV** and **TXT** files. It does not read Excel workbooks. An `.xlsx`
+or `.xls` file has to be saved as CSV first, and so does an `.ods` or a Numbers
+document.
+
+| Where the file lives now | How to get a CSV |
+|---|---|
+| **Excel** | File, Save As (or Export), and pick **CSV UTF-8 (Comma delimited) (.csv)**. Choose that entry rather than plain "CSV" when both are offered. |
+| **Numbers** | File, Export To, **CSV**, and set **Text Encoding** to **Unicode (UTF-8)**. |
+| **Google Sheets** | File, Download, **Comma Separated Values (.csv)**. Google Sheets always writes UTF-8. |
+| **Another system's export** | Ask for CSV. If the export only offers Excel, open it and save it again as CSV. |
+
+Save one sheet per file. A workbook with several tabs becomes a CSV of whichever
+sheet was active, and the rest is lost silently.
+
+<Note>
+Save as **UTF-8** wherever the option exists. Orgo also recognises the older Western
+European encodings that Excel produces on Windows, but UTF-8 is the only one that
+carries accented names, Cyrillic and Greek without any guessing. A UTF-8 byte order
+mark at the start of the file is harmless and is removed for you.
+</Note>
+
+---
+
+## Keep it under 50 MB
+
+The limit is **50 MB per file**. The size is checked in your browser before the
+upload starts, so an oversized file never leaves your computer: you get **"File is
+larger than the 50 MB import limit"** straight away.
+
+A CSV of member records is small, so 50 MB is a lot of rows. If you do go past it,
+split the file:
+
+1. Open the spreadsheet and split it by row into two or more files, for example
+   rows 1 to 40,000 and rows 40,001 onwards.
+2. Copy the header line into every part. Each file has to carry its own headers.
+3. Upload the parts one after another, mapping each one as its own import.
+
+Splitting is also the faster route for very large files, not only the legal one.
+A file of a few tens of thousands of rows moves through Orgo noticeably quicker
+as several parts than as one enormous upload.
+
+---
+
+## How Orgo reads the file
+
+**One header line, then one row per record.** No merged cells, no blank spacer
+rows in the middle, no totals row at the bottom, no notes written above the
+headers. A spreadsheet meant to be read by a person is rarely a good import file;
+strip the presentation out of it.
+
+**The header line is found for you.** Blank lines above the header are skipped, and
+when an import starts Orgo looks through the first ten lines for the row that
+carries the columns that type needs. What you should still do is put the headers on
+the first line with content in it, because the mapping screen builds the sheet you
+see from that line. A title such as "Members export 2026" sitting above the headers
+will be read as the header row there.
+
+**The delimiter is detected, not configured.** Orgo counts semicolons, commas and
+tabs on the header line and uses whichever appears most often. That is why the
+header line matters more than the rest of the file: a header full of punctuation
+can outvote the real separator. Values that contain the delimiter are fine as long
+as your spreadsheet quoted them, which every export listed above does.
+
+**One row is one record.** Five rows for the same person are five rows, not one
+person seen five times, and each of them is processed on its own.
+
+---
+
+## Column headers are yours to name
+
+This is the change that matters most if you have imported into Orgo before.
+
+**Your headers no longer have to match Orgo's field names.** You are not renaming
+`Email address` to `email`, or `Date of birth` to `birth_date`, before you upload
+anything. You upload the file as your old system exported it, and then you say on
+screen which column goes where. `E-mail`, `Correo`, `Adresa de email` and
+`Contact email` are all fine, because you point each one at the destination field
+yourself in the mapping screen.
+
+Two things follow from that:
+
+- **Do not rename headers to guess at Orgo's vocabulary.** Leave them as they are.
+  Clear, human headers are easier to map than half-remembered technical ones.
+- **Every column needs a header.** A column with an empty header cell cannot be
+  mapped, so give it a name, even a rough one, or delete the column.
+
+Headers that do already match Orgo's names are still worth having: the mapping
+screen recognises them and pre-selects the destination for you, which leaves less
+to do by hand. It is a shortcut, not a requirement.
+
+<Note>
+Two columns whose headers differ only by capitals, spaces or hyphens count as the
+same column, so `First Name` and `first-name` collide and only one survives. Give
+every column a distinct name.
+</Note>
+
+---
+
+## Values that need care
+
+Most cells are copied across as text and need no thought. These are the ones that
+quietly do something other than what the spreadsheet looks like it says.
+
+| Column holds | Write it as | What happens otherwise |
+|---|---|---|
+| **A date** | `2026-03-14`, always year, month, day with dashes | Anything else is refused: `14/03/2026`, `2026-3-14`, `March 14 2026`, and the plain numbers Excel leaves behind when a date column loses its formatting. A date Orgo cannot read fails the whole row, not just that cell. |
+| **Yes or no** | `true`, `1` or `yes` for yes, in any capitalisation | Only those three spellings count as yes. Everything else, including `y`, `x`, `da`, `ja`, `oui`, `sim` and a tick character, is stored as **no**, with no warning and no error. |
+| **A number** | The number as you want it stored | Numbers are stored exactly as written. Nothing is parsed, rounded or reformatted, so `12,50`, `1 250` and `EUR 50` all land as that text. Decide on one way of writing amounts and apply it to the whole column. |
+| **Nothing (an empty cell)** | Leave it empty only when you mean "no change" | An empty cell writes nothing at all. It cannot clear a value that is already stored, so blanking a column in the spreadsheet and importing again leaves the old values in place. |
+| **One choice from a list** | The option label as it reads in Orgo | The value is matched against the existing options by label, ignoring capitals and extra spaces, so `chess`, `Chess` and `Chess ` all find the same option. A value that matches nothing creates a new option on the field. |
+| **Several choices at once** | The labels separated by one consistent character | Multi-choice columns are split on a delimiter you choose in the mapping screen, and each part is then matched like a single choice. Mixing separators inside one column leaves you with options named after the whole cell. |
+
+<Warning>
+The yes/no rule is the one that catches people out. A column of `da` and `nu`, or
+`ja` and `nein`, or `Y` and `N`, imports as a column of no's, and the import
+reports a clean run because nothing went wrong from its point of view. Convert
+those columns to `yes` and `no`, or to `1` and `0`, in the spreadsheet first. A
+find-and-replace on the column takes a minute and is the single highest-value
+thing on this page.
+</Warning>
+
+<Note>
+Only capitals and spacing are forgiven when a choice is matched. `Chess` and
+`Chess.` are two different options, and so are `Football` and `Fotbal`. Tidy the
+spelling in the column before you import, or you will find near-duplicate options
+on the field afterwards.
+</Note>
+
+---
+
+## Start from an example file
+
+Every import type on the **Data Import** page carries an **Example CSV** link on its
+step card, next to the upload button. The example is a real, working file for that
+type with a handful of demonstration rows.
+
+Use one as a template:
+
+1. Download the example for the type you are importing.
+2. Open it and look at the columns. They are the ones that type understands, written
+   the way Orgo writes them.
+3. Replace the demonstration rows with your own data, keeping the header line.
+4. Save as CSV and upload.
+
+Working this way means your headers already match Orgo's names, so the mapping
+screen has almost nothing left to ask you. It is also the quickest way to see what a
+type expects when the field list is unfamiliar. Any column of your own that the
+example does not have can simply be added: you will map it when you upload.
+
+---
+
+## Before you upload
+
+- [ ] The file is saved as **CSV or TXT**, not as an Excel workbook, and in UTF-8.
+- [ ] It is under **50 MB**, or it has been split into parts that each carry the header line.
+- [ ] The **headers sit on the first line with content**, with nothing above them.
+- [ ] **Every column has a header**, and no two headers are the same.
+- [ ] There is **one row per record**: no merged cells, no spacer rows, no totals line.
+- [ ] Every date column reads **`2026-03-14`**, in that order, for every row including the last ones.
+- [ ] Every yes/no column uses **`yes`, `1` or `true`**, and nothing else means yes.
+- [ ] Nothing you wanted to erase was left blank, because a blank cell changes nothing.
+- [ ] Files about people carry an **email column** wherever you have addresses.
+- [ ] You scrolled to the **bottom of the file** and checked that the last rows look like the first ones.
+
+<Tip>
+That last one is worth the thirty seconds. Exports often start clean and turn messy
+several thousand rows in, where a different date format or a stray note was pasted
+years ago.
+</Tip>
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="My file is rejected as too large">
+    The limit is 50 MB and it is checked in the browser, so the message appears
+    before anything is uploaded. Split the spreadsheet by row into two or more
+    files, copy the header line into each part, and import the parts one after
+    another. If the file is unexpectedly large for its row count, look for empty
+    columns stretching far to the right, or thousands of empty rows below the data:
+    delete them and export again.
+  </Accordion>
+  <Accordion title="My dates all failed">
+    Orgo accepts one date format, `2026-03-14`. Everything else, including
+    `14/03/2026` and `14.03.2026`, is refused. In the spreadsheet, select the date
+    column and give it a custom format of `yyyy-mm-dd`, then export again and open
+    the CSV in a text editor to confirm the dates really were written that way.
+    Watch for the case where Excel shows a date but has stored a serial number: the
+    CSV then contains something like `46095`, which is not a date to Orgo.
+  </Accordion>
+  <Accordion title="My yes/no column came in as all no">
+    Only `true`, `1` and `yes` are read as yes. Any other word, in any language, is
+    stored as no without an error, so the import looks successful. Fix the column in
+    the spreadsheet with a find-and-replace, `da` to `yes` and `nu` to `no` for
+    example, then import the corrected file. Because a blank cell changes nothing,
+    re-importing the same file with the column corrected will set the values that
+    should be yes.
+  </Accordion>
+  <Accordion title="My file has no header row">
+    Orgo needs one. Add a line at the top naming each column. The names are yours to
+    choose, since you map them on screen, so plain words are enough. Also check that
+    nothing sits above that line: a report title, a date stamp or an exported note
+    on line one will be treated as the headers by the mapping screen. Delete those
+    rows and save again.
+  </Accordion>
+  <Accordion title="The delimiter was read wrong">
+    The separator is chosen by counting semicolons, commas and tabs on the header
+    line. Two things break it. First, punctuation inside the header names
+    themselves, such as a column called `Name, first`: rename it. Second, a file
+    that mixes separators, usually because it was edited by hand after export. The
+    reliable fix is to open the file in your spreadsheet, check that the columns
+    split correctly there, and export it once more so the whole file uses one
+    separator. In Excel on a computer set to a European locale, prefer the
+    **CSV UTF-8** export, which is consistent about what it writes.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related
+
+- [Data import](/platform/customization/import) - the whole import, from upload to finished records
+- [Mapping columns](/platform/customization/import/mapping-columns) - the screen where your headers meet Orgo's fields
+- [Custom fields in an import](/platform/customization/import/custom-fields) - storing columns Orgo has no field for
+- [Linking records](/platform/customization/import/linking-records) - how a row finds the member, event or product it belongs to
+- [Import reference](/platform/customization/import/reference) - the fields each import type reads
+- [Custom Fields](/platform/users/custom-fields) - the profile fields an import can fill or create

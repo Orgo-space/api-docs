@@ -1,0 +1,649 @@
+---
+title: 'Import Type Reference'
+description: 'Every import type in one place: the fields you can map, what each type needs, how it decides a record already exists'
+"og:title": 'Import Type Reference | Orgo'
+"og:description": 'Every import type in one place: the fields you can map, what each type needs, how it decides a record already exists'
+"twitter:title": 'Import Type Reference | Orgo'
+"twitter:description": 'Every import type in one place: the fields you can map, what each type needs, how it decides a record already exists'
+---
+
+**Built for** the moment you are about to map a file and need the answer for one type, not a tour of the whole wizard. Jump to your type and read the entry.
+
+**Replaces** opening the example CSV and guessing what each header does.
+
+---
+
+## How to read an entry
+
+Every type below has the same parts.
+
+- **Fields.** What you can map. **Field** is the name the wizard shows in its destination list; **Column** is the canonical name Orgo uses internally and in the example file. Your own spreadsheet headers do not have to match either one: you point each column at a field yourself while mapping.
+- **Required.** What the mapping must cover before **Start import** unlocks. Every group has to be satisfied, and inside a group any one alternative is enough.
+- **Already exists.** How Orgo decides a row describes a record it already has. **A match is skipped, not updated.** Only [Modify Users](#modify-users) and [Modify Contacts](#modify-contacts) change records that are already there. Re-uploading a corrected sheet through any other type changes nothing for the rows that match.
+- **Custom fields.** Whether this type can write to custom fields. Only the four people types can; for every other type the field list below is the whole vocabulary, and a column that is not on it can only be skipped.
+- **Example file.** The **Example CSV** link on that type's card, a small file with the canonical headers.
+
+---
+
+## The types at a glance
+
+| Type | Creates | Updates existing records | Custom fields |
+|---|---|---|---|
+| [Users](#users) | Members | No | Yes |
+| [Contacts](#contacts) | Contacts | No | Yes |
+| [Modify Users](#modify-users) | Nothing, except a contact for a row that matches no member | Yes, members | Yes |
+| [Modify Contacts](#modify-contacts) | Nothing, except a contact for a row that matches nobody | Yes, contacts | Yes |
+| [Product Payments](#product-payments) | Payments, plus the payer, product and price tier a payment needs | No | No |
+| [Products](#products) | Products and fees | No | No |
+| [Product Prices](#product-prices) | Price tiers | No | No |
+| [Local Centers](#local-centers) | Chapters | No | No |
+| [Units](#units) | Units and groups | No | No |
+| [Roles](#roles) | Roles | No | No |
+| [User Roles](#user-roles) | Role assignments | No | No |
+| [Companies](#companies) | Companies | No | No |
+| [Company Members](#company-members) | Company memberships | No | No |
+| [List members](#list-members) | List memberships, plus a contact when nobody matches | No | No |
+| [Events](#events) | Events | No | No |
+| [Badge Types](#badge-types) | Badge categories | No | No |
+| [Badges](#badges) | Badges | No | No |
+| [Badge Assignments](#badge-assignments) | Badge awards | No | No |
+
+<Note>
+Order matters when you run several types: each one can name records the earlier ones created, so chapters before members, products before price tiers, price tiers before payments. The import page lists the types in a workable order already.
+</Note>
+
+---
+
+## Users
+
+Creates member accounts.
+
+| Field | Column | What it means |
+|---|---|---|
+| Email | `email` | Email address. Also how Orgo tells whether the person is already a member. |
+| First name | `first_name` | Given name. |
+| Last name | `last_name` | Family name. |
+| Phone number | `phone_number` | Phone number. |
+| Birth date | `birth_date` | Date of birth. |
+| Gender | `gender` | Gender. Only the first character is kept. |
+| Address | `address` | Street address. |
+| Postal code | `postal_code` | Postcode or ZIP. |
+| Town of residence | `town_residence` | Town they live in, matched against the town list by name. |
+| Website | `website` | Personal website. |
+| Company name | `company_name` | Employer name as free text on the member, not a link to a company record. |
+| Profession headline | `profession_headline` | Job title or headline text. |
+| Member ID | `member_id` | Membership card number. |
+| Full member | `is_full_member` | Yes or no: a full member rather than a trial or associate one. |
+| Status | `status` | Member status. Only values on the allowed status list are accepted. |
+| Member type legacy ID | `user_type_legacy_id` | Their membership type, matched by legacy id or by name. |
+| Chapter legacy ID | `local_center_legacy_id` | Their chapter, by legacy id or by chapter name. |
+| Date created | `date_created` | The date the record should say the person was created. |
+| Date joined | `date_joined` | The date they joined. |
+| Date joined as full member | `date_joined_full_member` | The date they became a full member. |
+| Newsletter subscribed | `is_newsletter_subscribed` | Yes or no. Left blank, the stored value stays as it is. |
+| Tags | `tags` | Comma separated tag names. A tag that does not exist yet is created. |
+| Fee price legacy ID | `fee_tenant_product_price_legacy_id` | Legacy id of the price tier that sets their membership fee. |
+| Legacy ID | `user_legacy_id` | The person's id in the system you are migrating from. |
+
+The wizard shows these as one flat list rather than in groups.
+
+**Required:** `email`.
+
+**Already exists:** the email address, compared without regard to case. A row whose email already belongs to a member is skipped. A row with a blank or unusable email fails rather than creating a member. Map the legacy id as well and a member carrying that legacy id counts as a match too.
+
+**Custom fields:** yes.
+
+**Example file:** `import_users.csv`, from the **Example CSV** link on the **Users** card.
+
+---
+
+## Contacts
+
+Creates contacts: people you hold details for who do not have a member account.
+
+| Field | Column | What it means |
+|---|---|---|
+| Email | `email` | Email address. Also how Orgo tells whether this person is already on file. |
+| Name | `name` | Full name in one field, not split into first and last. |
+| Phone | `phone` | Phone number. |
+| Birth date | `birth_date` | Date of birth. |
+| Gender | `gender` | Gender. |
+| Address | `address` | Street address. |
+| Town | `town` | Town, matched by name. |
+| Country | `country` | Country, matched by two-letter code, three-letter code or name. |
+| Organisation | `organisation` | The organisation they belong to, as free text. |
+| Role | `role` | Their position or job title. |
+| Profession and role | `profession_organisation_role` | Their role inside that organisation. |
+| Company name | `company_name` | Company name as free text. |
+| Company identifier | `company_identifier` | Company identifier, for example a Romanian CUI. |
+| Company address | `company_address` | Company address. |
+| Company registration number | `company_reg_no` | Company registration number. |
+| LinkedIn | `linkedin` | LinkedIn profile link. |
+| Twitter | `twitter` | Twitter profile link. |
+| Instagram | `instagram` | Instagram profile link. |
+| Status | `status` | Contact status, matched by name against your profile status list. |
+| Chapter | `local_center` | Their chapter, by name. |
+| Chapter legacy ID | `local_center_legacy_id` | Their chapter, by legacy id. |
+| Newsletter subscribed | `is_newsletter_subscribed` | Yes or no. Left blank, the stored value stays as it is. |
+| Tags | `tags` | Comma separated tag names. |
+| Legacy ID | `user_legacy_id` | If the email turns out to belong to a member, this legacy id is stamped onto that member instead of a contact being created. |
+
+The wizard shows these as one flat list rather than in groups.
+
+**Required:** `email`.
+
+**Already exists:** the email address, checked against both members and contacts. An email that already belongs to either is skipped.
+
+**Custom fields:** yes.
+
+**Example file:** `import_contacts.csv`, from the **Example CSV** link on the **Contacts** card.
+
+---
+
+## Modify Users
+
+Updates members who are already in Orgo. One of the two types that change existing records.
+
+| Field | Column | What it means |
+|---|---|---|
+| Email | `email` | Email address. A match key, and writable: put a new address here to change it. |
+| Phone number | `phone_number` | Phone number. A match key, and writable. |
+| Legacy ID | `user_legacy_id` | Their id in your old system. A match key, and writable. |
+| First name | `first_name` | Given name. |
+| Last name | `last_name` | Family name. |
+| Birth date | `birth_date` | Date of birth. |
+| Gender | `gender` | Gender. |
+| Address | `address` | Street address. |
+| Postal code | `postal_code` | Postcode or ZIP. |
+| Town of residence | `town_residence` | Town they live in, matched by name. |
+| Website | `website` | Personal website. |
+| Company name | `company_name` | Employer name as free text. |
+| Profession headline | `profession_headline` | Job title or headline text. |
+| Member ID | `member_id` | Membership card number. |
+| Full member | `is_full_member` | Yes or no. |
+| Status | `status` | Member status. |
+| Newsletter subscribed | `is_newsletter_subscribed` | Yes or no. |
+| Date joined | `date_joined` | The date they joined. |
+| Date joined as full member | `date_joined_full_member` | The date they became a full member. |
+| Chapter | `local_center` | Their chapter, by name. |
+| Chapter legacy ID | `local_center_legacy_id` | Their chapter, by legacy id. Wins if you map both chapter columns. |
+| Member type legacy ID | `user_type_legacy_id` | Their membership type, by legacy id or name. |
+
+**Required:** one group, three alternatives. Map `email`, or `user_legacy_id`, or `phone_number`.
+
+**Already exists:** this type only ever works on records that exist. Each row is matched on email first, then legacy id, then phone number. A row that matches no member is tried against your contacts on the same details, and a contact is updated or created from it.
+
+**Custom fields:** yes.
+
+<Note>
+The wizard offers the full member field list here, but a modify run writes only the fields in the table above. Anything else you map, including `date_created`, `tags` and the fee price legacy id, is accepted and then goes unused. An empty cell writes nothing either, so a blank column cannot clear a value that is already stored.
+</Note>
+
+**Example file:** `import_user_modify.csv`, from the **Example CSV** link on the **Modify Users** card.
+
+---
+
+## Modify Contacts
+
+Updates contacts who are already in Orgo. The second of the two types that change existing records.
+
+| Field | Column | What it means |
+|---|---|---|
+| Email | `email` | Email address. A match key, and writable. |
+| Phone | `phone` | Phone number. A match key, and writable. |
+| Name | `name` | Full name in one field. |
+| Birth date | `birth_date` | Date of birth. |
+| Gender | `gender` | Gender. |
+| Address | `address` | Street address. |
+| Town | `town` | Town, matched by name. |
+| Country | `country` | Country, matched by two-letter code, three-letter code or name. |
+| Organisation | `organisation` | The organisation they belong to. |
+| Role | `role` | Their position or job title. |
+| Profession and role | `profession_organisation_role` | Their role inside that organisation. |
+| Company name | `company_name` | Company name. |
+| Company identifier | `company_identifier` | Company identifier, for example a Romanian CUI. |
+| Company address | `company_address` | Company address. |
+| Company registration number | `company_reg_no` | Company registration number. |
+| LinkedIn | `linkedin` | LinkedIn profile link. |
+| Twitter | `twitter` | Twitter profile link. |
+| Instagram | `instagram` | Instagram profile link. |
+| Status | `status` | Contact status. |
+| Newsletter subscribed | `is_newsletter_subscribed` | Yes or no. |
+| Chapter | `local_center` | Their chapter, by name. |
+| Chapter legacy ID | `local_center_legacy_id` | Their chapter, by legacy id. Wins if you map both chapter columns. |
+
+**Required:** one group, two alternatives. Map `email`, or `phone`. There is no legacy id alternative here, because contacts carry no legacy id of their own.
+
+**Already exists:** each row is matched on email first, then phone. A row that matches nobody creates a contact, as long as it carries an email or a name.
+
+**Custom fields:** yes.
+
+<Note>
+`tags` and the member legacy id are offered by the mapper but not written by a modify run. An empty cell writes nothing, so a blank column cannot clear a stored value.
+</Note>
+
+**Example file:** `import_contact_modify.csv`, from the **Example CSV** link on the **Modify Contacts** card.
+
+---
+
+## Product Payments
+
+Creates payment records, and the payer, product and price tier each payment needs.
+
+| Group | Field | Column | What it means |
+|---|---|---|---|
+| Payer | Payer email | `payer_email` | The payer's email address. |
+| Payer | Payer name | `payer_name` | The payer's full name, used to create a contact when no member or contact matches. |
+| Payer | Payer organisation | `payer_organisation` | The payer's organisation, kept as extra detail on a contact created this way. |
+| Payer | Legacy ID | `user_legacy_id` | The payer, by member legacy id. |
+| Product | Product name | `product_name` | The product or fee this pays for. Created if it does not exist. |
+| Product | Product type | `product_type` | The product category, used when the product has to be created. |
+| Product | Product legacy ID | `product_legacy_id` | The product, by legacy id. |
+| Price tier | Price tier name | `price_name` | The price tier. Created if it does not exist. |
+| Price tier | Price tier legacy ID | `product_price_legacy_id` | The price tier, by legacy id. |
+| Payment | Amount | `amount` | The amount paid. Numbers written the human way are understood. |
+| Payment | Currency | `currency` | Currency code. Left out, your organisation's currency is used. |
+| Payment | Status | `status` | Payment status. Only values on the allowed list are accepted. |
+| Payment | Date created | `date_created` | The date of the payment. |
+| Payment | Period start | `period_start` | Start of the period the payment covers. |
+| Payment | Period end | `period_end` | End of that period. |
+| Payment | Comment | `comment_by_user` | A free text note on the payment. |
+| Payment | Public | `is_public` | Yes or no: show this payment publicly. |
+| Payment | Payment legacy ID | `payment_legacy_id` | The invoice or payment reference from your old system. |
+
+**Required:** two things.
+
+| Group | Map at least |
+|---|---|
+| Payer | `user_legacy_id`, or `payer_email`, or `payer_name` |
+| Payment | `amount` **and** `status`, both |
+
+The **Product** and **Price tier** groups are optional: a payment with no product is treated as a donation, so a payments file without product columns validates and imports.
+
+**Already exists:** the payment legacy id when you map one. Without it, Orgo builds a fingerprint from the payer, product, price tier, amount, payment date and period, and a second row with the same fingerprint is skipped. That is what stops a re-run of the same file doubling every payment.
+
+**Custom fields:** no.
+
+**Example file:** `import_product_payments.csv`, from the **Example CSV** link on the **Product Payments** card.
+
+---
+
+## Products
+
+Creates products and fees.
+
+| Group | Field | Column | What it means |
+|---|---|---|---|
+| Product | Name | `name` | Product or fee name. |
+| Product | Type | `type` | The category, for example a fee rather than a shop item. |
+| Product | Description | `description` | Description text. |
+| Product | Product legacy ID | `product_legacy_id` | The product, by legacy id. |
+| Billing | Subscription | `has_subscription` | Yes or no: it can be paid as a recurring subscription. |
+| Billing | One-time payment | `has_one_time_payment` | Yes or no: it can be paid once off. |
+| Billing | Months per period | `month_period` | The billing period, in months. |
+| Billing | Archived | `is_archived` | Yes or no: archived. |
+| Chapter | Chapter legacy ID | `local_center_legacy_id` | The chapter that owns the product, by legacy id. |
+
+**Required:** `name`.
+
+**Already exists:** the product legacy id when you map one, otherwise the name, compared without regard to case.
+
+**Custom fields:** no.
+
+**Example file:** `import_products.csv`, from the **Example CSV** link on the **Products** card.
+
+---
+
+## Product Prices
+
+Creates price tiers under an existing product.
+
+| Group | Field | Column | What it means |
+|---|---|---|---|
+| Product | Product name | `product_name` | The parent product, by name. |
+| Product | Product legacy ID | `product_legacy_id` | The parent product, by legacy id. |
+| Price tier | Name | `name` | Tier name. |
+| Price tier | Price | `price` | The amount. |
+| Price tier | Currency | `currency` | Three-letter currency code. |
+| Price tier | Default tier | `is_default` | Yes or no: the tier offered by default. |
+| Price tier | Subscription tier | `is_subscription` | Yes or no: recurring. |
+| Price tier | Lifetime | `is_lifetime` | Yes or no: a lifetime price. |
+| Price tier | Restricted | `is_restricted` | A restriction marker, stored as text rather than a yes or no. |
+| Price tier | Price tier legacy ID | `product_price_legacy_id` | This tier, by legacy id. |
+| Price tier | Previous version legacy ID | `previous_version_old_id` | Legacy id of the tier this one replaces. Linked in a second pass, and only on rows that also carry `product_price_legacy_id`. |
+| Validity | Valid from | `valid_from` | Start of validity. Left blank, the tier is valid from the moment it is imported. |
+| Validity | Valid to | `valid_to` | End of validity. |
+
+**Required:** one group, two alternatives.
+
+| Alternative | Map |
+|---|---|
+| A | `product_name` **and** `price` |
+| B | `product_legacy_id` **and** `price` |
+
+**Already exists:** the price tier legacy id when you map one. Without it, the product plus the tier name plus the amount to the cent. The amount is read to two decimals, so `10` and `10.00` are the same tier.
+
+**Custom fields:** no.
+
+**Example file:** `import_product_prices.csv`, from the **Example CSV** link on the **Product Prices** card.
+
+---
+
+## Local Centers
+
+Creates chapters.
+
+| Group | Field | Column | What it means |
+|---|---|---|---|
+| Chapter | Name | `name` | Chapter name. |
+| Chapter | Short name | `short_name` | Short name or abbreviation, stored as an alias. |
+| Chapter | Status | `status` | Active or closed. `FALSE`, `CLOSED` and `INACTIVE` all mean closed. |
+| Chapter | Is parent | `is_parent` | Yes or no: this chapter has child chapters under it. |
+| Chapter | Parent chapter | `parent` | The chapter above it, by legacy id or by name. |
+| Chapter | Date created | `date_created` | Creation date. |
+| Chapter | Chapter legacy ID | `local_center_legacy_id` | This chapter, by legacy id. |
+| Location | Town | `town` | Town, matched inside your organisation's country unless the organisation is international. |
+| Location | Postal address | `postal_address` | Postal address. Also written to the office address. |
+| Location | Place name | `google_place_name` | Place or venue name. |
+| Location | Latitude | `google_latitude` | Latitude. |
+| Location | Longitude | `google_longitude` | Longitude. |
+| Contact | Contact name | `contact_full_name` | The contact person's name. |
+| Contact | Contact email | `contact_email` | Contact email address. |
+| Contact | Contact phone | `contact_phone` | Contact phone number. |
+| Contact | Website | `website` | Chapter website. |
+| Contact | Facebook URL | `facebook_url` | Facebook page. |
+| Bank | IBAN | `iban_eur` | The chapter's EUR IBAN. |
+
+**Required:** `name`.
+
+**Already exists:** the chapter legacy id when you map one, otherwise the name, compared without regard to case.
+
+**Custom fields:** no.
+
+**Example file:** `import_local_centers.csv`, from the **Example CSV** link on the **Local Centers** card.
+
+---
+
+## Units
+
+Creates units and groups.
+
+| Group | Field | Column | What it means |
+|---|---|---|---|
+| Unit | Name | `name` | Unit name. |
+| Unit | Unit legacy ID | `unit_legacy_id` | This unit, by legacy id. |
+| Hierarchy | Parent unit | `parent_unit` | The unit above it, by name. |
+| Hierarchy | Parent unit legacy ID | `parent_unit_legacy_id` | The unit above it, by legacy id. Wins if you map both parent columns. |
+| Hierarchy | Chapter | `local_center` | The chapter that owns the unit, by name. |
+| Hierarchy | Chapter legacy ID | `local_center_legacy_id` | The chapter that owns the unit, by legacy id. Wins if you map both chapter columns. |
+
+**Required:** `name`.
+
+**Already exists:** the unit legacy id when you map one, otherwise the name, compared without regard to case. Chapters, groups and role groups are left out of that name check, so a unit can share a name with one of them.
+
+**Custom fields:** no.
+
+**Example file:** `import_units.csv`, from the **Example CSV** link on the **Units** card.
+
+---
+
+## Roles
+
+Creates roles, including the membership types people can hold.
+
+| Group | Field | Column | What it means |
+|---|---|---|---|
+| Role | Name | `name` | Role name. |
+| Role | Role legacy ID | `role_legacy_id` | This role, by legacy id. |
+| Scope | Member type | `is_user_type` | Yes or no: this is a membership type rather than a job. |
+| Scope | Organisational role | `is_organizational` | Yes or no: a national level role. |
+| Scope | Chapter role | `is_local_center` | Yes or no: a role held at chapter level. |
+| Scope | Parent chapter role | `is_local_center_parent` | Yes or no: a role held at parent chapter level. |
+
+**Required:** `name`.
+
+**Already exists:** the role legacy id when you map one, otherwise the name, compared without regard to case.
+
+**Custom fields:** no.
+
+**Example file:** `import_roles.csv`, from the **Example CSV** link on the **Roles** card.
+
+---
+
+## User Roles
+
+Gives members their roles, optionally inside a unit, for a period of time.
+
+| Group | Field | Column | What it means |
+|---|---|---|---|
+| Member | Email | `email` | The member, by email. |
+| Member | Legacy ID | `user_legacy_id` | The member, by legacy id. |
+| Role | Role name | `role_name` | The role, by name. |
+| Role | Role legacy ID | `role_legacy_id` | The role, by legacy id. |
+| Unit | Unit name | `unit_name` | The unit the role is held in, by name. |
+| Unit | Unit legacy ID | `unit_legacy_id` | The unit, by legacy id. |
+| Period | Start date | `start_date` | When the role started. |
+| Period | End date | `end_date` | When it ended. Blank means they still hold it. |
+| Period | Unit admin | `is_admin` | Yes or no: this role makes them an admin of the unit. |
+
+**Required:** three things.
+
+| Group | Map at least |
+|---|---|
+| Member | `user_legacy_id`, or `email` |
+| Role | `role_legacy_id`, or `role_name` |
+| Period | `start_date` |
+
+The **Unit** group is offered but never required.
+
+**Already exists:** the member, the role, the unit and the start date together. The same person can hold the same role twice as long as the start dates differ.
+
+**Custom fields:** no.
+
+**Example file:** `import_user_roles.csv`, from the **Example CSV** link on the **User Roles** card.
+
+---
+
+## Companies
+
+Creates company records.
+
+| Group | Field | Column | What it means |
+|---|---|---|---|
+| Company | Name | `name` | Trading name. |
+| Company | Legal name | `legal_name` | Registered legal name. |
+| Company | Description | `description` | Description text. |
+| Company | Status | `status` | Company status. |
+| Company | Registration number | `registration_number` | Company registration number. |
+| Company | VAT number | `vat_number` | VAT or tax identifier. |
+| Company | Country | `country` | Country, matched by two-letter code, three-letter code or name. |
+| Company | Date created | `date_created` | Creation date. |
+| Company | Company legacy ID | `company_legacy_id` | This company, by legacy id. |
+| Contact | Contact name | `contact_full_name` | The contact person's name. |
+| Contact | Contact email | `contact_email` | Contact email address. |
+| Contact | Website | `website` | Company website. |
+| Contact | Address | `address` | Company address. |
+| Membership | Membership valid until | `valid_fee_date` | The date the company's membership fee is paid up to. |
+| Membership | Fee price tier | `fee_tenant_product_price_id` | The fee price tier, looked up by legacy id first and then by Orgo's own id. |
+
+**Required:** `name`.
+
+**Already exists:** the company legacy id when you map one, otherwise the name, compared without regard to case.
+
+**Custom fields:** no.
+
+**Example file:** `import_companies.csv`, from the **Example CSV** link on the **Companies** card.
+
+---
+
+## Company Members
+
+Links members to the companies they belong to.
+
+| Group | Field | Column | What it means |
+|---|---|---|---|
+| Company | Company name | `company_name` | The company, by name. |
+| Company | Company legacy ID | `company_legacy_id` | The company, by legacy id. |
+| Member | Email | `email` | The member, by email. |
+| Member | Legacy ID | `user_legacy_id` | The member, by legacy id. |
+| Membership | Role | `role` | Their role inside the company. |
+| Membership | Date created | `date_created` | When the membership started. |
+| Membership | Membership legacy ID | `company_user_legacy_id` | This membership row, by legacy id. |
+
+**Required:** two things.
+
+| Group | Map at least |
+|---|---|
+| Company | `company_legacy_id`, or `company_name` |
+| Member | `user_legacy_id`, or `email` |
+
+**Already exists:** the company and the member together, among memberships that have not ended. Somebody already in the company is skipped.
+
+**Custom fields:** no.
+
+**Example file:** `import_company_users.csv`, from the **Example CSV** link on the **Company Members** card.
+
+---
+
+## List members
+
+Adds people to one static list. This type is not on the import page: you start it from the list itself, so the list you are importing into comes from where you started rather than from a column in the file.
+
+| Group | Field | Column | What it means |
+|---|---|---|---|
+| Member | Email | `email` | Matched against members first, then contacts. |
+| Member | Legacy ID | `user_legacy_id` | A member, by legacy id. |
+| Member | Phone | `phone` | Phone number. |
+| Member | Name | `name` | Full name, used to create a contact when nothing else matches. |
+
+**Required:** one group, four alternatives. Map `email`, or `user_legacy_id`, or `phone`, or `name`.
+
+**Already exists:** membership of the list itself. Somebody already on the list is counted as already there rather than added twice. A row with no email is also matched against your existing contacts by name before a new contact is created.
+
+**Custom fields:** no.
+
+<Note>
+This is the one link type with no match preview. What a row resolves to is decided during the run, so a preview would not tell you the truth.
+</Note>
+
+**Example file:** `import_user_list_members.csv`, from the **Download example CSV** link in the list's import panel.
+
+---
+
+## Events
+
+Creates events.
+
+| Group | Field | Column | What it means |
+|---|---|---|---|
+| Event | Name | `name` | Event title. |
+| Event | Begins | `datetime_begin` | Start date and time. |
+| Event | Ends | `datetime_end` | End date and time. |
+| Event | Description | `description` | Description text, HTML allowed. Left blank, the event gets an empty description. |
+| Event | Event type | `event_type` | The event category. A type that does not exist yet is created. |
+| Event | Event legacy ID | `event_legacy_id` | This event, by legacy id. |
+| Location | Location | `location_name` | Venue name. |
+| Location | Timezone | `timezone` | The timezone the times in the file are written in. |
+| Location | Chapter legacy ID | `local_center_legacy_id` | The chapter that owns the event, by legacy id. |
+| Location | Unit legacy ID | `unit_legacy_id` | The unit that owns the event, by legacy id. |
+| Settings | Public | `is_public` | Yes or no: visible publicly. |
+| Settings | Training | `is_training` | Yes or no: counts as training. |
+
+**Required:** `name` **and** `datetime_begin`.
+
+**Already exists:** the event legacy id when you map one. Without it, the name plus the start time to the minute, so two events of the same name at different times are two events, and the same name at the same minute is one.
+
+**Custom fields:** no.
+
+**Example file:** `import_events.csv`, from the **Example CSV** link on the **Events** card.
+
+---
+
+## Badge Types
+
+Creates the categories badges are filed under.
+
+| Group | Field | Column | What it means |
+|---|---|---|---|
+| Badge type | Name | `name` | Badge type name. |
+| Badge type | Badge type legacy ID | `badge_type_legacy_id` | This badge type, by legacy id. |
+
+**Required:** `name`.
+
+**Already exists:** the badge type legacy id when you map one, otherwise the name, compared without regard to case.
+
+**Custom fields:** no.
+
+**Example file:** `import_badge_types.csv`, from the **Example CSV** link on the **Badge Types** card.
+
+---
+
+## Badges
+
+Creates badges under a badge type.
+
+| Group | Field | Column | What it means |
+|---|---|---|---|
+| Badge | Name | `name` | Badge name. |
+| Badge | Badge legacy ID | `badge_legacy_id` | This badge, by legacy id. |
+| Badge type | Badge type | `badge_type` | The badge type it belongs to, by name. |
+| Badge type | Badge type legacy ID | `badge_type_legacy_id` | The badge type, by legacy id. Wins if you map both badge type columns. |
+
+**Required:** one group, two alternatives.
+
+| Alternative | Map |
+|---|---|
+| A | `name` **and** `badge_type` |
+| B | `name` **and** `badge_type_legacy_id` |
+
+**Already exists:** the badge legacy id when you map one, otherwise the name, compared without regard to case.
+
+**Custom fields:** no.
+
+**Example file:** `import_badges.csv`, from the **Example CSV** link on the **Badges** card.
+
+---
+
+## Badge Assignments
+
+Awards badges to members.
+
+| Group | Field | Column | What it means |
+|---|---|---|---|
+| Member | Email | `email` | The member, by email. |
+| Member | Legacy ID | `user_legacy_id` | The member, by legacy id. |
+| Badge | Badge | `badge_name` | The badge, by name. |
+| Badge | Badge legacy ID | `badge_legacy_id` | The badge, by legacy id. |
+| Award | Awarded on | `concluded_at` | The date of the award. |
+| Award | Status | `status` | Completed or pending. Words are accepted as well as 0 and 1, and a word Orgo does not recognise fails the row rather than guessing. |
+| Award | Points | `points_at_award` | Points scored at the time of the award. |
+| Award | Member comment | `comment_user` | The member's own comment. |
+| Award | Reviewer comment | `comment_master` | The assessor's comment. |
+| Award | Award legacy ID | `badge_user_legacy_id` | This award row, by legacy id. |
+
+**Required:** three things.
+
+| Group | Map at least |
+|---|---|
+| Member | `user_legacy_id`, or `email` |
+| Badge | `badge_legacy_id`, or `badge_name` |
+| Award | `concluded_at` |
+
+**Already exists:** the badge, the member and the day of the award together, plus the award legacy id when you map one. The same badge can be awarded to the same person more than once, which is why the date is part of the key, and why it is required: a file without it, re-run on another day, would double every award.
+
+**Custom fields:** no.
+
+**Example file:** `import_badge_users.csv`, from the **Example CSV** link on the **Badge Assignments** card.
+
+---
+
+## Related
+
+- [Data Import](/platform/customization/import) - what the wizard is and the steps it runs through
+- [Preparing your file](/platform/customization/import/preparing-your-file) - formats, headers, dates and the example files
+- [Mapping columns](/platform/customization/import/mapping-columns) - the mapping screen and what blocks **Start import**
+- [Custom fields in an import](/platform/customization/import/custom-fields) - mapping onto existing fields and declaring new ones
+- [Linking records](/platform/customization/import/linking-records) - how a row finds the member, product or event it names
+- [Custom Fields](/platform/users/custom-fields) - the fields an import can write to
+- [Lists & Segments](/platform/users/lists) - where a List members import starts
+- [Merging Duplicates](/platform/users/merging-duplicates) - cleaning up records an import doubled
