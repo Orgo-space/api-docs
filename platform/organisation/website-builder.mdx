@@ -1,0 +1,216 @@
+---
+title: 'Website Builder'
+description: 'Build your organization&apos;s public website out of ready-made sections, then publish it to your own domain — or ask an AI assistant to build it for you'
+"og:title": 'Website Builder | Orgo'
+"og:description": 'Build your organization&apos;s public website out of ready-made sections, then publish it to your own domain'
+"twitter:title": 'Website Builder | Orgo'
+"twitter:description": 'Build your organization&apos;s public website out of ready-made sections, then publish it to your own domain'
+---
+
+The website builder is where your organization's own website is written: pages and news articles made of ready-made sections, a header and footer menu, your colours, your domain. It is not a page of settings for the [small public site](/platform/organisation/public-website) every organization already gets — it is a site you author, with as many pages as you want to write.
+
+What it replaces is a separate website you would otherwise host somewhere else, keep in sync by hand, and re-key every event, chapter and document into. Here the events section pulls your real events, the chapters section your real chapters, and the downloads section the files you have already shared from Drive.
+
+**Settings → Organization → Website**
+
+<Note>
+  Requires **ADMIN_TENANT** and the website module. Without the module the menu entry is not there and every call behind it is refused, so an address typed by hand gets you nowhere either.
+</Note>
+
+---
+
+## The five areas
+
+| Area | What you do there |
+|---|---|
+| **Pages** | Write and order the pages of the site. This is also where news is switched on. |
+| **Articles** | Write news articles. The tab appears once news is on. |
+| **Header & Footer** | The two menus: what is in them and in what order. |
+| **Settings** | Your domain, custom code, and redirects. |
+| **Design** | Colours and link styles, and the starter templates. |
+
+---
+
+## Pages are made of sections
+
+A page is an ordered list of sections, each one a shape that already knows how to behave on a phone. You choose the shape and fill it in; you do not lay anything out.
+
+| Section | For |
+|---|---|
+| `hero` | The opening statement: a headline, a line under it, up to three buttons, optionally a background image or a short silent video |
+| `text` | A run of prose — an about page, a policy, a long explanation |
+| `imageText` | One image beside one block of text; repeat with alternating sides for a sequence |
+| `image` | A picture that *is* the content, not an illustration of nearby text |
+| `cards` | A row of linked cards with pictures — programmes, news teasers, "explore these" |
+| `features` | Icon cards: a glyph, a short title, two lines. For "what we do" where there are no photographs |
+| `stats` | A band of numbers with labels, for when the figures are the argument |
+| `cta` | One loud panel asking for a single action. Once per page — a page that asks three times asks for nothing |
+| `banner` | A full-bleed photograph with a heading and a button, mid-page |
+| `gallery` | A grid of photographs, optionally opening into a lightbox |
+| `video` | One embedded video or podcast episode |
+| `quote` / `testimonials` | One pulled quote, or several short endorsements with faces |
+| `people` | A roster: photograph, name, role, a line of biography |
+| `logos` | A wall of partner, funder or member logos |
+| `faq` | Questions with expandable answers |
+| `columns` | Two or three columns of parallel text |
+| `divider` | A rule or a gap between two sections |
+| `form` | One of your own forms, filled in and sent without leaving the page |
+| `files` | Documents to download, taken from Drive |
+| `events` | Your upcoming public events, pulled live |
+| `articles` | Your published news, newest first, optionally one category |
+| `chapters` | The map and list of your local chapters |
+| `donate` | The donation panel, wired to your payment setup |
+| `newsletter` | The sign-up form for your own newsletter list |
+
+The last six are live: you write the heading, the platform supplies the content, and it stays correct without anyone revisiting the page.
+
+### Four sections that need something to exist first
+
+<AccordionGroup>
+  <Accordion title="form — the form has to be published and open to non-members">
+    The section stores the form's identifier and fetches its questions when the page renders, so adding a question updates every page carrying it and closing the form closes it everywhere at once. Never re-type a form's questions into another section.
+
+    Two conditions, both refused on save with a message naming the block: the form must be **published or closed** — a draft is not embeddable — and it must be answerable by somebody with no Orgo account. A members-only form on a public page would render questions a visitor can fill in and cannot send, so it is refused rather than embedded.
+  </Accordion>
+
+  <Accordion title="files — the document has to be publicly shared in Drive">
+    Nothing is uploaded here and nothing is copied. The section lists files you have already shared publicly from [Drive](/platform/files), by their share link, so the permissions and the revocation stay in one place. Share the document in Drive first; revoking that share later takes the download off the site, which is what revoking a share is for.
+
+    Every entry is listed as a file, never as a picture — a photograph a visitor is meant to *look* at belongs in `gallery` or `image`.
+  </Accordion>
+
+  <Accordion title="donate — online payments have to be configured">
+    Without a donation product the section hides itself from visitors rather than showing an empty panel. See [Donation Pages & Widgets](/platform/fees/donation-pages).
+  </Accordion>
+
+  <Accordion title="events and chapters — the modules have to be on">
+    Both pull from the platform. The events section needs the events module; the chapters section shows your active local centers, so it is empty until you have some.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Starting from a template
+
+Six starter templates under **Design → Templates**, each a complete small site — pages, sections, menus and a matching palette — that you then edit:
+
+| Template | For |
+|---|---|
+| Civic | Parties, movements and campaign groups |
+| Cultural | A theatre, festival, choir or heritage organisation |
+| Educational | Youth programmes, training and scouting |
+| Environmental | Conservation, climate and local green action |
+| Professional | Professional bodies and chambers |
+| Social | Community support and direct services |
+
+A template is a starting point, not an import. If you already have a website somewhere else, do not rebuild it by hand from a template — [move it across](#moving-an-existing-website-in) instead.
+
+---
+
+## Design
+
+**Design → Theme** sets six colours — accent, page background, alternate surface, body text, header background, footer background — and how links behave on hover. Everything else follows from them, so the site stays coherent without anyone picking a colour per page.
+
+---
+
+## Your address
+
+Every organization's site starts on an Orgo address of the form `your-org.orgo.cloud`, live the moment you publish.
+
+To use a domain you own, enter it under **Settings → Domain**. Orgo shows you the DNS record to add and then reports what it sees:
+
+| Status | What it means |
+|---|---|
+| Live | Visitors reach the site here over a secure connection |
+| Setting up the certificate | The DNS record is in place; this usually takes a few minutes |
+| Not reaching Orgo yet | Check the record with whoever manages the domain name |
+
+<Note>
+  The domain your website uses is separate from the address your members sign in at. See [Custom Domain](/platform/custom-domain).
+</Note>
+
+### Custom code
+
+**Settings → Custom code** adds markup inside `<head>` and before `</body>` — an analytics tag, a verification meta tag, a chat widget. Up to 8,000 characters each.
+
+<Warning>
+  Custom code runs on the **published site only** — never in the builder and never in the preview. That is a safety boundary, not an omission: code you paste cannot reach the screen where you are signed in as an administrator.
+</Warning>
+
+### Redirects
+
+**Settings → Redirects** maps an old address to a new one. They matter most when you move a site in: without them, every link anyone ever shared to the old site, and every search ranking those addresses earned, stops working on the day you go live.
+
+---
+
+## Publishing
+
+Nothing you write is visible to anybody until you publish. Two separate things have to be true:
+
+<Steps>
+  <Step title="The page is published">
+    Pages are drafts until you say otherwise. You can publish one page or the whole site.
+  </Step>
+  <Step title="The site is live">
+    One switch decides whether visitors reach the site at all. Until it is on, a published page is still only visible to you.
+  </Step>
+</Steps>
+
+Publishing queues a build: the site is rendered to static files and served from a CDN, which is why a published page loads faster than the builder that made it. Changes you save afterwards do not reach visitors until you publish again — the builder tells you which areas have unpublished changes.
+
+Orgo takes a snapshot of the whole site before every write, so a change you regret can be put back.
+
+---
+
+## Building your website by asking
+
+You can connect an AI assistant to your organization and describe what you want instead of clicking it together:
+
+> *"Add a Volunteering page with a hero, three ways to help and a contact form, and put it in the header menu."*
+
+The **Connect MCP** button at the top of the builder gives you the address and the steps for Claude, Claude Code, ChatGPT and other assistants. The assistant works with your permissions and never publishes anything by itself. See [Orgo MCP](/platform/mcp).
+
+### Moving an existing website in
+
+Ask the assistant to move your current site across — WordPress, Squarespace, Wix, WildApricot, Hivebrite and NationBuilder are all covered. It reads the old site, decides what each part of it *is*, and expresses that in the sections above. It is a mapping rather than a copy: a clone would inherit the old site's layout accidents and its bad behaviour on phones, which is usually why you are moving in the first place.
+
+It stops and asks you twice — once before anything is written, with a preview of what would land, and once before anything becomes public. Documents, your old newsletter provider and any shop do not come across; the assistant tells you what it found rather than quietly flattening it.
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="I published, but visitors still see nothing">
+    Publishing a page and putting the site live are two separate steps. Check the live switch, then check that the page itself is published rather than a draft.
+  </Accordion>
+
+  <Accordion title="My changes are not on the live site">
+    Saving is not publishing. The builder marks the areas holding unpublished changes; publish again to send them.
+  </Accordion>
+
+  <Accordion title="A document is missing from my downloads section">
+    The `files` section can only list documents that are publicly shared in Drive. Share it there, then add it here. If a download has stopped working, check whether the share was revoked.
+  </Accordion>
+
+  <Accordion title="My form will not save on a page">
+    A draft form cannot be embedded, and neither can a members-only one: on a public page it would show questions a visitor can fill in and cannot send. Publish the form and set it to accept answers from people without an Orgo account.
+  </Accordion>
+
+  <Accordion title="The website menu is not in my settings">
+    It needs the website module and **ADMIN_TENANT**. Both are checked on the server, so the missing menu entry is the symptom rather than the cause.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Related
+
+- [Public website](/platform/organisation/public-website) - the small fixed site every organization gets, before you build one of your own
+- [Custom Domain](/platform/custom-domain) - the address your members sign in at
+- [Branding](/platform/organisation/branding) - the logo the site's header and footer use
+- [Orgo MCP](/platform/mcp) - connect an assistant and build the site by asking
+- [Files](/platform/files) - Drive, and the shares the downloads section reads
+- [Forms](/platform/forms) - the forms a page can embed
+- [Donation Pages & Widgets](/platform/fees/donation-pages) - what the donate section needs
+- [Permissions](/platform/permissions) - what ADMIN_TENANT unlocks

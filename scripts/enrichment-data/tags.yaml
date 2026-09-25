@@ -317,3 +317,47 @@ WebhookSubscription: |
   optionally set a secret for signature verification, and get a delivery-
   log endpoint for debugging. Test-firing a subscription helps verify
   end-to-end connectivity before going live.
+
+# ── Public website ───────────────────────────────────────────────────────────
+
+Website: |
+  The tenant's public website: pages and news articles built from a fixed
+  vocabulary of sections, plus both menus, redirects, design settings and
+  media. Start at `GET /api/v1/website-guide` (the process — what to produce,
+  in what order, and where to stop and ask a person) and
+  `GET /api/v1/website-schema` (the vocabulary — every section type with its
+  intent and one valid example). Both are generated from the code that
+  validates the writes, so they cannot drift from what a save accepts.
+
+  A whole site moves through `GET /website-snapshot` (read) and
+  `POST /website-import` (dry-run, then apply, in one transaction); a single
+  change goes through `PUT /website-page/{slug}` or
+  `PUT /website-article/{slug}`. Images are never URLs in a block —
+  `POST /website-media/import` fetches one and returns the filename the block
+  stores. Nothing here puts a site in front of visitors: an import sets page
+  statuses and leaves the live switch alone, and `POST /website-publish` is a
+  separate, deliberate call. Every write takes a snapshot first, and
+  `POST /website-restore/{uuid}` puts the site back.
+
+WebsitePage: |
+  One page of the public website: a slug, SEO metadata, a status, and an
+  ordered list of section blocks drawn from the vocabulary in
+  `GET /api/v1/website-schema`. Blocks are sanitized on save — anything the
+  vocabulary does not recognise is dropped, so read the stored page back
+  rather than assuming the payload survived. Prefer
+  `PUT /api/v1/website-page/{slug}` for authoring; this CRUD surface is what
+  the builder UI uses.
+
+WebsiteArticle: |
+  A news article: a page with a date. The body is the same block list through
+  the same sanitizer, so everything the section vocabulary can express is
+  available in one. `publishedAt` is the article's own date — carry the
+  source's date when migrating, or a decade of work looks like it happened
+  this afternoon. A date in the future schedules it: the public index filters
+  on the date, so it stays unseen until then.
+
+WebsiteMenuItem: |
+  One entry in the website's header or footer menu, pointing at a page, an
+  article, or an external address. Menus are ordered;
+  `POST /api/v1/website-menu/reorder` moves entries. An import that carries
+  menus replaces them wholesale; one that does not leaves them untouched.
