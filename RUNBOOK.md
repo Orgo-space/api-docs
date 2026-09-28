@@ -17,9 +17,10 @@ Run after any change to API Platform resources, controllers, or serialization gr
 
 ```bash
 # 1. Export from the Symfony backend (run inside the api container)
+# --output takes a FILE PATH inside the container (--output=json writes a file named "json").
 docker exec orgo-php bin/console api:openapi:export \
-  --output=json --spec-version=3.1 \
-  > /Users/alex/api-docs/api-reference/openapi.json
+  --output=/tmp/openapi.json --spec-version=3.1
+docker cp orgo-php:/tmp/openapi.json /Users/alex/api-docs/api-reference/openapi.json
 
 # 2. Reapply all enrichment
 cd /Users/alex/api-docs
