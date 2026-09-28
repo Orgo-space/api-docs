@@ -38,11 +38,11 @@ The hosted server is the easiest way to connect: nothing to install, always up t
 https://mcp.orgo.space/mcp
 ```
 
-Add this URL to your AI tool and sign in with the user on your Orgo workspace when prompted. Your organization is the one you sign in with, not the one in the address.
+Add this URL to your AI tool and sign in with the user on your Orgo workspace when prompted. Your organization is the one you sign in with, not the one in the address — the same address serves every organization. Administrators find it inside Orgo too, under **Website** → **Build by asking**, ready to copy.
 
-### Your organization's own address
-
-Administrators also see an address specific to their organization inside Orgo, under **Website** → **Build by asking**, ready to copy: `https://<your-org>.mcp.orgo.space/mcp`. It is the same server and the same sign-in, so use whichever of the two you have at hand. Organizations on a domain of their own get the shared address above.
+<Note>
+  An older address of the form `https://<your-org>.mcp.orgo.space/mcp` still works and existing connectors using one keep working. There is no longer any reason to prefer it: it reaches the same server and the same sign-in.
+</Note>
 
 ### If you belong to several organizations
 
@@ -172,7 +172,7 @@ Redirects matter more than they look. A migration without them throws away every
 
 <AccordionGroup>
   <Accordion title="Couldn't register with Orgo's sign-in service">
-    Your AI tool could not reach the address you entered, so it never got as far as the Orgo login. Check the address for typos — it ends in `/mcp` — then remove the connector and add it again. Both the shared address and your organization's own one work; try the other if one of them keeps failing.
+    Your AI tool could not reach the address you entered, so it never got as far as the Orgo login. Check the address for typos — it ends in `/mcp` — then remove the connector and add it again. In Claude Code the address has to be added with `--transport http`; without it the URL is treated as a command to run and the connection never starts.
   </Accordion>
 
   <Accordion title="No login window appears">
