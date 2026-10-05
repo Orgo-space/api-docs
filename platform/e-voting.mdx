@@ -84,8 +84,21 @@ The **Who is voting?** cards set eligibility.
 | **Group vote** | Everyone in the selected group. With no group selected, every active member of the organisation. For a local group, its members. For a role group, everyone bound to it. For a regular group, everyone with a role in it that has not ended. |
 | **Private vote** | Only the members the vote creator adds by name. The creator is added automatically when the vote is created. |
 | **Event attendees** | Set automatically when you start the vote from an event. Eligible attendees are those invited or fully registered, and not cancelled. Pending approval, waiting list and awaiting payment are excluded. |
+| **Company voting representatives** | The voting representative of every active company whose membership is paid through the vote's start date. Offered to tenant admins when the companies module is on. |
 
 On a private vote only the creator can add or remove voters, using the member search in the Participation panel and only while the vote is still editable. A voter who has already cast a ballot cannot be removed.
+
+### Company voting representatives
+
+The list follows the companies until the vote starts, then it is fixed.
+
+- **Before the start** the Participation panel shows the live list, each person with their company. It is recomputed on every read, so appointing or removing a voting representative, a payment, or a company changing status shows up at once; on a published vote an open page refreshes by itself. The company must be **Active**, its fee paid through the start date, and the representative's own account active; a representative who is only a contact, with no account, is not included.
+- **When the vote starts** the list is frozen, and the panel shows **List fixed when the vote started** with the time. Whoever was a voting representative at that moment keeps their vote, even if they lose the role during the vote. Someone appointed after the start cannot vote, so a company never votes twice.
+- Nobody is added by hand, the creator included: voters can be neither added nor removed, and a duplicate gets its own list when it starts.
+- A person who represents two companies is one voter.
+- The voters export lists each voter with the company recorded at the start.
+
+The electorate is chosen while the vote is a draft and cannot change once it is published. Over the API it is the `electorate` field (`company_voting_representatives`), and the list is at `GET /vote_collections/{id}/electorate`.
 
 ---
 
