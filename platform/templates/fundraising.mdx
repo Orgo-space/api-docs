@@ -46,7 +46,7 @@ Everything in this table lives under **Settings**. Module settings pages all req
 | Stripe's own receipt email | **Stripe Email Receipts** | **Settings → Modules → Payments & Fees → Online Payments** | `ADMIN_TENANT` |
 | The campaign itself | **Create Product**, then the **Donation** card | **Finance → Products** (or **Finance → Local products** for a chapter) | `FINANCIAL_TENANT`, or `FINANCIAL_LOCAL` for a chapter campaign |
 | Appeal emails | **Enable Email Campaign Module** | **Settings → Modules → Emails & Notifications → Email Campaigner** | `ADMIN_TENANT` to switch on, `COMMUNICATION_TENANT` to send |
-| Wording of the thank-you email | **Donation thank you** template | **Settings → Modules → Emails & Notifications → Email Templates** | `ADMIN_TENANT` |
+| Wording of the thank-you email | **Donation Thank You** email | **Settings → Modules → Emails & Notifications → Emails** | `ADMIN_TENANT` or `COMMUNICATION_TENANT` |
 | Revenue dashboards | analytics module, then **Minimum access level** | **Settings → Modules → All Modules** for the module, **Settings → Modules → Users & Profiles → Security & Permissions** for the access level | `ADMIN_TENANT` to configure, `FINANCIAL_TENANT` to read the Finance tab |
 
 <Note>
@@ -160,13 +160,13 @@ Each step says where in the interface it happens and how you can tell it worked,
     See [Donations](/platform/fees/donations).
   </Step>
   <Step title="Rewrite the thank-you email">
-    Open **Settings → Modules → Emails & Notifications → Email Templates** and edit **Donation thank you**.
+    Open **Settings → Modules → Emails & Notifications → Emails**, find **Donation Thank You** under **Donations** and click **Edit text**.
 
     This is the only message a one-off donor receives, so it carries the whole relationship: what the gift does, and what happens next.
 
-    Your version has no language of its own. It goes to every donor as written, whatever language they read the platform in, so pick the language most of your donors share. Leave the template untouched if you would rather each donor got the built-in wording in your organisation's default language.
+    Your wording goes to every donor as written, whatever language they read the platform in. It is saved for your organisation's default language, which is also the language of the built-in version.
 
-    **Done when:** the template reads in your own voice, and you have decided which language your donors get.
+    **Done when:** the email reads in your own voice.
 
     See [Email templates](/platform/emails/email-templates) and [System emails](/platform/emails/system-emails).
   </Step>
@@ -254,7 +254,7 @@ Two things to know before you rely on this. The A/B test is on the suggested amo
 | Donor self-service | Every **Subscription created** and **Subscription payment received** email carries a personal cancel link that works without a login |
 
 <Warning>
-  Switching off **Subscription Notifications** on **Settings → Modules → Emails & Notifications → Emails Config** silences those two emails, and with them the only cancel link a donor who is not a member ever receives. Leave the category on for a recurring programme. See [System emails](/platform/emails/system-emails).
+  Switching off those two emails under **Subscriptions** on **Settings → Modules → Emails & Notifications → Emails** silences the only cancel link a donor who is not a member ever receives. Leave them on for a recurring programme. See [System emails](/platform/emails/system-emails).
 </Warning>
 
 ### Example: an appeal tied to an event
@@ -350,7 +350,7 @@ Stated plainly, because each one has caught somebody out.
   </Accordion>
 
   <Accordion title="Nobody got a thank-you email">
-    The **Donation thank you** email is sent when Stripe confirms the payment, and it sits under the **Payment Confirmations** category on **Settings → Modules → Emails & Notifications → Emails Config**. A category switched off sends nothing and writes no log row. If the switch is on, check the [email log](/platform/emails/email-log) for the recipient address: a gift given with a mistyped email has nowhere to go. Offline gifts you recorded by hand never trigger it, because there is no Stripe confirmation to react to.
+    The **Donation thank you** email is sent when Stripe confirms the payment, and it has its own switch under **Donations** on **Settings → Modules → Emails & Notifications → Emails**. An email switched off sends nothing and writes no log row. If the switch is on, check the [email log](/platform/emails/email-log) for the recipient address: a gift given with a mistyped email has nowhere to go. Offline gifts you recorded by hand never trigger it, because there is no Stripe confirmation to react to.
   </Accordion>
 
   <Accordion title="A donor wants a receipt for their accountant">

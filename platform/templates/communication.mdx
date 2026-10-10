@@ -34,7 +34,7 @@ means resending mail.
 - [ ] A sender address you control on your own domain, not a personal mailbox
 - [ ] Access to your domain's DNS, if you want mail to leave as your address instead of `no-reply@orgo.space`
 - [ ] A written answer to "who should receive what": what goes to everyone, what to one chapter, what to a saved segment
-- [ ] A decision on language, knowing that automatic email is written in the organization's default language and only English, Romanian and German exist
+- [ ] A decision on language, knowing that automatic email is written in the organization's default language, available in English, Romanian, German, Bulgarian, Lithuanian, Spanish, French, Italian, Dutch, Ukrainian and Portuguese
 - [ ] `ADMIN_TENANT` on your own account, because every setting below lives in Settings
 
 ---
@@ -49,8 +49,7 @@ Settings.
 | **Enable Email Campaign Module** | Settings → Notifications & Email Campaign → Email Campaigner | Turns on campaigns, campaign templates, Lists & Segments, signup widgets and the email log, and adds the **COMMUNICATION** section to the administration sidebar |
 | **Default Newsletter Widget UUID** | Settings → Notifications & Email Campaign → Email Campaigner | Which [signup widget](/platform/newsletter-widgets) is served when a page asks for your organization's widget without naming one |
 | **Notification Preferences** (Newsletter Notifications, Push Notifications, Email Notifications: Comments / Tasks / Votes / Events / Discussions / Mentions) | Settings → Notifications & Email Campaign → Notification Preferences | The defaults new members are created with. They are seeds applied once, not overrides. See [Notifications](/platform/notifications) |
-| **Emails Config** category switches | Settings → Notifications & Email Campaign → Emails Config | Switches whole categories of automatic email on or off. See [System emails](/platform/emails/system-emails) |
-| **Email Templates** | Settings → Notifications & Email Campaign → Email Templates | Rewrites the subject and body of one automatic email, with a per-template **Enabled** switch. See [Email templates](/platform/emails/email-templates) |
+| **Emails** | Settings → Notifications & Email Campaign → Emails | Every automatic email with a preview, its wording to change in place, and an on or off switch per email. See [System emails](/platform/emails/system-emails) and [Email templates](/platform/emails/email-templates) |
 | **Enable Discussions Module** and **Who Can Create Public Discussions** | Settings → Discussions | The in-app forum, and whether the organization-wide feed is open to everyone or an announcement channel. See [Discussions](/platform/discussion) |
 | **Enable Profanity Check** | Settings → Discussions | Holds flagged posts for review and adds **Moderation queue** to the COMMUNICATION menu for `COMMUNICATION_TENANT`. See [Moderation](/platform/discussion/moderation) |
 | **Enable Multi-language Support** and the default language | Settings → Customization → Languages | The interface languages members can choose, and the language automatic email is written in. See [Languages](/platform/customization/languages) |
@@ -104,31 +103,30 @@ saves as you flip it and a **Saving** indicator appears while it does.
   </Step>
   <Step title="Set the organization language">
     **Settings** → **Customization** → **Languages**. Automatic email is written
-    in the organization's default language, not the recipient's, and only
-    English, Romanian and German exist. Anything else falls back to English. See
+    in the organization's default language, not the recipient's, and is
+    available in English, Romanian, German, Bulgarian, Lithuanian, Spanish, French, Italian, Dutch, Ukrainian and Portuguese. Anything else falls back to English. See
     [Languages](/platform/customization/languages).
 
     **Done when** the default language on that screen is the language you want
     every automatic email written in.
   </Step>
   <Step title="Decide what automatic email goes out">
-    **Settings** → **Notifications & Email Campaign** → **Emails Config** groups
-    every automatic email into categories (User Lifecycle, Membership & Fees,
-    Adhesion and the rest) with a switch each. Walk them before you invite
-    anyone, so members do not receive a reminder ladder you have not read. See
-    [System emails](/platform/emails/system-emails).
+    **Settings** → **Notifications & Email Campaign** → **Emails** lists every
+    automatic email by section (Users, Membership & Fees, Adhesion and the rest),
+    each with its own switch. Click an email to preview it. Walk them before you
+    invite anyone, so members do not receive a reminder ladder you have not read.
+    See [System emails](/platform/emails/system-emails).
 
-    <img src="/images/platform/emails/system-emails-config.png" alt="Emails Config screen with the Notifications and Email Campaign menu on the left and switch rows grouped under User Lifecycle, Membership and Fees, and Adhesion or Applications" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+    <img src="/images/platform/emails/system-emails-config.png" alt="Emails page filtered to Can be turned off, with section cards for Users and Membership and Fees, each email row with its switch, an off count on the section and the Turn all on or Turn all off button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-    **Done when** every category is on deliberately or off deliberately, rather
+    **Done when** every email is on deliberately or off deliberately, rather
     than on because nobody looked.
   </Step>
   <Step title="Rewrite the templates that do not sound like you">
-    **Email Templates**, in the same menu, gives you the subject and body of one
-    automatic email at a time, with placeholders and a per-template **Enabled**
-    switch. Note that a customized template has no language: your version is
-    used for every recipient. See
-    [Email templates](/platform/emails/email-templates).
+    On the same page, **Edit text** opens the email as it is sent: click a
+    sentence and type your own, change the subject, insert placeholders. Your
+    wording is saved for the organization's language and every recipient gets it.
+    See [Email templates](/platform/emails/email-templates).
 
     **Done when** the emails a new member meets in their first week read like
     your organization wrote them.
@@ -352,16 +350,15 @@ workspace, because it matches on the address rather than the account.
 
 - **System emails.** A renewal reminder, invoice or ticket confirmation goes to
   the person it concerns whether or not they unsubscribed and whether or not they
-  are in any list. Only the Emails Config category switch or the per-template
-  **Enabled** switch stops one.
+  are in any list. Only that email's switch on the **Emails** page stops one.
 - **Event attendee campaigns.** As above, the subscription flag is not consulted.
 - **Membership and role change notifications.** When an admin adds someone to a
   group or changes their roles, the member is emailed and no preference switches
   it off.
 
 **Language.** Automatic email follows the organization's default language,
-clamped to English, Romanian or German, and a template you customize yourself has
-no language at all: your version reaches every recipient. The
+falling back to English for a language email does not cover, and wording you
+change yourself reaches every recipient. The
 [invoice email and the PDF it carries](/platform/fees/invoices) are the
 exception: they cover all 14 interface languages, falling back to English only
 when the organization default is not one of them.
@@ -471,8 +468,8 @@ regardless.
     usually the bulk and the only category that batches. Then switch off the
     individual categories they object to. If the volume persists, the traffic is
     coming from something with no toggle: membership and role changes always
-    email, and system email follows the Emails Config switches instead of member
-    preferences.
+    email, and system email follows the switches on the **Emails** page instead of
+    member preferences.
   </Accordion>
 
   <Accordion title="We want one announcement to reach everyone, including people who unsubscribed">
@@ -495,8 +492,8 @@ only matters if you collect subscribers from a website.
 
 - [ ] Contact email set under **Settings** → **Organisation**, and verification requested from support
 - [ ] Default language set under **Settings** → **Customization** → **Languages**
-- [ ] Every **Emails Config** category reviewed and switched on or off deliberately
-- [ ] Templates that did not sound like you rewritten under **Email Templates**
+- [ ] Every email on the **Emails** page reviewed and switched on or off deliberately
+- [ ] Emails that did not sound like you rewritten with **Edit text** on the **Emails** page
 - [ ] **Notification Preferences** set before any member import, since they apply only at account creation
 - [ ] **Enable Email Campaign Module** on, and `COMMUNICATION_TENANT` granted to whoever writes campaigns
 - [ ] `ADMIN_TENANT` given to anyone who maintains manual list membership

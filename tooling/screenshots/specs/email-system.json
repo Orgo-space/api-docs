@@ -3,16 +3,17 @@
     "id": "emails-system-emails-config",
     "image": "/images/platform/emails/system-emails-config.png",
     "usedOn": [
-      "platform/emails/system-emails.mdx"
+      "platform/emails/system-emails.mdx",
+      "platform/templates/communication.mdx"
     ],
     "tenant": "t187c",
-    "route": "/tenants/modules/emails/system-emails",
-    "routeHint": "Settings -> Notifications & Email Campaign -> Emails Config (third item in the left module menu)",
+    "route": "/tenants/modules/emails/templates?filter=toggleable",
+    "routeHint": "Settings -> Notifications & Email Campaign -> Emails, Can be turned off filter. The old /system-emails address redirects here; the Emails Config menu item no longer exists.",
     "actions": [],
-    "waitFor": "text=Membership Renewal Reminders",
+    "waitFor": "text=Turn all off",
     "viewport": "desktop",
-    "alt": "Emails Config screen with grouped switches for User Lifecycle, Membership and Fees, Adhesion, Identity Validation, Events, Contracts and other categories",
-    "status": "new"
+    "alt": "Emails page filtered to Can be turned off, with section cards for Users and Membership and Fees, each email row with its switch, an off count on the section and the Turn all on or Turn all off button",
+    "status": "recapture"
   },
   {
     "id": "emails-templates-grid",
@@ -22,12 +23,12 @@
     ],
     "tenant": "t187c",
     "route": "/tenants/modules/emails/templates",
-    "routeHint": "Settings -> Notifications & Email Campaign -> Email Templates. The current UI shows the category list as a submenu nested under Email Templates in the left module menu, not as a separate Template Categories card, and the third menu item is now labelled Emails Config. The existing file shows the older layout and must be replaced.",
+    "routeHint": "Settings -> Notifications & Email Campaign -> Emails. One page for every email: section list nested under Emails in the left module menu, search box and filter chips at the top, then one card per section. Replaces both the old Email Templates grid and the Emails Config screen.",
     "actions": [],
-    "waitFor": "text=Welcome/New member email",
+    "waitFor": "text=Search emails",
     "viewport": "desktop",
-    "alt": "Email Templates screen with template categories in the sidebar and a grid of template cards for the Users category, each with a name and a one-line description",
-    "status": "new"
+    "alt": "Emails page with the section list under Emails in the left module menu, a search box and the All, Editable, Can be turned off and Off filters, and the Users section as a card listing each email with an Edit text button and an on or off switch",
+    "status": "recapture"
   },
   {
     "id": "emails-template-editor",
@@ -37,14 +38,15 @@
     ],
     "tenant": "t187c",
     "route": "/tenants/modules/emails/templates",
-    "routeHint": "Settings -> Notifications & Email Campaign -> Email Templates -> click the Welcome/New member email card to open the editor modal",
+    "routeHint": "Settings -> Notifications & Email Campaign -> Emails -> Edit text on the Welcome/New member email row. The inline editor shows the email as sent with each editable text outlined.",
     "actions": [
-      "click text=Welcome/New member email"
+      "click [data-type=\"approved\"] >> text=Edit text",
+      "wait 2500"
     ],
     "waitFor": "text=Insert Placeholder",
     "viewport": "desktop",
-    "alt": "Template editor over the templates grid, with the subject field, the Use default and Insert Placeholder buttons, the rich text body, and Send Test Email, Enabled, Preview and Save in the header",
-    "status": "new"
+    "alt": "Inline editor for the Welcome email: the Subject field, the Insert Placeholder and Use default buttons, and the email itself with each editable text outlined, with Send Test Email, Preview and Save in the header",
+    "status": "recapture"
   },
   {
     "id": "emails-log-list",

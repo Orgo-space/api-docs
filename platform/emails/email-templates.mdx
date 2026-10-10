@@ -1,86 +1,115 @@
 ---
 title: 'Email templates'
-description: 'Rewrite the subject and body of an automatic email, insert placeholders, preview it and send yourself a test'
+description: 'See every automatic email, change its wording in place, preview it and send yourself a test'
 "og:title": 'Email templates | Orgo'
-"og:description": 'Rewrite the subject and body of an automatic email, insert placeholders, preview it and send yourself a test'
+"og:description": 'See every automatic email, change its wording in place, preview it and send yourself a test'
 "twitter:title": 'Email templates | Orgo'
-"twitter:description": 'Rewrite the subject and body of an automatic email, insert placeholders, preview it and send yourself a test'
+"twitter:description": 'See every automatic email, change its wording in place, preview it and send yourself a test'
 ---
 
-Every automatic email ships with a written-for-you version. When that version does
-not sound like your organisation, you can replace it: your own subject line, your
-own body, your own wording.
+Every automatic email ships with a written-for-you version in your organisation's
+language. When that wording does not sound like you, change it: click a sentence in
+the email and type your own. The design stays Orgo's, so it keeps up with later
+improvements; only your words are saved.
 
 **Built for** organisations whose voice matters. **Replaces** apologising for the
 robot that emailed your members.
 
-Templates live at **Settings** → **Notifications & Email Campaign** →
-**Email Templates** (`/email-templates`) and need ADMIN_TENANT.
+Everything lives on one page: **Settings** → **Notifications & Email Campaign** →
+**Emails** (`/tenants/modules/emails/templates`). Admins (ADMIN_TENANT) and
+communication managers (COMMUNICATION_TENANT) can open it and edit wording;
+communication managers reach the same page from the main menu at
+`/email-templates`. Only admins can switch emails on or off, see
+[System emails](/platform/emails/system-emails).
 
-<img src="/images/platform/organisation/email-templates-grid.png" alt="Email Templates screen with template categories in the sidebar and a grid of template cards for the Users category, each with a name and a one-line description" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
----
-
-## Finding the template you want
-
-Templates are grouped into categories in the left sidebar: **Users**, **Referrals**,
-**Adhesion**, **Membership & Fees**, **Identity**, **eDocuments**, **Events**,
-**Donations**, **Subscriptions** and **System**.
-
-Only categories that apply to you appear: Referrals and Adhesion show when those
-features are switched on, Membership, Identity, eDocuments, Events, Donations and
-Subscriptions disappear when the matching feature is off, and **Users** and
-**System** are always there.
-
-A card greyed out with a **Disabled** tag is switched off: still editable, but not
-sent until you switch it back on.
+<img src="/images/platform/organisation/email-templates-grid.png" alt="Emails page with the section list under Emails in the left module menu, a search box and the All, Editable, Can be turned off and Off filters, and the Users section as a card listing each email with an Edit text button and an on or off switch" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## Editing a template
+## Finding an email
+
+The page lists every email your organisation sends, one card per section:
+**Users**, **Referrals**, **Adhesion**, **Membership & Fees**, **Identity**,
+**eDocuments**, **Events**, **Donations**, **Subscriptions**, **Admin alerts**,
+**Sign-in & security** and **Activity notifications**.
+
+- The sections also appear under **Emails** in the left menu. Clicking one scrolls
+  the page to it.
+- **Search emails** matches names and descriptions.
+- The filters narrow the list to **Editable** emails, those that **Can be turned
+  off**, or those that are **Off**. Each filter shows how many emails it holds.
+
+Only sections that apply to you appear: **Referrals** and **Adhesion** show when
+those features are switched on, and **Membership & Fees**, **Identity**,
+**eDocuments**, **Events**, **Donations** and **Subscriptions** disappear when the
+matching feature is off. The referral emails also follow your registration
+setting: with manual approval on you see the versions that mention approval,
+without it the ones that do not.
+
+Emails Orgo sends to your organisation about its own Orgo subscription, and
+internal messages such as "your report is ready", are not listed: they are not
+yours to change.
+
+---
+
+## Previewing an email
+
+Click any row to open a preview of the email as your members receive it, with
+your wording, your logo and colour, and your own account's details filled in.
+This works for every email on the page, including the ones you cannot edit or
+switch off. The subject line sits above the email.
+
+Sign-in codes show a sample code. **Activity notifications** (new discussions,
+comments, mentions, votes and the discussion summary) show sample content in your
+organisation's language.
+
+---
+
+## Changing the wording
 
 <Steps>
-  <Step title="Open the card">
-    The editor opens with the current subject and body loaded. If you have never
-    customised this email, that is the built-in version in your organisation's
-    language.
+  <Step title="Open the editor">
+    Click **Edit text** on the row, or **Edit text** in the preview. The email
+    opens exactly as it is sent, with every text you can change outlined.
   </Step>
-  <Step title="Change the subject">
-    A single line at the top. Placeholders work here too.
-  </Step>
-  <Step title="Change the body">
-    A rich text editor with formatting, links and images. Images you paste or
-    upload are stored when you save.
+  <Step title="Click a text and type">
+    A heading or a button label is plain text: **Enter** keeps your change,
+    **Escape** puts the previous wording back. A paragraph can also take
+    **bold**, *italic* and links, from the buttons above the email.
   </Step>
   <Step title="Insert placeholders">
-    The **Insert Placeholder** button lists the values available for this email,
-    each with a short description. Inserting from the menu is safer than typing:
-    the list is filtered to what this email actually knows about.
+    Click where the value should go, then pick it from **Insert Placeholder**. The
+    menu lists only what this email can fill in.
+  </Step>
+  <Step title="Change the subject">
+    The **Subject** field sits above the email. Leave it alone and members keep
+    getting the default subject in your language.
   </Step>
   <Step title="Preview">
-    **Preview** renders the message with your own account's details filled in.
+    **Preview** shows the email with your changes and your account's details. **Back
+    to Editor** returns to editing.
   </Step>
   <Step title="Send a test">
-    **Send Test Email** sends it to your own address with `[TEST]` in front of the
-    subject, from your organisation's real sending address. It saves nothing.
+    **Send Test Email** sends the email with your unsaved changes to your own
+    address, with `[TEST]` in front of the subject. It saves nothing.
   </Step>
   <Step title="Save">
-    **Save** makes your version the one members receive from that moment on.
+    **Save** makes your wording the one members receive from that moment on.
   </Step>
 </Steps>
 
-<img src="/images/platform/emails/email-template-editor.png" alt="Template editor over the templates grid, with the subject field, the Use default and Insert Placeholder buttons, the rich text body, and Send Test Email, Enabled, Preview and Save in the header" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/emails/email-template-editor.png" alt="Inline editor for the Welcome email: the Subject field, the Insert Placeholder and Use default buttons, and the email itself with each editable text outlined, with Send Test Email, Preview and Save in the header" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-The **Enabled** switch in the editor header turns this one email on or off,
-overriding the broader category switch on the
-[Emails Config](/platform/emails/system-emails) screen.
+To put one text back to the default, clear it and save. Every text you leave
+untouched keeps the default wording, so a later improvement to that sentence still
+reaches your members.
 
 ---
 
 ## Placeholders
 
 A placeholder is written `{{name}}` and is replaced with real data when the email
-is sent. These are available in every template:
+is sent. Most emails can use these:
 
 | Placeholder | Becomes |
 |---|---|
@@ -100,66 +129,67 @@ is sent. These are available in every template:
 | `{{contractsLink}}` | A link to the recipient's documents |
 | `{{unsubscribeUrl}}`, `{{preferencesUrl}}` | Unsubscribe and notification preference links |
 
-Individual templates add their own. Event emails carry `{{eventName}}`,
-`{{eventDate}}`, `{{eventLocation}}` and calendar links; contract reminders carry
-`{{contractName}}` and `{{contractExpiryDate}}`; renewal reminders carry
-`{{expirationDate}}` and `{{productName}}`. The **Insert Placeholder** menu is the
-authoritative list for the template you have open.
+Individual emails add their own: event emails carry the event's name, date and
+place, contract reminders the document and its expiry date, renewal reminders the
+expiry date and the product. The **Insert Placeholder** menu is the authoritative
+list for the email you have open.
 
 <Note>
-`{{ name }}` with spaces and `%name%` both work as well as `{{name}}`. A
-placeholder the email does not know about is left in the message as literal text,
-so check the preview before saving.
+**Save** refuses a placeholder the email cannot fill and names it, so a typo such
+as `{{firstname}}` cannot reach your members as literal text. Pick a replacement
+from **Insert Placeholder**.
 </Note>
 
 ---
 
 ## Going back to the original
 
-**Use default** in the editor toolbar throws your version away and reloads the
-built-in one. It asks for confirmation, and cannot be undone: the saved custom
-template is deleted, not archived, and the email falls back to the built-in
-wording exactly as it behaved before you touched it.
+**Use default** in the editor toolbar removes your wording and your subject for this
+email, after you confirm. It cannot be undone: the email goes back to the built-in
+version exactly as it was before you touched it.
 
 ---
 
 ## Language
 
-The built-in templates exist in English, Romanian and German, and Orgo picks the
-one matching your organisation's default language.
+The built-in wording exists in English, Romanian, German, Bulgarian, Lithuanian,
+Spanish, French, Italian, Dutch, Ukrainian and Portuguese. Orgo uses your
+organisation's default language; any other language falls back to English.
 
-Your own version has no language: it is used for every recipient, whatever their
-language. A multilingual organisation therefore trades wording control against
-translation, keeping the built-in templates for all three languages or customising
-and getting one.
+Your wording is saved for the language you wrote it in. If you later change the
+organisation's default language, members get the built-in wording in the new
+language until you edit the email again.
 
-The invoice email is the exception, because it is not a template at all. It and
-the PDF it carries render in your organisation's default language across all 14
-interface languages, falling back to English only when the default is not one of
-them. See [Invoices](/platform/fees/invoices).
+The invoice email is not a template at all. It and the PDF it carries render in
+your organisation's default language across all 14 interface languages, falling
+back to English only when the default is not one of them. See
+[Invoices](/platform/fees/invoices).
+
+---
+
+## Emails customised in the old editor
+
+An email you customised before the inline editor arrived was saved as a whole
+document. Members still receive that saved version, without the current design,
+and the editor says so in a notice above the email. Saving the email in the editor
+replaces it with the current design and your texts.
 
 ---
 
 ## What you cannot change
 
-Sign-in and security emails cannot be customised at all: login codes,
-multi-factor codes, verification codes, password reset and change codes, the
-password-changed confirmation and the email-change request. Orgo refuses to save
-a template for these types, because they carry live one-time codes and letting
-stored HTML into them would turn a compromised admin account into an account
-takeover of every member.
+- **Sign-in & security** emails (login, multi-factor, verification, password and
+  email-change codes and confirmations, and the event app code) can be previewed
+  but not edited. They carry live one-time codes, so their wording is fixed.
+- **Activity notifications** can be previewed but not edited. Each member chooses
+  which ones they get, see [Notifications](/platform/notifications).
+- A few admin alerts, such as **Reactivation request**, **Group transfer request**,
+  **Resignation request** and **Referral received**, can be switched off but not
+  edited.
 
-A few emails also have no card here at all and always send in their built-in
-wording, among them invoices, family invitations, waitlist messages, task
-notifications, event-app networking messages and the discussion digest.
-
-<Warning>
-Four cards exist for emails that are still produced outside the template system,
-so editing them has no effect on what members receive: **Newsletter
-Registration**, **Fee Payment Approval**, **Adult Eligibility Notification** and
-**Waitlist Eligibility Notification**. Preview and test send still work, which
-makes this easy to miss. Treat the built-in wording for those four as fixed.
-</Warning>
+Some emails have no row at all and always send in their built-in wording, among
+them invoices, family invitations, waitlist messages, task notifications and
+event-app networking messages.
 
 ---
 
@@ -167,14 +197,20 @@ makes this easy to miss. Treat the built-in wording for those four as fixed.
 
 <AccordionGroup>
   <Accordion title="My change did not appear in the email members got">
-    Check whether the email is one of the four listed above, then check
+    Check that you pressed **Save** rather than only previewing, then check
     [Email logs](/platform/emails/email-log): the log stores the body that was
     actually sent, which settles it immediately.
   </Accordion>
 
-  <Accordion title="A placeholder printed as {{something}} in the real email">
-    That value is not available to that template. Open the template, delete the
-    placeholder and pick a replacement from the **Insert Placeholder** menu.
+  <Accordion title="Save says the email cannot fill a placeholder">
+    That value is not available to this email, often because of a typo or a
+    placeholder copied from another email. Delete it and pick a replacement from
+    **Insert Placeholder**.
+  </Accordion>
+
+  <Accordion title="The email still has the old design">
+    It was customised in the old editor. Open it in the editor and save: it moves
+    to the current design and keeps your texts.
   </Accordion>
 
   <Accordion title="The test email never arrived">
@@ -184,9 +220,9 @@ makes this easy to miss. Treat the built-in wording for those four as fixed.
     [Emails](/platform/emails).
   </Accordion>
 
-  <Accordion title="I want the original wording back but only for one template">
-    Use **Use default** in that template. It affects only the template you have
-    open.
+  <Accordion title="I want the original wording back but only for one sentence">
+    Clear that text in the editor and save. To reset the whole email, use **Use
+    default**.
   </Accordion>
 </AccordionGroup>
 
@@ -194,7 +230,7 @@ makes this easy to miss. Treat the built-in wording for those four as fixed.
 
 ## Related
 
-- [System emails](/platform/emails/system-emails) - what each template is for and when it sends
+- [System emails](/platform/emails/system-emails) - what each email is for, when it sends, and switching it off
 - [Emails](/platform/emails) - sender identity and language rules
 - [Email logs](/platform/emails/email-log) - the body that actually went out
 - [Newsletter builder](/platform/newsletter-builder) - designing campaigns rather than system emails

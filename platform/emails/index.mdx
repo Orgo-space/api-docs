@@ -17,17 +17,17 @@ them. **Replaces** the transactional email service you would otherwise wire up
 yourself.
 
 Everything here lives under **Settings** → **Notifications & Email Campaign**
-(`/tenants/modules/emails`) and requires ADMIN_TENANT. The delivery log and the
-lists sit in the Administration area instead.
+(`/tenants/modules/emails`) and requires ADMIN_TENANT; communication managers
+(COMMUNICATION_TENANT) can also open the **Emails** page and change wording. The
+delivery log and the lists sit in the Administration area instead.
 
 ---
 
-## The four surfaces
+## The three surfaces
 
 | Surface | Where | What it is for |
 |---|---|---|
-| **Emails Config** | Settings → Notifications & Email Campaign → Emails Config | Switch whole categories of automatic email on or off |
-| **Email Templates** | Settings → Notifications & Email Campaign → Email Templates | Rewrite the subject and body of an individual email |
+| **Emails** | Settings → Notifications & Email Campaign → Emails | See every automatic email, preview it, change its wording, and switch it on or off |
 | **Email logs** | Administration → `/email-log` | Every email the platform sent, with the exact body |
 | **Lists & Segments** | Administration → `/email-lists` | Reusable audiences that campaigns send to |
 
@@ -64,12 +64,14 @@ Changing it to an unverified address moves the From address back to
 ## What language an email is written in
 
 Automatic emails are written in your organisation's default interface language,
-not the recipient's. Only English, Romanian and German are supported for email:
-if your default language is anything else, emails fall back to English.
+not the recipient's. Email is available in English, Romanian, German, Bulgarian,
+Lithuanian, Spanish, French, Italian, Dutch, Ukrainian and Portuguese: if your
+default language is anything else, emails fall back to English.
 
-This applies to the built-in wording of a template. If you write your own version
-of a template, that version is used for every recipient regardless of language, so
-a multilingual organisation should think carefully before customising.
+Wording you change yourself is saved for the language you wrote it in, and every
+recipient gets that version. If you change the organisation's default language
+later, the built-in wording in the new language applies until you edit the email
+again.
 
 The [invoice email](/platform/fees/invoices) and the PDF attached to it are the
 exception: they follow your organisation's default language across all 14
@@ -89,14 +91,14 @@ setting itself.
     A member registers, a fee approaches its renewal date, a ticket is paid for.
     Each of these has one email type attached to it.
   </Step>
-  <Step title="The category switch is checked">
-    If the matching switch in **Emails Config** is off, nothing is sent and nothing
-    is logged as sent. Login codes, password emails and workflow emails ignore this
-    check and always send.
+  <Step title="The switch is checked">
+    If that email is switched off on the **Emails** page, nothing is sent and
+    nothing is logged as sent. Sign-in and security emails, the newsletter signup
+    confirmation and workflow emails ignore this check and always send.
   </Step>
-  <Step title="The template is resolved">
-    Your customised version if you saved one, otherwise the built-in template in
-    your organisation's language.
+  <Step title="The wording is resolved">
+    The built-in email in your organisation's language, with any texts and subject
+    you changed in place of the defaults.
   </Step>
   <Step title="Placeholders are filled in">
     Names, dates, amounts, links. See the
@@ -148,10 +150,9 @@ A few things Orgo does for you, and one it cannot:
     Start at [Email logs](/platform/emails/email-log) and search for them. The log
     answers whether Orgo sent it, to which address, and what it said. If there is
     no row at all, check first whether that email is one Orgo logs: waitlist
-    messages, family invitations, the fee payment approval, the newsletter signup
-    confirmation and the discussion digest are never written to the log.
-    Otherwise the email was either disabled in **Emails Config** or the
-    triggering action did not happen.
+    messages and family invitations are never written to the log. Otherwise the
+    email was either switched off on the **Emails** page or the triggering action
+    did not happen.
   </Accordion>
 
   <Accordion title="Emails arrive from no-reply@orgo.space instead of us">
@@ -160,15 +161,15 @@ A few things Orgo does for you, and one it cannot:
   </Accordion>
 
   <Accordion title="An email is in the wrong language">
-    Automatic email follows the organisation's default language, clamped to
-    English, Romanian or German. A member's own interface language does not change
-    it. Invoice emails are the exception and cover all 14 languages.
+    Automatic email follows the organisation's default language, falling back to
+    English for a language email does not cover. A member's own interface language
+    does not change it. Invoice emails are the exception and cover all 14
+    languages.
   </Accordion>
 
   <Accordion title="We want to stop one specific reminder without stopping the rest">
-    Open that template in **Email Templates** and use the **Enabled** switch in the
-    template header. That per-template switch overrides the broader category
-    switch.
+    Find it on the **Emails** page and turn off the switch on its row. Every email
+    has its own switch; **Turn all off** on a section is only a shortcut.
   </Accordion>
 </AccordionGroup>
 
@@ -176,8 +177,8 @@ A few things Orgo does for you, and one it cannot:
 
 ## Related
 
-- [System emails](/platform/emails/system-emails) - the catalogue of automatic emails and what triggers each
-- [Email templates](/platform/emails/email-templates) - rewriting subject and body, and the placeholder list
+- [System emails](/platform/emails/system-emails) - the catalogue of automatic emails, what triggers each, and which can be switched off
+- [Email templates](/platform/emails/email-templates) - previewing an email, changing its wording, and the placeholder list
 - [Email logs](/platform/emails/email-log) - what was sent, to whom, and what it said
 - [Newsletter](/platform/newsletter) - campaigns you compose and send yourself
 - [Notifications](/platform/notifications) - in-app and push delivery, and per-member preferences

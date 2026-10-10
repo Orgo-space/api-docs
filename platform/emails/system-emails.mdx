@@ -14,56 +14,64 @@ off.
 **Built for** admins who need to know exactly what their members are receiving.
 **Replaces** guessing from the support inbox.
 
-The switches live at **Settings** → **Notifications & Email Campaign** →
-**Emails Config** (`/tenants/modules/emails/system-emails`) and need ADMIN_TENANT.
-Changes save as you flip them.
+The switches live on the **Emails** page: **Settings** → **Notifications & Email
+Campaign** → **Emails** (`/tenants/modules/emails/templates`). Switching an email
+on or off needs ADMIN_TENANT; communication managers (COMMUNICATION_TENANT) see
+whether each email is on but cannot change it. Changes save as you flip them. The
+old **Emails Config** address now opens this page filtered to the emails that
+**Can be turned off**.
 
-<img src="/images/platform/emails/system-emails-config.png" alt="Emails Config screen with the module menu on the left and grouped switches for User Lifecycle, Membership and Fees, and the start of Adhesion or Applications, with the remaining categories below the fold" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/emails/system-emails-config.png" alt="Emails page filtered to Can be turned off, with section cards for Users and Membership and Fees, each email row with its switch, an off count on the section and the Turn all on or Turn all off button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
 ## How the switches work
 
-A **category switch** on the Emails Config screen covers a group of related
-emails: turning off **Membership Renewal Reminders** silences all fourteen
-reminders, personal and company. A **per-email switch** sits in the header of each
-card in [Email Templates](/platform/emails/email-templates) and beats the category
-switch in both directions, so you can leave the reminder category on and silence
-only the 30-days-after one.
+Every email that can be turned off has its own switch on its row. Each section card
+shows how many of its emails are off, and **Turn all off** or **Turn all on**
+switches the whole section in one go. You can leave the renewal reminders on and
+silence only the 30-days-after one.
 
 A switched-off email is not sent and no log row is written. Nothing queues up for
 later.
 
+Organisations that used the old category switches keep what they chose: an email
+whose category was off shows as off on its row until you switch it on.
+
 <Warning>
-Login codes, verification codes, multi-factor codes, password emails and
-email-change confirmations always send. They have no switch, by design: a member
-locked out of their account is not a preference.
+Some emails always send and show **Always sent** instead of a switch:
+the **Sign-in & security** emails (a member locked out of their account is not a
+preference) and the newsletter signup confirmation (without it nobody can finish
+subscribing). The emails Orgo sends you about your own Orgo subscription are not
+listed and always send.
 </Warning>
 
 ---
 
 ## Members and accounts
 
-| Email | Sent when | Category switch |
+| Email | Sent when | Can be turned off |
 |---|---|---|
-| **Registration confirmation** | Someone registers and must confirm their address | Registration Confirmation |
-| **Welcome** | A member's account becomes active | Welcome Email |
-| **User invitation** | An admin invites someone to join | User Invitation |
-| **Company invitation** | Someone is invited to join a company profile | User Invitation |
-| **Account created by admin** | An admin creates the account rather than the member registering | User Created by Admin |
-| **New member notification** | A new member registers, sent to admins | New Member Admin Notification |
-| **Reactivation request** | A former member asks to come back, sent to admins | New Member Admin Notification |
-| **Account deactivated** | An account is deactivated, sent to admins | none, always sends |
-| **Family invitation** | A member invites a family member to link accounts | none, always sends |
+| **Account confirmation** | Someone registers and must confirm their address | Yes |
+| **Welcome** | A member's account becomes active | Yes |
+| **User invitation** | An admin invites someone to join | Yes |
+| **Company invitation** | Someone is invited to join a company profile | Yes |
+| **Account created by admin** | An admin creates the account rather than the member registering | Yes |
+| **Adult eligibility** | A child member comes of age and can sign in on their own | Yes |
+| **Waitlist eligibility** | A child becomes old enough to register from the waitlist, sent to the parents | Yes |
+| **New member notification** | A new member registers, sent to admins | Yes |
+| **Reactivation request** | A former member asks to come back, sent to admins | Yes |
+| **Newsletter registration** | Someone subscribes to the newsletter and must confirm their address | No, always sends |
+| **Account deactivated** | An account is deactivated, sent to admins | No, always sends |
+| **Family invitation** | A member invites a family member to link accounts | No, always sends |
 
 ---
 
 ## Sign-in and security
 
-None of these can be switched off or edited. Seven of them are refused by the
-platform outright if anyone tries to save a template for them; the event app code
-has no card on the Email Templates screen and renders from the built-in template
-like the rest.
+None of these can be switched off or edited. They are listed under **Sign-in &
+security** on the Emails page so you can preview them, and the platform refuses to
+save custom wording for them.
 
 | Email | Sent when |
 |---|---|
@@ -89,8 +97,8 @@ other email.
 ## Membership and fees
 
 The renewal ladder runs once a day at 18:00 UTC and picks one message per member
-based on how far the renewal date is away. All fourteen (seven here, seven for
-companies) sit under the **Membership Renewal Reminders** switch.
+based on how far the renewal date is away. Each of the fourteen (seven here, seven
+for companies) can be turned off on its own, under **Membership & Fees**.
 
 | Reminder | Window |
 |---|---|
@@ -107,12 +115,12 @@ contact email, with the primary contacts and any additional addresses in copy.
 When the company has no contact email, the first primary contact becomes the
 recipient instead. A company with neither is skipped and nothing is sent.
 
-| Other fee emails | Sent when | Category switch |
+| Other fee emails | Sent when | Can be turned off |
 |---|---|---|
-| **Renewal Confirmed** | A recurring membership charge succeeds | Payment Success |
-| **Renewal Failed** | A recurring membership charge fails | Payment Failed |
-| **Fee Payment Approval** | An admin approves a recorded fee payment | none, always sends |
-| **Invoice** | An invoice is emailed, with the PDF attached | none, always sends |
+| **Renewal Confirmed** | A recurring membership charge succeeds | Yes |
+| **Renewal Failed** | A recurring membership charge fails | Yes |
+| **Fee Payment Approval** | An admin approves a recorded fee payment | Yes |
+| **Invoice** | An invoice is emailed, with the PDF attached | No, always sends |
 
 See [Renewals](/platform/fees/renewals) for what a member experiences when a fee
 lapses, and [Invoices](/platform/fees/invoices) for invoice delivery.
@@ -121,67 +129,68 @@ lapses, and [Invoices](/platform/fees/invoices) for invoice delivery.
 
 ## Events
 
-| Email | Sent when | Category switch |
+| Email | Sent when | Can be turned off |
 |---|---|---|
-| **Event invitation** | A member is invited to an event | Event Invitations |
-| **Free event registration** | Someone registers for a free event | Event Registration Confirmation |
-| **Paid event registration** | A ticket purchase completes | Ticket Payment Confirmation |
-| **Guest tickets** | A buyer's tickets are issued for other people | Event Invitations |
-| **Ticket confirmed** | A ticket is confirmed for an attendee | Event Invitations |
-| **Day-before reminder** | A published event starts tomorrow, sent only to people who registered more than 7 days in advance, once each | Event Reminders |
-| **1-hour reminder** | An event with the one-hour reminder enabled starts in about an hour, checked every 10 minutes | Event Reminders |
-| **Attendance reminder** | An event ended 24 hours ago and attendance still needs recording | Event Reminders |
-| **Networking invitation, accepted, declined, cancelled** | A meeting request in the event app changes state | none, always sends |
+| **Event invitation** | A member is invited to an event | Yes |
+| **Free event registration** | Someone registers for a free event | Yes |
+| **Paid event registration** | A ticket purchase completes | Yes |
+| **Guest tickets** | A buyer's tickets are issued for other people | Yes |
+| **Attendance confirmed** | A ticket is confirmed for an attendee | Yes |
+| **24-hour reminder** | A published event starts tomorrow, sent once to everyone who registered at least a day before | Yes |
+| **1-hour reminder** | An event with the one-hour reminder enabled starts in about an hour, checked every 10 minutes | Yes |
+| **Attendance reminder** | An event ended 24 hours ago and attendance still needs recording | Yes |
+| **Networking invitation, accepted, declined, cancelled** | A meeting request in the event app changes state | No, always sends |
 
 ---
 
 ## Applications, identity and documents
 
-| Email | Sent when | Category switch |
+| Email | Sent when | Can be turned off |
 |---|---|---|
-| **Adhesion pending review** | An application is submitted, sent to admins and HR | Adhesion Notifications |
-| **Adhesion approved** | An application is approved | Adhesion Notifications |
-| **Adhesion rejected** | An application is rejected | Adhesion Notifications |
-| **Adhesion reverted to draft** | An admin sends an application back for changes | Adhesion Notifications |
-| **Adhesion form validated** | An admin validates the signed form | Adhesion Notifications |
-| **Identity validation requested** | A member uploads identity documents | Identity Validation Emails |
-| **Identity rejected** | A submission is rejected, with the reason | Identity Validation Emails |
-| **Identity payment reminders (3)** | Hourly job, for members who owe an identity validation payment | Identity Validation Emails |
-| **New identity for review** | Sent to finance when a document needs checking | Identity Validation Emails |
-| **Contract expiry: 30 days, 7 days, today, 7 days overdue** | Daily job at 08:00 UTC against each document's validity end date | Contract Expiry Reminders |
-| **Contract signed, pending** | One party has signed and others have not | Contract Signed Notifications |
-| **Contract signed, complete** | Everyone has signed, sent to the signer and to admins | Contract Signed Notifications |
+| **Adhesion pending review** | An application is submitted, sent to admins and HR | Yes |
+| **Adhesion approved** | An application is approved | Yes |
+| **Adhesion rejected** | An application is rejected | Yes |
+| **Adhesion reverted to draft** | An admin sends an application back for changes | Yes |
+| **Adhesion form validated** | An admin validates the signed form | Yes |
+| **Identity validation requested** | A member uploads identity documents | Yes |
+| **Identity rejected** | A submission is rejected, with the reason | Yes |
+| **Identity payment reminders (3)** | Hourly job, for members who owe an identity validation payment | Yes |
+| **New identity for review** | Sent to finance when a document needs checking | Yes |
+| **Contract expiry: 30 days, 7 days, today, 7 days overdue** | Daily job at 08:00 UTC against each document's validity end date | Yes |
+| **Contract signed, pending** | One party has signed and others have not | Yes |
+| **Contract signed, complete** | Everyone has signed, sent to the signer, with a separate version for admins | Yes, each version on its own |
 
 ---
 
 ## Subscriptions and payments
 
-| Email | Sent when | Category switch |
+| Email | Sent when | Can be turned off |
 |---|---|---|
-| **Subscription created** | A recurring payment is set up | Subscription Notifications |
-| **Subscription payment received** | A recurring charge succeeds | Subscription Notifications |
-| **Subscription cancelled** | A recurring payment is cancelled | Subscription Notifications |
-| **Identity expiring** | Daily job at 07:00 UTC, for subscriptions whose identity document is about to expire | Subscription Notifications |
-| **Identity expiring (second run)** | A second daily job at 08:00 UTC sends the same message | none, always sends |
-| **Checkout reminder** | Daily job at 08:00 UTC, for an abandoned checkout | none, always sends |
-| **Donation thank you** | A donation payment completes | Payment Confirmations |
-| **Form submission confirmation** | Someone submits a form that has confirmation enabled | Payment Confirmations |
+| **Subscription created** | A recurring payment is set up | Yes |
+| **Subscription payment received** | A recurring charge succeeds | Yes |
+| **Subscription cancelled** | A recurring payment is cancelled | Yes |
+| **Identity expiring** | Daily job at 07:00 UTC, for subscriptions whose identity document is about to expire | Yes |
+| **Subscription cancelled, identity expired** | Daily job at 08:00 UTC: three days before the identity document expires, the subscription is set to end and the member is told | No, always sends |
+| **Checkout reminder** | Daily job at 08:00 UTC, for an abandoned checkout | Yes |
+| **Donation thank you** | A donation payment completes | Yes |
+| **Form submission confirmation** | Someone submits a form that has confirmation enabled | Yes |
+| **Donation refunded** and **recurring donation stopped** | A donation is returned, or a recurring one stopped, because it would pass the annual limit per donor | Yes |
 
 ---
 
 ## Community, local centres and everything else
 
-| Email | Sent when | Category switch |
+| Email | Sent when | Can be turned off |
 |---|---|---|
-| **Local centre request, approved, declined** | A member asks to join a local centre and an admin decides | Local Center Request Notifications |
-| **Resignation request** and **approved** | A member asks to resign and an admin decides | Resignation Notifications |
-| **Referral received** | Someone signs up through a referral link | Referral Notifications |
-| **Referral complete** | A referral is finished, one version for the referrer and one for admins, differing by whether your organisation approves registrations manually | Referral Notifications |
-| **Post held for moderation** | A discussion post is held, sent to moderators | none, always sends |
-| **Connection request** and **accepted** | Members connect in the event app | none, always sends |
-| **Vote published** | A vote opens. Members receive it through their vote notification preference; non-member attendees of an event vote receive it with a personal voting link | none, always sends |
-| **Waitlist confirmation, approved, rejected, position update, new entry** | The registration waitlist changes | none, always sends |
-| **Task assigned, status changed, comment added, due soon, overdue** | Task activity | none, always sends |
+| **Local centre request, approved, declined** | A member asks to join a local centre and an admin decides | Yes |
+| **Resignation request** and **approved** | A member asks to resign and an admin decides | Yes |
+| **Referral received** | Someone signs up through a referral link | Yes |
+| **Referral complete** | A referral is finished, one version for the referrer and one for admins, differing by whether your organisation approves registrations manually | Yes |
+| **Post held for moderation** | A discussion post is held, sent to moderators | No, always sends |
+| **Connection request** and **accepted** | Members connect in the event app | No, always sends |
+| **Vote open** and **vote closed** | A vote opens or closes. Members receive them through their vote notification preference; non-member attendees of an event vote receive the opening one with a personal voting link | No, each member chooses |
+| **Waitlist confirmation, approved, rejected, position update, new entry** | The registration waitlist changes | No, always sends |
+| **Task assigned, status changed, comment added, due soon, overdue** | Task activity | No, always sends |
 
 ---
 
@@ -191,21 +200,21 @@ Three summary emails run on a schedule instead of reacting to one event.
 
 | Digest | Runs | Contains |
 |---|---|---|
-| **Daily discussion digest** | 06:00 UTC | Sent to active members whose discussion preference is Daily who have an unread discussion notification from the last 25 hours. The email itself lists their 10 most recent unread notifications of any kind |
-| **Weekly discussion digest** | Wednesdays 09:00 UTC | The same, selected over the last 7 days, for members set to Weekly |
+| **Daily discussion summary** | 06:00 UTC | Sent to active members whose discussion preference is Daily who have unread discussions from the last 25 hours. It lists up to the 10 newest, grouped by group, with a count of the rest |
+| **Weekly discussion summary** | Wednesdays 09:00 UTC | The same, over the last 7 days, for members set to Weekly |
 | **Daily task digest** | 06:00 UTC | Open tasks assigned to the member |
 
-An unread discussion notification is what triggers the digest, but the email
-carries the member's ten most recent unread notifications whatever their type, so
-events, mentions and votes they have switched off individually still surface
-here. Members choose Instant, Daily or Weekly in their own notification
-preferences, or switch discussion email off entirely.
+The discussion summary lists discussions only. Events, mentions, comments and votes
+reach a member as their own emails, if their preferences ask for them. Sending the
+summary marks the discussions it covers as seen in the app, and nothing else. Members choose Instant,
+Daily or Weekly in their own notification preferences, or switch discussion email
+off entirely.
 
 <Note>
-Discussion email follows each member's notification preference rather than the
-**Discussion Notifications** switch on the Emails Config screen. To reduce
-discussion email across the organisation, change the default in **Notification
-Preferences** instead. See [Notifications](/platform/notifications).
+Discussion and other activity emails follow each member's notification preference,
+so they have no switch on the Emails page. You can preview each one under
+**Activity notifications**. To change what new members start with, set the
+defaults in **Notification Preferences**. See [Notifications](/platform/notifications).
 </Note>
 
 ---
@@ -213,7 +222,7 @@ Preferences** instead. See [Notifications](/platform/notifications).
 ## Related
 
 - [Emails](/platform/emails) - sender identity, language and delivery
-- [Email templates](/platform/emails/email-templates) - rewriting a system email
+- [Email templates](/platform/emails/email-templates) - previewing an email and rewriting its wording
 - [Email logs](/platform/emails/email-log) - proving an email was sent
 - [Notifications](/platform/notifications) - in-app, push, and per-member preferences
 - [Renewals](/platform/fees/renewals) - what the fee reminder ladder is enforcing
