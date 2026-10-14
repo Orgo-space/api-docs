@@ -315,6 +315,40 @@ for name, description in tag_descriptions.items():
 spec["tags"] = existing_tags
 
 
+# ─── Pass 11b: repair hand-declared operations that omit their schemas ───────
+#
+# The website endpoints are declared by hand in
+# api/src/OpenApi/WebsiteOpenApiFactory.php, which calls `new RequestBody(...)`
+# and `new Parameter($name, $in, $description, $required)` without reaching the
+# schema argument. API Platform then serialises a `requestBody` with no
+# `content` and parameters whose `schema` is the constructor default `[]`.
+# Both are invalid under OpenAPI 3.1 - `content` is required on a Request Body
+# Object, and a Schema Object must be an object or a boolean, never an array.
+# Mintlify's parser rejects the whole file on either one: the build fails with
+# "Failed to fetch OpenAPI file for anchor or tab" and not one page of the site
+# deploys, which took a 493-path bisection to find. Repair both here so the
+# spec stays valid whatever the generator emits.
+
+bodies_repaired = 0
+param_schemas_repaired = 0
+for path_item in (spec.get("paths") or {}).values():
+    if not isinstance(path_item, dict):
+        continue
+    for op in path_item.values():
+        if not isinstance(op, dict):
+            continue
+        rb = op.get("requestBody")
+        if isinstance(rb, dict) and not rb.get("content"):
+            rb["content"] = {"application/json": {"schema": {"type": "object"}}}
+            bodies_repaired += 1
+        for param in (op.get("parameters") or []):
+            # A path or query value arrives as text; string is both correct on
+            # the wire and the type Mintlify renders a plain input for.
+            if isinstance(param, dict) and not isinstance(param.get("schema"), (dict, bool)):
+                param["schema"] = {"type": "string"}
+                param_schemas_repaired += 1
+
+
 # ─── Pass 12: synthesize request/response examples ───────────────────────────
 #
 # For every operation, walk the schema of each request body content-type and
@@ -709,6 +743,8 @@ print(f"examples synthesized (req)   : {example_stats['synth_req']}")
 print(f"examples synthesized (resp)  : {example_stats['synth_resp']}")
 print(f"examples hand-curated (req)  : {example_stats['manual_req']}")
 print(f"examples hand-curated (resp) : {example_stats['manual_resp']}")
+print(f"contentless bodies repaired  : {bodies_repaired}")
+print(f"param schemas repaired       : {param_schemas_repaired}")
 print(f"x-codeSamples injected       : {code_samples_injected}")
 print(f"webhook events declared      : {webhook_schemas_added}")
 print(f"content variants pruned      : {content_types_pruned}")
