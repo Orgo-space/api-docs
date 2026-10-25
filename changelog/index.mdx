@@ -3,6 +3,39 @@ title: "Changelog"
 description: "What's new in ORGO platform"
 ---
 
+<Update label="October 2026">
+**New Features**
+
+**Projects**
+- **Project Roles**: Give each person and each group on a project one of four roles: Admin, Member, Contributor or Viewer. Roles are enforced on tasks, comments, files, objectives, statuses and settings, and a project can limit Contributors to the tasks they created or are assigned to. People already on a project keep what they could do before: [Projects](/platform/projects#roles).
+- **Task IDs**: Every task has an ID such as ORG-145, built from a key you choose per project. Search finds tasks by it, and a renamed key keeps old links working: [Tasks](/platform/tasks).
+- **Who Is On a Project**: The project header shows the people with access and their roles, and Settings has a Members tab for adding people and groups, changing roles and handing over ownership: [Projects](/platform/projects#giving-people-access).
+- **A New Task List**: Group by status, assignee, type, priority, week, two weeks or month, order by manual rank, priority or due date, add tasks inline with `!high @name #type`, change many tasks at once, and work from the keyboard. `⌘ K` opens a command palette and `?` lists the shortcuts: [Tasks](/platform/tasks#finding-and-organising-tasks).
+- **Task Panel**: Open a task beside the list instead of in a pop-up. Move to the next task with `J` and `K`, and attach files by dropping or pasting them: [Tasks](/platform/tasks#the-task-panel).
+- **Manual Order**: Rank tasks by dragging or with `Alt` and the arrow keys. The order is shared by the list and the board.
+- **Board Swimlanes**: Split the board by assignee, priority or type; a closed column shows the last 7 days: [Projects](/platform/projects#the-project-views).
+- **Gantt With Dependencies**: Dependency arrows, a tray for tasks without dates that you drag onto the timeline, and a plain agenda on phones.
+- **Redesigned Overview**: Counters for open, overdue, due in 7 days, unassigned and blocked tasks, urgent work, workload and progress per objective.
+- **Settings in Tabs**: General, Objectives, Workflow and Members. Objectives and goals moved here from their own page, and statuses and types can be reordered and show a progress circle.
+- **Shared Filters**: Assignee, type and objective filters carry across Overview, Tasks, Board and Gantt, and live in the address so a view can be linked.
+
+**Help Desk**
+- **Tickets in the Task List**: The Support page uses the same list and side panel as project tasks: [Help Desk](/platform/help-desk#the-ticket-list).
+
+**API & MCP**
+- **Project Endpoints**: Change a member's role (`PATCH /projects/{uuid}/members/{userId}`), list who is on a project, reorder statuses, types, goals and objectives, count tasks per status, and move a task in the manual order. Tasks carry `number` and `reference`, and projects carry `taskKey`, `myRole` and `roleCapabilities`: [API Reference](/api-reference/introduction).
+- **Orgo MCP Brought Up to Date**: The assistant integration now knows the full current API, including the project operations above: [Orgo MCP](/platform/mcp).
+
+**Improvements**
+
+**Projects**
+- **New Projects Start With Five Statuses**: Backlog, To do, In Progress, Review and Done.
+- **Priorities**: The scale is Urgent, High, Medium and Low. Tasks that were Lowest now read as Low.
+- **Last Tab Remembered**: Each member lands on the project tab they used last.
+- **Safer Deletes**: Deleting a status or type that tasks still use asks where to move them; the API answers 409 until `moveTo` is given.
+
+</Update>
+
 <Update label="September 2026">
 **New Features**
 

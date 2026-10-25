@@ -7,7 +7,7 @@ description: 'Create tasks with assignees, statuses, checklists and dependencies
 "twitter:description": 'Create tasks with assignees, statuses, checklists and dependencies, and see them on a list, board or timeline'
 ---
 
-Tasks are the unit of work inside a project. A task carries a title, a rich description with attachments, a status, a type, a priority, one or more assignees, start and due dates, a checklist, dependencies on other tasks, comments and a change history.
+Tasks are the unit of work inside a project. A task carries a short ID such as `ORG-145`, a title, a rich description with attachments, a status, a type, a priority, one or more assignees, start and due dates, a checklist, dependencies on other tasks, comments and a change history.
 
 **Built for** the day to day work of a committee or staff team: who is doing what, by when, and what is blocking it.
 
@@ -19,32 +19,46 @@ Tasks are the unit of work inside a project. A task carries a title, a rich desc
 
 ## Creating a task
 
-Open a project and use **Add task** on the Tasks, Board or Gantt tab. Anyone who can open the project can create tasks. Dragging files onto a project also opens the form with those files attached.
+Anyone with the **Admin**, **Member** or **Contributor** role on the project can create tasks; a Viewer cannot (see [Roles](/platform/projects#roles)). There are three ways in:
+
+- **Quick add.** Press `C` on the Tasks tab, or use **Add task** at the head of a group, and type a title. The new task starts with the values of the group you added it in. Type `!high`, `@daniel`, `#bug` or `+review` anywhere in the title to set the priority (`!urgent`, `!high`, `!medium`, `!low`, `!none`, or `!1` to `!4`), the assignee, the type and the status; words that match nothing stay in the title. `Enter` adds the task, `⌘ Enter` adds it and opens it.
+- **Add task** on the Board or Gantt tab, which adds a card in the column or opens the form.
+- **Dropping files** onto a project opens the form with those files attached.
+
+Every task gets its ID on creation, built from the project's task key and a number that counts up: `ORG-1`, `ORG-2`... Numbers are never reused, so a deleted task leaves a gap. The ID is searchable in the list.
 
 | Field | What it does |
 |-------|-------------|
 | **Task title** | Required. |
-| Description | Rich text with images, video and file attachments. |
+| Description | Rich text with images, video and file attachments. Files can also be dropped or pasted (`⌘ V`) onto the task. |
 | **Checklist** | A list of sub-items with tick boxes. Pasting a bulleted list creates several at once. Items are reordered by dragging. |
-| **Goal** | Only when **Goals** is on for the project. Puts the task under a goal. |
+| **Objective** | Only when **Objectives** is on for the project. Puts the task under a phase or milestone. |
 | **Type** | Only when the project has task types defined, for example Bug, Feature, Task. |
 | **Assignees** | One or more members. Search is limited to people who can access the project. |
-| **Priority** | **Highest**, **High**, **Medium**, **Low**, **Lowest**. New tasks start at **Medium**. |
-| **Status** | One of the project's statuses. Defaults to the first one, normally **To do**. |
+| **Priority** | **Urgent**, **High**, **Medium** or **Low**, or no priority. |
+| **Status** | One of the project's statuses. Defaults to the first open one, normally **Backlog**. |
 | **Start date** and **Due date** | Each optional. The pickers keep the start on or before the due date. |
 | **Blocked by** | Other tasks in the same project that must be closed first. |
 
-The task list, board and Gantt only show the fields the project has switched on under **Task options**, so a project without priorities or due dates gets a simpler form.
+The list, board and Gantt only show the fields the project has switched on under **Task options**, so a project without priorities or due dates gets a simpler form.
 
-<img src="/images/platform/projects/task-form-modal.png" alt="New task modal with a title, a description, a two item checklist and a side panel holding goal, type, assignees, priority, status and dates" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<Note>
+Tasks used to have a fifth priority, **Lowest**. It has been merged into **Low**: tasks that were Lowest now read as Low.
+</Note>
+
+## The task panel
+
+Click a task in the list, board or Gantt to open it in a panel beside the list, so you keep your place. The panel holds the title, the ID, a **Copy link** button, every field above, the checklist, the files and the comment thread. `J` and `K` (or the previous and next arrows) move to the neighbouring task while the panel is open, and **Expand** opens the task on a page of its own. Changes save as you make them, and the panel shows who created the task and when.
+
+<img src="/images/platform/projects/task-detail.png" alt="Task detail page showing status, priority and type controls, two assignees with completion ticks, a three item checklist and a comment thread" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
 ## Statuses and types
 
-Both are defined per project under **Settings** → **Statuses & types**, so two projects can run entirely different workflows.
+Both are defined per project under **Settings** → **Workflow**, so two projects can run entirely different workflows.
 
-A status has a name, a colour and a **Mark as closed** switch. Closed is what makes a task count as complete: it removes the task from open filters, from the daily digest and from reminder emails, and it satisfies any dependency on that task. A new project starts with **To do**, **In Progress** and **Done**, with **Done** marked as closed.
+A status has a name, a colour and a **Mark as closed** switch. Closed is what makes a task count as complete: it removes the task from open filters, from the daily digest and from reminder emails, and it satisfies any dependency on that task. A new project starts with **Backlog**, **To do**, **In Progress**, **Review** and **Done**, with **Done** marked as closed. Each status also draws a circle showing how far along it is, from dashed (no progress) to full.
 
 A type has a name and a colour only. It is a label for grouping and filtering.
 
@@ -54,7 +68,7 @@ A type has a name and a colour only. It is a label for grouping and filtering.
 
 A task can have several assignees, each with their own tick box, and the task shows a counter such as 2/3. Only that assignee can tick their own box; `ADMIN_TENANT` can tick anyone's. Completing every assignee's part does not close the task automatically: someone still has to move it to a closed status.
 
-Editing a task is open to `ADMIN_TENANT`, the project owner, any assignee, and whoever created the task. Deleting a task is limited to `ADMIN_TENANT`, the project owner and the task creator.
+What a person may do to a task follows their role on the project. Admins and Members edit any task; a Contributor edits the tasks they created or are assigned to; a Viewer edits nothing. Admins delete any task, while Members and Contributors delete only tasks they created. On a project set to **Only assigned**, a Contributor cannot see other tasks at all. See [Roles](/platform/projects#roles).
 
 ---
 
@@ -72,7 +86,7 @@ While a blocking task is still open, moving the dependent task to a closed statu
 
 ## Comments and history
 
-Comments sit at the bottom of the task. They take rich text, images and files, support threaded replies and emoji reactions.
+Comments sit at the bottom of the task. They take rich text, images and files, support threaded replies and emoji reactions. Viewers can read them, and can reply only when the project has **Viewers can comment** switched on.
 
 Posting a comment notifies the task assignee and the task creator in the app, and emails everyone assigned plus the creator, skipping whoever wrote the comment. On an archived project the comment is saved but nothing is sent.
 
@@ -82,23 +96,51 @@ Every status change, assignee change, priority change and due date change is wri
 
 ---
 
-## Finding tasks
+## Finding and organising tasks
 
-The **Tasks** tab is the full list. It shows 20 tasks a page, or the whole set when grouping is on.
+The **Tasks** tab is the full list. Tasks show in groups, each with a header you can collapse.
 
 | Control | What it does |
 |---------|-------------|
-| **Search task** | Matches the title. |
-| Assignee row | Click an avatar to filter to that person, or **unassigned**. A search box appears once the project has more than ten members. |
-| **Group by** | **assignee**, **status**, **Type**, **Goal**, **priority** or **Month**. **By assignee** adds a second level of columns inside each group. |
-| **Status** | Filter by **Open tasks**, **Closed tasks** or individual statuses. |
-| **Goal** | Filter to one goal, when goals are on. |
-| **Columns** | Show or hide the **created**, **Type**, **Goal**, **Due date** and **Priority** columns. |
-| **Reset filters** | Clears everything at once. |
+| **Search tasks** | Matches the title or the task ID (`ORG-145`). |
+| Filters | Narrow by status (**Open tasks**, **Closed only**, or individual statuses), assignee (including **unassigned** and **Show my tasks**), type and objective. Assignee, type and objective are shared with the Overview, Board and Gantt tabs. |
+| **Display** → grouping | Group by **status**, **assignee**, **type**, **priority**, or by deadline: **week**, **two weeks** or **month**. A second **Then by** level splits each group by assignee or type. |
+| **Display** → ordering | **Manual rank**, **priority**, **due date** or **Newest first**. |
+| **Display** → columns | Show or hide the task fields on each row. |
+| Reset | Clears every filter at once. |
 
-The Overview tab's counters are shortcuts into the same list: clicking **overdue**, **unassigned**, **due in 3 days** or **no dates** applies that filter.
+Deadline groupings also show the next few empty periods, so a task can be dropped into next week; **Add period** and **Remove period** adjust how many.
 
-The **Board** tab is a kanban view with one column per status plus optional **Overdue** and **No status** columns; dragging a card changes its status. The **Gantt** tab plots tasks and goals over a day, week or month scale, and dragging a bar or its edges changes the dates.
+The Overview tab's counters are shortcuts into the same list: clicking **overdue**, **due in 3 days**, **unassigned** or **no dates** applies that filter.
+
+### Changing many tasks at once
+
+Press `X` on a row (or use **Select multiple**) to tick tasks, then change their status, priority, assignee or type together, or delete them. **Clear selection** drops the ticks.
+
+### Manual order
+
+Tasks have one order inside the project. Drag a row, or press `Alt` with `↑` or `↓`, to change its rank; a task keeps its place relative to its neighbours in every grouping. The same order is used by the board columns.
+
+### Keyboard
+
+| Keys | What they do |
+|------|-------------|
+| `J` `K` | Move between tasks; the task panel follows when it is open |
+| `Enter` | Open or close the task |
+| `C` | Add a task inline |
+| `X` | Select the task for bulk actions |
+| `S` `P` `A` `T` | Set status, priority, assignee, type |
+| `E` | Rename inline (or double-click the title) |
+| `→` `←` | Expand or collapse the checklist |
+| `F` | Show or hide the files under a task |
+| `Alt` `↑` `↓` | Change rank inside the group |
+| `⌘ K` | Command palette: run a command or search a task |
+| `/` | Search |
+| `Esc` | Close, deselect, cancel |
+
+`?` in the list shows the same table inside Orgo (**Keyboard shortcuts**).
+
+The **Board** tab is a kanban view with one column per status; dragging a card changes its status, and **Swimlanes** split the board by assignee, priority or type. The **Gantt** tab plots tasks on a timeline, and dragging a bar or its edges changes the dates. Both are described under [Projects](/platform/projects#the-project-views).
 
 <img src="/images/platform/projects/project-board.png" alt="Kanban board with Overdue, To do, In Progress, In Review and Done columns holding task cards with avatars, priority icons and due dates" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
