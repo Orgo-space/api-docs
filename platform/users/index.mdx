@@ -89,6 +89,8 @@ appears in the table view, never in Gallery or Map.
 
 Each row's menu holds **View Profile**, **Modify Profile** and **Modify Roles**
 (ADMIN_LOCAL and above), plus making or removing a unit admin inside a unit.
+**Modify Profile** opens the member's Edit view on the **Info** pane and **Modify
+Roles** opens it on the **Roles** pane (see [Member profile](/platform/users/member-profile)).
 Members pending approval (**New request**) or waitlisted get **Approve** and **Add
 to waiting list** shortcuts next to the name, and a **New requests (N)** button
 jumps to that queue. There is no multi-select: actions apply one member at a
@@ -157,33 +159,32 @@ Two implications worth remembering for any permission you hand out:
 ## The member profile
 
 Clicking a name opens the profile in a modal you can expand to a full page
-(`/user/{id}`). Which tabs appear depends on modules, permissions and whether the
-profile is your own.
+(`/user/{id}`). The profile is made of cards you read, an **Edit** view where
+details, status, roles and permissions are changed, and a **Settings** view for
+the member's own account. Everything is documented on one page:
+[Member profile](/platform/users/member-profile).
 
 <img src="/images/platform/users/user-profile-overview.png" alt="Member profile showing status, user type, age, town, chapter, member since, badges, permissions, resignation, identity, adhesion and roles" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
+Which tabs appear depends on modules, permissions and whether the profile is
+your own:
+
 | Tab | What is there | Who sees it |
 |---|---|---|
-| **Profile** | Photo, status, user type, age, town, chapter, member since, badges, permissions, roles, social links, resignation, identity and adhesion shortcuts | Everyone who can see the profile |
+| **Profile** | Cards: membership, contact, company, about, tags, roles, achievements, profession, courses & trainings, family, other info | Everyone who can see the profile |
 | **My Network** | Connection requests and accepted connections | Own profile, connections enabled |
 | **Fee** | Fee level, periods and history | Self, HR_LOCAL, FINANCIAL_LOCAL, or a parent managing the profile |
 | **Payments** | Every payment: fees, tickets, donations | Same as Fee, online payments enabled |
-| **e-Documents** | Contracts and documents assigned to the member | Self, HR_LOCAL, or a managing parent |
-| **Events** | Events attended or registered for | Per event-module visibility |
-| **Files** | The member's personal drive | Self and admins in scope |
-| **Referrals** | People they referred or invited | Referral or invitations enabled |
-| **Company** | The company they belong to | Own profile, companies module on |
-| **[Activity](/platform/users/profile-activity)** | Staff notes, donations, form submissions and tag changes on one feed | HR_LOCAL or FINANCIAL_LOCAL over that member, or ADMIN_TENANT, with **Enable Profile Notes & Activity** on |
-| **Logs** | Audit and email history | ADMIN_TENANT |
+| **Documents** (**Files** when e-Documents are off) | Contracts and documents that need a signature, above the member's personal files | Self, HR_LOCAL, or a managing parent; personal files also for HR_TENANT and ADMIN_TENANT |
+| **Events** | Events attended or registered for | Self, HR_LOCAL or EVENT_LOCAL |
+| **Referrals** | People they referred or invited | Referral or invitations enabled. On someone else's profile it is under **More**. |
+| **[Activity](/platform/users/profile-activity)** | Staff notes, donations, form submissions and tag changes on one feed | HR_LOCAL or FINANCIAL_LOCAL over that member, with **Enable Profile Notes & Activity** on |
+| **More** | **Forms** (HR_LOCAL or FINANCIAL_LOCAL), and **Email Logs** and **Audit Logs** (ADMIN_TENANT) | Staff |
 
-<img src="/images/platform/users/user-profile-logs.png" alt="Logs tab showing the audit log with date, action and author, and the email log sub-tab" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
-The Logs tab has two sub-tabs. **Audit Logs** records every change with the date,
-the action, who made it, and an expandable before-and-after view of each field.
-**Email Logs** shows what the platform sent this member and what happened to it:
-the fastest answer to "they say they never got it".
-
----
+There is no separate edit page and no separate **Company** or **e-Documents**
+tab any more: the company is a card on the Profile tab, and the documents live in
+the **Documents** tab. A link to the old `/users/edit/{id}` address redirects to
+the matching pane of Edit or Settings.
 
 ## Setting up
 
@@ -332,12 +333,29 @@ Waitlist are absent until those modules are active.
     if the members really should see the directory. Do not assume a hidden link
     means a protected page, or that a visible link means an accessible one.
   </Accordion>
+
+  <Accordion title="Where did the Edit member page go?">
+    Editing happens on the profile itself. Open the member, press **Edit profile**
+    (or the pencil on any card) and pick a pane: **Info**, **Membership status**,
+    **Roles**, **Permissions**, **Badges**, **Profession** or **Family**. The
+    member's own account (password, email, privacy, closing the account) is the
+    **Settings** view. Old `/users/edit/{id}` links still work and redirect.
+    Details and the old-tab-to-new-pane table are in
+    [Member profile](/platform/users/member-profile).
+  </Accordion>
+
+  <Accordion title="Where do I end a role or change a member's status?">
+    Both are in the Edit view: **Edit profile** → **Roles** → **End role**, and
+    **Edit profile** → **Membership status** → **Status**. See
+    [Member profile](/platform/users/member-profile#roles-and-the-role-timeline).
+  </Accordion>
 </AccordionGroup>
 
 ---
 
 ## Related
 
+- [Member profile](/platform/users/member-profile) - the header, cards, Edit view, Settings view and role timeline
 - [Adding Members](/platform/users/adding-members) - the four ways people get an account
 - [Lists & Segments](/platform/users/lists) - reusable audiences built from member criteria
 - [User Statuses](/platform/users/statuses) - what each status blocks

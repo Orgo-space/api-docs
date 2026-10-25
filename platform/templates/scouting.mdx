@@ -118,7 +118,7 @@ Every module and setting below is at **Settings** → **Modules**, and every one
 | **Users & Profiles** → **Custom Fields** | your own fields | Medical notes, dietary needs, emergency contact, check expiry dates |
 | **Gamification & Courses** → **Gamification** | **Enable Gamification Module** | Badges and the Badges tab on every profile |
 | **Gamification & Courses** → **Gamification** | **Enable badge categories** | Groups badges so the award picker stays usable |
-| **Gamification & Courses** → **Gamification** | **Enable hours tracking** | Volunteering hours, and badges awarded from an hours total |
+| **Gamification & Courses** → **Gamification** | **Badges with a checklist of steps** | Steps a young person works through, signed off one at a time, for a badge that earns itself when the last required step is done |
 | **Gamification & Courses** → **Courses** | **Enable Courses** (already on) | Leader training as self-paced courses |
 | **Files & eDocuments** → **eDocuments** | **Enable eDocuments Module** | Consent forms, volunteer agreements and codes of conduct, signed on screen |
 | **Identity Validation** | **Enable Identity Validation** | ID document upload and admin review. Read the limits in [Adult volunteers](#adult-volunteers) first |
@@ -390,17 +390,14 @@ Badges need the Gamification module (**Settings** → **Modules** → **Gamifica
 | Layer | Where | Notes |
 |---|---|---|
 | **Badge Categories** | **Gamification & Courses** → **Badge Categories** | Optional, behind **Enable badge categories**. An image and a title. Keeps the award picker usable once you have a full scheme |
-| **Badges** | **Gamification & Courses** → **Badges** | Title, artwork, category, an optional hours threshold, an optional points threshold, and a default note |
-| **Volunteering hours** | The member's Badges tab | Behind **Enable hours tracking**. Each entry has a period, hours, title and notes |
-| **Points and tiers** | **Gamification** → point rules | Behind **Enable tiers/levels by points**. Points come from payments, attendance, referrals and discussion activity |
+| **Badges** | **Gamification & Courses** → **Badges** | Title, artwork, category, an optional points threshold, an optional checklist of steps, and a default note |
+| **Points and tiers** | **Gamification** → point rules | Tiers are enabled for your organisation by Orgo support, not by a switch. Points come from payments, attendance, referrals and discussion activity |
 
-Your scheme ends up as one list at **Settings** → **Modules** → **Gamification & Courses** → **Badges**:
+Your scheme ends up as one list at **Settings** → **Modules** → **Gamification & Courses** → **Badges**.
 
-<img src="/images/platform/features/badges-list.png" alt="Badges settings list with one row per badge showing its image, its name, a Type column naming the badge category, and an amber hours pill on the badges that carry an hours threshold" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+Two things there are conditional, which is a quick way to check your settings took. The **Type** column, which holds the badge category, appears only when **Enable badge categories** is on. The points pill appears only for an organisation that has tiers, which Orgo support enables.
 
-Two columns there are conditional, which is a quick way to check your settings took. The **Type** column, which holds the badge category, appears only when **Enable badge categories** is on. The amber hours pill appears only when **Enable hours tracking** or tiers is on, and it is the threshold that awards the badge automatically.
-
-Four ways a badge reaches a member: awarded by hand from their Badges tab (`HR_TENANT`, or `HR_LOCAL` over their chapter), awarded automatically when their logged volunteering hours pass a badge's **Hours number**, awarded on event attendance when the event names a badge, and awarded when a course enrolment is marked complete. A member can hold a given badge only once, and every automatic path checks first, so re-marking attendance never duplicates an award.
+Four ways a badge reaches a member: awarded by hand from the **+** on the **Achievements** card or the **Add badge** button on their **Badges** tab (`HR_TENANT`, or `HR_LOCAL` over their chapter), awarded automatically when the last required step of its checklist is completed, awarded on event attendance when the event names a badge, and awarded when a course enrolment is marked complete. A member can hold a given badge only once, and every automatic path checks first, so re-marking attendance never duplicates an award. Volunteering hours are no longer tracked in Orgo, so no badge is awarded from an hours total.
 
 Use **Pending** rather than **Completed** for work in progress. It is counted and filtered separately everywhere, which makes it a workable "started this badge" state.
 

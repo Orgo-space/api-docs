@@ -55,6 +55,15 @@ The pills above the table combine, and the result is written into the page URL, 
 
 **Refresh** re-runs the current filter.
 
+### Searching the text of entries
+
+The tenant-wide page has no free-text box. Two other places do:
+
+- **A member's profile.** Open the member, then **More** → **Audit Logs** (the **More** menu sits at the end of the profile's tab row). The **Search action, details or author** box shows only that member's entries that contain what you type. It looks in the action name, in the recorded details (the field names and values that changed) and in the author's first and last name. It is not case sensitive and matches part of a word, so `email` finds changes to an email field and `Maria` finds everything Maria did. Field names are stored in camel case (`firstName`, not "first name"), so search for the stored spelling or a fragment of it. It needs at least 2 characters; with fewer the list is not filtered. The list updates a moment after you stop typing.
+- **The API.** `GET /logs?keyword=<text>` applies the same search. It is combined with the filters you already use (`user`, `action`, `entityType`, dates) and can only narrow the result, never widen it, so it cannot return an entry you could not list without it. Like the page, it needs ADMIN_TENANT.
+
+For the member-profile view of the same entries, see [Profile activity](/platform/users/profile-activity).
+
 ---
 
 ## What gets recorded
@@ -105,7 +114,7 @@ Deletion entries also record an **impersonator** when the deletion happened whil
 
 The tenant-wide page is not the only way in. The same entries appear filtered on:
 
-- a **member profile**, on its logs tab;
+- a **member profile**, under **More** → **Audit Logs**: a table with **ID**, **Date**, **Action**, **Changes** and **Author**, plus the search box described above. **Changes** names the field that changed, and "+2" after it means two more fields changed in the same edit. Click a row to open the entry: a window with one line per field, showing **Field**, **Value before** and **Value after**;
 - an **event attendance**, on the attendees screen;
 - an **adhesion**, on its log view.
 
@@ -135,6 +144,12 @@ The log is strictly read-only: entries cannot be edited or deleted from the inte
   <Accordion title="I need to know who deleted a member">
     Filter Action = **remove** and Entity = **User**, then expand the row. The snapshot holds the email, first and last name and status the account had at deletion, and the Author column names who did it.
   </Accordion>
+  <Accordion title="How do I find every change made by one person, or every change to one field?">
+    On the member's profile, **More** → **Audit Logs**, type the person's name (for the author) or the field name (for example `email`) into **Search action, details or author**. For the whole organisation, filter the tenant-wide page by **Author** and **Action**; field names can only be searched per member or through `GET /logs?keyword=`.
+  </Accordion>
+  <Accordion title="The log search finds nothing">
+    Use at least 2 characters (shorter text is ignored and the full list shows). The search covers the action, the details and the author's name, Details are stored as raw field names and values, so search for the stored spelling, for example `firstName` rather than "first name".
+  </Accordion>
   <Accordion title="A local admin says the log is empty for them">
     It is not visible to them. The log requires ADMIN_TENANT, and that includes the log tabs on individual profiles.
   </Accordion>
@@ -149,6 +164,7 @@ The log is strictly read-only: entries cannot be edited or deleted from the inte
 
 - [Permissions](/platform/permissions)
 - [Email log](/platform/emails/email-log)
+- [Profile activity](/platform/users/profile-activity)
 - [Merging duplicates](/platform/users/merging-duplicates)
 - [Custom fields](/platform/users/custom-fields)
 - [Workflows](/platform/workflows)

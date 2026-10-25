@@ -18,7 +18,7 @@ was paid for.
 |---|---|---|
 | An invoice you raised | The invoice, **Mark as paid** | `ADMIN_TENANT` |
 | A membership fee period | The member's **Fee** tab, **Mark as paid** | `FINANCIAL_TENANT` for the organisation fee, `FINANCIAL_LOCAL` for a local fee |
-| Anything else (a course place, merchandise, a one-off service) | The member's **Payments** tab, **Record payment** | `FINANCIAL_TENANT` |
+| Anything else (a course place, merchandise, a one-off service) | The member's **Payments** tab, **Add payment record** | `FINANCIAL_TENANT` |
 
 ---
 
@@ -113,13 +113,20 @@ raises an unpaid invoice, which is settled with **Mark as paid** on the invoice.
 ## Recording any other payment
 
 For everything that is not membership, use the member's **Payments** tab and the
-**Record payment** button. It needs `FINANCIAL_TENANT`.
+**Add payment record** button. It needs `FINANCIAL_TENANT`. The same button is on
+a [contact's](/platform/contacts/payments) **Payments & Subscriptions** card.
 
 <Steps>
   <Step title="Choose what was bought">
     Either pick an existing product, or switch on **Custom item** and type an
     **Item name**. A custom item creates a hidden one-off product so the payment
     has something to hang from without cluttering your product list.
+  </Step>
+  <Step title="Check the payment type">
+    **Payment type** says what the money was for. With an existing product the
+    field is greyed out and shows the type Orgo will use, taken from the product.
+    With a custom item you choose it yourself: **Fee**, **Donation**,
+    **Event ticket**, **Shop** or **Admin**. It starts on **Admin**.
   </Step>
   <Step title="Choose the price">
     Products with active prices require you to pick one, and the **Amount** is
@@ -129,6 +136,9 @@ For everything that is not membership, use the member's **Payments** tab and the
   <Step title="Set the payment date">
     Defaults to today. Set it to the day the money actually arrived so reporting
     lines up with your bank statement.
+  </Step>
+  <Step title="Confirm">
+    Select **Record payment** at the bottom of the window.
   </Step>
 </Steps>
 
@@ -144,6 +154,47 @@ you try. A fee payment also has to carry the period it buys, which this form doe
 not collect. Use the **Fee** tab instead.
 </Warning>
 
+### Payment type
+
+Every payment carries one payment type, and the payment lists can be filtered by it
+(see [Finding payments by payment type](#finding-payments-by-payment-type)). It is a
+label for reporting and filtering. It does not change what the payment does.
+
+| Payment type | Set automatically when the product is |
+|---|---|
+| **Fee** | A membership fee |
+| **Donation** | A donation |
+| **Event ticket** | An event ticket |
+| **Shop** | A shop item or a digital download |
+| **Admin** | Anything else, including payments from invoices and custom items you leave on **Admin** |
+
+<Note>
+Labelling a custom item as **Fee** does not extend anyone's membership. Fee
+validity only moves when the payment is a real membership fee recorded from the
+**Fee** tab. If you choose a type for a custom item, it is kept as you set it;
+if you pick an existing product, Orgo ignores any other type and uses the
+product's own.
+</Note>
+
+Payments added through a data import get the type from the product they were
+matched to, so imported history is filterable too.
+
+---
+
+## Finding payments by payment type
+
+The **Payment type** filter (a pill with the options **All**, **Fee**,
+**Donation**, **Event ticket**, **Shop** and **Admin**) is on:
+
+- the organisation-wide **Payments** list
+- a product's **Payments** tab
+- the **Payments** tab of a member's profile
+
+Pick one option to see only that kind of money; pick **All** to clear it. The
+filter is separate from the **Product** pill (one specific product) and the
+**type** pill (one-time or recurring); combine them to narrow further. The
+payment type is a filter only: the lists do not show it as a column.
+
 ---
 
 ## Getting it wrong
@@ -151,6 +202,29 @@ not collect. Use the **Fee** tab instead.
 If you mark the wrong invoice as paid, do not delete it. See
 [cancelling and correcting invoices](/platform/fees/cancelling-invoices):
 the trail of what happened is worth more than a tidy list.
+
+---
+
+## Questions
+
+<AccordionGroup>
+  <Accordion title="Where did the Record payment button go?">
+    It is now called **Add payment record** and sits at the top of the member's
+    **Payments** tab. The button that saves the window is still **Record
+    payment**.
+  </Accordion>
+
+  <Accordion title="The Payment type field is greyed out">
+    You picked an existing product, so the type comes from that product and
+    cannot be overridden. Switch on **Custom item** if you need to choose it
+    yourself.
+  </Accordion>
+
+  <Accordion title="Why does a payment from an invoice show as Admin?">
+    Invoices use a built-in invoice product, which has no fee, donation, event or
+    shop meaning, so its payments are typed **Admin**.
+  </Accordion>
+</AccordionGroup>
 
 ---
 

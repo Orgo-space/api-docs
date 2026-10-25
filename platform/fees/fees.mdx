@@ -201,7 +201,7 @@ Approving marks every payment in the batch successful and recalculates each affe
 
 <img src="/images/platform/fees/fee-stats.png" alt="Local groups fees table listing chapters with status, active member count and paid fee count, with under-target rows highlighted" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-Per-member history lives on **Members** → open a member → **Fee**: the organisation and local fee side by side with every period.
+Per-member history lives on **Members** → open a member → **Fee**. A summary card at the top shows the status (**active** or **Unpaid**), the amount, the **Plan** with a **Change plan** link where the member can pick another level, and the **Pay** or **Automatic Renewal** buttons when they apply. Below it, the **History** lists every period with its amount and a tag (**Paid**, **Partially paid**, **Pending**, **Unpaid**, **Refunded** or **Exempt**), newest first; older periods sit behind a **+N older** link. When the member also has a local fee, the **Organisation fee** and **Local fee** cards appear side by side and the summary shows each amount plus the combined total. Fee periods are separate from the member's other purchases: the profile's **Payments** tab lists every payment and can be narrowed with the **Payment type** filter (see [Recording a payment](/platform/fees/record-payment#finding-payments-by-payment-type)).
 
 <img src="/images/platform/users/user-profile-fees.png" alt="Fee tab on a member profile with the status and total fee summary above the organisation fee and local fee cards, each showing its plan and its paid periods" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -272,6 +272,10 @@ Open the payment on **Finance** → **Payments** and choose **Refund**. Orgo ref
 
   <Accordion title="A pending batch has no Approve button">
     **Approve** is shown only to `ADMIN_TENANT`, and only while the batch is still pending. A chapter administrator with `ADMIN_LOCAL` sees **Cancel** instead, which deletes the batch rather than approving it. A finance-only administrator, `FINANCIAL_LOCAL` or `FINANCIAL_TENANT` without an admin permission, sees the queue and the batch details but neither button, so the batch stays pending and the members it covers stay unpaid.
+  </Accordion>
+
+  <Accordion title="How do I list only the fee payments in the payments list?">
+    On **Finance** → **Payments**, or a member's **Payments** tab, open the **Payment type** pill and choose **Fee**. The type comes from the product that was paid: membership fee products are **Fee**, donations **Donation**, event tickets **Event ticket**, shop items and digital downloads **Shop**, and everything else, including payments from invoices, **Admin**. See [Recording a payment](/platform/fees/record-payment#finding-payments-by-payment-type).
   </Accordion>
 
   <Accordion title="A returning member was not charged the registration fee">

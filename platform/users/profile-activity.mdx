@@ -1,10 +1,10 @@
 ---
 title: 'Profile Activity & Notes'
-description: 'The Activity tab: staff notes, donations, form submissions and tag changes on one feed, and who can read it'
+description: 'The Activity tab (staff notes, donations, form submissions and tag changes on one feed) plus the Forms, Audit Logs and Email Logs tabs beside it, and who can read each'
 "og:title": 'Profile Activity & Notes | Orgo'
-"og:description": 'The Activity tab: staff notes, donations, form submissions and tag changes on one feed, and who can read it'
+"og:description": 'The Activity tab (staff notes, donations, form submissions and tag changes on one feed) plus the Forms, Audit Logs and Email Logs tabs beside it, and who can read each'
 "twitter:title": 'Profile Activity & Notes | Orgo'
-"twitter:description": 'The Activity tab: staff notes, donations, form submissions and tag changes on one feed, and who can read it'
+"twitter:description": 'The Activity tab (staff notes, donations, form submissions and tag changes on one feed) plus the Forms, Audit Logs and Email Logs tabs beside it, and who can read each'
 ---
 
 Activity is a single feed of what a person has done with you and what your staff
@@ -15,6 +15,12 @@ or a contact, in the words of the people who spoke to them.
 **Built for** the membership officer who needs to know what happened with
 someone before calling them back. **Replaces** the shared spreadsheet of "who
 spoke to whom" and the notes people keep in their own inbox.
+
+Three further staff tabs sit beside it on the [member profile](/platform/users/member-profile):
+**Forms** (every form the person submitted), **Audit Logs** (every recorded
+change, with before and after values) and **Email Logs** (every email Orgo sent
+them). Audit Logs and Email Logs have their own search box. They are described
+under [Forms, Audit Logs and Email Logs](#forms-audit-logs-and-email-logs) below.
 
 <img src="/images/platform/users/profile-activity-tab.png" alt="Activity tab on a member profile, with a Notes composer above an Activity feed whose filter chips read Donations, Notes, Tags, Forms, Date, Author and Search, and entries grouped under the day headings 07 AUG 2026, 24 FEB 2026 and 12 FEB 2026" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -46,17 +52,24 @@ Two conditions have to hold at once: the setting is on, and you hold **HR** or
 **Financial** permission over the person you are looking at. `ADMIN_TENANT`
 covers everybody. Contacts use the identical gate.
 
-| | Activity | Logs |
-|---|---|---|
-| Permission | `HR_LOCAL` or `FINANCIAL_LOCAL` over that person, or `ADMIN_TENANT` | `ADMIN_TENANT` only |
-| Needs a setting switched on | Yes, **Enable Profile Notes & Activity** | No |
-| What it shows | Donations, form submissions, tags and notes | Every recorded change, with before and after values |
-| Exists on contacts | Yes | No |
+| | Activity | Forms | Audit Logs | Email Logs |
+|---|---|---|---|---|
+| Permission | `HR_LOCAL` or `FINANCIAL_LOCAL` over that person, or `ADMIN_TENANT` | `HR_LOCAL` or `FINANCIAL_LOCAL` over that person, or `ADMIN_TENANT` | `ADMIN_TENANT` only | `ADMIN_TENANT` only |
+| Needs a setting switched on | Yes, **Enable Profile Notes & Activity** | No | No | No |
+| What it shows | Donations, form submissions, tags and notes | The forms the person submitted, newest first | Every recorded change, with before and after values | Every email Orgo sent to the person |
+| Where the tab is | In the tab row | Under **More** | Under **More** | Under **More** |
+| Exists on contacts | Yes, as the Notes and Activity cards | Yes, as the Forms card | No | Yes, as the Email logs card |
 
-So the two tabs answer different questions for different people. A chapter
-secretary with `HR_LOCAL` gets Activity on their own chapter's members and never
-sees Logs. Someone auditing a disputed profile edit wants Logs, and only a
-tenant administrator has it.
+So the tabs answer different questions for different people. A chapter
+secretary with `HR_LOCAL` gets Activity and Forms on their own chapter's members
+and never sees the two log tabs. Someone auditing a disputed profile edit wants
+Audit Logs, and only a tenant administrator has it.
+
+**More** is the control at the end of the tab row. It lists the staff tabs you
+can open on this profile. Choosing one shows it as the last tab in the row,
+replacing any tab you chose from the menu earlier, and the menu then offers the
+others. Audit Logs and Email Logs share one tab, so only one of them is open at
+a time.
 
 <Warning>
 Staff who hold HR or Financial permission get the Activity tab on **their own
@@ -70,7 +83,7 @@ reassuring than the behaviour, so do not rely on it.
 
 ## Where it lives
 
-On a **member profile**, Activity is a tab, next to Logs. The note composer sits
+On a **member profile**, Activity is a tab in the tab row. The note composer sits
 at the top of the tab and the feed underneath it.
 
 On a **contact record**, there is no tab strip, so Notes and Activity are two
@@ -109,14 +122,14 @@ write tag links directly and produce no entry at all.
 **Profile field edits are deliberately absent.** Somebody changing a member's
 email address or town writes nothing to Activity. Those belong in the
 [Activity Log](/platform/logs), which stores the old value beside the new one,
-and they are reachable from the **Logs** tab on the same profile.
+and they are reachable from the **Audit Logs** tab on the same profile.
 
 Also absent, and not planned for this feed: fees and any payment that is not a
 donation, event registrations, emails sent or received, logins, e-documents,
 roles, permission changes, custom field changes and badges. Payments have the
-[Payments tab](/platform/users), emails have the
+[Payments tab](/platform/users), emails have the **Email Logs** tab and the
 [email log](/platform/emails/email-log), and everything else with an audit trail
-is in Logs.
+is in **Audit Logs**.
 
 ---
 
@@ -194,7 +207,9 @@ The chips above the feed narrow it. They combine, and they all apply at once.
 **Search matches note text and form names, and nothing else.** It does not match
 tag names, donation amounts or author names, so searching for a colleague's name
 finds notes that mention them rather than notes they wrote. Use the **Author**
-filter for that.
+filter for that. This is the Activity feed's search; the **Audit Logs** and
+**Email Logs** tabs have separate search boxes with different rules, described
+below.
 
 When nothing matches, the feed says so and offers **Clear filters**, which
 resets every chip at once.
@@ -216,6 +231,68 @@ narrowing by type or date searches everything and not only the first 40 rows.
 
 ---
 
+## Forms, Audit Logs and Email Logs
+
+### Forms
+
+The **Forms** tab lists every form the person has submitted, newest first, ten
+to a page. It is the same list as the form entries in the Activity feed, without
+the notes and donations around it, so it is the quickest way to find one
+submission.
+
+| Column | What it shows |
+|---|---|
+| **Form** | The name of the form |
+| **Submitted** | The date and time of the submission |
+| **Status** | **Confirmed**, or **Awaiting confirmation** while the person has not yet confirmed the submission by email |
+
+Clicking a row opens the answers, read-only, in the same window the Activity
+feed uses, so the [warning above](#opening-a-form-submission) about who can read
+answers applies here too. An empty list reads "No forms submitted". The list is
+for staff only: a member without `HR_LOCAL` or `FINANCIAL_LOCAL` gets no Forms
+tab, not even on their own profile. It does not depend on the **Enable Profile
+Notes & Activity** setting.
+
+### Audit Logs
+
+**Audit Logs** is the per-member view of the organisation's
+[Activity Log](/platform/logs): every recorded change to this profile, newest
+first, twenty to a page. It needs `ADMIN_TENANT`.
+
+| Column | What it shows |
+|---|---|
+| **ID** | The log entry number |
+| **Date** | When it happened |
+| **Action** | What was done, for example update or remove |
+| **Changes** | The first field that changed, and how many more, such as "Email +2" |
+| **Author** | Who made the change, linking to their profile; a dash when nobody was signed in |
+
+Click a row to see what changed. The window lists each **Field** with its
+**Value before** and **Value after**, so you can read an edit as old value next
+to new value. If an entry recorded no values it says "No details available". A
+change to the personal identification number opens its own view, and only
+`HR_TENANT` or `FINANCIAL_TENANT` can reveal the stored value there.
+
+The search box above the table, **Search action, details or author**, narrows
+the list on the server. It looks in three places: the action, the recorded
+details (which include the before and after values, so you can search for an old
+email address or town), and the first and last name of the author. Type at least
+two characters; the list updates a moment after you stop typing, and the page
+returns to the first page. The search only ever narrows what this member's list
+already shows. With no match the tab says "No logs match this search"; with no
+entries at all it says "No logs available".
+
+### Email Logs
+
+**Email Logs** lists the emails Orgo sent to this person, the same entries as the
+organisation-wide [email log](/platform/emails/email-log) narrowed to one
+member. It needs `ADMIN_TENANT`. Its search box, **Search subject or content**,
+matches the subject and the body of each email, again from two characters, and
+narrows the member's list only. The same search box is on the organisation-wide
+email log page.
+
+---
+
 ## Common questions
 
 <AccordionGroup>
@@ -229,9 +306,30 @@ narrowing by type or date searches everything and not only the first 40 rows.
     `FINANCIAL_LOCAL` on their chapter, or `ADMIN_TENANT`. `EVENT_LOCAL`,
     `COMMUNICATION_LOCAL` and `ADMIN_LOCAL` on their own are not enough.
 
-    Do not use the **Logs** tab as a guide. That one asks for `ADMIN_TENANT` and
-    nothing else, so seeing Logs but not Activity means the setting is off, and
-    seeing Activity but not Logs is entirely normal for a chapter administrator.
+    Do not use the **Audit Logs** tab as a guide. That one asks for
+    `ADMIN_TENANT` and nothing else, so seeing Audit Logs but not Activity means
+    the setting is off, and seeing Activity but not Audit Logs is entirely normal
+    for a chapter administrator.
+  </Accordion>
+
+  <Accordion title="Where are the Forms, Audit Logs and Email Logs tabs?">
+    Open **More** at the end of the profile's tab row. Forms appears for staff with
+    `HR_LOCAL` or `FINANCIAL_LOCAL` over the person, Audit Logs and Email Logs for
+    `ADMIN_TENANT`. Picking one shows it as the last tab in the row; Audit Logs and
+    Email Logs take turns in the same tab.
+  </Accordion>
+
+  <Accordion title="How do I find which change altered a member's email address?">
+    Open **More** → **Audit Logs** on the member's profile and type the old or the
+    new address into **Search action, details or author**. Open the matching row
+    and read the **Field**, **Value before** and **Value after** table. The
+    **Author** column says who made the change.
+  </Accordion>
+
+  <Accordion title="How do I find an email we sent a member?">
+    Open **More** → **Email Logs** on the profile and type a word from the subject
+    or the message into **Search subject or content**. Two characters are enough
+    to start the search.
   </Accordion>
 
   <Accordion title="An entry has no author name">
@@ -276,7 +374,8 @@ narrowing by type or date searches everything and not only the first 40 rows.
 
 ## Related
 
-- [Members](/platform/users) - the profile the Activity tab sits on
+- [Member Profile](/platform/users/member-profile) - the profile the Activity tab sits on
+- [Members](/platform/users) - the member directory
 - [Contacts](/platform/contacts) - the same notes and feed on a contact record
 - [Activity Log](/platform/logs) - profile field edits, with before and after values
 - [Permissions](/platform/permissions) - the HR and Financial permissions named here

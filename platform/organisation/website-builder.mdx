@@ -54,6 +54,7 @@ A page is an ordered list of sections, each one a shape that already knows how t
 | `faq` | Questions with expandable answers |
 | `columns` | Two or three columns of parallel text |
 | `divider` | A rule or a gap between two sections |
+| `contactForm` | Your contact form — name, email, message — filled in and sent without leaving the page |
 | `form` | One of your own forms, filled in and sent without leaving the page |
 | `files` | Documents to download, taken from Drive |
 | `events` | Your upcoming public events, pulled live |
@@ -67,6 +68,16 @@ The last six are live: you write the heading, the platform supplies the content,
 ### Sections that need something to exist first
 
 <AccordionGroup>
+  <Accordion title="contactForm — pick a contact form, or create one on the spot">
+    This is the section for "get in touch". It asks for a name, an email address and a message, optionally a phone number and a subject, and sends without the visitor leaving the page. The message arrives in **Contact messages**, the sender is saved in [Contacts](/platform/contacts/sources), and whoever the form notifies is emailed.
+
+    Its settings offer the contact forms you already have — and a **Create a contact form** button for when you have none, which is the usual case the first time you add this section. If your organisation has never switched the contact form module on, creating one switches it on too, and **Contact messages** appears in your menu.
+
+    The fields, the consent wording and the notification address belong to the form, not to the page: they are edited under **Settings → Modules → Communication → Contact forms**, and a change there corrects every page carrying that form without republishing any of them.
+
+    Use `form` instead when the form asks anything beyond those fields — a membership application, a survey, a volunteer sign-up with its own questions. A contact form switched off, or the module switched off, hides the section from visitors rather than showing a panel nobody can send.
+  </Accordion>
+
   <Accordion title="form — the form has to be published and open to non-members">
     The section stores the form's identifier and fetches its questions when the page renders, so adding a question updates every page carrying it and closing the form closes it everywhere at once. Never re-type a form's questions into another section.
 
@@ -198,6 +209,14 @@ It stops and asks you twice — once before anything is written, with a preview 
     The `files` section can only list documents that are publicly shared in Drive. Share it there, then add it here. If a download has stopped working, check whether the share was revoked.
   </Accordion>
 
+  <Accordion title="My contact form section is empty for visitors">
+    Either no contact form is chosen yet, or the one it names is switched off — or the contact form module is off for the whole organisation. The builder says which; visitors are shown nothing at all rather than a form they cannot send. Check **Settings → Modules → Communication → Contact forms**.
+  </Accordion>
+
+  <Accordion title="My contact form section is empty for visitors">
+    Either no contact form is chosen yet, or the one it names is switched off — or the contact form module is off for the whole organisation. The builder tells you which; visitors are shown nothing at all rather than a form they cannot send. Check **Settings → Modules → Communication → Contact forms**.
+  </Accordion>
+
   <Accordion title="My form will not save on a page">
     A draft form cannot be embedded, and neither can a members-only one: on a public page it would show questions a visitor can fill in and cannot send. Publish the form and set it to accept answers from people without an Orgo account.
   </Accordion>
@@ -217,5 +236,6 @@ It stops and asks you twice — once before anything is written, with a preview 
 - [Orgo MCP](/platform/mcp) - connect an assistant and build the site by asking
 - [Files](/platform/files) - Drive, and the shares the downloads section reads
 - [Forms](/platform/forms) - the forms a page can embed
+- [Where contacts come from](/platform/contacts/sources) - what the contact form section writes, and where it lands
 - [Donation Pages & Widgets](/platform/fees/donation-pages) - what the donate section needs
 - [Permissions](/platform/permissions) - what ADMIN_TENANT unlocks

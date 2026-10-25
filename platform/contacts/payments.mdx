@@ -14,7 +14,7 @@ for almost everything you sell. Donations, event tickets, invoices and recurring
 subscriptions all work with a contact as the payer. There is exactly one thing a
 contact can never hold, and it is the thing people most often assume they can.
 
-<img src="/images/platform/contacts/contact-payments.png" alt="The Payments and Subscriptions card on a contact record, listing four donations with amount, a paid status, date, product and a one-time type, and a Record payment button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/contacts/contact-payments.png" alt="The Payments and Subscriptions card on a contact record, listing four donations with amount, a paid status, date, product and a one-time type, and a record payment button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
@@ -86,7 +86,7 @@ stored identity details. Only that member, signed in, can change them.
 | **Event tickets** | Card checkout, free registration, or pay by invoice | A contact can be the buyer, the attendee, or both, and can buy tickets for other people |
 | **Invoices** | An invoice raised with a contact as the payer, including event registration invoices settled by bank transfer | An invoice has one payer: a member, a contact, or a company |
 | **Subscriptions** | A recurring product bought without an account | Each period's charge creates a payment against the contact |
-| **Payments you record by hand** | **Record payment** on the contact record | Needs `FINANCIAL_TENANT` |
+| **Payments you record by hand** | **Add payment record** on the contact record | Needs `FINANCIAL_TENANT`. Choose a **Payment type** when you enter a custom item |
 | **Membership fees** | Not possible | See the boundary above |
 
 ---
@@ -94,8 +94,9 @@ stored identity details. Only that member, signed in, can change them.
 ## Where a contact's money shows up
 
 **On the contact record.** The **Payments & Subscriptions** card holds a
-subscriptions table and the same payments table used on member profiles, plus a
-**Record payment** button for money taken offline.
+subscriptions table and the same payments table used on member profiles, plus an
+**Add payment record** button for money taken offline. Choose what it was for with
+**Payment type** (see [Recording a payment](/platform/fees/record-payment#payment-type)).
 
 **In your organisation-wide lists.** A contact payer appears in the payments list
 and in the invoice list exactly like a member, shown as a link back to the
@@ -113,6 +114,11 @@ screen shows you.
 
 A chapter-level financial or HR permission on its own is not enough to open a
 contact's payment history. That list is an organisation-level view.
+
+To see only one kind of money across everyone, including contacts, use the
+**Payment type** filter on the organisation-wide **Payments** list: **Fee**,
+**Donation**, **Event ticket**, **Shop** or **Admin**. The contact's own card has
+no such filter.
 
 <Note>
 A contact with any payment, invoice or signed document attached cannot be
@@ -230,6 +236,13 @@ where money comes from. See [Insights](/platform/insights).
     and role controls on the **Team Members** panel act on member rows. If the
     company needs more room, the seat count comes from the plan it bought, so a
     plan with more slots raises the allowance.
+  </Accordion>
+
+  <Accordion title="I recorded a contact's payment as a Fee and their membership did not change">
+    Expected. **Payment type** is a label for filtering. A contact can never hold
+    a membership fee, and even for members only a real fee period recorded from
+    the **Fee** tab moves a validity date. See
+    [Recording a payment](/platform/fees/record-payment#payment-type).
   </Accordion>
 
   <Accordion title="A contact's subscription renewed and nobody was told">

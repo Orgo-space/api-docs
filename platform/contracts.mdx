@@ -21,7 +21,7 @@ E-Documents lets you write a document once as a template, fill it with member da
 
 | Setting | What it does |
 |---|---|
-| **Enable eDocuments Module** | Shows the eDocuments screens and the E-Documents tab on member profiles |
+| **Enable eDocuments Module** | Shows the eDocuments screens and the e-documents on the **Documents** tab of member profiles |
 | **Enable Groups** | Ties each template to one group, which changes who sees it and who may assign it |
 | **Membership Card Contract** | Marks one template as the membership card document, adding a **Print status** column and a **Mark as printed** action on that template's list |
 
@@ -45,7 +45,7 @@ Creating a template requires `ADMIN_TENANT`; editing, cloning and deleting requi
 |---|---|
 | **Template name** | Internal name, shown in lists and filters |
 | **Associated group** | Ties the template to one group (needs **Enable Groups**) |
-| **Show in member profile** | Members see the template on their own E-Documents tab before it is assigned to them. With **Enable Groups** on, only members of the associated group see it |
+| **Show in member profile** | Members see the template on the **Documents** tab of their own profile before it is assigned to them. With **Enable Groups** on, only members of the associated group see it |
 | **Mandatory document** | The member is pushed through onboarding until it is signed (see below) |
 | **Enable signature** | Off makes it a read-and-download document with no signing step |
 | **Signing method** | **Sign by finger on screen** or **Sign by file upload** |
@@ -85,9 +85,48 @@ The two end dates are not the same tag. `{dateValidityEnd}` prints the validity 
 
 ## Sending a document
 
-In the **Documents** tab, **Start document** opens a panel with three fields: the template (shown only when more than one exists), a **Search member** autocomplete across members and [contacts](/platform/contacts), and validity. **Contract validity date start** defaults to today, and the end date comes from the template duration unless you switch on **Custom contract validity date end**.
+Sending a document from a template is one panel, opened from two places.
+
+| Where you start | How | Who |
+|---|---|---|
+| The eDocuments list | **eDocuments** → **Documents** tab → **Start document** (top right of the filter row) | `HR_TENANT` |
+| A member's own page | The member's **Documents** tab → **New** → **From eDocuments template**. The member is already chosen | `HR_TENANT`. The entry appears only while eDocuments is on and the member has a personal drive |
+
+<Steps>
+  <Step title="Open the panel">
+    A panel slides in from the right. Its title is the name of the template, or
+    **Start document** until one is chosen.
+  </Step>
+  <Step title="Pick the template">
+    **Document template** is shown only when your organisation has more than one
+    template. From the list it starts on the template you are filtering by; from
+    a member's page it starts on the first template.
+  </Step>
+  <Step title="Pick who signs">
+    Type in **Search member**. It finds members and [contacts](/platform/contacts)
+    alike. The person you pick appears as a chip with their initials; select the
+    **x** on the chip to choose someone else. Opened from a member's page, the chip
+    is already there.
+  </Step>
+  <Step title="Set the validity (signing templates only)">
+    Under **OPTIONS**, **Contract validity date start** defaults to today. A line
+    below it reads **Current validity interval** followed by the template's
+    duration in months, or **Unlimited**. To override the end, switch on **Custom
+    contract validity date end** and pick a **Contract validity date end**;
+    otherwise the end is the start plus the template's duration. A template with
+    **Enable signature** off (read-and-download) shows no validity fields.
+  </Step>
+  <Step title="Send">
+    **Start document** stays greyed out until a template and a person are chosen.
+    Selecting it creates the document, shows "Created successfully" and closes
+    the panel. The document appears in the **Documents** list, and on the member's
+    **Documents** tab without reloading the page.
+  </Step>
+</Steps>
 
 Assigning to someone else requires `HR_TENANT`, or `HR_LOCAL` when the template's associated group belongs to a local center. Members can always start their own document from their profile.
+
+The list page also opens the panel from a link: `/e-documents?send=1` opens it empty, and `/e-documents?send=1&user=<member id>` opens it with that member already chosen.
 
 ### Public links
 
@@ -124,7 +163,9 @@ Three more admin actions on a single document, all `HR_TENANT`: **Modify documen
 
 ## What the member sees
 
-Members find their documents under **E-Documents** on their own profile: a card per template with **Sign**, **Upload file** or **Download PDF**, a running count of required documents signed, and previous versions with their validity ranges.
+Members find their documents on the **Documents** tab of their own profile (the tab reads **Files** when eDocuments is off). The e-documents sit above the member's files: a card per template with **Sign**, **Upload file** or **Download PDF**, a **Needs signature** tag on those still waiting, and previous versions with their validity ranges. When there are no e-documents, that part of the tab is simply not shown. The card at the top that counted required documents signed (**Required documents**, "2 / 3 signed") has been removed; use **Needs signature** on each card to see what is outstanding.
+
+Opening a document from there and selecting **Back** returns to the member's own **Documents** tab, rather than to the admin list.
 
 On a signing template, the screen shows the document beside a short form for whatever placeholders it uses (first name, phone, town, company details, custom fields), then the member draws a signature. What they enter is written back to their profile where that field was empty.
 

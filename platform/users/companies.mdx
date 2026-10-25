@@ -29,7 +29,7 @@ and holds the membership. To create an account for an ordinary member, use
 
 | Setting | What it does |
 |---------|-------------|
-| **Enable Companies Module** | Turns the feature on. Adds **Companies** to the sidebar and a **Company** tab to each member's own profile |
+| **Enable Companies Module** | Turns the feature on. Adds **Companies** to the sidebar and a **Company** card to member profiles |
 | **Who can create companies** | **Any member**, **Local center admins and above**, or **Organization admins only** |
 | **Enable Company Fees** | Lets companies pay membership fees for their members. Only appears when the Payments and Fees module is active |
 
@@ -52,6 +52,25 @@ Companies start **Pending** and flip to **Active** on the first paid membership 
 <Note>
 An ordinary member who creates a company is added to it as **Primary Contact** and can only ever belong to one company. Administrators (`ADMIN_LOCAL` and above) create companies on behalf of others, so they are exempt from the one-company rule and are not enrolled in what they create.
 </Note>
+
+---
+
+## The Company card on a member's profile
+
+The module adds a **Company** card to the main tab of a [member's profile](/platform/users/member-profile). It replaces the Company tab older versions had.
+
+| Situation | What the card shows |
+|---|---|
+| The member belongs to a company | The company logo and name, and a role chip. The name opens the company page for the member themselves and for `ADMIN_TENANT`; for anyone else it is plain text. The role chip is shown only to the member and to staff with `HR_LOCAL` or `FINANCIAL_LOCAL` over them |
+| It is your own profile and you belong to a company | The same, plus **Manage** (opens your company page) and **Leave** |
+| It is your own profile, you belong to no company, and **Who can create companies** allows you | "You are not part of any company yet" and a **Create Company** button |
+| It is someone else's profile and they belong to no company | No card |
+
+**Create Company** on the card opens a short form: **Company Name** (required), **Description**, **Contact Email** and **Contact Phone**. Billing details and the financial contact are completed afterwards on the company page, before the first payment. Creating the company this way follows the same rules as [Creating a company](#creating-a-company): an ordinary member becomes its **Primary Contact** and can belong to only one company.
+
+**Leave** asks "Are you sure you want to leave this company?". Leaving ends the membership and clears the fee date and fee price the company had given you, so you are treated as an individual member again. If you are the only person left, leaving also deletes the company (status Deleted), exactly as **Delete Company** does.
+
+The card does not show the company's member count, valid-until date or status. Those are on the company page itself, one click away from the company name.
 
 ---
 
@@ -162,7 +181,31 @@ Only **Active** and **Pending** companies with a plan and a renewal date are rem
 
 ---
 
+## Common questions
+
+<AccordionGroup>
+  <Accordion title="Where did the Company tab on the member profile go?">
+    It is now the **Company** card on the profile's main tab. The membership figures the tab used to carry (members used and allowed, valid until, status) live on the company page, which you reach from the company name or **Manage**.
+  </Accordion>
+
+  <Accordion title="How does a member leave a company?">
+    On their own profile, **Leave** on the Company card. Staff cannot use that button on someone else's profile; an administrator removes a person from the member list on the company page instead.
+  </Accordion>
+
+  <Accordion title="Why does a member see no Create Company button?">
+    The button appears on a member's own profile only while they belong to no company and **Who can create companies** includes them. With **Organization admins only**, ordinary members never see it.
+  </Accordion>
+
+  <Accordion title="What happens to the company if its last member leaves?">
+    The company is deleted (soft delete, status Deleted) as part of leaving, with no second confirmation. Deleted companies disappear from every list.
+  </Accordion>
+</AccordionGroup>
+
+---
+
 ## Related
+
+- [Member Profile](/platform/users/member-profile) - the Company card and the other cards on the profile
 
 - [Adding Members](/platform/users/adding-members) - the four ways people get into your organization, and where this one fits
 - [Family Members](/platform/users/family-members) - the household equivalent, without shared fees

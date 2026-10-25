@@ -101,21 +101,28 @@ Trainers carry no dates, topics or rates. The record is simply "this member trai
 
 ### The trainer flag on a member
 
-A member's **Permissions** tab (member → **Modify** → **Permissions**) has an **is Trainer** checkbox,
-visible once a Training Event Type is configured. Editing that tab needs `HR_LOCAL` on the member's
-local centre, and `HR_TENANT` when the organisation does not let local admins change permissions.
+On a member's profile, open the pencil (**Edit**) and choose the **Membership status** tab. Its last group holds a **This member is a trainer** checkbox. Ticking it reveals an optional **Trainer since** date picker beside it, with an **x** to clear the date. Save with the tab's **Save** button. The group is visible once a Training Event Type is configured.
 
-The flag does two things:
+Editing needs `HR_LOCAL` on the member's local centre, and `HR_TENANT` when **Allow Local Admins to Modify User Permissions** (**Settings** → **Users & Profiles** → **Configuration**) is turned off. Other staff and the member themselves do not see the checkbox.
 
-- the member may create events of the training type, even without the permission that event type
-  normally requires;
-- their profile gains a **Trainer** section listing the trainings they led.
+The flag does three things:
+
+- the member may create events of the training type, even without the permission that event type normally requires;
+- the member's profile shows a **Trainer** row in its main card, described below;
+- the trainings they led are listed on their profile, in the **Courses & trainings** card.
+
+**Trainer since** is a calendar date with no time. It is for your own records and changes nothing else: it does not limit which trainings are listed or which events the trainer may create.
 
 ### On the member's profile
 
-With a Training Event Type configured, a profile shows a **Trainings** card: the training events the
-member attended, and, for a flagged trainer, the trainings they ran. Both lists link straight to the
-events.
+With a Training Event Type configured, a profile shows two things for a trainer.
+
+| Where | What it shows |
+|---|---|
+| **Trainer** row in the main card at the top left | Only for members flagged as trainers. With a **Trainer since** date it shows how long ago that was, for example "3 years ago", and hovering shows the date. Without a date it shows a **Yes** tag |
+| **Courses & trainings** card | One list of training events: the ones the member attended and, for a flagged trainer, the ones they ran. Each row shows the date, the length when it ran longer than a day, and the event name, which links to the event. When the Courses module is active, course enrollments follow with a status tag |
+
+The card is shown only while it has something to list, and the list does not mark which trainings were attended and which were led.
 
 <Note>
 Certifications on a profile are typed in by hand and are not produced by attending a training. Nothing
@@ -135,6 +142,18 @@ in Orgo turns an attendance record into a certificate automatically.
   <Accordion title="There is no Trainers entry">
     Either the organisation has no Training Event Type set, or this event is not using that type.
     Check the event's type first.
+  </Accordion>
+
+  <Accordion title="Where do I record when someone became a trainer?">
+    On the member's profile: **Edit** → **Membership status** → tick **This member is a trainer** and fill in **Trainer since**. The date is optional; without it the profile shows a **Yes** tag in the **Trainer** row instead of "x years ago".
+  </Accordion>
+
+  <Accordion title="The Trainer row or the Courses & trainings card is missing from a profile">
+    Both need a Training Event Type in **Settings** → **Modules** → **Events** → **Configuration**. The **Trainer** row also needs the member to be flagged as a trainer. The **Courses & trainings** card is hidden while the member has no trainings or course enrollments to list.
+  </Accordion>
+
+  <Accordion title="I cannot find the trainer checkbox">
+    It is on the **Membership status** tab of the profile editor, not on the Permissions tab where older versions had it. It is shown only when a Training Event Type is set and you hold `HR_LOCAL` over the member (and `HR_TENANT` if local admins may not modify permissions).
   </Accordion>
 
   <Accordion title="A speaker's title or photo is wrong">
@@ -162,3 +181,4 @@ in Orgo turns an attendance record into a certificate automatically.
 - [Event Types](/platform/events/event-types): including the type used for training
 - [Public Event Page](/platform/events/public-page): where the speaker line-up is shown
 - [QR Check-in](/platform/events/check-in): getting speakers through the door
+- [Member Profile](/platform/users/member-profile): where the Trainer row and the Courses & trainings card appear

@@ -64,7 +64,7 @@ A user type can never carry permissions. The permissions section is hidden as so
 
 A member has exactly one user type; if someone fits two categories, pick the primary and use a role or tag for the other.
 
-- **On the member's profile**: edit the member → **roles** tab → the **userType** selector.
+- **On the member's profile**: **Edit profile** → **Membership status** → **User type**, then **Save**.
 - **When an admin creates a member**: a user type selector on the create form.
 - **Automatically on registration**: **Default User Type After Registration** stamps a type on every self-registration.
 - **From the registration link**: signing up through `/join/<slug>` applies that type and the matching role.
@@ -72,7 +72,7 @@ A member has exactly one user type; if someone fits two categories, pick the pri
 - **On adhesion approval**: approving an [adhesion](/platform/users/adhesion) sets the type configured for successful applications, and emails the member if their type changed.
 - **Bulk import**: set the type during a member [import](/platform/customization/import).
 
-Editing roles on a profile requires `HR_TENANT`, or `HR_LOCAL` over the member's chapter. Local admins can view but not change them unless **Allow Local Admins to Modify User Permissions** is on.
+Changing the user type needs `HR_LOCAL` over the member's chapter, and local admins must be allowed to change permissions (**Allow Local Admins to Modify User Permissions**, on by default) unless the person holds `HR_TENANT`. The **Roles** pane of the Edit view is offered to `HR_TENANT`, or to `HR_LOCAL` over the member's chapter when chapters are on; adding roles there needs the same setting. See [Member profile](/platform/users/member-profile).
 
 ---
 
@@ -90,7 +90,9 @@ Editing roles on a profile requires `HR_TENANT`, or `HR_LOCAL` over the member's
 
 ## Roles and terms
 
-Assign a role from the member's **roles** tab, where each assignment has a **dateBegin** and an optional **dateEnd**. Ending a role ends the permissions it carried, and the assignment stays visible as history. That is why permissions belong on roles rather than people: a handover is one assignment ended and another started.
+Assign a role from **Edit profile** → **Roles** → **Add role**: choose a scope (the organisation, **Chapter** or **Units**), tick the roles and **Save**. Each assignment has a **Date begin** and an optional **Date ended**. The member's roles are drawn as one timeline, **Now** above **History**, on the profile's **Roles** card and in the Roles pane.
+
+To end a role, press **End role** on its row, confirm the date and **Save**. Ending a role ends the permissions it carried, and the assignment moves to **History**. Dates can be corrected afterwards by clicking the row, and a record entered by mistake can be deleted from the history. That is why permissions belong on roles rather than people: a handover is one assignment ended and another started. The steps in full are in [Member profile](/platform/users/member-profile#roles-and-the-role-timeline).
 
 Where each level applies: **Organisation** is the whole organization, **Chapter** one local center, **Parent chapter** a parent local center and every local center beneath it at any depth, a unit type a specific unit or team of that type, and **None** a label with no scope and no permissions.
 
@@ -123,6 +125,14 @@ Under **Settings** → **Users & Profiles** → **Configuration**.
 
   <Accordion title="Is 'Leader' a user type or a role?">
     A category of member is a user type; a post someone is elected or appointed to is a role with the right level and permissions. Need both, create both: they are separate rows on the same screen.
+  </Accordion>
+
+  <Accordion title="How do I end a role, or fix the dates of one?">
+    Open the member, **Edit profile** → **Roles**. **End role** on a current row sets **Date ended** to today (change it if needed) and closes the role. To correct either date, click the row; to reopen an ended role, clear **Date ended**. A wrong record can be deleted with the trash icon in the history. Organisation-level roles that are not user types can only be changed by `HR_TENANT`.
+  </Accordion>
+
+  <Accordion title="Where do I change a member's user type?">
+    **Edit profile** → **Membership status** → **User type**. It is a single choice, and saving a new type leaves the member's other roles as they were.
   </Accordion>
 
   <Accordion title="The /join link for a type does not work">
