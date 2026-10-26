@@ -77,7 +77,7 @@ Roles are stored per membership, and one person can hold more than one.
 |---|---|
 | **Member** | The default. Sees the company page and inherits the membership validity |
 | **Primary Contact** | Edits the company, manages members and invitations, and pays. At most one per company |
-| **Voting Representative** | A label marking who speaks for the company. At most one per company |
+| **Voting Representative** | Casts the company's vote in a [company vote](/platform/e-voting#company-votes). At most one per company |
 | **Financial Rep** | Legacy. Same rights as Primary Contact, but no longer assignable from the interface |
 
 Assigning **Primary Contact** or **Voting Representative** takes it from whoever held it before, in the same action.
@@ -386,7 +386,7 @@ If you also run chapters, **Finance** → **Stats** (route `/fee/stats`, `FINANC
 
 - **A person belongs to at most one company.** There is no way to attach somebody to two member companies, and an invitation to a second one is refused.
 - **Companies are organization-wide.** A company has no chapter field, so it cannot be owned by a region, filtered by one, or billed through one.
-- **Voting Representative is a label.** Nothing in the voting module reads it: every employee with an account votes as an individual, and there is no one-company-one-vote weighting.
+- **Only company votes read Voting Representative.** A [company vote](/platform/e-voting#company-votes) gives one vote to each voting representative of an active, paid-up company. In any other vote, every employee with an account votes as an individual.
 - **Contacts occupy seats but inherit nothing.** A contact has no fee date, so company membership sync skips them. Use contacts for people you communicate with, not for people who need to sign in.
 - **Domain matching ignores the seat allowance.** An event registration that matches a company's website domain adds the person even when the company is full, so a company can end up over its allowance without anyone acting.
 - **Company fees replace individual fees entirely for those people.** There is no "company pays half" arrangement, and no way to leave an individual fee in place beside a company one.
@@ -471,9 +471,9 @@ Work down this list once and your federation is live. Each line is an outcome yo
   </Accordion>
 
   <Accordion title="Can we give each member company one vote?">
-    No. **Voting Representative** is a label on a company membership and nothing outside the company screens reads it. Voting eligibility is per person, so every employee with an account can vote on a session they are eligible for.
+    Yes, with a [company vote](/platform/e-voting#company-votes). Choose **Company vote** as the audience and the voters are the **Voting Representative** of every active company that is paid through the vote's start date. The list follows role and payment changes until the vote starts, then it is fixed.
 
-    The closest you can get is procedural: name the representative on the company so the record is unambiguous, and restrict the vote's audience to a [role group](/platform/groups/role-groups) or private group holding one person per company. Vote exports carry a **Company** column, so you can check afterwards that nobody's firm voted twice.
+    Make sure each company has its representative named before the start. A company without one has no vote, and a company with two has two. A vote with any other audience still lets every eligible employee vote as an individual.
   </Accordion>
 
   <Accordion title="An administrator cannot see which company a member belongs to">
