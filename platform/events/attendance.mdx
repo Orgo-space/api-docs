@@ -74,15 +74,18 @@ is attached: cancel or refund the payment first, since the status follows the mo
 
 ## Adding people
 
-Use **Invite** at the top right. The **Member** tab searches the directory; the **External** tab takes
-a name and email, matching the address against members first, then contacts, and creating a new
-contact only if neither exists. **Guest tickets** takes a number from 0 to 20: each guest is a
-separate registration and ticket issued to the same person, with its own QR code, so they can bring
-people whose names you do not need.
+Use **Invite** at the top right. One search box takes a member's name or a plain email address. Pick several people and they collect under **To add**, then choose what happens to them. The dialog is titled **Invite participant** on an event with a registration form and **Add attendee** on one without.
 
-<img src="/images/platform/events/event-attendee-invite.png" alt="Invite participant dialog with Member and External tabs, a member search box, and the guest tickets number control" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+| Action | What it does | At most |
+|---|---|---|
+| **Add to list** | Registers each person straight away and emails them their ticket, with a calendar invite | 50 people at once |
+| **Send invitation** | Sends an invitation email; the person confirms or declines from there. Until they answer they are **Invited** | 10 people at once |
 
-Either route confirms immediately: registration **Registered**, RSVP **Attending**, and an emailed
+An email that matches a member is treated as that member; one that matches a contact uses the contact; an unknown address creates a new contact, marked **New contact, not a member yet**. Adding is queued: a message says **Adding N people to the list. They appear in a moment.** and the list fills in as each one is processed, so a long selection never times out.
+
+**Guest tickets** (0 to 20 per person) appears when the event has guest tickets switched on, and only for **Add to list**: each guest is a separate registration and ticket issued to the same person, with its own QR code, so they can bring people whose names you do not need. Everyone you add or invite must be a member of your organization or a new contact; a member from another organization is refused.
+
+**Add to list** confirms immediately: registration **Registered**, RSVP **Attending**, and an emailed
 ticket with a QR code and a calendar invite, so speakers, sponsors and staff get in without paying.
 
 ### Everyone in the group at once
@@ -92,6 +95,9 @@ a published event shows **Send Invites to All Members**, and publishing offers t
 every active member of the event's group as **Invited** with RSVP **Maybe**, or of the whole
 organisation when the event has no group. People already listed are skipped, and it runs once per
 event.
+
+The **Invite participant** dialog offers it as a third choice, **Add all members** (**Add all N members**),
+which first shows the group's name, how many active members it reaches and the first ten by name.
 
 <Warning>
 Bulk invite fills the participant list. It does not currently send the invitation email, so announce
