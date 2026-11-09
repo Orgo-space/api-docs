@@ -82,7 +82,7 @@ Roles are stored per membership, and one person can hold more than one.
 
 Assigning **Primary Contact** or **Voting Representative** takes it from whoever held it before, in the same action.
 
-An ordinary member belongs to at most one company, and a member cannot be added to a second one. Administrators who create companies on behalf of others are exempt from that rule and are not enrolled in what they create.
+An ordinary member belongs to at most one company, and a member cannot be added to a second one. Staff who create companies do so on behalf of others and are not enrolled in what they create.
 
 ### Seats, and what happens when they run out
 
@@ -131,10 +131,8 @@ Every switch below needs `ADMIN_TENANT`, and the Settings screens themselves als
 | Setting | What it does |
 |---|---|
 | **Enable Companies Module** | Adds **Companies** to the sidebar and a **Company** tab to a member's own profile |
-| **Who can create companies** | **Any member**, **Local center admins and above**, or **Organization admins only**. This also decides who administers companies they do not belong to (see [Permissions](#permissions) below) |
 | **Enable Company Fees** | Lets companies pay membership fees on behalf of their people. Only appears while the Payments and Fees module is active |
-
-<img src="/images/platform/templates/federation-companies-module.png" alt="Companies module configuration with the Enable Companies Module switch on, a Who can create companies dropdown set to Organization admins only, and Enable Company Fees on with an explanatory note" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+| **Public company directory** | Optional. Publishes your member companies for anyone with the link. See [Public directory](/platform/users/companies#public-directory) |
 
 ### Payments and fees
 
@@ -199,9 +197,7 @@ Work through these in order. Steps 1 to 4 build the money side, 5 turns the memb
     <img src="/images/platform/fees/membership-fee-settings.png" alt="Membership fees settings with Enable Membership Fees on, a Product Configuration card naming the membership fee product and default price, and the payment options below" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginTop: "1rem" }} />
   </Step>
   <Step title="Turn on Companies and company fees">
-    Go to **Settings** → **Modules** → **Companies** → **Configuration**. Switch **Enable Companies Module** on, choose **Who can create companies**, then switch **Enable Company Fees** on.
-
-    Read [Permissions](#permissions) before you pick the **Who can create companies** value: it quietly decides who can administer companies they do not belong to.
+    Go to **Settings** → **Modules** → **Companies** → **Configuration**. Switch **Enable Companies Module** on, then switch **Enable Company Fees** on.
 
     **Done when** **Companies** appears in the sidebar and the **Enable Company Fees** switch shows its "How company fees work" note underneath.
   </Step>
@@ -345,15 +341,7 @@ Company access is decided by a company-specific check, not by the chapter permis
 | Delete a company | `ADMIN_TENANT` |
 | Open **Settings** at all | `ADMIN_TENANT`, plus the **Orgo administrator** flag |
 
-On top of that there is one bypass, and it is the setting people get wrong: **Who can create companies** also decides who administers companies they do not belong to, floored at `ADMIN_LOCAL`.
-
-| **Who can create companies** | Who can then view, edit, manage members and pay on *every* company |
-|---|---|
-| **Any member** | Anyone holding `ADMIN_LOCAL` or above (the floor keeps ordinary members out of companies they do not belong to) |
-| **Local center admins and above** | Anyone holding `ADMIN_LOCAL` or above |
-| **Organization admins only** | `ADMIN_TENANT` only |
-
-Because a company has no chapter, that `ADMIN_LOCAL` check is not scoped to anything: a chapter admin who qualifies reaches every company in the organization, not the ones "in their area". Set **Who can create companies** to **Organization admins only** if that is not what you want.
+On top of that, `HR_TENANT` creates companies and can view, edit, manage members and pay on *every* company without belonging to it. Chapter permissions such as `ADMIN_LOCAL` give no access to companies, because a company has no chapter to scope them to.
 
 Two more things worth knowing before you delegate:
 
@@ -404,7 +392,7 @@ Work down this list once and your federation is live. Each line is an outcome yo
 - [ ] Membership fee product created with the right **Period** and **Cycle beginning** (both lock on save)
 - [ ] Company fee prices created on that product: one **Company only** price per corporate tier, each carrying its own **Company slots** allowance
 - [ ] Organization pointed at the product: **Enable Membership Fees** on, with a **Membership Fee Product** and a **Default Membership Fee Price** selected
-- [ ] Companies module on, **Who can create companies** deliberately chosen, and **Enable Company Fees** on
+- [ ] Companies module on and **Enable Company Fees** on
 - [ ] Invoices module on and a **Manual Invoice Product** set, so renewal reminders can carry a PDF
 - [ ] Member companies imported, each with legal name, billing address and VAT number filled in
 - [ ] One **Primary Contact** named per company, and a **Financial contact email** on every **Financial Contact** card

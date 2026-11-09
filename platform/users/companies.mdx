@@ -29,9 +29,13 @@ and holds the membership. To create an account for an ordinary member, use
 
 | Setting | What it does |
 |---------|-------------|
-| **Enable Companies Module** | Turns the feature on. Adds **Companies** to the sidebar and a **Company** card to member profiles |
-| **Who can create companies** | **Any member**, **Local center admins and above**, or **Organization admins only** |
+| **Enable Companies Module** | Turns the feature on. Adds **Companies** to the sidebar and a **Company** card to member profiles. The **Members** menu entry is then called **Profiles** |
+| **Company media** | Featured audio, featured video and a photo gallery on each company page. On by default. See [Company media](#company-media) |
+| **Icon for companies without a logo** | Shown on company cards, on the map, on the company page and on the sidebar entry until a company adds its logo |
 | **Enable Company Fees** | Lets companies pay membership fees for their members. Only appears when the Payments and Fees module is active |
+| **Public company directory** | Publishes your companies for anyone with the link. Off by default. See [Public directory](#public-directory) |
+
+The **Company fields** tab beside **Configuration** holds the questions every company answers. See [Company fields](#company-fields).
 
 With **Enable Company Fees** on, mark fee prices **Company only** in the fee product settings and give each a **Company slots** number: company members then inherit membership status from the company and cannot buy an individual fee. A separate switch, **Settings** → **Modules** → **Payments & Fees** → **Company Fee Payment Mandatory**, locks company members out of the platform until the company fee is paid.
 
@@ -39,19 +43,86 @@ With **Enable Company Fees** on, mark fee prices **Company only** in the fee pro
 
 ## Creating a company
 
-**Create** on the Companies list opens one form. Only **Company Name** is required, though payment needs the billing block completed.
+Creating a company requires `HR_TENANT`. **Create** on the Companies list opens one form. Only **Company Name** is required, though payment needs the billing block completed.
 
 | Group | Fields |
 |---|---|
-| Identity | Company Name, Description, Website, Company Logo |
-| Billing Details | Legal Name, Registration Number, VAT Number, Billing Address, Town, Country |
+| Identity | Company Name, Description, Website, Company Logo, Location on companies map |
+| Public directory | **Show in public directory**, when the directory is published and companies opt in |
+| About us | The answers to your [company fields](#company-fields) |
+| Media | Featured audio link, Featured video link, Gallery. Photos can be added once the company is saved |
+| Billing Details | Legal Name, Registration Number, VAT Number, Billing Address, Postal code, Town, Country, Secondary address, Secondary postal code |
 | Financial Contact | Financial contact full name, Financial contact email, Financial contact phone, Additional contact email 1 (Cc), Additional contact email 2 (Cc) |
 
 Companies start **Pending** and flip to **Active** on the first paid membership fee. `ADMIN_TENANT` can also set status by hand from the company page. **Delete Company** is a soft delete: the record moves to status Deleted and disappears from every list.
 
 <Note>
-An ordinary member who creates a company is added to it as **Primary Contact** and can only ever belong to one company. Administrators (`ADMIN_LOCAL` and above) create companies on behalf of others, so they are exempt from the one-company rule and are not enrolled in what they create.
+Members cannot create companies themselves. Whoever creates a company does so on behalf of others and is not enrolled in it, so add a **Primary Contact** afterwards from the company page.
 </Note>
+
+---
+
+## The company directory
+
+**Companies** in the sidebar opens the directory at `/organizations`, for every member of an organization running the module. It shows the active companies with search, a map, and a filter for each [company field](#company-fields) marked **Use as a filter**. Members can filter only on Public fields.
+
+Staff with `HR_TENANT` also get **Manage companies**, which opens the full list at `/companies` with status counts and billing data. When the [public directory](#public-directory) is published, **Public page** opens it.
+
+---
+
+## Company fields
+
+**Settings** → **Modules** → **Companies** → **Company fields**. Managing them requires `ADMIN_TENANT`.
+
+Company fields are questions every company answers on its page, such as a genre or a sector. They work like [custom fields](/platform/users/custom-fields) on member profiles, with these differences:
+
+- **File Upload** is not offered, and company fields cannot be encrypted.
+- **Show on list rows and cards** puts the answer under the company name in the company lists and directory cards.
+- **Use as a filter** adds the field as a filter on the company lists and the public directory. It is offered only on Dropdown, Checkboxes, Radio choice and Switcher fields. Options ticked within one field widen the results, and each further field narrows them.
+
+Visibility has its own meaning here:
+
+| Level | Who can read the answer | Who can fill it in |
+|---|---|---|
+| **Public** | Everyone who can see the company, including visitors of the public directory | Whoever can edit the company |
+| **Company members and admins** | The company's own members and `HR_TENANT` | Whoever can edit the company |
+| **Admins only** | `HR_TENANT`. The company itself does not see it | `HR_TENANT` |
+
+---
+
+## Company media
+
+With **Company media** on, a company page can show:
+
+- **Featured audio** and **Featured video**: links only, with no upload. Spotify, SoundCloud, YouTube and Vimeo play inside the page, and any other `https://` link becomes a button that opens it.
+- **Gallery**: up to 12 JPEG, PNG, GIF or WebP images of 5 MB each. The first image is the cover, images can be reordered, and each can carry a description for screen readers.
+
+Whoever can edit the company manages its media. Switching **Company media** off hides all of it, including on the public directory.
+
+---
+
+## Public directory
+
+Publishing the directory puts your companies on a page anyone can open, without signing in. Switch **Public company directory** on under **Settings** → **Modules** → **Companies** → **Configuration**, then choose how it behaves:
+
+| Setting | What it does |
+|---|---|
+| **Only companies that opt in** | On by default: each company decides through **Show in public directory** on its page, and new companies appear unless they switch it off. Off: every company meeting the membership status appears, whatever it chose |
+| **Views offered** | **List**, **Cards** and **Map**. At least one of List and Map stays on, and Cards needs List |
+| **Default view** | The view the page opens on, when more than one is offered |
+| **Membership status required** | **Active and fee paid** (default) or **All active**. Only shown while company fees are on. Without them, every active company qualifies |
+| **Share** | **Open public page**, and an embed code for any website. You can also add the **Company map** section in the [Website Builder](/platform/organisation/website-builder). Both show the views you offered |
+
+A company must always be **Active** to appear. The public page is at `/company-map/<your-organization-slug>`.
+
+| Visitors see | Visitors never see |
+|---|---|
+| Name, logo, description, website, town and country | Contact details, billing data, postal address, VAT or registration number |
+| Answers to **Public** company fields, with filters on the ones marked **Use as a filter** | Answers to the other company fields |
+| Featured audio and video, and the gallery | Fees and member counts |
+| The Primary Contact and Voting Representative, subject to each person's [privacy settings](/platform/users/privacy-settings) | Any other member |
+
+The list shows at most the first 500 companies, and says so when there are more.
 
 ---
 
@@ -63,10 +134,7 @@ The module adds a **Company** card to the main tab of a [member's profile](/plat
 |---|---|
 | The member belongs to a company | The company logo and name, and a role chip. The name opens the company page for the member themselves and for `ADMIN_TENANT`; for anyone else it is plain text. The role chip is shown only to the member and to staff with `HR_LOCAL` or `FINANCIAL_LOCAL` over them |
 | It is your own profile and you belong to a company | The same, plus **Manage** (opens your company page) and **Leave** |
-| It is your own profile, you belong to no company, and **Who can create companies** allows you | "You are not part of any company yet" and a **Create Company** button |
-| It is someone else's profile and they belong to no company | No card |
-
-**Create Company** on the card opens a short form: **Company Name** (required), **Description**, **Contact Email** and **Contact Phone**. Billing details and the financial contact are completed afterwards on the company page, before the first payment. Creating the company this way follows the same rules as [Creating a company](#creating-a-company): an ordinary member becomes its **Primary Contact** and can belong to only one company.
+| The member belongs to no company | No card |
 
 **Leave** asks "Are you sure you want to leave this company?". Leaving ends the membership and clears the fee date and fee price the company had given you, so you are treated as an individual member again. If you are the only person left, leaving also deletes the company (status Deleted), exactly as **Delete Company** does.
 
@@ -87,9 +155,9 @@ Roles are stored per membership; a person may hold several.
 
 Assigning Primary Contact or Voting Representative takes it from whoever held it before, in the same action.
 
-`ADMIN_TENANT` can do anything on any company in the tenant, and so can whoever **Who can create companies** names, with a floor of `ADMIN_LOCAL`. Setting it to "Any member" does not grant access to companies you do not belong to.
+`HR_TENANT` creates companies and can view, edit, and manage members and payments on any company in the organization without belonging to it. `ADMIN_TENANT` includes it.
 
-That reach is organization-wide by design, chapter admins included. A company is not attached to a chapter anywhere in its record, so there is nothing for a chapter-scoped permission to narrow down to: an `ADMIN_LOCAL` holder in one chapter sees, edits and manages members and payments on every company in the organization. If that is wider than you want, set **Who can create companies** to **Organization admins only**, which raises the floor to `ADMIN_TENANT`.
+Chapter permissions such as `ADMIN_LOCAL` and `HR_LOCAL` give no access to companies, because a company is not attached to a chapter anywhere in its record. Holders of those permissions see the same directory as any other member.
 
 ---
 
@@ -192,8 +260,12 @@ Only **Active** and **Pending** companies with a plan and a renewal date are rem
     On their own profile, **Leave** on the Company card. Staff cannot use that button on someone else's profile; an administrator removes a person from the member list on the company page instead.
   </Accordion>
 
-  <Accordion title="Why does a member see no Create Company button?">
-    The button appears on a member's own profile only while they belong to no company and **Who can create companies** includes them. With **Organization admins only**, ordinary members never see it.
+  <Accordion title="Can members create their own company?">
+    No. Companies are created from the Companies list by staff with `HR_TENANT`, who then add a **Primary Contact** to run the company.
+  </Accordion>
+
+  <Accordion title="Why is a company missing from the public directory?">
+    Check, in order, that it is **Active**, that **Show in public directory** is on for it (while **Only companies that opt in** is on), and that its fee is paid (while **Membership status required** is **Active and fee paid**). The public list can take a minute to update.
   </Accordion>
 
   <Accordion title="What happens to the company if its last member leaves?">
