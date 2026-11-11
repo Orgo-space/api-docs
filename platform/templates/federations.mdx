@@ -77,12 +77,12 @@ Roles are stored per primary membership, and one person can hold more than one. 
 |---|---|
 | **Member** | The default. Sees the company page and inherits the membership validity |
 | **Primary Contact** | Edits the company, manages members and invitations, and pays. At most one per company |
-| **Voting Representative** | Casts the company's ballot in a **Company vote** (see [E-voting](/platform/e-voting)). At most one per company |
+| **Voting Representative** | Casts the company's vote in a [company vote](/platform/e-voting#company-votes). At most one per company |
 | **Financial Rep** | Legacy. Same rights as Primary Contact, but no longer assignable from the interface |
 
 Assigning **Primary Contact** or **Voting Representative** takes it from whoever held it before, in the same action.
 
-A person can be a primary member of only one company, and cannot be added as a primary member of a second one. They can still be added to others as an associate.
+An ordinary member belongs to at most one company, and a member cannot be added to a second one. Staff who create companies do so on behalf of others and are not enrolled in what they create.
 
 ### Seats, and what happens when they run out
 
@@ -135,10 +135,9 @@ Every Settings screen below needs the **Orgo administrator** flag on your accoun
 
 | Setting | What it does |
 |---|---|
-| **Enable Companies Module** | Adds **Companies** to the sidebar for organization-wide HR managers, a **Companies** tab for every member, and a **Company** card on member profiles |
-| **Company media**, **Icon for companies without a logo** | Featured audio, video and a gallery on each company page, and the icon shown until a company uploads a logo |
-| **Public company directory** | Publishes your companies to anyone with the link. Optional. See [Companies](/platform/users/companies#public-directory) |
+| **Enable Companies Module** | Adds **Companies** to the sidebar and a **Company** tab to a member's own profile |
 | **Enable Company Fees** | Lets companies pay membership fees on behalf of their people. Only appears while the Payments and Fees module is active |
+| **Public company directory** | Optional. Publishes your member companies for anyone with the link. See [Public directory](/platform/users/companies#public-directory) |
 
 ### Payments and fees
 
@@ -202,7 +201,7 @@ Work through these in order. Steps 1 to 4 build the money side, 5 turns the memb
     <img src="/images/platform/fees/membership-fee-settings.png" alt="Membership fees settings with Enable Membership Fees on, a Product Configuration card naming the membership fee product and default price, and the payment options below" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginTop: "1rem" }} />
   </Step>
   <Step title="Turn on Companies and company fees">
-    Go to **Settings** → **Modules** → **Companies** → **Configuration**. Switch **Enable Companies Module** on, then switch **Enable Company Fees** on. Read [Permissions](#permissions) first: organization-wide HR managers can administer every company, and nothing narrows that to a chapter.
+    Go to **Settings** → **Modules** → **Companies** → **Configuration**. Switch **Enable Companies Module** on, then switch **Enable Company Fees** on.
 
     **Done when** **Companies** appears in the sidebar and the **Enable Company Fees** switch shows its "How company fees work" note underneath.
   </Step>
@@ -345,7 +344,7 @@ Company access is decided by a company-specific check, not by the chapter permis
 | Everything above, on every company | Organization-wide HR managers, and Orgo administrators |
 | Open **Settings** at all | The **Orgo administrator** flag, not a permission |
 
-There is no setting that lets ordinary members or chapter admins create or administer companies. Creating a company, and administering one you do not belong to, belongs to organization-wide HR managers and Orgo administrators only. Because a company has no chapter, a chapter-scoped permission has nothing to narrow it down to, so chapter admins get no extra access to companies.
+On top of that, `HR_TENANT` creates companies and can view, edit, manage members and pay on *every* company without belonging to it. Chapter permissions such as `ADMIN_LOCAL` give no access to companies, because a company has no chapter to scope them to.
 
 Two more things worth knowing before you delegate:
 
@@ -378,7 +377,7 @@ If you also run chapters, **Finance** → **Stats** (organization-wide finance m
 
 - **A person is a primary member of at most one company.** They can be an associate of any number of others, but associates take no seat, hold no roles and are not covered by that company's fee.
 - **Companies are organization-wide.** A company has no chapter field, so it cannot be owned by a region, filtered by one, or billed through one.
-- **One company, one vote needs a Company vote.** Create the vote with the **Company vote** audience: each company's voting representative is eligible, counted once however many companies they represent. The roll freezes when voting starts, so fix representatives and fee records beforehand. An ordinary **Group vote** still counts every employee as an individual.
+- **Only company votes read Voting Representative.** A [company vote](/platform/e-voting#company-votes) gives one vote to each voting representative of an active, paid-up company. In any other vote, every employee with an account votes as an individual.
 - **Contacts occupy seats but inherit nothing.** A contact has no fee date, so company membership sync skips them. Use contacts for people you communicate with, not for people who need to sign in.
 - **Domain matching respects seats.** An event registrant whose email domain matches a full company is not added, and neither is someone who is already a primary member elsewhere.
 - **Company fees replace individual fees entirely for those people.** There is no "company pays half" arrangement, and no way to leave an individual fee in place beside a company one.
@@ -463,7 +462,15 @@ Work down this list once and your federation is live. Each line is an outcome yo
   </Accordion>
 
   <Accordion title="Can we give each member company one vote?">
-    Yes, with a **Company vote**. Name the **Voting representative** on each company, then create the vote with the **Company vote** audience (offered to organization admins while the Companies module is on). Only the voting representative of each active, paid-up company is eligible, once, even if they represent several companies. The roll is fixed when the vote starts, so correct representatives and company fees before the start time. Vote exports carry a **Company** column. See [E-voting](/platform/e-voting).
+    Yes, with a [company vote](/platform/e-voting#company-votes). Choose **Company vote** as the audience and the voters are the **Voting Representative** of every active company that is paid through the vote's start date. The list follows role and payment changes until the vote starts, then it is fixed.
+
+    Make sure each company has its representative named before the start. A company without one has no vote, and a company with two has two. A vote with any other audience still lets every eligible employee vote as an individual.
+  </Accordion>
+
+  <Accordion title="An administrator cannot see which company a member belongs to">
+    The **Company** tab is rendered on your own profile only, so an administrator opening somebody else's profile does not get it. This is a display rule, not a permission: nothing is hidden from them elsewhere.
+
+    Two ways round it. The **fee** column on the members list shows the company's tier for anybody in a company, so the tier name is a reliable tell. And Ask Orgo has both companies and company memberships in its catalogue, so "which company is X in" and "list every member with their company" both answer.
   </Accordion>
 
   <Accordion title="We deleted a company and its people still look like members">

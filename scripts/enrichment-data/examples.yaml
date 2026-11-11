@@ -810,6 +810,27 @@ operations:
               name: "Boston"
             dateCreated: "2026-01-15T10:30:00+00:00"
 
+  - operationId: user_form_submissions
+    response:
+      "200":
+        application/json:
+          summary: "First page of a member's form submissions, newest first"
+          value:
+            items:
+              - id: 318
+                formId: 12
+                formName: "AGM 2026 Registration"
+                createdAt: "2026-01-15T10:30:00+00:00"
+                isValid: true
+              - id: 204
+                formId: 9
+                formName: "Volunteer Interest Survey"
+                createdAt: "2025-11-02T14:05:00+00:00"
+                isValid: true
+            totalItems: 2
+            page: 1
+            itemsPerPage: 10
+
   # ═══════════════════════════════════════════════════════════════════════════
   # Discussion posts
   # ═══════════════════════════════════════════════════════════════════════════
@@ -927,31 +948,32 @@ operations:
                 dateDue: "2026-02-15T10:30:00+00:00"
 
   # ═══════════════════════════════════════════════════════════════════════════
-  # Badges and hours
+  # Badges
   # ═══════════════════════════════════════════════════════════════════════════
 
   - operationId: api_badges_post
     request:
       "*":
-        summary: "Create an hours-based volunteer badge"
+        summary: "Create a points-based volunteer badge"
         value:
-          name: "100-Hour Volunteer"
-          description: "Awarded automatically when a member logs 100 hours of volunteer time."
-          hoursThreshold: 100
-          logo: "https://cdn.orgo.space/badges/100h-volunteer.png"
+          name: "Volunteer Champion"
+          kind: "badge"
+          pointsRequired: 100
+          defaultNote: "Awarded for sustained volunteering."
+          logo: "https://cdn.orgo.space/badges/volunteer-champion.png"
     response:
       "201":
         application/json:
-          summary: "Badge created — will auto-award as members cross the threshold"
+          summary: "Badge created"
           value:
             id: 14
-            name: "100-Hour Volunteer"
-            description: "Awarded automatically when a member logs 100 hours of volunteer time."
-            hoursThreshold: 100
-            logo: "https://cdn.orgo.space/badges/100h-volunteer.png"
-            assigneeCount: 0
-            dateCreated: "2026-01-15T10:30:00+00:00"
-
+            name: "Volunteer Champion"
+            kind: "badge"
+            pointsRequired: 100
+            defaultNote: "Awarded for sustained volunteering."
+            logo: "https://cdn.orgo.space/badges/volunteer-champion.png"
+            autoCompleteOnSteps: true
+            steps: []
   # badge_hours is gone: logging hours was replaced by a per-step checklist on
   # the badge assignment (POST /badge_users/{id}/steps, feat/badge-award-date-step-log).
   - operationId: recordStep

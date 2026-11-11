@@ -276,13 +276,42 @@ VoteCollection: |
 
 Project: |
   A team workspace — a working group, a campaign, a one-off initiative. Owns
-  its members, tasks, drive folder, and discussion namespace. Lifecycle is
+  its members, tasks, statuses, task types, goals and objectives. Lifecycle is
   open-ended — projects stay around until explicitly deleted.
 
+  Access is role-based. Every person (and every group) on a project holds one
+  of four fixed roles: `admin` (settings, people, every task), `member`
+  (create and edit every task), `contributor` (create tasks, edit and delete
+  their own) and `viewer` (read only). The owner, tenant admins and HR are
+  always Admin. `myRole` and `roleCapabilities` on a single project say what
+  the caller may do. A project set to `contributorScope: assigned` shows a
+  Contributor only the tasks they created or are assigned to.
+
+  Each project has a `taskKey` (2–6 letters or digits, unique per tenant) that
+  prefixes the task references, for example `ORG-145`.
+
 Task: |
-  A to-do item — usually inside a Project, but standalone tasks are
-  supported. Carries assignee, due date, status, and a comment thread.
-  Multi-assignee tasks fan out per user.
+  A unit of work inside a Project — a task always belongs to one. Carries
+  assignees, a status, a type, a priority, start and due dates, a checklist,
+  blockers and a comment thread. Multi-assignee tasks fan out per user.
+
+  `number` and `reference` (`ORG-145`, built from the project's `taskKey`) are
+  assigned on creation and never reused. Priority runs 1–4: Urgent, High,
+  Medium, Low. Tasks have a manual order inside the project; `POST
+  /tasks/{uuid}/move` places one before or after another. What a caller may do
+  with a task follows their role on the project (TASK_VIEW, TASK_CREATE,
+  TASK_EDIT, TASK_DELETE, TASK_COMMENT).
+
+Goal: |
+  The phase or milestone a task links to (`Task.goal`), with a name, colour
+  and optional dates. The Orgo interface calls it an **objective**; the
+  Objective resource is the optional parent that groups these, which the
+  interface calls a **goal**.
+
+Objective: |
+  An optional parent that groups Goals. The Orgo interface calls it a **goal**;
+  the Goal resource is what tasks link to, which the interface calls an
+  **objective**.
 
 Workflow: |
   An automation rule — "when X happens, do Y" with optional conditions and

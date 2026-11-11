@@ -27,8 +27,8 @@ anyone.
 | Source | What triggers it | What gets filled in |
 |---|---|---|
 | **Manual** | An admin uses **Add Contact** on the contacts list | Everything on the contact form, including custom fields. A chapter manager creating a contact without picking a chapter gets it filed under their own |
-| **Import** | A contact import runs from **Settings** → **Customization** → **Import** | Every column you mapped, plus tags and the newsletter flag when those columns are present |
-| **Contact form** | A visitor submits the contact form you embedded on your website | Email always. Name and phone are written on a new record, and on an existing one only where those fields are still empty. Nothing else is ever overwritten |
+| **Import** | A contact import runs from **Settings → Customization → Import** | Every column you mapped, plus tags and the newsletter flag when those columns are present |
+| **Contact form** | A visitor submits your contact form, as a `contactForm` section on your [Orgo website](/platform/organisation/website-builder), or embedded on a site you host elsewhere | Email always. Name and phone are written on a new record, and on an existing one only where those fields are still empty. Nothing else is ever overwritten |
 | **Newsletter** | A visitor fills in a newsletter signup widget **and** clicks the confirmation link in the email | Email, name, subscription set to yes, and the tag configured on that widget |
 | **Form** | A non-member submits a form whose access is set to anyone with an email address | Email, name (first and last joined into one field), any answers you mapped onto profile fields, and the subscription flag if the opt-in box was ticked |
 | **Event** | A non-member registers for an event, buys a ticket, fills in a ticket details link, or is invited as an external guest | Name, email, phone, organisation, role, town, social profiles and company billing details, as far as the registration form asked for them |
@@ -42,10 +42,14 @@ Records created before Orgo started recording provenance have an empty Source, w
 why an old tenant can show a large group of blank rows in that column.
 
 <Note>
-The contact form and the newsletter widget are two different embeds. The contact form
+The contact form and the newsletter widget are two different things. The contact form
 sends you a message and files the sender in Contacts. The newsletter widget does one
 thing: it collects confirmed subscribers. See
 [Newsletter signup widgets](/platform/newsletter-widgets).
+
+Either can go on a page of your own Orgo website as a section, or on a site you host
+somewhere else as an embed. The contact form section can also create the form for you if
+you have none, see [Website builder](/platform/organisation/website-builder).
 </Note>
 
 ---

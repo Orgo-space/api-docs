@@ -3,8 +3,69 @@ title: "Changelog"
 description: "What's new in ORGO platform"
 ---
 
+<Update label="November 2026">
+**New Features**
+
+**Events**
+- **A New Events List**: Switch between a list grouped by day with a **Next up** card, and a month calendar. Filter by **Show only** (registered, not registered, hosted by you, online, local or unit events), type, status and SDG: [Events](/platform/events#the-events-list).
+- **Search Events Near a ZIP Code**: US organizations can show events within 10 to 250 miles (or kilometers) of a ZIP code: [Events](/platform/events#search-by-location).
+- **Sync to My Calendar**: One private link that Google, Apple or Outlook Calendar subscribe to once and keep current with the events you host or are registered for. **Create a new link** retires a link that was shared by mistake: [Events](/platform/events#sync-to-my-calendar).
+- **Your Time Next to the Event's**: When an event runs in another timezone, the page shows its own time with the venue's city and, below it, **For you** in your account's timezone. Picking a location now sets the event's timezone to the venue's: [Events](/platform/events#times-and-timezones).
+- **Page Background**: Give an event page a color, a free photo from Pixabay or your own upload, set from the form or from the event page itself: [Create Event](/platform/events/create-event#page-background).
+- **Add or Invite Many People at Once**: Search members or type emails, collect up to 50 people to add straight to the list (with guest tickets) or 10 to invite by email. The work runs in the background, and **Add all members** shows who it reaches first: [Attendance](/platform/events/attendance#adding-people).
+- **A Program Builder With Stages**: Build the schedule across stages, assign speakers, and see clashes (two sessions on one stage, or one speaker in two places) before attendees do: [Program](/platform/events/event-app-feed#building-the-program).
+- **Checkout Color**: Set the color of the ticket picker and checkout buttons for the whole organization, with a per-event override: [Branding](/platform/organisation/branding#checkout-color).
+
+**Members**
+- **A Shorter Welcome Screen**: A new member sees only the steps that apply: missing required profile fields, a summary card each for privacy, notifications and timezone with the privacy defaults already on, and documents to sign. The timezone starts from the device: [Member profile](/platform/users/member-profile#first-sign-in).
+
+**Companies**
+- **Public Company Directory**: Publish your companies as a list, cards or a map, on a public page, an embed or your website. Choose whether companies opt in and which membership status they need: [Companies](/platform/users/companies#public-directory).
+- **Company Fields**: Ask every company your own questions, use the answers as filters and choose which ones are public: [Companies](/platform/users/companies#company-fields).
+- **Company Media**: Each company page can show featured audio, featured video and a gallery of up to 12 photos: [Companies](/platform/users/companies#company-media).
+
+**API & MCP**
+- **Event Endpoints**: `GET /calendar-feed` returns your private subscription link and `POST /calendar-feed/reset` replaces it. `POST /events/{uuid}/attendees-bulk` adds or invites up to 50 or 10 people and answers 202, and `GET /events/{uuid}/invite-audience` shows who a bulk add reaches. Events list filters `near` (ZIP) with `radius` (miles), `registered`, `online` and `unitKind`; events carry `meetProvider`, and event types a `position`: [API Reference](/api-reference/introduction).
+
+**Improvements**
+
+**Events**
+- **Reorder Event Types**: Drag types into the order they appear in the form and the filter: [Event Types](/platform/events/event-types).
+- **Join Meeting Button**: Online events show a button named after Zoom, Google Meet or Microsoft Teams. On ticketed events the link appears once a person has registered.
+
+**Companies**
+- **Who Administers Companies**: Creating companies and managing them without belonging to them now needs `HR_TENANT`. The **Who can create companies** setting is gone, so members and chapter admins no longer create companies: [Companies](/platform/users/companies#roles-inside-a-company).
+
+</Update>
+
 <Update label="October 2026">
 **New Features**
+
+**Voting**
+- **Company Votes**: Choose **Company vote** as the audience and each company's Voting Representative gets a vote, instead of every employee voting as an individual. The list follows role and payment changes until the vote starts, then it is fixed: [E-Voting](/platform/e-voting#company-votes).
+
+**Projects**
+- **Project Roles**: Give each person and each group on a project one of four roles: Admin, Member, Contributor or Viewer. Roles are enforced on tasks, comments, files, objectives, statuses and settings, and a project can limit Contributors to the tasks they created or are assigned to. People already on a project keep what they could do before: [Projects](/platform/projects#roles).
+- **Task IDs**: Every task has an ID such as ORG-145, built from a key you choose per project. Search finds tasks by it, and a renamed key keeps old links working: [Tasks](/platform/tasks).
+- **Who Is On a Project**: The project header shows the people with access and their roles, and Settings has a Members tab for adding people and groups, changing roles and handing over ownership: [Projects](/platform/projects#giving-people-access).
+- **A New Task List**: Group by status, assignee, type, priority, week, two weeks or month, order by manual rank, priority or due date, add tasks inline with `!high @name #type`, change many tasks at once, and work from the keyboard. `⌘ K` opens a command palette and `?` lists the shortcuts: [Tasks](/platform/tasks#finding-and-organising-tasks).
+- **Task Panel**: Open a task beside the list instead of in a pop-up. Move to the next task with `J` and `K`, and attach files by dropping or pasting them: [Tasks](/platform/tasks#the-task-panel).
+- **Manual Order**: Rank tasks by dragging or with `Alt` and the arrow keys. The order is shared by the list and the board.
+- **Board Swimlanes**: Split the board by assignee, priority or type; a closed column shows the last 7 days: [Projects](/platform/projects#the-project-views).
+- **Gantt With Dependencies**: Dependency arrows, a tray for tasks without dates that you drag onto the timeline, and a plain agenda on phones.
+- **Redesigned Overview**: Counters for open, overdue, due in 7 days, unassigned and blocked tasks, urgent work, workload and progress per objective.
+- **Settings in Tabs**: General, Objectives, Workflow and Members. Objectives and goals moved here from their own page, and statuses and types can be reordered and show a progress circle.
+- **Shared Filters**: Assignee, type and objective filters carry across Overview, Tasks, Board and Gantt, and live in the address so a view can be linked.
+
+**Help Desk**
+- **Tickets in the Task List**: The Support page uses the same list and side panel as project tasks: [Help Desk](/platform/help-desk#the-ticket-list).
+
+- **Tickets Synced With Intercom**: Help desk tickets and their statuses stay in step with Intercom: [Help Desk](/platform/help-desk).
+
+**API & MCP**
+- **Company Vote Electorate**: Votes carry `electorate` (`company_voting_representatives` for a company vote) and a read-only `electorateFrozenAt`, and `GET /vote_collections/{id}/electorate` lists the voters of a company vote, 50 per page: [API Reference](/api-reference/introduction).
+- **Project Endpoints**: Change a member's role (`PATCH /projects/{uuid}/members/{userId}`), list who is on a project, reorder statuses, types, goals and objectives, count tasks per status, and move a task in the manual order. Tasks carry `number` and `reference`, and projects carry `taskKey`, `myRole` and `roleCapabilities`: [API Reference](/api-reference/introduction).
+- **Orgo MCP Brought Up to Date**: The assistant integration now knows the full current API, including the project operations above: [Orgo MCP](/platform/mcp).
 
 **Members & Profiles**
 - **Rebuilt Member Profile**: The profile has been redesigned around a header that carries the member's status, membership and fee at a glance, with the rest split into tabs rather than one long page: [Members](/platform/users).
@@ -75,10 +136,13 @@ description: "What's new in ORGO platform"
 **Forms**
 - **Save an Answer to the Postal Code**: A form question can write straight to the member's postal code: [Forms](/platform/forms).
 
-**Help Desk**
-- **Tickets Synced With Intercom**: Help desk tickets and their statuses stay in step with Intercom: [Help Desk](/platform/help-desk).
-
 **Improvements**
+
+**Projects**
+- **New Projects Start With Five Statuses**: Backlog, To do, In Progress, Review and Done.
+- **Priorities**: The scale is Urgent, High, Medium and Low. Tasks that were Lowest now read as Low.
+- **Last Tab Remembered**: Each member lands on the project tab they used last.
+- **Safer Deletes**: Deleting a status or type that tasks still use asks where to move them; the API answers 409 until `moveTo` is given.
 
 **Everywhere**
 - **12-Hour Clock for US Organizations**: Times read as AM and PM in the application, in emails and on PDFs.

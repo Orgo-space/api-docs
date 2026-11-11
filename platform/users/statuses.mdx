@@ -16,12 +16,12 @@ access problem, status is the first field to check.
 behave differently. **Replaces** the "archived" column in a spreadsheet that
 nothing actually enforces.
 
-The status field is on the **Membership status** tab of a member's edit page
-(**Members** → open a member → **Edit** → **Membership status**). That tab also
-holds the member's chapter, user type, full-member date and the **Record the
-resignation of this member** shortcut. The status control itself appears for
-chapter HR managers over that member, and, when **Allow Local Admins to Modify User
-Permissions** is off, for organization-wide HR managers only.
+A member's current status shows as a chip in the profile header. To change it,
+open the member and press **Edit profile** → **Membership status** → **Status**
+(**Members** → open a member → **Edit profile**). See
+[Member profile](/platform/users/member-profile).
+
+<img src="/images/platform/users/statuses-dropdown.png" alt="Status field set to Active at the top of the Permissions tab of a member edit page, beside the Record the resignation of this member button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
@@ -66,7 +66,7 @@ sign in, they will be locked out.
 | Open sessions are cut | Moving a member to Inactive, Suspended, Excluded or Deleted signs them out at once rather than letting the session run to expiry |
 | Role assignments are end-dated | Any move away from Active end-dates every open role. The rows stay in the history with a closed date; they are not deleted |
 | They leave the member directory | The directory lists Active members by default, and a non-Active profile page is refused for everyone except an admin with HR access over their local group |
-| Moving back to Active restores the basics, not the roles | Their user-type role and local group follows come back; roles that the earlier change end-dated do not, so reassign them on the Roles tab |
+| Moving back to Active restores the basics, not the roles | Their user-type role and local group follows come back; roles that the earlier change end-dated do not, so reassign them in **Edit profile** → **Roles** |
 | A payment can reactivate an Inactive member | When a membership fee payment (or a donation, where donations count towards membership) pays an Inactive member's fee date into the future, they are switched back to Active automatically, with the usual welcome email. It does not happen if their resignation was approved |
 
 <Note>
@@ -78,18 +78,17 @@ The date of the most recent change is stored on the member automatically, so
 
 ## Who can change a status
 
-<img src="/images/platform/users/statuses-dropdown.png" alt="The status control on a member profile, open on the statuses the administrator may move the member to" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+Status is changed in **Edit profile** → **Membership status**, which needs
+`HR_LOCAL` over that member's local group; `HR_TENANT` and `ADMIN_TENANT` cover every local
+group. Turning off **Allow Local Admins to Modify User Permissions**
+(**Settings** → **Users & Profiles** → **Configuration**) leaves only
+`HR_TENANT` and `ADMIN_TENANT`, and local admins are refused with "Only tenant
+administrators can modify user status."
 
-Status is edited through the admin edit endpoint, which requires chapter HR
-manager rights over that member's local group; organization-wide HR managers and
-organization admins cover every local group. Turning off **Allow Local Admins to
-Modify User Permissions** (**Settings** → **Modules** → **Users & Profiles** →
-**Configuration**) leaves only organization-wide HR managers and organization
-admins, and local admins are refused with "Only tenant administrators can modify
-user status."
-
-Members have one self-service route: **Close account** on their **Settings &
-Privacy** → **Close account** page sets them to Inactive. See
+Members have one self-service route: **Close account** on their profile,
+under **Settings** → **Account and security** → **Close account**, sets them to
+Inactive. Administrators with `ADMIN_LOCAL` use the same card for **Suspend
+account** and **Reactivate account**. See
 [Deletion of account](/platform/users/deletion-of-account).
 
 ---
@@ -124,7 +123,8 @@ These settings all live under **Settings** → **Modules** → **Users & Profile
 With **Manual Approval** on, the member directory grows a **New requests** button
 showing the count awaiting approval. Each row has two inline actions,
 **Approve** (sets Active) and **Add to waiting list** (parks them on Waiting
-list), both needing the same permission as any other status change.
+list), both needing the same permission as any other status change. The member's
+own profile header offers the same two buttons beside the status chip.
 
 <Tip>
 If you want an application process with a form, documents and a review record
@@ -166,6 +166,14 @@ ordering) and they do not apply to members. See
 ## Common questions
 
 <AccordionGroup>
+  <Accordion title="How do I change a member's status?">
+    Open the member, press **Edit profile**, choose **Membership status**, change
+    **Status** and **Save**. You need `HR_LOCAL` over the member's local group, and
+    the setting **Allow Local Admins to Modify User Permissions** must be on unless
+    you hold `HR_TENANT`. The chip at the top of the profile shows the result. For
+    a New request, the green tick next to the chip approves it in one click.
+  </Accordion>
+
   <Accordion title="What is the difference between Inactive and Suspended?">
     For access, nothing: both block the login and cut open sessions. The
     difference is what they mean and what they allow next.
@@ -184,8 +192,10 @@ ordering) and they do not apply to members. See
     No profile data is removed by an ordinary status change. Role assignments
     are the exception: every open role is end-dated, and the rows stay in the
     member's history with a closed date rather than disappearing. Reinstating
-    someone does not reopen them, so check the Roles tab after any
-    reinstatement.
+    someone does not reopen them, so check the **Roles** card on the profile
+    (or **Edit profile** → **Roles**) after any reinstatement. A role that was
+    end-dated by mistake can be reopened by clearing its **Date ended**; see
+    [Member profile](/platform/users/member-profile#roles-and-the-role-timeline).
 
     Deletion is the one status that does remove things. See
     [Deletion of account](/platform/users/deletion-of-account) for exactly what

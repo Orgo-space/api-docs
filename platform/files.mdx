@@ -25,6 +25,7 @@ Files is a module. The Orgo administrator turns it on at **Settings → Modules 
 |---|---|
 | **Enable Drive Module** | Shows **Files** in the sidebar and the **Files** tab on groups. Off hides the whole surface. |
 | **Enable Personal Drives** | Gives every member a private drive, and lets HR and admins add files to it. |
+| **Who Can Manage Personal Files** | Appears once personal drives are on. **Members and admins** (the default) lets the member add, rename and delete files in their own drive. **Admins and HR only** makes the drive read-only for the member: they still see and download their files, and only HR of their local center, **HR_TENANT** and **ADMIN_TENANT** can change them. |
 
 <img src="/images/platform/features/drive-module-settings.png" alt="Drive module settings with the Enable Drive Module toggle and the Enable Personal Drives toggle, both switched on" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -42,9 +43,9 @@ Each group has its own controls in its settings: a **Files** feature toggle that
 |---|---|---|
 | **Organisation drive** | Every member of the organisation | Organization HR managers and above by default |
 | **Group drive** (any group, local center or role group) | Members of that group | Members of that group, unless the group is set to **Only admins** |
-| **Personal Drive** | The member, chapter HR managers over their chapter, organization HR managers, organization admins | The same people |
+| **Personal Drive** | The member, **HR_LOCAL** of their local center, **HR_TENANT**, **ADMIN_TENANT** | The same people, unless **Who Can Manage Personal Files** is set to **Admins and HR only**, which removes the member from this column |
 
-Renaming, moving, deleting an item, and publishing or revoking its public link all need the same thing: you own it, you administer its group, or you are an organization admin. Chapter admins get no rights over the organisation drive; their authority is scoped to the groups and chapters they administer.
+Renaming, moving, removing an item, and publishing or revoking its public link all need the same thing: you own it, you administer its group (the group owner, an active group admin, or **ADMIN_LOCAL** of the group's local center), or you are **ADMIN_TENANT**. Local admins get no rights over the organisation drive; their authority is scoped to the groups and local centers they administer, so an **ADMIN_LOCAL** from another local center cannot remove a file in your group. The row menu only offers actions you are allowed to do, because the app asks the server what you can do with each item.
 
 Group drives are how you restrict who sees what. There is no per-file permission: a file inherits the audience of its drive, so leadership documents go in a leadership group.
 
@@ -58,12 +59,15 @@ A personal drive is also reachable from the member's profile, on the **Personal 
 
 ## What you can put in a drive
 
-| **+** menu | What it does |
+Inside a drive, the **New** button (the **+** icon on a phone) opens one menu. It appears only where you may add things. In an empty folder the page says **No file uploaded yet** and **Drag files here, or use New**.
+
+| **New** menu item | What it does |
 |---|---|
-| **Upload** | Or drag files anywhere onto the page. Up to 100 files per batch, uploaded one at a time with a progress panel. |
-| **Document** | Opens Orgo's own editor. Autosaves five seconds after you stop typing, counts words and characters, and warns you before you leave with unsaved changes. Documents live in the drive like any other item. |
-| **Folder** | Folders nest. Move an item by dragging it or using **Move**; items can only be moved into folders, and a folder cannot be moved into itself. |
-| **Embed media** | When enabled, adds a YouTube or Spotify link as a drive entry. Orgo checks the URL against the allowed providers and pulls the title and thumbnail. Nothing is copied into your storage. |
+| **New document** | Opens Orgo's own editor on a blank page, described under [Writing documents](#writing-documents). Documents live in the drive like any other item. |
+| **New folder** | Folders nest. Move an item by dragging it or using **Move**; items can only be moved into folders, and a folder cannot be moved into itself. |
+| **Upload file** | Opens the file picker. You can also drag files anywhere onto the page; the page then says **Drop files to upload them to** the open folder. Up to 100 files per batch, uploaded one at a time with a progress panel. |
+| **Embed media** | Shown only when embedding is enabled. Adds a YouTube or Spotify link as a drive entry. Orgo checks the URL against the allowed providers and pulls the title and thumbnail. Nothing is copied into your storage. |
+| **From eDocuments template** | Shown only inside a member's Personal Drive, when the E-Documents module is on and you are **HR_TENANT** or above. Opens the send panel with that member already chosen, so you can send them a contract to sign. See [E-Documents](/platform/contracts). |
 
 ### Upload limits
 
@@ -76,11 +80,36 @@ A personal drive is also reachable from the member's profile, on the **Personal 
 
 There is no allowed-types list: any format that is not blocked uploads. The blocked ones can execute code in a browser when opened from a link. Orgo also renames every uploaded file in storage to the original name plus 24 random characters, so the storage address cannot be guessed from the name.
 
-<img src="/images/platform/features/drive-document-editor.png" alt="The in-app document editor with a rich text toolbar, the document title, a heading and paragraphs, and the word and character count in the header" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
 ### Previews
 
 Images, PDFs and videos get an automatic thumbnail in the gallery; other formats show an icon. Office files (DOC, DOCX, XLS, XLSX, PPT, PPTX) offer a read-only browser preview through Microsoft Office Online, or a download, and cannot be edited inside Orgo. A video in a format browsers cannot play (MKV or AVI, for example) prompts you to upload it as download-only.
+
+---
+
+## Writing documents
+
+**New document** opens Orgo's editor on its own page, with a path across the top (for example `Scouts Cluj: Files > Camp > Untitled Document`), a back arrow, a save indicator and the title above the text. The drive's name comes first in the path, so you can tell a group's document from a personal one (a member's Personal Drive reads **Documents** instead of **Files** when E-Documents is on). Every folder in the path is a link back to that folder.
+
+| Behaviour | What happens |
+|---|---|
+| Saving | Automatic, about a second after you stop typing. The bar shows **Saving...**, then **Saved**, or **Error saving** if it failed. **Ctrl+S** (or **Cmd+S**) saves at once. Nothing is created until you have typed something, so opening **New document** and leaving leaves no empty file behind. |
+| Title | Follows your first line until you type in the title box yourself. A document with no text is called **Untitled Document**. |
+| Leaving | Going back, or to another page in Orgo, saves anything still pending. Orgo only stops to ask (**Unsaved Changes**, **Leave** or **Stay**) when the last save failed. Closing or refreshing the browser tab with unsaved text shows the browser's own warning. |
+| Refreshing | The editor has its own address (`/drive-doc/<number>`), so a refresh or a pasted link reopens the same document, with the same path. **Back** returns you to the folder it sits in and briefly highlights its row. |
+| Details | On a computer, the **Details** menu shows **Owner**, **Created**, **Last Modified**, **Reading time** (in minutes, from 225 words a minute, never less than 1) and the word and character count. Phones do not show it. |
+| Read only | If you cannot edit the document, the title and text are locked and a **Read Only** badge shows. |
+
+### Classic and Blocks
+
+Two editing modes write the same document, so a document written in one opens in the other without losing anything, including task lists. The switch **Editing mode** (**Blocks** or **Classic**) is in the top bar, and only people who can edit see it.
+
+| | Classic | Blocks |
+|---|---|---|
+| Formatting | A fixed toolbar above the text: undo and redo, bold, italic, underline, strikethrough, headings, lists, indent, alignment, link, image, quote, horizontal rule, highlight colour, clear formatting | No toolbar. Select text and a small menu appears with **Heading 1**, **Heading 2**, **Bold**, **Italic**, **Underline**, **Strikethrough**, **Link** and **Highlight** |
+| Adding things | Toolbar buttons | Type `/` on an empty line, or use the **Add block** (+) button that appears beside a line. The `/` menu lists **Text**, **Heading 1** to **Heading 3**, **Bulleted list**, **Numbered list**, **Task list**, **Quote**, **Divider** and **Image**; keep typing to filter, use the arrow keys and **Enter**, **Esc** to close. The empty page says **Start writing, or type / for commands** |
+| Moving things | Cut and paste | Drag a line by the grip beside it |
+
+Classic is the default for everyone; nobody is moved to Blocks unless they choose it. Phones always use Classic and have no switch. You can also paste or drop images into either mode.
 
 ---
 
@@ -89,17 +118,29 @@ Images, PDFs and videos get an automatic thumbnail in the gallery; other formats
 | Action | Notes |
 |---|---|
 | **Download** | Single file. |
-| **Download folder as archive** | Zips the folder in your browser and downloads it. |
+| **Copy link** | In the row menu, and **Copy link to folder** at the top of an open folder. For a file it is the same link as the **Only in the community** link in **Share**; for a folder or document it is an ordinary in-app link. |
+| **Download folder as archive** | In the folder's **...** menu. Zips in your browser the files directly inside the open folder (up to the 100 shown on the page). Subfolders and Orgo documents are not included. |
 | **Rename** | Changes the display title only. |
 | **Move** | Drag, or use **Move** and pick a destination folder. |
-| **Delete** | Permanent. The stored file is deleted too, and there is no recycle bin. |
+| **Remove** | Permanent. Asks "Are you sure you want to delete ...? This action cannot be undone.", and on **Delete** removes the stored file too. There is no recycle bin. |
 | **Share** | Opens the share dialog described below. |
-| **Search** | The box on the Files home searches titles across every drive you can reach. Two characters minimum, ten results. |
+| **Search** | On the Files home, the **Search** box searches titles across every drive you can reach (two characters minimum, ten results). Inside a drive, its own search box filters that drive once you have typed four characters. |
+
+### Finding your way around
+
+| You are on | What you see |
+|---|---|
+| Files home, computer | A card for each drive (**Personal Drive**, the organisation, each group) with its file count and size, and a **Latest files** table beside it. |
+| Files home, phone | A **Locations** list of the same drives, then **Latest files** grouped as **Last 7 days**, **Last 30 days** and **Earlier**. |
+| Inside a drive, computer | A table with **Name**, **Owner**, **Date** and **Size** (documents show **words** instead of a size). Narrow windows hide the less important columns. Click a column heading to sort. The switch beside the search box changes between **List** and **Gallery**; the gallery shows photos and videos as thumbnails. |
+| Inside a drive, phone | Rows showing size and date, with a sort menu: **Name**, **Newest** or **Largest**. |
+
+The path across the top of a drive (a house or person icon, then each folder) is clickable. Long paths fold the middle folders behind **...**, and on a phone the arrow goes up one folder. In group and organisation drives an open folder is part of the address, so a refresh or a pasted link stays in that folder. Clicking an Office file asks **How would you like to open this file?** with **View in browser (Microsoft Online Viewer)** or **Download**.
 
 <img src="/images/platform/features/drive-folder-contents.png" alt="A drive folder listing with file rows showing name, owner, date and size, and an open row menu with Copy link, Share, Download, Remove, Move and Rename" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 <Warning>
-Deleting is not reversible and it removes the underlying file from storage. Deleting a folder removes everything inside it.
+Removing is not reversible and it removes the underlying file from storage. Removing a folder removes everything inside it, subfolders included, and deletes their uploaded files from storage too.
 </Warning>
 
 ---
@@ -128,7 +169,7 @@ If the file already has a public link, **Only in the community** gives you that 
 | How do I take it back? | Open **Share** on the file and click **Revoke public link**. The public address stops working and the file becomes unreadable to visitors again. Copies already downloaded are of course still out there, so rotate anything sensitive. |
 | Who can publish or revoke it? | The same people who can edit the file: its owner, the admins of the group it sits in, and organization admins. |
 
-Publicly shared files show a globe marker in the list, so you can see what is exposed. Video files get a branded viewer page instead of a raw download, with the organisation logo when video branding is enabled, and playable files also give you an **Embed** snippet for an external website.
+Publicly shared files show a globe marker (tooltip **Shared publicly**) in the list, so you can see what is exposed. Video files get a branded viewer page instead of a raw download, with the organisation logo when video branding is enabled, and playable files also give you an **Embed** snippet for an external website.
 
 ### Sharing a whole folder
 
@@ -180,8 +221,9 @@ Files sit in Orgo's cloud storage, readable without a login only while a public 
     database level, so removing the group removes every file, folder and document
     that lived in its drive, along with the stored copies.
 
-    Before you delete or merge a group, download the folder as an archive, or
-    upload anything worth keeping to the organisation drive. Note that this is
+    Before you delete or merge a group, download each folder as an archive (files
+    only, one folder at a time), or upload anything worth keeping to the
+    organisation drive. Note that this is
     the one case where **Move** does not help you, because Move never changes
     which drive an item is in (see the next answer).
 
@@ -196,7 +238,8 @@ Files sit in Orgo's cloud storage, readable without a login only while a public 
     folders from that same drive. Dragging behaves the same way.
 
     Download the file and upload it again in the destination drive, then delete
-    the original. For a whole folder, use **Download folder as archive** first.
+    the original. For a folder, use **Download folder as archive** per folder (it
+    skips subfolders and Orgo documents).
 
     Uploading into the organisation drive needs organization HR or organization admin by
     default, so an ordinary member who wants a document promoted from their
@@ -214,6 +257,44 @@ Files sit in Orgo's cloud storage, readable without a login only while a public 
     The member opens the Personal Drive tab, downloads the contract, and finds no
     Rename, Move or Delete on that row. Files the member uploaded themselves show
     all three. Ask HR to remove it, or upload a corrected copy alongside.
+  </Accordion>
+
+  <Accordion title="Can I stop members changing the files in their own Personal Drive?">
+    Yes. In **Settings → Modules → Files & eDocuments → Drive**, set **Who Can
+    Manage Personal Files** to **Admins and HR only**. The setting appears once
+    **Enable Personal Drives** is on. The member then keeps read access: they see
+    and download every file, and the **New** menu and the row actions
+    (**Rename**, **Move**, **Remove**) disappear for them. HR of their local
+    center, **HR_TENANT** and **ADMIN_TENANT** can still add and change files.
+    The default, **Members and admins**, lets members manage their own uploads.
+  </Accordion>
+
+  <Accordion title="What is the difference between Classic and Blocks in a document?">
+    Only how you write. **Classic** has a toolbar above the page. **Blocks** has no
+    toolbar: formatting appears when you select text, and you add headings, lists,
+    task lists, quotes, dividers and images by typing `/` on an empty line. The
+    document itself is identical, so you can switch at any time with **Editing
+    mode** in the top bar. Classic is the default, and phones always use Classic.
+  </Accordion>
+
+  <Accordion title="Do I need to press save in an Orgo document?">
+    No. The document saves about a second after you stop typing, and again when
+    you leave. Watch the indicator in the top bar: **Saved** means it is stored,
+    **Error saving** means it is not, and in that case Orgo asks before you leave
+    so the text is not lost. A blank new document is not saved at all until you
+    type something.
+  </Accordion>
+
+  <Accordion title="Why can't I see the Classic / Blocks switch?">
+    The switch is shown only to people who can edit the document, and only on a
+    computer. A document you can only read shows a **Read Only** badge instead, and
+    on a phone the editor always uses Classic.
+  </Accordion>
+
+  <Accordion title="Does Download folder as archive include everything in the folder?">
+    No. It zips the files directly inside the open folder, as listed on the page
+    (up to 100). Subfolders, Orgo documents and embedded media are skipped. To keep a
+    whole tree, open each subfolder and download it in turn.
   </Accordion>
 
   <Accordion title="The Personal Drive tab is missing from a member's profile">

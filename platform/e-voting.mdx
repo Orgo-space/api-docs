@@ -83,7 +83,7 @@ The **Who is voting?** cards set eligibility.
 |---|---|
 | **Group vote** | Everyone in the selected group. With no group selected, every active member of the organisation. For a local group, its members. For a role group, everyone bound to it. For a regular group, everyone with a role in it that has not ended. |
 | **Private vote** | Only the members the vote creator adds by name. The creator is added automatically when the vote is created. |
-| **Company vote** | The voting representative of every company in good standing. Offered to organization admins when the Companies module is on. |
+| **Company vote** | One vote per voting representative of a member company. Offered to organization admins when the Companies module is on. See [Company votes](#company-votes). |
 | **Event attendees** | Set automatically when you start the vote from an event. Eligible attendees are those invited or fully registered, and not cancelled. Pending approval, waiting list and awaiting payment are excluded. |
 
 On a private vote only the creator can add or remove voters, using the member search in the Participation panel and only while the vote is still editable. A voter who has already cast a ballot cannot be removed.
@@ -100,6 +100,26 @@ For organizations whose members are companies rather than people, a **Company vo
 | When the roll is fixed | The list is worked out live while the vote is a draft or still upcoming, so changes to companies and representatives keep flowing in. It is frozen once, at the moment the vote starts, and later changes to companies or representatives do not affect a vote already running. |
 
 Because the roll is only frozen when voting opens, get the representatives and the company fee records right **before** the start time. See [Companies](/platform/users/companies) for setting a voting representative.
+
+---
+
+## Company votes
+
+A company vote lets each member company be heard through the person who speaks for it, instead of every employee voting as an individual. Choose the **Company vote** card under **Who is voting?**; it is shown to `ADMIN_TENANT` when the [Companies](/platform/users/companies) module is on, and it cannot be combined with a group, an event or hand-picked voters.
+
+The voters are the **Voting Representatives** of your companies. Someone is on the list when all of these are true:
+
+- they hold the **Voting Representative** role on a company membership that has not ended;
+- their account is active;
+- the company is active and its fee is paid through the vote's start date. With no start date, the date you publish counts.
+
+Each representative has one vote, even when they represent several companies. A company with two voting representatives has two votes.
+
+**The list is live until the vote starts, then fixed.** Until the start, the list follows every change: a new representative, a role moved to someone else, a company that lapses or pays. When the vote starts, Orgo copies the list once and it never changes again. Whoever represented a company at that moment keeps their vote, and a representative appointed afterwards has none. The list is fixed within about a minute of the start, or at once when you publish a vote whose start has already passed. Representatives appointed between publishing and the start are notified when the list is fixed.
+
+The Participation panel says which state it is in: **Live list. It is fixed when the vote starts**, or **List fixed when the vote started** with the date. Each voter is shown with their company. Only the vote's creator and `HR_LOCAL` on the vote can read the live list; everyone else sees **The voter list is shown when the vote starts**. The voting list marks these votes **Company vote** with the number of eligible voters.
+
+The voters come only from the companies, so you cannot add, remove or import voters by hand on a company vote. **Duplicate** copies the questions and options but not the voters: the copy builds its own list and fixes it when it starts.
 
 ---
 
@@ -195,6 +215,8 @@ Publishing a vote sends a notification: to the listed voters on a private vote, 
 | Create a vote | Organization admins, organization HR managers |
 | Edit, publish, close, archive, duplicate, export | Organization admins, the vote's creator, or a chapter HR manager over the vote's group |
 | Add or remove voters on a private vote | The vote's creator |
+| Create or duplicate a company vote | Organization admins, with the Companies module on |
+| Read the live voter list of a company vote | The vote's creator, or a chapter HR manager over the vote's group |
 | See the voters list when **Hide voters list** is on | Chapter HR managers over the vote's group, and above |
 | See Individual results on a non-anonymous vote | Organization admins, the vote's creator, or a chapter HR manager over the vote's group, after it closes |
 | Attach a vote to an event | The event owner, or an event manager for that event's chapter |
@@ -209,6 +231,10 @@ See [Permissions](/platform/permissions) for what each level means.
 <AccordionGroup>
   <Accordion title="A member says they cannot vote">
     Check the audience: on a group vote they must be in the group with an active role, on a private vote on the voter list, on an event vote invited or fully registered and not cancelled. Then check the status: an upcoming vote refuses ballots, and a member who already voted sees their own answers instead of the ballot.
+  </Accordion>
+
+  <Accordion title="A company representative cannot vote">
+    On a company vote the list is fixed when the vote starts. They need to have held the **Voting Representative** role then, on a company that was active and paid through the start date. A representative appointed after the start has no vote; if that is wrong, close the vote and duplicate it so the copy builds a new list.
   </Accordion>
 
   <Accordion title="The vote closed before the end date">
@@ -234,6 +260,7 @@ See [Permissions](/platform/permissions) for what each level means.
 
 - [Events](/platform/events) for attaching a vote to a general assembly or conference
 - [Event App](/platform/events/event-app) for in-event voting on a phone
+- [Companies](/platform/users/companies) for the Voting Representative role that company votes use
 - [Groups](/platform/groups) for the groups a vote can be scoped to
 - [Notifications](/platform/notifications) for how members are told a vote opened
 - [Permissions](/platform/permissions) for the roles named on this page

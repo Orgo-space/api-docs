@@ -31,10 +31,12 @@ and resetting passwords at random.
     will not think to mention it.
   </Step>
   <Step title="Check their status, not their fee">
-    A paid fee does not grant access. Open **Members** → the member → **Edit** →
-    **Membership status** and read **Status**. Only **Active** permits a sign-in, while
-    the fee tab looks perfectly healthy either way. See
-    [User statuses](/platform/users/statuses).
+    A paid fee does not grant access. Open **Members** → the member and read the
+    status chip under their name (to change it, **Edit profile** →
+    **Membership status**). Only **Active** permits a sign-in, while the **Fee**
+    tab looks perfectly healthy either way. See
+    [User statuses](/platform/users/statuses) and
+    [Member profile](/platform/users/member-profile).
   </Step>
   <Step title="Check the sign-in method they used">
     Password, one-time code and social sign-in do not fail the same way, and do
@@ -123,8 +125,11 @@ requires referrals. This is the fastest way to unstick a member who never
 confirmed their email address.
 </Note>
 
-**Admin-initiated reset.** On the member's profile you can send them a
-password-reset email. It requires chapter HR rights over their local group, works only
+**Admin-initiated reset.** In the member's Settings view, **Account and
+security** → **Password** → **Change password**, an administrator sees **Send
+password reset email**. Another member's Settings view has no button on their
+profile: add `?tab=settings` to the profile address (`/user/{id}?tab=settings`).
+It requires `HR_LOCAL` over their local group, works only
 for the same four statuses, and is throttled to one per minute per member. Each
 send is written to the audit log against the administrator who sent it.
 
@@ -154,14 +159,19 @@ A member who has requested several codes is usually typing an older one. Have
 them use the most recent email, or wait out the lockout rather than requesting
 again.
 
+If no code ever arrives, look at the top of the member's profile. A red
+**Emails not delivered** tag means the address bounced or marked an earlier
+message as spam, and nothing is sent to it until the address is changed or Orgo
+support unblocks it. Hover or tap the tag for the date.
+
 ---
 
 ## Multi-factor authentication
 
 When the MFA module is on, everyone with tenant-level admin, HR or finance
 permissions has MFA forced on and cannot switch it off. Every other member has a
-switch on their own **Settings** → **Account and security** → **Multi Factor Authentication**
-page.
+switch on their own profile, under **Settings** → **Account and security** →
+**Multi Factor Authentication**.
 
 The verification code is valid for 5 minutes, and a device that has passed the
 check stays trusted for 2 days. After that, or on a new browser or device, the
@@ -178,9 +188,11 @@ the address change, and the member is signed out and must sign in with the new
 address.
 
 A member stuck halfway through this still has their old address. If they cannot
-receive mail at the old address at all, a chapter admin over their
-local group (or an organization-wide HR manager) sees a plain address field on the member's Email
-settings instead of the two-step flow, and can change it directly.
+receive mail at the old address at all, an admin with `ADMIN_LOCAL` over their
+local group (or `HR_TENANT`) sees a plain address field on the member's **Email** card
+(**Settings** → **Account and security**, reached for another member with
+`?tab=settings` on their profile address) instead of the two-step flow, and can
+change it directly.
 
 ---
 

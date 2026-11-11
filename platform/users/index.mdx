@@ -100,11 +100,12 @@ row) needs organization HR permission, or chapter admin permission on your own c
 in the table view, never in Gallery or Map.
 
 Each row's menu holds **View Profile**, **Modify Profile** and **Modify Roles**
-(chapter admin permission and above), plus making or removing a unit admin inside a unit.
-Members pending approval or waitlisted get **Approve** and **Add to waiting list**
-shortcuts next to the name, and a **New requests** button with a count, at the top
-of the page, jumps to that queue. With **Show "&lt;18" Tag in Lists** on, members under 18 carry an **Under 18**
-tag beside the name. There is no multi-select: actions apply one member at a
+(ADMIN_LOCAL and above), plus making or removing a unit admin inside a unit.
+**Modify Profile** opens the member's Edit view on the **Info** pane and **Modify
+Roles** opens it on the **Roles** pane (see [Member profile](/platform/users/member-profile)).
+Members pending approval (**New request**) or waitlisted get **Approve** and **Add
+to waiting list** shortcuts next to the name, and a **New requests (N)** button
+jumps to that queue. There is no multi-select: actions apply one member at a
 time.
 
 ### Export and adding members
@@ -170,7 +171,11 @@ Two implications worth remembering for any permission you hand out:
 
 ## The member profile
 
-<img src="/images/platform/users/user-profile-logs.png" alt="The Audit Logs tab of a member profile, with a search box above a table of changes showing the id, date, the action, what changed and who made it" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+Clicking a name opens the profile in a modal you can expand to a full page
+(`/user/{id}`). The profile is made of cards you read, an **Edit** view where
+details, status, roles and permissions are changed, and a **Settings** view for
+the member's own account. Everything is documented on one page:
+[Member profile](/platform/users/member-profile).
 
 Clicking a name opens the profile in a window you can expand to a full page
 (`/user/{id}`).
@@ -212,53 +217,25 @@ The Profile tab is a set of cards. The pencil on a card opens the editor at the 
 
 Which tabs appear depends on modules, permissions and whose profile it is.
 
+Which tabs appear depends on modules, permissions and whether the profile is
+your own:
+
 | Tab | What is there | Who sees it |
 |---|---|---|
-| **Profile** | The cards above | Everyone who can see the profile |
+| **Profile** | Cards: membership, contact, company, about, tags, roles, achievements, profession, courses & trainings, family, other info | Everyone who can see the profile |
 | **My Network** | Connection requests and accepted connections | Own profile, connections enabled |
-| **Fee** | Fee plan, periods and history. For a member with a per-year fee assignment, a plan change is recorded from the next unpaid year and shown as **From** followed by the year | Self, chapter HR permission, chapter financial permission, a trainer, or a parent managing the profile; only when a membership fee exists and the member's user type pays one |
-| **Payments** | Every payment: fees, tickets, donations | Self, chapter financial permission, chapter HR permission or a managing parent, with online payments enabled |
-| **Documents** (**Files** when e-Documents are off) | Contracts and documents assigned to the member, above the member's personal drive | Contracts: self, chapter HR permission or a managing parent. Personal drive: self, chapter HR permission, organization HR permission or organization admin permission, with the personal drive on |
-| **Events** | Events attended or registered for | Self, chapter HR permission or chapter event manager permission |
-| **Referrals** | People they referred or invited | Referral or invitations enabled. On your own profile it is a tab; on someone else's it sits under **More** |
-| **[Activity](/platform/users/profile-activity)** | Staff notes, donations, form submissions, tag changes, resignations and emails sent from the profile on one feed | Chapter HR permission or chapter financial permission over that member, or organization admin permission, with **Enable Profile Notes & Activity** on |
+| **Fee** | Fee level, periods and history | Self, HR_LOCAL, FINANCIAL_LOCAL, or a parent managing the profile |
+| **Payments** | Every payment: fees, tickets, donations | Same as Fee, online payments enabled |
+| **Documents** (**Files** when e-Documents are off) | Contracts and documents that need a signature, above the member's personal files | Self, HR_LOCAL, or a managing parent; personal files also for HR_TENANT and ADMIN_TENANT |
+| **Events** | Events attended or registered for | Self, HR_LOCAL or EVENT_LOCAL |
+| **Referrals** | People they referred or invited | Referral or invitations enabled. On someone else's profile it is under **More**. |
+| **[Activity](/platform/users/profile-activity)** | Staff notes, donations, form submissions and tag changes on one feed | HR_LOCAL or FINANCIAL_LOCAL over that member, with **Enable Profile Notes & Activity** on |
+| **More** | **Forms** (HR_LOCAL or FINANCIAL_LOCAL), and **Email Logs** and **Audit Logs** (ADMIN_TENANT) | Staff |
 
-The **More** menu at the end of the tab row holds the staff views, which take a
-tab of their own once you pick them:
-
-- **Forms**: every form the member submitted, with answers. Needs the Forms module and chapter HR permission or chapter financial permission over the member.
-- **Email Logs**: what the platform sent this member and what happened to it, the fastest answer to "they say they never got it". Organization admin permission only.
-- **Audit Logs**: every change with the date, the action, the fields that changed and who made it. Click a row for the before-and-after value of each field, and search by action, detail or author. Organization admin permission only.
-
-### Editing a profile
-
-**Edit profile** (or a card's pencil) opens the editor. It is available to the
-member, to chapter HR permission over their chapter and to a parent managing the profile. The
-left menu lists only the sections you may use, and **Save** applies to the section
-that is open.
-
-| Section | What it edits | Needs |
-|---|---|---|
-| **Info** | The fields and [custom fields](/platform/users/custom-fields) on your [profile form](/platform/users/profile-fields) | The edit permission above |
-| **Membership status** | Status, **User type**, chapter and chapter transfer, full-member date, trainer, resignation | Chapter HR permission over the chapter; the status, full-member and trainer groups also need local admins to be allowed to change permissions |
-| **Roles** | Roles, with **Add role**, **End role** and per-role dates | Organization HR permission, or chapter HR permission over the chapter |
-| **Permissions** | The member's permission levels | Chapter HR permission over the chapter, unless local admins are barred from changing permissions |
-| **Badges** | Badges and tier | Gamification on, and chapter HR assistant permission |
-| **Profession** | Headline, industry, job, sector, organisation | Professions module on |
-| **Family** | Family members | Family members on |
-
-**Settings** opens a second pane with up to three sections:
-
-- **Notifications**: the member, or chapter admin permission.
-- **Privacy**: the member, a managing parent, or someone who holds both chapter HR permission over the member's chapter and chapter admin permission.
-- **Account and security** (email, password, two-step sign-in, timezone, blocked members, closing the account): the member, a managing parent, or chapter HR permission over the member's chapter.
-
-A chapter administrator who holds chapter admin permission but not chapter HR permission therefore sees
-**Notifications** alone.
-
-Old links to the retired edit page still work: they land on the matching section.
-
----
+There is no separate edit page and no separate **Company** or **e-Documents**
+tab any more: the company is a card on the Profile tab, and the documents live in
+the **Documents** tab. A link to the old `/users/edit/{id}` address redirects to
+the matching pane of Edit or Settings.
 
 ## Setting up
 
@@ -409,12 +386,29 @@ Waitlist are absent until those modules are active.
     if the members really should see the directory. Do not assume a hidden link
     means a protected page, or that a visible link means an accessible one.
   </Accordion>
+
+  <Accordion title="Where did the Edit member page go?">
+    Editing happens on the profile itself. Open the member, press **Edit profile**
+    (or the pencil on any card) and pick a pane: **Info**, **Membership status**,
+    **Roles**, **Permissions**, **Badges**, **Profession** or **Family**. The
+    member's own account (password, email, privacy, closing the account) is the
+    **Settings** view. Old `/users/edit/{id}` links still work and redirect.
+    Details and the old-tab-to-new-pane table are in
+    [Member profile](/platform/users/member-profile).
+  </Accordion>
+
+  <Accordion title="Where do I end a role or change a member's status?">
+    Both are in the Edit view: **Edit profile** → **Roles** → **End role**, and
+    **Edit profile** → **Membership status** → **Status**. See
+    [Member profile](/platform/users/member-profile#roles-and-the-role-timeline).
+  </Accordion>
 </AccordionGroup>
 
 ---
 
 ## Related
 
+- [Member profile](/platform/users/member-profile) - the header, cards, Edit view, Settings view and role timeline
 - [Adding Members](/platform/users/adding-members) - the four ways people get an account
 - [Lists & Segments](/platform/users/lists) - reusable audiences built from member criteria
 - [User Statuses](/platform/users/statuses) - what each status blocks

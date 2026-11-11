@@ -24,16 +24,20 @@ field by field. Read the tables before you promise a member anything.
 
 ## Where it lives
 
-**Profile** → **Settings** → **Account and security**, then **Delete account** in
-the **Close account** card. A confirmation dialog appears ("Are you sure you want to completely
+**Profile** → **Settings** → **Account and security** → **Close account** card,
+then **Delete account**. A member reaches it from the **Settings** button on their
+own profile. For someone else's account, add `?tab=settings` to the profile
+address (`/user/{id}?tab=settings`); there is no button for it on another
+member's profile. A confirmation dialog appears ("Are you sure you want to completely
 delete the account? This action cannot be undone!") and confirming applies the
 change immediately.
 
 There is no module to enable and no setting that turns deletion on or off.
 
 The same card also offers **Close account** (sets Inactive, reversible) and, for
-admins, **Suspend account**. Those are the reversible options; see
-[User statuses](/platform/users/statuses).
+admins, **Suspend account** and **Reactivate account**. Those are the reversible
+options; see [User statuses](/platform/users/statuses) and
+[Member profile](/platform/users/member-profile#close-account).
 
 ---
 
@@ -43,9 +47,9 @@ admins, **Suspend account**. Those are the reversible options; see
 |---|---|
 | A member deleting their own account | **No**, unless their account is on the guest user type. The attempt is refused with "You cannot delete your account, please contact the administrator." |
 | A guest deleting their own account | Yes |
-| An admin deleting a member who belongs to a local group | Chapter admin rights over that local group, and the button only appears for organization admins |
-| An admin deleting a member with no local group | Organization admins |
-| An HR manager (chapter or organization-wide) | No. They see "This profile can be deleted permanently only by organization Admin" and a **Request delete** button that opens a support request instead. |
+| An admin deleting a member who belongs to a local group | `ADMIN_LOCAL` over that local group, and the **Delete account** button only appears for an Orgo administrator (the **Orgo administrator** switch on the member's Permissions pane) |
+| An admin deleting a member with no local group | `ADMIN_TENANT`, and again the button only appears for an Orgo administrator |
+| An HR admin (`HR_LOCAL`, `HR_TENANT`) | No. They see "This profile can be deleted permanently only by organization Admin" and a **Request delete** button that opens a support request instead. |
 
 <Note>
 Ordinary members cannot self-delete. An erasure request from a member is
@@ -179,12 +183,22 @@ for the whole window.
 
 <AccordionGroup>
   <Accordion title="A member asked me to delete their data. What do I actually do?">
-    Delete the account from their Close account page as an organization admin (or a
-    chapter admin for their local group). Then decide, against your own retention
+    Delete the account from the **Close account** card of their Settings view
+    (`/user/{id}?tab=settings`) as an Orgo administrator: the **Delete
+    account** button is not shown to anyone else. Then decide, against your own retention
     policy, what to do with the name, profile fields, custom field values,
     identity documents and adhesion record, which the action leaves in place.
     Record the request and what you did outside Orgo, because the platform does
     not log the deletion.
+  </Accordion>
+
+  <Accordion title="Where is the Delete account button? I only see Close account">
+    On a member's own profile it is under **Settings** → **Account and security**
+    → **Close account**, and it is shown only to a guest on their own account and
+    to an Orgo administrator. An ordinary member sees **Close account** (Inactive,
+    reversible) and, where the Resignation module is on, **Resign**. An HR
+    administrator on someone else's profile sees **Request delete**, which opens a
+    support request.
   </Accordion>
 
   <Accordion title="A member deleted their account by mistake, can I restore it?">

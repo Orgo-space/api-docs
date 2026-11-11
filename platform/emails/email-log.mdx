@@ -20,9 +20,7 @@ messages, family invitations, the vote seal and the discussion digest.
 taking the member's word for it, or your own.
 
 The log is at **Administration** → **Email logs** (`/email-log`) and needs
-organization communication managers, which organization admins also satisfy. It is also embedded in two places where you are more likely to want
-it: a member profile has a **Logs** tab with an **Email Logs** view, and a contact
-record shows an **Email logs** card.
+organization communication managers, which organization admins also satisfy. It is also embedded in two places where you are more likely to want it: a member profile has **Email Logs** under its **More** menu (that entry itself needs the organization admin permission), and a contact record shows an **Email logs** card.
 
 <img src="/images/platform/emails/email-log-list.png" alt="Email logs list with a recipient search box and a table of ID, sent date, member, subject and type" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -40,8 +38,40 @@ Newest first, twenty per page. Each row shows:
 | **Subject** | The subject line as sent, with placeholders already filled in |
 | **Type** | Which kind of email it was. Only the labelled kinds carry a tag: welcome, the four membership fee reminders, the two subscription renewal results, transactional email, newsletter, and admin notification. Everything else is logged with its own internal type and leaves this column blank, so a blank Type is normal for most system mail |
 
-**Search by recipient** at the top finds a member or contact and filters the list
-to them. ID, sent date and type are sortable.
+ID, sent date and type are sortable.
+
+---
+
+## Searching and filtering
+
+The row of filters above the table narrows the list. They combine, and none of
+them can show you an email outside your organisation or outside the member or
+contact you are already looking at.
+
+| Filter | What it does |
+|---|---|
+| **Search subject or content** | Shows only emails whose subject or body contains what you type. Not case sensitive, and it matches part of a word. Needs at least 2 characters; with fewer, nothing is filtered. The list updates a moment after you stop typing |
+| **Search by recipient** | Finds a member or contact and filters the list to them. Not shown on a profile or contact record, where the list is already theirs |
+| **Date** | Emails sent on or after, and on or before, the dates you pick |
+| **Company** | Emails sent to the company itself or to anyone who is, or ever was, a member or contact in it. Pick a company from the suggestions, or type part of a name and apply. Shown only when the company module is on |
+
+On a member profile (**More** → **Email Logs**) and on a contact record's **Email
+logs** card, only the **Search subject or content** box is offered, applied to
+that person's emails.
+
+<Note>
+The content search reads the body Orgo stored. Notification emails (discussions,
+comments, mentions, events, votes) store only the subject, and one-time codes
+store no body, so searching for text from inside those messages
+finds nothing. Search by a word from the subject instead.
+</Note>
+
+**Export** (top right of the standalone list) downloads the list as a CSV file
+without the message body. Up to 10,000 emails go in one file; above that, Orgo asks
+which page of 10,000 you want. The export follows the **Date** and **Company**
+filters. The **Search subject or content** box does not reach the export: the
+file holds every email in the date and company range, not only the ones you
+searched for.
 
 ---
 
@@ -65,7 +95,7 @@ work, you can see the link that was in their copy.
 
 <Steps>
   <Step title="Find them in the log">
-    Search by recipient, or open their profile and use the **Logs** tab. Working
+    Search by recipient, or open their profile and use **More** → **Email Logs**. Working
     from the profile is usually faster and avoids picking the wrong person.
   </Step>
   <Step title="No row at all?">
@@ -98,6 +128,38 @@ work, you can see the link that was in their copy.
     the entry records why instead of the body. Usually the address is invalid.
   </Step>
 </Steps>
+
+---
+
+## Questions
+
+<AccordionGroup>
+  <Accordion title="How do I find every email that mentions a word or an invoice number?">
+    Type it into **Search subject or content** on **Administration** → **Email
+    logs**. It checks the subject and the stored body, ignores capital letters
+    and needs at least 2 characters. To limit it to one person, run it on that
+    member's profile under **More** → **Email Logs**.
+  </Accordion>
+
+  <Accordion title="The search finds nothing, but I know the email was sent">
+    Check three things. The text may sit in a notification email, which stores
+    only the subject. It may be in a one-time-code email, which stores no body.
+    Or the search has fewer than 2 characters, in which case it is ignored and
+    the full list shows. Also clear any **Date**, **Company** or recipient filter
+    that is hiding the row.
+  </Accordion>
+
+  <Accordion title="Can the search show me emails from another organisation or another member?">
+    No. The search only narrows what the list already shows you, so it never
+    reaches beyond your organisation, or beyond the member or contact whose
+    profile you are on.
+  </Accordion>
+
+  <Accordion title="My export has more rows than my search showed">
+    The export ignores the search box and follows only the **Date** and **Company**
+    filters. Filter the downloaded file in a spreadsheet instead.
+  </Accordion>
+</AccordionGroup>
 
 ---
 
@@ -148,4 +210,5 @@ that reason. Take that into account in your data retention policy.
 - [Email templates](/platform/emails/email-templates) - changing what a message says
 - [Emails](/platform/emails) - sender identity and deliverability
 - [Newsletter](/platform/newsletter) - campaign statistics, including opens and clicks
-- [Users & Profiles](/platform/users) - the profile Logs tab
+- [Users & Profiles](/platform/users) - the profile's Email Logs view
+- [Activity log](/platform/logs) - who changed what, with before and after values

@@ -36,11 +36,11 @@ Privacy in Orgo works on two independent layers. You set organisation defaults t
 
 ## What a member controls
 
-A member opens their own profile, then **Settings** → **Privacy**. Chapter admins and above and a parent managing a child's profile see the same panel.
+A member opens their own profile, presses **Settings**, then the **Privacy** tab. Local admins (`ADMIN_LOCAL` and above) get the same panel for another member by adding `?tab=settings&setting=privacy` to that member's profile address (`/user/{id}?tab=settings&setting=privacy`). Changes save as soon as a switch is clicked, with the note **Changes are saved automatically**.
 
 <img src="/images/platform/users/privacy-user-controls.png" alt="Privacy section of a member's own settings, with the Make my profile completely private switch above a Who sees your data list where Name, Email, Phone, Age, Profile image and town, and Profession and social media each carry an Admins and a Community button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-The member panel groups fields more tightly than the admin defaults do: **Profile image & town** is one switch, and **Profession & social media** is another. Setting either one applies to both fields behind it. Each card shows its current state as "All community" or "Only by admins".
+The member panel groups fields more tightly than the admin defaults do: **Profile image & town** is one switch, and **Profession & social media** is another. Setting either one applies to both fields behind it. Each field has a **Community** / **Admins** switch, and the line under its name shows the current state: "All community" or "Only by admins".
 
 **Make my profile completely private** sits above the rest. Turning it on sets every field to private and greys the individual switches out. Turning it off sets every field back to visible.
 
@@ -61,7 +61,7 @@ This is what a signed-in member without HR or Financial permissions sees on some
 | **Profession** | Profession headline and industry are blank |
 | **Social media** | Every social link is blank: TikTok, Telegram, Instagram, Facebook, Website, LinkedIn, Twitter, Signal, Bluesky |
 
-Email, phone and social links have a second condition on top of their switches: see [Connections](#connections-and-contact-details) below.
+Email, phone and social links are also **connection-gated**. Even when the member left them on **Community**, another member sees them only through an accepted connection (see **My Network** on the [member profile](/platform/users/member-profile)); everyone else sees them blank. In the member's own panel the line under these fields therefore reads "Only by my connections and admins" while the [connections feature](/platform/professional-network) is on, and "Only by admins" when it is off, since without connections nobody can connect. Administrators with full access see them regardless.
 
 Three things are hidden from ordinary members no matter how the switches are set: **date of birth**, **member card ID**, and the **identity verification record**. Age can still be shown, date of birth cannot.
 

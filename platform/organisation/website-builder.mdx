@@ -7,7 +7,7 @@ description: 'Build your organization&apos;s public website out of ready-made se
 "twitter:description": 'Build your organization&apos;s public website out of ready-made sections, then publish it to your own domain'
 ---
 
-The website builder is where your organization's own website is written: pages and news articles made of ready-made sections, a header and footer menu, your colours, your domain. It is a site you author, with as many pages as you want to write. Visitors reach the pages, and the built-in directory and event pages that sit alongside them, as described in [Public website](/platform/organisation/public-website).
+The website builder is where your organization's own website is written: pages and news articles made of ready-made sections, a header and footer menu, your colours, your domain. It is a site you author, with as many pages as you want to write.
 
 What it replaces is a separate website you would otherwise host somewhere else, keep in sync by hand, and re-key every event, chapter and document into. Here the events section pulls your real events, the chapters section your real chapters, and the downloads section the files you have already shared from Drive.
 
@@ -75,6 +75,7 @@ Sections are added, arranged and written in the visual editor, which opens the p
 | `faq` | Questions with expandable answers |
 | `columns` | Two or three columns of parallel text |
 | `divider` | A rule or a gap between two sections |
+| `contactForm` | Your contact form (name, email, message), filled in and sent without leaving the page |
 | `form` | One of your own forms, filled in and sent without leaving the page |
 | `contactForm` | Your contact form (name, email, message). Messages land in the Messages inbox and the sender is filed in Contacts |
 | `files` | Documents to download, taken from Drive or uploaded to the website |
@@ -92,6 +93,16 @@ Two older sections, a contact block and a company map, are retired. They still d
 ### Sections that need something to exist first
 
 <AccordionGroup>
+  <Accordion title="contactForm: pick a contact form, or create one on the spot">
+    This is the section for "get in touch". It asks for a name, an email address and a message, optionally a phone number and a subject, and sends without the visitor leaving the page. The message arrives in **Contact messages**, the sender is saved in [Contacts](/platform/contacts/sources), and whoever the form notifies is emailed.
+
+    Its settings offer the contact forms you already have, and a **Create a contact form** button for when you have none, which is the usual case the first time you add this section. If your organisation has never switched the contact form module on, creating one switches it on too, and **Contact messages** appears in your menu.
+
+    The fields, the consent wording and the notification address belong to the form, not to the page: they are edited under **Settings → Modules → Communication → Contact forms**, and a change there corrects every page carrying that form without republishing any of them.
+
+    Use `form` instead when the form asks anything beyond those fields: a membership application, a survey, a volunteer sign-up with its own questions. A contact form switched off, or the module switched off, hides the section from visitors rather than showing a panel nobody can send.
+  </Accordion>
+
   <Accordion title="form: the form has to be published and open to non-members">
     The section stores the form's identifier and fetches its questions when the page renders, so adding a question updates every page carrying it and closing the form closes it everywhere at once. Never re-type a form's questions into another section.
 
@@ -216,6 +227,8 @@ Nothing you write is visible to anybody until you publish. Two separate things h
   </Step>
 </Steps>
 
+<img src="/images/platform/website/website-public-page.png" alt="The organisation's website as a visitor sees it, with the header menu, the opening section and the sections that follow it" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
 Publishing queues a build: the site is rendered to static files and served from a CDN, which is why a published page loads faster than the builder that made it. Changes you save afterwards do not reach visitors until you publish again: the builder tells you which areas have unpublished changes.
 
 Orgo keeps a snapshot of the whole site at every publish, and before every whole-site import by an assistant, so a change you regret can be put back by asking the assistant to restore it.
@@ -253,6 +266,14 @@ It stops and asks you twice: once before anything is written, with a preview of 
     A Drive document can only be listed while it is publicly shared in Drive. Share it there, then add it here. If a download has stopped working, check whether the share was revoked. A document you uploaded to the website stays until you delete it.
   </Accordion>
 
+  <Accordion title="My contact form section is empty for visitors">
+    Either no contact form is chosen yet, or the one it names is switched off, or the contact form module is off for the whole organisation. The builder says which; visitors are shown nothing at all rather than a form they cannot send. Check **Settings → Modules → Communication → Contact forms**.
+  </Accordion>
+
+  <Accordion title="My contact form section is empty for visitors">
+    Either no contact form is chosen yet, or the one it names is switched off, or the contact form module is off for the whole organisation. The builder tells you which; visitors are shown nothing at all rather than a form they cannot send. Check **Settings → Modules → Communication → Contact forms**.
+  </Accordion>
+
   <Accordion title="My form will not save on a page">
     A draft form cannot be embedded, and neither can a members-only one: on a public page it would show questions a visitor can fill in and cannot send. Publish the form and set it to accept answers from people without an Orgo account.
   </Accordion>
@@ -266,11 +287,12 @@ It stops and asks you twice: once before anything is written, with a preview of 
 
 ## Related
 
-- [Public website](/platform/organisation/public-website) - what visitors can open, and the setting that sends your bare address to your website
+
 - [Custom Domain](/platform/custom-domain) - the address your members sign in at
 - [Branding](/platform/organisation/branding) - the logos and colours of the members' area
 - [Orgo MCP](/platform/mcp) - connect an assistant and build the site by asking
 - [Files](/platform/files) - Drive, and the shares the downloads section reads
 - [Forms](/platform/forms) - the forms a page can embed
+- [Where contacts come from](/platform/contacts/sources) - what the contact form section writes, and where it lands
 - [Donation Pages & Widgets](/platform/fees/donation-pages) - what the donate section needs
 - [Permissions](/platform/permissions) - what the Orgo administrator flag unlocks

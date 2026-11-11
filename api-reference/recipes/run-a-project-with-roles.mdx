@@ -1,0 +1,144 @@
+---
+title: 'Run a project with roles'
+description: 'Create a project, give people and groups a role, create and order tasks, and move or delete statuses safely'
+---
+
+This walkthrough covers a project's life through the API: create it, add people with a role, create tasks that get an ID like `ORG-1`, reorder them, and change the workflow without orphaning tasks. It uses the [Project](/api-reference/project), [Task](/api-reference/task), [IssueStatus](/api-reference/issuestatus) and [Goal](/api-reference/goal) resources.
+
+Who is this for: integrations that open a project for each committee, grant or campaign, and tools that keep tasks in step with another system.
+
+<Note>
+Names differ between the interface and the API. What the interface calls an **objective** is the `Goal` resource (what `Task.goal` points at), and what it calls a **goal** is the `Objective` resource, the optional parent of those.
+</Note>
+
+---
+
+## Roles
+
+Every person and group on a project holds one role. A person who reaches the project in several ways gets the highest. The owner, tenant admins and HR are always Admin.
+
+| Role | Tasks | Settings and people |
+|------|-------|---------------------|
+| `admin` | See, create, edit and delete any | Yes |
+| `member` | See, create, edit any; delete own | No |
+| `contributor` | See, create; edit tasks created by or assigned to them; delete own | No |
+| `viewer` | See; comment only when `viewersCanComment` is on | No |
+
+A single `GET /projects/{uuid}` returns the caller's role as `myRole` and the table above as `roleCapabilities`, so a client can hide what the server would refuse. A **Contributor** on a project with `contributorScope: "assigned"` only sees tasks they created or are assigned to, in lists and by direct link (a direct request for another task answers `403`).
+
+---
+
+## Step 1: Create the project
+
+```bash
+curl -X POST https://acme.orgo.space/api/v1/projects \
+  -H "Api-Token: $ORGO_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Annual Gala 2027",
+    "description": "Everything for the gala.",
+    "contributorScope": "all",
+    "viewersCanComment": false
+  }'
+```
+
+The caller becomes the owner. Orgo creates five statuses (Backlog, To do, In Progress, Review, Done; Done is closed) and a `taskKey` from the name, here `AG`. To choose the key yourself, `PATCH /projects/{uuid}` with `taskKey` (2 to 6 letters or digits, starting with a letter, unique in the organisation). The old key keeps resolving after a change. A taken key answers `409`, an invalid one `400`.
+
+---
+
+## Step 2: Add people and groups
+
+An individual, with a role (default `member`):
+
+```bash
+curl -X POST https://acme.orgo.space/api/v1/projects/$PROJECT/members \
+  -H "Api-Token: $ORGO_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{ "userId": 42, "role": "contributor" }'
+```
+
+Change the role later:
+
+```bash
+curl -X PATCH https://acme.orgo.space/api/v1/projects/$PROJECT/members/42 \
+  -H "Api-Token: $ORGO_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{ "role": "viewer" }'
+```
+
+The owner is always Admin: changing or removing them answers `422`. A group is added through `groups` on the project, and its role is set with `groupRoles`, an object mapping group id to role (a group without an entry is a Contributor; the generated schema shows it as a list, but it is an object):
+
+```bash
+curl -X PATCH https://acme.orgo.space/api/v1/projects/$PROJECT \
+  -H "Api-Token: $ORGO_API_TOKEN" \
+  -H "Content-Type: application/merge-patch+json" \
+  -d '{ "groups": ["/api/v1/units/7"], "groupRoles": { "7": "member" } }'
+```
+
+`GET /projects/$PROJECT/access` returns `{ "owner", "people", "groups" }`: the owner, up to 100 people with their role, and the groups. Members of a group are not expanded. Changing settings, people and roles needs the Admin role (`PROJECT_EDIT`); the access list needs any role.
+
+---
+
+## Step 3: Create tasks
+
+```bash
+curl -X POST https://acme.orgo.space/api/v1/tasks \
+  -H "Api-Token: $ORGO_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "project": "/api/v1/projects/01938d8e-c2f4-7c2a-b8e1-3f7a9b8c4f88",
+    "title": "Confirm the venue",
+    "priority": 2,
+    "dateDue": "2027-02-01"
+  }'
+```
+
+Priority is `1` Urgent, `2` High, `3` Medium, `4` Low. A task needs the `TASK_CREATE` right, which Admin, Member and Contributor have. The response carries `number` and `reference` (`AG-1`). Numbers count up per project and are never reused.
+
+---
+
+## Step 4: Order tasks
+
+Tasks have one manual order per project. Put a task right before or after another task of the same project:
+
+```bash
+curl -X POST https://acme.orgo.space/api/v1/tasks/$TASK/move \
+  -H "Api-Token: $ORGO_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{ "before": "01938d8e-0000-7c2a-b8e1-3f7a9b8c4f01" }'
+```
+
+Send `before` or `after` with the other task's uuid. The response is `{ "position": n }`. It needs `TASK_EDIT` on the moved task.
+
+---
+
+## Step 5: Change the workflow safely
+
+Statuses, types, goals and objectives are reordered in one call each, with the ids in the new order:
+
+```bash
+curl -X POST https://acme.orgo.space/api/v1/projects/$PROJECT/statuses/order \
+  -H "Api-Token: $ORGO_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{ "ids": [3, 1, 2, 4, 5] }'
+```
+
+The same works at `/types/order` (ids), `/goals/order` and `/objectives/order` (uuids). Every id must belong to the project.
+
+Before deleting a status or type, ask how many tasks use it:
+
+```bash
+curl https://acme.orgo.space/api/v1/projects/$PROJECT/issue-counts \
+  -H "Api-Token: $ORGO_API_TOKEN"
+# { "statuses": {"11": 4}, "types": {"3": 2}, "goals": {"01J...": 6} }
+```
+
+Deleting one that tasks still use needs a target: `DELETE /issue_statuses/11?moveTo=12` moves its tasks to status 12 first; without `moveTo` the answer is `409`. For a type, `moveTo` may also be `none`. A project must keep at least one open and one closed status.
+
+---
+
+## What to watch for
+
+- **Task rights follow the role.** `GET /tasks` and the task comments only return what the caller's role may see; do not infer a project's task count from them for a Contributor.
+- **`issue-counts` is Admin only**, so a Contributor on "Only assigned" cannot learn the project total.
+- **Archived projects stay quiet**: assignment, status and comment emails for their tasks are not sent.

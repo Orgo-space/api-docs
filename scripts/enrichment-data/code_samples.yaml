@@ -911,6 +911,29 @@ operations:
               ],
           ]);
 
+  - operationId: user_form_submissions
+    samples:
+      - lang: cURL
+        label: cURL
+        source: |
+          curl "https://acme.orgo.space/api/v1/users/42/form-submissions?page=1" \
+            -H "Api-Token: $ORGO_API_TOKEN"
+      - lang: JavaScript
+        label: JavaScript (fetch)
+        source: |
+          const res = await fetch("https://acme.orgo.space/api/v1/users/42/form-submissions?page=1", {
+            headers: { "Api-Token": process.env.ORGO_API_TOKEN },
+          });
+          const { items, totalItems, itemsPerPage } = await res.json();
+      - lang: PHP
+        label: PHP (Guzzle)
+        source: |
+          $response = $client->get('/api/v1/users/42/form-submissions', [
+              'headers' => ['Api-Token' => getenv('ORGO_API_TOKEN')],
+              'query'   => ['page' => 1],
+          ]);
+          $submissions = json_decode($response->getBody(), true)['items'];
+
   # ── Discussion posts ───────────────────────────────────────────────────────
 
   - operationId: api_posts_post
@@ -1079,8 +1102,8 @@ operations:
             -H "Api-Token: $ORGO_API_TOKEN" \
             -H "Content-Type: application/json" \
             -d '{
-              "name": "100-Hour Volunteer",
-              "hoursThreshold": 100
+              "name": "Volunteer Champion",
+              "pointsRequired": 100
             }'
       - lang: JavaScript
         label: JavaScript (fetch)
@@ -1092,8 +1115,8 @@ operations:
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              name: "100-Hour Volunteer",
-              hoursThreshold: 100,
+              name: "Volunteer Champion",
+              pointsRequired: 100,
             }),
           });
       - lang: PHP
@@ -1102,11 +1125,8 @@ operations:
           $client->post('/api/v1/badges', [
               'headers' => ['Api-Token' => getenv('ORGO_API_TOKEN')],
               'json' => [
-                  'name'           => '100-Hour Volunteer',
-                  'hoursThreshold' => 100,
-              ],
-          ]);
-
+                  'name'           => 'Volunteer Champion',
+                  'pointsRequired' => 100,
   - operationId: recordStep
     samples:
       - lang: cURL

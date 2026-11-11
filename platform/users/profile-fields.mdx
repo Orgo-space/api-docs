@@ -57,8 +57,27 @@ Removing a field with the **X** takes it off the form. It does not delete data a
 Profile picture is not on this list. It is always available and is not configurable here.
 
 <Note>
-When the Professions module is active, the profession and organisation fields are edited in the **Profession** section of the profile editor and shown on the **Profession** card on the Profile tab. Profession headline is the exception: with Professions switched off it appears in the main **Info** section of the editor instead. The billing fields show under **Billing Details** on the **Contact** card.
+The profession, organisation, and billing fields are not part of the **Info** pane of the Edit view. They are edited in a separate **Profession** pane, and only when the Professions module is active. Profession headline is the exception: with Professions switched off it is edited inside **Info** instead.
 </Note>
+
+---
+
+## Where the fields appear on a profile
+
+The form decides what a member can fill in. On the profile itself, each field lands on a fixed card; see [Member profile](/platform/users/member-profile) for the full screen.
+
+| Field | Read on the Profile tab | Edited in |
+|---|---|---|
+| First Name, Last Name | The header name (middle name included) | Edit → **Info** |
+| Date of birth | **Age** in the Membership card; the date itself only for `HR_TENANT` and `ADMIN_LOCAL` | Edit → **Info** |
+| Gender, Location on members map | Not shown on a card | Edit → **Info** |
+| Bio, Address, Postal code | **Contact** card. Address and postal code only for the member and `HR_LOCAL` over their chapter. | Edit → **Info** |
+| Town born, Town current | **Hometown** and **Town of residence** in the Membership card | Edit → **Info** |
+| Phone number, Website, Signal, Bluesky, Facebook, Twitter, LinkedIn, Instagram, Telegram, TikTok | **Contact** card, as copyable values and link buttons (Twitter is labelled X). Visibility follows [privacy settings](/platform/users/privacy-settings). | Edit → **Info**, in the contact block under the location fields |
+| Profession headline, industry, sector | **Profession** card, Professions module on | Edit → **Profession** (**Info** with Professions off) |
+| Organisation name, website and role | **Profession** card | Edit → **Profession** |
+| Company legal name, identifier, address, commerce registry number | **Billing Details** in the **Contact** card, for the member and `HR_LOCAL` | Edit → **Profession** |
+| [Custom fields](/platform/users/custom-fields) | **Other info** card, or the Membership card when flagged **Show in profile main info** | Edit → **Info** |
 
 ---
 
@@ -86,7 +105,7 @@ Requiring a field is the fastest way to backfill data from existing members: you
 **Immutable** is available on custom field rows only. Once the field has a value for a member, it becomes read-only on the profile form.
 
 <Warning>
-Immutable locks the field for everyone editing through the profile form, administrators included. It is a form-level lock, so it does not block changes made through an import or the API. Use it for values that should be entered once, such as a licence number or an externally issued member ID, and expect to correct mistakes outside the profile screen.
+Immutable locks the field for everyone editing through the profile form (Edit → **Info**), administrators included. It is a form-level lock, so it does not block changes made through an import or the API. Use it for values that should be entered once, such as a licence number or an externally issued member ID, and expect to correct mistakes outside the profile screen.
 </Warning>
 
 ---

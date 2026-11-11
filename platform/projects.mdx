@@ -7,7 +7,7 @@ description: 'Run projects inside Orgo with tasks, a board, a Gantt timeline and
 "twitter:description": 'Run projects inside Orgo with tasks, a board, a Gantt timeline and objectives'
 ---
 
-A project is a workspace for a piece of work your organisation is delivering. It holds tasks, its own set of task statuses and task types, an optional list of objectives, and its own people with a role each. Every project has an Overview, Tasks, Board and Gantt tab, plus a Guide tab for the project's written guide.
+A project is a workspace for a piece of work your organisation is delivering. It holds tasks, its own set of task statuses and task types, optional objectives and goals, and its own people and roles. Every project has up to five views: Overview, Tasks, Board, Gantt (when the project uses due dates) and, once it has a description, About. Each person on a project holds one of four roles that decide what they can change.
 
 **Built for** committees, working groups and staff teams that plan work in Orgo rather than in a separate tool, so the people, groups and permissions are already there.
 
@@ -40,10 +40,10 @@ If someone has access several ways (individually and through a group, say), the 
 
 | Action | Who |
 |--------|-----|
-| Create a project | Any signed-in member, from the plus button on the sidebar **Projects** section. The **Create project** button on the Projects page shows only to organization admins and HR managers. Guests cannot create projects when a guest user type is configured, unless they are organization admins. |
-| Open a project | The owner, individually added people, members of an added group, organization admins and HR managers. Everyone else gets a not-found and never sees it in the sidebar. |
-| Rename, restyle, archive, delete, manage people, statuses, types and objectives | Admins of the project. |
-| Create tasks | Admins, Members and Contributors. Editing and deleting is narrower: see [Tasks](/platform/tasks). |
+| Create a project | Any signed-in member, from the plus button on the sidebar **Projects** section. The Projects page **Create project** button shows only to `HR_TENANT` and above. Guests cannot create projects when a guest user type is configured. |
+| Open a project | The owner, individual members, members of a group it grants access to, `ADMIN_TENANT` and `HR_TENANT`. Everyone else gets a not-found and never sees it in the sidebar. |
+| Rename, restyle, archive, delete, manage people, statuses, types and objectives | The **Admin** role: the owner, `ADMIN_TENANT`, `HR_TENANT` and anyone given Admin on the project. |
+| Work with tasks | Depends on the role, see [Roles](#roles). |
 
 ---
 
@@ -57,16 +57,23 @@ The sidebar plus button, or **Projects** → **Create project**, opens the **New
 |-------|-------------|
 | **Project name** | Required. Shown in the sidebar, on the card and in the header. |
 | **Emoji** / **Color** | Pick one or the other. It identifies the project everywhere it is listed. |
-| **Description** | One line, up to 255 characters, shown on the card and under the project name. |
-| **Project owner** | Defaults to you; search any member to hand it over. The owner always has the Admin role. |
-| **Group access** | One or more of your groups whose members can all open the project. Each group starts as **Member** and its role can be changed afterwards. |
-| **Task options** | Checkboxes for which fields tasks use: **Objectives** (off by default), **Priority**, **Due date** and **Task types** (on by default). |
+| **Description** | Free text. Filling it in adds the **About** tab. |
+| **Project owner** | Defaults to you; search any member to hand it over. The owner always has full rights. |
+| **Group access** | One or more groups whose members can all open the project. |
+| **Task key** | Prefix of the task IDs, such as `ORG-145`. Filled in from the name; see [Project settings](#project-settings). |
+| **Task options** | Which fields and filters appear on tasks here: **Priority**, **Due date**, **Task types** (on) and **Objectives** (off by default). |
 
-Saving creates five task statuses: **Backlog**, **To do**, **In Progress**, **Review** and **Done**, with **Done** marked as closed. Edit them any time under **Statuses & types**. No task types are created: add yours in the same place.
+Saving creates five task statuses: **Backlog**, **To do**, **In Progress**, **Review** and **Done**, with **Done** marked as closed.
 
 ---
 
 ## Giving people access
+
+Owner, individual members and group access stack. Add people and groups under **Settings** → **Members**, using the search box: pick a person or a group, then a role. Only active accounts qualify, and nobody twice. Changing a role, or removing someone, takes effect straight away. `ADMIN_TENANT` and `HR_TENANT` see every project as Admin regardless.
+
+The project header shows a stack of the people with access; click it for the full list, with each person's role and the groups. Members of a group are not listed one by one.
+
+The owner is always an Admin and cannot be removed. To hand the project over, make the new person an Admin first, then use **Change owner**; the previous owner stays an Admin.
 
 <img src="/images/platform/projects/project-settings-members.png" alt="The Members section of project settings listing the owner, the groups that have access and the individual people added, each with the role they hold" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -83,6 +90,28 @@ When you remove a person who still has open tasks on the project, Orgo asks who 
 
 The row of avatars in the project header (**In this project**) shows who is on the project, with a **Manage people and roles** link for Admins.
 
+### Roles
+
+Roles are fixed, so everyone knows what to expect. A person who reaches the project in several ways (owner, individually, through two groups) gets the highest role among them. A group with no role set is treated as Contributor, and so is anyone who was a project member before roles existed, so nobody lost or gained access when roles arrived.
+
+| Capability | Admin | Member | Contributor | Viewer |
+|------------|:-----:|:------:|:-----------:|:------:|
+| See tasks | Yes | Yes | Yes | Yes |
+| Create tasks | Yes | Yes | Yes | No |
+| Edit tasks and change status | Yes | Yes | Own | No |
+| Comment and add files | Yes | Yes | Yes | No |
+| Delete tasks | Yes | Own | Own | No |
+| Manage settings and people | Yes | No | No | No |
+
+**Own** means tasks the person created or is assigned to, and files they uploaded. Deleting is the narrower case: only tasks the person created.
+
+Two options sit under the table:
+
+- **Contributors see**: **All tasks**, or **Only assigned** for volunteers or clients who should not see the whole backlog. With Only assigned, a Contributor sees just the tasks they created or are assigned to, in the lists, the board, the timeline and when opening a task by link.
+- **Viewers can comment**: off by default. When on, a Viewer can reply on tasks but not change them.
+
+The interface hides what a role cannot do (a Viewer sees no **Add task** button), and the server refuses it anyway.
+
 ---
 
 ## The project views
@@ -93,13 +122,15 @@ Opening a project returns you to the tab you used last in it, and on a first vis
 
 | Tab | What it shows |
 |-----|--------------|
-| **Overview** | Tiles for **Open tasks**, **Overdue**, **Due in 7 days**, **Unassigned** and **Blocked**; cards for **Urgent** tasks, **Needs attention** (overdue first, then due within a week), **By status**, **Objectives** (done out of all tasks per objective) and **Workload** (open tasks per person); and **Recent activity**. The Overdue and Due tiles need the due date option, the Urgent card needs priority, and the Objectives card needs objectives. Clicking a tile or row opens the Tasks tab with that filter. |
-| **Tasks** | The full task list with filters, grouping, sorting and inline editing. See [Tasks](/platform/tasks). |
-| **Board** | One column per task status. Drag a card to another column to change its status, or between cards to reorder. Closed columns can be collapsed. **Swimlanes** splits the board into rows by **Assignee**, **Priority** or **Type**. |
-| **Gantt** | Tasks with a due date as bars on a timeline, from their start date (or the day they were created) to the due date. Click a bar to open the task. Tasks without dates sit under the chart: drag one onto the timeline to give it a due date. Buttons for **Go to today**, **Dependencies** (arrows between blocking tasks) and **Done tasks**. On a phone the Gantt becomes a plain list grouped by when tasks are due. Only available while the **Due date** option is on. |
-| **Guide** | The project's written guide: what it is for, how to ask for something and who to contact. Admins edit it in place. Shown while the **Guide** option is on. |
+| **Overview** | Counters for open, overdue, due in 7 days, unassigned and blocked tasks; a **By status** breakdown; **Needs attention**; **Urgent and high priority**; **Workload** by assignee; and progress per objective. Clicking a counter or a slice opens the Tasks tab with that filter applied. |
+| **Tasks** | The full task list with filters, grouping, ordering and keyboard shortcuts. See [Tasks](/platform/tasks). |
+| **Board** | Kanban: one column per status, with optional **Swimlanes** by assignee, priority or type. Drag a card between columns to change its status, or within a column to reorder it. A closed column shows the last 7 days, with **Show all** for the rest. |
+| **Gantt** | Tasks on a timeline with dependency arrows and **Go to today**. Drag a bar to move it, or its edges to change the dates. Tasks with no dates wait in **Without dates**: drag one onto the timeline to schedule it. **Done tasks** and **Dependencies** can be switched off. On a phone it becomes a plain agenda grouped Overdue, This week, Next week, Later and No date. Shown when the project uses due dates. |
+| **About** | The project description, edited in place by anyone who can edit the project. Appears once a description exists. |
 
-The Overview, Board and Gantt share an **Assignee**, **Type** and **Objective** filter row (the same choices carry across tabs and are kept in the page address, so a filtered view can be shared as a link), with **Clear filters** to reset them.
+The **assignee**, **type** and **objective** filters are shared across Overview, Tasks, Board and Gantt, and live in the address bar (`?assignee=`, `?type=`, `?objective=`), so a filtered view can be linked. Each member lands on the tab they used last in a project; the first visit opens the Overview.
+
+Dropping files anywhere on a project opens the new task form with those files attached.
 
 <img src="/images/platform/projects/project-board.png" alt="The Board tab with a column per status, task cards carrying their ID, priority, type, due date and checklist progress, and an Add task action at the foot of each column" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -107,13 +138,17 @@ Dropping files anywhere on a project opens a new task with those files attached.
 
 ---
 
-## Objectives
+## Objectives and goals
 
-<img src="/images/platform/projects/project-goals.png" alt="The Objectives section of project settings, listing the project objectives with their colour and how many tasks each one holds" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+Switch on **Objectives** in the project's task options, then open **Settings** → **Objectives** (the old **Objectives & Goals** page now lives there, and its address redirects).
 
-Switch on **Objectives** under **Settings** → **General** → **Features** (or tick it when creating the project). An **Objectives** section then appears in project settings, and tasks gain an **Objective** field.
+An **objective** is a phase or milestone that tasks belong to: a name, a colour and optional start and end dates. Tasks then carry an **Objective** field, the task list filters by it, Overview tracks progress against it and dated objectives get their own bars on the Gantt.
 
-An **objective** is a phase or milestone that tasks belong to: a name, a colour and optional start and end dates. Add one by typing a name in the list and pressing Enter; reorder by dragging, or with the arrow keys on the drag handle. Each row shows how many tasks it holds. Deleting an objective asks where its tasks should go: another objective, or no objective.
+A **goal** sits a level above, for projects with several strands of work; turn on **Group objectives under goals** and drag objectives into them. With it off you get one flat list. Both reorder by dragging (or Alt with the arrow keys), and deleting a goal keeps its objectives.
+
+<Note>
+The interface and the API swap the two words. What this page calls an *objective* is the `Goal` resource in the [API](/api-reference/introduction), and a *goal* is the `Objective` resource.
+</Note>
 
 For bigger projects you can group objectives under **goals**: choose **Group objectives under goals**, then **Add goal**, and move objectives between goals from each row. A goal has a name and a colour. Removing a goal keeps its objectives. Once goals exist, the task filters offer both **Goal** and **Objective**, and tasks can be grouped by goal.
 
@@ -123,14 +158,22 @@ Tasks and the Overview then show progress per objective. The task list can group
 
 ## Project settings
 
-The **Settings** button in the project header (Admins only) opens a page with these sections. Each change saves as you make it, with a **Saving** and **All changes saved** indicator at the top.
+The **Settings** button in the project header opens four tabs, for Admins:
 
-- **General**: name, emoji or colour, one-line description, and **Task key**, the 2 to 6 letter prefix of task IDs such as ORG-145 (changing it updates the ID on every task; two projects cannot share a key). Under **Features** you switch **Priority**, **Due date**, **Task types**, **Guide** and **Objectives** on or off: hidden fields keep their data. The **Danger zone** holds archive and delete.
-- **Objectives**: described above. Only present while objectives are on.
-- **Statuses & types**: each project has its own. See [Tasks](/platform/tasks).
-- **Members**: people, groups and roles, described above.
+| Tab | What it holds |
+|-----|---------------|
+| **General** | Name, emoji or colour, description, **Task key**, the task options (**Priority**, **Due date**, **Task types**, **Objectives**; hidden fields keep their data), and the danger zone. |
+| **Objectives** | Objectives and goals, described above. |
+| **Workflow** | **Task statuses** and **Task types**: add, rename, recolour and drag into order. |
+| **Members** | People, groups and roles, described above. |
 
-**Archive project** moves it to the **Archived** tab of the Projects page and hides it from the sidebar. Tasks stay readable and **Restore project** brings it back. An archived project's tasks stop sending assignment, status, comment and reminder emails and drop off your dashboard and **My tasks** page, but still appear in the daily task digest. **Delete project** asks you to type the project name, is permanent, and takes the tasks, objectives, statuses and types with it.
+Changes save as you make them, and the tab shows **All changes saved** when they have.
+
+**Task key** is the prefix of every task ID in the project (`ORG-145`): 2 to 6 letters or digits, starting with a letter, unique across your organisation. New projects get one from their name. Changing it updates the ID shown on every task, and links that used the old key keep working.
+
+Each **status** has a name, a colour, a **Closed** switch and a circle that shows progress (from empty to full, or dashed for none). Closed statuses are hidden from **Open tasks**, and a project must keep at least one open and one closed status. A new project starts with **Backlog**, **To do**, **In Progress**, **Review** and **Done**, with **Done** closed. A **type** is a name and a colour. Deleting a status or type that tasks still use asks where to move those tasks first.
+
+**Archive project** moves it to the **Archived** tab, still readable and restorable from there. Its tasks stop sending assignment, status, comment and reminder emails and drop off the dashboard **My Tasks** card, but still appear in the daily task digest. **Delete project** is permanent, asks you to type the project name, and takes the tasks, objectives, goals, statuses and types with it.
 
 ---
 

@@ -1,10 +1,10 @@
 ---
 title: 'Gamification'
-description: 'Points members earn for taking part, tier badges those points unlock, and the leaderboard that ranks them'
+description: 'Points members earn for taking part, membership tiers those points unlock, and the leaderboard that ranks them. Tiers are enabled by Orgo support'
 "og:title": 'Gamification | Orgo'
-"og:description": 'Points members earn for taking part, tier badges those points unlock, and the leaderboard that ranks them'
+"og:description": 'Points members earn for taking part, membership tiers those points unlock, and the leaderboard that ranks them. Tiers are enabled by Orgo support'
 "twitter:title": 'Gamification | Orgo'
-"twitter:description": 'Points members earn for taking part, tier badges those points unlock, and the leaderboard that ranks them'
+"twitter:description": 'Points members earn for taking part, membership tiers those points unlock, and the leaderboard that ranks them. Tiers are enabled by Orgo support'
 ---
 
 Gamification adds a points ledger on top of [badges](/platform/badges). Members earn points for things they already do (buying, attending, referring, posting), those points feed a leaderboard, and badges with a points threshold act as tiers members climb.
@@ -13,7 +13,18 @@ Gamification adds a points ledger on top of [badges](/platform/badges). Members 
 
 **Replaces** the engagement spreadsheet and the manual "member of the month" shortlist. It is not a loyalty scheme with redeemable rewards: Orgo counts points, it does not spend them.
 
-Everything on this page sits behind one switch: **Enable tiers/levels by points**. Without it, badges still work but no points are recorded anywhere.
+Gamification has two layers:
+
+| Layer | What it gives you | Who turns it on |
+|---|---|---|
+| **Badges** | The catalogue, awards by hand, from events and courses, categories, checklists of steps, awards, member levels | You, with the switches in [Turning it on](#turning-it-on) |
+| **Points and tiers** | Point rules, the points total on each profile, the **Membership level** card, tier badges, the leaderboard, and the event points and event badge fields | Orgo support, per organisation. There is no switch for it in Settings. Ask support to enable **tiers** for your organisation |
+
+Without tiers, badges still work but no points are recorded anywhere. Everything below the [Turning it on](#turning-it-on) section applies only to organisations that have tiers enabled.
+
+<Note>
+Volunteering-hours tracking was removed from Gamification, together with the hours-based badge award. Points and point rules are not affected.
+</Note>
 
 ---
 
@@ -23,22 +34,23 @@ Everything on this page sits behind one switch: **Enable tiers/levels by points*
 
 | Switch | What it turns on |
 |---|---|
-| **Enable Gamification Module** | Badges, the Badges tab on member profiles, and the Badges entry in the sidebar |
+| **Enable Gamification Module** | Badges, the **Achievements** card and **Badges** tab on member profiles, and the Badges entry in the sidebar |
 | **Enable badge categories** | Grouping badges into categories |
-| **Enable badge per event** | The per-event badge field. Also needs the tiers switch below, because the event form's Gamification section only appears with tiers on |
-| **Enable tiers/levels by points** | Points, the point rules panel, tier badges, and the leaderboard |
-| **Badges with a checklist of steps** | A steps editor on every badge and a progress panel on member profiles. See [Badges](/platform/badges#by-working-through-a-checklist) |
-| **Members may record their own progress** | Whether a member can tick their own checklist steps, or only HR assistants can. On by default, and inert while the checklist switch is off |
-| **Awards** | Lets a badge be marked as an award, counted and listed separately from badges on a profile |
-| **Badges by user type** | Lets a badge belong to a member level, and tabs the earned badges on a profile by level |
+| **Enable badge per event** | The per-event badge field. The event form's **Gamification** section, where that field lives, appears only when tiers are enabled for your organisation |
+| **Awards** | Lets a badge be marked as an award, counted and listed apart from badges on a profile |
+| **Badges by user type** | Lets a badge belong to a member level, and tabs earned badges by level on a profile |
+| **Badges with a checklist of steps** | A steps editor on every badge and a progress panel on the member profile. See [Badges](/platform/badges#checklists-of-steps) |
+| **Members may record their own progress** | Appears under the checklist switch. Off: only HR assistants can record a step |
 
-<img src="/images/platform/features/gamification-module-config.png" alt="Gamification module settings showing the Enable Gamification Module switch and the badge categories, badge per event, and tiers feature switches" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/features/gamification-module-config.png" alt="Gamification module settings with the Enable Gamification Module switch above a Features card holding Enable badge categories, Enable badge per event, Awards, Badges by user type and Badges with a checklist of steps" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+Tiers have no switch here. Once support has enabled them, two more panels, **Point Rules** and **Engagement Points**, appear at the bottom of this same screen.
 
 ---
 
 ## How members earn points
 
-Turning tiers on reveals **Point Rules** and **Engagement Points**. Set a rule to 0 and that source stops awarding.
+With tiers enabled, **Point Rules** and **Engagement Points** are on the Gamification settings screen. Set a rule to 0 and that source stops awarding.
 
 | Setting | Awards points when | How much |
 |---|---|---|
@@ -57,7 +69,9 @@ Event points are recorded once per attendance record, and they are taken back if
 
 ## Tiers
 
-A tier is a badge with **Points required** set on it. On a member's profile, the overview card is retitled **Membership level** and shows the member's total points, their current tier, and every tier as a card marked **Achieved** or **Locked** against that total.
+A tier is a badge with **Points required** set on it (the field is on the badge form, and appears once tiers are enabled). On a member's profile, the **Membership level** card shows the member's points as a **Total Points** tag, their current tier by name, and every tier as a card with its **Required Points**, marked **Achieved** or **Locked** against that total. The card appears for every viewer of the profile, only when Gamification and tiers are both on. People with `HR_ASSISTANT_LOCAL` over the member get a pencil on it that opens the member's **Badges** tab.
+
+Tier badges are shown only in this card. They are left out of the **Achievements** card's badge pictures and its in-progress list.
 
 <Note>
 Tier cards on the profile light up from the points threshold alone, but the automatic promotion that actually writes the badge onto the member also needs an ordering number (`level`) on each tier badge. The settings screen does not expose that field today, so set it through the API (`PATCH /badges/{id}`) or award tier badges by hand. When automatic promotion does run, it grants the highest tier the member qualifies for and removes their lower tier badges, so a member holds one tier at a time.
@@ -67,9 +81,9 @@ Tier cards on the profile light up from the points threshold alone, but the auto
 
 ## The points ledger
 
-Every point movement is a dated row: how many points, which activity type (purchase, event, engagement, referral, manual), a description, and a reference to the record that caused it. The member's total is the sum of those rows.
+Every point movement is a dated row: how many points, which activity type (purchase, event, engagement, referral, manual), a description, and a reference to the record that caused it. The member's total is the sum of those rows, and it is what the **Membership level** card and the leaderboard show.
 
-Open a member, go to the **Badges** tab, and the ledger sits below their badges. Organization HR managers can correct the point value on a row or delete a row outright; the activity type, description, and reference are fixed. There is no button to add points by hand, so a correction means editing or removing an existing row.
+The profile shows only the total. No screen lists the individual rows or lets you add, edit or delete one, so a wrong total (a refunded purchase, say) is corrected through Orgo support.
 
 ---
 
@@ -86,24 +100,40 @@ The same tab carries leaderboards that do not depend on gamification at all: eve
 ## Common questions
 
 <AccordionGroup>
+  <Accordion title="How do I enable tiers, points and the leaderboard?">
+    Ask Orgo support to enable tiers for your organisation. The **Enable tiers/levels by points** switch is no longer on the Gamification settings screen, so you cannot turn it on yourself. Once it is on, **Point Rules** and **Engagement Points** appear on that screen, **Points required** appears on the badge form, and the **Membership level** card and the points leaderboard appear.
+  </Accordion>
+
   <Accordion title="Nobody is earning points">
-    Check that **Enable tiers/levels by points** is on, then check the rules themselves: a rule left at 0 awards nothing. Points also start from the moment the switch goes on, so nothing is backfilled for past activity.
+    First check that tiers are enabled for your organisation: if the **Point Rules** panel is not on the Gamification settings screen, they are not, and nothing is recorded. Then check the rules themselves: a rule left at 0 awards nothing. Points also start from the moment tiers are enabled, so nothing is backfilled for past activity.
+  </Accordion>
+
+  <Accordion title="Why is there no Membership level card or Points required field?">
+    Both need tiers, which Orgo support enables for your organisation. The Gamification module also has to be on.
   </Accordion>
 
   <Accordion title="Do points expire?">
     No. The ledger is permanent, and the 7 and 30 day buttons only narrow the leaderboard window, not the member's total.
   </Accordion>
 
-  <Accordion title="What happens if I turn tiers off?">
-    Recording stops and the leaderboard card disappears, but nothing already earned is deleted. Turn it back on and the old totals are still there.
+  <Accordion title="What happens if tiers are turned off for us?">
+    Recording stops and the leaderboard card and Membership level card disappear, but nothing already earned is deleted. If tiers are enabled again, the old totals are still there.
   </Accordion>
 
   <Accordion title="Can I give a member points as a one-off reward?">
-    Not from the interface: there is no add-points button. Award a badge by hand instead, or adjust an existing ledger row.
+    Not from the interface: there is no add-points button. Award a badge by hand instead.
   </Accordion>
 
   <Accordion title="A member's points look too high after a refund">
-    Purchase points are awarded when the payment is recorded and are not reversed by a refund. Edit the ledger row down as an organization HR manager.
+    Purchase points are awarded when the payment is recorded and are not reversed by a refund. The ledger rows cannot be edited from the interface, so ask Orgo support to correct the total.
+  </Accordion>
+
+  <Accordion title="Can I still track volunteer hours?">
+    No. The hours switch, the Hours number badge field, Add volunteering hours and the badges awarded from hours were removed. Badges and points continue to work.
+  </Accordion>
+
+  <Accordion title="Why does my demo organisation have badges but no points or tiers?">
+    Generating demo data no longer turns tiers on by itself. Badges and sample points are still created, but the points features show only for an organisation that has tiers enabled.
   </Accordion>
 </AccordionGroup>
 
@@ -111,7 +141,7 @@ The same tab carries leaderboards that do not depend on gamification at all: eve
 
 ## Related
 
-- [Badges](/platform/badges) - The catalogue tiers are built from
+- [Badges](/platform/badges) - The catalogue tiers are built from, and the checklist, award and member level options
 - [Products](/platform/fees/products) - Purchases that award points
 - [Event attendance](/platform/events/attendance) - Attendance that awards points and event badges
 - [Referral program](/platform/users/referral) - Referrals that award points

@@ -1,13 +1,13 @@
 ---
 title: 'Custom Fields'
-description: 'Create your own profile fields, control who can see and edit each one, and encrypt the sensitive ones'
+description: 'Create your own profile fields, control who can see and edit each one, choose where they show on a member's profile, and encrypt the sensitive ones'
 "og:title": 'Custom Fields | Orgo'
-"og:description": 'Create your own profile fields, control who can see and edit each one, and encrypt the sensitive ones'
+"og:description": 'Create your own profile fields, control who can see and edit each one, choose where they show on a member's profile, and encrypt the sensitive ones'
 "twitter:title": 'Custom Fields | Orgo'
-"twitter:description": 'Create your own profile fields, control who can see and edit each one, and encrypt the sensitive ones'
+"twitter:description": 'Create your own profile fields, control who can see and edit each one, choose where they show on a member's profile, and encrypt the sensitive ones'
 ---
 
-Custom fields capture information Orgo does not ship a column for: emergency contact, T-shirt size, licence number, dietary restrictions, whatever your organisation actually tracks. A field is defined once and reused across the profile form, the registration form, the adhesion form, contact records, Forms and your emails.
+Custom fields capture information Orgo does not ship a column for: emergency contact, T-shirt size, licence number, dietary restrictions, whatever your organisation actually tracks. A field is defined once and reused across the profile form, the registration form, the adhesion form and contact records, and its answers appear on the member's [profile](/platform/users/member-profile).
 
 <img src="/images/platform/users/custom-fields-list.png" alt="Custom fields settings listing the organisation's custom fields with their field types and custom_field_<id> reference tags, plus the Interest Custom Field selector" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -30,9 +30,11 @@ Custom fields capture information Orgo does not ship a column for: emergency con
   <Step title="Set visibility">
     **Public**, **User** or **Admin**, described below.
   </Step>
+  <Step title="Optionally show it in the profile main info">
+    Switch on **Show in profile main info** to display the answer beside the member's Orgo ID and card ID instead of under **Other info**. See [Where a field shows on the profile](#where-a-field-shows-on-the-profile).
+  </Step>
   <Step title="Save, then put it on a form">
-    A new field exists but is not shown anywhere yet. Add it to the [profile form](/platform/users/profile-fields), the [registration form](/platform/users/registration-form) or the [adhesion form](/platform/users/adhesion).
-
+    A new field exists but is not shown anywhere yet, neither on a form nor on a profile. Add it to the [profile form](/platform/users/profile-fields), the [registration form](/platform/users/registration-form) or the [adhesion form](/platform/users/adhesion).
     You can also skip this page: the profile form builder, the registration form builders and the adhesion form builder each have a **Create Custom Field** button on their **Custom Fields** tab that opens this same editor in a window and adds the new field to the form when you save. The pencil next to a field there edits it. Two things differ on a registration form: File Upload is not offered, and the **Visibility** choice (only **Public** and **User**) appears only for a field that is also on the profile form; a field created there starts as **User**.
   </Step>
 </Steps>
@@ -157,13 +159,46 @@ To collect something from every existing member, add the field to the profile fo
 
 Event registration forms and the standalone form builder create their own fields, scoped to that event or that form. Those do not appear on this settings page and are managed where they were created. Companies keep a separate set of fields too, under the Companies module settings, **Company fields**.
 
+Companies have their own set, managed under **Settings** → **Modules** → **Companies** → **Company fields**. They use the same editor but cannot be File Upload or encrypted, can be used as filters, and a Public answer can reach visitors of the public company directory. See [Company fields](/platform/users/companies#company-fields).
+
+---
+
+## Where a field shows on the profile
+
+On a member's [profile](/platform/users/member-profile), a custom field is displayed in one of four places. Which one depends on the **Show in profile main info** switch on the field and on whether it is your designated Interest or Skills field.
+
+| Field | Where its answer appears on the profile |
+|---|---|
+| Any field with **Show in profile main info** switched on | In the main card at the top left, under the member's **Orgo ID** and **Card ID**, as a label with its value |
+| Any other field | In the **Other info** card, as label and value pairs in a grid (Textarea answers take a full-width row below the grid) |
+| The designated **Interest** field | The **Interests** section of the main card, as removable tags |
+| The designated **Skills** field, while **Enable Skills Field** is on | The **Skills** section of the **About** card, as removable tags |
+
+Rules for the first two rows:
+
+- **The field must be on the profile form.** A field that has not been added to the [profile form](/platform/users/profile-fields) is not shown on profiles at all, even when members have answers stored for it.
+- **Empty answers are hidden, with one exception.** A field nobody has answered is left out. A field marked **Required** on the profile form is shown with a dash (`-`) instead, so a gap in a mandatory answer is visible. An empty **Admin** field is shown that way only to staff.
+- **Visibility still applies.** A viewer only sees the answers their [visibility level](#visibility) lets them read.
+- **A field appears in one place, never both.** Switching **Show in profile main info** on moves the field out of **Other info**.
+- **Display formats.** A Switcher shows a tick when on. A File Upload shows the file name, which opens a preview. Other types show the stored answer as text.
+- **Order.** Fields follow the order of the profile form.
+- The **Other info** card has a pencil that opens the member's edit screen, shown to whoever can edit that profile. The card is not shown when it would be empty.
+
+<Note>
+**Show in profile main info** changes only the member profile page. It does not change who can read or edit the field, which forms it is on, the member directory columns or contact records. The designated Interest and Skills fields ignore it, because they always use their own tag sections.
+</Note>
+
+Use it for answers that identify a member the way an ID does: a membership number, a licence number, a badge code. Leave descriptive answers (notes, preferences) under **Other info**.
+
 ---
 
 ## The Interest field
 
 The selector at the bottom of the list designates one Dropdown, Checkboxes or Radio choice field as your interests field. That adds an interests filter to the member directory and an interests breakdown to organisation statistics, and gives the field its own section on member profiles instead of a plain form row. Create a Checkboxes field with your options, add it to the profile form, then select it here.
 
-**Enable Skills Field** (**Settings** → **Modules** → **Users & Profiles** → **Configuration**) does the same for skills, except Orgo creates the field and seeds it with a catalogue. While the setting is on the field cannot be deleted, though its options stay editable. Turning it off preserves members' existing selections.
+On the profile, the answers appear as rounded tags under **Interests** in the main card, and nowhere else on the page. The member, and staff with `HR_LOCAL` over the member, can edit them in place: the **x** on a tag removes it and saves immediately, and **Add interest** opens a search box over the field's options, saved with **Save**. Everyone else sees the tags read-only. To offer a new interest, add an option to the field.
+
+**Enable Skills Field** (**Settings** → **Users & Profiles** → **Configuration**) does the same for skills, except Orgo creates the field and seeds it with a catalogue. While the setting is on the field cannot be deleted, though its options stay editable. Turning it off preserves members' existing selections. Skills show under **Skills** in the **About** card on the profile, with the same inline **Add a skill** control; with the setting off, the skills field is hidden from profiles.
 
 ---
 
@@ -186,12 +221,28 @@ Use a tag when staff need to label people ("VIP", "needs follow-up"). Use a cust
 ## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="Answers from the registration form are missing">
-    Check the field's visibility. An **Admin** field is never saved on the public
-    registration pages, because only your staff may write it. There is no error: the
-    applicant fills the box, the account is created, and the answer never reaches the
-    profile. Change the field to **Public** or **User**, or ask the question after joining
-    on the [profile form](/platform/users/profile-fields). See the table under
+  <Accordion title="A custom field I created does not show on a member's profile">
+    Work through these in order:
+
+    1. The field must be added to the [profile form](/platform/users/profile-fields). A field that is only defined in **Custom Fields** is not displayed on profiles.
+    2. The member must have answered it. Empty answers are hidden unless the field is **Required** on the profile form, in which case the profile shows a dash.
+    3. The viewer must be allowed to read it. **User** fields are visible only to the member and staff, and **Admin** fields only to staff; see [Visibility](#visibility).
+    4. If the field is your designated Interest or Skills field, it appears as tags under **Interests** or **Skills** instead of in **Other info**. Skills are hidden entirely while **Enable Skills Field** is off.
+  </Accordion>
+
+  <Accordion title="What does Show in profile main info do?">
+    It moves the field's answer from the **Other info** card to the main card at the top left of the member's profile, under the **Orgo ID** and **Card ID**. Nothing else changes: visibility, forms and permissions stay as they are. It is set per field, by an Orgo administrator, in the field editor, just below the **Visibility** selector. It has no effect on the designated Interest and Skills fields.
+  </Accordion>
+
+  <Accordion title="Answers from the registration form are missing for everyone">
+    Check the field's visibility. Anything above **Public** is discarded on the public
+    registration pages, because the write check asks who is signed in and, at
+    registration, nobody is. There is no error: the applicant fills the box, the
+    account is created, and the answer never reaches the profile.
+
+    Set the field to **Public** if you need it at sign-up, or move the question to the
+    [profile form](/platform/users/profile-fields), where the member is signed in and
+    User visibility behaves as documented. See the table under
     [Where a value actually saves](#where-a-value-actually-saves).
 
     The same field on a `/join/<slug>` form behaves slightly differently: Admin fields
@@ -273,6 +324,7 @@ Use a tag when staff need to label people ("VIP", "needs follow-up"). Use a cust
 
 ## Related
 
+- [Member Profile](/platform/users/member-profile) for the cards the answers are displayed in
 - [Profile Fields](/platform/users/profile-fields) for putting fields on member profiles
 - [Registration Form](/platform/users/registration-form) for collecting them at sign-up
 - [Adhesion](/platform/users/adhesion) for membership applications

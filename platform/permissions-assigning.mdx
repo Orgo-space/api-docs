@@ -18,8 +18,8 @@ A member's effective permissions are the union of three sources, recalculated wh
 | Source | Set where | Best for |
 |---|---|---|
 | **Role** | Permissions attached to a role, then the role assigned to the member | Ongoing responsibilities. Ending the role removes the permissions. |
-| **Direct** | Checkboxes on the member's **Permissions** tab | One-off exceptions that do not match any role. |
-| **Multi chapter access** | The **Roles** tab, when **Multi local center access** is on | One person who administers more than one chapter. |
+| **Direct** | Checkboxes in the **Permissions** pane of the member's Edit view | One-off exceptions that do not match any role. |
+| **Multi chapter access** | The **Roles** pane (**Add role** view), when **Multi local center access** is on | One person who administers more than one chapter. |
 
 ---
 
@@ -38,7 +38,7 @@ A member's effective permissions are the union of three sources, recalculated wh
 | Chapter secretary | `HR_LOCAL` | Chapter members |
 | Chapter treasurer | `FINANCIAL_LOCAL` | Chapter fees and payments |
 | Event coordinator | `EVENT_LOCAL` or `EVENT_TENANT` | Match the reach of their events |
-| Membership assistant | `HR_ASSISTANT_LOCAL` | Badges, hours, identity checks |
+| Membership assistant | `HR_ASSISTANT_LOCAL` | Badges, identity checks |
 | Regular member | none | Member access is the default |
 
 ---
@@ -56,7 +56,7 @@ A member's effective permissions are the union of three sources, recalculated wh
     The checkboxes are grouped **Organization level**, **Local group level** and **Parent local center level**. Only the groups your modules support appear.
   </Step>
   <Step title="Assign the role to members">
-    On a member's **Roles** tab. They pick up the role's permissions immediately.
+    On the member's profile: **Edit profile** → **Roles** → **Add role**. They pick up the role's permissions immediately. To take a role away, **End role** on its row in the same pane; the permissions stop with it.
   </Step>
 </Steps>
 
@@ -74,9 +74,7 @@ A **Parent chapter** role attaches to the member's own chapter when that chapter
 
 ## Assigning directly on a member
 
-Open **Members**, the person, **Edit**, then the **Permissions** tab. It is visible if you hold HR or higher for that member's chapter and local administrators have not been restricted (below).
-
-The tab opens with the answer rather than the controls: a summary row showing, per scope, the permissions this member actually ends up with as tags, and **Member only** where they hold none. The checkboxes below are how to change it. They are grouped under **Organization**, **Chapter** and **Parent chapter**, each heading naming the actual organization, chapter or region. Changes apply on the member's next page load, so ask them to reload if they had Orgo open.
+Open **Members**, the person, **Edit profile**, then the **Permissions** pane. It is visible if you hold HR or higher for that member's chapter and local administrators have not been restricted (below). The **Permissions** summary at the top shows what the member ends up with, level by level, or **Member only**; the same result is one line on the profile as **Platform access**. Checkboxes are grouped under **Organization**, **Chapter** and **Parent chapter**, each heading naming the actual organization, chapter or region. Changes apply on the member's next page load, so ask them to reload if they had Orgo open.
 
 The same **Orgo administrator** switch and permission checkboxes also appear on the form that creates a member, so a new administrator can be set up in one pass.
 
@@ -119,7 +117,7 @@ Two things fall out of that, and both surprise people:
 
 - **Being organisation-wide does not put you above every chapter permission.** The
   organisation's secretary general holding `HR_TENANT` ranks below `ADMIN_LOCAL`,
-  so they cannot tick **Chapter administrator** on anyone's Permissions tab: the
+  so they cannot tick **Chapter administrator** on anyone's Permissions pane: the
   checkbox is simply not rendered for them. Nor can the treasurer holding
   `FINANCIAL_TENANT` tick `HR_LOCAL`. The communications lead holding
   `COMMUNICATION_TENANT` ranks at the very bottom and can hand out nothing except
@@ -145,7 +143,7 @@ and decide deliberately which permissions are allowed to travel by role.
 
 ## Giving one person access to several chapters
 
-Turn on **Multi local center access** in **Settings → Groups & Teams → Local Centers**. A **Multi chapter access** section then appears on each member's **Roles** tab, visible to `HR_TENANT` and `ADMIN_TENANT`.
+Turn on **Multi local center access** in **Settings → Groups & Teams → Local Centers**. A **Multi chapter access** section then appears in the **Add role** view of each member's **Roles** pane (**Edit profile** → **Roles** → **Add role**), visible to `HR_TENANT` and `ADMIN_TENANT`.
 
 Each row pairs a chapter with a permission level: User, HR, Admin, Financial, HR Assistant, Event Manager or Communication Manager, all at chapter scope. Use **Add Local Center Access** for each extra chapter; the grant applies only to that chapter, so someone can be an HR manager in one and a plain member in another.
 
@@ -214,11 +212,17 @@ Run the member filter whenever someone leaves. Ending a member's role removes th
   <Accordion title="They have ADMIN_TENANT but Settings is missing">
     Settings screens require the **Orgo administrator** flag, which is a separate switch above the permission checkboxes. Turn it on.
   </Accordion>
+  <Accordion title="How do I see what permissions a member has?">
+    Open their profile and read **Platform access** in the Membership card: it names the strongest permission and its level, and hovering it shows the breakdown for the organisation, parent chapter and chapter (or **Member only**). It shows for the member and for anyone with `HR_LOCAL` over them. For the full list, including which permissions come from roles, open **Edit profile** → **Permissions**. To list everyone who holds a permission, use the **Permissions** filter on the member directory.
+  </Accordion>
+  <Accordion title="How do I take a permission away that came from a role?">
+    Open **Edit profile** → **Roles** and press **End role** on the role. Its permissions stop when it ends; the locked checkbox in the **Permissions** pane cannot be unticked. A permission ticked directly stays until you untick it.
+  </Accordion>
   <Accordion title="A permission checkbox is not in the list">
     Either the module it belongs to is off (Financial needs Fees, Event Manager needs Events), or the scope is unavailable (chapter permissions need Local Centers, parent chapter permissions need Enable Parent Centers), or it is above your own level.
   </Accordion>
   <Accordion title="A chapter manager sees the wrong chapter's data">
-    Check their chapter on the profile, and check the **Multi chapter access** rows on their Roles tab. A regional permission covers an anchor chapter and every chapter beneath it at any depth, so with a three-layer structure it can reach further than the layer you had in mind. Work the anchor out from their own chapter using [What a parent-scope permission reaches](/platform/groups/local-groups#what-a-parent-scope-permission-reaches).
+    Check their chapter on the profile, and check the **Multi chapter access** rows in **Edit profile** → **Roles** → **Add role**, and the **Roles** card on their profile. A regional permission covers an anchor chapter and every chapter beneath it at any depth, so with a three-layer structure it can reach further than the layer you had in mind. Work the anchor out from their own chapter using [What a parent-scope permission reaches](/platform/groups/local-groups#what-a-parent-scope-permission-reaches).
   </Accordion>
 
   <Accordion title="A checkbox is missing even though I clearly outrank the person">

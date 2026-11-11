@@ -267,6 +267,51 @@ contact.
 
 ---
 
+## A member's or contact's submissions on their record
+
+Every form a person has answered is also listed on their own record, so you can
+see what they told you without opening each form's Responses tab.
+
+- **Member:** open the member, then **More** → **Forms** (the **More** menu sits at the
+  end of the profile's tab row).
+- **Contact:** open the contact and look for the **Forms** card.
+
+Who sees it: administrators who hold `HR_LOCAL` or `FINANCIAL_LOCAL` for that
+person (so `HR_TENANT` and `FINANCIAL_TENANT` holders, and chapter administrators
+for members of their own chapter). The member themself does not get this tab on
+their own profile, and a person with form-builder rights alone (for example
+`COMMUNICATION_TENANT`) does not see it either.
+
+<Steps>
+  <Step title="Read the list">
+    A table, newest first, ten rows per page, with **Form** (the form's name),
+    **Submitted** (date and time) and **Status**. Status reads **Confirmed**, or
+    **Awaiting confirmation** while the person has not yet clicked the confirmation
+    link in the email (see [What a response creates](#what-a-response-creates)).
+  </Step>
+  <Step title="Open the answers">
+    Select a row. A window titled with the form's name shows the person's answers.
+    The same window opens from a **Forms** entry on the
+    [Activity](/platform/users/profile-activity) timeline.
+  </Step>
+</Steps>
+
+An empty record shows **No forms submitted**.
+
+<Note>
+Unlike the Responses tab above, the list includes submissions still awaiting
+confirmation, and it is open to anyone with `HR_LOCAL` or `FINANCIAL_LOCAL` on the
+person, whether or not they own the form or hold `COMMUNICATION_TENANT` or
+`EVENT_TENANT`. Opening a submission from here therefore follows the profile's
+permissions, not the form builder's.
+</Note>
+
+A submission is attached to a member when the respondent was signed in, or gave
+the email address of that member account. Anonymous forms store no submitter, so
+they never appear here.
+
+---
+
 ## Standalone forms versus the other builders
 
 | Use | Builder | Why |
@@ -286,6 +331,21 @@ profile-based builders. If it belongs to one question you asked once, use Forms.
 ## Troubleshooting
 
 <AccordionGroup>
+  <Accordion title="Where can I see which forms a particular member answered?">
+    On the member's profile, **More** → **Forms**. It lists each form with the date
+    and whether the answer is confirmed, and selecting a row shows the answers. It
+    needs `HR_LOCAL` or `FINANCIAL_LOCAL` on that member. Contacts have the same
+    list in their **Forms** card.
+  </Accordion>
+
+  <Accordion title="The Forms tab is missing from a member's profile">
+    Only holders of `HR_LOCAL` or `FINANCIAL_LOCAL` for that member see it. It is
+    in the **More** menu rather than the main tab row, and it disappears from the
+    menu once it has been opened, because it then has its own tab. Holding
+    `COMMUNICATION_TENANT` or `EVENT_TENANT` does not help: those open the form
+    builder's Responses tab, not this list.
+  </Accordion>
+
   <Accordion title="Why can I open the Forms area but not the responses on a colleague's form?">
     The Responses tab, the statistics, the recalculate button and the **Publish**
     action all check the same thing: that you created the form, or that you are
@@ -395,6 +455,7 @@ profile-based builders. If it belongs to one question you asked once, use Forms.
 ## Related
 
 - [Contacts](/platform/contacts) for the records created by public responses
+- [Profile activity](/platform/users/profile-activity) for the timeline that also links to form answers
 - [Custom Fields](/platform/users/custom-fields) for fields that live on member profiles
 - [Registration Form](/platform/users/registration-form) for collecting data at sign-up
 - [Event Registration Forms](/platform/events/registration-forms) for questions asked at booking
