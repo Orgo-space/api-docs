@@ -45,7 +45,9 @@ Settle these before you open a single settings screen. Each one is a decision th
 
 Start here, before you configure anything else. Orgo lets you replace the wording it ships with your own, which is how "full member" becomes "Promise", "user type" becomes "Age level" and "chapters" becomes "Local groups".
 
-The feature is called **Texts**, at **Settings** → **Customization** → **Texts**, and it needs `ADMIN_TENANT`.
+The feature is called **Texts**, at **Settings** → **Customization** → **Texts**, and it needs the **Orgo administrator** flag on your account (a separate switch from the Admin permission: see [Permissions](/platform/permissions)).
+
+If your organization has **Terminology** switched on (a page next to Texts, shown only when Orgo has enabled it for you), it renames a whole concept in one pass and lets you review every affected text. Texts is the tool for everything else.
 
 The page is a two-column table: **System Expression** on the left is the phrase Orgo ships, **Custom Expression** on the right is the phrase you want in its place, with one Custom Expression column per language you have enabled. You do not type technical keys. **Add Text Replacement** opens a search over the whole interface catalogue, and you tick the results you want to override.
 
@@ -78,7 +80,7 @@ You do not need to relabel unit layers. A unit type carries its own **Title** an
 
 ### The real limit
 
-**Texts is applied in the browser only.** The replacements are stored on your organization and merged into the interface translation catalogue when the app loads (`client/src/utils/i18n.js`). Nothing on the server reads them.
+**Texts is applied in the browser only.** The replacements are stored on your organization and merged into the interface wording when the app loads. Nothing on the server reads them.
 
 | Surface | Uses your wording |
 |---|---|
@@ -100,12 +102,12 @@ Full detail: [Texts](/platform/customization/labels).
 
 ## What to turn on
 
-Every module and setting below is at **Settings** → **Modules**, and every one of them requires `ADMIN_TENANT` to change. Most are off until you switch them on. The two marked **already on** ship enabled, so your job there is to confirm rather than to enable.
+Every module and setting below is at **Settings** → **Modules**, and every one of them requires the **Orgo administrator** flag to change. Most are off until you switch them on. The two marked **already on** ship enabled, so your job there is to confirm rather than to enable.
 
 | Module and tab | Setting | What it buys you |
 |---|---|---|
 | **Groups & Teams** → **Local Centers** | **Enable Local Centers Module** (already on) | Chapters: your groups or districts, each with their own members, events, files, dues and admins |
-| **Groups & Teams** → **Local Centers** | **Enable Parent Centers** | Layers above a chapter, nested as deep as you need, and the `ADMIN_PARENT_LOCAL` and `HR_PARENT_LOCAL` permissions that reach down through them |
+| **Groups & Teams** → **Local Centers** | **Enable Parent Centers** | Layers above a chapter, nested as deep as you need, and the regional (parent chapter) Admin and HR permissions that reach down through them |
 | **Groups & Teams** → **Local Centers** | **Enable Regions** | A flat region label for grouping and filtering. Grants no permissions |
 | **Groups & Teams** → **Configuration** | **Enable Organizational Units** | Sections and patrols inside a chapter |
 | **Groups & Teams** → **Configuration** | **Enable Role Groups** | Groups whose membership is a query over roles and profile data |
@@ -118,14 +120,15 @@ Every module and setting below is at **Settings** → **Modules**, and every one
 | **Users & Profiles** → **Custom Fields** | your own fields | Medical notes, dietary needs, emergency contact, check expiry dates |
 | **Gamification & Courses** → **Gamification** | **Enable Gamification Module** | Badges and the Badges tab on every profile |
 | **Gamification & Courses** → **Gamification** | **Enable badge categories** | Groups badges so the award picker stays usable |
-| **Gamification & Courses** → **Gamification** | **Enable hours tracking** | Volunteering hours, and badges awarded from an hours total |
+| **Gamification & Courses** → **Gamification** | **Badges with a checklist of steps** | Badges that are worked through step by step, with progress recorded on the member's profile. This replaces the old volunteering hours |
+| **Gamification & Courses** → **Gamification** | **Badges by user type** | Lets a badge belong to an age level, and tabs a member's earned badges by level |
 | **Gamification & Courses** → **Courses** | **Enable Courses** (already on) | Leader training as self-paced courses |
 | **Files & eDocuments** → **eDocuments** | **Enable eDocuments Module** | Consent forms, volunteer agreements and codes of conduct, signed on screen |
 | **Identity Validation** | **Enable Identity Validation** | ID document upload and admin review. Read the limits in [Adult volunteers](#adult-volunteers) first |
 | **Payments & Fees** → **Membership fees** | **Enable Membership Fees** | Subs. Also **Local Center Fees Enabled** for a second, group-level fee |
 | **Payments & Fees** → **Membership fees** → **Pricing Options** | **Enable Age Restrictions on Prices** | Age-conditioned fee prices. Read the limit in [Limits worth knowing](#limits-worth-knowing-before-you-start) |
 
-Not a module: **Texts** and **Languages** live under **Settings** → **Customization**.
+Not a module: **Texts** and **Languages** live under **Settings** → **Customization**, and **Import** under **Settings** → **Customization** → **Import**.
 
 ### Check the chapter layer first
 
@@ -151,7 +154,7 @@ The order matters. Several of these screens are hidden until an earlier one is o
   <Step title="Turn on the modules">
     Work down the table above, at **Settings** → **Modules**. Turning a module on only reveals screens, so it is safe to do in one pass, and you can leave the settings inside each one until later.
 
-    Two of them change the settings menu itself, which is your proof the pass landed: **Enable Organizational Units** adds a **Unit Types** tab to **Groups & Teams**, and **Enable Regions** adds a **Regions** tab under **Local Centers**.
+    Two of them change the settings menu itself, which is your proof the pass landed: **Enable Organizational Units** adds a **Unit Types** tab to **Groups & Teams**, and **Enable Regions** adds a **Regions** tab.
 
     **Done when:** **Groups & Teams** shows a **Unit Types** tab beside **Configuration** and **Local Centers**, and every switch in the table above is in the position you left it after a page reload.
   </Step>
@@ -174,13 +177,13 @@ The order matters. Several of these screens are hidden until an earlier one is o
   <Step title="Create user types for your age levels">
     **Settings** → **Modules** → **Users & Profiles** → **Roles & User types** → **Add role**. Set **Level** to **User type**, fill in **Title** and **Plural title**, and create one per age band.
 
-    Give each one a **URL Slug** while you are there. The slug is what publishes a joining page at `/join/<slug>` for that age level, and it is also the way around the volunteer and parent picker limit described in [Adult volunteers](#adult-volunteers).
+    Give each one a **URL Slug** while you are there. The slug, together with a saved and active per-type form on the **Registration Form** tab, publishes a joining page at `/join/<slug>` for that age level. It is also the way around the volunteer and parent picker limit described in [Adult volunteers](#adult-volunteers).
 
     <img src="/images/platform/users/user-type-edit.png" alt="Role editor with Level set to User type, Title and Plural title filled in, the Not eligible for fee and Parent switches below them, and a URL Slug field whose hint reads Used for the registration URL /join/[slug]" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
     Note what is not on this screen: there is no permissions section. Levels above **User type** have one, and that is the whole point of the next step.
 
-    **Done when:** every age band appears in the Roles list with a green **User type** tag in the Level column, and `/join/<slug>` opens a joining page rather than a not-found.
+    **Done when:** every age band appears in the Roles list with a green **User type** tag in the Level column, and, once you have saved and activated its form on the **Registration Form** tab, `/join/<slug>` opens a joining page rather than a not-found.
   </Step>
   <Step title="Create roles for leader positions">
     Same screen, one role per post. Set **Level** to the layer the post belongs to: **Organisation** for national officers, **Parent chapter** for district commissioners, **Chapter** for group leaders, or one of your unit types for section leaders. Attach the permissions the post needs here, never to a user type.
@@ -195,14 +198,14 @@ The order matters. Several of these screens are hidden until an earlier one is o
     **Done when:** every group appears in the chapters list, indented under the right layer above it, and each with the currency you intend to collect subs in.
   </Step>
   <Step title="Create the units inside each chapter">
-    From the chapter's unit tab, or from the drag-and-drop segmented board that `ADMIN_LOCAL` gets. Create your sections first, then the patrols inside them, so each patrol has a section to attach to.
+    From the chapter's unit tab, or from the drag-and-drop board that chapter HR managers get on the chapter header. Create your sections first, then the patrols inside them, so each patrol has a section to attach to.
 
     **Done when:** the chapter's org structure shows every section, each patrol nested under its section, and no unit sitting at the top level by accident.
   </Step>
   <Step title="Add the custom fields you need before anyone registers">
     **Settings** → **Modules** → **Users & Profiles** → **Custom Fields**. Medical notes, dietary requirements, emergency contact, photo permission, and the safeguarding dates from your **Before you start** checklist.
 
-    Decide **Visibility** on each field now, and decide it against where the answer is collected. A field above **Public** is silently discarded on the public registration pages, so anything you need at sign-up has to be **Public** there, with profile visibility controlled separately.
+    Decide **Visibility** on each field now, and decide it against where the answer is collected. **Public** and **User** answers are saved at sign-up, and a **User** field stays visible only to the member and your staff. An **Admin** field is silently discarded on the public registration pages, so put Admin-only questions on the profile form instead, where only your staff are offered them.
 
     <img src="/images/platform/users/custom-field-editor.png" alt="Custom field editor showing the Title, the Field type dropdown, the reorderable list of options, and the Visibility selector above the Save, Cancel and Remove buttons" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -216,7 +219,7 @@ The order matters. Several of these screens are hidden until an earlier one is o
     **Done when:** a test registration on your own joining page creates an account with a date of birth on it, that account is offered the right price for its age level, and any document you marked **Mandatory document** is waiting for it in onboarding.
   </Step>
   <Step title="Import your existing members">
-    [Import](/platform/customization/import) handles members, badge categories, badges and badge assignments as separate passes. Run them in that order: an assignment cannot attach to a badge that does not exist yet, and a badge cannot file itself under a category that has not been imported.
+    [Import](/platform/customization/import) at **Settings** → **Customization** → **Import** handles chapters, units, members, role assignments, badge categories, badges and badge assignments as separate runs. The page lists them in a workable order: chapters before members, and badge categories before badges before assignments, because an assignment cannot attach to a badge that does not exist yet.
 
     **Done when:** the member count matches your source list, spot-checked members sit in the right chapter and unit, and their badge tabs show the awards you imported.
   </Step>
@@ -231,7 +234,7 @@ Four separate mechanisms, and picking the wrong one is the most expensive mistak
 | Your structure | Model it as | Why |
 |---|---|---|
 | National association | The organization itself | Everything lives inside it |
-| District, county or area, and any layer between them | Parent chapter, with **Enable Parent Centers** on. Nest them as deep as your structure goes | `ADMIN_PARENT_LOCAL` and `HR_PARENT_LOCAL` reach an anchor chapter and every chapter beneath it, at any depth |
+| District, county or area, and any layer between them | Parent chapter, with **Enable Parent Centers** on. Nest them as deep as your structure goes | The regional (parent chapter) Admin and HR permissions reach an anchor chapter and every chapter beneath it, at any depth |
 | Group or troop | Chapter | Owns its members, events, files, discussions, its own dues, and its own administrators |
 | Section (Beavers, Cubs, Scouts, Explorers) | A unit type called Section, one unit per section | Units belong to a chapter, carry a member type and appear in the org chart |
 | Patrol, six or lodge | A unit type called Patrol with **Parent unit type** set to Section | Units nest as deep as your chain of types |
@@ -242,11 +245,11 @@ The distinction that catches people out: a **unit** is where a member sits in th
 
 Things to plan around:
 
-- **Every member has exactly one chapter.** **Multi local center access** grants named extra chapters to a member from their profile, but that is an access grant, not a second home group. Moving someone for good is a [transfer request](/platform/groups/transfers).
+- **Every member has exactly one chapter.** **Multi local center access** grants named extra chapters to a member from their profile, and with it on a unit position held in another chapter (a leader serving a troop elsewhere) also gives that chapter's discussions, events and files. Both are access grants, not a second home group. Moving someone for good is a [transfer request](/platform/groups/transfers).
 - **A member can hold roles in several units at once**, so a leader who runs the Cub section and sits on the group committee is two role assignments, not a choice.
-- **The unit member Admin flag is not cosmetic.** It delegates scoped fee access and unit event attendance, so Orgo restricts it to people who already hold `HR_LOCAL`, `FINANCIAL_LOCAL` or `ADMIN_TENANT` over the chapter. Unit admins cannot appoint each other.
-- **`ADMIN_PARENT_LOCAL` reach is computed from the holder's own primary chapter**, not from a branch you pick. Give it to someone whose chapter sits under North District and they administer North District and everything beneath it, however deep, and there is no control that points it somewhere else. Give it to a district commissioner whose own chapter is North District and it stays inside North District, because a chapter flagged **It's a parent chapter** anchors to itself and the grant never climbs to the county above.
-- **Reshaping the tree is an organization-level job.** Changing a chapter's parent, or its **It's a parent chapter** flag, requires `HR_TENANT`. District and group administrators see those two fields greyed out and can edit everything else on the chapter form.
+- **The unit member Admin flag is not cosmetic.** It delegates scoped fee access and unit event attendance, so Orgo restricts it to people who already hold chapter HR, chapter finance or organization admin rights over the chapter. Unit admins cannot appoint each other.
+- **A regional (parent chapter) Admin permission is computed from the holder's own primary chapter**, not from a branch you pick. Give it to someone whose chapter sits under North District and they administer North District and everything beneath it, however deep, and there is no control that points it somewhere else. Give it to a district commissioner whose own chapter is North District and it stays inside North District, because a chapter flagged **It's a parent chapter** anchors to itself and the grant never climbs to the county above.
+- **Reshaping the tree is an organization-level job.** Changing a chapter's parent, or its **It's a parent chapter** flag, is for organization-wide HR managers. District and group administrators see those two fields greyed out and can edit everything else on the chapter form.
 
 Detail: [Local Centers](/platform/groups/local-groups), [Units](/platform/groups/units), [User types and roles](/platform/users/user-types), [Role Groups](/platform/groups/role-groups).
 
@@ -260,7 +263,7 @@ Turn on **Enable Family Members** and, if you want to hold details for relatives
 
 Those two switches are the entire block, which is worth noticing: the two age values described below are not on this screen or any other, so there is nothing here to tune them with.
 
-A family is one record grouping parents, guardians and children. One family per person. Members reach it at **Profile** → **Edit** → **Family**; anyone with `HR_LOCAL` over the member's chapter sees and manages it from the same tab.
+A family is one record grouping parents, guardians and children. One family per person. Members reach it at **Profile** → **Edit** → **Family**; chapter HR managers see and manage it from the same tab, provided they have HR rights over every account in the family.
 
 ### Registering a child
 
@@ -275,7 +278,9 @@ The normal path is: the parent registers themselves, opens their Family tab, and
 The child's email is optional, and a child registered without one gets a generated placeholder address. It cannot receive mail and cannot be used to sign in. Leave it blank only when you want a record rather than a login, which for under-8s is usually exactly what you want.
 </Warning>
 
-Ordinary members can create their own family and add non-member relatives. Linking an **existing** member account into a family requires `HR_LOCAL`, on purpose: otherwise anyone could attach themselves to anyone.
+Ordinary members can create their own family and add non-member relatives. Linking an **existing** member account into a family requires a chapter or organization-wide HR manager, on purpose: otherwise anyone could attach themselves to anyone.
+
+For troops, there is also a setting, off by default and switched on per organization by Orgo support, that lets a verified parent follow the units their children are actively in: they see and take part in those units' events and discussions without becoming members, and the access follows the child's membership with no manual change. See [Family Members](/platform/users/family-members#parents-and-their-childrens-troops).
 
 ### What the age settings actually do
 
@@ -304,7 +309,7 @@ Add **Birthday** to your [registration form](/platform/users/registration-form) 
 
 ### Fees and families
 
-Family membership does not change what anyone pays. Fees are resolved per member, there is no family tier and no sibling discount, and linking a child to a parent does not transfer or cover the child's fee. What a parent listed as managing a member **can** do is pay for them. For one payer covering several people by design, use [Companies](/platform/users/companies) instead.
+Family membership does not change what anyone pays. Fees are resolved per member, there is no family tier and no sibling discount, and linking a child to a parent does not transfer or cover the child's fee. What a parent listed as managing a member **can** do is pay for them. For one payer covering several people by design, use a fee bundle or [Companies](/platform/users/companies) instead.
 
 Detail: [Family Members](/platform/users/family-members), [Waitlist](/platform/users/waitlist).
 
@@ -328,9 +333,9 @@ Match the role's level to the scope of the post:
 
 | Post | Role level | Effective permissions |
 |---|---|---|
-| National commissioner | **Organisation** | Tenant-level, for example `HR_TENANT` |
-| District commissioner | **Parent chapter** | `ADMIN_PARENT_LOCAL` or `HR_PARENT_LOCAL` across the district and everything beneath it |
-| Group scout leader | **Chapter** | `ADMIN_LOCAL` or `HR_LOCAL` over the group |
+| National commissioner | **Organisation** | Organization-wide, for example HR |
+| District commissioner | **Parent chapter** | Regional (parent chapter) Admin or HR across the district and everything beneath it |
+| Group scout leader | **Chapter** | Chapter Admin or HR over the group |
 | Section leader | Your Section unit type | Scoped to that unit, plus the unit **Admin** flag where they need fee and attendance access |
 
 ### The volunteer flag, and its trap
@@ -349,7 +354,7 @@ Route volunteers around it: give the volunteer user type a **URL Slug** and its 
 
 This is the section to read carefully, because the feature name promises more than the feature delivers.
 
-[Identity Validation](/platform/identity-validation) collects a scan of an ID document, stores the details read off it, and puts the record in front of an administrator who approves or rejects it. Reviewing needs `HR_LOCAL` or above over the member's chapter.
+[Identity Validation](/platform/identity-validation) collects a scan of an ID document, stores the details read off it, and puts the record in front of an administrator who approves or rejects it. Reviewing needs HR assistant rights over the member's chapter, which chapter HR, chapter finance and chapter admin all satisfy, as do the organization-wide equivalents.
 
 What it does:
 
@@ -390,19 +395,21 @@ Badges need the Gamification module (**Settings** → **Modules** → **Gamifica
 | Layer | Where | Notes |
 |---|---|---|
 | **Badge Categories** | **Gamification & Courses** → **Badge Categories** | Optional, behind **Enable badge categories**. An image and a title. Keeps the award picker usable once you have a full scheme |
-| **Badges** | **Gamification & Courses** → **Badges** | Title, artwork, category, an optional hours threshold, an optional points threshold, and a default note |
-| **Volunteering hours** | The member's Badges tab | Behind **Enable hours tracking**. Each entry has a period, hours, title and notes |
+| **Badges** | **Gamification & Courses** → **Badges** | Title, artwork, category, an optional points threshold, a default note, and optionally a checklist of steps |
+| **Checklists** | The **Checklist** editor on a badge | Behind **Badges with a checklist of steps**. Each step is Not started yet, Began or Completed on the member's badge, with who recorded it and when |
 | **Points and tiers** | **Gamification** → point rules | Behind **Enable tiers/levels by points**. Points come from payments, attendance, referrals and discussion activity |
 
 Your scheme ends up as one list at **Settings** → **Modules** → **Gamification & Courses** → **Badges**:
 
-<img src="/images/platform/features/badges-list.png" alt="Badges settings list with one row per badge showing its image, its name, a Type column naming the badge category, and an amber hours pill on the badges that carry an hours threshold" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/features/badges-list.png" alt="Badges list inside the Gamification and Courses module, each row showing the badge artwork, its name and its Type, with an Add badge button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-Two columns there are conditional, which is a quick way to check your settings took. The **Type** column, which holds the badge category, appears only when **Enable badge categories** is on. The amber hours pill appears only when **Enable hours tracking** or tiers is on, and it is the threshold that awards the badge automatically.
+The **Type** column, which holds the badge category, appears only when **Enable badge categories** is on, which is a quick way to check your settings took.
 
-Four ways a badge reaches a member: awarded by hand from their Badges tab (`HR_TENANT`, or `HR_LOCAL` over their chapter), awarded automatically when their logged volunteering hours pass a badge's **Hours number**, awarded on event attendance when the event names a badge, and awarded when a course enrolment is marked complete. A member can hold a given badge only once, and every automatic path checks first, so re-marking attendance never duplicates an award.
+Volunteering hours no longer exist: Orgo does not log hours or award a badge when a total is reached. A scheme that used to work that way is modelled as a badge with a checklist of steps instead, for example "Complete 10 service sessions" as ten steps or "Camp skills" as a handful of named skills. Completing the last required step completes the badge, and reopening a step takes the completion back. Mark a step **Optional** and it does not block completion. By default members tick their own steps; switch **Members may record their own progress** off and only a leader can, which is usually right for a youth scheme.
 
-Use **Pending** rather than **Completed** for work in progress. It is counted and filtered separately everywhere, which makes it a workable "started this badge" state.
+Four ways a badge reaches a member: awarded by hand from their Badges tab by organization HR managers or chapter HR managers over their chapter, completed by working through its checklist, awarded on event attendance when the event names a badge, and awarded when a course enrolment is marked complete. A member can hold a given badge only once, and every automatic path checks first, so re-marking attendance never duplicates an award.
+
+Use **Pending** rather than **Completed** for work in progress. It is counted and filtered separately everywhere, which makes it a workable "started this badge" state. **Badges by user type** lets each age level carry its own badges, and **Awards** lets a badge be listed apart from ordinary badges on a profile.
 
 Things to know before you load your whole scheme:
 
@@ -421,11 +428,11 @@ Detail: [Badges](/platform/badges), [Gamification](/platform/gamification), [Cou
 
 ### Collecting what you need before a camp
 
-Four steps, in this order. Editing any of it needs `EVENT_LOCAL` on the event's group, which `EVENT_TENANT` and `ADMIN_TENANT` satisfy across the organization.
+Four steps, in this order. Editing the form needs event admin rights on the event's group (a chapter event manager for that group), which organization-wide event managers and organization admins have across the organization.
 
 <Steps>
   <Step title="Turn the registration form on">
-    Open the camp's **Modify** screen and switch on **Require registration form for members**, under **Registration**. Paid events turn it on automatically and lock the toggle, so a ticketed camp is already done here.
+    Open the camp, choose **Edit**, and under **Who can join** switch on **Require registration form for members**. Paid events turn it on automatically and lock the toggle, so a ticketed camp is already done here.
 
     **Done when:** a **Registration form** entry appears in the event's sidebar, among **Participants**, **Program** and **Tickets**.
   </Step>
@@ -444,7 +451,7 @@ Four steps, in this order. Editing any of it needs `EVENT_LOCAL` on the event's 
     **Done when:** the public event page shows your rules text under the form, and both checkboxes appear if you expect them.
   </Step>
   <Step title="Save the camp as a template">
-    From the event sidebar, **Save as Template**. This is the only way to reuse the form you just built, because event custom fields cannot be copied from one event to another by hand.
+    From the **Actions** menu in the event header, **Save as Template** (organization admins only). It copies the event's settings, ticket types, agenda and custom registration fields, and it is the only way to reuse the form you just built, because event custom fields cannot be copied from one event to another by hand.
 
     **Done when:** the camp appears in your [event templates](/platform/events/event-templates) list, and next year's camp is created from it rather than rebuilt.
   </Step>
@@ -458,10 +465,10 @@ Event custom fields belong to that one event. They are not your organization-wid
 
 Custom field answers are stored per registration, on that attendee's record for that event. The same person answering differently at two camps keeps two answers, which is what you want for medical information that changes.
 
-You read them in two places: the **Columns** menu on the **Participants** screen adds one column per custom field, and **Export** downloads a CSV that needs `EVENT_TENANT`, `EVENT_LOCAL` on the event, or event ownership.
+You read them in two places: the **Columns** menu on the **Participants** screen adds one column per custom field, and **Export** downloads a CSV that needs organization-wide event admin rights, event admin rights on the event, or event ownership.
 
 <Warning>
-Event registration custom fields have no visibility control and no encryption option. The builder only asks for a type and its options, so every answer is readable by everyone who can open the event's Participants screen: the event owner, `EVENT_LOCAL` or `ADMIN_LOCAL` on the group, `EVENT_TENANT`, `ADMIN_TENANT`, and admins of a private group running its own event.
+Event registration custom fields have no visibility control and no encryption option. The builder only asks for a type and its options, so every answer is readable by everyone who can open the event's Participants screen: the event owner, chapter event managers and chapter admins for the group, organization-wide event managers and admins, and admins of a private group running its own event.
 
 If a medical detail should be tighter than that, keep it on the member's profile as an organization [custom field](/platform/users/custom-fields) with **Admin** visibility, which is enforced on the server for reading and writing, and can be encrypted at rest when it is a text, number or date field. Then the camp form only asks "anything changed since last year?".
 </Warning>
@@ -482,7 +489,7 @@ Three separate things, and only the last one is a real signature:
 Every confirmed registration carries a QR code, delivered in the confirmation email as a PDF ticket, shown on the event page and in the event app. Scanning it sets the attendee's RSVP to **Attended**, which is the same thing an attendance figure counts. Scanning twice is harmless.
 
 <Warning>
-Sort the scanning permission out before the doors open. Scanning with a plain phone camera needs `HR_TENANT` or `EVENT_TENANT`. `EVENT_LOCAL` is **not** enough on that route: a section leader with local events permission gets an access error even though the ticket is valid. They can scan from inside the Orgo mobile app, where `EVENT_LOCAL` on the event's group is accepted, or you give door staff `EVENT_TENANT` for the weekend.
+Sort the scanning permission out before the doors open. Scanning the code on an emailed PDF ticket, with a phone camera or the mobile app, needs an organization-wide HR or event manager. A chapter event manager is **not** enough on that route: a section leader with local events permission gets an access error even though the ticket is valid. Either make door staff organization-wide event managers for the weekend, or have them work in the Event App and scan attendees' badge codes there, where chapter event management is enough. See [QR check-in](/platform/events/check-in).
 </Warning>
 
 Two more camp-day realities. Check-in is online only, so at a site with no signal you fall back to a printed participant export and record the RSVPs afterwards. And walk-ins must exist on the participant list before they can be marked present: add them with **Invite**, then set them to **Attended**.
@@ -510,7 +517,7 @@ One line per step in [Setup order](#setup-order), written as the outcome rather 
 - [ ] **Safeguarding records have a home.** A date field for each check that expires, a file field or Identity Validation for the evidence, and a named person with a calendar reminder to run the export, because nothing in Orgo watches those dates.
 - [ ] **Members imported and spot-checked.** Counts match, sampled members sit in the right chapter and unit, badge categories and badges were imported before assignments.
 - [ ] **Camp form saved as a template.** The full camp registration form, with its medical and dietary custom fields, exists as an event template so you never rebuild it.
-- [ ] **Door staff can scan.** Whoever is on the gate either holds `EVENT_TENANT` or is scanning from inside the Orgo mobile app.
+- [ ] **Door staff can scan.** Whoever is on the gate is either an organization-wide event manager or is scanning attendees' badge codes in the Event App.
 
 ---
 
@@ -534,8 +541,8 @@ Everything here is current behaviour, verified in the product. None of it is a r
 | **Deleting a badge deletes its awards** | And deleting a badge category deletes its badges and their awards |
 | **Event custom fields do not travel** | They belong to one event. Use an event template |
 | **Event custom field answers are not restricted** | No visibility level, no encryption. Anyone who can open Participants reads them |
-| **Bulk invite does not send email** | **Send Invites to All Members** fills the participant list only. Announce the camp with a newsletter as well |
-| **`EVENT_LOCAL` cannot scan with a phone camera** | Only inside the mobile app. Otherwise give door staff `EVENT_TENANT` |
+| **Add all members does not send email** | It needs **Bulk Invites** on under **Settings** → **Modules** → **Events**, and it fills the participant list only. Announce the camp with a newsletter as well |
+| **Chapter event managers cannot scan an emailed ticket** | Make door staff organization-wide event managers, or scan badge codes in the Event App |
 | **Volunteer and parent user types are hidden at `/register`** | Use a `/join/<slug>` link for those types, or assign the type after they join |
 | **A chapter currency is set once** | It can never be changed afterwards, because past payments and the connected Stripe account are bound to it |
 
@@ -551,7 +558,7 @@ Everything here is current behaviour, verified in the product. None of it is a r
   <Accordion title="How do I build an automatic group of all 8 to 10 year olds?">
     You cannot, with role groups: the **Min age** and **Max age** selectors only offer 16 upwards. That is a deliberate consequence of role groups being built for adult segmentation.
 
-    Model youth age bands with structure instead. Create a unit type called Section, one unit per age band inside each chapter, and a user type per age band. The unit gives you a real membership list with its own leaders; the user type gives you the filter, the fee price and the per-type registration form. Moving a child up an age band is then two edits, on their unit membership and their user type, both of which an `HR_LOCAL` administrator can do.
+    Model youth age bands with structure instead. Create a unit type called Section, one unit per age band inside each chapter, and a user type per age band. The unit gives you a real membership list with its own leaders; the user type gives you the filter, the fee price and the per-type registration form. Moving a child up an age band is then two edits, on their unit membership and their user type, both of which a chapter HR manager can do.
   </Accordion>
 
   <Accordion title="Cubs and Explorers should pay different subs. How?">
@@ -569,9 +576,9 @@ Everything here is current behaviour, verified in the product. None of it is a r
   </Accordion>
 
   <Accordion title="Our section leader gets an access error scanning tickets at camp">
-    Permission, not the ticket. Scanning through a phone camera opens a page that requires `HR_TENANT` or `EVENT_TENANT`, and `EVENT_LOCAL` does not satisfy it, so the person who organized the event may still be refused at the door.
+    Permission, not the ticket. Scanning an emailed ticket opens a page that requires an organization-wide HR or event manager, and a chapter event manager does not satisfy it, so the person who organized the event may still be refused at the door.
 
-    Two fixes: have them scan from inside the Orgo mobile app, where `EVENT_LOCAL` on the event's group is accepted, or grant `EVENT_TENANT` to the people on the gate. Marking somebody present without scanning is wider than both: the event owner, `EVENT_LOCAL` on the group, `HR_TENANT` and group admins can all set an RSVP to **Attended** from the participant list.
+    Two fixes: have them work in the Event App and scan attendees' badge codes there, where chapter event management is enough, or make the people on the gate organization-wide event managers. Marking somebody present without scanning is wider than both: the event owner, chapter event managers for the group, organization HR managers and group admins can all set an RSVP to **Attended** from the participant list.
   </Accordion>
 
   <Accordion title="Where do I see that a parent consented?">
@@ -581,15 +588,15 @@ Everything here is current behaviour, verified in the product. None of it is a r
   </Accordion>
 
   <Accordion title="Answers from our joining form never arrived on the profiles">
-    Check the custom field's visibility. Anything above **Public** is discarded on the public registration pages, because the write check asks who is signed in and at registration nobody is. There is no error: the applicant fills the box, the account is created, and the answer is simply not there.
+    Check the custom field's visibility. **Admin** answers are discarded on the public registration pages, because only your staff may write them. There is no error: the applicant fills the box, the account is created, and the answer is simply not there. **Public** and **User** answers are saved.
 
-    This bites youth organizations particularly hard, because medical and dietary questions are exactly the ones you would instinctively mark **User** or **Admin**. Two options: collect the field as **Public** at sign-up and control profile visibility separately with [Privacy settings](/platform/users/privacy-settings), or ask the question after joining on the [profile form](/platform/users/profile-fields), where the member is signed in and **User** visibility works as documented.
+    This bites youth organizations when a medical or dietary question was marked **Admin** so that only staff would read it. Mark it **User** instead (the member and your staff read it, other members never do), or ask the question after joining on the [profile form](/platform/users/profile-fields), where staff can be the only people offered an **Admin** field. Also check that the field is actually on the registration form you are using.
   </Accordion>
 
   <Accordion title="A leader moved to another group and kept permissions they should not have">
     Look at where the permission was granted. A permission attached to a **role** ends when you end the role assignment, which is the whole reason to put permissions on roles. A permission ticked directly on the member's profile does not: it survives a chapter change, and it is now pointing at their new chapter.
 
-    Check three places on the profile: the permissions panel itself, any **Multi local center access** grants (which stay stored even when the setting is switched off, and come back exactly as they were if it is switched on again), and `_PARENT_LOCAL` permissions, whose reach is recomputed from the member's new primary chapter. That last one is the surprising case: a district-level permission follows the person to their new district rather than staying with the old one.
+    Check three places on the profile: the permissions panel itself, any **Multi local center access** grants (which stay stored even when the setting is switched off, and come back exactly as they were if it is switched on again), and regional (parent chapter) permissions, whose reach is recomputed from the member's new primary chapter. That last one is the surprising case: a district-level permission follows the person to their new district rather than staying with the old one.
   </Accordion>
 
   <Accordion title="Two different features are now both called Teams">
@@ -609,9 +616,9 @@ Everything here is current behaviour, verified in the product. None of it is a r
 
 ## Related
 
-- [Texts](/platform/customization/labels) - replacing Orgo's vocabulary with your own
-- [Units](/platform/groups/units) - sections and patrols inside a group
-- [Family Members](/platform/users/family-members) - parents, guardians and child accounts
-- [Badges](/platform/badges) - the award scheme and how badges are given
-- [Registration forms](/platform/events/registration-forms) - what a camp asks at sign-up
-- [Identity Validation](/platform/identity-validation) - what an ID check does and does not prove
+- [Texts](/platform/customization/labels): replacing Orgo's vocabulary with your own
+- [Units](/platform/groups/units): sections and patrols inside a group
+- [Family Members](/platform/users/family-members): parents, guardians and child accounts
+- [Badges](/platform/badges): the award scheme and how badges are given
+- [Registration forms](/platform/events/registration-forms): what a camp asks at sign-up
+- [Identity Validation](/platform/identity-validation): what an ID check does and does not prove

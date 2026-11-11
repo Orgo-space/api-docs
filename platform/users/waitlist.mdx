@@ -29,8 +29,8 @@ sets their status to Active. Organisation administrators are exempt.
 
 ## Turning it on
 
-**Settings** → **Users & Profiles** → **Registration Waitlist**. Requires
-ADMIN_TENANT.
+**Settings** → **Modules** → **Users & Profiles** → **Registration Waitlist**. Only
+Orgo administrators can change it.
 
 The entry is in the menu whether or not the waitlist is on, and every setting below lives on that page, starting with the switch that enables it.
 
@@ -40,17 +40,17 @@ The entry is in the menu whether or not the waitlist is on, and every setting be
 |---|---|
 | **Enable Registration Waitlist** | Turns queueing on for new registrations that have a local center. |
 | **Allow Self Removal** | Intended to let people take themselves off the list. There is no button for it in the interface today, so removals are done by staff from the Waitlist screen. |
-| **Notify Admins On New** | Emails everyone with HR_LOCAL in that center whenever someone joins its queue. Off by default. |
+| **Notify Admins On New** | Emails every chapter HR manager of that center whenever someone joins its queue. Off by default. |
 | **Volunteer Trigger Slots** | When a volunteer's waitlist entry is approved, this many places are added in total to the center's user type capacities, going first to the types furthest below their limit. Leave empty to release nothing. |
 
 Below those, **Waitlist Priority Settings** assigns each user type a priority of
 **Normal**, **High** or **Emergency**, which anyone joining the queue picks up.
-Saving these requires HR_TENANT, and **Reset to Default** puts every type back to
+Saving these requires an organization-wide HR manager, and **Reset to Default** puts every type back to
 Normal.
 
 **Capacity per local center.** Each center's capacities live in its own
 **Waitlist Settings** (`/local/settings/waitlist`), reachable with
-FINANCIAL_LOCAL: enable the user types the center accepts, give each a **Maximum
+chapter financial managers: enable the user types the center accepts, give each a **Maximum
 Capacity**, and the page shows the current count and available spots. Capacity is
 a planning figure, not a barrier. It drives the "spots available" readouts and the
 volunteer slot mechanism; it does not stop people joining the queue.
@@ -137,10 +137,10 @@ the top of the list.
 
 ## Working the queue
 
-**Waitlist** in the main menu (`/waitlist`) needs ADMIN_LOCAL to open; the bulk
-actions themselves check HR_LOCAL. What you see is scoped to your permissions:
-ADMIN_TENANT sees every center, HR_PARENT_LOCAL its anchor center and every
-center beneath it at any depth, ADMIN_LOCAL or HR_ASSISTANT_LOCAL only their own.
+**Waitlist** in the main menu (`/waitlist`) needs chapter admin rights to open; the bulk
+actions themselves check chapter HR rights. What you see is scoped to your permissions:
+organization admins see every center, parent-chapter HR managers their anchor center and every
+center beneath it at any depth, chapter admins or chapter HR assistants only their own.
 
 The bulk actions apply that same scope entry by entry, not once at the door: an
 entry in a center you do not cover is skipped rather than processed. You will
@@ -258,9 +258,9 @@ promise.
     2. **Underage.** Children below the minimum registration age are only listed
        when you filter for Underage specifically.
     3. **Local center.** The list is scoped by the center filter and by your own
-       permissions: `ADMIN_LOCAL` sees only their own center,
-       `HR_PARENT_LOCAL` its anchor center and every center beneath it at any
-       depth, `ADMIN_TENANT` everything.
+       permissions: chapter admins see only their own center,
+       parent-chapter HR managers their anchor center and every center beneath it at any
+       depth, organization admins everything.
     4. **Whether they were ever queued.** Someone who registered without
        choosing a local center is never queued, and neither is anyone with
        organisation-wide admin rights. Registrations from before you switched
@@ -312,7 +312,7 @@ promise.
 
     When it is on, the email goes to a narrower group than most people expect:
     active members whose own local center is the center that was joined, and
-    whose permissions include `HR_LOCAL` directly. An admin who covers that
+    whose permissions include chapter HR rights directly. An admin who covers that
     center through a role, or a tenant-level admin who is not assigned to the
     center, is not on the list.
 
@@ -326,13 +326,13 @@ promise.
     Time** are real.
 
     Use the status filter to count what was processed and the priority filter to
-    count High entries. The tiles also need `HR_LOCAL`, so an `ADMIN_LOCAL`
-    without it sees the table but no tiles at all.
+    count High entries. The tiles also need chapter HR rights, so a chapter admin
+    without them sees the table but no tiles at all.
   </Accordion>
 
   <Accordion title="A local center cannot set its own capacities">
     The **Waitlist Settings** page under local settings always edits the local
-    center of the person opening it, so it needs `FINANCIAL_LOCAL` and a local
+    center of the person opening it, so it needs chapter financial manager rights and a local
     center on your own account. An administrator with no local center is bounced
     straight back with "You need to be assigned to a local center", and there is
     no center picker on that screen: to set capacities for several centers, an
@@ -364,4 +364,4 @@ promise.
 - [Registration Form](/platform/users/registration-form) - the signup that feeds the queue
 - [Local Groups](/platform/groups/local-groups) - the local centers the queue is attached to
 - [Family Members](/platform/users/family-members) - parents registering children
-- [Permissions](/platform/permissions) - ADMIN_LOCAL, HR_LOCAL and the parent-local levels
+- [Permissions](/platform/permissions) - chapter admin, chapter HR and the parent-chapter levels

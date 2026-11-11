@@ -1,60 +1,86 @@
 ---
 title: 'Errors'
-description: 'Error envelope shape, every status code, and when to retry'
+description: 'Error envelope shapes, every status code, and when to retry'
 ---
 
-The Orgo API returns errors as JSON. Two envelope shapes exist — one for general errors, one for validation errors. Both carry the HTTP status in the body as well as in the response status line, so you can log either reliably.
+The Orgo API returns errors as JSON. Which JSON depends on where the error was raised, so this page lists every envelope you can meet before it lists the status codes. Whatever the envelope, the HTTP status line is authoritative.
 
 ---
 
-## General error envelope
+## Error envelopes
 
-For most errors (`400`, `401`, `403`, `404`, `409`, `500`):
+<Note>
+A small, fixed set of shapes exist. Code that reads the HTTP status first and the body second handles all of them.
+</Note>
+
+### 1. Request errors: `title`, `detail`, `status`
+
+Malformed input that Orgo rejects before or while handling the request (invalid JSON, a bad `page` value, a missing required field, a duplicate create, a reference to something that no longer exists):
 
 ```json
 {
+  "detail": "Page should not be less than 1",
   "title": "Bad Request",
-  "detail": "Email must be a valid email address.",
   "status": 400
 }
 ```
 
 | Field | Always present | Notes |
 |---|---|---|
-| `title` | yes | Short, human-readable summary — usually matches the HTTP status |
-| `detail` | yes | Human-readable description of *what specifically* went wrong |
-| `status` | yes | HTTP status code, mirroring the response status line |
+| `title` | yes | Short summary, usually the HTTP reason phrase |
+| `detail` | yes | What specifically went wrong. Safe to show to a developer, not to a member |
+| `status` | yes | The HTTP status code, mirroring the status line |
 
-Some errors include additional context (e.g., the conflicting resource ID on a `409`) under a `context` or `meta` field — these are documented per endpoint.
+### 2. Framework errors: Problem JSON or Hydra
 
----
-
-## Validation error envelope (422)
-
-When the API rejects a request because field-level validation failed, the response includes a `violations` array enumerating each failed field:
+Errors raised by the API layer itself (an authorization refusal, a missing item, an unhandled fault) use the format you asked for. With `Accept: application/json` you get `application/problem+json`; with `Accept: application/ld+json` you get a Hydra error:
 
 ```json
 {
-  "@context": "/api/contexts/ConstraintViolationList",
-  "@type": "ConstraintViolationList",
   "title": "An error occurred",
-  "detail": "email: This value is not a valid email address.\nphoneNumber: This value is too short.",
-  "violations": [
-    {
-      "propertyPath": "email",
-      "message": "This value is not a valid email address.",
-      "code": "bd79c0ab-ddba-46cc-a703-a7a4b08de310"
-    },
-    {
-      "propertyPath": "phoneNumber",
-      "message": "This value is too short. It should have 7 characters or more.",
-      "code": "9ff3fdc4-b214-49db-8718-39c315e33d45"
-    }
-  ]
+  "detail": "No user associated with this API Token.",
+  "status": 404,
+  "type": "/errors/404"
 }
 ```
 
-Iterate `violations[]` to surface each error next to the right form field. `code` is a stable Symfony validator UUID — useful if you want to localize the message without parsing the English text.
+```json
+{
+  "@context": "/api/v1/contexts/Error",
+  "@type": "hydra:Error",
+  "detail": "No user associated with this API Token.",
+  "status": 404,
+  "type": "/errors/404"
+}
+```
+
+Servers running in debug mode add a `trace` array; do not rely on it.
+
+### 3. Validation errors (`422`)
+
+See the 422 entry below. They add a `violations` array to the framework envelope.
+
+### 4. Sign-in errors: `code`, `message`
+
+A missing, expired or invalid session JWT, and a refused password login, answer with:
+
+```json
+{ "code": 401, "message": "JWT Token not found" }
+```
+
+Other messages in this family: `Invalid JWT Token`, `Invalid credentials.`, and `SSO_REQUIRED_<connection uuid>` when the member's email domain requires their identity provider.
+
+### 5. Emailed-code and identity-provider refusals
+
+The emailed-code and password-reset endpoints answer a required identity provider with `409` and `{"error": "SSO_REQUIRED", "message": "...", "connection": "<uuid>"}`. See [Authentication](/api-reference/concepts/authentication#sign-in-through-an-identity-provider).
+
+### 6. OAuth token endpoint
+
+RFC 6749 shaped: `{"error": "invalid_grant", "error_description": "..."}`. See [Authentication](/api-reference/concepts/authentication#client-authentication).
+
+### 7. Public event checkout
+
+The public event registration endpoints (`/api/v1/public/event/{uuid}/save-attendees`, `.../payment-intent`, `.../complete`, `.../complete-free`) answer failures with `{"error": "<message>"}` and the matching status. See [Build a public event landing page](/api-reference/recipes/build-a-public-event-landing-page).
 
 ---
 
@@ -62,129 +88,132 @@ Iterate `violations[]` to surface each error next to the right form field. `code
 
 <AccordionGroup>
 
-  <Accordion title="400 Bad Request — fix the request">
-    The request is malformed at the HTTP/JSON level: invalid JSON syntax, wrong `Content-Type`, missing required query parameter, unknown enum value.
+  <Accordion title="400 Bad Request: fix the request">
+    The request is malformed or refers to something that cannot work: invalid JSON, a `page` that is not a positive integer, a missing required field, an unknown enum value, a business rule that refuses the action ("Already voted", "ID document is missing").
 
     ```json
     {
+      "detail": "Page should not be less than 1",
       "title": "Bad Request",
-      "detail": "Expected one of: NEW, ACTIVE, INACTIVE. Got: ENABLED.",
       "status": 400
     }
     ```
 
-    **Retry?** No. The same request will fail again. Inspect `detail` and fix.
+    **`?page=0` is a `400`.** A `page` of `0`, a negative number, or a value that is not a number is a client error and answers `400` with the `detail` above. It used to be a `500`.
+
+    Many faults that were once `500` now answer a proper `4xx` with the cause in `detail`: a follow, mute or vouch with a missing target, creating a family or a widget without a name, sending or rescheduling a newsletter with an unparseable time, an unknown custom field visibility or waitlist priority, a product edited to a slug another product holds (`422`), an unknown website page status or menu location (`422`), and a custom action on an item that does not exist or belongs to another tenant (`404`).
+
+    **Retry?** No. The same request will fail again. Read `detail` and fix it.
   </Accordion>
 
-  <Accordion title="401 Unauthorized — re-authenticate">
-    The auth header is missing, malformed, or carries an expired/revoked token. JWT might have expired (refresh it); Api-Token might have been revoked.
+  <Accordion title="401 Unauthorized: sign in again">
+    A session JWT or OAuth token is missing, malformed, expired or revoked. Revocation applies on the next request, so a token that still looks valid can be refused.
 
     ```json
-    {
-      "title": "Unauthorized",
-      "detail": "Invalid JWT Token",
-      "status": 401
-    }
+    { "code": 401, "message": "Invalid JWT Token" }
     ```
 
-    **Retry?** Yes, after refreshing the token or re-authenticating. If a fresh token still fails, the tenant might be wrong — see [Tenancy](/api-reference/concepts/tenancy).
+    A bad **Api-Token** is not a `401`: it answers `404` (see below).
+
+    **Retry?** Yes, after signing in again or refreshing an OAuth token. If a fresh token still fails, the host might be wrong, see [Tenancy](/api-reference/concepts/tenancy).
   </Accordion>
 
-  <Accordion title="403 Forbidden — no permission for this resource">
-    You're authenticated, but your user (or the API token's owner) lacks the permission required for this action.
+  <Accordion title="403 Forbidden: no permission for this resource">
+    You are authenticated, but the user (or the token) lacks the permission the action needs.
 
     Common reasons:
-    - The token is read-only and you sent a write
-    - The user has `HR_LOCAL` but the resource is in a different local center
-    - The endpoint requires `ADMIN_TENANT` and the user is `HR_LOCAL`
+    - A read-only Api-Token sent a write: `This API token has read-only access.`
+    - A scoped Api-Token reached outside its categories: `This API token is not scoped for this resource.`
+    - A read-only OAuth app sent a `POST`, `PUT`, `PATCH` or `DELETE`.
+    - The member manages people for one local center and the resource belongs to another.
+    - The endpoint is for organization administrators and the caller is a chapter manager.
 
     ```json
     {
-      "title": "Forbidden",
+      "title": "An error occurred",
       "detail": "Access Denied.",
       "status": 403
     }
     ```
 
-    **Retry?** No. Have an admin grant the missing permission, or use a different token.
+    **Retry?** No. Have an administrator grant the missing permission, or use a different token.
   </Accordion>
 
-  <Accordion title="404 Not Found — resource doesn't exist (or is in another tenant)">
-    The resource does not exist, OR exists but belongs to a different tenant than the one your auth is scoped to. Orgo returns `404` (not `403`) in the second case so the absence of the resource is indistinguishable from "exists but forbidden" — preventing tenant-existence leaks.
+  <Accordion title="404 Not Found: no such resource (or it is in another tenant)">
+    The resource does not exist, or it exists in a different tenant than the one your request is scoped to. Orgo answers `404` (not `403`) in the second case so a `404` never confirms that a record exists somewhere else.
 
     ```json
     {
-      "title": "Not Found",
       "detail": "The referenced resource was not found or is no longer accessible.",
+      "title": "Not Found",
       "status": 404
     }
     ```
 
-    **Retry?** No. Verify the ID/URL and the tenant host.
+    Two surprises. An **unknown, expired or revoked Api-Token** answers `404` with `No user associated with this API Token.`, not `401`. And a custom action on an item that does not exist (`POST /things/{id}/verb`) answers `404`, not `500`.
+
+    **Retry?** No. Verify the id, the URL, the token and the tenant host.
   </Accordion>
 
-  <Accordion title="409 Conflict — optimistic-lock collision or illegal state">
-    The request would create a conflict with the current state of the resource. Two common causes:
+  <Accordion title="409 Conflict: duplicate, stale or illegal state">
+    The request conflicts with the current state of the resource.
 
+    - **Duplicate**: creating something whose identifier already exists, for example a contact whose email is already a contact or a member.
     - **Optimistic locking**: another writer updated the record between your read and your write. Refetch and retry.
-    - **Illegal state transition**: e.g., trying to mark a contract as signed twice, or transition an adhesion to a state that is not reachable from its current state.
-    - **Duplicate identifier**: e.g., creating a resource whose external ID already exists.
+    - **Required identity provider**: an emailed-code or password-reset call for an address whose domain must sign in through the organization's provider (`SSO_REQUIRED`).
 
     ```json
     {
-      "title": "Conflict",
       "detail": "Cannot create: a resource with this identifier already exists. Please refresh and try again.",
+      "title": "Conflict",
       "status": 409
     }
     ```
 
-    **Retry?** *Sometimes*. For optimistic-lock collisions: refetch, reconcile your changes, retry. For illegal state transitions: no — fix the workflow. For duplicate IDs: no — use a different identifier or update the existing resource.
+    **Retry?** Sometimes. For optimistic-lock collisions: refetch, reconcile and retry once. For duplicates and `SSO_REQUIRED`: no.
   </Accordion>
 
-  <Accordion title="422 Unprocessable Entity — validation failed">
-    The request is well-formed but one or more fields failed validation (required, format, length, custom rules).
+  <Accordion title="422 Unprocessable Entity: validation failed">
+    The request is well-formed but one or more fields failed validation.
 
     ```json
     {
-      "@type": "ConstraintViolationList",
       "title": "An error occurred",
       "detail": "email: This value is not a valid email address.",
+      "status": 422,
       "violations": [
-        { "propertyPath": "email", "message": "This value is not a valid email address.", "code": "bd79c0ab-..." }
-      ],
-      "status": 422
+        {
+          "propertyPath": "email",
+          "message": "This value is not a valid email address.",
+          "code": "bd79c0ab-ddba-46cc-a703-a7a4b08de310"
+        }
+      ]
     }
     ```
 
-    **Retry?** No. Iterate `violations[]`, surface each error next to the right form field, let the user correct, and resubmit.
+    Iterate `violations[]` to show each message next to the right field. `code` is a stable validator identifier, useful if you localize messages yourself.
+
+    Not every business rule is a field violation. Rules enforced in code (for example, a slug another product already holds) answer `422` or `400` with only `detail`.
+
+    **Retry?** No. Correct the fields and resubmit.
   </Accordion>
 
-  <Accordion title="429 Too Many Requests — back off">
-    You hit the per-endpoint rate limit (usually 20/min on write-heavy endpoints like login or send-email).
+  <Accordion title="429 Too Many Requests: back off">
+    You reached a limit on this endpoint. Which limits exist, and their sizes, are listed in [Rate limits](/api-reference/concepts/rate-limits).
 
-    ```json
-    {
-      "title": "Too Many Requests",
-      "detail": "Rate limit exceeded. Try again in 47 seconds.",
-      "status": 429
-    }
-    ```
-
-    The response includes a `Retry-After` header (seconds).
-
-    **Retry?** Yes, after `Retry-After`. See [Rate limits](/api-reference/concepts/rate-limits).
+    **Retry?** Yes, after the `Retry-After` header (seconds). Wrong OAuth client secrets are throttled separately and a `429` there means your credentials are wrong.
   </Accordion>
 
-  <Accordion title="500 Internal Server Error — server-side bug or transient outage">
-    Something went wrong inside Orgo. The `detail` may be generic ("An error occurred") to avoid leaking internals.
+  <Accordion title="500 Internal Server Error: a fault inside Orgo">
+    Something went wrong inside Orgo. The `detail` may be generic to avoid leaking internals. A `500` on a request that sends bad input is a defect, not an expected answer: report it.
 
-    **Retry?** Yes, with exponential backoff. If a 500 reproduces on the same call repeatedly, contact support with the request ID from the response headers.
+    **Retry?** Yes, with exponential backoff. If a `500` reproduces on the same call, contact support with the time and the request.
   </Accordion>
 
-  <Accordion title="502 / 503 / 504 — transient infrastructure error">
-    Load balancer, application server, or upstream dependency is unreachable.
+  <Accordion title="502 / 503 / 504: transient infrastructure error">
+    The gateway or an upstream dependency is unreachable.
 
-    **Retry?** Yes, with exponential backoff (start ~1s, double up to ~30s, give up after ~5 minutes).
+    **Retry?** Yes, with exponential backoff (start around 1 second, double up to around 30 seconds, give up after around 5 minutes).
   </Accordion>
 
 </AccordionGroup>
@@ -215,20 +244,20 @@ def call_orgo(method, url, **kwargs):
 
 Do **not** retry:
 
-- `400`, `401`, `403`, `404`, `422` — retrying produces the same failure
-- `409` from illegal state transitions or duplicate IDs — retrying still conflicts
-- `409` from optimistic locks — refetch first, then retry once (not in a tight loop)
+- `400`, `401`, `403`, `404`, `422`: retrying produces the same failure (a `401` is worth one retry after signing in again)
+- `409` from duplicates or `SSO_REQUIRED`: retrying still conflicts
+- `409` from optimistic locks: refetch first, then retry once (not in a tight loop)
 
 ---
 
 ## Logging tips
 
-Save the request ID from response headers (when present) — it lets support trace the exact request in our logs. The body's `status` field mirrors the HTTP status, so you can log just the response body and recover the status from JSON without needing two fields.
+Log the status, the `detail` (or `message`, or `error`, depending on the envelope) and the URL. The body's `status` mirrors the HTTP status in the envelopes that have one, but the sign-in and public checkout envelopes do not, so keep the status line.
 
 ---
 
 ## Related
 
-- [Authentication](/api-reference/concepts/authentication) — what 401 and 403 mean per auth method
-- [Tenancy](/api-reference/concepts/tenancy) — why a 404 may actually be a tenant mismatch
-- [Rate limits](/api-reference/concepts/rate-limits) — how to avoid 429 in the first place
+- [Authentication](/api-reference/concepts/authentication): what `401`, `403` and `404` mean per auth method
+- [Tenancy](/api-reference/concepts/tenancy): why a `404` may actually be a tenant mismatch
+- [Rate limits](/api-reference/concepts/rate-limits): how to avoid `429` in the first place

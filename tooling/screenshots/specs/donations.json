@@ -7,18 +7,17 @@
     ],
     "tenant": "t187c",
     "route": "/product/create",
-    "routeHint": "Sidebar Finance -> Products -> Create Product. Then click the 'Donation' type card so the donation-only blocks (custom amount, Campaign goal, settings groups) render.",
+    "routeHint": "Sidebar Finance -> Products -> Create Product. Then click the 'Donation' type card so the donation-only blocks (custom amount, Campaign goal, settings groups) render. 2026-11-11: /product/create is now a two-step wizard (views/Product/CreateWizard.vue): step 1 Product (type cards Membership Fee and Donation, Name, Payment page address, Recurring and One-off cards, annual giving, ownership, Cancel and Continue), step 2 Donation settings. It opens on Membership Fee, so click text=Donation first; the Title label is now Name, with placeholder e.g. Winter appeal, and the old waitFor Enable custom amount and the scrollto Product type no longer apply. The shot now shows step 1 after choosing Donation and typing the name (press ArrowLeft still fires the keyup that builds the slug). Nothing is saved. The page platform/fees/donations.mdx alt text also mentions the custom amount limits and the Campaign block, which belong to step 2 and are not in this image.",
     "actions": [
       "click text=Donation",
-      "fill .field:has(> label:text-is(\"Title\")) input|Winter Appeal 2026",
+      "wait 800",
+      "fill input[placeholder=\"e.g. Winter appeal\"] | Winter Appeal 2026",
       "press ArrowLeft",
-      "wait 1500",
-      "scrollto text=Product type",
-      "wait 1000"
+      "wait 1500"
     ],
-    "waitFor": "text=Enable custom amount",
+    "waitFor": "text=Payment page address",
     "viewport": "desktop",
-    "alt": "Donation product form showing the Donation and Membership Fee type cards, the title with the generated URL slug and its public address preview, the Recurring and One-off frequency cards, and the custom amount limits",
+    "alt": "Create Product, step 1 of 2 for a donation: the Donation type card selected, the Name Winter Appeal 2026 with its generated payment page address, the Recurring and One-off payment option cards, the Also offer annual giving switch and the chapter ownership switch, with Cancel and Continue buttons",
     "status": "new",
     "notes": "The slug is generated on @keyup of the Title input (client/src/views/Product/Form.vue), which Playwright's fill() does not fire, so the slug preview stayed empty. The 'press ArrowLeft' after the fill delivers a keyup to the focused input and triggers changeSlug(). 'press End' also works but scrolls the form to the bottom. The scrollto brings the type cards back into frame."
   },
@@ -138,11 +137,12 @@
     "id": "donation-landing-page-editor",
     "image": "/images/platform/fees/donation-landing-page-tab.png",
     "usedOn": [
-      "platform/fees/donation-pages.mdx"
+      "platform/fees/donation-pages.mdx",
+      "platform/templates/fundraising.mdx"
     ],
     "tenant": "t187c",
     "route": "/product/1gjk4l2d48amoo6pku74kb4h2?tab=style",
-    "routeHint": "Open 'Support Northwind's Mission' (id 969, has hero image, goal and description) on the Landing page tab.",
+    "routeHint": "Open 'Support Northwind's Mission' (id 969, has hero image, goal and description) on the Landing page tab. Also used on platform/templates/fundraising.mdx from 2026-11-11: that page had a second spec writing a byte-identical copy of this same screen.",
     "actions": [
       "wait 4000",
       "scrollto text=Hero media",
@@ -225,5 +225,29 @@
     "alt": "Donation widget configuration screen with basic information, appearance and donation settings on the left and a live widget preview on the right",
     "status": "new",
     "notes": "The widget was named 'DOnatieeeee' with a Romanian description, a 'Doneazaza' button label and an Orgo marketing screenshot as the hero image. All four are replaced with Northwind copy, a Donate button and a campaign photo."
+  },
+  {
+    "id": "donation-product-settings-step",
+    "image": "/images/platform/fees/donation-product-settings.png",
+    "usedOn": [
+      "platform/fees/donations.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/product/create",
+    "routeHint": "Finance -> Products -> Create Product -> the Donation card -> Continue. Step 2 of the create wizard, which is where the donation's own settings live: the custom amount switch, the suggested amounts, the goal and the campaign content. Step 1 is captured by donation-product-create-form. Added 2026-11-11 because the page documented both steps but only had an image of the first. Nothing is submitted: the capture stops before Create product. The name field has no name attribute; address it by its placeholder, exactly as donation-product-create-form does. With the wrong selector the field stays empty, Continue is refused and the capture is a second copy of step one with a red 'Give the product a name' error, which is what the first run produced.",
+    "actions": [
+      "click text=Donation",
+      "wait 800",
+      "fill input[placeholder=\"e.g. Winter appeal\"] | Winter Appeal 2026",
+      "press ArrowLeft",
+      "wait 1200",
+      "click text=Continue",
+      "wait 3000"
+    ],
+    "waitFor": "text=Enable custom amount",
+    "viewport": "wide",
+    "alt": "Create Product, step 2 of 2 for a donation: the custom amount switch with its minimum and maximum, the campaign goal, and the landing page behaviour switches for donor messages, the recent donations list, payment confidentiality, the newsletter and register checkboxes and the full address, with Back, Cancel and Create product",
+    "status": "new",
+    "notes": "Pairs with donation-product-create-form. If the name field selector moves, diagnose before guessing: the wizard is CreateWizard.vue."
   }
 ]

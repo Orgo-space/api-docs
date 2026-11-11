@@ -16,7 +16,7 @@ A module is a block of settings stored on your organization that decides whether
 **Settings → Modules**
 
 <Note>
-  Requires **ADMIN_TENANT**. Every module settings route is guarded by `ROLE_ADMIN_TENANT`, and every save goes through `PATCH /tenants/{id}`, which the API only accepts from an admin of that same organization.
+  Requires the **Orgo administrator** flag on your account. The module pages are closed to everyone else, and the server only accepts a save from an Orgo administrator of that same organization.
 </Note>
 
 <img src="/images/platform/organisation/module-settings-page.png" alt="Users and Profiles module page with the tab list on the left and the User Types and Roles settings section on the right" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
@@ -57,13 +57,13 @@ Every module in the Settings sidebar, in the order it appears.
 | **Projects** | Projects with tasks, boards and goals. | Configuration |
 | **Voting** | Votes and polls. | Configuration |
 | **Identity Validation** | Identity document upload and review, optionally required for members, for online payments, or both. | Configuration |
-| **Companies** | Company records, a rule for who may create them, and company-paid memberships. | Configuration |
+| **Companies** | Company records, company media, an icon for companies without a logo, company-paid memberships, and a public company directory. | Configuration, Company fields |
 | **Form Builder** | Standalone forms for surveys, sign-ups and data collection. | Configuration |
 
 Several of those tabs only appear once their own setting is on. **Event Statuses** needs **Enable Custom Statuses**, **Attendance Reminder** needs **Enable Attendance Reminder**, **Group Categories** needs **Enable Group Categories**, **Unit Types** needs **Enable Organizational Units**, **Regions** needs Local Centers plus **Enable Regions**, **Contact Statuses** needs **Enable Contact Statuses**, **Discussion Categories** needs **Enable Discussion Namespaces**, **Profession Industries** needs **Enable Industry Tracking**, **Badges** and **Badge Categories** need Gamification on, **Invoice Templates** needs Invoices on, and the Users tabs for **Roles & User types**, **Registration Form**, **Adhesion Form**, **Adhesion Template**, **Referral Program** and **Registration Waitlist** each need their own feature switched on.
 
 <Note>
-  **eDocuments Templates** is the odd one out: it leaves Settings and opens the eDocuments list in the main application. Requires **HR_TENANT**.
+  **eDocuments Templates** is the odd one out: it leaves Settings and opens the eDocuments list in the main application. Requires the organization-wide HR permission.
 </Note>
 
 ### Where each module is documented
@@ -92,26 +92,26 @@ Several modules have no sidebar entry of their own. They are switched on from in
 
 | Module | Where you switch it on |
 |---|---|
-| Adhesion | Users & Profiles → Configuration → Adhesion & Membership |
-| Resignation | Users & Profiles → Configuration → Resignation & Membership Termination |
-| Referral | Users & Profiles → Referral Program |
-| Waitlist | Users & Profiles → Registration Waitlist |
-| Privacy defaults | Users & Profiles → Privacy Defaults |
-| Multi-Factor Authentication | Users & Profiles → Security & Permissions |
-| Local Centers | Groups & Teams → Local Centers |
-| Official Gazette, eDocuments | Files & eDocuments → the matching tab |
-| Membership fees, Invoices | Payments & Fees → Membership fees and Invoice Product |
-| Notification defaults, System emails | Emails & Notifications → Notification Preferences and Emails |
-| Courses | Gamification & Courses → Courses |
-| Languages | Customization → Languages |
-| Third-party integrations | Developers → Third-party Integrations |
-| Welcome message and default theme | Customization → Dashboard Welcome, and Organization → Branding |
-| API & OAuth, Analytics, Extra User Statuses, Realtime | All Modules only |
+| Adhesion | Settings → Modules → Users & Profiles → Configuration → Adhesion & Membership |
+| Resignation | Settings → Modules → Users & Profiles → Configuration → Resignation & Membership Termination |
+| Referral | Settings → Modules → Users & Profiles → Referral Program |
+| Waitlist | Settings → Modules → Users & Profiles → Registration Waitlist |
+| Privacy defaults | Settings → Modules → Users & Profiles → Privacy Defaults |
+| Multi-Factor Authentication | Settings → Modules → Users & Profiles → Security & Permissions |
+| Local Centers | Settings → Modules → Groups & Teams → Local Centers |
+| Official Gazette, eDocuments | Settings → Modules → Files & eDocuments → the matching tab |
+| Membership fees, Invoices | Settings → Modules → Payments & Fees → Membership fees and Invoice Product |
+| Notification defaults, System emails | Settings → Modules → Emails & Notifications → Notification Preferences and Emails |
+| Courses | Settings → Modules → Gamification & Courses → Courses |
+| Languages | Settings → Customization → Languages |
+| Third-party integrations | Settings → Developers → Third-party Integrations |
+| Welcome message and default theme | Settings → Customization → Dashboard Welcome, and Settings → Organization → Branding |
+| API & OAuth, Analytics, Extra User Statuses, Realtime | Settings → Modules → All Modules only |
 
 Four of those deserve a note:
 
 - **API & OAuth** decides whether **API Tokens** and **OAuth Apps** appear in the Developers group.
-- **Analytics** turns the statistics dashboards on. Who may open each area (membership, geography, leaderboards, platform, finance) is set on **Users & Profiles → Security & Permissions**, not here.
+- **Analytics** turns the statistics dashboards on. Who may open each area (membership, geography, leaderboards, platform, finance, communication) is set on **Settings → Modules → Users & Profiles → Security & Permissions**, not here. See [Insights](/platform/insights).
 - **Extra User Statuses** is six independent switches (Suspended, Waiting list, Unreachable, Excluded, Helping hands, Contributor) deciding which optional statuses appear in the member status dropdown, member list filters and membership statistics. Open **Options** on the card to reach them. The card's own master switch gates nothing.
 - **Realtime** is on by default and drives live updates over Mercure in feeds, discussions, votes and networking. Switching it off does not break those screens, it just stops them refreshing on their own.
 
@@ -140,7 +140,7 @@ The grid draws only the modules Orgo recognises. An organization set up years ag
 ## Dependencies worth knowing
 
 - **Event ticket settings** are greyed out until Online Payments is on. The page says so and offers a shortcut to enable it.
-- **Local center roles** such as `ADMIN_LOCAL` and `HR_LOCAL` only appear in permission dropdowns while Local Centers is on.
+- **Chapter-level options** (chapter admin, chapter HR and the like) only appear in permission dropdowns while Local Centers is on.
 - **Per-chapter contacts** and **Regions** both need Local Centers.
 - **Company fees** only appear on the Companies page while Membership fees is on.
 - **Enable Skills Field** creates a Skills custom field, seeded with a starter list, the first time you turn it on. Turning it back off keeps the values members already entered.
@@ -151,9 +151,9 @@ The grid draws only the modules Orgo recognises. An organization set up years ag
 
 ## Permission levels in module settings
 
-Many module settings are a dropdown of permission levels rather than a switch: who can create public events, who can send invitations, who can see member fee status. The list is `USER`, then the organization levels (`ADMIN_TENANT`, `HR_TENANT`, `FINANCIAL_TENANT`, `EVENT_TENANT`, `COMMUNICATION_TENANT`, `HR_ASSISTANT_TENANT`), then the chapter levels (`ADMIN_LOCAL`, `HR_LOCAL`, `FINANCIAL_LOCAL`, `EVENT_LOCAL`, `COMMUNICATION_LOCAL`, `HR_ASSISTANT_LOCAL`) when Local Centers is on.
+Many module settings are a dropdown of permission levels rather than a switch: who can create public events, who can send invitations, who can see member fee status. The list starts with **User**, which means any signed-in member, then the organization-wide levels (Admin, HR, Financial, Event Manager, Communication Manager and HR Assistant), then the same six at chapter level when Local Centers is on.
 
-**Users & Profiles → Security & Permissions** collects every one of those dropdowns from every active module onto one page, grouped by module, alongside the MFA switch. See [Permissions](/platform/permissions) for what each level unlocks.
+**Settings → Modules → Users & Profiles → Security & Permissions** collects every one of those dropdowns from every active module onto one page, grouped by module, alongside the MFA switch. See [Permissions](/platform/permissions#minimum-access-levels) for the list and the defaults, and for what each level unlocks.
 
 ---
 
@@ -173,7 +173,7 @@ Many module settings are a dropdown of permission levels rather than a switch: w
     Online Payments is off. Turn it on from **Payments & Fees → Online Payments**, then come back.
   </Accordion>
   <Accordion title="I cannot open Settings at all">
-    You need **ADMIN_TENANT**. Without it the gear icon does not appear and the module routes bounce you to the login screen.
+    You need the **Orgo administrator** flag. Without it the cog icon does not appear and the module pages bounce you to the login screen. The organization admin permission alone does not open them.
   </Accordion>
   <Accordion title="Will turning a module off lose our data">
     No. The switch writes a flag on your organization and nothing else. Records stay in the database and reappear when you turn the module back on.

@@ -10,7 +10,7 @@ import { chromium } from 'playwright';
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
-import { PIPELINE_ROOT, DOCS_DIR, FRONTEND, CONCURRENCY } from '../config.mjs';
+import { PIPELINE_ROOT, DOCS_DIR, FRONTEND, CONCURRENCY, TIMEZONE } from '../config.mjs';
 
 const ROOT = PIPELINE_ROOT;
 const SPECS = path.join(ROOT, 'specs');
@@ -34,6 +34,12 @@ const VIEWPORTS = {
 const onlyFile = process.argv[2];
 const onlyId = process.argv[3];
 
+// ORGO_ONLY_LIST=<file> narrows a run to the "area/id" lines in that file, so a
+// re-run can target exactly the specs that failed without rewriting their status.
+const ONLY_LIST = process.env.ORGO_ONLY_LIST
+  ? new Set(fs.readFileSync(process.env.ORGO_ONLY_LIST, 'utf8').split('\n').map((l) => l.trim()).filter(Boolean))
+  : null;
+
 function loadSpecs() {
   const out = [];
   for (const f of fs.readdirSync(SPECS).filter((f) => f.endsWith('.json'))) {
@@ -47,6 +53,7 @@ function loadSpecs() {
     }
     for (const s of Array.isArray(parsed) ? parsed : parsed.specs || []) {
       if (onlyId && s.id !== onlyId) continue;
+      if (ONLY_LIST && !ONLY_LIST.has(`${f.replace(/\.json$/, '')}/${s.id}`)) continue;
       if ((s.status || 'new') === 'keep') continue;
       if ((s.status || '') === 'dropped') continue;
       s._area = f.replace(/\.json$/, '');
@@ -65,7 +72,7 @@ async function applyActions(page, actions = [], failures = []) {
   for (const raw of actions) {
     // Agents write free-form hints; support the common verbs and skip the rest.
     const a = String(raw).trim();
-    const m = a.match(/^(click|fill|wait|waitFor|press|hover|scroll|scrollto)\s+(.*)$/i);
+    const m = a.match(/^(click|fill|wait|waitFor|press|hover|scroll|scrollto|upload)\s+(.*)$/i);
     if (!m) continue;
     const verb = m[1].toLowerCase();
     let arg = m[2].replace(/\s*\(only if.*$/i, '').trim();
@@ -84,6 +91,19 @@ async function applyActions(page, actions = [], failures = []) {
       } else if (verb === 'fill') {
         const [sel, val] = arg.split('|');
         await page.locator(toLocator(sel.trim())).first().fill((val || '').trim());
+      } else if (verb === 'upload') {
+        // upload <css selector> | <file under fixtures/>. The screens behind a file
+        // upload (the import wizard's mapping sheet, its column panel, its value map)
+        // cannot be reached any other way: there is no route that opens them.
+        // The path is resolved inside fixtures/ so a spec can never reach out of the
+        // pipeline, and the file is committed, so the capture is reproducible.
+        const [sel, rel] = arg.split('|');
+        const name = (rel || '').trim();
+        if (/[\\/]|\.\./.test(name)) throw new Error(`upload: ${name} must be a bare file name in fixtures/`);
+        const file = path.join(ROOT, 'fixtures', name);
+        if (!fs.existsSync(file)) throw new Error(`upload: no fixture named ${name}`);
+        await page.locator(sel.trim()).first().setInputFiles(file);
+        await page.waitForTimeout(2500);
       } else if (verb === 'scroll') {
         // The app scrolls an inner container, so move the wheel over the content pane.
         const box = await page.locator('main, [class*="content"], body').first().boundingBox();
@@ -131,6 +151,10 @@ async function capture(browser, spec) {
   // desktop layout squeezed into 390px.
   const context = await browser.newContext({
     ...vp,
+    // Run the browser on the demo organisation's clock. The event form formats the start
+    // time in the browser's zone and the end time in the tenant's, so a UTC browser draws an
+    // end time five hours before the start (see config.mjs).
+    timezoneId: TIMEZONE,
     ...(spec.userAgent ? { userAgent: spec.userAgent } : {}),
     ...(anon ? {} : { storageState: sp }),
   });

@@ -23,8 +23,8 @@
       "platform/events/ticketing.mdx"
     ],
     "tenant": "t187c",
-    "route": "/public/event/a2a3287a8fc711f19aed9e396b?workspace=t187c",
-    "routeHint": "Open the public page of a paid event, select a ticket, then press Continue to open the checkout overlay. The event must be in the future: the Get tickets card is hidden by eventEnded(), which is why the previously used event (May 2026) produced only the description page. Event 200433 Member Networking Evening Springfield runs 2026-09-08 and sells Patriot Member / Heritage Sponsor / Founder's Circle. Clicking the ticket row alone leaves the quantity at 0 and Continue stays disabled, so press the quantity stepper's plus button first.",
+    "route": "/public/event/a2a3281d8fc711f19aed9e396b?workspace=t187c",
+    "routeHint": "Open the public page of a paid event, select a ticket, then press Continue to open the checkout overlay. The event must be in the future: the Get tickets card is hidden by eventEnded(), which is why the previously used event (May 2026) produced only the description page. Event 200433 Member Networking Evening Springfield runs 2026-09-08 and sells Patriot Member / Heritage Sponsor / Founder's Circle. Clicking the ticket row alone leaves the quantity at 0 and Continue stays disabled, so press the quantity stepper's plus button first. 2026-11-11: event 200433 (uuid a2a3287a...) is now past (2026-09-08), is_public NULL and renders Page not found anonymously, and its product 972 prices differ. Repointed to event 200431 Strategy Away Day Arlington (uuid a2a3281d..., public, 2026-12-10, product 970 with Member Ticket 125 usd and Guest Ticket 185 usd), the same event event-public-page uses, instead of opening up a second event.",
     "actions": [
       "scrollto .ticket-price-row",
       "click .ticket-quantity-picker button:last-child",
@@ -34,7 +34,7 @@
     ],
     "waitFor": "text=Order summary",
     "viewport": "desktop",
-    "alt": "Event checkout with the registration form on the left (email, full name) and an order summary on the right showing the ticket, total, consent checkboxes and Pay with Card",
+    "alt": "Event checkout with the attendee's name and email fields on the left and an order summary on the right showing the Member Ticket, the total, the newsletter checkbox and the Pay with Card button",
     "status": "new"
   },
   {
@@ -60,14 +60,14 @@
     ],
     "tenant": "t187c",
     "route": "/public/event/2aff4dh9qe9q68pmut1k4snqbt?workspace=t187c",
-    "routeHint": "Log in as a member who already holds a confirmed registration for the event and open the event page; the confirmed-registration card with the QR code replaces the ticket selector. The t187c session user (Julian Sorensen) has a success registration on event 200245 Regional Forum Arlington, which is still in the future so the card renders.",
+    "routeHint": "Log in as a member who already holds a confirmed registration for the event and open the event page; the confirmed-registration card with the QR code replaces the ticket selector. The t187c session user (Julian Sorensen) has a success registration on event 200245 Regional Forum Arlington, which is still in the future so the card renders. 2026-11-11: the card was missing because event 200245 had ended (2026-08-07) and its location was Online, and EventPublicPage.vue hides the free-registration card when eventEnded() and ticketQrCodeUrl (EventPublicPage.vue:2802) is null without a physical venue (utils/eventVenue.js hasPhysicalVenue). Seeded: UPDATE event SET location='1100 Wilson Boulevard, Arlington, Virginia, United States', date_time_begin='2026-12-12 14:00:00', date_time_end='2026-12-12 17:00:00' WHERE id=200245 AND tenant_id=282; then deleted the Redis key public_event_2aff4dh9qe9q68pmut1k4snqbt (orgo-1-redis, the public event payload is cached for an hour). The spec itself is unchanged. Queued for recapture 2026-11-11 after the capture runner was pinned to the demo organisation's timezone: times on this screen had been drawn on the browser's clock instead.",
     "actions": [
       "scrollto text=Show this QR code at the entrance"
     ],
     "waitFor": "text=Show this QR code at the entrance",
     "viewport": "desktop",
     "alt": "Attendee view of a confirmed registration with the Registration confirmed badge and the QR code shown at the entrance",
-    "status": "new",
+    "status": "recapture",
     "note": "There is no download button on the public event page: EventRegistrationStatusBox renders only the status badge and the QR code. The Download button lives on the internal event page (views/Event/ShowContent.vue) and only for attendances that carry a productPrice. The alt text on both pages that use this image was corrected accordingly."
   },
   {
@@ -105,5 +105,24 @@
     "status": "new",
     "note": "Crop or scroll so the Confirmation Message radio pair is NOT the focus: that setting has no reader in the product (see report). Registration Options plus Custom Content is enough.",
     "notes": "Recaptured 2026-08-06: the thank-you-message radio group was removed from the Settings tab, which now holds only the two Registration options switches and the Custom content textarea."
+  },
+  {
+    "id": "event-ticket-type-editor",
+    "image": "/images/platform/events/event-ticket-type-editor.png",
+    "usedOn": [
+      "platform/events/ticketing.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/events/edit/ticketing/a2a3281d8fc711f19aed9e396b",
+    "routeHint": "Event -> Tickets -> Add ticket. The editor for one ticket type: name, price, how many are on sale, who may buy it and when sales open and close. Added 2026-11-11: the ticketing page documented creating a ticket type but had no image of the editor. Nothing is saved; the capture stops before the save button. If the control is not a modal, diagnose before guessing. Confirmed 2026-11-11: the control is a full-screen panel headed 'New ticket' with Back and a close button, not a small modal.",
+    "actions": [
+      "click text=Add ticket",
+      "wait 2000"
+    ],
+    "waitFor": "text=Ticket name",
+    "viewport": "wide",
+    "alt": "The New ticket editor, with the name, price and description under Basics, the Everyone, All members and Specific members choice for who can buy it, the seat count and the sales window, and a live preview of how buyers will see the ticket beside a summary of what the choices mean",
+    "status": "new",
+    "notes": "Pairs with event-tickets-page, which shows the three cards this editor writes into."
   }
 ]

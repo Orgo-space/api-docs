@@ -1,60 +1,50 @@
 ---
 title: 'Rate limits'
-description: 'Per-endpoint limits, how 429 responses look, and how to design integrations that never trip them'
+description: 'The limits that exist, how 429 responses look, and how to design integrations that never trip them'
 ---
 
-Rate limiting on the Orgo API is **per endpoint** and **per token**, not a single global bucket. Most endpoints have no application-layer limit at all — they are only protected by platform-level infrastructure throttles. Limits exist on endpoints that are expensive (sending email, generating PDFs) or sensitive to abuse (login, OTP requests, impersonation).
-
----
-
-## How limits are applied
-
-When an endpoint is rate-limited:
-
-- The limit is **20 requests per 60 seconds** by default. Some endpoints set their own.
-- The bucket is keyed by the **authenticated token** (Api-Token or JWT), or by **IP address** for unauthenticated endpoints.
-- Hitting the limit returns `429 Too Many Requests` with a `Retry-After` header telling you how many seconds to wait.
-
-Read-heavy endpoints (`GET /api/v1/users`, `GET /api/v1/events`, etc.) are *not* application-rate-limited under normal circumstances — you can paginate freely.
+Rate limiting on the Orgo API is **per endpoint**, and the key differs by endpoint: some limits count per account, some per IP address, some per email address or per OAuth client. There is no single global bucket, and **most endpoints have no application-layer limit at all**; they are only protected by platform-level throttles. Limits exist where an endpoint sends email, is expensive, or can be used to guess secrets.
 
 ---
 
-## Endpoints with explicit limits
+## How a limit looks
 
-| Endpoint family | Why limited | Typical limit |
-|---|---|---|
-| `POST /api/v1/login-check` | Brute-force protection | 20 / 60s per IP |
-| `POST /api/v1/request-login-otp` | Email abuse prevention | 20 / 60s per email |
-| `POST /api/v1/verify-login-otp` | Brute-force protection | 20 / 60s per email |
-| `POST /api/v1/request-password-reset-otp` | Email abuse prevention | 20 / 60s per email |
-| `POST /api/v1/newsletters/{uuid}/send` | Outbound-email cost control | varies per plan |
-| `POST /api/v1/email_templates/send-test` | Outbound-email cost control | 20 / 60s |
-| `POST /api/v1/permission/impersonate/*` | Audit/abuse protection | 20 / 60s per admin |
-| `POST /api/v1/webhook_subscriptions/{id}/test` | Outbound-HTTP cost control | 20 / 60s |
-| `GET /api/v1/contacts-csv`, `GET /api/v1/users-csv` | DB load on large exports | 20 / 60s |
-| File-generation endpoints (PDF invoices, adhesion PDFs, contract PDFs) | CPU cost | 20 / 60s |
-
-Where a limit is not listed in an endpoint's reference page, assume it is not application-rate-limited beyond platform protections.
-
----
-
-## The 429 response
+When you hit a limit the API answers `429 Too Many Requests`, normally with a `Retry-After` header in seconds:
 
 ```http
 HTTP/1.1 429 Too Many Requests
-Content-Type: application/json
 Retry-After: 47
 ```
 
-```json
-{
-  "title": "Too Many Requests",
-  "detail": "Rate limit exceeded. Try again in 47 seconds.",
-  "status": 429
-}
-```
+The body is a framework error (see [Errors](/api-reference/concepts/errors#error-envelopes)) whose `detail` names the cause, for example `Too many ticket holds. Please try again shortly.` Read the status and the header, not the exact text.
 
-Always honor `Retry-After`. Retrying inside the window will *not* succeed and only delays your overall throughput.
+Read-heavy endpoints (`GET /api/v1/users`, `GET /api/v1/events`, and so on) are not application-rate-limited under normal circumstances, so you can paginate freely.
+
+---
+
+## Limits you can hit
+
+| Endpoint or family | Why limited | Limit |
+|---|---|---|
+| `POST /api/v1/login-check` (password login) | Password guessing | 5 failed attempts per username and per IP within 15 minutes. Successful logins never count |
+| `POST /api/v1/request-login-otp` | Email abuse | One code per 20 seconds per address, at most 10 codes in 5 minutes, then a lockout |
+| `POST /api/v1/verify-login-otp` | Code guessing | 15 attempts per code, and a 10-minute lockout after 10 failed verifications for one address. A code expires after 5 minutes |
+| `POST /api/v1/password-forgot` | Email abuse | 10 per hour per IP, plus a one-minute cooldown per account |
+| `POST /api/v1/users/{id}/send-password-reset` | Email abuse | One request per minute per member |
+| `POST /api/v1/oauth/register` | Open registration | 10 per hour per IP |
+| `POST /api/v1/oauth/token` | Secret guessing | 10 **failed** client authentications per `client_id` within 5 minutes. A correct secret is never throttled |
+| `POST /api/v1/events/{uuid}/ticket-holds` | Inventory hoarding | 12 per hour per IP and event |
+| `POST /api/v1/public/event/{uuid}/validate-voucher` and `GET .../link/{token}` | Code guessing | 10 per minute per IP and event |
+| Starting a permission-impersonation session | Abuse of a powerful action | 5 starts per minute per administrator |
+| `GET /api/v1/s3-upload` (anonymous callers) | Storage cost | 20 per hour per address. Signed-in callers are not counted here |
+| Identity document uploads by hash | Guessing | 15 per hour per IP |
+| `POST /api/v1/users/{id}/send-email`, `POST /api/v1/contacts/{id}/send-email` | Mail reputation | 30 per hour per admin |
+| Public forms (`form-submit`, contact requests, newsletter sign-up widgets) | Spam | A handful per hour per IP, for example 10 form submissions or 5 newsletter registrations |
+| Email-exists check during registration | Enumeration | 30 per hour per IP |
+
+Newsletter sends go through a managed outbound queue rather than a visible limit: the platform sends at a steady rate, so a large campaign takes minutes to flush, not a `429`.
+
+Where an endpoint's reference page does not mention a limit, assume none beyond platform protections.
 
 ---
 
@@ -62,26 +52,24 @@ Always honor `Retry-After`. Retrying inside the window will *not* succeed and on
 
 <AccordionGroup>
 
-  <Accordion title="Bulk operations — batch instead of looping">
-    Many endpoints have explicit bulk variants: `POST /api/v1/contacts/bulk-delete`, `POST /api/v1/waitlist_entries/bulk-approve`, etc. Each bulk call counts as **one** request and is far cheaper than N individual calls.
-
-    Prefer bulk endpoints over `for entry in entries: api.delete(entry)` loops.
+  <Accordion title="Bulk operations: batch instead of looping">
+    Many endpoints have explicit bulk variants: `POST /api/v1/contacts/bulk-delete`, `POST /api/v1/waitlist_entries/bulk-approve`, `POST /api/v1/events/{uuid}/attendees-bulk` and others. Each bulk call is **one** request and is far cheaper than N individual calls.
   </Accordion>
 
-  <Accordion title="Pagination — use the maximum page size">
-    `itemsPerPage=100` is the cap. Setting it lower means more requests for the same data and a higher chance of tripping platform-level throttles. Use 100 unless you have a specific reason not to.
+  <Accordion title="Pagination: use the maximum page size">
+    `itemsPerPage=100` is the cap. A smaller page size means more requests for the same data. Use 100 unless you have a reason not to.
   </Accordion>
 
-  <Accordion title="Polling — switch to webhooks">
-    If you find yourself polling `GET /api/v1/payments?status=PENDING` every few seconds, subscribe to the `product_payment.updated` webhook instead. Webhooks deliver in under a second and cost no API calls. See [Webhooks](/api-reference/concepts/webhooks).
+  <Accordion title="Polling: switch to webhooks">
+    If you find yourself polling `GET /api/v1/product_payments?status=open` every few seconds, subscribe to the `product_payment.updated` webhook instead. See [Webhooks](/api-reference/concepts/webhooks).
   </Accordion>
 
-  <Accordion title="OAuth and JWT — cache tokens">
-    Do not call `/api/v1/login-check` before every request. Cache the JWT for its full ~11-day lifetime and only re-login when a request returns `401`. The same applies to OAuth access tokens — cache and refresh on demand, never on every call.
+  <Accordion title="Sessions and OAuth: cache tokens">
+    Do not sign in before every request. Keep the session JWT (about 11 days by default) and sign in again only when a request returns `401`. Cache OAuth access tokens and refresh on demand, never on every call. An Api-Token does not expire unless you set an expiry.
   </Accordion>
 
-  <Accordion title="Background sync — go off-peak">
-    For nightly data syncs, schedule them during your tenant's off-hours. The platform handles concurrent tenants well, but a single integration making a thousand requests at noon still adds latency on top of normal user traffic.
+  <Accordion title="Background sync: go off-peak">
+    For nightly syncs, schedule them in your tenant's off-hours. A thousand sequential requests at noon still adds latency on top of normal member traffic.
   </Accordion>
 
 </AccordionGroup>
@@ -90,7 +78,7 @@ Always honor `Retry-After`. Retrying inside the window will *not* succeed and on
 
 ## Retry pattern
 
-A safe pattern that handles both 429 and transient 5xx:
+A safe pattern that handles both `429` and transient `5xx`:
 
 ```python
 import time
@@ -111,7 +99,7 @@ def call(method, url, **kw):
     return r
 ```
 
-The same pattern in JavaScript / TypeScript:
+The same pattern in JavaScript or TypeScript:
 
 ```ts
 async function call(input: RequestInfo, init?: RequestInit): Promise<Response> {
@@ -136,13 +124,11 @@ async function call(input: RequestInfo, init?: RequestInit): Promise<Response> {
 
 ## Per-plan limits
 
-There is no per-plan rate limit at the application layer today. Higher-volume plans get more generous platform-level concurrency budgets (more API workers, larger DB connection pools), but the per-endpoint application limits above are the same regardless of plan.
-
-If you have a use case that needs limits raised on a specific endpoint — high-volume webhook sender, large nightly export, etc. — contact support and we can adjust on a per-tenant basis.
+There is no per-plan rate limit at the application layer. Higher-volume plans get more generous platform-level concurrency, but the endpoint limits above are the same for every plan. If you need a limit raised for a specific tenant and endpoint, such as a high-volume webhook sender or a large nightly export, contact support.
 
 ---
 
 ## Related
 
-- [Errors](/api-reference/concepts/errors) — the 429 envelope and full retry strategy
-- [Webhooks](/api-reference/concepts/webhooks) — the cure for polling
+- [Errors](/api-reference/concepts/errors): the `429` envelope and the full retry strategy
+- [Webhooks](/api-reference/concepts/webhooks): the cure for polling

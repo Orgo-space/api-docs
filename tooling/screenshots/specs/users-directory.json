@@ -7,8 +7,11 @@
     ],
     "tenant": "t187c",
     "route": "/users?generalUnit=true",
-    "routeHint": "Sidebar -> Members. Do NOT navigate to a bare /users: the root v-if is `tenant && (unitItem || isGeneralUnitAccess)` (client/src/views/User/List.vue:3) and isGeneralUnit is `!!$route.query.generalUnit` (:2250), so /users with no query renders an empty pane. That is exactly what the previous capture caught. Log in as a tenant admin (HR_TENANT) so the Status, Fee status and export controls render, and wait for member rows before capturing.",
-    "actions": [],
+    "routeHint": "Sidebar -> Members. Do NOT navigate to a bare /users: the root v-if is `tenant && (unitItem || isGeneralUnitAccess)` (client/src/views/User/List.vue:3) and isGeneralUnit is `!!$route.query.generalUnit` (:2250), so /users with no query renders an empty pane. That is exactly what the previous capture caught. Log in as a tenant admin (HR_TENANT) so the Status, Fee status and export controls render, and wait for member rows before capturing. The default view on desktop is now the Map, so click Table first: the alt text and the page's column documentation describe the table.",
+    "actions": [
+      "click text=Table",
+      "wait 1200"
+    ],
     "waitFor": "text=More filters",
     "viewport": "desktop",
     "alt": "Member directory in table view with the filter bar, member rows and the CSV export button",
@@ -139,15 +142,15 @@
       "platform/users/lists.mdx"
     ],
     "tenant": "t187c",
-    "route": "/email-lists/107",
-    "routeHint": "Lists & Segments -> 'Chesterfield Chapter' (user_list 107). The recipients table only auto-loads when itemsCount is between 1 and 100 (UserList/View.vue:333 and :838); above that the panel shows a Show recipients button instead, which is what the previous capture caught on the 342-member 'Active Members with Paid Fees' list. This list is a dynamic members-only segment on chapter Chesterfield, 34 contacts, 22 subscribed. Avoid 'Event Participants': an eventAttends criterion suppresses the subscription filter chips.",
+    "route": "/email-lists/96",
+    "routeHint": "Lists & Segments -> 'Chesterfield Chapter' (user_list 107). The recipients table only auto-loads when itemsCount is between 1 and 100 (UserList/View.vue:333 and :838); above that the panel shows a Show recipients button instead, which is what the previous capture caught on the 342-member 'Active Members with Paid Fees' list. This list is a dynamic members-only segment on chapter Chesterfield, 34 contacts, 22 subscribed. Avoid 'Event Participants': an eventAttends criterion suppresses the subscription filter chips. UPDATED 2026-11-11: list 107 no longer exists. The demo lists are 92 Active Members with Paid Fees, 93 Members Without Paid Fees, 94 Donors, 95 Event Participants, 96 Board Members, 97 Newsletter Recipients and 98 VIP Members. STILL WRONG on 2026-11-11: /email-lists/92 renders a red 'Error fetching data' banner over an otherwise empty page. The id is right (user_list has no uuid column and 92 belongs to tenant 282), so the failure is in what the page fetches, probably the members query at /user_lists/{id}/members. Run capture/diagnose.mjs and read the network failure before choosing another list: 93 Members Without Paid Fees, 94 Donors, 95 Event Participants, 96 Board Members, 97 Newsletter Recipients and 98 VIP Members are the alternatives. RESOLVED 2026-11-11: list 92 is a dynamic list filtered on feeStatus = paid, and it matches nobody in this demo data, so its page loads cleanly and shows an empty table. (An earlier capture of it caught a transient 'Error fetching data' and a later probe timed out, both while another capture run was loading the dev server; checked again with nothing else running and the page is fine, just empty.) The static lists 96-98 held no members either, so list 96 Board Members was given fourteen and this spec points at it.",
     "actions": [
       "wait 4000"
     ],
-    "waitFor": "text=Not subscribed",
+    "waitFor": "text=Board Members",
     "viewport": "desktop",
     "alt": "List detail with total, subscribed and unsubscribed tiles, the active criteria card, and the recipients table with subscription filter chips",
-    "status": "new",
+    "status": "recapture",
     "notes": "Needs the four stat tiles (Total Contacts, Subscribed, Unsubscribed, Member status), the Active criteria card and the Subscribed / All / Not subscribed chips all in one frame. Tenant ila had 2 automated Contacts Only lists at last capture (325/643 and 0/1 subscribed); prefer the 643-member one only if it still auto-loads, otherwise use a smaller list."
   }
 ]

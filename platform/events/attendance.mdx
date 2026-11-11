@@ -23,14 +23,14 @@ who actually came.
 
 ## Who can open it
 
-**Participants** appears in the event sidebar for the event owner, `EVENT_LOCAL` or `ADMIN_LOCAL` on
-the event's group, `EVENT_TENANT` or `ADMIN_TENANT` organisation-wide, and to the owner or an admin
+**Participants** appears in the event sidebar for the event owner, chapter event managers or chapter admins
+for the event's group, organization-wide event managers and organization admins, and to the owner or an admin
 of the hosting group. When **Restrict Event Editing by User Type** is on, a local user whose type
-does not match the event's loses this even if they hold `EVENT_LOCAL`.
+does not match the event's loses this even if they are a chapter event manager.
 
 Attendees never reach it. They get the **Participants** block on the event page, and only when they
-are registered themselves and the event has **Visibility of attendee list** on (event → **Modify** →
-**Features**). With it off, the attendee list is organisers only.
+are registered themselves and the event's **Visibility of attendee list** is set to **Attendees** (event → **Edit** →
+**More options**). With **Only hosts**, the attendee list is organisers only.
 
 ---
 
@@ -74,41 +74,50 @@ is attached: cancel or refund the payment first, since the status follows the mo
 
 ## Adding people
 
-Use **Invite** at the top right. The **Member** tab searches the directory; the **External** tab takes
-a name and email, matching the address against members first, then contacts, and creating a new
-contact only if neither exists. **Guest tickets** takes a number from 0 to 20: each guest is a
-separate registration and ticket issued to the same person, with its own QR code, so they can bring
-people whose names you do not need.
+Use **Invite** at the top right (the person-plus button). The dialog is titled **Add attendee**, or
+**Invite participant** on an event that uses a registration form, and has two modes:
 
-<img src="/images/platform/events/event-attendee-invite.png" alt="Invite participant dialog with Member and External tabs, a member search box, and the guest tickets number control" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+- **Add to list** registers the people on the spot (registration **Registered**, RSVP **Attending**)
+  and emails each one a ticket with a QR code and a calendar invite, so speakers, sponsors and staff
+  get in without paying. Up to 50 people per go.
+- **Send invitation** emails an invitation instead, and the person confirms or declines from the email.
+  Up to 10 people per go. This is the default mode on events with a registration form.
 
-Either route confirms immediately: registration **Registered**, RSVP **Attending**, and an emailed
-ticket with a QR code and a calendar invite, so speakers, sponsors and staff get in without paying.
+Search the directory by name, or type an email address to add someone who is not a member: the address
+is matched against members first, then contacts, and a new contact is created only if neither exists.
+
+<img src="/images/platform/events/event-attendee-invite.png" alt="Add attendee dialog with its Add to list and Send invitation tabs, one member picked out of the directory search and shown under To add, with the guest tickets counter beside her" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+**Guest tickets** is a switch under **More options** on the event form, offered on events that use a
+registration form or sell tickets. When it is on, **Add to list** shows a counter from 0 to 20 beside
+each person you add: each guest is a separate registration and ticket issued to that person, with its
+own QR code, so they can bring people whose names you do not need.
 
 ### Everyone in the group at once
 
 With **Bulk Invites** enabled (**Settings → Modules → Events → Additional Features → Bulk Invites**),
-a published event shows **Send Invites to All Members**, and publishing offers the same. It adds
-every active member of the event's group as **Invited** with RSVP **Maybe**, or of the whole
-organisation when the event has no group. People already listed are skipped, and it runs once per
-event.
+a published event that belongs to a group gets a third mode, **Add all members**, in the same dialog,
+and publishing offers the same. It adds every active member of the event's group as **Invited** with
+RSVP **Maybe**. People already listed are skipped, and it runs once per event ("Invites have been sent
+to all members" then replaces it).
 
 <Warning>
-Bulk invite fills the participant list. It does not currently send the invitation email, so announce
-the event separately (a [newsletter](/platform/newsletter) or the event's Messages tab) rather than
-assuming everybody has been contacted.
+Add all members fills the participant list. It does not send any email, so announce the event
+separately (a [newsletter](/platform/newsletter) or the event's Messages entry) rather than assuming
+everybody has been contacted.
 </Warning>
 
 ### Capacity
 
 On an event with **Max capacity** set and no ticketing, registration is refused with "This event is
-full" once **Registered** participants reach the limit.
+full" once the seats taken reach the limit. A seat is taken by a participant who is not canceled,
+whose RSVP is **Attending** or **Attended**, and whose registration is **Registered**, **Invited** or
+**Awaiting payment**. Guest tickets count. People who are on the **Waiting list**, **Pending approval**,
+**Maybe**, **Not attending**, or who never answered do not hold a seat.
 
-The **X / N Participants (M seats left)** line on the event page is not this number. It counts every
-participant row that has not been cancelled, including people who are only **Invited**, on the
-**Waiting list**, or awaiting payment, and including guest tickets. So the event page can say "This
-event is full" while sign-ups are still going through, most visibly after a bulk invite. The public
-event page and the refusal itself both count only **Registered**.
+The seats-left count on the event page, the "N of M spots left" line on the public page and the refusal
+all use that same count, so they agree. A bulk invite adds people with RSVP **Maybe**, so it does not
+fill the event. An invitee takes a seat when they confirm, or when you set them to **Attending**.
 
 Nobody is queued automatically: move people to **Waiting list** yourself. To let one in, set their
 registration to **Registered**, and note that this sends nothing. If they need a ticket by email, set
@@ -125,25 +134,28 @@ confirm action accepts.
 - **Walk-ins** must exist on the list first: add them with **Invite**, then set them to Attended.
 
 A row-actions column carrying **Logs**, the confirm action, **Generate guest tickets** and **Remove**
-appears only for the person who owns the event and for `HR_TENANT`. An `EVENT_TENANT` or
-`EVENT_LOCAL` admin who does not own the event can still change statuses from the dropdowns but gets
+appears only for the person who owns the event and for organization HR managers. An organization-wide or
+chapter event manager who does not own the event can still change statuses from the dropdowns but gets
 none of those four actions.
 
 ---
 
 ## Filtering, columns and export
 
-The control bar filters by name, email, RSVP, registration status, ticket type and an **Invited**
-checkbox; events with an agenda add a session selector. The list paginates at 100 rows, and the count
+The filter bar filters by name, email, RSVP, registration status, ticket type and an **Invited**
+toggle; events with an agenda add a session selector. The list paginates at 100 rows, and the count
 above it includes guest tickets and add-on attendees while the rows show only the people they were
 issued to.
 
-**Columns** offers Membership and Membership Fee (only with the fees module on), Organisation, Role,
+**View columns** offers Membership and Membership Fee (only with the fees module on), Organisation, Role,
 Email, Phone, LinkedIn, Date, and one column per custom field on the event's registration form, with
 **Show all** and **Hide all** at the bottom of the menu.
 
-**Export** downloads `attendees_<event>_<date>.csv` and needs `EVENT_TENANT`, `EVENT_LOCAL` on the
-event, or event ownership; a session selected in the agenda filter narrows it to that session. Its
+A **Registered via** filter appears on ticketed events (**Invitation** or **Ticket link**), and the
+pencil icon beside a member's name opens **Edit event-app profile**. **Refresh** reloads the list.
+
+**Export** (the **Export CSV** button) downloads `attendees_<event>_<date>.csv` and needs organization-wide event management, chapter event management
+for the event's group, or event ownership; a session selected in the agenda filter narrows it to that session. Its
 columns are Name, Email, every standard profile field on the event's
 [registration form](/platform/events/registration-forms), Ticket Type, Ticket Price, Registration
 Status, RSVP Status, Date Registered, and one per event custom field (dropdown and checkbox answers

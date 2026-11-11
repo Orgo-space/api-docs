@@ -25,15 +25,15 @@ Resignation is off by default.
 
 | Setting | Where | What it does |
 |---|---|---|
-| **Enable Resignation Module** | Settings → Users & Profiles → Configuration → Resignation & Membership Termination (`ADMIN_TENANT`) | Shows the Resign button to members and the Resignation requests screen to admins |
+| **Enable Resignation Module** | Settings → Modules → Users & Profiles → Configuration → Resignation & Membership Termination (Orgo administrators) | Shows the Resign button to members and the Resignation requests screen to admins |
 | **Automatically Inactivate Accounts After Resignation** | Same section, once the module is on | Forces every approved resignation to set the member Inactive. The member's "Close my account" choice disappears from the form and is ignored |
-| **Resignation request** and **Resignation approved** | Settings → Emails & Notifications → Emails | The two resignation emails (request to admins, approval to the member), each with its own switch. On by default; off keeps the workflow but stops that email |
+| **Resignation request** and **Resignation approved** | Settings → Modules → Emails & Notifications → Emails | The two resignation emails (request to admins, approval to the member), each with its own switch. On by default; off keeps the workflow but stops that email |
 
 ---
 
 ## What the member does
 
-Profile → **Settings & Privacy** → **Close account** → **Resign**. The form opens in place.
+Profile → **Settings** → **Account and security** → **Resign**, in the **Close account** card. The form opens in place.
 
 <img src="/images/platform/users/resignation-form.png" alt="Resignation form with a resignation reason box, a what would determine you to continue as member box, a Close my account toggle and Submit and Cancel buttons" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -59,9 +59,11 @@ is processed."
 Guest accounts do not see the Resign button at all.
 </Note>
 
-An administrator with `HR_LOCAL` over the member's local group sees the same form
+A chapter HR manager over the member's local group sees the same form
 on that member's Close account page, headed "Record the resignation of this
-member", plus a shortcut with that label on the member's Permissions tab. Use it
+member", plus a shortcut with that label on the **Membership status** tab of the
+member's edit screen. This works even when your organisation has turned off **Allow
+Local Admins to Modify User Permissions**. Use it
 when somebody resigns by email or in person.
 
 ---
@@ -69,7 +71,7 @@ when somebody resigns by email or in person.
 ## What administrators do
 
 The queue is **Resignation requests** in the sidebar under MANAGEMENT, visible to
-`HR_LOCAL` and above once the module is on. The screen is titled **Resignations**:
+chapter HR managers and above once the module is on. The screen is titled **Resignations**:
 30 requests per page, newest first, chips for **All**, **Pending** and
 **Processed**, and columns for date requested, member, requested by, chapter,
 StayActive and status. StayActive is hidden when automatic inactivation is on,
@@ -79,19 +81,19 @@ Opening a row shows the reason, the retention answer and an **Exit conclusion**
 box for the reviewer's note. The exit conclusion is hidden from the resigning
 member and read-only once approved. **Approve** processes the resignation;
 **Delete** removes the request entirely and is only offered in the queue to
-`ADMIN_TENANT`.
+organization admins.
 
 <img src="/images/platform/users/resignation-request-detail.png" alt="Resignation request detail showing status, date, member, requested by, stay active, resignation reason, retention answer, exit conclusion box and Approve and Delete buttons" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 | Action | Permission |
 |---|---|
 | Submit a resignation for yourself | Any member (not guests) |
-| Record a resignation for another member | `HR_LOCAL` over that member's local group |
-| See a request | The member, whoever submitted it, or `HR_LOCAL` over the member's local group |
-| Approve a request | `HR_LOCAL` over the member's local group |
-| Delete a request | `ADMIN_TENANT`, or the member themselves, or whoever submitted it |
+| Record a resignation for another member | Chapter HR manager over that member's local group |
+| See a request | The member, whoever submitted it, or a chapter HR manager over the member's local group |
+| Approve a request | Chapter HR manager over the member's local group |
+| Delete a request | Organization admins, or the member themselves, or whoever submitted it |
 
-`HR_TENANT` and `ADMIN_TENANT` cover every local group.
+Organization-wide HR managers and organization admins cover every local group.
 
 ---
 
@@ -110,7 +112,7 @@ Approval, in one step:
 
 <Warning>
 The user type is reassigned on every approval. If your organisation has no
-**Guest User Type** configured (**Settings** → **Users & Profiles** →
+**Guest User Type** configured (**Settings** → **Modules** → **Users & Profiles** →
 **Configuration** → User Types & Roles), approving a resignation leaves the
 member with no user type at all. Set a guest user type before you turn the module
 on if user type drives anything in your setup.
@@ -125,7 +127,7 @@ the ended roles all remain.
 
 | Email | Who gets it | When |
 |---|---|---|
-| Resignation request | `HR_LOCAL` holders in the member's own local group, plus `HR_PARENT_LOCAL` holders in that group or in any group above it in the chapter tree; tenant admins if none of those exist | On submission |
+| Resignation request | Chapter HR managers of the member's own local group, plus parent-chapter HR managers in that group or in any group above it in the chapter tree; organization admins if none of those exist | On submission |
 | Resignation approved | The resigning member | On approval |
 
 Each has its own switch on the **Emails** page.
@@ -142,8 +144,8 @@ deletion does not require a resignation, and resigning does not start a deletion
 <AccordionGroup>
   <Accordion title="A member submitted a resignation and changed their mind">
     While it is pending, the member withdraws it with **Cancel resignation** on
-    their Close account page, or an `ADMIN_TENANT` deletes it from the queue.
-    After approval, set their status back to Active on the Permissions tab and
+    their Close account page, or an organization admin deletes it from the queue.
+    After approval, set their status back to Active on the Membership status tab and
     reassign the roles the approval end-dated.
   </Accordion>
 
@@ -175,5 +177,5 @@ deletion does not require a resignation, and resigning does not start a deletion
 - [User statuses](/platform/users/statuses) - what Inactive blocks, and how to reverse it
 - [Deletion of account](/platform/users/deletion-of-account) - the separate erasure request
 - [Adhesion](/platform/users/adhesion) - the joining flow this mirrors
-- [Permissions](/platform/permissions) - the permissions named on this page
+- [Permissions](/platform/permissions) - the permission levels named on this page
 - [Troubleshooting member access](/platform/users/troubleshooting-access) - when a departure was not the cause

@@ -1,25 +1,5 @@
 [
   {
-    "id": "fundraising-landing-page-editor",
-    "image": "/images/platform/templates/fundraising-landing-page-editor.png",
-    "usedOn": [
-      "platform/templates/fundraising.mdx"
-    ],
-    "tenant": "t187c",
-    "route": "/product/1gjk4l2d48amoo6pku74kb4h2?tab=style",
-    "routeHint": "Finance -> Products -> open the donation campaign 'Support Northwind's Mission' (id 1gjk4l2d48amoo6pku74kb4h2, has hero media, goal and description) -> Landing page tab. The tab is selectable straight from the URL with ?tab=style (client/src/views/Product/Show.vue:785-790 and :2712), which avoids the ambiguous 'Landing page' text that also matches the header button.",
-    "actions": [
-      "wait 7000",
-      "scrollto text=Hero media",
-      "wait 4000"
-    ],
-    "waitFor": "text=Hero media",
-    "viewport": "desktop",
-    "alt": "Landing page tab of a donation campaign, with the hero media, appearance and campaign content editors on the left and a live preview of the public donation page on the right",
-    "status": "new",
-    "notes": "The existing /images/platform/fees/donation-landing-page-tab.png is a mis-capture: it shows the Prices & Options tab, because 'click text=Landing page' matched the header button rather than the tab. Capture the real editor here instead of overwriting that file. Data prep: product 969 had slug NULL, and landingPreviewUrl (client/src/views/Product/Show.vue:3907) builds /pay/{slug || uuid}, which resolves through the by-slug route only, so the live preview iframe rendered an empty page. Set product 969 slug to 'support-northwinds-mission' in the local obfuscated DB before capturing."
-  },
-  {
     "id": "fundraising-donation-product-shortcuts",
     "image": "/images/platform/templates/fundraising-donation-product-shortcuts.png",
     "usedOn": [

@@ -28,7 +28,7 @@ Courses is a module, on by default. **Settings** → **Gamification & Courses** 
 | **Enable Courses** | Shows the Courses entry in the sidebar and enables every course screen. |
 | **Enforce onboarding courses** | Blocks members from the rest of the platform until they finish their onboarding courses. Off by default. |
 
-Toggling the module requires `ADMIN_TENANT`.
+Toggling the module is for the Orgo administrator.
 
 ---
 
@@ -37,10 +37,10 @@ Toggling the module requires `ADMIN_TENANT`.
 | Action | Permission |
 |--------|-----------|
 | Browse and take courses | Any signed-in member |
-| Create, edit, delete a course, add lessons and quizzes | `HR_TENANT`, or `HR_LOCAL` on the course's local group |
-| Enrol other members, view the Students tab, export | `HR_TENANT`, or `HR_LOCAL` on the course's local group |
+| Create, edit, delete a course, add lessons and quizzes | Organization HR managers, or chapter HR managers over the course's chapter group |
+| Enrol other members, view the Students tab, export | Organization HR managers, or chapter HR managers over the course's chapter group |
 
-A local manager (`HR_LOCAL`) must keep the course inside a local group they belong to. If they do not pick one when creating, their own group is filled in automatically, and they cannot later move the course to a group they have no rights over or make it organisation-wide.
+A chapter HR manager must keep the course inside a chapter group they belong to. If they do not pick one when creating, their own group is filled in automatically, and they cannot later move the course to a group they have no rights over or make it organisation-wide.
 
 ---
 
@@ -59,7 +59,7 @@ A local manager (`HR_LOCAL`) must keep the course inside a local group they belo
 
 Two dropdowns sit in the header:
 
-- **Status**: **Draft** or **Published**. Draft courses are visible only to `HR_TENANT` and to a local manager of that course's group. Everyone else gets a not-found.
+- **Status**: **Draft** or **Published**. Draft courses are visible only to organization HR managers and to a chapter HR manager of that course's group. Everyone else gets a not-found.
 - **Course type**: **Self-paced** or **User onboarding**. See [Onboarding courses](#onboarding-courses).
 
 ### Sections, lessons and quizzes
@@ -84,12 +84,18 @@ On the **Lessons** tab, add a section, then use **Add new** on that section for 
 | Field | What it does |
 |-------|-------------|
 | **Status** | Draft or Published. |
-| **Enforce passing grade** | When on, the member must reach the score below before later items unlock. They may retake the quiz. |
+| **Enforce passing grade** | When on, the member must reach the score below before later items unlock. |
 | Passing grade | Percentage, defaults to 80. Only shown when Enforce passing grade is on. |
 | **Question type** | **Single answer** or **Multiple answers**. These are the only two types. |
 | **Responses** | At least two options per question, with the correct one or ones marked. Questions can carry an image. |
 
 Scoring is done on the server: each question is worth its points value (1 by default) and the score is the percentage of points earned. Nothing is graded by hand.
+
+<Warning>
+**A quiz is one attempt.** The server accepts a single submission per member per quiz and refuses the rest, so a member who fails a quiz with **Enforce passing grade** on cannot try again and stays blocked on that item.
+
+Retakes exist in the data model, behind a retake switch and an attempt limit, but the quiz editor has no control for either, so there is no way to turn them on from the interface. If a member needs another attempt, the practical options are to mark the item complete for them or to ask Orgo support.
+</Warning>
 
 ---
 
@@ -138,7 +144,7 @@ Set **Course type** to **User onboarding** to make a course part of the joining 
 Saving any course as **User onboarding** switches the tenant setting **Enforce onboarding courses** on for you if it was off. From that point, members with an unfinished onboarding course are redirected away from the rest of the platform.
 </Warning>
 
-Once enforcement is on, a member who opens Orgo is sent to a mandatory-course screen listing every published onboarding course that matches their user type and that they have not completed. The gate does not apply to `HR_TENANT` users, to the Event App, or to a member who owes a mandatory fee (the fee gate takes priority and runs first).
+Once enforcement is on, a member who opens Orgo is sent to a mandatory-course screen listing every published onboarding course that matches their user type and that they have not completed. The gate does not apply to organization HR managers, to the Event App, or to a member who owes a mandatory fee (the fee gate takes priority and runs first).
 
 ---
 
@@ -158,6 +164,6 @@ If you use Workflows, three course triggers are available: **Course Enrolled**, 
 
 - [Badges & Gamification](/platform/badges) - award a badge on course completion
 - [User types](/platform/users/user-types) - the audience filter on every course
-- [Permissions](/platform/permissions) - what `HR_TENANT` and `HR_LOCAL` unlock
+- [Permissions](/platform/permissions) - what the organization and chapter HR permissions unlock
 - [Local groups](/platform/local-group-fees/create-local-fees) - scoping a course to one group
 - [Events](/platform/events) - for training that happens in person

@@ -23,31 +23,32 @@ Gather these before you open Orgo. Every one of them is asked for during setup, 
 - [ ] A hero image, or the URL of a hero video
 - [ ] A decision on suggested amounts: the figures you want offered, or a plan to press **Generate** and start from what Orgo proposes
 - [ ] A decision on frequency: one-off gifts, monthly giving, or both
-- [ ] Someone with `ADMIN_TENANT` to change the settings, and someone with `FINANCIAL_TENANT` to build the campaign
+- [ ] Someone with the **Orgo administrator** flag to change the settings, and someone with the organization-wide Financial permission to build the campaign. These are two different things: see [Permissions](/platform/permissions)
 
 ---
 
 ## What to turn on
 
-Everything in this table lives under **Settings**. Module settings pages all require `ADMIN_TENANT`, which is what the permission column says when the setting itself is what you are changing.
+Everything in this table lives under **Settings**, except the campaign itself. Settings screens need the **Orgo administrator** flag on your account, which is a separate switch from the Admin permission (see [Permissions](/platform/permissions)). The last column says who that is.
 
-| What | Exact label | Where | Permission |
+| What | Exact label | Where | Who |
 |---|---|---|---|
-| Country on the organisation profile | **Country** | **Settings → Organisation info** | `ADMIN_TENANT` |
-| The payments module | **Enable Online Payments** | **Settings → Modules → Payments & Fees → Online Payments** | `ADMIN_TENANT` |
-| Stripe account | **Connect existing Stripe account** or **Generate Stripe Account** | **Settings → Modules → Payments & Fees → Payment Gateway** | `ADMIN_TENANT` (organisation), `ADMIN_LOCAL` (chapter) |
-| Accounts for donors who are not members | **Create Accounts for External Buyers** | **Settings → Modules → Payments & Fees → Online Payments** | `ADMIN_TENANT` |
-| Phone on the donation form | **Collect Phone at Checkout** | **Settings → Modules → Payments & Fees → Online Payments** | `ADMIN_TENANT` |
-| Forced confidentiality notice | **Confidentiality Agreement Mandatory** | **Settings → Modules → Payments & Fees → Online Payments** | `ADMIN_TENANT` |
-| Chapter designations on a campaign | **Products with Local Center Option** | **Settings → Modules → Payments & Fees → Online Payments** | `ADMIN_TENANT` |
-| Chapters taking their own money | **Local Center Payments**, then **All Local Centers Eligible** or per chapter | **Settings → Modules → Payments & Fees → Online Payments** | `ADMIN_TENANT` |
-| The default `/donate` campaign | **Donation Product** | **Settings → Modules → Payments & Fees → Donation Product** | `ADMIN_TENANT` |
-| The campaign that grants the Supporter flag | **Recurring Donation Product** | **Settings → Modules → Payments & Fees → Donation Product** | `ADMIN_TENANT` |
-| Stripe's own receipt email | **Stripe Email Receipts** | **Settings → Modules → Payments & Fees → Online Payments** | `ADMIN_TENANT` |
-| The campaign itself | **Create Product**, then the **Donation** card | **Finance → Products** (or **Finance → Local products** for a chapter) | `FINANCIAL_TENANT`, or `FINANCIAL_LOCAL` for a chapter campaign |
-| Appeal emails | **Enable Email Campaign Module** | **Settings → Modules → Emails & Notifications → Email Campaigner** | `ADMIN_TENANT` to switch on, `COMMUNICATION_TENANT` to send |
-| Wording of the thank-you email | **Donation Thank You** email | **Settings → Modules → Emails & Notifications → Emails** | `ADMIN_TENANT` or `COMMUNICATION_TENANT` |
-| Revenue dashboards | analytics module, then **Minimum access level** | **Settings → Modules → All Modules** for the module, **Settings → Modules → Users & Profiles → Security & Permissions** for the access level | `ADMIN_TENANT` to configure, `FINANCIAL_TENANT` to read the Finance tab |
+| Country on the organisation profile | **Country** | **Settings → Organisation info** | Orgo administrator |
+| The payments module | **Enable Online Payments** | **Settings → Modules → Payments & Fees → Online Payments** | Orgo administrator |
+| Stripe account | **Connect existing Stripe account** or **Generate Stripe Account** | **Settings → Modules → Payments & Fees → Payment Gateway** | Orgo administrator (organisation); admin of the chapter, under **Chapter settings → Stripe integration** (chapter) |
+| Accounts for donors who are not members | **Create Accounts for External Buyers** | **Settings → Modules → Payments & Fees → Online Payments** | Orgo administrator |
+| Phone on the donation form | **Collect Phone at Checkout** | **Settings → Modules → Payments & Fees → Online Payments** | Orgo administrator |
+| Forced confidentiality notice | **Confidentiality Agreement Mandatory** | **Settings → Modules → Payments & Fees → Online Payments** | Orgo administrator |
+| Chapter designations on a campaign | **Products with Local Center Option** | **Settings → Modules → Payments & Fees → Online Payments** | Orgo administrator |
+| Chapters taking their own money | **Local Center Payments**, then **All Local Centers Eligible** or per chapter | **Settings → Modules → Payments & Fees → Online Payments** | Orgo administrator |
+| The default `/donate` campaign | **Donation Product** | **Settings → Modules → Payments & Fees → Donation Product** | Orgo administrator |
+| The campaign that grants the Supporter flag | **Recurring Donation Product** | **Settings → Modules → Payments & Fees → Donation Product** | Orgo administrator |
+| Stripe's own receipt email | **Stripe Email Receipts** | **Settings → Modules → Payments & Fees → Online Payments** | Orgo administrator |
+| A yearly cap on what one donor can give | **Annual Donation Limit per Donor** | **Settings → Modules → Payments & Fees → Online Payments** | Orgo administrator |
+| The campaign itself | **Create Product**, then the **Donation** card | **Finance → Products** (or **Finance → Local products** for a chapter) | Organization-wide Financial permission, or chapter Financial for a chapter campaign |
+| Appeal emails | **Enable Email Campaign Module** | **Settings → Modules → Emails & Notifications → Email Campaigner** | Orgo administrator to switch on, organization-wide communication manager to send |
+| Wording of the thank-you email | **Donation Thank You** email | **Settings → Modules → Emails & Notifications → Emails** | Orgo administrator or organization-wide communication manager |
+| Revenue dashboards | analytics module, then **Minimum access level** | **Settings → Modules → All Modules** for the module, **Settings → Modules → Users & Profiles → Security & Permissions** for the access level | Orgo administrator to configure, organization-wide finance manager to read the Finance tab |
 
 <Note>
   Nothing here needs the **Invoices** module. Donation payments cannot be turned into Orgo invoices: see [Limits](#limits-worth-knowing-before-you-start).
@@ -81,7 +82,7 @@ Each step says where in the interface it happens and how you can tell it worked,
     See [Stripe integration](/platform/fees/stripe-integration).
   </Step>
   <Step title="Decide the checkout rules once, for all campaigns">
-    **Settings → Modules → Payments & Fees → Online Payments** holds the switches that shape every donation form you will ever build.
+    **Settings → Modules → Payments & Fees → Online Payments** holds the switches that shape every donation form you will ever build, plus **Annual Donation Limit per Donor** if you want to cap what one person can give in a calendar year.
 
     <img src="/images/platform/fees/fees-module-config.png" alt="Online Payments module settings with the Enable Online Payments switch, Payment Features, a Local Centers group holding Local Center Payments and Products with Local Center Option, and Checkout Settings holding Create Accounts for External Buyers, Collect Phone at Checkout and Confidentiality Agreement Mandatory" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -92,22 +93,22 @@ Each step says where in the interface it happens and how you can tell it worked,
     See [Modules](/platform/organisation/modules).
   </Step>
   <Step title="Create the campaign">
-    **Finance → Products → Create Product**, pick **Donation**, name it, check the URL slug, and turn on **One-off**, **Recurring**, or both.
+    **Finance → Products → Create Product**, pick **Donation**, name it and check the URL slug, then press **Continue** to reach the donation settings and **Create product** to save. **One-off** and **Recurring** both start on; **One-off** stays off until a Stripe account is connected. With **Recurring** on, **Also offer annual giving** adds a yearly option.
 
     <img src="/images/platform/fees/donation-product-edit.png" alt="Create Product form with the Donation card selected next to Membership Fee, a campaign title, the URL slug generated from it with the public address preview beneath, the Recurring and One-off frequency cards both ticked, custom amount minimum and maximum fields, and the start of the Campaign block" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-    The frequency choice is the one that is awkward to undo: a saved campaign must keep at least one of the two.
+    The frequency choice is the one that is awkward to undo: once a campaign has been saved with only one of the two, that one cannot be switched off.
 
     **Done when:** the campaign opens on its own detail page with **Prices & Options**, **Landing page**, **Widgets** and **Stats** tabs and an **Active** badge.
 
     See [Donations](/platform/fees/donations).
   </Step>
   <Step title="Add suggested amounts">
-    On **Prices & Options**, add a price row per suggested amount and mark one default. These are the buttons a donor sees before they type anything.
+    A new campaign arrives with suggested amounts already created in your organisation currency: 50, 100, 200, 300, 500 and 1000 for one-off gifts (100 pre-selected) and 25, 50, 100, 200, 300 and 500 for monthly ones (50 pre-selected). On **Prices & Options**, edit or archive them and add a row for any amount you want offered, then mark one default. These are the buttons a donor sees before they type anything.
 
     <img src="/images/platform/fees/donation-product-detail.png" alt="Prices and Options tab of a donation campaign listing suggested amounts by name, value and description, one tagged default and four tagged Recurring, with an Add button above the table" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-    On a campaign with no prices yet, **Generate** proposes three A/B variations of three amounts each from your country, currency and campaign title, registers them in Stripe and switches A/B testing on. It disappears once any price exists, so use it before you add the first row by hand.
+    **Generate** appears only while a campaign has no prices at all, so the seeded amounts have to be removed first. It proposes three A/B variations of three amounts each from your country, currency and campaign title, registers them in Stripe and switches A/B testing on. Use it only if you want to start an A/B test from Orgo's proposal.
 
     **Done when:** every amount you want offered has a row, and exactly one carries the **default** tag.
 
@@ -140,7 +141,7 @@ Each step says where in the interface it happens and how you can tell it worked,
   <Step title="Build the public page">
     The **Landing page** tab edits hero media, colours, the campaign story, the thank-you message and the social share image against a live preview.
 
-    <img src="/images/platform/templates/fundraising-landing-page-editor.png" alt="Landing page tab of a donation campaign, with a Hero media card holding Image and Video tabs over the uploaded hero photo, an Appearance card with logo header bar and title switches for desktop and mobile plus named primary colour presets, and a live preview on the right showing the campaign page on a phone with its progress bar and suggested amounts" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+    <img src="/images/platform/fees/donation-landing-page-tab.png" alt="Landing page tab of a donation campaign, with a Hero media card holding Image and Video tabs over the uploaded hero photo, an Appearance card with logo header bar and title switches for desktop and mobile plus named primary colour presets, and a live preview on the right showing the campaign page on a phone with its progress bar and suggested amounts" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
     Work down the left column and watch the preview: it renders the real public page, so it shows what a donor will see on the phone most of them are holding.
 
@@ -149,7 +150,7 @@ Each step says where in the interface it happens and how you can tell it worked,
     See [Donation pages and widgets](/platform/fees/donation-pages).
   </Step>
   <Step title="Point the shortcuts at the right campaign">
-    **Settings → Modules → Payments & Fees → Donation Product** sets which campaign answers `/donate`, and which one grants the **Supporter** flag on member profiles.
+    **Settings → Modules → Payments & Fees → Donation Product** sets which campaign answers `/donate`, and which one grants the **Supporter** flag on member profiles. The same page has a **Donate Button in Header** switch that adds a Donate shortcut to the app header, pointing at the default campaign or at a link you give.
 
     <img src="/images/platform/templates/fundraising-donation-product-shortcuts.png" alt="Donation Product settings with both the Donation Product and the Recurring Donation Product selector naming the campaign Support Northwind's Mission, beside a Manage Products link" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -191,16 +192,17 @@ Everything below lands on one public page or one click from it. This is a campai
 
 | What you need | What Orgo gives you | Where it is documented |
 |---|---|---|
-| One-off gifts | A donation campaign with **One-off** on: suggested amounts, a custom amount with optional minimum and maximum, **Cover the processing fee**, 19 currencies | [Donations](/platform/fees/donations) |
-| Recurring giving | The same campaign with **Recurring** on: a **Give once / Monthly** toggle on the page, a **Subscribers** tab, and a personal cancel link in the donor's subscription emails | [Donations](/platform/fees/donations) |
+| One-off gifts | A donation campaign with **One-off** on: suggested amounts, a custom amount with optional minimum and maximum, **Cover the processing fee**, 22 currencies | [Donations](/platform/fees/donations) |
+| Recurring giving | The same campaign with **Recurring** on: a **One time / Monthly** toggle on the page (with **Annual** as a third choice when annual giving is on), a **Subscribers** tab, and a personal cancel link in the donor's subscription emails | [Donations](/platform/fees/donations) |
 | A campaign page | A public page at `/pay/<slug>`, no login needed, with hero media, story, goal progress bar, donor wall and share button | [Donation pages and widgets](/platform/fees/donation-pages) |
 | Giving from your own website | Embed and popup widgets with their own colours, language, preset amounts and statistics | [Donation pages and widgets](/platform/fees/donation-pages) |
 | Restricted or designated gifts | **Product options** under **Designate to**, each with its own deep link, filterable on the payments list | [Products](/platform/fees/products) |
 | Donor recognition | The donor wall (**Display top 50 recent donations**), **Words of support** messages, and the **Supporter** tag on profiles and in the member directory for active recurring donors | [Donation pages and widgets](/platform/fees/donation-pages) |
 | Anonymous giving | **Enable payment confidentiality**: the gift counts toward the goal, the name shows as "anonymous" | [Donation pages and widgets](/platform/fees/donation-pages) |
 | Receipts | The **Donation thank you** email, plus optional **Stripe Email Receipts** from your own Stripe account | [System emails](/platform/emails/system-emails) |
-| Offline gifts (cash, cheque, bank transfer) | **Record payment** on the donor's **Payments** tab, or on the campaign's **Payments** tab | [Recording a payment](/platform/fees/record-payment) |
-| Refunds | **Refund** on the payment row, which returns that row's amount through Stripe | [Stripe integration](/platform/fees/stripe-integration) |
+| Offline gifts (cash, cheque, bank transfer) | **Add payment record** on the donor's own **Payments** tab, choosing the campaign and pressing **Record payment**. The campaign's own **Payments** tab has no record button | [Recording a payment](/platform/fees/record-payment) |
+| Refunds | **Refund** on the payment row, which returns that row's amount through Stripe. A gift with no Stripe charge behind it (a recorded or imported gift) shows **Mark as refunded** instead, which only marks it: return the money yourself first |
+| Donations that keep a membership alive | The **Donations count towards membership** switch under **Settings → Modules → Payments & Fees → Membership fees**: a gift to any campaign extends the donor's membership when it reaches the minimum of a **Flexible amount** level | [Membership Fees](/platform/fees/fees) | [Stripe integration](/platform/fees/stripe-integration) |
 | Appeal emails | Newsletter campaigns, with **Follow up with non-openers** to re-mail the people who did not read the first one | [Newsletter](/platform/newsletter) |
 | Donor segments | Lists with **Has Payment** and **Has Recurring Payment** criteria, both of which reveal a **Product** selector so you can narrow to one campaign | [Lists and segments](/platform/users/lists) |
 | Campaign reporting | The campaign's **Stats** tab: views, device split, widget versus public page, and UTM source, medium and campaign breakdowns for both views and gifts | [Donations](/platform/fees/donations) |
@@ -226,8 +228,8 @@ A six-week campaign with a published target, tested ask amounts, and two emails.
 
 | Step | Setting |
 |---|---|
-| Frequency | **One-off** only, so the page does not split attention with a monthly toggle |
-| Suggested amounts | Press **Generate** on the empty **Prices & Options** tab. It creates three variations of three amounts, registers them in Stripe and switches **Pricing A/B Testing** on |
+| Frequency | **One-off** only, so the page does not split attention with a monthly toggle. Switch **Recurring** off before the first save: once saved, a lone frequency cannot be undone |
+| Suggested amounts | Archive the seeded amounts on **Prices & Options**, then press **Generate**, which only appears when a campaign has no prices. It creates three variations of three amounts, registers them in Stripe and switches **Pricing A/B Testing** on |
 | Goal | **Total goal**, **Goal value** set to your target, **Target date** 31 December. The progress bar then prints the date instead of the completion percentage, which is what creates the deadline |
 | Page | Hero image, a short story in **Description**, and a **Thank you message** that names what the money does |
 | Recognition | **Display top 50 recent donations** and **Messages of support from donors** both on, so the page fills up with activity as the appeal runs |
@@ -245,7 +247,7 @@ Two things to know before you rely on this. The A/B test is on the suggested amo
 
 | Step | Setting |
 |---|---|
-| Frequency | **Recurring** and **One-off** both on, so the page shows the **Give once / Monthly** toggle and the "Boost your impact by giving monthly" prompt |
+| Frequency | **Recurring** and **One-off** both on, so the page shows the **One time / Monthly** toggle and the "Boost your impact by giving monthly" prompt |
 | Goal | **Monthly goal**, so the progress bar tracks recurring revenue per month rather than a cumulative total |
 | Suggested amounts | Price rows tagged **Is recurring**, at monthly rather than annual figures |
 | Supporter flag | Point **Recurring Donation Product** at this campaign under **Settings → Modules → Payments & Fees → Donation Product**. Members with an active, non-confidential subscription then carry a **Supporter** tag on their profile and in the directory |
@@ -314,9 +316,9 @@ Stated plainly, because each one has caught somebody out.
 
 **The PDF Receipts/Proofs setting is not a general donation receipt.** It adds a downloadable proof on paid rows, but the document is generated from the payer's validated identity record, so it only produces anything for donors who went through [identity validation](/platform/identity-validation). Do not enable it expecting receipts for ordinary card gifts.
 
-**A chapter designation is a label, not a bank instruction.** With **Has local center option** on, a donor picking a chapter under **Designate to** stamps the payment with that chapter, which is what the payments filter and the refund permission read. A gift with no designation is treated as organisation-level, and the refund, cancel, accept and proof actions on it require `FINANCIAL_TENANT` rather than any one chapter's `FINANCIAL_LOCAL`. The money still settles into the Stripe account the campaign resolves to. Only fee payments follow chapter Stripe routing: see [Stripe integration](/platform/fees/stripe-integration).
+**A chapter designation is a label, not a bank instruction.** With **Has local center option** on, a donor picking a chapter under **Designate to** stamps the payment with that chapter, which is what the payments filter and the refund permission read. A gift with no designation is treated as organisation-level, and the refund, cancel, accept and proof actions on it require the organization-wide Financial permission rather than any one chapter's Financial permission. The money still settles into the Stripe account the campaign resolves to. Only fee payments follow chapter Stripe routing: see [Stripe integration](/platform/fees/stripe-integration).
 
-**There is no CSV export on the campaign payments or subscribers lists.** Both are filterable and paginated on screen only. For a donor extract, build a payments report in [Reports](/platform/reports): **Payments** is one of the builder's starting points, you can add columns from the product, the price, the payer and the company, and the download holds every matching row rather than one page. The alternative is to ask the question in [Ask Orgo](/platform/insights) and use **Export CSV**, which returns the first 500 rows; save the query and run it from **Database Queries** for the whole set. Both routes require `ADMIN_TENANT`, so a fundraiser holding only `FINANCIAL_TENANT` cannot do this themselves.
+**There is no CSV export on the campaign payments or subscribers lists.** Both are filterable and paginated on screen only. For a donor extract, build a payments report in [Reports](/platform/reports): **Payments** is one of the builder's starting points, you can add columns from the product, the price, the payer and the company, and the download holds every matching row rather than one page. The alternative is to ask the question in [Ask Orgo](/platform/insights) and use **Export CSV**, which returns the first 500 rows; save the query and run it from **Database Queries** for the whole set. Reports and Ask Orgo are open to organization admins only, so a fundraiser holding only the Financial permission cannot use them. They can open a saved query that was shared with them from the **DB Query** tab of Analytics.
 
 **Refunds are all or nothing.** **Refund** returns exactly that payment row's amount. There is no partial refund in Orgo, so a donor who wants half their gift back has to be refunded in full and give again.
 
@@ -338,7 +340,7 @@ Stated plainly, because each one has caught somebody out.
 
 <AccordionGroup>
   <Accordion title="The Recurring or One-off toggle is greyed out on the campaign form">
-    No Stripe account is connected: the organisation's for an organisation campaign, the chapter's own for a chapter campaign. Connect one under **Settings → Modules → Payments & Fees → Payment Gateway**. If the connect buttons themselves are disabled, the organisation has no **Country** set under **Settings → Organisation info**. See [Stripe integration](/platform/fees/stripe-integration).
+    No Stripe account is connected. **One-off** needs the organisation's account for an organisation campaign and the chapter's own for a chapter campaign; a chapter campaign needs the chapter's own account for **Recurring** too. Connect the organisation's under **Settings → Modules → Payments & Fees → Payment Gateway**, and a chapter's under **Chapter settings → Stripe integration**. If the connect buttons themselves are disabled, the organisation has no **Country** set under **Settings → Organisation info**. See [Stripe integration](/platform/fees/stripe-integration).
   </Accordion>
 
   <Accordion title="Donors say payments are temporarily unavailable">
@@ -346,7 +348,7 @@ Stated plainly, because each one has caught somebody out.
   </Accordion>
 
   <Accordion title="A gift went through but I cannot find it in Orgo">
-    Check three things in order. Is it on the campaign's **Payments** tab with a status other than `success`? A payment on hold shows as **on-hold** and has not been captured. Was it designated to a chapter you do not hold `FINANCIAL_LOCAL` on? The payments list is scoped by permission, and the payment-ID and email filters are only offered to `FINANCIAL_TENANT`. And is it on the right campaign at all? The `/donate` shortcut resolves to whichever campaign is set as **Donation Product**, which is not necessarily the one you were promoting.
+    Check three things in order. Is it on the campaign's **Payments** tab with a status other than `success`? A payment on hold shows as **on-hold** and has not been captured. Was it designated to a chapter you do not hold the chapter Financial permission on? The payments list is scoped by permission, and the email, designation and chapter filters are only offered to the organization-wide Financial permission. And is it on the right campaign at all? The `/donate` shortcut resolves to whichever campaign is set as **Donation Product**, which is not necessarily the one you were promoting.
   </Accordion>
 
   <Accordion title="Nobody got a thank-you email">
@@ -358,7 +360,7 @@ Stated plainly, because each one has caught somebody out.
   </Accordion>
 
   <Accordion title="A donor wants their gift back">
-    **Refund** on the payment row, which needs `FINANCIAL_LOCAL` on the chapter the gift was designated to, or `FINANCIAL_TENANT` when the gift carries no chapter. `ADMIN_TENANT` qualifies either way, and a chapter treasurer cannot refund an undesignated gift. It only works on a payment already in `success`; a payment still on hold is cancelled instead, and the full row amount goes back. Refunds you issue in the Stripe Dashboard are picked up and marked in Orgo too, so you do not have to do it twice.
+    **Refund** on the payment row, which needs the chapter Financial permission on the chapter the gift was designated to, or the organization-wide Financial permission when the gift carries no chapter. The organization-wide Admin permission qualifies either way, and a chapter treasurer cannot refund an undesignated gift. It only works on a payment already in `success`; a payment still on hold is cancelled instead, and the full row amount goes back. Refunds you issue in the Stripe Dashboard are picked up and marked in Orgo too, so you do not have to do it twice.
   </Accordion>
 
   <Accordion title="A monthly donor wants to stop and cannot find how">
@@ -382,7 +384,7 @@ Stated plainly, because each one has caught somebody out.
   </Accordion>
 
   <Accordion title="I cannot open or edit the campaign">
-    Organisation campaigns need `FINANCIAL_TENANT`. `FINANCIAL_LOCAL` reaches only campaigns belonging to a chapter the holder is attached to, which is why a chapter finance admin sees **Finance → Local products** but not the organisation's campaigns. Someone without the permission is sent to the login screen rather than shown a permission message, which reads like an expired session and is not one. See [Permissions](/platform/permissions).
+    Organisation campaigns need the organization-wide Financial permission. The chapter Financial permission reaches only campaigns belonging to a chapter the holder is attached to, which is why a chapter finance admin sees **Finance → Local products** but not the organisation's campaigns. Someone without the permission is sent to the login screen rather than shown a permission message, which reads like an expired session and is not one. See [Permissions](/platform/permissions).
   </Accordion>
 </AccordionGroup>
 

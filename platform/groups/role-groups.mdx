@@ -20,7 +20,9 @@ Role groups appear under **Teams** on the Groups page.
 
 ## Before you start
 
-Role groups need **Enable Role Groups** on under **Settings** → **Groups & Teams** → **Configuration**, and `ADMIN_TENANT` to create or edit. Without both, the **Role group** access mode, the **Create role group** action and the **Role groups** tab are hidden.
+Role groups need **Enable Role Groups** on under **Settings** → **Modules** → **Groups & Teams** → **Configuration**, and an organization admin to create or edit them. Without both, the **Role group** access mode, the **Create role group** action and the **Role groups** tab are hidden.
+
+If **Role groups: only my chapters** is on in the same settings page, the **Chapter** picker (see below) offers an admin only the chapters they belong to, including the chapters above their own, and any chapter below one they are directly in. A chapter already set on the group stays selectable.
 
 ---
 
@@ -37,7 +39,7 @@ Role groups need **Enable Role Groups** on under **Settings** → **Groups & Tea
     The **Segmentation type** toggle switches between **Profile** (who the member is) and **Roles** (what they have been assigned).
   </Step>
   <Step title="Set the criteria and save">
-    Fill in the fields below. Saving scans your members, populates the group and subscribes them, so they get its notifications.
+    Fill in the fields below. Saving scans your members, populates the group and subscribes them, so they get its notifications. You are added to the group yourself as an extra member, whether or not you match the criteria (see [Adding people the criteria miss](#adding-people-the-criteria-miss)).
   </Step>
 </Steps>
 
@@ -99,9 +101,9 @@ Recalculation both adds newly matching members and drops those who no longer mat
 
 ## Adding people the criteria miss
 
-A role group has an **Admins** tab, visible to organization admins. Anyone added there is kept in the group even though they do not match the criteria, and survives the rebuild that a re-save triggers. Use it for the exceptions that always exist; for anything larger, adjust the criteria.
+A role group has an **Admins** tab, visible to organization admins. It lists the extra members, the people kept in the group even though they do not match the criteria. Anyone added there survives every recalculation and the rebuild that a re-save triggers, and stays a member when their profile or roles change. Use it for the exceptions that always exist; for anything larger, adjust the criteria.
 
-Ordinary members cannot leave a role group, because membership is derived from their profile. They can mute it with the **Subscribe** / **Subscribed** button on the Groups page.
+You, as the creator, are the first extra member. Extra members, you included, can leave from **Leave group** in the group's header menu. Leaving removes them from the extra members for good, so the next recalculation does not bring them back unless they match the criteria. Members who are in because they match the criteria cannot leave, since the next recalculation would add them again. Every member can mute the group with the **Subscribe** / **Subscribed** button on the Groups page. People who are not in the group do not see that button.
 
 ---
 
@@ -113,14 +115,14 @@ Ordinary members cannot leave a role group, because membership is derived from t
 
 ## Editing, archiving and deleting
 
-Edit a role group from the gear icon on the **Role groups** tab of the Groups page, or from **Settings** in the group's own header.
+Edit a role group from the gear icon on the **Role groups** tab of the Groups page, or from **Settings** in the group's own header. Organization-wide HR managers see every role group on the Groups page and can open one they are not in, but only organization admins can change or archive it.
 
 | Action | Permission | Effect |
 |--------|-----------|--------|
-| **Edit** | `ADMIN_TENANT` | Saving rebuilds the membership from the new criteria. Manually added members from the Admins tab are re-added. |
-| **Archive** | `ADMIN_TENANT` | Moves it to the **Archived** tab. Membership is left alone, so a later unarchive restores it as it was. |
-| **Unarchive** | `ADMIN_TENANT` | Restores it from the **Archived** tab |
-| **Delete** | `HR_TENANT` | Removes the role group and its role assignments permanently |
+| **Edit** | Organization admin | Saving rebuilds the membership from the new criteria. Extra members from the Admins tab are kept. |
+| **Archive** | Organization admin | Moves it to the **Archived** tab. Membership is left alone, so a later unarchive restores it as it was. |
+| **Unarchive** | Organization admin | Restores it from the **Archived** tab |
+| **Delete** | Organization-wide HR manager | Removes the role group and its role assignments permanently |
 
 ---
 
@@ -144,4 +146,4 @@ Edit a role group from the gear icon on the **Role groups** tab of the Groups pa
 - [Private Groups](/platform/groups/private-groups) - for manually controlled membership
 - [Main Group](/platform/groups/main-group) - the organization-wide space
 - [Local Centers](/platform/groups/local-groups) - geographic branches
-- [Permissions](/platform/permissions) - what `ADMIN_TENANT` and `HR_TENANT` cover
+- [Permissions](/platform/permissions) - what organization admins and organization HR managers cover

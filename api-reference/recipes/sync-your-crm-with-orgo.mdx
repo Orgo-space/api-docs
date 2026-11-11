@@ -1,47 +1,49 @@
 ---
 title: 'Sync your CRM with Orgo'
-description: 'Two-way contact sync — bulk import from your CRM into Orgo, react to changes via webhooks'
+description: 'Two-way contact sync: push contacts from your CRM into Orgo, and react to changes through webhooks'
 ---
 
-This walkthrough sets up a two-way sync between an external CRM (HubSpot, Salesforce, Attio, or a homegrown one) and Orgo's [Contact](/api-reference/contact) resource. The pattern: bulk push contacts on a schedule, then keep them in sync incrementally via webhooks.
+This walkthrough sets up a two-way sync between an external CRM (HubSpot, Salesforce, Attio, or a homegrown one) and Orgo's `Contact` resource. The pattern: push contacts on a schedule, then keep both sides current incrementally through webhooks.
 
-Who is this for: marketing-ops integrations that own the CRM and need to project membership/contact data into Orgo so it can be used in newsletters, event invites, and audience filters.
+Who is this for: marketing-ops integrations that own the CRM and need to project contact data into Orgo so it can drive newsletters, event invites and audience filters.
+
+Your Api-Token must belong to a user who can manage contacts (HR or finance rights over the contact's chapter). Tagging and newsletter subscription need organization-wide HR rights, and creating tags needs organization-wide admin rights.
 
 ---
 
 ## Architecture in two paragraphs
 
-Your CRM is the source of truth for *contact details*. Orgo is the source of truth for *what that contact has done* inside Orgo — events attended, payments made, contracts signed, newsletter engagement. The sync pushes contact details one way and pulls Orgo activity the other way.
+Your CRM is the source of truth for *contact details*. Orgo is the source of truth for *what that contact has done* inside Orgo: events attended, payments made, contracts signed, newsletter engagement. The sync pushes contact details one way and pulls Orgo activity the other way.
 
-Day-to-day, both sides change. Without webhooks, you'd have to poll Orgo for "what changed since yesterday?" — expensive and slow. With webhooks, Orgo tells you the moment a contact subscribes, a payment clears, or a contract is signed. We use webhooks for the Orgo → CRM direction.
+Both sides change day to day. Without webhooks you would poll Orgo for "what changed since yesterday", which is slow, and contacts have no "updated since" filter to poll with. With webhooks, Orgo tells you the moment a contact is created, edited or removed. Use webhooks for the Orgo to CRM direction.
 
 ---
 
-## Step 1 — Bulk import from CRM to Orgo (initial load)
+## Step 1: Bulk import from the CRM to Orgo
 
-Iterate over your CRM and create one Contact per record. The endpoint `POST /api/v1/contacts` returns `409 Conflict` if an email already exists in Orgo (either as a Contact or as a User), so you can rerun safely.
+Create one contact per CRM record with `POST /api/v1/contacts`. If the email already belongs to a contact **or a member**, the call answers `409 Conflict`, so you can rerun an import safely.
 
 ```bash
 curl -X POST https://acme.orgo.space/api/v1/contacts \
   -H "Api-Token: $ORGO_API_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "name": "Olivia Brown",
+    "firstName": "Olivia",
+    "lastName": "Brown",
     "email": "olivia.brown@example.com",
     "phone": "+1 415 555 0192",
-    "localCenter": "/api/v1/local_centers/4",
-    "isNewsletterSubscribed": true,
-    "notes": "Imported from HubSpot on 2026-01-15. Source: trade-show signup."
+    "organisation": "Brown & Co",
+    "localCenter": "/api/v1/local_centers/4"
   }'
 ```
 
-For thousands of contacts, parallelize with a concurrency cap of ~10 — the per-endpoint rate limit on Contact create is generous, but Stripe/SES upstream limits aren't (some Contact creates trigger welcome emails).
+Contacts take `name` or `firstName` and `lastName`, plus `email`, `phone`, `organisation`, `role`, `town`, `country`, `gender`, `dateBirth`, social links, company fields, `customFieldValues` and `localCenter`. The response carries the contact `id`, `source: "MANUAL"` and the read-only `isNewsletterSubscribed` flag. Newsletter opt-in cannot be set on create, see step 3.
+
+For thousands of contacts, parallelize with a modest cap (around 10 concurrent requests) rather than flooding the endpoint.
 
 ### Conflict handling
 
-When `POST` returns `409`, the email already exists. Options:
-- **Skip** — your CRM was already in sync; no action needed.
-- **Merge** — look up the existing Contact by email (`GET /api/v1/contacts?email=...`) and `PATCH` it with the fresher CRM data.
+When `POST` returns `409`, the email already exists. Either skip it (your CRM was already in sync) or merge: look the contact up by email and update it with the fresher CRM data.
 
 ```bash
 # Find the existing contact
@@ -54,45 +56,63 @@ curl -X PATCH https://acme.orgo.space/api/v1/contacts/85 \
   -H "Content-Type: application/merge-patch+json" \
   -d '{
     "phone": "+1 415 555 0199",
-    "notes": "Updated from HubSpot 2026-01-15."
+    "role": "Board member"
   }'
 ```
 
+If the `409` is because the address belongs to a **member**, the email is not a contact at all: update the user instead, or leave it.
+
 ---
 
-## Step 2 — Tag contacts for audience filtering
+## Step 2: Tag contacts for audience filtering
 
-Tags are how Orgo segments contacts in newsletter audiences and event invite filters. Sync your CRM segments to Orgo `ProfileTag` entries.
+Tags label contacts for filtering and for newsletter audiences. Mirror your CRM segments as tags. A tag is created once, then attached to each contact with a profile tag:
 
 ```bash
-# Create a tag (idempotent — returns 409 if it exists; treat as success)
-curl -X POST https://acme.orgo.space/api/v1/profile_tags \
+# Create the tag (organization-wide admin rights)
+curl -X POST https://acme.orgo.space/api/v1/tags \
   -H "Api-Token: $ORGO_API_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"name": "donor-2026"}'
+# -> {"id": 14, "name": "donor-2026", ...}
 
-# Attach the tag to a contact
-curl -X POST https://acme.orgo.space/api/v1/contacts/85/profile_tags \
+# Attach the tag to a contact (organization-wide HR)
+curl -X POST https://acme.orgo.space/api/v1/profile_tags \
   -H "Api-Token: $ORGO_API_TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"profileTag": "/api/v1/profile_tags/14"}'
+  -d '{"tag": "/api/v1/tags/14", "contact": "/api/v1/contacts/85"}'
 ```
 
-For high-volume tag syncs, run them after the initial Contact import (one round-trip per contact-tag pair is acceptable up to ~10k contacts).
+List a contact's tags with `GET /api/v1/contacts/85/profile_tags`, and find every contact with a tag using `GET /api/v1/contacts?tags.tag=/api/v1/tags/14`. Remove a tag from a contact by deleting the profile tag: `DELETE /api/v1/profile_tags/{id}`.
+
+Run tagging after the initial import. One round trip per contact-tag pair is fine up to around ten thousand contacts.
+
+### Newsletter subscription
+
+Whether a contact receives newsletters is a flag Orgo manages, with an audit entry for every change. Set it with:
+
+```bash
+curl https://acme.orgo.space/api/v1/contact/85/subscribe-to-newsletter \
+  -H "Api-Token: $ORGO_API_TOKEN"
+# and .../unsubscribe-from-newsletter to turn it off
+```
+
+Both are `GET` calls and need organization-wide HR rights. Respect opt-outs: a person who unsubscribes through an email link has the flag turned off, and your sync should not turn it back on without their consent.
 
 ---
 
-## Step 3 — Subscribe to Orgo events
+## Step 3: Subscribe to Orgo events
 
-Register a webhook so Orgo pushes updates the moment they happen — no polling needed.
+Register a webhook so Orgo pushes updates as they happen:
 
 ```bash
 curl -X POST https://acme.orgo.space/api/v1/webhook_subscriptions \
   -H "Api-Token: $ORGO_API_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
+    "name": "CRM sync",
     "url": "https://your-app.example.com/webhooks/orgo",
-    "events": [
+    "eventTypes": [
       "contact.created",
       "contact.updated",
       "contact.deleted",
@@ -101,24 +121,24 @@ curl -X POST https://acme.orgo.space/api/v1/webhook_subscriptions \
       "product_payment.created"
     ],
     "secret": "whsec_a3f8b2c4d6e8f1a3b5c7d9e1f3a5b7c9",
-    "active": true,
-    "description": "Sync contact + member changes into CRM"
+    "isActive": true,
+    "description": "Sync contact and member changes into CRM"
   }'
 ```
 
-See [Handle webhooks](/api-reference/recipes/handle-webhooks) for the receiver implementation.
+Creating webhook subscriptions needs the Orgo administrator flag. See [Handle webhooks](/api-reference/recipes/handle-webhooks) for the receiver implementation.
 
 ---
 
-## Step 4 — Receive and write back to CRM
+## Step 4: Receive and write back to the CRM
 
 When Orgo fires a `contact.updated` webhook, your handler:
 
 1. Verifies the signature.
 2. Looks up the same contact in your CRM by email.
-3. Writes back the fields Orgo owns (newsletter opt-in, last event attended, total payments).
+3. Writes back the fields Orgo owns (newsletter opt-in, attendance, payments).
 
-The payload shape (Stripe-inspired):
+The payload shape:
 
 ```json
 {
@@ -139,30 +159,30 @@ The payload shape (Stripe-inspired):
 }
 ```
 
-`previous_attributes` is the diff — fields not mentioned didn't change. This is enough to detect "unsubscribed" events without diffing against a stored snapshot.
+`previous_attributes` is the diff: fields not mentioned did not change. That is enough to detect an unsubscribe without comparing against a stored snapshot.
 
 ---
 
-## Step 5 — Incremental backfill (catching up after webhook downtime)
+## Step 5: Catch up after downtime
 
-If your webhook receiver was down for a while, replay missed events with the delivery-log endpoint:
+If your receiver was down, look at the subscription's recent delivery attempts:
 
 ```bash
-curl https://acme.orgo.space/api/v1/webhook_subscriptions/3/delivery_logs \
+curl "https://acme.orgo.space/api/v1/webhook_subscriptions/3/delivery_logs?limit=500" \
   -H "Api-Token: $ORGO_API_TOKEN"
 ```
 
-This lists every delivery attempt, success or failure. For each failed delivery, the payload is available — re-process them locally.
+The log lists successes and failures, with the payload of each attempt, up to 500 at a time. For each failed delivery, re-process the payload locally. Failed deliveries are retried automatically a few times (see [Webhooks](/api-reference/concepts/webhooks#retry-behavior)), so most short outages heal themselves.
 
-For longer outages (more than a few days, beyond the log retention), do a delta poll instead:
+For a longer outage, or if you suspect you missed events, run a reconciliation pass. Contacts cannot be filtered by update time, so page through the whole collection in a stable order and compare it with your CRM:
 
 ```bash
-# All contacts updated since the last sync timestamp
-curl "https://acme.orgo.space/api/v1/contacts?dateUpdated[after]=2026-01-10T00:00:00Z&order[dateUpdated]=asc" \
-  -H "Api-Token: $ORGO_API_TOKEN"
+curl "https://acme.orgo.space/api/v1/contacts?order[id]=asc&itemsPerPage=100&page=1" \
+  -H "Api-Token: $ORGO_API_TOKEN" \
+  -H "Accept: application/json"
 ```
 
-Paginate through and merge into your CRM. Record the highest `dateUpdated` seen as the watermark for the next sync.
+To pick up only new contacts since your last pass, order by creation: `order[dateCreated]=desc`, and stop when you reach a contact you already have.
 
 ---
 
@@ -170,19 +190,19 @@ Paginate through and merge into your CRM. Record the highest `dateUpdated` seen 
 
 <AccordionGroup>
   <Accordion title="My import is creating duplicate contacts">
-    Orgo deduplicates by email — but only on `POST /api/v1/contacts`. If your CRM has multiple records for the same person under different emails, Orgo will store them as separate Contacts. Dedupe in your CRM first, or merge in Orgo by `DELETE`-ing the older one and `PATCH`-ing the survivor.
+    Orgo deduplicates by exact email, and only when a contact has an email. If your CRM holds several records for one person under different addresses, Orgo stores them as separate contacts. Dedupe in your CRM first, or merge in Orgo before syncing (see the merge tool under **Settings → Developers → Merge Records**).
   </Accordion>
 
-  <Accordion title="A contact converted into a User mid-sync — my CRM has stale state">
-    When a Contact becomes a User (via adhesion success or invite acceptance), Orgo keeps the Contact record but flips the linked User's status. The `user.created` webhook fires; subscribe to it and update your CRM to point at the User. The Contact remains for historical audit.
+  <Accordion title="A contact became a member mid-sync and my CRM has stale state">
+    When a person becomes a member, a `user.created` webhook fires. Match it to your CRM record by email and point the record at the member. Do not assume the contact record disappears or stays; treat the email as the join key.
   </Accordion>
 
   <Accordion title="Webhook deliveries are failing silently">
-    Check `GET /api/v1/webhook_subscriptions/3/delivery_logs`. Common causes: receiver returning a non-2xx, receiver taking >30s to respond, TLS certificate issues. Orgo retries 3 times with exponential backoff before giving up.
+    Check `GET /api/v1/webhook_subscriptions/3/delivery_logs`. Common causes: the receiver returns a non-2xx status, it takes longer than the subscription's `timeoutSeconds` (30 by default), a TLS problem, or an address Orgo refuses to call (private or non-standard port). Orgo makes up to `maxRetries` attempts (3 by default) before giving up.
   </Accordion>
 
-  <Accordion title="Can I import Users directly instead of Contacts?">
-    Only if you also have authority to skip the adhesion (HR_TENANT). `POST /api/v1/users` works server-to-server and creates a `NEW` user with an unverified email. The user can't log in until they verify their email. For most CRM use cases, Contacts are the right primitive — promote selected ones to User via the adhesion flow when they're ready to become members.
+  <Accordion title="Can I import members directly instead of contacts?">
+    Only HR with organization-wide rights can create members, with `POST /api/v1/member-register-by-admin`, which sends each person a welcome email. For most CRM use cases contacts are the right primitive: promote selected ones to members through the application flow when they are ready, see [Onboard a new member](/api-reference/recipes/onboard-a-new-member).
   </Accordion>
 </AccordionGroup>
 
@@ -190,6 +210,6 @@ Paginate through and merge into your CRM. Record the highest `dateUpdated` seen 
 
 ## What to do next
 
-- [Handle webhooks](/api-reference/recipes/handle-webhooks) — the receiver implementation in detail
-- [Send a newsletter campaign](/api-reference/recipes/send-a-newsletter-campaign) — once contacts are synced, target them
-- [Onboard a new member](/api-reference/recipes/onboard-a-new-member) — promote a Contact into a full member
+- [Handle webhooks](/api-reference/recipes/handle-webhooks): the receiver implementation in detail
+- [Send a newsletter campaign](/api-reference/recipes/send-a-newsletter-campaign): once contacts are synced, target them
+- [Onboard a new member](/api-reference/recipes/onboard-a-new-member): promote a contact into a full member

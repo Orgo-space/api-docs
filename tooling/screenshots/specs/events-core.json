@@ -7,12 +7,12 @@
     ],
     "tenant": "t187c",
     "route": "/event/a2a3284c8fc711f19aed9e396b",
-    "routeHint": "Events in the main menu -> open any published event from the list. The left sidebar (Modify, View event, Event app, Participants, Program, Votes, Tickets, Payments, Analytics, Messages, Landing page, Report, Duplicate Event, Save as Template, Email Templates, Delete) must be visible next to the event hero. Use an UPCOMING ticketed event: a past event shows 'The event has passed' and no registration panel at all. Annual General Meeting Springfield (event 200432, 2026-09-07, product 971) is upcoming, ticketed and public.",
+    "routeHint": "Events in the main menu -> open any published event from the list. The left sidebar (Modify, View event, Event app, Participants, Program, Votes, Tickets, Payments, Analytics, Messages, Landing page, Report, Duplicate Event, Save as Template, Email Templates, Delete) must be visible next to the event hero. Use an UPCOMING ticketed event: a past event shows 'The event has passed' and no registration panel at all. Annual General Meeting Springfield (event 200432, 2026-09-07, product 971) is upcoming, ticketed and public. UPDATED 2026-11-11: the event header offers Share, Edit and an Actions menu holding Duplicate Event, Save as Template and Delete. Nothing reads 'View event'.",
     "actions": [],
-    "waitFor": "text=View event",
+    "waitFor": "text=Save as Template",
     "viewport": "desktop",
     "alt": "Event page with the event sidebar on the left and the event hero, date, location and registration panel on the right",
-    "status": "new",
+    "status": "recapture",
     "note": "Current image predates the reworked sidebar (Agenda, Votes, Analytics, Networking spaces, Duplicate Event, Save as Template, Email Templates are all new entries). Prefer an event owned by the logged-in admin so every sidebar entry renders."
   },
   {
@@ -39,17 +39,17 @@
     ],
     "tenant": "t187c",
     "route": "/events/create",
-    "routeHint": "Events -> Create an event. Capture the top of the form: cover image panel on the left, then Group, Event type, Title, Location, Online meetup, and the Start/End timeline with the timezone chip.",
+    "routeHint": "Events -> Create an event. Capture the top of the form: cover image panel on the left, then Group, Event type, Title, Location, Online meetup, and the Start/End timeline with the timezone chip. UPDATED 2026-11-11: the location choice reads In person / Online / Hybrid; there is no 'Online meetup'. Queued for recapture 2026-11-11 after the capture runner was pinned to the demo organisation's timezone: times on this screen had been drawn on the browser's clock instead.",
     "actions": [
       "fill input[required] | Autumn Governance Forum",
       "fill input[placeholder=\"Location\"] | Norfolk, Virginia, United States",
       "press Escape",
       "wait 1000"
     ],
-    "waitFor": "text=Online meetup",
+    "waitFor": "text=Hybrid",
     "viewport": "desktop",
     "alt": "Create Event form with cover image on the left and group, event type, title, location, online meetup, start and end times with timezone on the right",
-    "status": "new",
+    "status": "recapture",
     "note": "Run this file with TZ=America/New_York. The Start select renders in browser-local time while the End select renders in the event timezone (America/New_York for this tenant), so any other host timezone makes End look earlier than Start on the same day. Log in as an admin so the Access/Audience block renders."
   },
   {
@@ -60,7 +60,7 @@
     ],
     "tenant": "t187c",
     "route": "/events/create",
-    "routeHint": "Events -> Create an event, then scroll to the settings card: the Access (Free/Paid) and Audience (Members only/Public) option cards, followed by the Registration section (Require registration form for members, Max capacity, Close registrations) and the Features section (Enable speakers, Visibility of attendee list, Enable 1:1 networking, Send reminder 1 hour before event starts).",
+    "routeHint": "Events -> Create an event, then scroll to the settings card: the Access (Free/Paid) and Audience (Members only/Public) option cards, followed by the Registration section (Require registration form for members, Max capacity, Close registrations) and the Features section (Enable speakers, Visibility of attendee list, Enable 1:1 networking, Send reminder 1 hour before event starts). Queued for recapture 2026-11-11 after the capture runner was pinned to the demo organisation's timezone: times on this screen had been drawn on the browser's clock instead.",
     "actions": [
       "scroll 620",
       "wait 1000"
@@ -68,7 +68,7 @@
     "waitFor": "text=Enable 1:1 networking",
     "viewport": "desktop",
     "alt": "Access and Audience option cards followed by the Registration and Features setting rows with toggles",
-    "status": "new",
+    "status": "recapture",
     "note": "Must be captured as an ADMIN_TENANT or FINANCIAL_TENANT user, otherwise the Access block is hidden. Leave Access on Free so Max capacity is visible."
   },
   {
@@ -79,14 +79,11 @@
     ],
     "tenant": "t187c",
     "route": "/tenants/modules/events/event-types",
-    "routeHint": "Settings -> Modules -> Events -> Event Types. The ACTIONS column is opacity:0 until the row is hovered (List.vue .row-actions), so the capture must hover a row or the column reads as empty on every line.",
-    "actions": [
-      "hover .event-types-table tbody tr",
-      "wait 600"
-    ],
-    "waitFor": "text=Create Event type",
+    "routeHint": "Settings -> Modules -> Events -> Event Types. The ACTIONS column is opacity:0 until the row is hovered (List.vue .row-actions), so the capture must hover a row or the column reads as empty on every line. 2026-11-11: route unchanged and tenant 282 has 8 event types (Chapter Meetings ... Gala Dinner). List.vue was redesigned into rows (.wf-row, drag handle, ProjectPalette color dot, .wf-name input, gear, trash) with no table and no Create Event type button, so the old hover on .event-types-table tbody tr and waitFor text=Create Event type matched nothing. Actions removed, waitFor now .wf-row.wf-add (the Add event type row, which renders only once the list has loaded; text=Gala Dinner missed because names are input values).",
+    "actions": [],
+    "waitFor": ".wf-row.wf-add",
     "viewport": "desktop",
-    "alt": "Event types settings page listing type names with inline editing and delete actions, and a Create Event type button",
+    "alt": "Event types settings page listing the types in order, each with a drag handle, a color dot, an editable name, a gear icon for the event form and a trash icon, with an Add event type row at the bottom",
     "status": "new",
     "note": "Current image shows a Color column that no longer exists; the table is now Type name plus Actions only, and the module menu now sits on the left."
   },
@@ -143,14 +140,17 @@
     ],
     "tenant": "t187c",
     "route": "/events",
-    "routeHint": "Requires at least one event template to exist. Events -> Create an event (opens a panel over the list) -> Start from template in the panel header. Capture the template picker modal with its template cards, the preview (eye) buttons, and the No template / Done footer.",
+    "routeHint": "Requires at least one event template to exist. Events -> Create an event (opens a panel over the list) -> Start from template in the panel header. Capture the template picker modal with its template cards, the preview (eye) buttons, and the No template / Done footer. 2026-11-11: the Start from template button is no longer in a panel header. It is a dropdown in the event form's top bar (views/Event/Form.vue, the eform-bar-template button, shown only when the tenant has at least one template), and the picker modal is its Browse all templates entry. Actions were click Create an event, click Start from template, which now opens the dropdown (Start from + up to five templates, Browse all templates), so a click on Browse all templates was added. Tenant 282 had no templates (the only row belonged to tenant 24), so three were seeded: INSERT INTO event_template (tenant_id,name,...) for 'Annual conference' (type 1298, ticketed, Member ticket 125 and Guest ticket 185, public, 250 seats), 'Chapter meeting' (type 1293, free, 60 seats) and 'Gala dinner' (type 1300, ticketed, Dinner seat 95 and Table of eight 700, 160 seats), ids 2 to 4, no logo so the gradient thumbnail shows.",
     "actions": [
       "click text=Create an event",
-      "click text=Start from template"
+      "wait 1500",
+      "click text=Start from template",
+      "click text=Browse all templates",
+      "wait 800"
     ],
     "waitFor": "text=Choose a template",
     "viewport": "desktop",
-    "alt": "Template picker modal listing templates with badges and a preview button, plus No template and Done actions",
+    "alt": "Template picker modal listing the Annual conference, Chapter meeting and Gala dinner templates with Ticket or Free badges, ticket counts and a preview button, plus No template and Done actions",
     "status": "new"
   }
 ]

@@ -21,7 +21,7 @@ of to a group.
 
 ## Turning it on
 
-**Settings → Modules → Helpdesk → Enable Helpdesk Module** (needs `ADMIN_TENANT`).
+**Settings → Modules → Helpdesk → Enable Helpdesk Module**, which is for the Orgo administrator.
 
 Once it is on, a **Support** entry appears in every member's profile menu (top-right
 avatar). Nothing else has to be configured for members to start writing in, but a ticket
@@ -66,6 +66,37 @@ person automatically.
 
 ---
 
+## Platform tickets
+
+Alongside the types you define, every workspace carries one type it did not create and
+cannot change, called **Platform**. A ticket of that type is a question for **Orgo**, not
+for your own support team, and Orgo answers it.
+
+Platform tickets appear in your help desk so you can follow them, but they run on their own
+set of statuses, shared by every organization and not editable by anyone:
+
+| Status | Meaning |
+|---|---|
+| **Submitted** | Orgo has it and has not started yet |
+| **In Progress** | Someone at Orgo is working on it |
+| **Waiting on you** | Orgo has replied and needs something back from you |
+| **Resolved** | Closed |
+
+These four sort after your own statuses in the list, so your workflow stays first.
+
+<Note>
+On a Platform ticket the **status**, **type** and **assignee** are read only for everyone
+in your organization, including administrators and your support team. Only Orgo moves a
+Platform ticket along, and the server refuses the change even if a control is reachable.
+You can still reply, and you can still set the priority.
+</Note>
+
+Your own tickets are unaffected: the **Platform** type is simply not one your members
+should choose for an internal question. For how to reach Orgo in the first place, and what
+Orgo can and cannot see, see [Orgo Support](/platform/orgo-support).
+
+---
+
 ## How a member raises a ticket
 
 <Steps>
@@ -86,7 +117,7 @@ person automatically.
 
 A member who is not on the support team sees only the tickets they opened, and cannot
 change type, status, assignee or priority. Support team members and anyone with
-`HR_TENANT` see every ticket in the organisation.
+Organization HR managers see every ticket in the organisation.
 
 ---
 
@@ -172,6 +203,6 @@ per-member controls.
 
 - [Issues](/platform/issues) - the same board scoped to a project group
 - [Notifications](/platform/notifications) - how members control what reaches them
-- [Permissions](/platform/permissions) - what `ADMIN_TENANT` and `HR_TENANT` unlock
+- [Permissions](/platform/permissions) - what the Admin and HR permissions unlock
 - [Members](/platform/users) - member records behind each ticket
 - [Contacts](/platform/contacts) - people without an account, who cannot raise tickets

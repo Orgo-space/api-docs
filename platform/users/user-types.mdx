@@ -21,7 +21,7 @@ User types and roles are the same object in Orgo, separated by one setting calle
 
 ## Where it lives
 
-**Settings** → **Users & Profiles** → **Roles & User types**, which requires `ADMIN_TENANT` and appears when **Enable Roles** is on. Every role is listed with its plural name, a **Level** tag and any attached permissions. Filter by **Level** or **Permissions**, open the [organisational chart](/platform/organisational-chart), or press **Add role**.
+**Settings** → **Modules** → **Users & Profiles** → **Roles & User types**, which requires the **Orgo administrator** flag on your account and appears when **Enable Roles** is on. Every role is listed with its plural name, a **Level** tag and any attached permissions. Filter by **Level** or **Permissions**, open the [organisational chart](/platform/organisational-chart), or press **Add role**.
 
 ---
 
@@ -29,7 +29,7 @@ User types and roles are the same object in Orgo, separated by one setting calle
 
 <Steps>
   <Step title="Name it">
-    **title** and **Plural title**. The plural, prefilled from the title as you type, is used wherever Orgo lists several holders.
+    **Title** and **Plural title**. The plural, prefilled from the title as you type, is used wherever Orgo lists several holders.
   </Step>
   <Step title="Pick the level">
     One choice only: **None**, **User type**, **Chapter**, **Parent chapter**, **Organisation**, or one of your unit types. Chapter and Parent chapter need local centers enabled, unit types need units enabled, User type needs **Enable User Types** on.
@@ -64,7 +64,7 @@ A user type can never carry permissions. The permissions section is hidden as so
 
 A member has exactly one user type; if someone fits two categories, pick the primary and use a role or tag for the other.
 
-- **On the member's profile**: edit the member → **roles** tab → the **userType** selector.
+- **On the member's profile**: **Edit profile** → **Membership status** → the **User type** selector.
 - **When an admin creates a member**: a user type selector on the create form.
 - **Automatically on registration**: **Default User Type After Registration** stamps a type on every self-registration.
 - **From the registration link**: signing up through `/join/<slug>` applies that type and the matching role.
@@ -72,7 +72,7 @@ A member has exactly one user type; if someone fits two categories, pick the pri
 - **On adhesion approval**: approving an [adhesion](/platform/users/adhesion) sets the type configured for successful applications, and emails the member if their type changed.
 - **Bulk import**: set the type during a member [import](/platform/customization/import).
 
-Editing roles on a profile requires `HR_TENANT`, or `HR_LOCAL` over the member's chapter. Local admins can view but not change them unless **Allow Local Admins to Modify User Permissions** is on.
+Both the **Membership status** and **Roles** sections of the profile editor need organization HR permission, or chapter HR permission over the member's chapter. Local admins can see the **Roles** section but not change roles, and the status, full-member and trainer parts of **Membership status** stay hidden from them, unless **Allow Local Admins to Modify User Permissions** is on. The **User type** selector is not held back by that setting.
 
 ---
 
@@ -81,7 +81,7 @@ Editing roles on a profile requires `HR_TENANT`, or `HR_LOCAL` over the member's
 - **Fees**: a type flagged **Not eligible for fee**, or the type chosen as fee-exempt, drops the member out of fee assignment entirely.
 - **Registration**: each type can have its own [registration form](/platform/users/registration-form), public URL and preselected membership price.
 - **Menu**: categories and items can be shown only to selected types. See [Menu Organizer](/platform/customization/menu-organizer).
-- **Dashboard**: widgets can carry a different image per user type. See [Dashboard Organizer](/platform/customization/dashboard-organizer).
+- **Dashboard**: widgets can carry a different image per user type. See [Dashboard Builder](/platform/customization/dashboard-organizer).
 - **Directory**: the member list can be filtered by type, subject to **Who Can Filter Users by Type**.
 - **Guest accounts**: the type chosen as **Guest User Type** marks its members as guests; approving a resignation switches the member to it.
 - **Units**: a unit type can require its members to hold a specific user type.
@@ -90,7 +90,7 @@ Editing roles on a profile requires `HR_TENANT`, or `HR_LOCAL` over the member's
 
 ## Roles and terms
 
-Assign a role from the member's **roles** tab, where each assignment has a **dateBegin** and an optional **dateEnd**. Ending a role ends the permissions it carried, and the assignment stays visible as history. That is why permissions belong on roles rather than people: a handover is one assignment ended and another started.
+Assign a role from **Edit profile** → **Roles** → **Add role**. Each assignment has a **Date begin** and an optional **Date ended**: **End role** closes a current one, and the pencil on a past one corrects its dates. Ending a role ends the permissions it carried, and the assignment stays visible as history on the member's **Roles** card, under **Timeline per role**. That is why permissions belong on roles rather than people: a handover is one assignment ended and another started.
 
 Where each level applies: **Organisation** is the whole organization, **Chapter** one local center, **Parent chapter** a parent local center and every local center beneath it at any depth, a unit type a specific unit or team of that type, and **None** a label with no scope and no permissions.
 
@@ -100,7 +100,7 @@ A chapter role attaches to the member's own chapter when assigned. A parent-chap
 
 ## Settings reference
 
-Under **Settings** → **Users & Profiles** → **Configuration**.
+Under **Settings** → **Modules** → **Users & Profiles** → **Configuration**.
 
 | Setting | Options and effect |
 |---|---|

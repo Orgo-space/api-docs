@@ -26,14 +26,14 @@
     ],
     "tenant": "t187c",
     "route": "/local-center/15658",
-    "routeHint": "Chapters -> click a chapter name to open the panel -> use the expand icon to open the full page. Virginia Beach (15658) now has nine officers across six roles, so the Team panel is populated.",
+    "routeHint": "Chapters -> click a chapter name to open the panel -> use the expand icon to open the full page. Virginia Beach (15658) now has nine officers across six roles, so the Team panel is populated. UPDATED 2026-11-11: no role holder is listed on this chapter, so 'Regional Chair' never appears. The page's own heading is the reliable wait.",
     "actions": [
       "wait 2500"
     ],
-    "waitFor": "text=Regional Chair",
+    "waitFor": "text=Parent chapter",
     "viewport": "desktop",
     "alt": "Chapter page showing the status and Chapter badges, the shortcut card, Contact and Address cards, and the Team panel grouping officers by role",
-    "status": "new",
+    "status": "recapture",
     "notes": "There is no 'Quick actions' heading anywhere in the client (only a translation key); the shortcut card renders unlabelled, so it cannot be used as a waitFor. The Team panel fetches /user_roles?...&role.isLocalCenterParent=1 for a parent chapter (ShowContent.vue:752), so officers must hold roles flagged is_local_center_parent, not is_local_center. Five such roles are seeded (Regional Chair, Regional Coordinator, Regional Treasurer, Regional Secretary, Membership Officer) with eight officers between them."
   },
   {
@@ -84,14 +84,14 @@
     ],
     "tenant": "t187c",
     "route": "/tenants/modules/groups/unit-types",
-    "routeHint": "Settings -> Modules -> Groups -> Unit Types. Requires 'Enable Organizational Units' on for the submenu entry to appear.",
+    "routeHint": "Settings -> Modules -> Groups -> Unit Types. Requires 'Enable Organizational Units' on for the submenu entry to appear. UPDATE 2026-11-11: group.hasUnits had been reset to false, which removes the Unit Types submenu entry entirely. Re-enabled.",
     "actions": [
       "wait 2000"
     ],
     "waitFor": "text=Working Party",
     "viewport": "desktop",
     "alt": "Unit Types settings page showing type cards with Within local center and Has user types badges and an Add Unit Type button",
-    "status": "new",
+    "status": "recapture",
     "notes": "Two fixes were needed: group.hasUnits had to be turned on, and the tenant's unit types had discriminator NULL while List.vue fetches /unit_types?discriminator=unit (List.vue:154), so the page rendered the empty state even though rows existed."
   },
   {
@@ -132,12 +132,12 @@
     ],
     "tenant": "t187c",
     "route": "/local-center-change/form",
-    "routeHint": "Direct URL as a signed-in member; the admin equivalent is the 'Request local transfer' button in the Permissions panel of a member profile. Fill the destination selector and the reason so both editable fields carry data.",
+    "routeHint": "Direct URL as a signed-in member; the admin equivalent is the 'Request local transfer' button in the Permissions panel of a member profile. Fill the destination selector and the reason so both editable fields carry data. UPDATED 2026-11-11: the bare .dropdown-item matched eleven nodes, most of them off screen, so the click timed out on a hidden one. Scope it to the chapter being typed.",
     "actions": [
       "wait 2500",
       "fill .local-center-select input | Alexandria",
       "wait 1500",
-      "click .local-center-select .dropdown-item",
+      "click .local-center-select .dropdown-item:has-text(\"Alexandria\")",
       "wait 1000",
       "fill .textarea | Relocating to Old Town in the spring and would like to continue with the Alexandria chapter.",
       "wait 800"
@@ -145,7 +145,7 @@
     "waitFor": "text=My transfer requests",
     "viewport": "desktop",
     "alt": "Local center transfer request form with a locked current chapter, a new chapter selector, a reason field, and the requester's past requests listed below",
-    "status": "new",
+    "status": "recapture",
     "notes": "The 'My transfer requests' block is gated on localCenterRequests.length > 0 (ChangeRequestForm.vue:56,66), fed by /local_center_requests?user={id}. Three requests (approved, declined, pending) are now seeded for the capture user Julian Sorensen (207128)."
   },
   {

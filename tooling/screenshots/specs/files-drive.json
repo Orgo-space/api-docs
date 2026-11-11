@@ -67,13 +67,13 @@
       "platform/files.mdx"
     ],
     "tenant": "t187c",
-    "route": "/drive-doc/1660",
-    "routeHint": "Drive item 1660 is the demo tenant in-app document. The saved status indicator only appears after an edit in the same session, so it is not part of this shot.",
+    "route": "/drive-doc/5c5476deddb611f19cef3e45814679bc",
+    "routeHint": "Drive item 1660 is the demo tenant in-app document. The saved status indicator only appears after an edit in the same session, so it is not part of this shot. FIXED 2026-11-11: the route takes the drive item's UUID, not its numeric id. Doc.vue:440 calls GET /drives/{the id param} and Doc.vue:541 navigates with response.data.uuid, so /drive-doc/1660 asked the API for a drive called '1660', got nothing and rendered a blank white page. Two runs shipped that blank before anyone opened the file. Item 1660's uuid is 5c5476deddb611f19cef3e45814679bc, and it was renamed from 'Climatic Report' to 'Board Meeting Minutes' the same day, which is what the waitFor expects. The document was empty (its body was a single non-breaking space), so the editor photographed as a title over blank space. Board minutes were written into drive.doc_content on 2026-11-11 so the shot shows an editor with something in it.",
     "actions": [],
     "waitFor": "text=Board Meeting Minutes",
     "viewport": "desktop",
     "alt": "The in-app document editor with a rich text toolbar, the document title, a heading and paragraphs, and the word and character count in the header",
-    "status": "new"
+    "status": "recapture"
   },
   {
     "id": "drive-module-settings",

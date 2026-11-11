@@ -7,7 +7,7 @@ description: 'Save an event setup once and start every new event from it, ticket
 "twitter:description": 'Save an event setup once and start every new event from it, tickets and registration form included'
 ---
 
-An event template is a saved blueprint: title, type, location, description, cover image, access settings, registration form, ticket types, and discount codes. Organizers pick a template when creating an event and everything arrives pre-filled.
+An event template is a saved blueprint: title, type, location, description, cover image, access settings, registration form, ticket types, add-ons, discount codes, and an agenda of sessions. Organizers pick a template when creating an event and everything arrives pre-filled.
 
 **Built for** organizations that run the same shape of event repeatedly (monthly meetups, a standard training, a recurring gala) and want every organizer to start from the approved setup instead of rebuilding it.
 
@@ -17,11 +17,11 @@ An event template is a saved blueprint: title, type, location, description, cove
 
 ## Where templates live
 
-**Settings → Modules → Events → Templates**. Creating, editing, and deleting templates requires `ADMIN_TENANT`. Templates belong to the whole organization, not to a group or local center.
+**Settings → Modules → Events → Templates**. Creating, editing, and deleting templates requires the **Orgo administrator** flag on your account, not only an admin permission. Templates belong to the whole organization, not to a group or local center.
 
 <img src="/images/platform/events/event-templates-list.png" alt="Event templates list showing template cards with Free or Ticket badges, audience badges, ticket counts, and cover thumbnails" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-Each card shows the template name, whether it is free or ticketed, whether it is members-only or public, whether it needs a registration form, how many ticket types it carries, and its default event type. Selecting a card opens it for editing; the trash button deletes it after a confirmation.
+Each card shows the template name, whether it is free or ticketed, whether it is members-only or public, whether it needs a registration form, how many ticket types it carries, and its default event type. Selecting a card opens it for editing; the trash button deletes it after a confirmation ("Delete Template").
 
 ---
 
@@ -32,13 +32,17 @@ Each card shows the template name, whether it is free or ticketed, whether it is
     **Settings → Modules → Events → Templates → Create Template**.
   </Step>
   <Step title="Or save an existing event as a template">
-    Open any event, then use **Save as Template** in the event sidebar and give it a name. This copies the event's settings, its live ticket types (skipping archived ones), its vouchers, and its custom registration fields. Requires `ADMIN_TENANT`.
+    Open any event, then choose **Save as Template** from the **Actions** menu in the event header and give it a name. This copies the event's settings, its cover image, its live ticket types (skipping archived ones), its vouchers, its custom registration fields, and its agenda sessions. Requires the **Orgo administrator** flag.
+
+Two limits to know: ticket **add-ons** and the membership level or chapter lists on a ticket are not copied this way, so re-add them in the template editor. Agenda sessions are stored as a day number counted from the event's start date plus a start and end time; a session that starts before the event's start date is left out, and a template holds at most 200 sessions.
   </Step>
 </Steps>
 
 ---
 
 ## What a template stores
+
+The editor has two tabs, **General settings** and **Agenda**.
 
 <img src="/images/platform/events/event-template-form.png" alt="Event template editor showing Template Name, Event Defaults, Description, Access and Audience cards, and the registration form builder" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -48,41 +52,46 @@ Each card shows the template name, whether it is free or ticketed, whether it is
 | Event Defaults | **Event title**, **Event type**, **Location** (with Places autocomplete and map preview) |
 | Description | Rich text, pre-filled into the event description |
 | Access | **Free** or **Paid** |
-| Audience | **Members only** or **Public** |
+| Audience | **Members only** or **Public** (there is no private-link option on a template) |
 | Registration | **Require registration form for members** (locked on for paid), **Max capacity** |
 | Features | **Enable speakers**, **Send reminder 1 hour before event starts** |
 | Registration Form | Form fields, form settings, and styling (see below) |
-| Tickets | Ticket types, when Access is Paid |
+| Tickets | Ticket types and add-ons, when Access is Paid |
 | Vouchers | Discount codes, when Access is Paid |
+| Agenda | Sessions on the **Agenda** tab |
 | Cover image | Uploaded and cropped in the right-hand panel |
 
-A template deliberately does **not** carry dates and times, the hosting group, attendees, or speakers. Those are decided per event.
+A template deliberately does **not** carry the event's dates, the hosting group, attendees, or speakers. Those are decided per event. Agenda sessions are the exception to "no dates": they are kept as day offsets and times and re-dated when you pick the event's start date.
 
 ### Registration form
 
-The **Form fields** tab is a drag-and-drop builder. Standard fields available: Email and Name (always required), plus Phone, Organisation, Role, Town, LinkedIn, X (Twitter), Instagram, Company Identifier, Company Name, and Company Address. You can also define custom fields with a name and a type: text input, text area, dropdown, radio, checkboxes, date, or yes/no. Dropdown, radio, and checkbox fields need at least two options.
+This card appears once the template requires a registration form or is Paid. The **Form fields** tab is a drag-and-drop builder. Standard fields available: Email and Name (always required), plus Phone, Organisation, Role, Town, LinkedIn, X (Twitter), Instagram, Company Identifier, Company Name, and Company Address. You can also define custom fields with a name and a type: text input, text area, dropdown, radio, checkboxes, date, or yes/no. Dropdown, radio, and checkbox fields need at least two options. See [Registration Forms](/platform/events/registration-forms) for what each field does.
 
 The **Settings** tab holds **Disable newsletter subscription**, **Disable register checkbox**, and **Custom text at bottom of registration form** (shown above the consent checkboxes).
 
 The **Styling** tab holds **Display title**, **Selected color**, **Button color** and **Hero image border radius**.
 
-### Tickets and vouchers
+### Tickets, add-ons and vouchers
 
-Ticket types carry their name, price, currency, description, seat limit, sort order, group name, members-only flag, and sale window. Vouchers carry a **Code**, a percentage or fixed **Discount type** and value, a **Currency**, an optional **Max discount amount**, **Max uses**, **Max tickets per use**, the **Active** flag, and an optional restriction to specific ticket types. See [Ticketing](/platform/events/ticketing) for what each of those does at checkout.
+When Access is Paid, the template shows the same **Ticket types**, **Add-ons** and **Vouchers** lists as an event's Tickets page, with the same editors, working on the template's draft copies. A ticket carries a name, price, description, who can buy it (**Everyone**, **All members** or **Specific members** by level or chapter) and a seat count; there is no sales window on a template, because a template has no dates. Add-ons carry a name, price, which tickets they are offered with, a per-ticket limit, a total and **Adds a separate attendee**. Vouchers carry a code, a percentage or fixed discount, **Never more than**, **Tickets per order**, **Max orders**, **Active** and an optional restriction to ticket types. Ticket links and invitations are not part of a template. See [Ticketing](/platform/events/ticketing) for what each of those does at checkout.
+
+### Agenda
+
+The **Agenda** tab builds the event's schedule ahead of time. "Days count from the event start date; times are in the event timezone." Use **Add session** to add sessions, and the pencil and bin icons on each row to edit or delete one. Sessions with stage colours show them in the list, and you can filter by stage.
 
 ---
 
 ## Using a template
 
-On the events list, select **Create an event**. When your organization has at least one template, a **Start from template** button appears in the header of the create panel.
+On the events list, select **Create an event**. When your organization has at least one template, a **Start from template** button appears in the action bar of the create form. It lists up to five templates, followed by **Start without a template** (once one is chosen) and **Browse all templates**.
 
 <img src="/images/platform/events/event-template-picker.png" alt="Template picker modal listing templates with badges and a preview button, plus No template and Done actions" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-The picker lists every template with its badges. The eye button opens a full preview: cover image, event title, type, location, description, ticket types, vouchers, registration form fields, and max capacity. From the preview you can select **Use this template**.
+The picker, titled **Choose a template**, lists every template with its badges (ticket count, session count, free or ticket, public, registration form). The eye button opens a full preview: cover image, event title, type, location, description, ticket types, vouchers, the agenda, registration form fields, and max capacity. From the preview you can select **Use this template**.
 
-Selecting a template pre-fills the form. You can still change anything before saving. **No template** clears the form back to defaults while keeping the timezone and the group you already chose.
+Selecting a template pre-fills the form. You can still change anything before saving. If the template's agenda runs over more days than the event, the form warns you and offers **Extend end date to N days**. **Start without a template** clears the form back to defaults while keeping the timezone and the group you already chose.
 
-When you save, Orgo creates the event and then applies the rest of the template: it copies the cover image, creates the ticket types, creates the vouchers, creates the custom fields, and writes the registration form layout.
+When you save, Orgo creates the event and then applies the rest of the template: it copies the cover image, creates the agenda sessions on the right dates, creates the ticket types, add-ons and vouchers, creates the custom fields, and writes the registration form layout. If any ticket, add-on or voucher fails to create, a message names it and you can add it from the Tickets page. A template with a very large agenda cannot be used with **Propagate event to all local centers**.
 
 <Note>
 Template management is admin-only, but the picker itself works for any organizer who can create an event. That is the point: admins curate the setups, everyone else uses them.

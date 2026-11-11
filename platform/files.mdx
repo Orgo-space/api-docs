@@ -19,7 +19,7 @@ Orgo Files (the Drive) gives your organisation one place for documents: an organ
 
 ## Turning it on
 
-Files is a module. An **ADMIN_TENANT** turns it on at **Settings → Modules → Files & eDocuments → Drive**:
+Files is a module. The Orgo administrator turns it on at **Settings → Modules → Files & eDocuments → Drive**:
 
 | Setting | What it does |
 |---|---|
@@ -40,16 +40,16 @@ Each group has its own controls in its settings: a **Files** feature toggle that
 
 | Drive | Who can see it | Who can add to it |
 |---|---|---|
-| **Organisation drive** | Every member of the organisation | **HR_TENANT** and above by default |
+| **Organisation drive** | Every member of the organisation | Organization HR managers and above by default |
 | **Group drive** (any group, local center or role group) | Members of that group | Members of that group, unless the group is set to **Only admins** |
-| **Personal Drive** | The member, **HR_LOCAL** of their local center, **HR_TENANT**, **ADMIN_TENANT** | The same people |
+| **Personal Drive** | The member, chapter HR managers over their chapter, organization HR managers, organization admins | The same people |
 
-Renaming, moving, deleting an item, and publishing or revoking its public link all need the same thing: you own it, you administer its group, or you are **ADMIN_TENANT**. Local admins get no rights over the organisation drive; their authority is scoped to the groups and local centers they administer.
+Renaming, moving, deleting an item, and publishing or revoking its public link all need the same thing: you own it, you administer its group, or you are an organization admin. Chapter admins get no rights over the organisation drive; their authority is scoped to the groups and chapters they administer.
 
 Group drives are how you restrict who sees what. There is no per-file permission: a file inherits the audience of its drive, so leadership documents go in a leadership group.
 
 <Note>
-The organisation drive is the drive with no group attached. Uploading there is restricted to **HR_TENANT** and **ADMIN_TENANT** by default, which is why an ordinary member sees the organisation card but no upload button on it. Group drives are open to their members unless the group sets **Who can post?** to **Only admins**.
+The organisation drive is the drive with no group attached. Uploading there is restricted to organization HR managers and organization admins by default, which is why an ordinary member sees the organisation card but no upload button on it. Group drives are open to their members unless the group sets **Who can post?** to **Only admins**.
 </Note>
 
 A personal drive is also reachable from the member's profile, on the **Personal Drive** tab, which appears only when personal drives are enabled.
@@ -110,7 +110,13 @@ The **Share** dialog offers two links, and they behave differently.
 
 <img src="/images/platform/features/drive-share-modal.png" alt="The Share dialog with two sections: Only in the community with a copyable 7-day link, and Anyone with the link with a Generate public link button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-**Only in the community** is a direct link to the file that **expires after 7 days**. Nothing is published and no setting changes. Treat it as a link, not a permission check: it is generated because you have rights on the file, but anyone you send it to can open the file until it expires. For a folder it is an ordinary in-app link instead, so the recipient must log in and already have access to that drive.
+**Only in the community** is an ordinary in-app link, of the form `/drive/<id>`, and it is exactly as safe as it sounds. It **never expires**, because it carries no access of its own: opening it needs a session in your workspace, and the file is then fetched through the same permission checks as everywhere else. Somebody outside your organization who is sent the link gets nothing. For a folder it opens the folder in its drive; for a file it opens that file's preview.
+
+<Note>
+This used to be a direct storage link that expired after 7 days, and it did grant access to whoever held it. It was changed because a link pasted into a discussion post stopped working once it expired, leaving members with a storage error page. If you have older notes or posts saying these links expire, or warning that anyone holding one can open the file, both are now wrong.
+</Note>
+
+If the file already has a public link, **Only in the community** gives you that public address instead, since that is the one that works for everybody.
 
 **Anyone with the link**, via **Generate public link**, publishes a permanent public address of the form `go.orgo.space/d/<code>`.
 
@@ -120,7 +126,7 @@ The **Share** dialog offers two links, and they behave differently.
 | Can the link be guessed? | No. The code is 10 random characters drawn from a cryptographic random source, roughly 51 bits, so it cannot realistically be enumerated. |
 | How long does it last? | Until you revoke it. |
 | How do I take it back? | Open **Share** on the file and click **Revoke public link**. The public address stops working and the file becomes unreadable to visitors again. Copies already downloaded are of course still out there, so rotate anything sensitive. |
-| Who can publish or revoke it? | The same people who can edit the file: its owner, the admins of the group it sits in, and **ADMIN_TENANT**. |
+| Who can publish or revoke it? | The same people who can edit the file: its owner, the admins of the group it sits in, and organization admins. |
 
 Publicly shared files show a globe marker in the list, so you can see what is exposed. Video files get a branded viewer page instead of a raw download, with the organisation logo when video branding is enabled, and playable files also give you an **Embed** snippet for an external website.
 
@@ -192,7 +198,7 @@ Files sit in Orgo's cloud storage, readable without a login only while a public 
     Download the file and upload it again in the destination drive, then delete
     the original. For a whole folder, use **Download folder as archive** first.
 
-    Uploading into the organisation drive needs `HR_TENANT` or `ADMIN_TENANT` by
+    Uploading into the organisation drive needs organization HR or organization admin by
     default, so an ordinary member who wants a document promoted from their
     group to the organisation drive has to ask somebody with that permission to
     do the second half.
@@ -200,8 +206,8 @@ Files sit in Orgo's cloud storage, readable without a login only while a public 
 
   <Accordion title="A member cannot rename or delete a file in their own Personal Drive">
     Expected. Inside a personal drive, editing rights belong to whoever uploaded
-    the item, plus `HR_LOCAL` of that member's local center, `HR_TENANT` and
-    `ADMIN_TENANT`. Being the owner of the drive lets a member see and download
+    the item, plus chapter HR managers over that member's chapter, organization HR
+    managers and organization admins. Being the owner of the drive lets a member see and download
     everything in it, but not change items somebody else put there.
 
     Worked example: HR uploads a signed contract into a member's personal drive.
@@ -212,8 +218,8 @@ Files sit in Orgo's cloud storage, readable without a login only while a public 
 
   <Accordion title="The Personal Drive tab is missing from a member's profile">
     Two things put it there. **Enable Personal Drives** has to be on in the Drive
-    module settings, and you have to be the member yourself, `HR_LOCAL` of their
-    local center, `HR_TENANT`, or `ADMIN_TENANT`. Any other viewer, including a
+    module settings, and you have to be the member yourself, a chapter HR manager over
+    their chapter, an organization HR manager, or an organization admin. Any other viewer, including a
     local admin from a different local center, sees the profile without the tab.
 
     Personal drives are also left out of the normal drive listing on purpose, so
@@ -276,7 +282,7 @@ Files sit in Orgo's cloud storage, readable without a login only while a public 
 ## Related
 
 - [Groups](/platform/groups/index) - group drives and who belongs to them
-- [Permissions](/platform/permissions) - what HR_TENANT, ADMIN_TENANT and the local roles unlock
+- [Permissions](/platform/permissions) - what the HR and Admin permissions unlock at each scope
 - [E-Documents](/platform/contracts) - documents members sign electronically
 - [Discussions](/platform/discussion/index) - attaching files to posts
 - [Modules](/platform/organisation/modules) - turning the Drive module on

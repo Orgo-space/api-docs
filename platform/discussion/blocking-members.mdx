@@ -29,7 +29,7 @@ Filtering happens on the server, so blocked content never reaches your browser.
 
 The same group feed, before and after one member is blocked. Two of the three threads were started by the blocked member and are simply gone; the third is untouched, and so is everyone else's view of all three.
 
-<img src="/images/platform/discussion/block-feed-before.png" alt="A committee group discussions feed showing three threads: Upcoming activities and events by Iris Vargas, Share your achievements by Freya Ashford, and Refreshing the member newsletter by Iris Vargas, each with reaction and comment counts" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/discussion/block-feed-before.png" alt="A committee group discussions feed showing three threads: Share your achievements by Freya Ashford, Upcoming activities and events by Iris Vargas, and How do I update my profile photo by Iris Vargas, each with its reaction and comment counts" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 <img src="/images/platform/discussion/block-feed-after.png" alt="The same committee group discussions feed after blocking Iris Vargas, now showing only the Share your achievements thread by Freya Ashford, with both of the blocked member's threads absent and no gap or placeholder where they were" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -82,17 +82,17 @@ The same action sits on every comment and reply, so you can block someone who ne
 
 <Steps>
   <Step title="Open your own profile">
-    Then **Settings & Privacy**. The tab appears on your profile only, never on somebody else's.
+    Then select **Settings** in the profile header and open the **Account and security** tab. The **Blocked users** card appears on your profile only, never on somebody else's.
   </Step>
-  <Step title="Choose Blocked users">
-    The panel lists everybody you have blocked, with the date you blocked them.
+  <Step title="Find Blocked users">
+    The card lists everybody you have blocked, with the date you blocked them.
   </Step>
   <Step title="Select Unblock">
     Their discussions, comments and replies are visible again straight away.
   </Step>
 </Steps>
 
-<img src="/images/platform/discussion/blocked-users-panel.png" alt="The Blocked users panel under Settings and Privacy on a member's own profile, listing each blocked member with the date the block was created and an Unblock control beside each row" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/discussion/blocked-users-panel.png" alt="The Blocked users card on a member's own profile settings, listing each blocked member with the date the block was created and an Unblock control beside each row" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 The list is also where a member checks whether a block is the reason somebody seems to have gone quiet.
 
@@ -100,22 +100,22 @@ The list is also where a member checks whether a block is the reason somebody se
 
 ## Who cannot be blocked
 
-Administrators are out of reach. The rule is Orgo's own permission ranking: anybody at or above `HR_LOCAL` cannot be blocked, and neither can a tenant admin.
+Administrators are out of reach. The rule is Orgo's own permission ranking: anybody at or above the chapter HR manager level cannot be blocked, and neither can a tenant admin.
 
 | Member | Can be blocked |
 |--------|----------------|
 | A member with no permissions | Yes |
-| `USER_LOCAL` | Yes |
-| `EVENT_LOCAL`, `COMMUNICATION_LOCAL`, `HR_ASSISTANT_LOCAL`, `FINANCIAL_LOCAL` | Yes |
-| `HR_LOCAL`, `ADMIN_LOCAL` | No |
-| Any `_PARENT_LOCAL` permission | No |
-| Any `_TENANT` permission, including `COMMUNICATION_TENANT` | No |
-| Tenant admins and super admins | No |
+| Chapter user managers | Yes |
+| Chapter event managers, communication managers, HR assistants and financial managers | Yes |
+| Chapter HR managers and chapter admins | No |
+| Anyone with a regional (parent chapter) permission | No |
+| Anyone with an organization-wide permission, communication managers included | No |
+| Organization admins and super admins | No |
 
-A local center's discussion moderator holds `COMMUNICATION_LOCAL`, which ranks below the floor, so moderators can be blocked. The people who run the organization cannot.
+A local center's discussion moderator is a chapter communication manager, which ranks below the floor, so moderators can be blocked. The people who run the organization cannot. See [Permissions](/platform/permissions) for what each level means.
 
 <Warning>
-Blocking somebody before they are promoted does not keep them hidden. When a member is given `HR_LOCAL` or anything above it, every block against them is dropped as their permissions are recalculated, and their content comes back for everybody who had blocked them.
+Blocking somebody before they are promoted does not keep them hidden. When a member is given the chapter HR manager level or anything above it, every block against them is dropped as their permissions are recalculated, and their content comes back for everybody who had blocked them.
 </Warning>
 
 Two more attempts are refused: blocking yourself, and blocking a member of another organization.
@@ -127,7 +127,7 @@ Two more attempts are refused: blocking yourself, and blocking a member of anoth
 | | Blocking | [Moderation](/platform/discussion/moderation) |
 |---|---|---|
 | Who it affects | Only the member who blocked | Everybody |
-| Who can do it | Any member | `COMMUNICATION_LOCAL` or `COMMUNICATION_TENANT` |
+| Who can do it | Any member | Communication managers of the group's chapter, or organization-wide ones |
 | What it acts on | Everything one member writes | One post, comment or reply |
 | Is the author aware | No | Yes, the content is visibly held or hidden |
 | Who can undo it | The member who blocked | Any moderator for that scope |
@@ -139,10 +139,10 @@ Blocking is not a report. If content breaks your rules, it still has to be moder
 
 ## What administrators can see
 
-Nothing. There is no admin screen, no report and no export that lists who has blocked whom. Every member sees their own blocks and only their own, on their own profile. An administrator opening a member's profile does not get the tab, and asking the API for the block list returns the caller's own blocks even for a tenant admin.
+Nothing. There is no admin screen, no report and no export that lists who has blocked whom. Every member sees their own blocks and only their own, on their own profile. An administrator opening a member's profile does not get the card, and asking the API for the block list returns the caller's own blocks even for a tenant admin.
 
 <Warning>
-Because blocks are invisible to administrators, "that member stopped posting" and "her comments never show up for me" can both be self-inflicted. Ask the member to check **Settings & Privacy** and then **Blocked users** on their own profile before you investigate anything else.
+Because blocks are invisible to administrators, "that member stopped posting" and "her comments never show up for me" can both be self-inflicted. Ask the member to check **Settings**, **Account and security** and then the **Blocked users** card on their own profile before you investigate anything else.
 </Warning>
 
 ---
@@ -151,11 +151,11 @@ Because blocks are invisible to administrators, "that member stopped posting" an
 
 <AccordionGroup>
   <Accordion title="A member says posts from one person never reach them">
-    Have them open their own profile, then **Settings & Privacy** and **Blocked users**. If the person is on the list, **Unblock** restores everything they wrote, everywhere in the forum, immediately.
+    Have them open their own profile, then **Settings**, **Account and security**, and look at the **Blocked users** card. If the person is on the list, **Unblock** restores everything they wrote, everywhere in the forum, immediately.
   </Accordion>
 
   <Accordion title="Can a member block an administrator to hide announcements?">
-    No. Anybody ranked `HR_LOCAL` or above, and every tenant admin, cannot be blocked, and blocks made before somebody was promoted are dropped when the promotion takes effect.
+    No. Anybody ranked chapter HR manager or above, and every tenant admin, cannot be blocked, and blocks made before somebody was promoted are dropped when the promotion takes effect.
   </Accordion>
 
   <Accordion title="Does blocking stop notifications and emails?">

@@ -15,7 +15,7 @@ The Member fees table is the chapter treasurer's screen: one row per member, one
 
 ## Getting there
 
-The table needs **Local Center Members Table** on under **Settings** → **Payments & Fees** → **Membership fees**, plus either `FINANCIAL_LOCAL` on the chapter or an active unit-admin role inside it.
+The table needs **Local Center Members Table** on under **Settings** → **Modules** → **Payments & Fees** → **Membership fees** (it appears there once **Local Center Fees Enabled** is on), plus either Financial (Chapter) on the chapter or an active unit-admin role inside it.
 
 | From | How |
 |---|---|
@@ -37,11 +37,11 @@ Chapter admins always land on their own chapter. An organisation admin can open 
 | **Member** | Last and first name, linking to the profile |
 | **Unit** | The member's sub-unit, with its colour dot |
 | **Fee** | The tier the member is charged at, editable unless locked |
-| One per period | The period start and end, with what is paid or owed |
+| One per period | The period start and end, with "X of Y paid" underneath (members paid out of members shown, following the unit filter), and for each member what is paid or owed |
 
 Each period cell shows a green tick with the amount when the period is paid, an orange tick while a payment is still processing, and a checkbox with the outstanding amount when it is not. Partly covered periods show one checkbox per missing slice, so proration is preserved.
 
-Above the table: the **Organisation** / **Local** toggle (only when chapter fees are on and the chapter has a fee product), the fee year, a member status filter (**Active**, **Inactive**, **Suspended**, plus any of Awaiting referral, Excluded, Helping hands or Contributor your organisation uses), and a unit filter with **All units** and **No unit**.
+Above the table: the **Organisation** / **Local** toggle (only when chapter fees are on and the chapter has a fee product), the fee year, a member status filter (**Members : active**, **inactive** and **suspended**, plus Awaiting referral, Excluded, Helping hands or Contributor where your organisation uses them), and a unit filter with a search box, **All units** and **No unit**. The status filter starts on active members.
 
 A member with active roles in more than one sub-unit is still listed under a single unit. Orgo picks the unit where they hold plain membership ahead of any unit where they are a unit administrator or hold a role that carries permissions, so a leadership position elsewhere does not pull someone out of the unit they are registered in. A member whose only role is a leadership one is listed under that unit. Where that still leaves a tie, the first unit by name wins. The **Unit** column, the unit filter and the unit recorded against payments you take here all follow the same choice.
 
@@ -53,9 +53,9 @@ A member with active roles in more than one sub-unit is still listed under a sin
 
 ## Changing a member's tier
 
-The **Fee** column is a dropdown of the fee product's prices. Picking a new one applies from the start of the fee cycle you are currently viewing, so setting next year's tier does not rewrite this year's.
+The **Fee** column is a dropdown of the fee product's levels. Picking a new one applies from the start of the fee cycle you are currently viewing, so setting next year's level does not rewrite this year's. On a product set to **Flexible amount** there are no levels to pick.
 
-The dropdown is replaced by a padlock and the tier name once a successful payment covers the viewed cycle or a later one. Trying anyway is refused with *The fee is already paid and can no longer be changed*.
+The dropdown is replaced by the level name once a successful payment covers the viewed cycle or a later one. Trying anyway is refused with *The fee is already paid and can no longer be changed*.
 
 ---
 
@@ -66,13 +66,13 @@ The dropdown is replaced by a padlock and the tier name once a successful paymen
     The running **Total** above the table adds up everything ticked, in the chapter's currency.
   </Step>
   <Step title="Save (optional)">
-    **Save** stores what you ticked as a draft, so the selection survives leaving the page. The draft is shared across the chapter's fee admins, and each admin sees only the members they are allowed to manage.
+    **Save** stores what you ticked as a draft, so the selection survives leaving the page. The draft is shared across the chapter's fee admins, and each admin sees only the members they are allowed to manage. Unit admins can save a draft too, limited to the members of their own units.
   </Step>
   <Step title="Pay">
-    **Pay [total]** writes one fee payment batch covering every ticked period and takes you to **Finance** → **Fee payments**. The batch is stamped with the bank transfer (`iban`) method and starts as **pending**.
+    **Pay [total]** writes one fee payment batch covering every ticked period and takes you to **Finance** → **Fee payments**. The batch is recorded with the **Bank transfer** method and starts as **pending**. Where a period is partly covered by earlier payments, only the remainder is recorded, and a member whose ticked periods turn out to be fully covered does not appear in the batch.
   </Step>
   <Step title="Approve">
-    On **Fee payments**, **Approve** marks the batch and every payment inside it successful, then recalculates each member's fee validity date, chapter validity for chapter fee products and organisation validity otherwise. **Approve** is offered to `ADMIN_TENANT` only. A pending batch can instead be removed with **Cancel**, which needs `ADMIN_LOCAL` and deletes the batch and its payment rows.
+    On **Fee payments**, **Approve** marks the batch and every payment inside it successful, then recalculates each member's fee validity date, chapter validity for chapter fee products and organisation validity otherwise. **Approve** is offered to Admin (Organization) only. A pending batch can instead be removed with **Cancel**, which needs Admin (Chapter) and deletes the batch and its payment rows.
   </Step>
 </Steps>
 
@@ -84,7 +84,7 @@ Paid rows clear from the draft automatically, so reloading the table after a suc
 
 A member with an active admin role on a unit reaches this table without chapter-level finance rights. They see and manage only members holding an active role in their admin units or any unit below them. Staging and recording are filtered the same way on the server, so one unit's treasurer can neither see nor overwrite another's rows.
 
-Their **Fee payments** list opens on the **Local** tab, which is where the payments they record appear.
+Their **Fee payments** list opens on the **Local** toggle, which is where the payments they record appear.
 
 ---
 
@@ -104,7 +104,7 @@ Their **Fee payments** list opens on the **Local** tab, which is where the payme
   </Accordion>
 
   <Accordion title="The batch is there but members still look unpaid">
-    The batch is pending. Fee validity dates only move when an organisation admin approves it.
+    The batch is pending. Fee validity dates only move when an Admin (Organization) approves it.
   </Accordion>
 </AccordionGroup>
 
@@ -116,4 +116,4 @@ Their **Fee payments** list opens on the **Local** tab, which is where the payme
 - [Recording a payment](/platform/fees/record-payment): the other ways to log an offline payment
 - [Membership Fees](/platform/fees/fees): fee cycles, validity dates and reminders
 - [Units](/platform/groups/units): unit admins and the unit hierarchy
-- [Permissions](/platform/permissions): what `FINANCIAL_LOCAL` and `ADMIN_LOCAL` unlock
+- [Permissions](/platform/permissions): what Financial (Chapter) and Admin (Chapter) unlock

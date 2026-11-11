@@ -3,7 +3,7 @@
     "id": "contacts-directory",
     "image": "/images/platform/support/contacts-list.png",
     "usedOn": [
-      "platform/contacts.mdx"
+      "platform/contacts/index.mdx"
     ],
     "tenant": "t187c",
     "route": "/contacts",
@@ -19,16 +19,17 @@
     "id": "contact-record",
     "image": "/images/platform/support/contact-record.png",
     "usedOn": [
-      "platform/contacts.mdx"
+      "platform/contacts/index.mdx",
+      "platform/contacts/record.mdx"
     ],
     "tenant": "t187c",
     "route": "/contacts/show/23852",
-    "routeHint": "Sidebar -> Contacts -> click any contact with an email and a status. Contact 23852 (Hugo Vargas, t187c) now carries town, country, source, tags, two social profiles, one paid payment, two email logs and three notes from three different authors. The Notes panel is the last card in the left column and falls below a 1080-high fold, so capture at the tall viewport.",
+    "routeHint": "Sidebar -> Contacts -> click any contact with an email and a status. Contact 23852 (Hugo Vargas, t187c) now carries town, country, source, tags, two social profiles, one paid payment, two email logs and three notes from three different authors. The Notes panel is the last card in the left column and falls below a 1080-high fold, so capture at the tall viewport. UPDATED 2026-11-11: contact 23852 had lost every note. Three were re-seeded (Met, Called, Emailed) dated 28 Oct, 4 Nov and 7 Nov 2026. Also used on platform/contacts/record.mdx from 2026-11-11: that page had its own copy of the same screen under images/platform/contacts/, which no spec wrote and so could never be refreshed.",
     "actions": [],
     "waitFor": "text=Met Hugo at the spring chapter mixer",
     "viewport": "tall",
     "alt": "Contact record showing details, status, newsletter state, tags and the notes thread",
-    "status": "new"
+    "status": "recapture"
   },
   {
     "id": "helpdesk-tickets",
@@ -38,12 +39,12 @@
     ],
     "tenant": "t187c",
     "route": "/issues?isSupport=true",
-    "routeHint": "Log in as a tenant admin, open the profile menu (top-right avatar) -> Support. Tenant oncr has 314 support tickets.",
+    "routeHint": "Log in as a tenant admin, open the profile menu (top-right avatar) -> Support. Tenant oncr has 314 support tickets. Checked 2026-11-11: seven support tickets remain (is_support=1, unit NULL) after five were moved to the project board group.",
     "actions": [],
     "waitFor": "text=Support team",
     "viewport": "desktop",
     "alt": "Support ticket board listing tickets with type, assignee, priority and status",
-    "status": "new",
+    "status": "recapture",
     "note": "This is the screen the existing images/platform/support/issues-list.png actually shows; that file is being repurposed for a project issue board, so this needs its own capture. Keep the Opened status filter and the Task type filter visible."
   },
   {
@@ -69,12 +70,12 @@
     ],
     "tenant": "t187c",
     "route": "/issues?unit=19493",
-    "routeHint": "Group 19493 in tenant t187c ('Annual Conference 2026') is a project group with 24 issues across 4 statuses and 5 types. Reach it by opening that group and clicking the Issues tab. DiscussionCollectionExtension filters the board to units the logged-in user belongs to, so the session account (207128, Julian Sorensen) holds a user_role on 19493 along with 8 other members. Do NOT point this at tenant ila: that is a real organisation and is banned as a screenshot source.",
+    "routeHint": "Group 19493 in tenant t187c ('Annual Conference 2026') is a project group with 24 issues across 4 statuses and 5 types. Reach it by opening that group and clicking the Issues tab. DiscussionCollectionExtension filters the board to units the logged-in user belongs to, so the session account (207128, Julian Sorensen) holds a user_role on 19493 along with 8 other members. Do NOT point this at tenant ila: that is a real organisation and is banned as a screenshot source. UPDATED 2026-11-11: the twelve seeded issues all had unit_id NULL, so this group's board was empty. Five were moved to unit 19493, had is_support cleared and were renamed to the conference work the group is for, with the group's own statuses (1944 To do, 1945 In progress, 1946 Waiting list). Second correction the same day: the five issues still carried the support issue types (1779-1782, unit NULL) and the group's board shows only its own types, so the list stayed empty with the toolbar rendered. Reassigned to this group's types 1786 Research, 1787 Maintenance and 1788 Development. An issue needs a status AND a type from the same unit to appear.",
     "actions": [],
     "waitFor": "text=Confirm keynote speaker for the opening plenary",
     "viewport": "desktop",
     "alt": "Issue board for a project group with type, assignee, priority and status columns",
-    "status": "new",
+    "status": "recapture",
     "note": "The current file shows the tenant-wide Support board, not a project group board. It must be replaced with a real project issue board so the page and the image agree."
   },
   {
@@ -85,7 +86,7 @@
     ],
     "tenant": "t187c",
     "route": "/group/edit/19493",
-    "routeHint": "Open the project group 'Annual Conference 2026' (unit 19493, group.is_project = 1, has_types = 1) and pick Settings from its menu. The Issue statuses and Issue types tabs sit in a card under the group form, so the shot has to be scrolled down to them. The tabs render only when the group is a project (Update.vue:99), and the Issue types tab only when has_types is on (Update.vue:243).",
+    "routeHint": "Open the project group 'Annual Conference 2026' (unit 19493, group.is_project = 1, has_types = 1) and pick Settings from its menu. The Issue statuses and Issue types tabs sit in a card under the group form, so the shot has to be scrolled down to them. The tabs render only when the group is a project (Update.vue:99), and the Issue types tab only when has_types is on (Update.vue:243). 2026-11-11: the locator timeout was the page being empty: the reset left tenant 282 with no project group (group.is_project=1 count 0), so /group/edit/19493 rendered only the shell. Created one through the UI as the admin: /group/create?project=1, name Autumn Conference Planning, access Private, Create group. It landed as unit 19493 (the id this spec already names), is_project 1, has_types 1, seeded with the statuses To do, In progress, Waiting list and the types Research, Maintenance, Development. Spec unchanged. The group is private and the admin is its owner; it now also appears in the admin's sidebar and in Groups browse. The crop selector also moved: Update.vue:57 now renders the card as class card p-5 without mt-5, so .card.p-5.mt-5:has-text(\"Issue statuses\") matched nothing and the element screenshot timed out; the selector is now .card.p-5:has-text(\"Issue statuses\").",
     "actions": [
       "wait 3000",
       "scrollto text=Issue statuses",
@@ -98,6 +99,77 @@
     "alt": "Issue statuses tab on a project group's Settings screen, with the statuses listed as coloured tags and one row open for editing, showing its name field, colour picker, Save and Cancel buttons and the delete bin, beside the Issue types tab and the Add button",
     "status": "new",
     "notes": "New capture: platform/issues.mdx described this editor and had no image.",
-    "selector": ".card.p-5.mt-5:has-text(\"Issue statuses\")"
+    "selector": ".card.p-5:has-text(\"Issue statuses\")"
+  },
+  {
+    "id": "contacts-module-settings",
+    "image": "/images/platform/contacts/contacts-settings.png",
+    "usedOn": [
+      "platform/contacts/permissions.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/contacts",
+    "routeHint": "Settings (gear) -> Modules -> Contacts -> Configuration. Added 2026-11-11. This image was used on a documentation page but written by no spec, so no run could refresh it and it had drifted from the screen. Diagnose before trusting the selectors: they were written from the documentation rather than from the screen.",
+    "actions": [
+      "wait 2500"
+    ],
+    "waitFor": "text=Enable Contacts Module",
+    "viewport": "desktop",
+    "alt": "Contacts module configuration with the Enable Contacts Module switch on, contact statuses enabled and per-chapter contacts disabled, each with its explanation",
+    "status": "new"
+  },
+  {
+    "id": "contact-statuses-settings",
+    "image": "/images/platform/contacts/contact-statuses.png",
+    "usedOn": [
+      "platform/contacts/record.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/modules/contacts",
+    "routeHint": "Settings (gear) -> Modules -> Contacts, the statuses screen. Added 2026-11-11. This image was used on a documentation page but written by no spec, so no run could refresh it and it had drifted from the screen. Diagnose before trusting the selectors: they were written from the documentation rather than from the screen. UPDATED 2026-11-11: the Contacts module page has a sub-navigation, Configuration and Contact Statuses, and opens on Configuration. Without the click this spec captured the same Configuration screen as contacts-module-settings, byte for byte the same size.",
+    "actions": [
+      "wait 2500",
+      "click text=Contact Statuses",
+      "wait 2000"
+    ],
+    "waitFor": "text=Contact Statuses",
+    "viewport": "desktop",
+    "alt": "The contact statuses screen listing each status with its colour and a handle for reordering",
+    "status": "recapture"
+  },
+  {
+    "id": "contact-payments-card",
+    "image": "/images/platform/contacts/contact-payments.png",
+    "usedOn": [
+      "platform/contacts/payments.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/contacts/show/23852",
+    "routeHint": "Contacts -> open a contact -> the payments card. The button that opens the dialog is now Add payment record, not Record payment, so the page alt naming the old label is stale too. Added 2026-11-11. This image was used on a documentation page but written by no spec, so no run could refresh it and it had drifted from the screen. Diagnose before trusting the selectors: they were written from the documentation rather than from the screen.",
+    "actions": [
+      "scrollto text=Payments",
+      "wait 1500"
+    ],
+    "waitFor": "text=Add payment record",
+    "viewport": "wide",
+    "alt": "The payments card on a contact record, listing the payments received with their amount, status, date and product",
+    "status": "new"
+  },
+  {
+    "id": "contact-newsletter-audience",
+    "image": "/images/platform/contacts/newsletter-audience.png",
+    "usedOn": [
+      "platform/contacts/newsletter.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/newsletter/create",
+    "routeHint": "Communication -> Email campaigns -> create, the recipients card, which is where contacts appear as an audience. Added 2026-11-11. This image was used on a documentation page but written by no spec, so no run could refresh it and it had drifted from the screen. Diagnose before trusting the selectors: they were written from the documentation rather than from the screen.",
+    "actions": [
+      "wait 3000"
+    ],
+    "waitFor": "text=Recipients",
+    "viewport": "desktop",
+    "alt": "The recipients card of a campaign, showing the audiences that can be chosen, including the ones that send to contacts",
+    "status": "new"
   }
 ]

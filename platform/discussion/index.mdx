@@ -55,15 +55,15 @@ Images, videos and files can be attached with the image, video and folder icons,
 
 <img src="/images/platform/communication/discussion-post-detail.png" alt="A single discussion showing its category and group chips, attached image, reaction count and comment count" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-**Reactions.** Four reactions are available on a post or any comment: Like, Love, Celebrate and Informative. You hold one at a time. Hovering a reaction shows the first 20 people who used it, and selecting it opens the full list.
+**Reactions.** Five reactions are available on a post or any comment: Like, I love, Agree, Applause and Insight. You hold one at a time. Selecting **Like** reacts with a like, and selecting it again takes the reaction back. To choose another reaction, hover over **Like** on a computer, or press and hold it on a phone, and pick from the tray. Hovering a reaction icon next to the count shows up to six of the people who used it and how many more there are, and selecting it opens the full list.
 
-**Comments and replies.** Comments appear oldest first. Every comment can be replied to, and replies can themselves be replied to, so threads nest as deep as the conversation goes. Long threads can be collapsed. Comments carry the same rich text, mentions and attachments as posts.
+**Comments and replies.** Above the comments, a switch sorts them **Oldest** (the default), **Newest** or **Top**. Top puts the comments with the most reactions first, and comments with the same number of reactions stay oldest first. Every comment can be replied to, and replies can themselves be replied to, so threads nest as deep as the conversation goes. Long threads can be collapsed. Comments carry the same rich text, mentions and attachments as posts. On a phone the emoji button is hidden, because the phone keyboard has its own.
 
 <img src="/images/platform/communication/discussion-post-comments.png" alt="Comment thread with several members replying, each comment offering Like and Reply, a nested reply under one of them, and a Write a comment box at the bottom" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-**Counts.** The footer of a post shows its reactions and its comment count. Views are recorded too, as unique viewers with the author's own visits excluded, and they are shown on the discussion cards in the dashboard rather than in the feed.
+**Counts.** The footer of a post shows its reactions and its comment count. The comment count includes replies, and it leaves out comments that are held for review, hidden by a moderator or deleted. On the discussion page it updates while you watch as other members comment. Views are recorded too, as unique viewers with the author's own visits excluded, and they are shown on the discussion cards in the dashboard rather than in the feed. For how often posts are seen and opened across the whole organization, see [Communication analytics](/platform/communication-analytics).
 
-**Following.** Creating a discussion or commenting on one follows it automatically. **Subscribe** and **Subscribed** on the discussion page turn following on and off by hand.
+**Following.** Creating a discussion, commenting on one, or reacting to a comment follows it automatically. **Subscribe** and **Subscribed** on the discussion page turn following on and off by hand.
 
 ---
 
@@ -72,23 +72,28 @@ Images, videos and files can be attached with the image, video and folder icons,
 | Where | Rule |
 |-------|------|
 | Organization feed | The **Who Can Create Public Discussions** setting (default: All Users). Members below that level can still post in a category set to "Anyone can post". |
-| A group, role group or local center | Anyone with access to it. If the group's **Who can post?** is set to **Only admins**, the composer is offered to group admins and holders of `HR_TENANT` only. |
-| Editing a post | The author. A moderator can hide it, and a local or tenant admin can delete it. |
-| Deleting a discussion or comment | The author, an `ADMIN_LOCAL` of the group, or `ADMIN_TENANT` for organization-wide posts. Deleting somebody else's content is written to the audit log. |
+| A group, role group or local center | Anyone with access to it. If the group's **Who can post?** is set to **Only admins**, the composer is offered to group admins and organization-wide HR managers only. |
+| Editing a post | The author. A moderator can hide it, and a chapter or organization admin can delete it. |
+| Deleting a discussion or comment | The author, an admin of the group's chapter, or an organization admin for organization-wide posts. Deleting somebody else's content is written to the audit log. |
 
-Deleting a comment that already has visible replies keeps the thread: the comment's text and attachments are cleared, and the replies stay.
+Deleting a comment deletes its replies with it, and deleting a discussion deletes all of its comments. Members who were notified of a deleted comment lose that notification too.
 
 ---
 
 ## Finding things
 
-The sort control offers **newest**, **oldest**, **most commented** and **least commented**, and the icon next to it switches between the card view and a compact list. Categories appear as a panel beside the feed on desktop and as tabs on mobile. Selecting a `#tag` under a post filters the feed to that tag. Feeds load more posts as you scroll.
+On a computer, the sort control under the composer offers **Recent activity** (the default), **Latest**, **Oldest**, **Most commented** and **Least commented**, and the icon next to it switches between the card view and a compact list. Phones have no sort control. Your choice is remembered on that device.
+
+- **Recent activity** puts the discussion with the newest visible comment or reply first. A new comment lifts its discussion to the top, and hiding or deleting that comment sends it back. Edits and reactions do not move a discussion. Discussions with no comments sort by when they were posted, and ties go to the newer discussion.
+- **Latest** sorts by when the discussion was first posted, whatever has happened since.
+
+Categories appear as a panel beside the feed on desktop and as tabs on mobile. Selecting a `#tag` under a post filters the feed to that tag. Feeds load more posts as you scroll.
 
 ---
 
 ## Notifications
 
-Followers are notified when a new comment is added, the author of a comment is notified of replies to it, and mentioned members are notified of the mention. Whether each one also arrives by email depends on the member's own settings and on the organization default **Email Notifications: Discussions**. See [Notifications](/platform/notifications).
+Followers are notified when a new comment is added, the author of a comment is notified of replies to it, and mentioned members are notified of the mention. The authors of a post or comment are also told when someone reacts to it, in the app only. Deleting a comment removes the notifications it created. Whether each one also arrives by email depends on the member's own settings and on the organization default **Email Notifications: Discussions**. See [Notifications](/platform/notifications).
 
 ---
 
@@ -96,7 +101,7 @@ Followers are notified when a new comment is added, the author of a comment is n
 
 <img src="/images/platform/communication/discussion-module-config.png" alt="Discussions module settings with the module toggle, Who Can Create Public Discussions, Enable Discussion Namespaces and Enable Profanity Check" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-**Settings** and then **Discussions**. Changing these requires `ADMIN_TENANT`.
+**Settings** and then **Discussions**. These are configuration screens, so changing them needs the **Orgo administrator** flag on your account, not only an admin permission. See [Permissions](/platform/permissions).
 
 | Setting | What it does | Default |
 |---------|--------------|---------|
@@ -119,7 +124,7 @@ Followers are notified when a new comment is added, the author of a comment is n
   </Accordion>
 
   <Accordion title="Can members delete their own posts?">
-    Yes, at any time. If the post is a comment with replies underneath, the text and attachments are removed and the thread structure stays so the replies still read.
+    Yes, at any time. Deleting a comment also deletes the replies under it, so a member who wants to keep a conversation readable should edit the comment instead.
   </Accordion>
 
   <Accordion title="How is this different from the newsletter?">
@@ -136,4 +141,5 @@ Followers are notified when a new comment is added, the author of a comment is n
 - [Blocking Members](/platform/discussion/blocking-members) how a member hides one other member's content for themselves
 - [Groups](/platform/groups) where group discussions live
 - [Notifications](/platform/notifications) what reaches a member and how
+- [Communication analytics](/platform/communication-analytics) how often posts are seen, opened and liked, and the best time to post
 - [Permissions](/platform/permissions) the permission levels used above

@@ -1,0 +1,92 @@
+[
+  {
+    "id": "import-sheet-custom-fields",
+    "image": "/images/platform/import/wizard-sheet-customfields.png",
+    "usedOn": [
+      "platform/customization/import/mapping-columns.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/import",
+    "routeHint": "Settings (gear) -> Import -> the Members step -> Choose file -> Map columns. Added 2026-11-11: these four mid-wizard screens were the last images on a documentation page that no spec could refresh, because the screen does not exist until a file has been uploaded and the runner had no way to upload one. It has an `upload` verb now, and the file is the committed fixture `fixtures/members-with-custom-fields.csv`, so the mapping is reproducible: six columns, three that match system fields (email, first_name, last_name), one that matches the tenant's existing T-Shirt Size dropdown, and two that would become new text fields. WARNING: opening the mapping screen writes an `import` row in `preflight` status, which then appears in Import History and makes the next run say 'Waiting behind another import'. Delete the leftovers afterwards: DELETE FROM import_preflight_key WHERE import_id IN (...); DELETE FROM import WHERE tenant_id=282 AND status IN ('preflight','queued'). Nothing is imported: the capture stops well before Start import. Selector trap: the runner only treats an argument as CSS when it starts with '.', '#' or '[', so `button:has-text(...)` and `th:has-text(...)` are read as literal text and match nothing. Both are written with a leading class here for that reason. Re-anchored 2026-11-11 after checking master: the step used to be found through `[data-testid=\"import-download-template-<type>\"]`, and master deletes that attribute along with the Download a template button it sat on (commit 021bab83b9, which found the button returned a file byte-identical to Example CSV). The step is now found by its own title, which exists in both builds. Run `node capture/clean-import-drafts.mjs` before AND after each of these specs, one spec at a time. A draft left behind does not just add a line to Import History: once it reaches `mapping` status the step's button changes from 'Map columns' to 'Continue mapping', so the click finds nothing and the capture is of the import page instead of the screen. That is what produced a 505 kb file where a good one is 364 kb.",
+    "actions": [
+      "wait 3500",
+      "upload .import-step:has(.import-step__title:text-is(\"Users\")) input[type=\"file\"] | members-with-custom-fields.csv",
+      "wait 6000",
+      "click .button:has-text(\"Map columns\")",
+      "wait 7000"
+    ],
+    "waitFor": "text=Start import",
+    "viewport": "wide",
+    "alt": "The Map columns screen showing the uploaded file as a sheet, with each column header carrying its destination and a status chip, a progress line reading 6 of 6 columns mapped, and the required field chip beside Discard and Start import",
+    "status": "new",
+    "notes": "The hero of the mapping documentation: it has to show the file as a sheet with the destination written into each header, not a form."
+  },
+  {
+    "id": "import-column-panel",
+    "image": "/images/platform/import/wizard-panel-customfields.png",
+    "usedOn": [
+      "platform/customization/import/mapping-columns.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/import",
+    "routeHint": "Same screen as import-sheet-custom-fields, then click a column header to open its settings panel. 'Dietary requirements' is used because it is a header the tenant has no field for, so the panel shows the whole destination choice (system field, existing field, new field, skip) with the field name and type underneath. Read that spec's warning about the leftover import row. Selector trap: the runner only treats an argument as CSS when it starts with '.', '#' or '[', so `button:has-text(...)` and `th:has-text(...)` are read as literal text and match nothing. Both are written with a leading class here for that reason. Re-anchored 2026-11-11 after checking master: the step used to be found through `[data-testid=\"import-download-template-<type>\"]`, and master deletes that attribute along with the Download a template button it sat on (commit 021bab83b9, which found the button returned a file byte-identical to Example CSV). The step is now found by its own title, which exists in both builds. Run `node capture/clean-import-drafts.mjs` before AND after each of these specs, one spec at a time. A draft left behind does not just add a line to Import History: once it reaches `mapping` status the step's button changes from 'Map columns' to 'Continue mapping', so the click finds nothing and the capture is of the import page instead of the screen. That is what produced a 505 kb file where a good one is 364 kb.",
+    "actions": [
+      "wait 3500",
+      "upload .import-step:has(.import-step__title:text-is(\"Users\")) input[type=\"file\"] | members-with-custom-fields.csv",
+      "wait 6000",
+      "click .button:has-text(\"Map columns\")",
+      "wait 7000",
+      "click .modal-card th:has-text(\"Dietary requirements\")",
+      "wait 3500"
+    ],
+    "waitFor": "text=sample rows have a value",
+    "viewport": "wide",
+    "alt": "The column settings panel open beside the sheet, showing how many sample rows have a value, the sample values, the destination choice between a system field, an existing field, a new field and skip, and the field name and type",
+    "status": "new"
+  },
+  {
+    "id": "import-value-map",
+    "image": "/images/platform/import/wizard-value-map.png",
+    "usedOn": [
+      "platform/customization/import/custom-fields.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/import",
+    "routeHint": "Same screen again, then open the T-Shirt Size column. That header matches a dropdown custom field the demo tenant already has, and a column pointed at a field with options grows a 'Match values to options' table pairing every value found in the file against the option it will be stored as, with a count per value and a Create new option choice. Read import-sheet-custom-fields for the warning about the leftover import row. Selector trap: the runner only treats an argument as CSS when it starts with '.', '#' or '[', so `button:has-text(...)` and `th:has-text(...)` are read as literal text and match nothing. Both are written with a leading class here for that reason. Re-anchored 2026-11-11 after checking master: the step used to be found through `[data-testid=\"import-download-template-<type>\"]`, and master deletes that attribute along with the Download a template button it sat on (commit 021bab83b9, which found the button returned a file byte-identical to Example CSV). The step is now found by its own title, which exists in both builds. Run `node capture/clean-import-drafts.mjs` before AND after each of these specs, one spec at a time. A draft left behind does not just add a line to Import History: once it reaches `mapping` status the step's button changes from 'Map columns' to 'Continue mapping', so the click finds nothing and the capture is of the import page instead of the screen. That is what produced a 505 kb file where a good one is 364 kb.",
+    "actions": [
+      "wait 3500",
+      "upload .import-step:has(.import-step__title:text-is(\"Users\")) input[type=\"file\"] | members-with-custom-fields.csv",
+      "wait 6000",
+      "click .button:has-text(\"Map columns\")",
+      "wait 7000",
+      "click .modal-card th:has-text(\"T-Shirt Size\")",
+      "wait 3500"
+    ],
+    "waitFor": "text=Match values to options",
+    "viewport": "wide",
+    "alt": "A column pointed at an existing dropdown field, with the Match values to options table pairing each value found in the file against the option it will be stored as, and a count of how many rows carry each value",
+    "status": "new"
+  },
+  {
+    "id": "import-sheet-payments",
+    "image": "/images/platform/import/wizard-sheet-payments.png",
+    "usedOn": [
+      "platform/customization/import/linking-records.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/import",
+    "routeHint": "Settings (gear) -> Import -> the Payments step -> Choose file -> Map columns. The fixture `fixtures/payments-with-references.csv` is built to produce one of each outcome in the match summary: four rows name members who exist, two name people who do not and would become contacts, two carry a legacy id that matches nothing at all and stay unmatched, and the product column mixes an existing product with one that would be created. Read import-sheet-custom-fields for the warning about the leftover import row. Selector trap: the runner only treats an argument as CSS when it starts with '.', '#' or '[', so `button:has-text(...)` and `th:has-text(...)` are read as literal text and match nothing. Both are written with a leading class here for that reason. Re-anchored 2026-11-11 after checking master: the step used to be found through `[data-testid=\"import-download-template-<type>\"]`, and master deletes that attribute along with the Download a template button it sat on (commit 021bab83b9, which found the button returned a file byte-identical to Example CSV). The step is now found by its own title, which exists in both builds. Run `node capture/clean-import-drafts.mjs` before AND after each of these specs, one spec at a time. A draft left behind does not just add a line to Import History: once it reaches `mapping` status the step's button changes from 'Map columns' to 'Continue mapping', so the click finds nothing and the capture is of the import page instead of the screen. That is what produced a 505 kb file where a good one is 364 kb.",
+    "actions": [
+      "wait 3500",
+      "upload .import-step:has(.import-step__title:text-is(\"Product Payments\")) input[type=\"file\"] | payments-with-references.csv",
+      "wait 6000",
+      "click .button:has-text(\"Map columns\")",
+      "wait 20000"
+    ],
+    "waitFor": "text=found",
+    "viewport": "wide",
+    "alt": "A payments import showing the match summary above the sheet with a tile per reference reading found, new and unmatched, and unmatched cells marked in the sheet below",
+    "status": "new",
+    "notes": "The match summary is computed server side and takes longer than the members mapping, which is why this spec waits twelve seconds rather than seven. The 'Checking N rows' line under the progress bar stays on screen with a count of zero after the preflight has finished; it is in the frame and is the screen's own state, not a capture that was taken too early."
+  }
+]

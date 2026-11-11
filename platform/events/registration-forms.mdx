@@ -23,26 +23,29 @@ The form belongs to the individual event, so building it well once does not carr
 
 ## Turning the form on
 
-Open the event, go to **Modify**, and under **Registration** switch on **Require registration form
+Open the event, choose **Edit**, and under **Who can join** switch on **Require registration form
 for members**. A **Registration form** entry then appears in the event sidebar. Without it, members
 simply RSVP.
 
-Editing the form needs `EVENT_LOCAL` on the event's group, which `EVENT_TENANT` and `ADMIN_TENANT`
-satisfy tenant-wide.
+Editing the form needs event admin rights on the event's group; organisation-wide event admins and
+organisation admins can edit it on every event.
 
 <Note>
 Ticketed events always use a registration form. Switching an event to **Paid** turns this on
 automatically and locks the toggle, with the hint "Paid events always require a registration form".
-Switching an event's audience to **Public** turns it on too, though there the toggle stays editable.
+Choosing the **Public** audience (or **Private link**) turns it on too, though there the toggle stays editable.
 </Note>
 
 ---
 
 ## Building the form
 
-The **Form fields** tab is a two-panel builder: **Available fields** left, **Form fields** right.
-Click or drag a field across to add it, drag rows to reorder, tick **required** where an answer is
-mandatory, then **Save changes**.
+The page header says "What people fill in when they register for this event" and shows **All changes
+saved** or **Unsaved changes**, with **Discard**, **Save changes** and **Open public form** (opens the
+form as a visitor sees it). The **Form fields** tab is a two-panel builder: **Available fields** left,
+**Form fields** right. Click or drag a field across to add it, drag rows to reorder (or use the move
+up and move down buttons on each row), tick **required** where an answer is mandatory, then **Save
+changes**. Email and Full Name show a lock and "Email and Full Name are always asked."
 
 <img src="/images/platform/events/event-registration-form-builder.png" alt="Registration form builder with Standard fields and Custom fields tabs on the left and the assembled form on the right, each row carrying a required checkbox" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -72,8 +75,8 @@ Email or Full Name through the API silently puts them back at the top of the for
 
 ### Custom fields
 
-Anything the standard list does not cover becomes a custom field: use **Create** on the **Custom
-fields** tab of the left panel.
+Anything the standard list does not cover becomes a custom field: use **Create custom field** on the
+**Custom fields** tab of the left panel. The pencil and bin icons beside a field edit or delete it.
 
 | Type | Behaviour |
 |------|-----------|
@@ -85,7 +88,8 @@ fields** tab of the left panel.
 | **Date** | Date picker. |
 | **Yes/No** | A switch. |
 
-Options for the three list types are entered one per row and can be dragged into order. Deleting a
+Options for the three list types are entered one per row and can be dragged into order; the order you
+set is the order people see, including after you reopen the field to edit it. Deleting a
 custom field also removes it from the form layout, and needs the same permission as editing the form.
 
 <Warning>
@@ -101,9 +105,11 @@ from an [event template](/platform/events/event-templates).
 
 | Setting | What it does |
 |---------|-------------|
-| **Disable newsletter subscription** | Hides the "I want to subscribe to the newsletter" switch from the form. |
-| **Disable register checkbox** | Hides the "I want to create an user account on the online community" switch that anonymous registrants otherwise see. |
+| **Disable newsletter subscription** | Hides the newsletter subscription checkbox from the registration form. |
+| **Disable register checkbox** | Hides the account creation checkbox that anonymous registrants otherwise see. |
 | **Custom text at bottom of registration form** | Free text shown after the fields, before the consent checkboxes: house rules, refund terms, cancellation policy. |
+
+A live **Preview** beside the settings shows the effect.
 
 <img src="/images/platform/events/event-registration-form-settings.png" alt="Settings tab of the event registration form showing the two registration option switches and the custom text box" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -117,9 +123,9 @@ GDPR policy URL, the terms checkbox when it has a terms URL. Both come from
 
 | Setting | What it does |
 |---------|-------------|
-| **Display title** | A switch under its own **Display** heading at the top of the tab, on by default, recording whether the form's title is shown above the fields. |
-| **Selected color** | Highlight colour for the selected ticket and other accents on the public event page. Defaults to `#FFE089`. |
-| **Button color** | Colour of the primary buttons on the public event page. Defaults to `#3173EE`. |
+| **Display title** | A switch under the **Display** heading, on by default: show the event title above the form. |
+| **Selected color** | Highlight colour for the ticket or option a person has chosen. Left empty, the event uses your organisation's checkout colour from branding. **Use default** clears it. |
+| **Button color** | Colour of the primary buttons on the public event page. Left empty, it also follows your branding. A warning appears when text on the chosen colour may be hard to read. |
 | **Hero image border radius** | Corner rounding of the event's hero image, for example `14px`. |
 
 <Note>
@@ -138,8 +144,8 @@ selected colour if you want the rounding to take effect.
   field, once a form layout has been saved. An event that requires a form but has no saved layout
   exports all ten profile fields instead, and an event that does not require a form exports six
   legacy fields: phone, organisation, role, LinkedIn, X and Instagram. Checkbox, radio and dropdown
-  answers export as their visible labels, dates as `YYYY-MM-DD`. Exporting needs `EVENT_TENANT`,
-  `EVENT_LOCAL` on the event, or event ownership.
+  answers export as their visible labels, dates as `YYYY-MM-DD`. Exporting needs organisation-wide
+  event admin rights, event admin rights on the event, or event ownership.
 
 Decide what you need before the event: you cannot ask retrospectively. Be sparing with **required**,
 since every mandatory field is a reason to abandon registration, and on a paid event that is a lost

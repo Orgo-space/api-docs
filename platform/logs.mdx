@@ -16,7 +16,7 @@ The activity log answers "who changed this, and when". Every entry names the per
 **Settings → Developers → Logs**
 
 <Note>
-  Requires **ADMIN_TENANT**. There is no local-admin view of the tenant-wide log, and the same permission gates the log tabs that appear on individual records.
+  The organization-wide log page needs the **Orgo administrator** flag on your account, like the other configuration screens. The organization admin permission alone does not open it, and there is no chapter-admin view of it. The log tabs on individual records (a member's **Audit Logs** tab, an event attendance, an adhesion) are different: they stay open to anyone holding the organization admin permission. See [the same log, scoped to one record](#the-same-log-scoped-to-one-record).
 </Note>
 
 <img src="/images/platform/logs/activity-log-list.png" alt="Activity log table with filter pills for action, entity, author, user and date above rows showing date, action, author and entity" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
@@ -65,13 +65,15 @@ The pills above the table combine, and the result is written into the page URL, 
 | **update** | A member profile is edited (the diff of changed fields), an adhesion or identity changes status, a unit or group is edited, an attendance changes, a contract is updated, a member's email is changed or their password is reset, an administrator unsubscribes a contact from the newsletter |
 | **remove** | A record is deleted through the application: newsletters and newsletter templates, email templates, events, courses and lessons, products, forms, users, adhesions, identities, contracts, contacts, roles, role groups, groups, local centers and units, plus discussions, posts and comments. Also written when a tag is removed from a member or contact profile, and when a [profile note](/platform/users/profile-activity) is deleted |
 | **moderate** / **unmoderate** | A discussion post or comment is hidden or restored |
-| **csv** | Members, role-group members, contacts, or a saved query are exported |
+| **csv** | Members, role-group members, contacts, invoices, the email log, a saved query or a [report](/platform/reports) are exported. A report export names the report |
 | **upload_identity** | A member uploads an identity document |
 | **confirm_identity** | An identity is confirmed before a subscription charge |
 | **custom_field_encryption_enabled** / **custom_field_encryption_disabled** | Encryption is switched on or off for a custom field |
 | **decrypt_custom_field** / **decrypt_custom_field_failed** | An encrypted custom field value is read, or a read fails |
 
-Record merges are logged too, but they are not offered in the Action filter. Review them on the merge history page instead.
+Creating or changing a [report](/platform/reports) is logged too, as a create or update on a report definition.
+
+A few more actions are written but are not offered in the Action filter, so you find them by author, user and date instead: record merges and merge rollbacks (review those on the merge history page), **personal_id_changed** (a personal identification number was changed, with old and new values kept encrypted), **personal_id_revealed** (an admin viewed one), **personal_id_exported** (one went out in a report or a personal data export), **personal_data_exported** (a person's data and files were exported for a data request) and **district_tag_updated** (an automatic district tag changed).
 
 ### What is not recorded here
 
@@ -89,7 +91,7 @@ Record merges are logged too, but they are not offered in the Action filter. Rev
 
 The **Entity** column and filter are populated for deletions and for saved-query exports. Most edit entries identify their subject through the **User** column instead and carry no entity type, so filtering by, say, `User` will not return profile edits. To review edits to one member, filter by **User**, or open that member's profile and use its own log tab.
 
-The filter dropdown is also a fixed list, and it is shorter than the set of entity types the table displays. Tag changes (`ProfileTag`) and note deletions (`UserNote`, `ContactNote`) write rows that show their type in the **Entity** column but have no option in the filter, so they cannot be narrowed down that way. Filter by **User** and **Action** instead, or read them in order on that person's [Activity tab](/platform/users/profile-activity).
+The filter dropdown is also a fixed list, and it is shorter than the set of entity types the table displays. Tag changes (`ProfileTag`), note deletions (`UserNote`, `ContactNote`), report saves and exports (`ReportDefinition`, `Report`) and resignation requests write rows that show their type in the **Entity** column but have no option in the filter, so they cannot be narrowed down that way. Filter by **User** and **Action** instead, or read them in order on that person's [Activity tab](/platform/users/profile-activity).
 
 ---
 
@@ -103,13 +105,13 @@ Deletion entries also record an **impersonator** when the deletion happened whil
 
 ## The same log, scoped to one record
 
-The tenant-wide page is not the only way in. The same entries appear filtered on:
+The organization-wide page is not the only way in. The same entries appear filtered on:
 
-- a **member profile**, on its logs tab;
-- an **event attendance**, on the attendees screen;
-- an **adhesion**, on its log view.
+- a **member profile**, on its **Audit Logs** tab, which has a search box over action, details and author, and sits beside an **Email Logs** view on the same profile;
+- an **event attendance**, behind the logs button on a row of the attendees screen;
+- an **adhesion**, on its **Logs** tab.
 
-All three read the same store and need the same ADMIN_TENANT permission, so a local admin will not see them.
+All three read the same store and need the organization admin permission, so a chapter admin or an HR manager without it will not see them (an adhesion page opens for chapter HR managers, but its **Logs** tab stays empty for them). Unlike the organization-wide page, they do not need the Orgo administrator flag.
 
 <img src="/images/platform/logs/activity-log-detail.png" alt="The expanded details panel of an activity log row, showing the JSON diff with the old and new value for each changed field" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -136,7 +138,7 @@ The log is strictly read-only: entries cannot be edited or deleted from the inte
     Filter Action = **remove** and Entity = **User**, then expand the row. The snapshot holds the email, first and last name and status the account had at deletion, and the Author column names who did it.
   </Accordion>
   <Accordion title="A local admin says the log is empty for them">
-    It is not visible to them. The log requires ADMIN_TENANT, and that includes the log tabs on individual profiles.
+    It is not visible to them. The organization-wide page needs the Orgo administrator flag, and the log tabs on individual profiles need the organization admin permission.
   </Accordion>
   <Accordion title="Who read an encrypted custom field?">
     Filter Action = **decrypt_custom_field**. Failed attempts are recorded separately as **decrypt_custom_field_failed**, and switching encryption on or off for a field is recorded as its own action.
@@ -148,6 +150,7 @@ The log is strictly read-only: entries cannot be edited or deleted from the inte
 ## Related
 
 - [Permissions](/platform/permissions)
+- [Reports](/platform/reports)
 - [Email log](/platform/emails/email-log)
 - [Merging duplicates](/platform/users/merging-duplicates)
 - [Custom fields](/platform/users/custom-fields)

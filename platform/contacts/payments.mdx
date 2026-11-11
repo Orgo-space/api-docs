@@ -86,7 +86,7 @@ stored identity details. Only that member, signed in, can change them.
 | **Event tickets** | Card checkout, free registration, or pay by invoice | A contact can be the buyer, the attendee, or both, and can buy tickets for other people |
 | **Invoices** | An invoice raised with a contact as the payer, including event registration invoices settled by bank transfer | An invoice has one payer: a member, a contact, or a company |
 | **Subscriptions** | A recurring product bought without an account | Each period's charge creates a payment against the contact |
-| **Payments you record by hand** | **Record payment** on the contact record | Needs `FINANCIAL_TENANT` |
+| **Payments you record by hand** | **Add payment record** on the contact record | Needs an organisation-wide financial manager |
 | **Membership fees** | Not possible | See the boundary above |
 
 ---
@@ -94,8 +94,9 @@ stored identity details. Only that member, signed in, can change them.
 ## Where a contact's money shows up
 
 **On the contact record.** The **Payments & Subscriptions** card holds a
-subscriptions table and the same payments table used on member profiles, plus a
-**Record payment** button for money taken offline.
+subscriptions table and the same payments table used on member profiles, plus an
+**Add payment record** button for money taken offline. The button only shows for
+organisation-wide financial managers.
 
 **In your organisation-wide lists.** A contact payer appears in the payments list
 and in the invoice list exactly like a member, shown as a link back to the
@@ -106,18 +107,18 @@ screen shows you.
 
 | Action | Permission |
 |---|---|
-| See a contact's payment history | `FINANCIAL_TENANT` or `HR_TENANT` |
-| Record a payment against a contact | `FINANCIAL_TENANT` |
-| Refund a contact's payment | `FINANCIAL_LOCAL` for the payment's chapter, or `FINANCIAL_TENANT` |
-| Generate an invoice from a payment | `ADMIN_TENANT` |
+| See a contact's payment history | Organisation-wide financial or HR managers |
+| Record a payment against a contact | Organisation-wide financial managers |
+| Refund a contact's payment | Chapter financial managers for the payment's chapter, or organisation-wide financial managers |
+| Generate an invoice from a payment | Organisation admins |
 
 A chapter-level financial or HR permission on its own is not enough to open a
 contact's payment history. That list is an organisation-level view.
 
 <Note>
 A contact with any payment, invoice or signed document attached cannot be
-deleted, individually or through bulk delete. The money records would be left
-without a payer.
+deleted. Deleting one directly is refused, and a bulk delete skips it and reports how
+many it skipped. The money records would be left without a payer.
 </Note>
 
 ---
@@ -136,6 +137,15 @@ recurring donation or subscription is charged every period without receiving one
 Plan for that. Say on the donation page how often the card will be charged and
 how to stop it, and check the subscriptions on the contact record when someone
 queries a charge they did not expect.
+
+---
+
+## Donations that count towards membership
+
+A contact still never holds a fee. But if your organisation has **Donations count towards
+membership** switched on, a donation a contact made is judged like any other when it is
+paid. When that contact is later merged into a member, the member's membership is worked
+out again with those donations included. See [Donations](/platform/fees/donations).
 
 ---
 
@@ -210,12 +220,13 @@ where money comes from. See [Insights](/platform/insights).
     the member lookup missed and a contact was found or created instead. The
     payment stays where it was booked. Merging that contact into the member moves
     their payments, subscriptions, invoices and identity records across.
-    **Create user account** may do the same thing, but only when your
-    organization creates admin-made accounts as Active, which is the default. On
+    **Create user account** does the same thing, but only when your
+    organisation creates admin-made accounts as Active, which is the default. On
     that setting the matching contact is folded into the new member and removed.
     On any other setting the contact is left behind with the money still on it.
-    Merge is the reliable route, because it shows you what will move before you
-    commit and can be undone. See
+    A person who later registers with the contact's own email is folded in
+    automatically once they confirm it. Merge Records is the reliable route,
+    because it shows you what will move before you commit and can be undone. See
     [Becoming a member](/platform/contacts/becoming-a-member).
   </Accordion>
 

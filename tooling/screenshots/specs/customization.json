@@ -7,15 +7,17 @@
     ],
     "tenant": "t187c",
     "route": "/tenants/languages",
-    "routeHint": "Any tenant settings page shows the settings sidebar. The subject is the sidebar's CUSTOMIZATION section, which sits below the long MODULES list and is therefore below the fold on load: the earlier capture had no scroll action at all and shot the top of the sidebar. The scrollto below drives the sidebar's own scroll container down to its last entry, which brings the whole CUSTOMIZATION block into frame. Dashboard Organizer only appears while 'Use Custom Dashboard' is on. Captured while hasCustomDashboard was on, so the Dashboard Organizer entry is in frame and the shot matches the page table one for one; the flag is off again now, so this spec is parked at status keep rather than dropping that entry on the next run.",
+    "routeHint": "Any Customization settings page (languages is used) so the left Settings menu shows its Customization section. Wait on 'Terminology', which is the entry added since the last capture: the old shot predates it and still labelled the builder 'Dashboard Organizer'. UPDATED 2026-11-11: opening a Customization page is not enough. The settings sidebar opens scrolled to the top, on Organization and Modules, with the Customization group below the fold, so the capture was of Language Settings with the section the shot is about cut off. Scroll the sidebar to Terminology first. Second correction the same day: the wait on 'Terminology' can never match on this tenant. That entry is behind settingFeatures.terminology.isActive (SettingsMenuTenant.vue:121), which is off here, and the documentation itself says the entry only appears once Orgo switches the feature on. The wait is on Menu Organizer, which is always present.",
     "actions": [
-      "scrollto text=API Documentation",
-      "wait 800"
+      "wait 2500",
+      "scrollto text=Menu Organizer",
+      "wait 1500"
     ],
     "waitFor": "text=Menu Organizer",
     "viewport": "desktop",
-    "alt": "Settings sidebar scrolled to the Customization section, listing Workflows, eDocuments templates, Custom Domain, Languages, Texts, Menu Organizer, Dashboard Organizer, Dashboard Welcome and Import, with the demo-only Demo Data and AI Provisioning entries below them and the Developers section underneath",
-    "status": "keep"
+    "alt": "The Customization group of the settings sidebar, listing Workflows, Custom Domain, Languages, Texts, Menu Organizer, the two dashboard builders and Import, with the Languages screen open beside it",
+    "status": "recapture",
+    "notes": "Rewritten 2026-11-11: the section gained Terminology and the Dashboard Organizer entry was renamed."
   },
   {
     "id": "languages-settings",
@@ -78,12 +80,12 @@
     ],
     "tenant": "t187c",
     "route": "/tenant/custom-menu",
-    "routeHint": "Settings -> Customization -> Menu Organizer. The existing image predates the current editor, which no longer lists individual groups under the GROUPS category. Capture the Main category expanded with its per-item permission and user type dropdowns, plus the collapsed GROUPS and PROJECTS headers below it, and the Save / Reset to defaults / CRM Mode controls at the top.",
+    "routeHint": "Settings -> Customization -> Menu Organizer. The existing image predates the current editor, which no longer lists individual groups under the GROUPS category. Capture the Main category expanded with its per-item permission and user type dropdowns, plus the collapsed GROUPS and PROJECTS headers below it, and the Save / Reset to defaults / CRM Mode controls at the top. 2026-11-11: re-checked why this was parked. The hint describes a stale image, not setup that must not persist, so there is nothing to seed or undo here and it is safe to run.",
     "actions": [],
     "waitFor": "text=Menu organizer",
     "viewport": "desktop",
     "alt": "Menu organizer showing the Main category with draggable items and per-item permission dropdowns, above the locked Groups and Projects category headers",
-    "status": "keep"
+    "status": "recapture"
   },
   {
     "id": "menu-organizer-new-link",
@@ -110,16 +112,16 @@
       "platform/customization/dashboard-organizer.mdx"
     ],
     "tenant": "t187c",
-    "route": "/tenants/languages",
-    "routeHint": "Settings -> Customization -> Dashboard Organizer. Requires 'Use Custom Dashboard' under Settings -> Modules -> Users & Profiles -> Advanced Settings, and the tenant needs at least one dashboard category or the left pane is empty. TRAP 1: navigating straight to /tenants/dashboard/configure fails even with the flag on, because the route's beforeEnter reads the tenant out of the persisted Vuex state, which is still the stale copy from the saved session when the guard runs, and it redirects to /dashboard. Land on another settings page first, let App.vue refetch the tenant, then click through the sidebar so the guard sees the fresh flag. TRAP 2: do not add a 'click Edit Dashboard Layout' action. ConfigureDashboard.vue initialises isEditMode to true, so the page already opens in edit mode and that button is not rendered; the click times out and the runner flags an action that did not run. The grey blocks inside the content sections are the organizer's own wireframe placeholders for auto-filled content, not unloaded data. SETUP/TEARDOWN REQUIRED, so this spec is parked at status keep. Setup: UPDATE tenant SET setting_features = JSON_SET(setting_features, '$.users.hasCustomDashboard', TRUE) WHERE id = 282. Teardown, immediately after the capture: JSON_SET(..., FALSE). The teardown is not optional: while the flag is on, Dashboard.vue redirects /dashboard to the configurable widget dashboard, which would silently change index-home/home-member-dashboard, permissions/permissions-impersonation-modal and both mobile-apps specs. The seeded dashboard_category and dashboard_widget rows for tenant 282 are left in place and are inert while the flag is off.",
+    "route": "/tenants/dashboard/configure",
+    "routeHint": "Dashboard -> the dashboard builder (route name DashboardBuilder, /tenants/dashboard/configure, Orgo administrator only). The old Dashboard Organizer at /tenants/languages with its 'Dashboard Elements' list no longer exists. The builder has a Back link, the 'Dashboard builder' title, an Undo and a Save layout button, and the Sections and Widgets palettes down the side.",
     "actions": [
-      "click text=Dashboard Organizer",
-      "wait 2500"
+      "wait 2000"
     ],
-    "waitFor": "text=Dashboard Elements",
+    "waitFor": "text=Save layout",
     "viewport": "desktop",
-    "alt": "Dashboard organizer in edit mode with the Dashboard Elements palette on the right and placed content sections on the left",
-    "status": "keep"
+    "alt": "Dashboard builder with the Sections and Widgets palettes, the desktop and mobile preview, and the Save layout button",
+    "status": "recapture",
+    "notes": "Rewritten 2026-11-11: the screen was replaced, so the old capture showed a UI that is gone."
   },
   {
     "id": "dashboard-welcome-list",
@@ -144,9 +146,9 @@
     ],
     "tenant": "t187c",
     "route": "/dashboard-welcome-template",
-    "routeHint": "Settings -> Customization -> Dashboard Welcome, then click 'edit' on the first card. The auto-open that used to make this shot free only happens when the default message is the only message, which is no longer true now that user-type messages are seeded, so the click is required. The selector crops to the card being edited: rich text editor, the 'Available Placeholders: {firstName} {lastName}' hint, the 'Welcome message Image URL' field and the Sticky switch next to Save and cancel.",
+    "routeHint": "Settings -> Customization -> Dashboard Welcome, then click 'edit' on the first card. The auto-open that used to make this shot free only happens when the default message is the only message, which is no longer true now that user-type messages are seeded, so the click is required. The selector crops to the card being edited: rich text editor, the 'Available Placeholders: {firstName} {lastName}' hint, the 'Welcome message Image URL' field and the Sticky switch next to Save and cancel. 2026-11-11: the editor is open as soon as the page loads (Save, Cancel and the heading menu are on screen), because the auto-open rule applies again: the docs tenant has only one message. The click text=edit had no target and was removed; a wait 1500 lets the editor finish rendering.",
     "actions": [
-      "click text=edit"
+      "wait 1500"
     ],
     "waitFor": "text=Available Placeholders",
     "selector": ".welcome-message-card.is-editing",

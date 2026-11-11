@@ -2,34 +2,30 @@
   {
     "id": "federation-company-record",
     "image": "/images/platform/templates/federation-company-record.png",
-    "usedOn": [
-      "platform/templates/federations.mdx"
-    ],
+    "usedOn": [],
     "tenant": "t187c",
     "route": "/companies/bb3a75e4-3482-4bc0-9a3c-f48b3e82ee99",
-    "routeHint": "Companies in the sidebar -> open 'Clearwater Logistics' (company id 317, 5 active members, plan Corporate Silver, 25 slots, valid until 30 Sep 2026). The whole page: status header, seat counter, Billing Details, Financial Contact, Team Members, Payment & Plan.",
+    "routeHint": "Companies in the sidebar -> open 'Clearwater Logistics' (company id 317, 5 active members, plan Corporate Silver, 25 slots, valid until 30 Sep 2026). The whole page: status header, seat counter, Billing Details, Financial Contact, Team Members, Payment & Plan. DROPPED 2026-11-11: this is the same screen as the companies documentation already shows (images/platform/users/), captured into a second file for the federations page. That page now points at the shared image instead, so this spec only duplicated maintenance.",
     "actions": [],
     "waitFor": "text=Clearwater Logistics",
     "viewport": "desktop",
     "alt": "Company record page showing the Active status header, a member counter of 5 of 25 with the plan name, Billing Details and Financial Contact cards, an About card, and the Team Members panel listing five people",
-    "status": "new",
+    "status": "dropped",
     "notes": "Identity scrub 2026-08-05: the About card read 'A leading Historic Preservation organization providing innovative solutions and services to our members.' on a company that is a freight business in every other field, which is the source organization's sector rather than anything of Northwind's. Company 317's description now describes a freight and distribution business. The same seed template had put a mission pillar of the source organization into companies 303 to 317 (Historic Preservation, Patriotism, Membership Records, Education, Community Service); all fifteen were rewritten to match what each company is, so the next audit does not find a sibling on another company page."
   },
   {
     "id": "federation-company-members",
     "image": "/images/platform/templates/federation-company-members.png",
-    "usedOn": [
-      "platform/templates/federations.mdx"
-    ],
+    "usedOn": [],
     "tenant": "t187c",
     "route": "/companies/bb3a75e4-3482-4bc0-9a3c-f48b3e82ee99",
-    "routeHint": "Same company page, Team Members panel only (selector .members-list-container). Company 317 has one PRIMARY_CONTACT and four ordinary members.",
+    "routeHint": "Same company page, Team Members panel only (selector .members-list-container). Company 317 has one PRIMARY_CONTACT and four ordinary members. DROPPED 2026-11-11: this is the same screen as the companies documentation already shows (images/platform/users/), captured into a second file for the federations page. That page now points at the shared image instead, so this spec only duplicated maintenance.",
     "actions": [],
     "waitFor": "text=Team Members",
     "selector": ".members-list-container",
     "viewport": "desktop",
     "alt": "Team Members panel listing five people, one carrying a Primary Contact badge, with Add Member and Invite buttons in the panel header",
-    "status": "new"
+    "status": "dropped"
   },
   {
     "id": "federation-invite-member",
@@ -39,15 +35,16 @@
     ],
     "tenant": "t187c",
     "route": "/companies/bb3a75e4-3482-4bc0-9a3c-f48b3e82ee99",
-    "routeHint": "Company page -> Invite (the primary button in the Team Members panel header). Captures the Invite Member dialog over the company page.",
+    "routeHint": "Company page -> Invite (the primary button in the Team Members panel header). Captures the Invite Member dialog over the company page. UPDATED 2026-11-11: the company record's buttons are Invite by email and Add existing member, and the dialog offers Primary member and Associate member. Nothing reads 'Send Invitation'.",
     "actions": [
       "wait 1500",
-      "click .members-list-header .header-actions .button.is-primary"
+      "click text=Invite by email",
+      "wait 1800"
     ],
-    "waitFor": "text=Send Invitation",
+    "waitFor": "text=Primary member",
     "viewport": "desktop",
-    "alt": "Invite Member dialog with Email, First Name and Last Name fields, a Role dropdown and a Message box, over the company page",
-    "status": "new"
+    "alt": "The Invite member dialog over a company record, asking for an email address with optional first and last names, a role and a personal message, above Cancel and Send invitation",
+    "status": "recapture"
   },
   {
     "id": "federation-companies-module",
@@ -79,23 +76,24 @@
     ],
     "waitFor": "text=Company slots",
     "viewport": "desktop",
-    "alt": "Price dialog for a corporate tier with the Company only switch on and a Company slots field set to 25, above the hint that 0 means unlimited slots",
+    "alt": "The editor for a company membership level, with its name, price per cycle and description, the Who it is for choice set to Companies with People covered at 25, how it renews, and the panel scheduling a future price change",
     "status": "new"
   },
   {
     "id": "federation-payment-plan",
     "image": "/images/platform/templates/federation-payment-plan.png",
-    "usedOn": [
-      "platform/templates/federations.mdx"
-    ],
+    "usedOn": [],
     "tenant": "t187c",
     "route": "/companies/b54072cf-7dfe-46d6-96ab-439d8030b3ae",
-    "routeHint": "Companies -> open 'Ironwood Logistics' (company id 316, no valid_fee_date so the fee is unpaid, plan Corporate Silver selected). Capture the Payment & Plan card only (selector .card:has(.payment-section)): the selected tier shows Pay and Mark as Paid, the other tiers show Select.",
-    "actions": [],
-    "waitFor": "text=Payment & Plan",
-    "selector": ".card:has(.payment-section)",
-    "viewport": "desktop",
+    "routeHint": "Companies -> open 'Ironwood Logistics' (company id 316, no valid_fee_date so the fee is unpaid, plan Corporate Silver selected). Capture the Payment & Plan card only (selector .card:has(.payment-section)): the selected tier shows Pay and Mark as Paid, the other tiers show Select. UPDATED 2026-11-11: 'Payment & Plan' and .payment-section no longer exist. The company record was rebuilt around Overview, Billing and Emails tabs and the plan sits under Billing as a Membership plan panel, so the spec now opens that tab and waits on its heading. The crop selector was removed rather than replaced with a guess: capture the page, look at it, and add a crop once the real class is known. DROPPED 2026-11-11: this is the same screen as the companies documentation already shows (images/platform/users/), captured into a second file for the federations page. That page now points at the shared image instead, so this spec only duplicated maintenance.",
+    "actions": [
+      "wait 2500",
+      "click text=Billing",
+      "wait 2500"
+    ],
+    "waitFor": "text=Membership plan",
+    "viewport": "wide",
     "alt": "Payment and Plan card listing three corporate tiers with their seat allowance and annual price, Select buttons on the unselected tiers and Pay plus Mark as Paid on the current one",
-    "status": "new"
+    "status": "dropped"
   }
 ]

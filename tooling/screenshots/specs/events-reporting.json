@@ -23,13 +23,13 @@
     ],
     "tenant": "t187c",
     "route": "/local-center/15658",
-    "routeHint": "Local centers -> open local center id 16 -> Annual report in the actions card. Opens a modal with Report begin date, Report end date and the 200 event note.",
+    "routeHint": "Local centers -> open local center id 16 -> Annual report in the actions card. Opens a modal with Report begin date, Report end date and the 200 event note. 2026-11-11: the Annual report action is behind tenant.settingFeatures.events.hasAnnualReport or hasLocalAnnualReport (views/LocalCenter/ShowContent.vue:151), both false after the demo reset, so the click matched nothing. The page this image sits on (platform/events/annual-report.mdx) documents the feature as an opt-in module setting, so it was switched on for the docs tenant, which is what the page tells an admin to do. Seeded: UPDATE tenant SET setting_features=JSON_SET(setting_features,'$.events.hasAnnualReport',true) WHERE id=282. Side effect that stays: local centre pages now list Annual report in the actions card and the event report form (views/Event/ReportUpdate.vue:8) shows Add to annual report. Spec actions unchanged.",
     "actions": [
       "click text=Annual report"
     ],
     "waitFor": "text=Report begin date",
     "viewport": "desktop",
-    "alt": "Annual report modal with report begin date and end date pickers and the note that a report can contain maximum 200 events",
+    "alt": "Events report dialog opened from the Annual report action on a local centre page, with empty Report begin date and Report end date pickers, the note that a report can contain maximum 200 events, and Cancel and Generate report buttons",
     "status": "new"
   },
   {

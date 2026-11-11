@@ -7,7 +7,7 @@ description: 'Corporate membership: one company record, a seat allowance, invite
 "twitter:description": 'Corporate membership: one company record, a seat allowance, invited employees, and a single fee that covers them all'
 ---
 
-A company is an organization that holds a membership on behalf of its people. It has its own record, its own billing details, a seat allowance, and one membership fee. Everyone inside it inherits the company's membership validity instead of paying individually.
+A company is an organization that holds a membership on behalf of its people. It has its own record, its own billing details, a seat allowance, and one membership fee. Its primary members inherit the company's membership validity instead of paying individually.
 
 **Built for** organizations whose members are businesses rather than individuals, including business networks, chambers of commerce, trade and industry associations, and any body that sells corporate or team memberships. **Replaces** spreadsheets of member companies plus manual invoicing and per-employee fee tracking.
 
@@ -15,7 +15,7 @@ A company is an organization that holds a membership on behalf of its people. It
 This page is about **member companies**, not about adding people to your
 organization in general. Everything below applies once a company record exists
 and holds the membership. To create an account for an ordinary member, use
-**Register member** in the member directory: see
+**Add member** in the member directory: see
 [Adding Members](/platform/users/adding-members).
 </Note>
 
@@ -25,86 +25,143 @@ and holds the membership. To create an account for an ordinary member, use
 
 ## How to enable
 
-**Settings** → **Modules** → **Companies** → **Configuration**. Requires `ADMIN_TENANT`.
+**Settings** → **Modules** → **Companies**. Only Orgo administrators see this page. It has two tabs: **Configuration**, and **Company fields** for the extra questions you ask every company (see [Company profile](#company-profile)).
 
 | Setting | What it does |
 |---------|-------------|
-| **Enable Companies Module** | Turns the feature on. Adds **Companies** to the sidebar and a **Company** tab to each member's own profile |
-| **Who can create companies** | **Any member**, **Local center admins and above**, or **Organization admins only** |
+| **Enable Companies Module** | Turns the feature on. Adds **Companies** to the sidebar for organization-wide HR managers, a **Companies** tab for every member, and a **Company** card on each member's own profile |
+| **Company media** | Featured audio, video and a photo gallery on each company page. On by default |
+| **Icon for companies without a logo** | The icon shown until a company uploads its logo |
 | **Enable Company Fees** | Lets companies pay membership fees for their members. Only appears when the Payments and Fees module is active |
+| **Public company directory** | Publishes your companies to anyone with the link, with its own options: see [Public directory](#public-directory) |
 
-With **Enable Company Fees** on, mark fee prices **Company only** in the fee product settings and give each a **Company slots** number: company members then inherit membership status from the company and cannot buy an individual fee. A separate switch, **Settings** → **Modules** → **Payments & Fees** → **Company Fee Payment Mandatory**, locks company members out of the platform until the company fee is paid.
+With **Enable Company Fees** on, set a fee level's **Who it is for** to **Companies** in the fee product settings and give it a **People covered** number: company members then inherit membership status from the company and cannot buy an individual fee. A separate switch, **Settings** → **Modules** → **Payments & Fees** → **Company Fee Payment Mandatory**, locks company members out of the platform until the company fee is paid.
 
 ---
 
 ## Creating a company
 
-**Create** on the Companies list opens one form. Only **Company Name** is required, though payment needs the billing block completed.
-
-| Group | Fields |
-|---|---|
-| Identity | Company Name, Description, Website, Company Logo |
-| Billing Details | Legal Name, Registration Number, VAT Number, Billing Address, Town, Country |
-| Financial Contact | Financial contact full name, Financial contact email, Financial contact phone, Additional contact email 1 (Cc), Additional contact email 2 (Cc) |
-
-Companies start **Pending** and flip to **Active** on the first paid membership fee. `ADMIN_TENANT` can also set status by hand from the company page. **Delete Company** is a soft delete: the record moves to status Deleted and disappears from every list.
+Organization-wide HR managers (and Orgo administrators) create companies: **Companies** in the sidebar, then **Add company**. The creator is not added to the company, because they set it up on behalf of someone else. Add the people who will run it afterwards, see [Members](#members-primary-and-associate).
 
 <Note>
-An ordinary member who creates a company is added to it as **Primary Contact** and can only ever belong to one company. Administrators (`ADMIN_LOCAL` and above) create companies on behalf of others, so they are exempt from the one-company rule and are not enrolled in what they create.
+There is no "any member can create a company" option any more. Members cannot create companies themselves, and a chapter admin cannot either: a company is not attached to a chapter, so there is nothing for a chapter-level permission to cover.
 </Note>
+
+The form has a **Profile** tab and a **Billing** tab. Only **Company Name** is required, though payment needs the billing block completed.
+
+| Tab | Fields |
+|---|---|
+| Profile | Company Name, Description, Website, Company Logo, **Show in public directory**, **Location on companies map**, your company questions under **About us**, and **Featured media** and **Gallery** when company media is on |
+| Billing | Legal Name, Registration Number, VAT Number, Billing Address, Postal code, Town, Country, Secondary address, Secondary postal code |
+| Billing, Financial Contact | Financial contact full name, Financial contact email, Financial contact phone, Additional contact email 1 (Cc), Additional contact email 2 (Cc) |
+
+Companies start **Pending** and flip to **Active** on the first paid membership fee. Organization admins can also set the status by hand from the **Status** menu on the company page. **Delete company**, in the same menu, is a soft delete: the record moves to status Deleted and disappears from every list.
+
+### Billing address and secondary address
+
+**Billing Address** and **Postal code** are the address invoices go to. **Secondary address** and **Secondary postal code** are optional: use them when invoices need a second address line block, for example a registered office next to a postal address. Both addresses are private to the company's administrators and your HR team, except that the town and country can show in the public directory.
+
+On an invoice issued to the company, the Bill-to block prints "address, postal code" and, when you filled it in, a second line "Secondary address: ..., postal code". Each invoice keeps its own copy of the address at the moment it is issued, so editing the company later does not change invoices already sent. The company address, town and country are also available as columns in the [report builder](/platform/reports).
+
+---
+
+## Members: primary and associate
+
+A person can belong to more than one company, but in two different ways:
+
+| | Primary member | Associate member |
+|---|---|---|
+| How many companies | One | Any number |
+| Takes a seat | Yes | No |
+| Roles (Primary Contact, Voting Representative) | Yes | No |
+| Covered by the company's fee | Yes: inherits its validity date | No: keeps whatever their own primary company or own payments give them |
+| Shown on their profile as | **Primary company** | **Associate member of** |
+
+An associate is listed in the company without belonging to it for fee purposes: think of a consultant who sits on the boards of three member companies but is employed by one. A person who is already a primary member elsewhere can still be added to another company as an associate, but not as a primary member.
+
+A membership points at either a **User** (has an account) or a **Contact** (in your database, no account). Both appear in the member list, and contacts are tagged **Contact**. Only user memberships inherit the company's validity date: a contact has no fee date, so membership sync skips it.
+
+On the company page, the **Team members** panel has two ways in:
+
+- **Invite by email** (company administrators): the person gets a link and joins as a primary member. See [Inviting employees](#inviting-employees).
+- **Add existing member** (organization admins): searches users and contacts. Choose **Primary member** or **Associate member** first, and optionally type a **Title**. The search finds people already in your database, it does not create anybody. To create a member who is not joining through a company, use [Adding Members](/platform/users/adding-members).
+
+Each member has a menu with **Edit title** or **Add title** (a free-text job title shown next to their name), **Make associate member** or **Make primary member**, and **Remove**. Company administrators and organization admins can also click a join date to correct it.
+
+- **Make associate member** removes their roles and takes away the membership validity the company gave them. The Primary Contact cannot be made an associate: hand the role to someone else first.
+- **Make primary member** needs a free seat, and fails if the person is already a primary member of another company.
+- Removing a member, or a member leaving from their profile card, ends their membership and, if it was their primary one, clears the fee date and fee price the company gave them. When the last primary member leaves, they are asked whether to delete the company; associates alone do not keep a company alive.
+
+<Info>
+If you import company members from a CSV, every imported membership is primary. A row for someone who is already a primary member of another company is skipped with the message to add them as an associate from the company page.
+</Info>
 
 ---
 
 ## Roles inside a company
 
-Roles are stored per membership; a person may hold several.
+Roles are stored per primary membership; a person may hold several. Associates cannot hold any.
 
 | Role | What it grants |
 |---|---|
 | **Member** | The default. Sees the company page, inherits the membership validity |
-| **Primary Contact** | Edits the company, manages members and invitations, pays. At most one per company |
-| **Voting Representative** | A label marking who speaks for the company. At most one per company |
+| **Primary contact** | Edits the company, manages members and invitations, pays. At most one per company |
+| **Voting representative** | Casts the company's vote in a Company vote. At most one per company |
 | **Financial Rep** | Legacy. Same rights as Primary Contact, but it can no longer be assigned from the interface |
 
-Assigning Primary Contact or Voting Representative takes it from whoever held it before, in the same action.
+Roles are ticked or unticked from a member's menu. Assigning Primary contact or Voting representative takes it from whoever held it before, in the same action. A company always keeps at least one Primary contact.
 
-`ADMIN_TENANT` can do anything on any company in the tenant, and so can whoever **Who can create companies** names, with a floor of `ADMIN_LOCAL`. Setting it to "Any member" does not grant access to companies you do not belong to.
+Organization-wide HR managers can do anything on any company in the organization, and Orgo administrators too. Some actions are narrower: only organization admins mark a payment as paid, change a company's status, or delete a company.
 
-That reach is organization-wide by design, chapter admins included. A company is not attached to a chapter anywhere in its record, so there is nothing for a chapter-scoped permission to narrow down to: an `ADMIN_LOCAL` holder in one chapter sees, edits and manages members and payments on every company in the organization. If that is wider than you want, set **Who can create companies** to **Organization admins only**, which raises the floor to `ADMIN_TENANT`.
+That reach is organization-wide by design, chapter admins included. A company is not attached to a chapter anywhere in its record, so there is nothing for a chapter-scoped permission to narrow down to, and a chapter admin gets no extra access to companies.
 
 ---
 
-## Members: users and contacts
+## Company profile
 
-A membership points at either a **User** (has an account) or a **Contact** (in your database, no account). Both appear in the member list, occupy a seat, and can carry a joined date; contacts are tagged **Contact** and link to the contact record rather than a member profile. Only user memberships inherit the company's validity date: a contact has no fee date, so membership sync skips it.
+Beyond billing, a company has a public-facing profile, edited from **Edit** on the company page:
 
-**Add Member** is an `ADMIN_TENANT` action and searches users and contacts not already in a company. Company admins invite by email instead.
+- **About us**: the questions you define under **Company fields** in the module settings. Each field is either public, for company members only, or for administrators only, and the form shows a **Company members only** or **Admins only** badge on the private ones. Visitors to the public directory see only what is public.
+- **Featured media**: links to one audio and one video (Spotify, SoundCloud, YouTube and Vimeo play inside the page, any other link becomes a button), plus a **Gallery** of photos you can reorder. The first photo is the cover. Gallery photos can be added once the company is saved.
+- **Location on companies map**: places the pin on the directory map. Leave it empty and the company sits on the centre of its town.
+- **Show in public directory**: the company's own opt-in, offered when the organization publishes a directory and asks companies to opt in.
 
-Both act on people who are already in your database: **Add Member** attaches an existing user or contact to this company, it does not create anybody. To create a member who is not joining through a company, use [Adding Members](/platform/users/adding-members).
+Members see the company directory from the **Companies** tab of the general group: a searchable list with filters, cards and a map, and each company's members. Organization-wide HR managers get a **Manage companies** button there that opens the admin list, where they also see pending and inactive companies, the fee status and the seat usage.
+
+### Public directory
+
+**Public company directory** in the module settings publishes your companies on a page anyone with the link can open, and in the website builder. Contact details, member counts and fees are never shown. Once it is on you choose:
+
+- **Only companies that opt in**: companies decide on their own page whether to appear.
+- **Views offered**: List, Cards, Map, with a **Default view**.
+- **Membership status required**: **Active and fee paid** or **All active**. The choice only matters when company fees are on, and with **Active and fee paid** a company appears once it is active and its fee is paid.
+- **Share**: an embed code and **Open public page**.
+
+The map shows active companies only.
 
 ---
 
 ## Inviting employees
 
-The **Team Members** panel and its **Invite** and **Add Member** buttons put a person into *this company*, taking one of its seats and passing the company's membership validity to them. That is a narrower job than adding a member to your organization, which starts from the member directory instead: [Adding Members](/platform/users/adding-members).
+The **Team members** panel puts a person into *this company*, taking one of its seats and passing the company's membership validity to them. That is a narrower job than adding a member to your organization, which starts from the member directory instead: [Adding Members](/platform/users/adding-members).
 
-<img src="/images/platform/users/company-members.png" alt="Team Members panel of a company showing active members with a Primary Contact badge and joined date, a pending invitation with an Invited badge and expiry, and Invite and Add Member buttons" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/users/company-members.png" alt="Team Members panel of a company showing active members with a Primary Contact badge and joined date, a pending invitation with an Invited badge and expiry, and invite and add buttons" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 <Steps>
   <Step title="Send the invitation">
-    **Invite** on the company page. Enter the email, first name and last name, pick a role, and add an optional personal message.
+    **Invite by email** on the company page. Enter the email, first name and last name, pick a role (Member, Primary contact or Voting representative), and add an optional personal message. **Send invitation** sends it.
   </Step>
   <Step title="The recipient opens the link">
     The email carries a link to `/company-invitation/{hash}`, which shows the company name and logo, who invited them, the message, and the role they were offered.
   </Step>
   <Step title="They accept or decline">
-    Accepting joins them to the company and emails a one-time login code, creating their account first if they do not have one.
+    **Accept Invitation** joins them to the company and emails a one-time login code, creating their account first if they do not have one. **Decline** closes it.
   </Step>
 </Steps>
 
-Invitations expire **30 days** after they are sent. Pending ones show in the member list with an **Invited** badge and a countdown; admins can resend (resetting the 30 days) or revoke them.
+Invitations expire **30 days** after they are sent. Pending ones show in the member list with an **Invited** badge and a countdown; administrators can resend (resetting the 30 days) or revoke them.
 
-An invitation is rejected up front when there are no free seats, when one is already pending for that email, or when the person already belongs to any company. The seat check runs again at acceptance, so one sent before the company filled up can still fail.
+An invitation is rejected up front when there are no free seats, when one is already pending for that email, when the person is already in this company, or when they are already a primary member of another company. The seat check runs again at acceptance, so one sent before the company filled up can still fail. Invitations always make a primary member: to add someone as an associate, use **Add existing member**.
 
 <Warning>
 First name and last name are labelled Optional in the invite dialog, but the server rejects the invitation without them. Fill both in.
@@ -114,35 +171,35 @@ First name and last name are labelled Optional in the invite dialog, but the ser
 
 ## Seats
 
-Seats come from the fee price the company bought: each **Company only** price carries a **Company slots** value, and paying for it writes that number onto the company. **0 means unlimited.**
+Seats come from the fee level the company bought: a level whose **Who it is for** is **Companies** carries a **People covered** value, and paying for it writes that number onto the company. **0 means unlimited.**
 
-The count is active members plus pending invitations, so an outstanding invitation holds a place. Memberships that ended, and those whose user was deleted, do not count. When the allowance is full, **Invite** and **Add Member** disappear.
+The count is primary members plus pending invitations, so an outstanding invitation holds a place. Associates take no seat, and neither do memberships that ended or whose user was deleted. The panel shows it as "used of max seats". When the allowance is full, **Invite by email** disappears and **Primary member** cannot be chosen in **Add existing member**, though associates can still be added.
 
 ---
 
 ## Paying the company fee
 
-<img src="/images/platform/users/company-payment-plans.png" alt="Payment and Plan panel listing company membership tiers with slot counts, annual prices and billing period, Select buttons on the unselected tiers, and Pay and Mark as Paid on the current one" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/users/company-payment-plans.png" alt="Membership plan panel listing company membership tiers with slot counts, annual prices and billing period, Select buttons on the unselected tiers, and Pay and Mark as Paid on the current one" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-The **Payment & Plan** panel is visible to the Primary Contact (and any legacy Financial Rep) and to `ADMIN_TENANT`. It lists every non-archived **Company only** price on the tenant fee product, with its slot count and price.
+When company fees are on, the company page has a **Billing** tab. Its **Membership plan** panel is visible to the Primary contact (and any legacy Financial Rep) and to organization admins. It lists every non-archived company level on the tenant fee product, with the number of people it covers and its price. Invoices and payments for the company are listed under the same tab for the teams allowed to see them.
 
-Select a plan, then **Pay**. Orgo checks that Legal Name, Billing Address, Financial contact full name and Financial contact email are filled in, sending you to the edit form if any are missing, then offers:
+Select a plan, then **Pay** (or **Renew** once the company has been paid before). Orgo checks that Legal Name, Billing Address, Financial contact full name and Financial contact email are filled in, sending you to the edit form if any are missing, then offers:
 
 - **Pay online**: a Stripe checkout. VAT is added on top of the configured net price as a separate line when your tenant charges VAT on fees and the price is not exempt.
-- **Get invoice for bank transfer**: generates an unpaid invoice, emails it, and shows a reference to quote on the transfer. Only offered when both bank-transfer membership payments and invoicing are enabled.
-- **Mark as Paid** (`ADMIN_TENANT` only): records money received outside the platform. It asks for a period start, defaulting to the current expiry so it extends rather than overwrites, records a payment, updates the seats, and voids any pending bank-transfer invoice.
+- **Get invoice for bank transfer**: generates an unpaid invoice addressed to the company's billing name, address and secondary address, emails it, and shows a reference to quote on the transfer. Only offered when both bank-transfer membership payments and invoicing are enabled.
+- **Mark as Paid** (organization admins only): records money received outside the platform. It asks for a period start, defaulting to the current expiry so it extends rather than overwrites, records a payment, updates the seats, and voids any pending bank-transfer invoice.
 
-On a calendar-anchored fee cycle, a mid-cycle payment buys only the remainder and is prorated: the panel shows the list price struck through next to what you will actually be charged, plus "{months} of {total} months" and the exact period. The charge is always recomputed server-side at checkout, so the quote can never undercharge.
+On a calendar-anchored fee cycle, a mid-cycle payment buys only the remainder and is prorated: the panel shows the list price struck through next to what you will actually be charged, plus `{months} of {total} months` and the exact period. The charge is always recomputed server-side at checkout, so the quote can never undercharge.
 
-Renewal opens **60 days** before the current period ends. Before that window, a company with a valid membership sees no Pay button.
+Renewal opens **60 days** before the current period ends. Before that window, a company with a valid membership sees no Pay button. A company whose chosen plan is unpaid or expired also shows a **Membership payment due** notice on its Overview tab.
 
 ---
 
 ## What members get from a company fee
 
-When a payment lands, Orgo copies the company's valid-until date onto every active member who has an account, sets the company to Active, and applies the plan's seat count. Joining an existing paid company inherits its date immediately; leaving or being removed clears the person's fee date and fee price. On their own fee screen, company-covered members see "Membership managed by company" with a link to the company, instead of the individual payment options.
+When a payment lands, Orgo copies the company's valid-until date onto every active **primary** member who has an account, sets the company to Active, and applies the plan's seat count. Joining an existing paid company as a primary member inherits its date immediately; leaving or being removed clears the person's fee date and fee price. Associates are untouched: they never receive the company's date and never lose their own when an associate membership ends. On their own fee screen, company-covered members see "Membership managed by company" with a link to the company, instead of the individual payment options.
 
-If **Company Fee Payment Mandatory** is on and the membership has lapsed, members are blocked out: Primary Contacts land on `/company-fee-payment`, a guided three-step page (Billing Information, Select a Plan, Complete Payment), everyone else on `/company-fee-required`, which names the company and points them at the financial contact.
+If **Company Fee Payment Mandatory** is on and the membership has lapsed, primary members are blocked out: Primary Contacts land on `/company-fee-payment`, a guided three-step page (Billing Information, Select a Plan, Complete Payment), everyone else on `/company-fee-required`, which names the company and points them at the financial contact.
 
 ---
 
@@ -158,16 +215,17 @@ Only **Active** and **Pending** companies with a plan and a renewal date are rem
 
 ## Importing companies
 
-**Settings** → **Import** offers **Companies** (with membership details) and **Company Members** (assigning users to companies with roles), both gated on the module being active. Example CSV files are linked next to each.
+**Settings** → **Customization** → **Import** offers **Companies** (with membership details) and **Company Members** (assigning users to companies with roles), both gated on the module being active. Example CSV files are linked next to each.
 
 ---
 
 ## Related
 
-- [Adding Members](/platform/users/adding-members) - the four ways people get into your organization, and where this one fits
+- [Adding Members](/platform/users/adding-members) - the ways people get into your organization, and where this one fits
 - [Family Members](/platform/users/family-members) - the household equivalent, without shared fees
 - [Membership Fees](/platform/fees/fees) - fee products, prices and cycles
 - [Record a Payment](/platform/fees/record-payment) - payments taken outside the platform
 - [VAT](/platform/fees/vat) - how VAT is added to a fee price
 - [Contacts](/platform/contacts) - non-member records that can hold a company seat
-- [Permissions](/platform/permissions) - what `ADMIN_TENANT` and `ADMIN_LOCAL` cover
+- [E-voting](/platform/e-voting) - company votes and the voting representative
+- [Permissions](/platform/permissions) - what organization-wide HR managers and organization admins can do

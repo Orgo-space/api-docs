@@ -25,24 +25,20 @@
     ],
     "tenant": "t187c",
     "route": "/reports/create",
-    "routeHint": "Reports -> New report. Members is the default starting point (Form.vue applyDefaultEntity prefers User), so no chip click is needed. The field groups start collapsed: the first .report-field-group-head is the root group ('Members'), the rest are the to-one relations. Address the group heads by CSS, never by text: the sidebar also carries 'Members', and the relation groups are labelled with the schema's long descriptions. Field labels come from GET /report_schema and are the descriptions too ('Date user joined the organization'). The preview never runs on its own - it loads only when Run preview is pressed - so the last action before the shot must be that button, and the waitFor must be a rendered preview row rather than the panel. Tick a checkbox by clicking its .control-label span, not the .report-field-option label: Playwright's :text-is() matches only the SMALLEST element holding the text, so `.report-field-option:text-is(\"Email\")` matches nothing and every tick is silently skipped (it cost one capture of an empty builder). Framing: the click on Run preview scrolls the pane down by ~275px, which is deliberate - at 1290 high the report name field and the preview rows cannot both be in frame (the builder is ~1900px tall), and the ticked columns plus real rows are what this image is for; the name field is visible in reports-field-groups and reports-filters instead. 'tall' fits the whole builder but drops the sidebar and leaves ~600px of empty canvas, and a selector crop to .report-builder tears (the element is taller than the viewport and the app scrolls an inner pane, so Playwright stitches the app header into the top and cuts the right edge).",
+    "routeHint": "Reports -> New report. Members is the default starting point (Form.vue applyDefaultEntity prefers User), so no chip click is needed. The field groups start collapsed: the first .report-field-group-head is the root group ('Members'), the rest are the to-one relations. Address the group heads by CSS, never by text: the sidebar also carries 'Members', and the relation groups are labelled with the schema's long descriptions. Field labels come from GET /report_schema and are the descriptions too ('Date user joined the organization'). The preview never runs on its own - it loads only when Run preview is pressed - so the last action before the shot must be that button, and the waitFor must be a rendered preview row rather than the panel. Tick a checkbox by clicking its .control-label span, not the .report-field-option label: Playwright's :text-is() matches only the SMALLEST element holding the text, so `.report-field-option:text-is(\"Email\")` matches nothing and every tick is silently skipped (it cost one capture of an empty builder). Framing: the click on Run preview scrolls the pane down by ~275px, which is deliberate - at 1290 high the report name field and the preview rows cannot both be in frame (the builder is ~1900px tall), and the ticked columns plus real rows are what this image is for; the name field is visible in reports-field-groups and reports-filters instead. 'tall' fits the whole builder but drops the sidebar and leaves ~600px of empty canvas, and a selector crop to .report-builder tears (the element is taller than the viewport and the app scrolls an inner pane, so Playwright stitches the app header into the top and cuts the right edge). REWRITTEN 2026-11-11 for the redesigned two-pane builder. The entity is a dropdown (.report-entity-trigger opens it, .report-entity-option picks one), the root entity's own fields are the FIRST .report-field-group and carry no label, relation groups are the labelled ones after it, field labels are Title Case, and Columns and Filters are sections of one rail rather than tabs. Save is .report-builder-save. The three demo reports were rebuilt through the UI by capture/seed-reports.mjs on 2026-11-11 after report_definition was found empty. This shot deliberately does NOT save: the builder has no upsert, so a saving capture would add a duplicate report on every run. Two selector traps in the Columns rail: the option is a Buefy <label> whose text node is preceded by an HTML comment, so :text-is() never matches it and :has-text() must be used; and :has-text() is a substring, so 'Date Joined' matches 'Date Joined Full Member' too and clicking it fails on strict mode. Tick Phone Number instead. Scope every option to .report-field-group.is-root: the collapsed relation groups keep their options in the DOM.",
     "actions": [
-      "fill .report-builder-config input.input | Member export by chapter",
-      "click .report-field-group-head",
-      "click .report-field-groups > div:nth-child(1) .control-label:text-is(\"First name\")",
-      "click .report-field-groups > div:nth-child(1) .control-label:text-is(\"Last name\")",
-      "click .report-field-groups > div:nth-child(1) .control-label:text-is(\"Email\")",
-      "click .report-field-groups > div:nth-child(1) .control-label:text-is(\"Date user joined the organization\")",
-      "click .report-field-groups > div:nth-child(2) .report-field-group-head",
-      "click .report-field-groups > div:nth-child(2) .control-label:text-is(\"Display name (used for LocalCenter, Group, etc.)\")",
-      "click .report-field-groups > div:nth-child(2) .report-field-group-head",
-      "click .report-preview-body button.is-primary",
+      "fill .report-rail input.input | Member export by chapter",
+      "click .report-field-group.is-root .report-field-option:has-text(\"First Name\")",
+      "click .report-field-group.is-root .report-field-option:has-text(\"Last Name\")",
+      "click .report-field-group.is-root .report-field-option:has-text(\"Email\")",
+      "click .report-field-group.is-root .report-field-option:has-text(\"Status\")",
+      "click .report-field-group.is-root .report-field-option:has-text(\"Phone Number\")",
       "wait 2500"
     ],
-    "waitFor": ".report-preview-body tbody tr",
+    "waitFor": ".report-stage-table tbody tr",
     "viewport": "wide",
-    "alt": "Report builder named Member export by chapter with Members chosen as the starting point, the Members field group expanded and First name, Last name, Email and Date user joined the organization ticked, and the preview below listing members with their local center name",
-    "status": "new",
+    "alt": "Report builder with the name filled in, the Members entity chosen, five columns ticked in the left rail and the live preview table on the right",
+    "status": "recapture",
     "notes": "The preview count reads 'showing 10 of 10' for a report matching 382 members. That is the product, not a bad capture: ReportPreviewController forces limit=10, and QueryCompiler::execute() collapses totalCount to the number of returned rows whenever the limit differs from the default 50 (the 'top N' rule inherited from Ask Orgo). Do not re-capture chasing a real total."
   },
   {
@@ -52,17 +48,16 @@
       "platform/reports.mdx"
     ],
     "tenant": "t187c",
-    "route": "/reports/edit/507b7ce1-e2d8-4e07-a27f-ea901ddd32e9",
-    "routeHint": "Reports -> open 'Member export by chapter' (uuid from capture/seed-reports.mjs; re-seeding mints a new one, so update this route after a re-seed). Opening a saved report expands every group that holds a selected column (Form.vue hydrateFromItem), so both actions here CLOSE a group again - the subject is the collapsed row of groups with their count pills. Groups are addressed by CSS position because the sidebar also reads 'Members' and because the relation groups carry the schema's long descriptions as labels.",
+    "route": "/reports/edit/e9a8b385-56a8-48f5-8af2-3c806b81ff2a",
+    "routeHint": "Reports -> open 'Member export by chapter' (uuid from capture/seed-reports.mjs; re-seeding mints a new one, so update this route after a re-seed). Opening a saved report expands every group that holds a selected column (Form.vue hydrateFromItem), so both actions here CLOSE a group again - the subject is the collapsed row of groups with their count pills. Groups are addressed by CSS position because the sidebar also reads 'Members' and because the relation groups carry the schema's long descriptions as labels. REWRITTEN 2026-11-11 for the redesigned two-pane builder. The entity is a dropdown (.report-entity-trigger opens it, .report-entity-option picks one), the root entity's own fields are the FIRST .report-field-group and carry no label, relation groups are the labelled ones after it, field labels are Title Case, and Columns and Filters are sections of one rail rather than tabs. Save is .report-builder-save. The three demo reports were rebuilt through the UI by capture/seed-reports.mjs on 2026-11-11 after report_definition was found empty. Report uuid: e9a8b385-56a8-48f5-8af2-3c806b81ff2a (Member export by chapter).",
     "actions": [
-      "click .report-field-group-head",
       "click .report-field-groups > div:nth-child(2) .report-field-group-head",
-      "wait 1200"
+      "wait 1500"
     ],
-    "waitFor": ".report-field-count",
+    "waitFor": ".report-field-group-body",
     "viewport": "desktop",
-    "alt": "Field groups of a members report, all collapsed: the Members group with a count of 5 and the related-record groups below it, the local center group carrying a count of 1 and the member type, town and fee tier groups with no count",
-    "status": "new"
+    "alt": "Columns rail of a saved report with a relation group expanded, showing the fields it adds alongside the ticked member columns",
+    "status": "recapture"
   },
   {
     "id": "reports-list",
@@ -72,15 +67,15 @@
     ],
     "tenant": "t187c",
     "route": "/reports",
-    "routeHint": "Administration -> Reports. Three saved reports built through the builder by capture/seed-reports.mjs. The row actions (download, edit, delete) are always rendered, not hover-revealed, so the hover here is only to show the row highlight. The 'Based on' column prints the raw root entity name (User / ProductPayment / EventAttend) - that is the product, not a capture defect.",
+    "routeHint": "Administration -> Reports. Three saved reports built through the builder by capture/seed-reports.mjs. The row actions (download, edit, delete) are always rendered, not hover-revealed, so the hover here is only to show the row highlight. The 'Based on' column prints the raw root entity name (User / ProductPayment / EventAttend) - that is the product, not a capture defect. REWRITTEN 2026-11-11 for the redesigned two-pane builder. The entity is a dropdown (.report-entity-trigger opens it, .report-entity-option picks one), the root entity's own fields are the FIRST .report-field-group and carry no label, relation groups are the labelled ones after it, field labels are Title Case, and Columns and Filters are sections of one rail rather than tabs. Save is .report-builder-save. The three demo reports were rebuilt through the UI by capture/seed-reports.mjs on 2026-11-11 after report_definition was found empty.",
     "actions": [
       "hover .orgo-table-wrap tbody tr",
-      "wait 800"
+      "wait 1000"
     ],
     "waitFor": "text=Payments export by date",
     "viewport": "desktop",
     "alt": "Reports list with three saved reports - Member export by chapter, Event attendee contact list and Payments export by date - each row showing what it is based on, when it was last updated, and download, edit and delete buttons",
-    "status": "new"
+    "status": "recapture"
   },
   {
     "id": "reports-filters",
@@ -89,15 +84,16 @@
       "platform/reports.mdx"
     ],
     "tenant": "t187c",
-    "route": "/reports/edit/6e02e0a3-deb2-4f86-b000-4560b479e238",
-    "routeHint": "Reports -> open 'Payments export by date' -> Filters tab (uuid from capture/seed-reports.mjs; re-seeding mints a new one). The two conditions are saved on the report, not typed here: run.mjs has no verb for a native <select>, so a filter cannot be built by a spec - the report is built by the seeding script and the spec only opens the tab. The AND label between the rows is rendered by .rf-logic and is what this capture is for.",
+    "route": "/reports/edit/24fc7b4f-726e-4f09-a132-49520e95d255",
+    "routeHint": "Reports -> open 'Payments export by date' -> Filters tab (uuid from capture/seed-reports.mjs; re-seeding mints a new one). The two conditions are saved on the report, not typed here: run.mjs has no verb for a native <select>, so a filter cannot be built by a spec - the report is built by the seeding script and the spec only opens the tab. The AND label between the rows is rendered by .rf-logic and is what this capture is for. REWRITTEN 2026-11-11 for the redesigned two-pane builder. The entity is a dropdown (.report-entity-trigger opens it, .report-entity-option picks one), the root entity's own fields are the FIRST .report-field-group and carry no label, relation groups are the labelled ones after it, field labels are Title Case, and Columns and Filters are sections of one rail rather than tabs. Save is .report-builder-save. The three demo reports were rebuilt through the UI by capture/seed-reports.mjs on 2026-11-11 after report_definition was found empty. Report uuid: 24fc7b4f-726e-4f09-a132-49520e95d255 (Payments export by date). The condition row renders only the Property select at first; the operator and value controls appear after a property is chosen, which the capture runner cannot do (it has no select verb), so this shot is of a freshly added row.",
     "actions": [
-      "click .tabs-pill nav.tabs li:nth-child(2) a",
-      "wait 1200"
+      "scrollto text=Filters",
+      "click .rf-add",
+      "wait 1500"
     ],
-    "waitFor": ".rf-logic",
+    "waitFor": ".rf-row",
     "viewport": "wide",
-    "alt": "Filters tab of the Payments export by date report with two stacked conditions, Date created after 2026-01-01 and Date created before 2026-07-01, joined by an AND label, above an Add filter button",
-    "status": "new"
+    "alt": "Filters section of the report rail with one condition row open on its property, operator and value controls",
+    "status": "recapture"
   }
 ]

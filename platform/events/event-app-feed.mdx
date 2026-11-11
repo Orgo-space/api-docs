@@ -18,14 +18,14 @@ Alongside [networking](/platform/events/event-app-networking), the [Event App](/
 The agenda is built from the event's **sessions**, which are sub-events of the main event. If the event has no sessions, there is no Program tab and the app opens on Details instead.
 
 <Note>
-**Program** is the label everywhere in the interface: this tab, the event sidebar entry that builds it, and the tab on the public event page. Only the underlying addresses still say agenda, which is why the embed URL and the `{eventAgendaUrl}` email placeholder use that word.
+**Program** is the label for this tab and for the tab on the public event page. The event sidebar entry that builds it is called **Program & Speakers** (it says Coordinators or Moderators instead if the event is set to call its people that). Only the underlying addresses still say agenda, which is why the embed URL and the `{eventAgendaUrl}` email placeholder use that word.
 </Note>
 
 **What attendees see**
 
 - Day chips across the top, then sessions in the order you arranged them.
 - Per session: title, description, start and end time, place, tags, cover image, speakers, and how many people are attending.
-- **Search sessions or speakers**, and a stage filter when your sessions use stages.
+- When your sessions use stages: chips to filter by stage (each with its colour) and a search button that opens **Search sessions or speakers**. Without stages there is no search box.
 - A toggle between **All sessions** and **My Agenda**, with a count. It appears only once the attendee has marked at least one session.
 - Tapping a speaker opens their profile with their other sessions and any co-speakers.
 - A copy-link action for sharing a session.
@@ -51,12 +51,12 @@ The Feed is the event's announcement stream. It updates live, so a post publishe
 
 | Action | Who |
 |---|---|
-| Post to the feed | The event owner, `EVENT_LOCAL` on the event, or `ADMIN_TENANT`. Non-member attendees cannot start a post |
+| Post to the feed | The event owner, people with event permission for the event's chapter or organisation-wide, and organisation admins. Non-member attendees cannot start a post |
 | Reply to a post | Any attendee with Event App access, members and non-members alike |
 | React to a post | Any attendee |
 | Pin or unpin a post | Same as posting |
-| Edit a post | The author, plus `EVENT_LOCAL` and `ADMIN_TENANT` on anyone's post |
-| Delete a post | The author, plus `EVENT_LOCAL` and `ADMIN_TENANT` on anyone's post. A post with replies keeps its place in the thread with its content removed, so the conversation still makes sense |
+| Edit a post | The author, plus those same managers on anyone's post |
+| Delete a post | The author, plus those same managers on anyone's post. A post with replies keeps its place in the thread with its content removed, so the conversation still makes sense |
 
 **What a post can contain**
 
@@ -86,7 +86,7 @@ See [E-Voting](/platform/e-voting) for how votes are created and configured.
 
 The Participants tab is the full administrative attendance screen, embedded in the app so organisers can work from a phone at the venue. It shows every registration, including people who have hidden themselves from the attendee directory, with the same filters, columns, invites, exports and status management as the desktop participant list.
 
-It appears only for people who can manage the event (`ADMIN_TENANT`, `EVENT_TENANT`, or `EVENT_LOCAL` on that event), and only on phones. On a desktop the event sidebar already offers the same screen, so the tab is hidden to keep the tab strip short. Anyone without the permission who opens the URL directly is redirected to Networking or Program.
+It appears only for people who can manage the event (organisation admins and people with event permission, organisation-wide or for that event's chapter), and only on phones. On a desktop the event sidebar already offers the same screen, so the tab is hidden to keep the tab strip short. Anyone without the permission who opens the URL directly is redirected to Networking or Program.
 
 See [Event Attendance](/platform/events/attendance) for what that screen does.
 
@@ -114,7 +114,7 @@ People who can manage the event also get a **Scan QR** button. Scanning another 
   </Accordion>
 
   <Accordion title="An attendee cannot post to the feed">
-    Starting a post is limited to the event owner, `EVENT_LOCAL` admins and `ADMIN_TENANT`. Everyone else replies and reacts. This keeps the feed an announcement channel rather than an open forum.
+    Starting a post is limited to the event owner, event managers and organisation admins. Everyone else replies and reacts. This keeps the feed an announcement channel rather than an open forum.
   </Accordion>
 
   <Accordion title="A post was deleted but still shows in the thread">

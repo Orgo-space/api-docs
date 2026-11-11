@@ -1,0 +1,37 @@
+[
+  {
+    "id": "sso-setup-empty",
+    "image": "/images/platform/developers/single-sign-on-setup.png",
+    "usedOn": [
+      "platform/single-sign-on.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenant/single-sign-on",
+    "routeHint": "Settings -> Single sign-on. The route is gated on the Orgo administrator flag (router.js:1812, ROLE_ADMIN_TENANT) and the screen itself is gated on settingFeatures.integrations.ssoOidc (SingleSignOn.vue:601). PREREQUISITE: that flag must be on for tenant 282, or the page renders only the 'not enabled for your organisation' notice. Enable it as a demo-seeding write on the gated docs database before capturing. UPDATED 2026-11-11: there are TWO switches, and the first capture caught only the refusal because of the second. OidcFeatureGate needs the deployment key OIDC_SECRET_ENCRYPTION_KEY set (unset means off everywhere) AND settingFeatures.integrations.ssoOidc true on the tenant. With the key unset the screen renders nothing but 'Sign-in with your own identity provider is not enabled for your organisation yet'. A random key was written into api/.env on this instance, which is git-ignored, and orgo-1-php restarted.",
+    "actions": [],
+    "waitFor": "text=Add identity provider",
+    "viewport": "desktop",
+    "alt": "The single sign-on screen before any provider is connected, laid out as three numbered steps: create an app in your identity provider with the redirect address to copy, connect it to Orgo with the Add identity provider button, and test, verify your domain and activate",
+    "status": "recapture",
+    "notes": "New page platform/single-sign-on.mdx has no image. Show the empty state with the setup guide, which is what an admin sees before connecting anything."
+  },
+  {
+    "id": "sso-add-provider-form",
+    "image": "/images/platform/developers/single-sign-on-add-provider.png",
+    "usedOn": [
+      "platform/single-sign-on.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenant/single-sign-on",
+    "routeHint": "Same screen, with the Add identity provider dialog open. The provider picker is a segmented control (Okta, Entra ID, Google, Keycloak, Other) and choosing one rewrites the help text and the issuer placeholder. UPDATED 2026-11-11: there are TWO switches, and the first capture caught only the refusal because of the second. OidcFeatureGate needs the deployment key OIDC_SECRET_ENCRYPTION_KEY set (unset means off everywhere) AND settingFeatures.integrations.ssoOidc true on the tenant. With the key unset the screen renders nothing but 'Sign-in with your own identity provider is not enabled for your organisation yet'. A random key was written into api/.env on this instance, which is git-ignored, and orgo-1-php restarted.",
+    "actions": [
+      "click text=Add identity provider",
+      "wait 1200"
+    ],
+    "waitFor": "text=Issuer URL",
+    "viewport": "desktop",
+    "alt": "The Add identity provider dialog with Okta, Entra ID, Google, Keycloak and Other to choose from, the instructions for the chosen one, and fields for the display name, issuer URL, client ID and client secret, a session lifetime and a switch for creating accounts on first sign-in",
+    "status": "recapture",
+    "notes": "Shows the fields the page documents in its step 2 table. Fill nothing: an empty form is the honest illustration and avoids inventing credentials."
+  }
+]

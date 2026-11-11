@@ -18,7 +18,7 @@ The Professional Network turns your member list into a searchable directory of w
 
 ## How to access
 
-The directory lives at `/professional-network`. It is not in Orgo's default sidebar, so add a **Professional network** item through the [Menu Organizer](/platform/customization/menu-organizer). Clicking an industry on someone's profile also lands here, pre-filtered. Being signed in is the only requirement, subject to [Who can see whom](#who-can-see-whom). Admins configure it under **Settings** → **Modules** → **Professions**, which requires `ADMIN_TENANT`.
+The directory lives at `/professional-network`. It is not in Orgo's default sidebar, so add a **Professional network** item through the [Menu Organizer](/platform/customization/menu-organizer). Clicking an industry on someone's profile also lands here, pre-filtered. Being signed in is the only requirement, subject to [Who can see whom](#who-can-see-whom). Admins configure it under **Settings** → **Modules** → **Professions**, which only Orgo administrators can change.
 
 ---
 
@@ -41,7 +41,7 @@ Headline, sector and the current-organisation fields are not switches here. They
 
 ## What members fill in
 
-The **Profession** tab on a profile shows only the fields you have enabled. Members edit their own; an admin needs `ADMIN_LOCAL` or higher over that member.
+The **Profession** tab on a profile shows only the fields you have enabled. Members edit their own; an admin needs chapter admin rights or higher over that member.
 
 <img src="/images/platform/professions/profile-profession-tab.png" alt="Profession tab of a member profile with profession headline, job and expertise pickers, industry, a public private non-governmental sector choice and a Current profession card" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -91,7 +91,7 @@ Unticking hides an industry without deleting it, and members who already picked 
 The job and expertise catalogues are read-only global reference data: you cannot add to them or hide entries.
 
 <Note>
-Every write on this screen, creating, renaming, deleting and the bulk enable and disable buttons, is refused unless your account carries the tenant administrator **role**. An admin who holds `ADMIN_TENANT` as a permission rather than as the role can open the screen and read the list, and gets Access Denied on the buttons.
+Every write on this screen, creating, renaming, deleting and the bulk enable and disable buttons, is refused unless your account carries the **Orgo administrator** flag. An admin who holds the organization admin permission without that flag can open the screen and read the list, and gets Access Denied on the buttons. See [Permissions](/platform/permissions).
 </Note>
 
 ---
@@ -167,6 +167,8 @@ Recommendations are deliberately not based on profession. Industry, expertise, j
 ## Who can see whom
 
 **Individual privacy.** Each member has a **Profession & social media** toggle in their privacy settings. Set to admin-only, it blanks their headline and industry for everyone except tenant admins, HR staff, and staff in their own local center. The organisation-wide default is **Settings** → **Modules** → **Users & Profiles** → **Privacy Defaults**. Signed-out visitors never see profession data. See [Privacy Settings](/platform/users/privacy-settings).
+
+**Connections.** An accepted connection lifts these limits between the two members: a connected member can open your profile even when it is private or limited to shared local centers. Contact details work the other way round: a regular member sees another member's email, phone and social links only when they are connected, whatever the profession toggle says. See [Privacy Settings](/platform/users/privacy-settings#connections-and-contact-details).
 
 **Directory visibility.** **Who Can See Members in General Groups**, under **Privacy & Visibility** in the same module, applies here too. Raised above ordinary members, plain members can still browse and filter by industry, but keyword and interest filters are refused and recommendations fall back to their own local center.
 

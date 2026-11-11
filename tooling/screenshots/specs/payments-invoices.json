@@ -89,14 +89,14 @@
     ],
     "tenant": "t187c",
     "route": "/user/209212?tab=payments",
-    "routeHint": "Member profile -> Payments tab -> Record payment (top right). Use /user/:id, not /users/edit/:id: the edit screen has no Payments tab. The button only renders for an admin with FINANCIAL_TENANT viewing someone else's profile. The price picker only appears once a product is selected, which the runner cannot do.",
+    "routeHint": "Member profile -> Payments tab -> Record payment (top right). Use /user/:id, not /users/edit/:id: the edit screen has no Payments tab. The button only renders for an admin with FINANCIAL_TENANT viewing someone else's profile. The price picker only appears once a product is selected, which the runner cannot do. 2026-11-11 recapture: the button was renamed from Record payment to Add payment record (blue pill at the top left of the Payments tab, next to Payment type); the route /user/209212?tab=payments is unchanged. The modal's own submit button may still read Record payment.",
     "actions": [
-      "click text=Record payment",
+      "click Add payment record",
       "wait 2000"
     ],
     "waitFor": "text=Payment date",
     "viewport": "desktop",
-    "alt": "Record payment modal with the custom item switch, the product picker, the amount field and the payment date picker",
+    "alt": "Add payment record modal with the custom item switch, the product picker, the payment type picker, the amount field, the payment date picker and Cancel and Record payment buttons",
     "status": "new",
     "notes": "The Price picker is deliberately absent from the alt. It only renders once a product is chosen, and the product control is a native b-select: the runner cannot pick an option (click opens an OS dropdown that headless Chromium never paints, and focus + ArrowDown + Enter leaves the selection on the placeholder - both verified). The prose step about choosing the price stays; the image just cannot show it."
   },

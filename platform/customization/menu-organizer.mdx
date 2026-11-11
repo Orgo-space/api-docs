@@ -17,7 +17,7 @@ The Menu Organizer edits the sidebar: the order of categories and items, their n
 **Settings → Customization → Menu Organizer**
 
 <Note>
-  Requires **ADMIN_TENANT**. Changes are held locally until you press **save**; nothing is applied as you drag.
+  Requires the **Orgo administrator** flag. Changes are held locally until you press **save** (which stays greyed out until you have changed something); nothing is applied as you drag.
 </Note>
 
 ---
@@ -29,9 +29,9 @@ The sidebar has two sections, and members switch between them:
 - **Community**: the Main category, Groups and Projects.
 - **Administration**: Communication, Finance and Management.
 
-The Menu Organizer edits the **Community** categories. The three Administration categories are managed by Orgo and are not listed in the editor: their contents are already permission-scoped so that a member only sees what their role unlocks.
+The Menu Organizer edits the **Community** categories. The Administration categories (Chapter Info, Communication, Finance, Management and Settings) are managed by Orgo and are not listed in the editor: their contents are already permission-scoped so that a member only sees what their role unlocks.
 
-**CRM Mode (unified menu without groups)** is a switch at the top of the page. Turning it on merges everything into a single list and drops the Groups category, which suits organizations that use Orgo as a contact database rather than a community. In CRM mode the Communication, Finance and Management categories become editable in the organizer too.
+**CRM Mode (unified menu)** is a switch at the top right of the page. Turning it on merges everything into a single list and drops the Groups category, which suits organizations that use Orgo as a contact database rather than a community. In CRM mode the Administration categories become editable in the organizer too. A second switch, **Keep Groups in the CRM menu**, appears beside it and puts Groups back into the unified list.
 
 ---
 
@@ -51,7 +51,7 @@ The Menu Organizer edits the **Community** categories. The three Administration 
     Every category and every item has a permission dropdown. Tick one or more permissions; the entry then shows for anyone holding **any** of them. Leave it empty for **All permissions**, meaning every member.
   </Step>
   <Step title="Restrict by user type">
-    Where your organization uses user types, a second dropdown limits the entry to selected types. The default is **allUserTypes**.
+    Where your organization uses user types, a second dropdown limits the entry to selected types. The default is **All user types**.
   </Step>
   <Step title="Hide an item">
     The **x** on an item hides it without deleting it. Hidden items stay in the list, greyed out, with a **+** to restore them.
@@ -73,13 +73,13 @@ The dropdown groups permissions by tier. Which ones appear depends on your enabl
 
 | Tier | Permissions | Shown when |
 |---|---|---|
-| Organization | `ADMIN_TENANT`, `HR_TENANT`, `HR_ASSISTANT_TENANT`, `COMMUNICATION_TENANT` | Always |
-| Organization | `FINANCIAL_TENANT` | Payments module on |
-| Organization | `EVENT_TENANT` | Events module on |
-| Chapter | `ADMIN_LOCAL`, `HR_LOCAL`, `HR_ASSISTANT_LOCAL`, `FINANCIAL_LOCAL`, `COMMUNICATION_LOCAL`, `EVENT_LOCAL` | Local centers enabled |
-| Regional | the same six as `_PARENT_LOCAL`, reaching an anchor chapter and every chapter beneath it | Parent chapters enabled |
+| Organization | Admin, HR, HR Assistant, Communication Manager | Always |
+| Organization | Financial | Payments module on |
+| Organization | Event Manager | Events module on |
+| Chapter | Admin, HR, HR Assistant, Financial, Communication Manager, Event Manager, at chapter level | Local centers enabled |
+| Regional | The same roles, reaching an anchor chapter and every chapter beneath it | Parent chapters enabled |
 
-`ROLE_ADMIN_TENANT` is offered as a separate top entry: it restricts an entry to organization administrators only.
+**Orgo administrator** is offered as a separate top entry: it restricts an entry to accounts that carry the Orgo administrator flag. Note that an organization-wide Admin permission is a different, weaker thing than that flag; see [Permissions](/platform/permissions).
 
 The two dropdowns at the top left of the page are **filters**, not settings. Pick a permission or a user type there to preview which entries that audience would see.
 
@@ -87,7 +87,7 @@ The two dropdowns at the top left of the page are **filters**, not settings. Pic
 
 ## Default menu contents
 
-This is what a new organization starts with. Items whose module is off never render, whatever the Menu Organizer says.
+This is what a new organization starts with. Items whose module is off never render, whatever the Menu Organizer says. Some entries added to Orgo since an organization was set up (Reports, for example) are added to its sidebar automatically.
 
 **Community → Main**
 
@@ -95,23 +95,32 @@ This is what a new organization starts with. Items whose module is off never ren
 |---|---|
 | Home | Always (desktop only; hidden on mobile) |
 | Members | **Who Can See Members in General Groups** permits it |
+| Companies | Companies module |
 | Events | Events module |
 | Files | Drive module |
 | Voting | Voting module |
-| Local Centers | Local centers module |
-| Organization (flyout: Courses, Gazette, Organisational Chart, Analytics) | Per child: courses, gazette, analytics |
+| Chapters (Local Centers) | Local centers module |
+| Courses | Courses module |
+| Organisational Chart | Organisational chart and roles enabled |
+| Analytics | Analytics module |
 
 **Community → Groups** and **Community → Projects** are generated from your actual groups and projects. The editor shows their headers only, never their contents, so neither can be reordered internally. In the default menu both are also marked as not modifiable, which is why they carry a padlock instead of a grip handle. Projects requires the project management module. The Groups header carries three extra buttons: **Manage group categories**, **Colors** (the bullet colour per group kind) and **Emojis** (an emoji per group, replacing its bullet).
 
-**Administration → Communication**: Email campaigns, Campaign templates, Lists & Segments, Newsletter subscription, Email Log, Moderation queue.
+**Administration → Chapter Info**: the chapter's own details page. Local centers module.
 
-**Administration → Finance**: Products, Payments, Subscribers, Local products, Fee payments, Local members fees, Fee settings, Local online payments settings, Invoices.
+**Administration → Communication**: Email campaigns, Campaign templates, Lists & Segments, Newsletter subscription, Email Log.
 
-**Administration → Management**: Adhesions, Contacts, Badges, Resignation requests, Merge Records, Waitlist, Transfer requests, Queries, e-Documents, Forms, Local center settings, Companies, Settings.
+**Administration → Finance**: Products, Payments, Subscribers, Local products, Fee payments, Local members fees, Invoices.
+
+**Administration → Management**: Adhesions, Contacts, Badges, Resignation requests, Merge Records, Waitlist, Transfer requests, Moderation queue, Database Queries, e-Documents, Forms, Reports, Companies, Organisation Settings.
+
+**Administration → Settings** (chapter level): Membership fees, Waitlist and Stripe integration for a chapter's own admins.
 
 <Note>
   Home cannot be renamed, moved, hidden or permission-scoped. It is the fixed entry point.
 </Note>
+
+On a phone, the sidebar menu lists a member's groups and group categories (five at first, then a **Show more** row that expands the rest). Projects are not shown in the phone menu.
 
 ---
 
@@ -154,7 +163,7 @@ The **Desktop** and **Mobile** buttons at the top switch the preview. The mobile
     Both are generated categories, built from your live groups and projects. The editor never lists their contents, and the default menu marks them as not modifiable, so they show a padlock. Groups gets its own colour, emoji and category tools from the buttons on its header.
   </Accordion>
   <Accordion title="Communication, Finance and Management are missing from the editor">
-    Expected in normal mode: those Administration categories are managed by Orgo. Turn on **CRM Mode** if you need them in the editable list.
+    Expected in normal mode: the Administration categories are managed by Orgo. Turn on **CRM Mode (unified menu)** if you need them in the editable list.
   </Accordion>
   <Accordion title="A permission is greyed out on an item">
     The category above it is already restricted to a stronger permission. An item cannot be visible to a wider audience than its category. Loosen the category first.
@@ -174,5 +183,5 @@ The **Desktop** and **Mobile** buttons at the top switch the preview. The mobile
 - [Texts](/platform/customization/labels) - per-language wording changes across the whole interface
 - [Modules](/platform/organisation/modules) - what is available to put in the menu at all
 - [Permissions](/platform/permissions) - what each permission actually unlocks
-- [Dashboard Organizer](/platform/customization/dashboard-organizer) - the dashboard equivalent
+- [Dashboard builder](/platform/customization/dashboard-organizer) - the dashboard equivalent
 - [Customization](/platform/customization) - everything under Settings → Customization

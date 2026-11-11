@@ -16,9 +16,9 @@ was paid for.
 
 | What was paid | Where to record it | Permission |
 |---|---|---|
-| An invoice you raised | The invoice, **Mark as paid** | `ADMIN_TENANT` |
-| A membership fee period | The member's **Fee** tab, **Mark as paid** | `FINANCIAL_TENANT` for the organisation fee, `FINANCIAL_LOCAL` for a local fee |
-| Anything else (a course place, merchandise, a one-off service) | The member's **Payments** tab, **Record payment** | `FINANCIAL_TENANT` |
+| An invoice you raised | The invoice, **Mark as paid** | Admin (Organization) |
+| A membership fee period | The member's **Fee** tab, **Mark as paid** | Financial (Organization) for the organisation fee, Financial (Chapter) for a local fee |
+| Anything else (a donation, a course place, merchandise, a one-off service) | The member's **Payments** tab, **Add payment record** | Financial (Organization) |
 
 ---
 
@@ -30,19 +30,26 @@ while the invoice is unpaid.
 Four things happen.
 
 1. The invoice becomes **paid** and Orgo records which administrator marked it,
-   so the action stays attributable.
+   so the action stays attributable. The invoice shows the day you marked it paid
+   as its paid date, not its due date.
 2. A **PAID** badge is added to the stored document, the amount due line changes
    to read as paid, and the "Pay online" link is removed from it.
 3. A payment record is created for the gross total (net plus VAT) and linked to
    the invoice. That record is what updates membership status and shows in
-   payment history.
+   payment history, dated the day you marked the invoice paid.
 4. The paid invoice is emailed to the customer.
+
+An invoice that is already paid, voided or refunded cannot be marked as paid
+again: Orgo refuses with "Only unpaid invoices can be marked as paid", so a
+double click or two administrators acting at once records one payment, not two.
 
 <Warning>
 Step 4 catches people out. Marking an invoice as paid emails the customer. If you
 are tidying historical records, they still get the email. Switch off **Send
 invoice emails automatically** in **Settings** → **Modules** → **Payments & Fees**
-→ **Invoice Product** first if you are doing a batch of corrections.
+→ **Invoice Product** first if you are doing a batch of corrections. With it off,
+nothing is emailed when you mark an invoice paid; you can still send the invoice by
+hand from the invoice itself.
 </Warning>
 
 <img src="/images/platform/fees/invoice-detail.png" alt="Unpaid invoice detail page showing the Mark as paid, Edit and Void buttons above the amount and billing summary" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
@@ -83,9 +90,19 @@ The action needs **Allow Mark as Paid** switched on in **Settings** →
 record a fee manually and members must pay online.
 </Note>
 
-An **Enter different amount** switch appears only if your organisation uses fixed
-starting dates for fees. Without that setting the amount is locked to the
-member's price, and a different figure is rejected.
+An **Enter different amount** switch appears only if your organisation uses
+**Fixed Starting Date for Fees** (**Settings** → **Modules** → **Payments & Fees**
+→ **Membership fees** → **Validity Period**). Without that setting the amount is
+locked to the member's price, and a different figure is rejected.
+
+If your membership product has a **Flexible amount** level (members choose their
+own amount above a minimum), the window instead shows an amount chooser with the
+level's quick-pick amounts and a field for any whole amount between its minimum
+and maximum, and you must choose one. The server applies the same limits.
+
+The button is not offered while the member has a bank transfer in progress, or,
+with **Require Contract for Membership** on, while their membership contract is
+unsigned or lapsed.
 
 Manual fee payments are recorded with the payment method **check** and count
 immediately: the member's validity date moves forward as soon as you confirm.
@@ -95,7 +112,7 @@ with no fee price for that period) is refused with an explanatory error rather
 than saved half-formed.
 
 Local centre fees have their own **Mark as paid** on the same profile, needing
-`FINANCIAL_LOCAL` for that member's local centre. Both behave the same way: what
+the Financial (Chapter) permission for that member's local centre. Both behave the same way: what
 an administrator marks as paid counts straight away, because a mark-as-paid batch
 is written as already approved and carries the method **check**.
 
@@ -103,8 +120,8 @@ The pending state you see on **Fee payments** in the sidebar comes from somewher
 else. It is the batch written by **Pay** on the
 [Member fees table](/platform/local-group-fees/member-fees), stamped as a bank
 transfer (`iban`) and left pending, for organisation and chapter fees alike.
-**Approve** there is shown only to `ADMIN_TENANT`; a chapter administrator with
-`ADMIN_LOCAL` sees **Cancel**, which deletes the batch instead. Members never
+**Approve** there is shown only to Admin (Organization); a chapter administrator with
+Admin (Chapter) sees **Cancel**, which deletes the batch instead. Members never
 submit a fee payment for approval: a member paying their own fee by bank transfer
 raises an unpaid invoice, which is settled with **Mark as paid** on the invoice.
 
@@ -112,14 +129,20 @@ raises an unpaid invoice, which is settled with **Mark as paid** on the invoice.
 
 ## Recording any other payment
 
-For everything that is not membership, use the member's **Payments** tab and the
-**Record payment** button. It needs `FINANCIAL_TENANT`.
+For everything that is not membership, open the member (or contact), go to the
+**Payments** tab, and use **Add payment record**. It needs the Financial
+(Organization) permission.
 
 <Steps>
   <Step title="Choose what was bought">
     Either pick an existing product, or switch on **Custom item** and type an
     **Item name**. A custom item creates a hidden one-off product so the payment
-    has something to hang from without cluttering your product list.
+    has something to hang from without cluttering your product list. An archived
+    product, or a ticket product of an event that is still a draft, is refused.
+  </Step>
+  <Step title="Check the payment type">
+    **Payment type** (fee, donation, event ticket, shop or admin) follows the
+    product you picked and is greyed out. Only for a custom item do you choose it.
   </Step>
   <Step title="Choose the price">
     Products with active prices require you to pick one, and the **Amount** is
@@ -128,15 +151,28 @@ For everything that is not membership, use the member's **Payments** tab and the
   </Step>
   <Step title="Set the payment date">
     Defaults to today. Set it to the day the money actually arrived so reporting
-    lines up with your bank statement.
+    lines up with your bank statement. Press **Record payment** to save.
   </Step>
 </Steps>
 
-<img src="/images/platform/fees/record-payment-modal.png" alt="Record payment modal with the custom item switch, the product picker, the amount field and the payment date picker" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/fees/record-payment-modal.png" alt="The payment record dialog with the custom item switch, the product picker, the payment type, the amount and the payment date, above Cancel and Record payment" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 The payment is saved as successful, stamped with your name as the administrator
 who recorded it, and carries no Stripe charge. The amount you enter is treated as
-the net figure, with VAT derived on top of it.
+the net figure, with VAT derived on top of it. It appears in the payments list
+under **Payment method**, **Recorded manually**.
+
+If your organisation has **Donations count towards membership** switched on
+(**Settings** → **Modules** → **Payments & Fees** → **Membership fees** →
+**Validity Period**) and you record a donation for a member, the gift is judged
+like an online one: when it reaches the minimum of the Flexible amount level, the
+member's validity date moves at once. With the switch off, a recorded donation
+never changes membership. See [Donations](/platform/fees/donations).
+
+Recorded this way by mistake? Open the payment's row menu and choose **Mark as
+refunded**. Nothing is sent anywhere, it only corrects the record, and for a
+donation it also takes back any membership the gift earned. A payment that has an
+invoice is marked as refunded from the invoice instead.
 
 <Warning>
 Membership fee products are deliberately not offered here, and are rejected if

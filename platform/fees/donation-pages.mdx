@@ -15,9 +15,9 @@ Everything a donor sees. Setting up the campaign itself, its suggested amounts, 
 
 ## Page addresses
 
-Campaigns live at `https://<your payment host>/pay/<slug>`. The slug is generated from the campaign title and editable on the campaign form; without one the page falls back to `/pay/i/<campaign id>`.
+Campaigns live at `https://<your payment host>/pay/<slug>`. The slug is generated from the campaign name when you create it and cannot be changed afterwards; without one the page falls back to `/pay/i/<campaign id>`.
 
-Your **default donation product** also answers on the short paths `/donate`, `/doneaza` and `/presedinte`. Pick which campaign that is under **Settings → Online Payments → Donation Product**; the first donation campaign you create claims it automatically.
+Your **default donation product** also answers on the short paths `/donate`, `/doneaza` and `/presedinte`. Pick which campaign that is under **Settings → Modules → Payments & Fees → Donation Product → Main Donation Product**; the first organisation-level donation campaign you create claims it automatically.
 
 **Copy link** on the campaign header publishes the landing page and copies a short URL, `https://<your app host>/share/product/<code>`, which the in-page **Share** button and the social preview also use.
 
@@ -61,10 +61,11 @@ Upload the image used when the link is pasted into a chat or posted socially. Th
 - Hero image or video, the campaign title and, with a goal set, a progress bar reading "X raised of Y goal", the donation count, and either the target date or the completion percentage. On mobile that becomes a progress ring.
 - The campaign story.
 - **Words of support** from other donors, if messages are enabled.
-- The donation form: a **Give once / Monthly** toggle when both frequencies are enabled, suggested amount buttons, a custom amount field, **Cover the processing fee** with the amount spelled out, and a **Designate to** dropdown when the campaign has options or a chapter picker.
+- The donation form: a **One time / Monthly** toggle when both payment types are enabled, with **Annual** added as a third choice when the campaign offers annual giving, suggested amount buttons, a custom amount field, **Cover the processing fee** with the amount spelled out, and a **Designate to** dropdown when the campaign has options or a chapter picker. See [Donations](/platform/fees/donations) for how the fee is worked out.
 - Name, email, optional phone, a full address when **Require full address** is on, and optional checkboxes to leave a message, stay confidential, subscribe to the newsletter, or create an account.
 - The donor wall and a **Share** button in the sidebar.
-- Stripe takes payment inline. The donor then sees your thank-you message, a share prompt, and gets a thank-you email.
+- Stripe takes payment inline, offering Apple Pay and Google Pay when your Stripe account has them enabled and your page address is registered with it (Orgo registers it for you, see [Stripe Integration](/platform/fees/stripe-integration)). The donor then sees your thank-you message, a share prompt, and gets a thank-you email. A recurring gift shows a neutral thank-you message instead, and a yearly gift is labelled "/ year".
+- A donor who starts a recurring gift and abandons the card form can simply come back and try again.
 
 <Warning>
   A campaign that is archived still loads, but the form is replaced with a notice that payments are disabled. Archive rather than delete: a campaign with any payment on it cannot be deleted.
@@ -86,13 +87,13 @@ With **Messages of support from donors** enabled, a donor can attach a message t
   Messages are published immediately, not held for review. A message attached to a payment that is successful or on hold is stored as **approved**, so moderation is after the fact: you review the list and take down anything you do not want. There is no pending queue to work through.
 </Note>
 
-Moderation lives on the campaign under **Comments**. Filter by donor name, message text or status (approved, rejected), and press **Refresh** to pull new ones. The **Status** column carries each message's own state, and the **Actions** column beside it holds the buttons: **Delete** rejects a message and pulls it off the public page, **Approve** puts a rejected one back and appears only on the rejected ones. Both need FINANCIAL_LOCAL on the chapter the gift was designated to, or FINANCIAL_TENANT when it carries no chapter designation, which is every gift on a campaign without a chapter picker. ADMIN_TENANT covers both. Every message on the campaign above is approved, which is the normal state, so none of the rows offers **Approve**.
+Moderation lives on the campaign under **Comments**. Filter by donor name, message text or status (approved, rejected), and press **Refresh** to pull new ones. The **Status** column carries each message's own state, and the **Actions** column beside it holds the buttons: **Delete** rejects a message and pulls it off the public page, **Approve** puts a rejected one back and appears only on the rejected ones. Both need the Financial (Chapter) permission on the chapter the gift was designated to, or Financial (Organization) when it carries no chapter designation, which is every gift on a campaign without a chapter picker. Admin (Organization) covers both. Every message on the campaign above is approved, which is the normal state, so none of the rows offers **Approve**.
 
 ---
 
 ## The donor wall
 
-**Display top 50 recent donations** adds a live panel to the page sidebar: the running count, the five most recent gifts with initial, amount and relative date, and a "N persons just made a donation" flash when several arrive at once. **See all** opens a paginated list of every donation, 50 at a time; **See top** opens the largest gifts. Confidential donors show as "anonymous" throughout.
+**Display top 50 recent donations** (on by default for a new campaign) adds a live panel to the page sidebar: the running count, the five most recent gifts with initial, amount and relative date, and a "N persons just made a donation" flash when several arrive at once. **See all** opens a paginated list of every donation, 50 at a time; **See top** opens the largest gifts. Confidential donors show as "anonymous" throughout.
 
 <img src="/images/platform/fees/donation-public-page-donors.png" alt="Donations dialog opened from the donor wall, with All and Top tabs over the full list of gifts showing donor initials, amounts and relative dates, above the public page and its recent donations panel" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -123,10 +124,10 @@ Widgets put the donation form on a website you already run. The **Widgets** tab 
 | **Button Appearance** (popup) | Button text, button color, position: bottom right, bottom left, top right, top left |
 | **Embed Appearance** (embed) | Primary, background, text, button text, unselected button and CTA colors, border radius |
 | **Content Settings** | Show title, subtitle, link text and link URL (validated as a real http or https address) |
-| **Donation Settings** | Default currency (13 options), widget language (Romanian, English, German, French, Spanish, Italian), default donation type (one-time or monthly), and, for popup widgets only, show monthly upsell and require address details; preset amounts for one-time and for monthly, initial suggested amount |
-| **Button Text Customization** | Overrides for the monthly, one-time, continue, payment and donate button labels, and for the details, payment, success and thank-you headings |
+| **Donation Settings** | Default currency (13 options), widget language (Romanian, English, German, French, Spanish, Italian), default donation type (one-time, monthly, or annual when the campaign offers it), and, for popup widgets only, show monthly upsell and require address details; preset amounts for one-time, for monthly and, with annual giving, for annual; initial suggested amount |
+| **Button Text Customization** | Overrides for the monthly, annual (when offered), one-time, continue, payment and donate button labels, and for the details, payment, success and thank-you headings |
 
-Leave a text override empty and the widget uses the translation for its configured language.
+Leave a text override empty and the widget uses the translation for its configured language. The one-time, monthly and annual buttons each show only when the campaign accepts that type. A widget saved before annual giving existed has no annual amounts of its own and starts from its one-time ones.
 
 <img src="/images/platform/fees/donation-widget-configuration.png" alt="Donation widget configuration screen with basic information, appearance and donation settings on the left and a live widget preview on the right" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -135,12 +136,12 @@ Leave a text override empty and the widget uses the translation for its configur
 **Copy Embed Code** gives a ready-to-paste snippet: a popup widget is one script tag carrying the widget id; an embed widget is a container div carrying the widget id and the color settings, plus the script tag. Both load from Orgo's CDN and handle the whole flow through to the Stripe payment.
 
 <Warning>
-  The widget id is public by design and the widget config endpoint is open, so anyone with the id can render your donation form. Delete a widget you no longer want live rather than just removing the snippet from your page.
+  The widget id is public by design and the widget config endpoint is open, so anyone with the id can render your donation form. Delete a widget you no longer want live rather than just removing the snippet from your page. Widget donations are always charged to the organisation's Stripe account, even for a campaign that belongs to a chapter.
 </Warning>
 
 ### Widget statistics
 
-Each widget card reports **Total**, **One-time** and **Recurring** donation counts with the amounts behind them, so you can compare placements. The campaign's **Stats** tab also splits views and donations between widget traffic and the public page.
+Each widget card reports **Total**, **One-time** and **Recurring** donation counts with the amounts behind them (a yearly gift counts as recurring), so you can compare placements. The campaign's **Stats** tab also splits views and donations between widget traffic and the public page.
 
 ---
 
@@ -149,7 +150,7 @@ Each widget card reports **Total**, **One-time** and **Recurring** donation coun
 | Setting | What it does |
 |---------|-------------|
 | **Total goal** | Target for cumulative one-off donations |
-| **Monthly goal** | Target for recurring monthly revenue |
+| **Monthly goal** | Target for recurring monthly revenue. A yearly gift counts as one twelfth of its amount |
 | **Goal value** | The amount to reach, in your organization's currency |
 | **Target date** | Optional deadline, printed under the progress bar in place of the percentage |
 

@@ -18,7 +18,7 @@ Source is a column in the contacts list and one of its filters, so it is also ho
 answer questions like "who came from the donation page this quarter" without tagging
 anyone.
 
-<img src="/images/platform/contacts/contact-import.png" alt="The import screen where a spreadsheet is uploaded and its columns are mapped onto contact fields" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/import/import-page.png" alt="The Data import page, where contacts are imported through the same wizard as members: each step carries a Column mapping badge, an Example CSV link and a Choose file button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
@@ -27,7 +27,7 @@ anyone.
 | Source | What triggers it | What gets filled in |
 |---|---|---|
 | **Manual** | An admin uses **Add Contact** on the contacts list | Everything on the contact form, including custom fields. A chapter manager creating a contact without picking a chapter gets it filed under their own |
-| **Import** | A contact import runs from **Settings → Customization → Import** | Every column you mapped, plus tags and the newsletter flag when those columns are present |
+| **Import** | A contact import runs from **Settings** → **Customization** → **Import** | Every column you mapped, plus tags and the newsletter flag when those columns are present |
 | **Contact form** | A visitor submits the contact form you embedded on your website | Email always. Name and phone are written on a new record, and on an existing one only where those fields are still empty. Nothing else is ever overwritten |
 | **Newsletter** | A visitor fills in a newsletter signup widget **and** clicks the confirmation link in the email | Email, name, subscription set to yes, and the tag configured on that widget |
 | **Form** | A non-member submits a form whose access is set to anyone with an email address | Email, name (first and last joined into one field), any answers you mapped onto profile fields, and the subscription flag if the opt-in box was ticked |
@@ -53,12 +53,12 @@ thing: it collects confirmed subscribers. See
 ## The import wizard
 
 Import is how most contacts arrive, especially in the first month. It lives at
-**Settings → Customization → Import** and needs `ADMIN_TENANT`. Contacts go through the
+**Settings** → **Customization** → **Import** and needs the Orgo administrator flag. Contacts go through the
 column-mapping wizard rather than the plain upload used by the older import steps.
 
 <Steps>
   <Step title="Upload the file">
-    `.csv` and `.txt`, up to 50 MB. Comma, semicolon and tab separators are detected for
+    `.csv` and `.txt` up to 500 MB, or `.xlsx` and `.ods` up to 100 MB (first sheet only). Comma, semicolon and tab separators are detected for
     you, and a UTF-8 byte order mark is stripped. A larger file is refused before it
     uploads, so split it and run the parts one after another. Nothing is created yet.
   </Step>
@@ -105,7 +105,8 @@ of addresses is a valid contact import.
 Matching is on the email address, within your organisation.
 
 - A row whose email belongs to an existing **member** is skipped. The member record
-  always wins, so an import cannot split someone's history in two.
+  always wins, so an import cannot split someone's history in two. Tags in the file are
+  still added to that member.
 - A row whose email belongs to an existing **contact** is also skipped, and the contact
   is left as it is. Two things still apply: tags in the file are added, and a contact who
   had never been asked about the newsletter is set to subscribed when the file says so.
@@ -197,8 +198,12 @@ What still slips through:
   each ticket carries its own attendee details. Those records look like duplicates in the
   contacts list and, having no address, cannot sign in to the event app.
 - **Import rows with a blank email**, as described above.
-- **Contacts who later become members.** Creating a member account from a contact does not
-  remove or link the contact, so the person exists twice until you merge them.
+- **Contacts who later become members.** When the person registers with the same email, or
+  an administrator uses **Create user account** on an Active default status, the contact is
+  folded into the member automatically. The person still exists twice if the member has a
+  different email address, if the account was created with a status other than Active, or
+  if the contact holds Event App history that the automatic merge will not discard. Merge
+  them by hand.
 
 The fix in every case is the same: merge the two records rather than deleting one, so the
 payments, tickets, documents and email history end up on a single record.

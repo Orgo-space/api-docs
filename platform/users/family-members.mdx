@@ -17,7 +17,7 @@ A family is a named record that groups people who belong together: parents and g
 
 ## How to enable
 
-**Settings** → **Modules** → **Users & Profiles** → **Configuration** → **Family & Relationships**. Requires `ADMIN_TENANT`.
+**Settings** → **Modules** → **Users & Profiles** → **Configuration** → **Family & Relationships**. Only Orgo administrators can change it.
 
 | Setting | What it does |
 |---------|-------------|
@@ -30,9 +30,9 @@ Both toggles are switches on the Users & Profiles configuration page. Turning on
 
 ## Where families live
 
-Members open **Profile** → **Edit** → **Family** (route `/users/edit/{id}`). A member sees their own family there. Anyone with `HR_LOCAL` for the member's local centre sees, and can manage, the family from the same tab on that member's profile.
+Members open **Profile** → **Edit** → **Family** (route `/users/edit/{id}`). A member sees their own family there. Chapter HR managers see and manage the family from the same tab on that member's profile, but only when they have HR rights over **every** account in the family: its owner and each linked member. A family has no chapter of its own, so this is what keeps one chapter's HR team out of another chapter's families. Organization-wide HR managers are not limited this way, and an empty family can be filled by any chapter HR manager, which is how a child's family is created and then completed.
 
-A read-only summary also appears on the profile page itself: linked members as avatars, non-member relatives as a name plus email and phone. That block is visible to the member and to `HR_LOCAL` administrators only.
+A read-only summary also appears on the profile page itself: linked members as avatars, non-member relatives as a name plus email and phone. That block is visible to the member and to chapter HR managers only.
 
 ---
 
@@ -40,10 +40,10 @@ A read-only summary also appears on the profile page itself: linked members as a
 
 One family per person. A member who is not in a family yet sees **Create Family**, which names the record after them (for example "Maya Marino Family") and makes them the owner.
 
-When an administrator creates a family from someone else's profile, Orgo asks what that person's place in it should be: **Parent/Owner** or **Child**. Picking Child creates the family without an owner and adds the person as a child, which is what you want when the responsible adult is not in the system yet.
+A family can be created by its future owner, by a chapter HR manager with rights over that owner's chapter, or by an organization-wide HR manager. HR of an unrelated chapter cannot create a family for someone else's member. When an administrator creates a family from someone else's profile, Orgo asks what that person's place in it should be: **Parent/Owner** or **Child**. Picking Child creates the family without an owner and adds the person as a child, which is what you want when the responsible adult is not in the system yet.
 
 <Note>
-Ordinary members can create their own family and can add non-member relatives to it. Adding an existing organization member to a family requires `HR_LOCAL`. Members without that permission see: "For privacy reasons, only chapter or association administrators can add organisation members to a family."
+Ordinary members can create their own family and can add non-member relatives to it. Adding an existing organization member to a family requires a chapter or organization-wide HR manager. Members without that permission see: "For privacy reasons, only chapter or association administrators can add organisation members to a family."
 </Note>
 
 ---
@@ -74,9 +74,9 @@ The add dialog asks three things:
   </Step>
 </Steps>
 
-Linking an existing member takes effect immediately. There is no request for the other person to accept.
+Linking an existing member takes effect immediately when an HR manager does it. There is no request for the other person to accept. Linking an existing account **as a child** is stricter: it needs HR rights over that account, because a child link is what gives a parent access to the child's private profile fields. Anyone else has to invite the account instead, and the link counts once the invitation is accepted.
 
-A person can hold only one non-parent membership across all families. If you add someone who is already a child or sibling elsewhere, Orgo asks: "{name} is already a member of "{family}". Move them to this family?" Moving requires permission on the other family too, and a family owner cannot be moved out of the family they own. Parents and guardians are exempt: a parent of several children legitimately appears in each child's family.
+A person can hold only one non-parent membership across all families. If you add someone who is already a child or sibling elsewhere, Orgo asks whether to move them, naming the person and the family they are already in. Moving requires HR rights over the other family too, and a family owner cannot be moved out of the family they own. Parents and guardians are exempt: a parent of several children legitimately appears in each child's family.
 
 ---
 
@@ -102,6 +102,12 @@ If the [Waitlist](/platform/users/waitlist) is active and the child's local cent
 Any member of a family with management rights can remove others; you cannot remove yourself. Removing someone deletes the family link, not their account.
 
 Deleting the whole family is a link at the top right of the panel. It only works once every member except the owner has been removed, otherwise Orgo answers "Cannot delete family with other members. Please remove all members first."
+
+---
+
+## Parents and their children's troops
+
+For scouting and other organizations that run troops or similar units, there is a setting, off by default and switched on per organization by Orgo, that lets a verified parent follow the units their children are actively in. With it on, a parent sees and takes part in the events and discussions of those units without becoming a member, and is notified of new ones unless they mute the unit. Drives, rosters, votes and the badge feed stay members-only. Access follows the family link and the child's membership, so a child joining or leaving a troop needs no manual change. Ask Orgo support to turn it on.
 
 ---
 
@@ -136,7 +142,7 @@ Do not rely on these settings for legal age gating. There is no age check on pub
   </Accordion>
 
   <Accordion title="Can a member add another member to their family themselves?">
-    No. Adding an existing account requires `HR_LOCAL`. Members can add non-member relatives (name, email, phone) on their own.
+    No. Adding an existing account requires a chapter or organization-wide HR manager. Members can add non-member relatives (name, email, phone) on their own.
   </Accordion>
 
   <Accordion title="What can a parent do with a linked child's account?">

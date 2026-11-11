@@ -23,13 +23,16 @@
     ],
     "tenant": "t187c",
     "route": "/tenants/branding",
-    "routeHint": "Settings -> Organization -> Branding. The selector crops to the block that holds the 'Auth background image URL' field and the Save button under it. Without the crop this was a full-page shot identical to branding-logo-grid, which sits at the top of the same page.",
-    "actions": [],
-    "waitFor": "text=Auth background image URL",
-    "selector": "div.mt-6:has-text(\"Auth background image URL\")",
+    "routeHint": "Settings -> Organization -> Branding. The page is now five collapsible cards (Logos, Auth background image, Default theme for organization, Custom theme, Checkout color) and only one is open at a time, so the section must be clicked open before the crop. The old label 'Auth background image URL' no longer exists: the section offers Upload or Image URL with a Remove image button. UPDATED 2026-11-11: 'Image URL' is the input's PLACEHOLDER, not text on the page, so a text= wait can never match it however well the card renders. The card's own help line is the reliable wait. The card now offers a URL and an Upload choice rather than a URL field alone.",
+    "actions": [
+      "click .o-branding-header:has-text(\"Auth background image\")",
+      "wait 1400"
+    ],
+    "waitFor": "text=Shown next to the login and registration forms",
+    "selector": "div.card:has(.o-branding-header:has-text(\"Auth background image\"))",
     "viewport": "desktop",
-    "alt": "Auth background image URL field holding a background image address, with a Save button below it",
-    "status": "new",
+    "alt": "Auth background image section of Branding, expanded, offering an upload or an image URL with a Remove image button",
+    "status": "recapture",
     "note": "Field label and Save button unchanged (client/src/views/Tenant/Branding.vue:33-44). The field must carry a value: an empty box shows the feature unset, which is the state the surrounding prose describes as the thing to avoid. The demo tenant's authImage was set on 2026-08-05."
   },
   {
@@ -40,15 +43,16 @@
     ],
     "tenant": "t187c",
     "route": "/tenants/branding",
-    "routeHint": "Settings -> Organization -> Branding, scroll past the Save button to the 'Default theme for organization' heading. Capture from that heading down to the 'Reset to default' button so the Light menu swatch row, the Dark menu swatch row and at least one hue slider are all visible. Capture with the admin's own session in LIGHT mode: the Light menu block is hidden entirely when the admin is viewing Orgo in dark mode (client/src/components/ThemePicker.vue:7).",
+    "routeHint": "Same Branding page, with the 'Default theme for organization' card opened. The accordion closes the other sections, so clicking this header is what makes the theme choices visible.",
     "actions": [
-      "wait 4000"
+      "click .o-branding-header:has-text(\"Default theme for organization\")",
+      "wait 1600"
     ],
-    "waitFor": "text=Default theme for organization",
-    "selector": "div.theme-picker",
+    "waitFor": ".o-branding-body",
+    "selector": "div.card:has(.o-branding-header:has-text(\"Default theme for organization\"))",
     "viewport": "tall",
-    "alt": "Theme picker showing the Light menu and Dark menu chrome preset swatch rows, both hue sliders and the Reset to default button",
-    "status": "new",
+    "alt": "Default theme for organization section of Branding, expanded, showing the theme choices",
+    "status": "recapture",
     "note": "Cropped to div.theme-picker, the ThemePicker component root. It contains everything the spec asked for (Light menu row, Dark menu row, both hue sliders, Reset to default) except the h3 heading above it, which is a sibling with no shared wrapper and is already the sentence the doc uses to introduce the image. Without the selector this was a 3840x4400 full-page shot whose top third duplicated branding-logo-grid and whose bottom third was empty. Capture with the admin's own session in LIGHT mode: the Light menu block is hidden entirely when the admin is viewing Orgo in dark mode (client/src/components/ThemePicker.vue:7)."
   },
   {

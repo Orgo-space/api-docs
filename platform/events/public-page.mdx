@@ -24,25 +24,27 @@ to register without creating an account first.
 One rule, and both halves of it must be true:
 
 - the event is **published**, and
-- its audience is set to **Public**.
+- its audience is set to **Public** or **Private link**.
 
 Ticketing does not change this. A members-only event with ticketing enabled has no public page,
 because members buy their tickets on the event page inside the app. Anything that fails either
-half refuses the request: the visitor gets an empty page, not a login prompt and not the event
+half refuses the request: the visitor gets a "not found" page, not a login prompt and not the event
 details.
 
-<Warning>
-Turning on ticketing makes the event page publicly readable even if the event itself is not public.
-If an event should stay internal, keep it free and use RSVP rather than tickets, and share the
-in-app link instead.
-</Warning>
+**Private link** events have a public page like any other, but they are left out of the public event
+directory and public lists, and the page asks search engines not to index it. Only people you give
+the link to will find it.
+
+An unpublished public event (a draft) has no public page for visitors. You can still look at it
+yourself with **Preview public page**, and you can send people without an account a preview link
+(see [Previewing a draft](#previewing-a-draft)).
 
 Marking an event public is gated by **Settings → Events → Who Can Create Public Events**. That
-setting is a ceiling, not an alternative route: if it is set to `EVENT_TENANT`, someone with only
-`EVENT_LOCAL` who ticks "Public" has the flag silently dropped on save. Events hosted by a private
-(non-joinable) group can never be public. Ticketing needs `EVENT_TENANT`. `FINANCIAL_TENANT` shows the
+setting is a ceiling, not an alternative route: if it is set to organization-wide event managers, someone who is only a
+chapter event manager and ticks "Public" has the flag silently dropped on save. Events hosted by a private
+(non-joinable) group can never be public. Ticketing needs an organization-wide event manager. Organization financial managers see the
 Paid option and the Tickets and Payments screens, but saving a Paid event still needs
-`EVENT_TENANT`.
+an organization-wide event manager.
 
 ---
 
@@ -56,8 +58,8 @@ On the shared domain `app.orgo.space` the link also needs `?workspace=<your slug
 which organisation it belongs to. On a [custom domain](/platform/custom-domain) the organisation is
 resolved from the domain and no parameter is needed.
 
-Open the event and use **Landing page** in the event sidebar to see the page as a visitor does, with
-the right parameters already attached. The entry appears once the event is public or ticketed.
+Open the event and use **Public page** in the event sidebar to see the page as a visitor does, with
+the right parameters already attached. The entry appears once the event is published and public.
 
 ---
 
@@ -66,25 +68,26 @@ the right parameters already attached. The entry appears once the event is publi
 | Area | Content |
 |------|---------|
 | Cover image | The event image, falling back to the last photo in the event gallery, then to a coloured placeholder |
-| Hosted by | Your organisation logo (clicking it opens your public event list) |
-| Share | Copy the link, or post to Facebook, WhatsApp or LinkedIn. Desktop only |
+| Hosted by | Your organisation, and the group the event belongs to |
+| Back to events | A button at the top (and your logo on a phone) that opens your public event list |
+| Share | A **Share** button that opens **Quick Share**: copy the link, or post to Facebook, WhatsApp or LinkedIn. Desktop only |
 | Title, date, time | With a timezone switcher, so a visitor can read the times in their own zone |
 | Location | Address, plus a map when the venue was picked from the place search |
 | Online event | An "online" marker only. The joining link is never sent to the public page |
 | About | Description, event videos, and SDG icons when **Sustainable Development Goals** is on |
-| Program | Sessions on their own tab, with times, stages, and session speakers |
-| Speakers | Speaker cards with photo, headline and bio, grouped by day on multi-day events |
+| Program | Sessions on their own **Program** tab, with times, stages, and session speakers |
+| Speakers | A tab of speaker cards with photo, headline and bio, grouped by day on multi-day events. The tab is named after the word the event uses (speakers, coordinators or moderators) |
 | Tickets or registration | Ticket types and prices, or a single **Register** button on free events |
 
 Someone who already registered sees their own status instead of the ticket picker: their ticket or
-registration, a button to show the QR code, and, when the event runs votes, a **Votes** tab. That
+registration, a button to show the QR code, and, when the event runs votes, a **Vote** tab. That
 also works for a non-member ticket holder, whose emailed link carries a personal `hash` parameter
 that identifies them without an account. The `{eventAgendaUrl}` placeholder in emails and newsletters
 produces exactly that personalised link.
 
 Registration is covered in [Ticketing](/platform/events/ticketing) and
 [Registration forms](/platform/events/registration-forms). The page also shows state: "Registrations
-are closed" when the organiser closed them, "This event is full" when capacity is reached, and no
+are closed" when the organiser used **Close registrations** in the event's **Actions** menu, "This event is full" when capacity is reached, and no
 registration card at all once the event has ended (after its end time, or 24 hours after the start
 when no end time was set).
 
@@ -115,9 +118,23 @@ or ticketed, so they can be served to signed-out visitors.
 
 ---
 
+## Previewing a draft
+
+While an event is a draft, organisers see an **Only organizers can see this event** banner on the event
+page with two buttons, shown for public drafts only:
+
+- **Preview public page** opens the public page as a visitor will see it, with a "Preview, not
+  published" notice. Nothing on a preview can register, hold or pay.
+- **Share preview** gives a link and QR code that anyone can open without an account, until you publish
+  the event or press **Reset link** (which makes the old link stop working).
+
+---
+
 ## Appearance
 
-Colours and the hero image rounding are set per event under **Registration form → Appearance**
+The page behind the event (a colour, a searched photo or an uploaded image) is set on the event page
+itself, from the **Add background** (or **Background**) button in its left column, and shows on the
+public page too. Colours and the hero image rounding are set per event under **Registration form → Appearance**
 (**Selected color**, **Button color**, **Hero image border radius**, **Display title**). That editor
 only exists on events that require a registration form, which every ticketed event does. See
 [Registration forms](/platform/events/registration-forms) for the full table. There is no per-event
@@ -131,7 +148,7 @@ light or dark preference unless the link carries `?light` or `?iframe`.
 <AccordionGroup>
   <Accordion title="The page is blank for people I send it to">
     The link is missing `?workspace=<slug>` and the visitor has never opened your organisation in
-    that browser. Copy the link from **Landing page** in the event sidebar rather than from your
+    that browser. Copy the link from **Share** on the event page, or open **Public page** in the event sidebar, rather than from your
     address bar.
   </Accordion>
 
@@ -141,9 +158,8 @@ light or dark preference unless the link carries `?light` or `?iframe`.
   </Accordion>
 
   <Accordion title="The social preview shows my organisation name, not the event">
-    The `/public/event/...` address has no per-event preview data. Use the short share link instead:
-    it serves a preview page carrying the event title, description and cover image, then forwards to
-    the event. See [Sharing events](/platform/events/sharing).
+    The `/public/event/...` address is a JavaScript page, and social platforms do not run it, so they
+    show generic details. See [Sharing events](/platform/events/sharing).
   </Accordion>
 
   <Accordion title="Members cannot see their discounted price">
@@ -161,7 +177,7 @@ light or dark preference unless the link carries `?light` or `?iframe`.
 
 ## Related
 
-- [Sharing events](/platform/events/sharing) - short links, embeds and the public event directory
+- [Sharing events](/platform/events/sharing) - the Share button, embeds and the public event directory
 - [Ticketing](/platform/events/ticketing) - ticket types, pricing and checkout
 - [Registration forms](/platform/events/registration-forms) - the questions asked at registration
 - [Create an event](/platform/events/create-event) - visibility, capacity and cover image

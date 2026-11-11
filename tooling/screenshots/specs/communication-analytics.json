@@ -1,0 +1,42 @@
+[
+  {
+    "id": "communication-analytics-overview",
+    "image": "/images/platform/insights/analytics-communication.png",
+    "usedOn": [
+      "platform/communication-analytics.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/stats?tab=communication",
+    "routeHint": "Sidebar -> Analytics, then the Communication tab. The tab key is 'communication' (client/src/views/App/Stats/Stats.vue:236) and it is gated by showCommunicationTab, so sign in as a tenant admin. The page needs the period selector and the three summary cards rendered before capture. The period buttons are 7 days / 30 days / 90 days / 12 months and the tab opens on 30 days. The demo organisation's newest discussion post is dated 2026-02-11, so at 30 days every figure on this tab reads 0; capture at 12 months. Checked 2026-11-11: discussion.main_post_created_at was NULL on all 97 demo discussions, which zeroes 'posts published' at any period, and was backfilled from the main post's date_created.",
+    "actions": [
+      "click text=12 months",
+      "wait 2500"
+    ],
+    "waitFor": "text=Best time to post",
+    "viewport": "desktop",
+    "alt": "Communication tab of Analytics with the period selector, the audience, posts and newsletter summary cards, and the best time to post chart",
+    "status": "recapture",
+    "notes": "New page platform/communication-analytics.mdx has no image at all. Show the summary cards and the Best time to post chart in one shot."
+  },
+  {
+    "id": "communication-analytics-posts",
+    "image": "/images/platform/insights/analytics-communication-posts.png",
+    "usedOn": [
+      "platform/communication-analytics.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/stats?tab=communication",
+    "routeHint": "Same screen, scrolled to the Post results table at the foot of the Communication tab. The table carries the Export CSV button and the In this period / Since published toggle. The period buttons are 7 days / 30 days / 90 days / 12 months and the tab opens on 30 days. The demo organisation's newest discussion post is dated 2026-02-11, so at 30 days every figure on this tab reads 0; capture at 12 months. Checked 2026-11-11: discussion.main_post_created_at was NULL on all 97 demo discussions, which zeroes 'posts published' at any period, and was backfilled from the main post's date_created.",
+    "actions": [
+      "click text=12 months",
+      "wait 2500",
+      "scrollto text=Post results",
+      "wait 800"
+    ],
+    "waitFor": "text=Post results",
+    "viewport": "desktop",
+    "alt": "Post results table on the Communication tab listing each post with its reach and engagement, with the Export CSV button",
+    "status": "recapture",
+    "notes": "Second shot for the same new page: the per-post table, which is the part admins act on."
+  }
+]

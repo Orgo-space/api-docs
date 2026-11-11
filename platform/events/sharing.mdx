@@ -1,14 +1,14 @@
 ---
 title: 'Sharing Events'
-description: 'Short share links with social previews, the public event directory, and embedding events or an agenda on your own site'
+description: 'The Share button, the public event directory, and embedding events or an agenda on your own site'
 "og:title": 'Sharing Events | Orgo'
-"og:description": 'Short share links with social previews, the public event directory, and embedding events or an agenda on your own site'
+"og:description": 'The Share button, the public event directory, and embedding events or an agenda on your own site'
 "twitter:title": 'Sharing Events | Orgo'
-"twitter:description": 'Short share links with social previews, the public event directory, and embedding events or an agenda on your own site'
+"twitter:description": 'The Share button, the public event directory, and embedding events or an agenda on your own site'
 ---
 
 Once an event has a [public page](/platform/events/public-page), there are three ways to put it in
-front of people: a short link built for social media, a directory of everything coming up, and
+front of people: the **Share** button, a directory of everything coming up, and
 embeds for your own website.
 
 **Built for** organisers who post events to Facebook or LinkedIn, keep an events page on their own
@@ -18,34 +18,25 @@ site, and want both to stay current without copying details around.
 
 ---
 
-## The short share link
+## Sharing from the event page
 
-Open the event and use **Copy link** in the event sidebar. It appears once the event is published
-and public.
+Open a published event and use **Share** in the bar above the event page. It opens **Quick Share**:
+**Your unique link** with a **Copy link** button, and buttons to post to Facebook, WhatsApp or
+LinkedIn.
 
-The first time you use it, the event is given a permanent seven-character code and a small preview
-page is published for it. You get a link shaped like:
+- For a **Public** or **Private link** event, the link is the event's [public page](/platform/events/public-page).
+- For a **Members only** event, the link is the event page inside the app, which only signed-in members can open.
+- A draft has no **Share** button. For a public draft, use **Share preview** instead (see
+  [Previewing a draft](/platform/events/public-page#previewing-a-draft)).
 
-```
-https://<your app domain>/share/<code>
-```
-
-The preview page exists for one reason: social platforms and messaging apps read a page's preview
-tags before showing a card, and they do not run the event page's JavaScript. It carries the event
-name as the title, the first 256 characters of the description as the summary, the event cover image,
-and your organisation's icon. A visitor who clicks it is forwarded to the event about a second later.
-
-It forwards to the event's public page with your organisation and interface language already set in
-the address, so nothing else needs to be appended by hand.
+Visitors can share too. The public event page has its own **Share** button with the same options
+(desktop only).
 
 <Note>
-Copying the link again republishes the preview page, so a new title or cover image is picked up.
-Facebook, LinkedIn and X cache previews aggressively, so use their own preview debugging tools if an
-old card keeps appearing.
+Social platforms and messaging apps read a page's preview tags without running its JavaScript, and the
+public event page is a JavaScript application. A pasted link may therefore show your organisation's
+generic details rather than the event's title and cover image.
 </Note>
-
-Visitors can share too. The public event page has a **Share** button that copies the link or hands it
-to Facebook, WhatsApp or LinkedIn.
 
 ---
 
@@ -57,20 +48,22 @@ Every organisation has a page listing its public events:
 https://<your app domain>/public/events?workspace=<your slug>&upcoming=1
 ```
 
-From inside the app, open **Events** and use **Public events** in the header to jump to it. Visitors
-reach it by clicking your logo on any public event page, or "Explore events" on a phone.
+From inside the app, open **Events** (with no group selected) and choose **Public events** in the header
+menu to jump to it. Visitors reach it from the button at the top of any public event page, which carries your
+organisation's name and "Events", or from "Explore events" on a phone.
 
 <img src="/images/platform/events/event-public-directory.png" alt="Public event directory showing the next event as a large hero card, a list of upcoming events with dates and cover images, and a month calendar with event dates marked" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-It shows only events that are both **published** and **public**. A ticketed event that was never
-marked public has a working page of its own but is never listed here.
+It shows only events that are both **published** and **Public**. **Private link** events are never
+listed, and a members-only ticketed event has no public page at all.
 
 | Element | Behaviour |
 |---------|-----------|
-| Hero card | The next upcoming event, shown large above the list |
-| Upcoming / Past | Two pills; past events stay browsable indefinitely |
-| Calendar | Inline month calendar on desktop, with dates that have events marked |
+| Next event card | The next upcoming event, shown large above the list ("Next up", or "Happening now" while it is on) |
+| Upcoming / Past | Two tabs; past events stay browsable indefinitely |
+| List / Calendar | A switch between the list and a month calendar with a month stepper and a **Today** button |
 | Event cards | Date, title, location and cover image, each opening the event's public page |
+| Subscribe to our events | In the clock menu: a calendar link visitors add to their calendar app so it stays up to date with your public events |
 
 Visitors get no search box and no filters. Those controls are for signed-in members on the internal
 event list.
@@ -106,7 +99,8 @@ exact page for you, so you do not need to paste anything.
 ## Embedding the agenda
 
 For a conference the agenda is often what people want on the website. Open the event, go to
-**Program**, and use **Iframe URL**. The button only appears when the event is public or ticketed.
+**Program & Speakers** (the second word follows the label the event uses for speakers), and use **Iframe URL**.
+The button appears for people who can edit the event, and only when the event is public or ticketed.
 
 It copies an address of the form
 `https://<your app domain>/public/event-agenda/<event uuid>?workspace=<your slug>&iframe=true`,
@@ -136,10 +130,9 @@ person, not the event, and is what gets scanned at
 
 ## Search engines
 
-Crawling is not blocked, but do not plan a search strategy around it. The public event page is a
-JavaScript application whose browser tab title is your organisation name, not the event name. The
-only page that serves proper title, description and image tags to a machine reading the raw HTML is
-the short share link's preview page, which is what makes social cards work.
+Do not plan a search strategy around the public event page. It is a JavaScript application whose
+browser tab title is your organisation name, not the event name. **Private link** events ask search
+engines not to index them.
 
 If search visibility matters, publish the event on your own site and link out to the Orgo page for
 registration.
@@ -151,11 +144,12 @@ registration.
 | Action | Needs |
 |--------|-------|
 | Mark an event public | The level set in **Settings → Events → Who Can Create Public Events** |
-| Enable ticketing | `EVENT_TENANT`. `FINANCIAL_TENANT` shows the Paid option and the Tickets and Payments screens, but saving a Paid event still needs `EVENT_TENANT` |
-| Copy the share link, publish the preview page | Event owner, `EVENT_LOCAL` on the event's group, or `EVENT_TENANT` |
-| Copy the agenda embed address | Access to the event's **Program** screen: owner, `EVENT_LOCAL` or `EVENT_TENANT` |
+| Enable ticketing | An organization-wide event manager. Organization financial managers see the Paid option and the Tickets and Payments screens, but saving a Paid event still needs an organization-wide event manager |
+| Use **Share** | Anyone who can open the published event page |
+| Use **Preview public page** and **Share preview** on a draft | People who can edit the event: its owner, a chapter event manager for the event's group, or an organization-wide event manager |
+| Copy the agenda embed address | Access to the event's **Program** screen: owner, a chapter event manager for the group, or an organization-wide event manager |
 
-`ADMIN_TENANT` satisfies all of these organisation-wide.
+Organization admins can do all of these across the organization.
 
 ---
 

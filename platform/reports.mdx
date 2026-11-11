@@ -8,9 +8,14 @@ description: 'Build a report from your members, payments, events or votes, and d
 ---
 
 **Reports** is a builder for the exports your organisation runs again and again.
-You pick what the report is about, tick the columns you want, add filters, check
-the preview, and download a CSV. Nothing is typed as a query and nothing is
-capped at a page: the file holds every row that matched.
+You pick what the report is about, tick the columns you want, add filters, watch
+the table fill in beside you, and download a CSV. Nothing is typed as a query and
+nothing is capped at a page: the file holds every row that matched.
+
+This page is about **Reports** only. If you want to type a question and get a
+one-off answer on screen, or read the built-in dashboards, that is a different
+screen: see [Insights & Ask Orgo](/platform/insights). The two are compared
+[below](#how-reports-differs-from-ask-orgo-and-database-queries).
 
 **Built for** admins who need the same extract every month, or a one-off list
 with exactly the columns a colleague, an auditor or a funder asked for.
@@ -26,107 +31,140 @@ spreadsheets together, and asking a developer for a data pull.
 
 | Surface | Route | Who can open it |
 |---|---|---|
-| **Reports** list | `/reports`, sidebar item **Reports** under Administration, beside **Ask Orgo** | `ADMIN_TENANT` only |
-| Build a report | `/reports/create` | `ADMIN_TENANT` only |
-| Edit a report | `/reports/edit/:item` | `ADMIN_TENANT` only |
+| **Reports** list | `/reports`, sidebar item **Reports** in the Administration section | Organization admins |
+| A report, read-only | `/reports/:item`, opened by clicking a row in the list | Organization admins |
+| Build a report | `/reports/create` | Organization admins |
+| Edit a report | `/reports/edit/:item` | Organization admins |
 
 There is no module switch and no setting to turn on. Reports is available to
 every organisation on the platform, and the sidebar entry appears as soon as you
-hold `ADMIN_TENANT`.
+hold the organization admin permission.
 
 <Warning>
-`ADMIN_TENANT` is the only way in, for every part of the feature: building,
-previewing, exporting and downloading. There is no HR, finance or chapter
-version, so an `HR_TENANT` or `ADMIN_LOCAL` administrator cannot open Reports at
-all, and cannot be given a read-only or chapter-scoped copy of one. A report
-covers the whole organisation, so treat access to Reports as the same reach as
-access to every member record. [Scoped API tokens](/platform/api) are refused
-too: a scoped token never carries `ADMIN_TENANT`, whoever minted it.
+The organization admin permission is the only way in, for every part of the
+feature: building, previewing, exporting and downloading. Reports does **not**
+need the Orgo administrator flag that most configuration screens under Settings
+require, so an organization admin without that flag can still use it. There is no
+HR, finance or chapter version, so an organization HR manager or a chapter admin
+cannot open Reports at all, and cannot be given a read-only or chapter-scoped
+copy of one. A report covers the whole organisation, so treat access to Reports
+as the same reach as access to every member record. [Scoped API
+tokens](/platform/api) are refused too: a scoped token never carries the
+organization admin permission, whoever minted it.
 </Warning>
+
+You can move the **Reports** entry elsewhere with the [Menu Organizer](/platform/customization/menu-organizer),
+but the page and its data still need the same permission wherever it sits.
 
 ---
 
 ## Building a report
 
-<img src="/images/platform/reports/reports-builder.png" alt="The report builder with Members selected from the row of seven starting points, the Members field group expanded showing four of sixteen columns ticked including first name, last name, email and date joined, the related record groups collapsed below it for local center, user type, town and membership fee tier, and a preview table underneath listing real member rows with a Local Center Name column pulled in from the related record" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+The builder has two panes. On the left, the **rail** holds the report's name and
+everything it is made of: what it is **Report on**, its **Columns** and its
+**Filters**. On the right, the **Preview** is the report itself, as a table that
+updates as you work.
+
+<img src="/images/platform/reports/reports-builder.png" alt="The report builder with a name typed in, Members chosen as the starting point, five columns ticked in the left rail and the live preview table of members on the right" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 <Steps>
-  <Step title="Choose what the report is about">
-    Pick one of seven starting points: members, contacts, payments, event
-    attendees, votes, companies or member roles. Everything else follows from
-    that choice, and one report has exactly one starting point. Each row in your
-    file will be one of these records.
+  <Step title="Name it and choose what it is about">
+    Type a **Report name** and pick what to **Report on** from the dropdown: members,
+    contacts, payments, event attendees, votes, companies or member roles. A new
+    report starts on members. One report has exactly one starting point, and each row
+    in your file will be one of these records. If you change it after ticking columns
+    or adding filters, Orgo asks first, because they belong to the old choice and are
+    cleared.
   </Step>
   <Step title="Tick the columns">
-    Each starting point offers its own list of fields. Tick the ones you want and
-    they become the columns of the file, in the order you picked them.
+    Each starting point offers its own list of fields, and each ticked field becomes a
+    column. **Select all** and **Deselect all** act on one group at a time. The small
+    information icon beside a field explains what it holds.
   </Step>
   <Step title="Add columns from related records">
-    Alongside the record's own fields you can reach one step outwards, into a
-    record it belongs to: a payment's product and payer, a member's chapter and
-    membership type, an attendee's event. Those fields appear as extra columns
-    with the relation named in front of them, so the chapter's name arrives as
-    **Local Center Name** rather than a second column called **Name**.
+    Alongside the record's own fields you can reach one step outwards, into a record
+    it belongs to: a payment's product and payer, a member's chapter and membership
+    type, an attendee's event. Each related record is a collapsible group in the
+    Columns list, with a counter of how many of its columns you have ticked. Those
+    fields appear as extra columns with the relation named in front of them, so the
+    chapter's name arrives as **Local Center Name** rather than a second column called
+    **Name**.
   </Step>
+
+<img src="/images/platform/reports/reports-field-groups.png" alt="The Columns rail of a saved report with a related record group expanded, showing the fields it can add and the counter of how many are ticked" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
   <Step title="Filter it down">
-    Add conditions until the report describes the group you mean. Filters are
-    typed to the field you chose, so a date field offers dates and a status field
-    offers its real list of values rather than a free text box.
+    Press **Add filter** and add conditions until the report describes the group you
+    mean. Filters are typed to the field you chose, so a date field offers dates and a
+    status field offers its real list of values rather than a free text box.
   </Step>
-  <Step title="Check the preview">
-    The preview runs as you build and shows the first 10 rows with the same
-    column headers the file will carry. Use it to confirm the shape before you
-    commit to a download.
+  <Step title="Order the table">
+    Click a column header in the preview to sort by it, and click again to reverse. A
+    chip above the table shows the sort (**A to Z** or **Z to A**) and clears it. Drag
+    a column header sideways to move the column. The sort and the column order are
+    saved with the report and carried into the file.
   </Step>
   <Step title="Save it, then download">
-    Give the report a name and save it. From there, **Download** starts the
-    export.
+    **Save** stores the report. **Download** saves any unsaved changes first and then
+    starts the export, so the file always matches the table on screen. A report that
+    has not been saved yet is created by pressing either.
   </Step>
 </Steps>
 
-### Filters
+The preview runs by itself a moment after you stop editing, and shows the first 10
+rows with a "showing 10 of N" count and the same column headers the file will carry.
+The **Refresh** button re-runs it. A half-built filter shows a short message in the
+preview instead of rows. **Unsaved changes** appears beside the title until you
+save, and leaving the page then asks you to confirm.
 
-<img src="/images/platform/reports/reports-filters.png" alt="The Filters tab of a saved report named Payments export by date, with the note that only rows matching every filter are included, two stacked conditions on Date created reading after 01/01/2026 and before 01/07/2026 joined by an AND label, an Add filter link, and an empty preview panel offering a Run preview button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+### Filters
 
 The operators you are offered depend on the type of the field, so you never have
 to know what a field is stored as.
+
+<img src="/images/platform/reports/reports-filters.png" alt="The Filters section of the report rail with a condition row open on its property, operator and value controls" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 | Field | Operators |
 |---|---|
 | Text | **contains**, **equals** |
 | Number and amount | **equals**, **greater than**, **less than**, **at least**, **at most** |
 | Date | **on**, **after**, **before** |
-| Yes or no | **is** |
+| Yes or no | **is**, with **Yes** or **No** |
 | A field with a fixed list of values, such as a status | **is**, choosing from the real list |
+| Tags (members and contacts) | **is**, choosing from your organisation's tags |
 
 Every filter you add narrows the report further: they are combined with **and**,
-always. There is no **or**, no bracketing of one group of conditions against
-another, and no way to say "members in Berlin or Munich" in a single report. Run
-that as two reports, or filter on something the two have in common.
+always, and the builder shows an **AND** label between them. There is no **or**, no
+bracketing of one group of conditions against another, and no way to say "members
+in Berlin or Munich" in a single report. Run that as two reports, or filter on
+something the two have in common.
 
-The builder also has no sorting and no totals. A report is the rows and the
-columns you asked for; ordering, subtotalling and charting are things to do in
-your spreadsheet once the file has downloaded.
+A report has one sort, chosen in the table. There are no totals or grouping:
+subtotalling and charting are things to do in your spreadsheet once the file has
+downloaded.
 
 ---
 
 ## What you can report on
 
-<img src="/images/platform/reports/reports-field-groups.png" alt="The Main entity tab of a report named Member export by chapter, asking what do you want to report on with Members selected from the seven chips, and beneath it five collapsed field groups: Members with five columns chosen, Local center this user belongs to with one, then user type, town and membership fee tier, each its own group" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
-Each starting point is its own group, with the records it can reach shown as further groups beneath it. The count beside a group is how many of its columns you have picked.
-
 Seven starting points, each with its own fields and its own related records.
 
 | Report is about | Fields on the record | Related records you can add columns from |
 |---|---|---|
-| **Members** | 16 | Local Center, Type, Town current, Fee Tenant Product Price |
-| **Contacts** | 8 | Local Center |
-| **Payments** | 17 | Product, Subscription Profile, Contact, User, Price, Manual Fee Payment, Accepted By, Identity, Invoice, Company |
-| **Event Attendees** | 6 | Event, User, External contact, Product Payment, Product Price, Invoice |
+| **Members** | 21 | Local Center, Type, Town Current, Fee Tenant Product Price, Voting Representative Of |
+| **Contacts** | 12 | Local Center, Voting Representative Of |
+| **Payments** | 18 | Product, Subscription Profile, Contact, User, Price, Manual Fee Payment, Accepted By, Identity, Invoice, Company |
+| **Event Attendees** | 7 | Event, User, External, Product Payment, Product Price, Invoice |
 | **Votes** | 5 | Owner, Event |
-| **Companies** | 10 | Fee Tenant Product Price |
+| **Companies** | 12 | Town, Country, Fee Tenant Product Price, Voting Representative, Voting Representative Contact |
 | **Member Roles** | 4 | Role, User, Unit |
+
+A few columns are worth knowing about:
+
+- **Tags** on members and contacts puts the person's tag names, sorted, in one cell, and can be used as a filter.
+- **Address** is available on members and on companies, and a company also brings its **Town** and **Country** as related records.
+- **Is Voting Representative** and **Voting Representative Of** (members and contacts), and **Has Voting Representative** (companies), show who represents a company in votes.
+- **Personal ID Number Encrypted** (members and contacts) holds the personal identification number. Despite the name it is shown readable in the preview and in the file, and every preview or export that contains such values is written to the [activity log](/platform/logs), with the report name and who ran it.
 
 Every related record in that table is one the row belongs to: a single product,
 a single chapter, a single event. That is the whole of what a report can reach.
@@ -147,11 +185,22 @@ payer, so the row count stays honest. The same trick covers roles (start from
 
 ---
 
+## Reading a saved report
+
+Click a row in the list to open the report on its own page. It shows the saved
+report as a table, 50 rows to a page, with a row count, and **Delete**, **Download**
+and **Edit** buttons at the top. Click a column header to sort what you see; the
+sort here is a view only and is not saved (use Edit to change the saved order).
+Empty cells show a dash.
+
+---
+
 ## Downloading the file
 
 **Download** hands the report to a background worker rather than making you wait
 at the screen, so a report matching a hundred thousand members behaves the same
-as one matching ten.
+as one matching ten. You can start it from the list, from the report page or from
+the builder.
 
 A progress window opens and counts the rows as they are written. It updates
 live, and keeps checking on its own if the live connection drops, so the count
@@ -184,19 +233,20 @@ away from. Come back to it tomorrow and the link still works.
   name every month.
 
 Every download is written to the [activity log](/platform/logs) with the report
-name and who asked for it.
+name and who asked for it, and so is every save of a report.
 
 ---
 
 ## Saving, editing and re-running
 
-<img src="/images/platform/reports/reports-list.png" alt="The Reports list showing three saved reports named Member export by chapter, Event attendee contact list and Payments export by date, with columns for name, what each is based on, and when it was last updated, and download, edit and delete actions on each row. There is no owner column" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+The list at `/reports` shows each report's name, what it is based on, how many
+columns it has and when it was last updated. Each row has **View**, **Download**,
+**Edit** and **Delete** actions, and there is no owner column.
+
+<img src="/images/platform/reports/reports-list.png" alt="The Reports list with three saved reports, each showing what it is based on, its column count and when it was last updated, with the view, download, edit and delete actions on the row" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 Saving a report stores the definition, not the data. Open it again next month,
 press **Download**, and it runs against today's records.
-
-The list at `/reports` shows each report's name, what it is about, and when it
-was last updated, with actions to open, edit or delete it.
 
 Editing a saved report changes what the next export contains. It does not touch
 files you have already downloaded, and it does not reach back into an export
@@ -204,23 +254,17 @@ that is already running.
 
 <Warning>
 **Saved reports belong to the organisation, not to you.** Every report is
-visible to every `ADMIN_TENANT` administrator in your organisation, and any of
+visible to every organization admin in your organisation, and any of
 them can open it, run it, edit it and delete it. The list shows no owner column,
 so there is no way to tell from the screen who built a report, and a report you
 rely on every month can be changed or removed by a colleague without warning.
+The activity log does record who saved a report and when.
 
 This is how the feature is meant to work: reports are a shared library of the
 organisation's standard extracts rather than private saved searches. Name them
 so their purpose is obvious to somebody who did not build them, and treat a
 report you depend on as shared infrastructure.
 </Warning>
-
-<Note>
-**Download exports the last saved version of the report.** If you change columns
-or filters on screen and press **Download** without saving first, you get the
-file the saved report describes, not what is in front of you. Save, then
-download.
-</Note>
 
 ---
 
@@ -233,19 +277,21 @@ download.
 | Steps out to related records | 1 |
 | Related records joined | 6 |
 | Rows in the downloaded file | No limit |
-| Rows in the preview | 10 |
+| Rows in the builder preview | 10 |
+| Rows per page on a saved report's own page | 50 |
 
 ---
 
 ## How Reports differs from Ask Orgo and Database Queries
 
-Three features look adjacent on the sidebar and answer different questions.
+Three features look adjacent and answer different questions. Only the first is
+this page.
 
 | | What you do | What comes back |
 |---|---|---|
 | **Reports** | Fill in a form: one of seven record types, columns, filters | A CSV of the whole result set, downloaded again whenever you need it |
-| **[Ask Orgo](/platform/insights)** | Type a question in your own words | A one-off answer on screen, as a table or chart, from a language model |
-| **[Database Queries](/platform/insights)** | Re-run a statement Ask Orgo wrote earlier and you saved | The saved query's results, exported a page at a time |
+| **[Ask Orgo](/platform/insights#ask-orgo)** | Type a question in your own words | A one-off answer on screen, as a table or chart, from a language model |
+| **[Database Queries](/platform/insights#database-queries)** | Re-run a statement Ask Orgo wrote earlier and you saved | The saved query's results, exported a page at a time |
 
 **Database Queries** stores the statement Ask Orgo produced and replays it, so
 what it can answer is whatever the assistant managed to build that day. Reports
@@ -259,16 +305,18 @@ misread you. Reports involves no model at all: you choose the columns, so the
 same report gives the same shape of file every time. Use Ask Orgo to explore,
 and a report for the file you download every month.
 
+Both Reports and Ask Orgo need the organization admin permission. The built-in
+**Analytics** dashboards, also described in [Insights & Ask Orgo](/platform/insights),
+have their own access levels.
+
 ---
 
 ## Common questions
 
 <AccordionGroup>
   <Accordion title="Can I give Reports to an HR admin or a chapter admin?">
-    No. Every route and every endpoint behind Reports requires `ADMIN_TENANT`,
-    and the sidebar entry is placed in code rather than drawn from your
-    configurable menu, so it cannot be moved onto another role's menu. There is
-    no chapter-scoped version and no read-only version.
+    No. Every page and every action behind Reports requires the organization admin
+    permission. There is no chapter-scoped version and no read-only version.
 
     If a colleague needs the numbers regularly, build the report, download it and
     send them the file, or give them the [analytics
@@ -297,11 +345,11 @@ and a report for the file you download every month.
     can follow a longer path.
   </Accordion>
 
-  <Accordion title="Can I sort the report, or add a total row?">
-    Not in the builder. A report produces rows and columns; sorting, subtotals,
-    pivots and charts are spreadsheet work once the file is open. The one thing
-    worth deciding in Orgo is the filtering, because that is what keeps the file
-    to a size you can work with.
+  <Accordion title="Can I add a total row?">
+    Not in the builder. A report produces rows and columns, with one sort you
+    choose in the table; subtotals, pivots and charts are spreadsheet work once the
+    file is open. The one thing worth deciding in Orgo is the filtering, because
+    that is what keeps the file to a size you can work with.
   </Accordion>
 
   <Accordion title="Can I write a filter that means one thing or another?">
@@ -315,8 +363,9 @@ and a report for the file you download every month.
 
   <Accordion title="Somebody else edited, or deleted, my report">
     That is how saved reports work: they belong to the organisation, and every
-    organisation admin can open, edit and delete any of them. There is no owner
-    column and no per-report permission.
+    organization admin can open, edit and delete any of them. There is no owner
+    column and no per-report permission. The [activity log](/platform/logs) shows
+    who saved it last.
 
     Rebuild it and give it a name that says what it is for and who relies on it.
     If your organisation runs several standard extracts, agree a naming
@@ -359,6 +408,6 @@ and a report for the file you download every month.
 - [Insights & Ask Orgo](/platform/insights) for questions in plain language and the analytics dashboards
 - [Members](/platform/users) for the directory, its own filters and its paged export
 - [Membership fees](/platform/fees/fees) for the payment screens a payments report draws from
-- [Permissions](/platform/permissions) for what `ADMIN_TENANT` unlocks
+- [Permissions](/platform/permissions) for what the organization admin permission unlocks
 - [Activity log](/platform/logs) for the record of who downloaded what
 - [Email lists](/platform/emails/email-lists) for building a segment to send to, rather than a file to download

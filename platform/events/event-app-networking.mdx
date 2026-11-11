@@ -17,14 +17,14 @@ The **Networking** tab in the [Event App](/platform/events/event-app) is where a
 
 ## Turning it on
 
-Two switches on the event form, under **Features**:
+Two settings in the **More options** section of the event form:
 
 | Setting | Effect |
 |---|---|
-| **Visibility of attendee list** | Off, the roster is admin-only and there is no Networking tab. On, attendees see each other and the tab appears |
-| **Enable 1:1 networking** | Adds meeting booking on top of the directory. It cannot be switched on until the attendee list is visible |
+| **Visibility of attendee list** | **Only hosts**: the roster is for organisers only and there is no Networking tab. **Attendees**: attendees see each other and the tab appears |
+| **Enable 1:1 networking** | Adds meeting booking on top of the directory. It stays off and greyed out until the attendee list is set to **Attendees** |
 
-Editing them needs event ownership, `EVENT_LOCAL`, `EVENT_TENANT` or `ADMIN_TENANT`.
+Editing them needs the same permission as editing the event: ownership, event permission for the event's chapter, or organisation-wide event permission.
 
 ---
 
@@ -39,7 +39,7 @@ Attendees can search by name, filter by country, and filter to people they have 
 - One card per person, even if they hold several tickets.
 - Up to 500 people. Larger events show the first 500 by surname.
 
-Organisers (`ADMIN_TENANT`, `EVENT_TENANT`, `EVENT_LOCAL`) see the full roster in this tab too, including people who hid themselves, with phone and email unmasked regardless of the individual's privacy choices. The **Participants** tab is the same data in the administrative screen.
+Organisers (organisation admins and people with event permission, organisation-wide or for the event's chapter) see the full roster in this tab too, including people who hid themselves, with phone and email unmasked regardless of the individual's privacy choices. The **Participants** tab is the same data in the administrative screen.
 
 ---
 
@@ -57,17 +57,17 @@ Every attendee controls their own visibility from the **Profile** tab, and the c
 For members these are the same privacy flags as their normal Orgo profile, so a change made here also applies across the platform, and the other way round. For non-member attendees the flags live on their contact record.
 </Note>
 
-Attendees can also edit their photo, headline, bio, LinkedIn, Bluesky and town from the Profile tab. Name, email and phone values themselves are managed on the member or contact record, not here.
+Attendees can also edit their photo, first and last name, headline, **About** text, LinkedIn, Bluesky, X, Instagram and town from the Profile tab. **Organisation** and **Role** fields appear there too when the event asks attendees for them. The email address and phone number themselves are managed on the member or contact record, not here; the Profile tab only controls whether they are shown. An organiser can open an attendee's profile in the same editor to fix the details, but not their name, email or phone.
 
 ---
 
 ## Connections
 
-**Connect** sends a lasting connection request, the same relationship used elsewhere in Orgo, not just for this event. The recipient accepts or rejects it; the card shows Connect, Pending, Awaits you, or Connected. There is a fifth state: after a rejection the card shows a greyed-out, non-clickable **Connect** tag, visually near-identical to the live button.
+**Connect** sends a lasting connection request, the same relationship used elsewhere in Orgo, not just for this event. The recipient accepts or rejects it; the card shows **Connect**, **Pending**, **Awaits you**, or **Connected**.
 
 - Only members can send and receive connection requests. Non-member attendees do not have this button; 1:1 meetings are their equivalent.
 - One connection per pair of people.
-- Removing an accepted connection deletes it and the pair can connect again. Rejecting or withdrawing a pending one is effectively permanent from inside the Event App: the card keeps showing a greyed-out **Connect** and the request is refused, and the 21-day cooldown that applies elsewhere in Orgo never lifts here.
+- Removing an accepted connection deletes it and the pair can connect again.
 
 ---
 
@@ -105,7 +105,7 @@ Meetings are fixed **15-minute** slots.
 
 Spaces are the rooms or tables the meetings happen in. Without at least one space, no slot has capacity and nothing can be booked.
 
-Open the event and use **Networking spaces** in the event sidebar. The entry appears once **Enable 1:1 networking** is on, and only for people who can manage the event (event owner, `EVENT_LOCAL`, `EVENT_TENANT` or `ADMIN_TENANT`).
+Open the event and use **Networking spaces** in the event sidebar. The entry appears once **Enable 1:1 networking** is on, and only for people who can manage the event (the event owner, people with event permission for the chapter or organisation-wide, and organisation admins).
 
 <img src="/images/platform/events/event-app-networking-spaces.png" alt="Networking spaces admin screen listing spaces with name and capacity per slot, and the Add space form open" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -129,7 +129,7 @@ Scanning another attendee's badge QR code offers to save them. Saved people are 
 
 <AccordionGroup>
   <Accordion title="The Networking tab is not there">
-    **Visibility of attendee list** is off for that event. Turn it on in the event's Features section.
+    **Visibility of attendee list** is set to **Only hosts** for that event. Change it to **Attendees** under **More options** on the event form.
   </Accordion>
 
   <Accordion title="The tab is there but nobody can book anything">
@@ -159,6 +159,6 @@ Scanning another attendee's badge QR code offers to save them. Saved people are 
 
 - [Event App](/platform/events/event-app) - Access, login and the tab overview
 - [Event App: Program, feed and votes](/platform/events/event-app-feed) - The other in-event tabs
-- [Create Event](/platform/events/create-event) - Where the Features switches live
+- [Create Event](/platform/events/create-event) - Where the attendee list and networking settings live
 - [Event Attendance](/platform/events/attendance) - Registration statuses that grant access
 - [Privacy Settings](/platform/users/privacy-settings) - The member-level privacy flags this shares

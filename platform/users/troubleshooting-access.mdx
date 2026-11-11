@@ -32,7 +32,7 @@ and resetting passwords at random.
   </Step>
   <Step title="Check their status, not their fee">
     A paid fee does not grant access. Open **Members** → the member → **Edit** →
-    **Permissions** and read **Status**. Only **Active** permits a sign-in, while
+    **Membership status** and read **Status**. Only **Active** permits a sign-in, while
     the fee tab looks perfectly healthy either way. See
     [User statuses](/platform/users/statuses).
   </Step>
@@ -91,7 +91,7 @@ there names the real reason, and it is one of the reasons in the table above.
 </Note>
 
 Which method the login screen offers first is a setting: **Default to Password
-Login** (**Settings** → **Users & Profiles** → **Configuration**). Members can
+Login** (**Settings** → **Modules** → **Users & Profiles** → **Configuration**). Members can
 always switch to the other one.
 
 ---
@@ -101,7 +101,7 @@ always switch to the other one.
 | Status | What they see |
 |---|---|
 | **Unconfirmed email** | "Account not confirmed", with a resend button and a countdown of up to 5 minutes before a new confirmation email can be sent |
-| **New request** (Unapproved) | An account-not-approved message. Someone with `HR_LOCAL` has to approve them from the member directory. |
+| **New request** (Unapproved) | An account-not-approved message. A chapter HR manager has to approve them from the member directory. |
 | **Inactive** | The reactivation prompt, if **Allow Account Reactivation** is on. Accepting it moves them to New request and emails your admins for approval. If the setting is off, they are told to contact support. |
 | **Suspended** and everything else | "Your account is suspended/inactive, please contact support" |
 | **Awaiting referral** | They are sent back to the registration flow to finish collecting the referrals your organisation requires |
@@ -124,7 +124,7 @@ confirmed their email address.
 </Note>
 
 **Admin-initiated reset.** On the member's profile you can send them a
-password-reset email. It requires `HR_LOCAL` over their local group, works only
+password-reset email. It requires chapter HR rights over their local group, works only
 for the same four statuses, and is throttled to one per minute per member. Each
 send is written to the audit log against the administrator who sent it.
 
@@ -160,7 +160,7 @@ again.
 
 When the MFA module is on, everyone with tenant-level admin, HR or finance
 permissions has MFA forced on and cannot switch it off. Every other member has a
-switch on their own **Settings & Privacy** → **Multi Factor Authentication**
+switch on their own **Settings** → **Account and security** → **Multi Factor Authentication**
 page.
 
 The verification code is valid for 5 minutes, and a device that has passed the
@@ -178,8 +178,8 @@ the address change, and the member is signed out and must sign in with the new
 address.
 
 A member stuck halfway through this still has their old address. If they cannot
-receive mail at the old address at all, an admin with `ADMIN_LOCAL` over their
-local group (or `HR_TENANT`) sees a plain address field on the member's Email
+receive mail at the old address at all, a chapter admin over their
+local group (or an organization-wide HR manager) sees a plain address field on the member's Email
 settings instead of the two-step flow, and can change it directly.
 
 ---
@@ -204,5 +204,5 @@ first reply is always a request for them.
 - [User statuses](/platform/users/statuses) - what each status permits
 - [Deletion of account](/platform/users/deletion-of-account) - why a deleted account cannot sign in at all
 - [Resignation](/platform/users/resignation) - the departure that leaves the account working
-- [Permissions](/platform/permissions) - the permissions named on this page
+- [Permissions](/platform/permissions) - the permission levels named on this page
 - [Renewals](/platform/fees/renewals) - when the problem really is the fee

@@ -23,13 +23,13 @@ This is what your organization pays **Orgo**: five meters showing what you consu
 
 | Screen | Path | Permission |
 |---|---|---|
-| **Settings → Organization → Usage & Billing** | `/tenant/usage` | `ADMIN_TENANT` |
-| Subscription, cards and billing address | `/billing` | `FINANCIAL_TENANT` to open the route, `ADMIN_TENANT` to load anything |
+| **Settings → Organization → Usage & Billing** | `/tenant/usage` | Orgo administrators |
+| Subscription, cards and billing address | `/billing` | The route opens for organization finance managers, but the page only draws for organization admins |
 
-**Usage & Billing** is the everyday screen, and its sidebar entry only appears for `ADMIN_TENANT`. The subscription screen has no sidebar entry at all: you reach it from the warning link in the top bar when something needs attention (payment details missing, trial ending, trial expired, subscription cancelled, payment failed). That link is also admin-only.
+**Usage & Billing** is the everyday screen, and its sidebar entry only appears for Orgo administrators. It needs the **Orgo administrator** flag on your account, not only an admin permission: an organization admin without the flag has neither the sidebar entry nor the page. See [Permissions](/platform/permissions). The subscription screen has no sidebar entry at all: you reach it from the warning link in the top bar when something needs attention (payment details missing, trial ending, trial expired, subscription cancelled, payment failed). That link is also admin-only.
 
 <Warning>
-  The `/billing` route admits `FINANCIAL_TENANT`, but every piece of data behind it requires `ADMIN_TENANT`. A finance-only user opens the page and sees nothing at all.
+  The `/billing` route admits organization finance managers, but the page itself draws nothing unless you are an organization admin. A finance-only user opens the page and sees nothing at all.
 </Warning>
 
 <img src="/images/platform/usage-billing/usage-meters.png" alt="Resource usage cards for users, storage, emails, contacts and API requests, each with a progress bar and a percentage" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
@@ -156,7 +156,7 @@ A failed payment opens a dialog on this screen with a **Pay now** button, which 
 
 If your organization is on a paid plan with no Stripe subscription, and is not on a manual arrangement, Orgo restricts access until that is resolved:
 
-- **Tenant admins** land on the subscription screen, where the plan, card and billing address can be completed.
+- **Organization admins** land on the subscription screen, where the plan, card and billing address can be completed.
 - **Everyone else** sees a short notice saying access is restricted because of incomplete billing details or unpaid invoices, and telling them to contact their administrator.
 
 ---
@@ -183,7 +183,7 @@ If your organization is on a paid plan with no Stripe subscription, and is not o
     The list shows the 100 most recent finalized invoices and excludes drafts and voided ones. For anything older, contact Orgo.
   </Accordion>
   <Accordion title="I can open the subscription page but it is blank">
-    The subscription data requires `ADMIN_TENANT`. `FINANCIAL_TENANT` is enough to open the route but not to load anything on it.
+    The subscription page only shows its content to organization admins. The finance permission is enough to open the address but not to see anything on it.
   </Accordion>
   <Accordion title="Everyone is being redirected to a billing notice">
     The organization is on a paid plan with no active subscription. An admin needs to open the subscription screen from the top-bar link, add a card and a billing address, and activate.
@@ -200,6 +200,7 @@ If your organization is on a paid plan with no Stripe subscription, and is not o
 
 ## Related
 
+- [Organization Settings](/platform/organisation)
 - [Organization info](/platform/organisation/organisation-info)
 - [Modules](/platform/organisation/modules)
 - [Membership fees](/platform/fees/fees)

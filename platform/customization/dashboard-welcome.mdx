@@ -12,17 +12,19 @@ description: 'A rich-text greeting at the top of the dashboard, optionally diffe
 
 The welcome message sits at the top of the dashboard. It is rich text with images and personalization placeholders. Every organization has one general message, and organizations that use user types can add more, each aimed at specific types.
 
-<img src="/images/platform/customization/dashboard-welcome.png" alt="Welcome Messages by User Type page with the Create New Message button and the Hide welcome message toggle above three cards: the Default message tagged All other users, and two messages tagged Volunteer and Student Member, each with a Sticky switch, an edit button and, on the non-default ones, a delete button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
 **Settings → Customization → Dashboard Welcome**
 
 <Note>
-  Requires **ADMIN_TENANT**. The page is headed **Welcome Messages by User Type**.
+  Requires the **Orgo administrator** flag. The page is headed **Welcome Messages by User Type**. The same screen is one click away from the dashboard itself: an administrator sees a pencil on the welcome card.
 </Note>
 
 ---
 
 ## Writing the message
+
+<img src="/images/platform/customization/dashboard-welcome.png" alt="Welcome Messages by User Type, with the Hidden and One message mode buttons at the top, Create New Message beside them, and the organisation's default message open in the editor below" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+An organization that has no message yet sees **Your members currently see no welcome message**, with Orgo's standard message shown for reference and two buttons: **Use this message**, which saves the standard text as your general message, and **Write my own**. Once a general message exists, **Restore standard message** on its card puts the standard text back in place (after a confirmation), without ever leaving members with nothing.
 
 <Steps>
   <Step title="Open the message card and click edit">
@@ -41,7 +43,7 @@ The welcome message sits at the top of the dashboard. It is rich text with image
     On a non-default message, add user types from the dropdown. See targeting below.
   </Step>
   <Step title="Save">
-    The message is live immediately.
+    The message is live immediately. **Cancel** closes the editor without saving.
   </Step>
 </Steps>
 
@@ -61,23 +63,23 @@ Write them exactly as shown, with no spaces inside the braces. The editor's own 
 
 ## Targeting by user type
 
-The **Create New Message** button appears only when your organization uses user types. Without them there is a single message for everyone and nothing to target.
+**Create New Message** (top right, once at least one message exists) starts an extra message. It only reaches anyone when it is assigned user types, so it is useful on organizations that use user types.
 
-- The **Default** message is tagged as such and labelled **All other users**. It is the fallback for anyone whose user type has no message of its own. It cannot be deleted.
-- Any other message carries a list of user type tags. Assignment is exclusive: adding a user type to one message removes it from whichever message held it before, so a member is never matched by two.
-- A non-default message with no user types assigned shows **No user types assigned** and reaches nobody.
+- The **Default** message is tagged as such and labelled **All other users** (or **All members** when you do not use user types). It is the fallback for anyone whose user type has no message of its own. It cannot be deleted.
+- Any other message carries a list of user type tags, added from the **Add** dropdown in edit mode. Assignment is exclusive: adding a user type to one message removes it from whichever message held it before, so a member is never matched by two.
+- A non-default message with no user types assigned shows **Nobody sees this message**.
 
 ### Which message a member sees
 
-| Situation | Result |
-|---|---|
-| **Hide welcome message** is on | No message, for anyone |
-| The member's user type has its own message | That message |
-| ...and **Show general and user type messages** is on | The general message first, then the user-type one |
-| The member's user type has no message, or user types are not in use | The general message |
-| No message exists at all | Nothing renders |
+The row of buttons at the top of the page chooses what members get:
 
-Both switches sit at the top of the page. **Show general and user type messages** only appears once at least one user-type message exists.
+| Setting | Meaning |
+|---|---|
+| **Hidden** | No member sees a welcome message |
+| **One message** | Each member sees the message for their user type, or the default one |
+| **Default + user type** | Members with a user type message see it below the default one. Offered only when user types are in use and at least one message is assigned to a type |
+
+Within **One message**: a member whose user type has its own message sees that one; a member whose type has none, or any member when user types are not in use, sees the general message; and if no message exists at all, nothing renders.
 
 ---
 
@@ -85,7 +87,7 @@ Both switches sit at the top of the page. **Show general and user type messages*
 
 Each saved message has a **Sticky** toggle, and the help text says it plainly: *if activated, the message is always visible and cannot be closed by users*.
 
-A non-sticky message has a close button. Once a member closes it, it stays hidden for them across sessions, on every message that is not sticky. That preference is per member and is not reset when you edit the text.
+A non-sticky message has a close button. Once a member closes it, it stays hidden for them across sessions, and closing one hides every message that is not sticky, not just that one. That preference is per member and is not reset when you edit the text.
 
 <Warning>
   Editing a non-sticky message does not bring it back for members who already dismissed it. For an announcement that must be read, make it sticky, or use a [notification](/platform/notifications) or the [newsletter](/platform/newsletter).
@@ -112,7 +114,7 @@ A non-sticky message has a close button. Once a member closes it, it stays hidde
 
 <AccordionGroup>
   <Accordion title="No welcome message appears on the dashboard">
-    Check **Hide welcome message** is off, that a message exists, and that its content is not empty (the card shows **No content yet** when it is). If you use user types, check the reader's type is either assigned to a message or covered by the default.
+    Check the setting at the top is not **Hidden**, that a message exists, and that its content is not empty (the card preview shows **No content yet** when it is). If you use user types, check the reader's type is either assigned to a message or covered by the default.
   </Accordion>
   <Accordion title="Some members see it and others do not">
     Almost always a dismissal. Non-sticky messages stay closed once a member closes them. Turn on **Sticky** to make it unclosable.
@@ -130,7 +132,7 @@ A non-sticky message has a close button. Once a member closes it, it stays hidde
     Not supported: targeting is by user type only. Either use `{organizationName}` and keep the message generic, or send local announcements through [notifications](/platform/notifications) or a [newsletter](/platform/newsletter) segmented by local center.
   </Accordion>
   <Accordion title="I want to delete the default message">
-    You cannot. Blank its content, or turn on **Hide welcome message** to suppress all messages at once.
+    You cannot. Replace its text with **Restore standard message**, or choose **Hidden** to suppress all messages at once.
   </Accordion>
 </AccordionGroup>
 
@@ -138,7 +140,7 @@ A non-sticky message has a close button. Once a member closes it, it stays hidde
 
 ## Related
 
-- [Dashboard Organizer](/platform/customization/dashboard-organizer) - the rest of the dashboard
+- [Dashboard builder](/platform/customization/dashboard-organizer) - the rest of the dashboard, including where the welcome message sits
 - [User Types](/platform/users/user-types) - the types you target messages at
 - [Notifications](/platform/notifications) - for time-sensitive messages
 - [Newsletter](/platform/newsletter) - for anything that has to reach inboxes

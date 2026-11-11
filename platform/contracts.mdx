@@ -17,7 +17,7 @@ E-Documents lets you write a document once as a template, fill it with member da
 
 ## Turning it on
 
-**Settings → Modules → Files & eDocuments → eDocuments**, then **Enable eDocuments Module**. Module settings require `ADMIN_TENANT`.
+**Settings → Modules → Files & eDocuments → eDocuments**, then **Enable eDocuments Module**. Module settings are for the Orgo administrator.
 
 | Setting | What it does |
 |---|---|
@@ -25,7 +25,7 @@ E-Documents lets you write a document once as a template, fill it with member da
 | **Enable Groups** | Ties each template to one group, which changes who sees it and who may assign it |
 | **Membership Card Contract** | Marks one template as the membership card document, adding a **Print status** column and a **Mark as printed** action on that template's list |
 
-Day-to-day work lives at **eDocuments** in the admin menu (`HR_TENANT`), with **Documents** and **Templates** tabs. `ADMIN_TENANT` satisfies every `HR_TENANT` check.
+Day-to-day work lives at **eDocuments** in the admin menu, open to organization HR managers, with **Documents** and **Templates** tabs. Organization admins satisfy every HR check.
 
 ---
 
@@ -35,7 +35,7 @@ Day-to-day work lives at **eDocuments** in the admin menu (`HR_TENANT`), with **
 
 Each card shows the name, group, signing method (on screen or file upload), duration in months and document count; selecting one opens the editor. The same cards under **Settings → Files & eDocuments → eDocuments Templates** also get **Clone**, which copies the template with the name prefixed `Copy `.
 
-Creating a template requires `ADMIN_TENANT`; editing, cloning and deleting require `HR_TENANT`.
+Creating a template is for the Orgo administrator; editing, cloning and deleting need organization HR.
 
 ### Settings tab
 
@@ -56,7 +56,7 @@ Creating a template requires `ADMIN_TENANT`; editing, cloning and deleting requi
 | **Infinite contract duration** | The document never expires |
 | **Contract duration in number of months** | 1 to 60 months from the signing date |
 
-**Delete template** refuses once any document from it has been signed. **Cancel all signed** (`ADMIN_TENANT`) instead cancels every outstanding document from that template and asks everyone to sign again.
+**Delete template** refuses once any document from it has been signed. **Cancel all signed**, for organization admins, instead cancels every outstanding document from that template and asks everyone to sign again.
 
 ### Document content tab
 
@@ -87,11 +87,11 @@ The two end dates are not the same tag. `{dateValidityEnd}` prints the validity 
 
 In the **Documents** tab, **Start document** opens a panel with three fields: the template (shown only when more than one exists), a **Search member** autocomplete across members and [contacts](/platform/contacts), and validity. **Contract validity date start** defaults to today, and the end date comes from the template duration unless you switch on **Custom contract validity date end**.
 
-Assigning to someone else requires `HR_TENANT`, or `HR_LOCAL` when the template's associated group belongs to a local center. Members can always start their own document from their profile.
+Assigning to someone else needs organization HR, or chapter HR when the template's associated group belongs to a chapter. Members can always start their own document from their profile.
 
 ### Public links
 
-Two buttons produce a link that works without an Orgo login: **Generate public link** on a template creates a blank invitation (the visitor gives a name and email, which creates a contact, then signs), and **Share** on a pending row links to that one document. Both live at `/public/document/<hash>` and **expire 72 hours** after creation. Creating one requires `HR_TENANT` unless it is for yourself. Every link for a document is deleted as soon as that document is signed.
+Two buttons produce a link that works without an Orgo login: **Generate public link** on a template creates a blank invitation (the visitor gives a name and email, which creates a contact, then signs), and **Share** on a pending row links to that one document. Both live at `/public/document/<hash>` and **expire 72 hours** after creation. Creating one needs organization HR unless it is for yourself. Every link for a document is deleted as soon as that document is signed.
 
 ---
 
@@ -112,13 +112,13 @@ A nightly job moves signed documents to **Expired** the day after their validity
 
 <img src="/images/platform/features/e-documents-list.png" alt="Documents tab with name search, template and group filters, status pills, and a table of documents showing member, signature date, validity and status" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-Filter by member name, template, group and status. The table shows document ID, member, template, group, signature date, validity and status. Every row carries **View** and **Open document**; **Share** appears on pending rows, **Download PDF** once a signed PDF exists, and **Delete** for `HR_TENANT`.
+Filter by member name, template, group and status. The table shows document ID, member, template, group, signature date, validity and status. Every row carries **View** and **Open document**; **Share** appears on pending rows, **Download PDF** once a signed PDF exists, and **Delete** for organization HR managers.
 
 <img src="/images/platform/features/e-document-detail-panel.png" alt="Document side panel showing status, member, created and signing dates, validity, and a history timeline with Revoke and Open document actions" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 **View** opens a side panel with the member, the dates, the validity and a **History** timeline. **Revoke** appears there for signed documents when the template has **Enable signature cancellation** on, and **Download PDF** once the signed PDF has been generated.
 
-Three more admin actions on a single document, all `HR_TENANT`: **Modify document text** (edits this copy before it is completed), **Mark as signed** (records an offline signature with your own start and end dates), and countersigning, by drawing a signature or with **Sign with default signature**.
+Three more admin actions on a single document, all for organization HR managers: **Modify document text** (edits this copy before it is completed), **Mark as signed** (records an offline signature with your own start and end dates), and countersigning, by drawing a signature or with **Sign with default signature**.
 
 ---
 
@@ -134,7 +134,7 @@ On a signing template, the screen shows the document beside a short form for wha
 
 **Mandatory document** shows the member an onboarding step listing everything they still have to sign, and holds them there until they do. A document is outstanding when it has never been signed, is waiting for the administrator signature, or its validity has ended. Tenant HR admins are exempt.
 
-Separately, **Settings → Modules → Payments & Fees → Membership Fees → Require Contract for Membership** blocks paying the membership fee until the template named in **Membership Contract Document ID** has been validly signed.
+Separately, **Settings → Modules → Payments & Fees → Membership Fees → Require Contract for Membership** blocks paying the membership fee until the template named in **Membership Contract Document ID** has been validly signed. What counts as validly signed, including the countersignature case, is on [E-Documents](/platform/e-documents#when-a-document-counts-as-validly-signed).
 
 ---
 
@@ -144,4 +144,4 @@ Separately, **Settings → Modules → Payments & Fees → Membership Fees → R
 - [Files](/platform/files) - general document storage and sharing
 - [Custom Fields](/platform/users/custom-fields) - the fields you can pull into a template
 - [Adhesion](/platform/users/adhesion) - the separate membership application document
-- [Permissions](/platform/permissions) - what `HR_TENANT` and `ADMIN_TENANT` unlock
+- [Permissions](/platform/permissions) - what the HR and Admin permissions unlock

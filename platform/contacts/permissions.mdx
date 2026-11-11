@@ -1,10 +1,10 @@
 ---
 title: 'Contact Permissions & Data Protection'
-description: 'Who can see, edit, export and delete contacts, and what the product does and does not give you for a data-protection request'
+description: 'Who can see, edit, email, export and delete contacts, and how a data-protection request is answered'
 "og:title": 'Contact Permissions & Data Protection | Orgo'
-"og:description": 'Who can see, edit, export and delete contacts, and what the product does and does not give you for a data-protection request'
+"og:description": 'Who can see, edit, email, export and delete contacts, and how a data-protection request is answered'
 "twitter:title": 'Contact Permissions & Data Protection | Orgo'
-"twitter:description": 'Who can see, edit, export and delete contacts, and what the product does and does not give you for a data-protection request'
+"twitter:description": 'Who can see, edit, email, export and delete contacts, and how a data-protection request is answered'
 ---
 
 Contacts hold personal data about people who never signed up for an account: donors,
@@ -19,7 +19,7 @@ This page assumes the permission model on [Permissions](/platform/permissions): 
 permission is a domain (HR, Financial, Admin) paired with a scope (organisation, regional,
 chapter). Only the contact-specific parts are covered here.
 
-<img src="/images/platform/contacts/contacts-settings.png" alt="Contacts module settings showing the Enable Contacts Module, Enable Contact Statuses and Enable Per-Chapter Contacts switches" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/contacts/contacts-settings.png" alt="Contacts module configuration with the Enable Contacts Module switch on, contact statuses enabled and per-chapter contacts disabled, each with its explanation" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
@@ -33,19 +33,28 @@ chapter). Only the contact-specific parts are covered here.
 | Edit a contact | The same, on that contact |
 | Delete one contact | The same, on that contact |
 | Bulk delete from the list | HR or Financial, at any scope |
-| Export the contact list to CSV | `HR_TENANT` or `ADMIN_TENANT` only |
-| Manage tags on a contact | `HR_TENANT` or `ADMIN_TENANT` |
-| Subscribe or unsubscribe a contact from the newsletter | `HR_TENANT` or `ADMIN_TENANT` |
-| Email contacts | Communication Manager, through a campaign. There is no per-contact send |
-| Write a note on a contact | HR or Financial, on that contact |
-| Edit or delete a note | The note's author, or `ADMIN_TENANT` |
-| Reveal a stored personal identification number | `HR_TENANT`, `FINANCIAL_TENANT` or `ADMIN_TENANT` |
+| Export the contact list to CSV | Organisation-wide HR managers, or organisation admins |
+| Manage tags on a contact | Organisation-wide HR managers, or organisation admins |
+| Subscribe or unsubscribe a contact from the newsletter | Organisation-wide HR managers, or organisation admins |
+| Send one email to one contact (**Send an email** on the record) | Communication permission over the contact's chapter. Organisation-wide Communication managers and organisation admins qualify for every contact |
+| Email many contacts | Communication Manager, through a campaign |
+| Write a note on a contact | HR or Financial, on that contact, with **Enable Profile Notes & Activity** switched on |
+| Edit or delete a note | The note's author, or an organisation admin |
+| Reveal a stored personal identification number | Organisation-wide HR managers, organisation-wide financial managers or organisation admins |
+| See the **Email logs** card on a record | Organisation-wide Communication managers, or organisation admins |
 
-Emailing is not a contact permission at all. Contacts are reached in bulk through
-[newsletter campaigns](/platform/newsletter), which are governed by the Communication
-Manager domain. Someone can hold Communication Manager and send to your whole contact
-audience without ever being able to open a single contact record, and the reverse is
-equally true.
+Emailing many contacts is not a contact permission at all. Contacts are reached in bulk
+through [newsletter campaigns](/platform/newsletter), which are governed by the
+Communication Manager domain. Someone can hold Communication Manager and send to your
+whole contact audience without ever being able to open a single contact record, and the
+reverse is equally true.
+
+The one-to-one **Send an email** button is the exception. It sits on the contact record, it needs an email address on the contact, and it checks Communication
+permission over the contact's chapter rather than HR or Financial. A message sent this
+way carries your organisation's branding and an unsubscribe link, is refused for a
+contact who has unsubscribed, and is limited to 30 sends an hour per administrator. Each
+send is recorded, and shows on the contact's Activity feed when **Enable Profile Notes &
+Activity** is on.
 
 ---
 
@@ -53,27 +62,27 @@ equally true.
 
 Every contact screen asks for the same thing: HR or Financial permission on the chapter.
 Written out, that sounds like two narrow chapter-level grants. It is not. Because a
-permission held higher up satisfies a check lower down, and because Admin covers the other
-domains at the same level, **nine different permissions open the contact list**:
+permission held higher up satisfies a check lower down, and because Admin satisfies
+chapter-level checks, **nine different permissions open the contact list**:
 
 | Permission | Why it satisfies the check |
 |---|---|
-| `ADMIN_TENANT` | Passes every permission check in the product |
-| `HR_TENANT` | Organisation scope satisfies the same domain at chapter scope |
-| `FINANCIAL_TENANT` | The same, on the Financial side |
-| `ADMIN_PARENT_LOCAL` | Admin covers every regional and local permission in its branch |
-| `ADMIN_LOCAL` | Admin covers every local permission in its chapter |
-| `HR_PARENT_LOCAL` | Regional HR includes chapter HR |
-| `HR_LOCAL` | Named directly by the check |
-| `FINANCIAL_PARENT_LOCAL` | Regional Financial includes chapter Financial |
-| `FINANCIAL_LOCAL` | Named directly by the check |
+| Organisation admin | Passes every permission check in the product |
+| Organisation-wide HR manager | Organisation scope satisfies the same domain at chapter scope |
+| Organisation-wide financial manager | The same, on the Financial side |
+| Regional admin | Admin covers every regional and chapter permission in its branch |
+| Chapter admin | Admin covers the chapter-level checks in its own chapter |
+| Regional HR manager | Regional HR includes chapter HR |
+| Chapter HR manager | Named directly by the check |
+| Regional financial manager | Regional Financial includes chapter Financial |
+| Chapter financial manager | Named directly by the check |
 
 <Warning>
 Granting a permission that sounds unrelated to contacts still grants the contact list.
-`ADMIN_LOCAL` for a chapter secretary, `FINANCIAL_PARENT_LOCAL` for a regional treasurer,
-`HR_TENANT` for a membership officer: all three open contacts. If the contact directory
-holds donor or subscriber data you would not hand to those people, decide that before you
-tick the box, not afterwards.
+Chapter admin for a chapter secretary, regional financial manager for a regional
+treasurer, organisation-wide HR manager for a membership officer: all three open
+contacts. If the contact directory holds donor or subscriber data you would not hand to
+those people, decide that before you tick the box, not afterwards.
 </Warning>
 
 **HR Assistant does not reach contacts.** It is the one HR-family permission that does not,
@@ -103,8 +112,8 @@ their own. This needs **two** settings switched on together:
 
 Both on, and scoping applies:
 
-- Organisation-scope managers (`HR_TENANT`, `FINANCIAL_TENANT`, `ADMIN_TENANT`) see every
-  contact, including contacts with no chapter.
+- Organisation-scope managers (organisation-wide HR and financial managers, and
+  organisation admins) see every contact, including contacts with no chapter.
 - Everyone else sees only contacts in the chapters they cover. Someone who covers no
   chapter sees an empty list rather than an error.
 - Creating a contact files it under the creator's own chapter by default, and a
@@ -114,7 +123,7 @@ Both on, and scoping applies:
 
 <Warning>
 **With Per-Chapter Contacts off, chapter-scoped administrators get no contacts at all**,
-rather than a scoped view. `HR_LOCAL` and `FINANCIAL_LOCAL` holders are refused the list,
+rather than a scoped view. Chapter HR and chapter financial managers are refused the list,
 the record and every write. Only organisation-scope managers keep access. Turning the
 setting off to "simplify things" therefore removes contacts from your chapter teams
 entirely.
@@ -130,7 +139,8 @@ organisation-scope managers until someone files them.
 ## CSV export, and what is recorded
 
 Export is the one contact action that does not follow the nine-permission rule. **It
-requires `HR_TENANT` or `ADMIN_TENANT`.** A chapter or regional administrator who can read
+requires an organisation-wide HR manager or an organisation admin.** The **Download CSV**
+button is hidden from everyone else. A chapter or regional administrator who can read
 every contact on screen still cannot export them, and adding a chapter filter to the
 request does not change that.
 
@@ -146,7 +156,7 @@ happened. If your controls depend on knowing when the directory left the product
 tokens and connected apps as their own control point, and scope them narrowly.
 </Note>
 
-The report builder is a second export route. It is `ADMIN_TENANT` only, it can include
+The report builder is a second export route. It is for organisation admins only, it can include
 contacts and their payments, tags and custom fields, and its exports are recorded too. See
 [Reports](/platform/reports).
 
@@ -161,7 +171,7 @@ description of the mechanics, not as advice about your obligations.
 
 A contact record holds name and middle name, email, phone, address, town and country, date
 of birth, gender, a personal identification number, a bio, employer and role, social
-profiles, company details, tags, status, source, notes, custom field answers, and links to
+profiles, company details, tags, status, source, staff notes, custom field answers, and links to
 payments, invoices, form submissions and event registrations.
 
 **Of everything on a contact, only the personal identification number is encrypted at
@@ -170,8 +180,9 @@ Individual custom fields can be marked as encrypted, one field at a time, but th
 opt-in and off unless someone set it.
 
 The personal identification number is never returned by the normal record; the record only
-says whether one exists. Reading the value has a single door, restricted to `HR_TENANT`,
-`FINANCIAL_TENANT` and `ADMIN_TENANT`, and every reveal is recorded with who did it, when,
+says whether one exists. Reading the value has a single door, restricted to
+organisation-wide HR managers, organisation-wide financial managers and organisation
+admins, and every reveal is recorded with who did it, when,
 and from where. If that record cannot be written, the reveal is refused.
 
 ### Identity documents
@@ -184,22 +195,69 @@ identity as holding considerably more sensitive data than the record on screen s
 
 ### What you can do for a data-protection request
 
-- **Produce a copy of what you hold.** There is no "download everything about this person"
-  button. What exists is the contact record itself, which shows notes, activity, payments,
-  invoices, event registrations and custom field answers on one screen, and the CSV export,
-  which covers the directory fields but not notes, payments or emails. Assembling a full
-  answer means reading the record and copying from it.
+- **Produce a copy of what you hold: ask the Orgo team.** There is a complete export for
+  one person, but it is a command that an Orgo operator runs on the server, not a button
+  an administrator can click. See [Subject access export](#subject-access-export) below.
+  Inside the product, the contact record shows notes, activity, payments, invoices, event
+  registrations and custom field answers on one screen, and the CSV export covers the
+  directory fields but not notes, payments or emails. Assembling a full answer yourself
+  means reading the record and copying from it.
 - **Correct data.** Edit the record, in the normal way.
 - **Stop email.** Unsubscribe the contact, or let them use the unsubscribe link in any
   campaign. This does not remove the record.
-- **Clear the personal identification number** by saving an empty value on the record.
+- **Clear the personal identification number.** The edit form cannot do it: leaving the
+  field empty keeps the stored value. Overwrite it with a different value, or ask a
+  developer to clear it through the [API](/platform/api).
 - **Delete the contact**, subject to the limit below.
+
+### Subject access export
+
+When a person asks for everything you hold about them, Orgo can produce it. This is **not
+a screen in the product and no organisation administrator can run it.** It is a console
+command, `app:gdpr:export-person`, which only an Orgo operator with server access can
+run. Forward the request to the Orgo team through [Orgo support](/platform/orgo-support)
+and say which contact (or member) it is about.
+
+What the command does:
+
+- **One person per run.** The operator names either a contact or a member, plus the
+  organisation the person belongs to. If the two do not match, nothing is exported, which
+  guards against pulling the wrong person from a mistyped number.
+- **It follows a linked member account.** If a member account was created from the
+  contact and is still linked to it, both are exported. A contact that was merged into a
+  member no longer exists as a separate record: its history is part of the member's file.
+- **What the data file holds for a contact:** profile (name, email, phone, birth date,
+  gender, personal identification number in readable form, address, town, country,
+  chapter, status, source, organisation, role, company details, bio, social profiles,
+  newsletter state, created date), identity documents, custom field answers, event
+  registrations, contracts, form submissions, invoices, payments, subscriptions, and
+  whether the person took part in votes. A member's file adds roles, membership
+  applications, course enrolments and membership fee payments.
+- **Files:** the profile photo, identity scans and signature, signed contracts, files
+  uploaded as custom field or form answers, invoice PDFs, and for a member the
+  application attachments and personal drive. The operator can leave files out.
+- **What it leaves out:** other people's personal data (staff who handled the record, or
+  whoever booked or paid for the person), the content of ballots, and security and
+  technical records such as login history, access tokens, device identifiers and
+  payment-provider references.
+- **Staff notes are left out by default.** They are added only if the operator is told to,
+  and that is your decision as the data controller, not Orgo's.
+- **The result is one encrypted ZIP.** It is protected with a random password that is
+  shown once and not stored. Send the file and the password to the person through
+  different channels.
+- **Each run is recorded** against the person. If the file carries a personal
+  identification number, a personal-identification-number export is recorded as well.
+
+The file opens with a statement that your organisation is the controller of the data and
+gives the contact address your organisation set in its settings, so the person knows whom
+to write to about correction or erasure. It also states the number of months your
+organisation keeps inactive member accounts, if it has set one.
 
 ### What the product does not do
 
-- **There is no anonymisation.** Nothing replaces a contact's details with placeholders
-  while keeping the record. Deletion is a real deletion of the row, not a flag, and it
-  cannot be undone.
+- **There is no anonymisation for contacts.** Nothing replaces a contact's details with
+  placeholders while keeping the record. Deletion is a real deletion of the row, not a
+  flag, and it cannot be undone. (Member accounts are different: see the next point.)
 - **Deletion is refused while the contact has any payment, invoice or contract.** There is
   no option to erase the person and keep the financial record. For most organisations this
   means a contact who has ever paid you anything, a donor, a ticket buyer, an invoiced
@@ -211,8 +269,11 @@ identity as holding considerably more sensitive data than the record on screen s
   identification number. Export anything you need to keep before deleting.
 - **Deletion does not reach data already sent elsewhere**, such as email logs, records
   synced to a connected CRM, or payloads already delivered to your webhooks.
-- **There is no retention policy and no automatic expiry.** Contacts, notes and log entries
-  stay until somebody removes them. Nothing ages out on its own.
+- **Contacts never expire on their own.** Contacts, notes and log entries stay until
+  somebody removes them. The automatic erasure that exists is for member accounts only:
+  **Erase Inactive or Deleted Accounts After** under **Settings** → **Modules** →
+  **Users & Profiles**, off until an Orgo administrator picks a period. It never touches a
+  contact.
 - **Consent is a single switch.** Newsletter subscription is subscribed, unsubscribed, or
   never asked. There is no consent timestamp, no record of where consent came from, and no
   per-purpose consent on a contact.
@@ -241,13 +302,14 @@ Some, but not all, of what happens to a contact is written to the audit log.
 
 Two more limits are worth knowing. Nothing is logged for changes made by an import, by an
 automation, or by any unauthenticated flow such as a public form or a donation checkout, so
-a field that changed by itself changed through one of those. And demo organisations write
+a field that changed by itself changed through one of those. The one exception is the
+unsubscribe link in an email, which writes its own entry. And demo organisations write
 no log entries at all.
 
 <Warning>
 **The field-change history is written, but no screen presents it.** The Activity card on a
 contact record deliberately leaves field edits out; it shows notes, tags, donations, form
-submissions and personal identification number changes. The
+submissions, emails sent from the record and personal identification number changes. The
 [Activity Log](/platform/logs) screen, which does show before and after values, exists for
 members and not for contacts. So "who changed this contact's email address" is recorded but
 not answerable from the product interface.
@@ -284,14 +346,16 @@ not answerable from the product interface.
     them from email, clear the personal identification number, and remove notes and any
     detail you do not need to keep. The record and its financial history stay.
 
-    A bulk delete from the list can also stop on the same rule. If a selection includes one
-    contact with a payment, deal with that one separately rather than retrying the batch.
+    A bulk delete from the list applies the same rule to each contact separately. Contacts
+    with a payment, invoice or contract are skipped and the rest are deleted; the
+    confirmation message reads **Deleted** with a count, and **Skipped** with a count when
+    any were left behind. Read the skipped number: those records are still there.
   </Accordion>
 
   <Accordion title="Who exported the contact list?">
     Every CSV export writes an entry to the [Activity Log](/platform/logs) naming the
     person, the time, and the exact request including any filters. Reading that log needs
-    `ADMIN_TENANT`. Report builder exports are recorded too.
+    an organisation admin. Report builder exports are recorded too.
 
     Two gaps to keep in mind. Contacts pulled through the API, a connected app or an
     assistant over MCP are ordinary reads and produce no export entry, so the log answers
@@ -302,8 +366,8 @@ not answerable from the product interface.
 
   <Accordion title="A member says they can see a contact's details">
     Ordinary members have no access to the contact directory, so check what the member
-    actually holds on their **Permissions** tab. `ADMIN_LOCAL` and `FINANCIAL_LOCAL` both
-    open contacts even though neither is labelled HR, and a permission attached to their
+    actually holds on their **Permissions** tab. Chapter admin and chapter financial
+    manager both open contacts even though neither is labelled HR, and a permission attached to their
     role counts the same as one ticked on their profile. See
     [Assigning Permissions](/platform/permissions-assigning).
 
@@ -326,3 +390,4 @@ not answerable from the product interface.
 - [Activity Log](/platform/logs) - where export and audit entries are read
 - [Identity Validation](/platform/identity-validation) - identity documents attached to a contact
 - [Reports](/platform/reports) - the second export route, and who can use it
+- [Orgo Support](/platform/orgo-support) - where to send a subject access request for the export

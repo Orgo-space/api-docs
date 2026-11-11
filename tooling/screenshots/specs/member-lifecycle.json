@@ -6,15 +6,17 @@
       "platform/users/statuses.mdx"
     ],
     "tenant": "t187c",
-    "route": "/users/edit/209212?tab=permissions",
-    "routeHint": "Members -> open any member -> Edit -> Permissions tab. The Status select is the first field on that tab, top left, next to the 'Record the resignation of this member' button when the resignation module is on.",
+    "route": "/user/209212",
+    "routeHint": "Members -> open any member -> Edit -> Permissions tab. The Status select is the first field on that tab, top left, next to the 'Record the resignation of this member' button when the resignation module is on. UPDATED 2026-11-11: /users/edit/<id>?tab=permissions redirects to /user/<id>?tab=edit&section=access and there is no 'Record the resignation of this member' text there any more. The status control is now the chip beside the member's name in the rebuilt profile header, which opens the list of statuses. Diagnose before trusting the click: 'Active' is a common word on that page and the click may need scoping to the chip.",
     "actions": [
-      "click text=Permissions"
+      "wait 3000",
+      "click text=Active",
+      "wait 1500"
     ],
-    "waitFor": "text=Record the resignation of this member",
+    "waitFor": "text=Inactive",
     "viewport": "desktop",
-    "alt": "Status field set to Active at the top of the Permissions tab of a member edit page, beside the Record the resignation of this member button, with the chapter, join date and permission checkboxes below",
-    "status": "new",
+    "alt": "The status control on a member profile, open on the statuses an administrator can move the member to",
+    "status": "recapture",
     "note": "The options list CANNOT be captured. The control is a native <select> (client/src/views/User/FormPermissions.vue:8); Chromium renders its popup outside the page, so Playwright screenshots it closed no matter what is clicked. Earlier notes asking for an open dropdown are not achievable without faking the DOM. The alt and statuses.mdx now describe the closed field, and the full status list is in the table directly under the image."
   },
   {
@@ -58,17 +60,20 @@
       "platform/users/resignation.mdx"
     ],
     "tenant": "t187c",
-    "route": "/users/edit/209216?tab=settings",
-    "routeHint": "Open a member -> Edit -> Settings & Privacy -> Close account -> click Resign so the form expands. TWO TRAPS. (1) The settings rail is rendered twice (a hidden mobile copy first), so a bare 'click text=Close account' picks the invisible one and times out, which is why the previous shot was the Privacy panel and a byte-twin of privacy-user-controls.png. Address the visible chip with a CSS selector. (2) The whole resign block is behind `!item.resignPending` (client/src/views/User/Update.vue:895), so a member who already has a pending resignation request shows 'Your resignation is pending' and no form at all - 209212 has one, 209216 (Ava Whitfield) does not.",
+    "route": "/user/209216?tab=settings",
+    "routeHint": "Open a member -> Edit -> Settings & Privacy -> Close account -> click Resign so the form expands. TWO TRAPS. (1) The settings rail is rendered twice (a hidden mobile copy first), so a bare 'click text=Close account' picks the invisible one and times out, which is why the previous shot was the Privacy panel and a byte-twin of privacy-user-controls.png. Address the visible chip with a CSS selector. (2) The whole resign block is behind `!item.resignPending` (client/src/views/User/Update.vue:895), so a member who already has a pending resignation request shows 'Your resignation is pending' and no form at all - 209212 has one, 209216 (Ava Whitfield) does not. 2026-11-11 recapture: the profile was rebuilt. /users/edit/209216?tab=settings no longer exists; the page is /user/209216?tab=settings (header Settings button), left pills Notifications, Privacy, Account and security. The Close account button is gone for another member's record (it needs item.id === user.id) and was never a step before Resign: on Account and security the Close account card shows Suspend account, Resign and Delete account directly. So the actions are now click Account and security, then click the Resign button. The old two-step .button.is-white Close account selector no longer matches; the docs page resignation.mdx still says Settings & Privacy then Close account then Resign, which is stale prose. The expanded form is taller than the viewport (Submit and Cancel sit below the fold), so the shot crops to the Close account card (.card.pc-card, views/User/Profile/settings/CloseAccountCard.vue) selected by its Resignation reason label.",
     "actions": [
-      "click .button.is-white:has-text(\"Close account\"):visible",
-      "click .button.is-danger:has-text(\"Resign\"):visible"
+      "click Account and security",
+      "wait 1500",
+      "click .button:has-text(\"Resign\")",
+      "wait 1500"
     ],
     "waitFor": "text=What would determine you to continue as member?",
     "viewport": "desktop",
     "alt": "Resignation form with a resignation reason box, a what would determine you to continue as member box, a Close my account toggle and Submit and Cancel buttons",
     "status": "new",
-    "note": "The waitFor is the retention question, which is rendered only while the form is expanded (the b-field carries `hidden` until resignationIntent is true), so a failed Resign click now shows up as waitFor MISSED instead of shipping the wrong panel."
+    "note": "The waitFor is the retention question, which is rendered only while the form is expanded (the b-field carries `hidden` until resignationIntent is true), so a failed Resign click now shows up as waitFor MISSED instead of shipping the wrong panel.",
+    "selector": ".card.pc-card:has-text(\"Resignation reason\")"
   },
   {
     "id": "close-account-page",
@@ -77,16 +82,17 @@
       "platform/users/deletion-of-account.mdx"
     ],
     "tenant": "t187c",
-    "route": "/users/edit/207128?tab=settings",
-    "routeHint": "Edit your own profile -> Settings & Privacy -> Close account, as an ADMIN_TENANT. All four actions only appear together on your own record: the Close account button needs item.id === user.id (Update.vue:828), Suspend needs ADMIN_LOCAL, Resign needs the resignation module and no pending request, and Delete account needs ROLE_ADMIN_TENANT. Viewing another member hides Close account. The sub-nav exists twice, an .is-hidden-desktop copy first in the DOM and the desktop one after it, so a bare text=Close account resolves to the hidden mobile link and the click times out; scope the selector to .is-hidden-mobile.",
+    "route": "/user/207128?tab=settings",
+    "routeHint": "Edit your own profile -> Settings & Privacy -> Close account, as an ADMIN_TENANT. All four actions only appear together on your own record: the Close account button needs item.id === user.id (Update.vue:828), Suspend needs ADMIN_LOCAL, Resign needs the resignation module and no pending request, and Delete account needs ROLE_ADMIN_TENANT. Viewing another member hides Close account. The sub-nav exists twice, an .is-hidden-desktop copy first in the DOM and the desktop one after it, so a bare text=Close account resolves to the hidden mobile link and the click times out; scope the selector to .is-hidden-mobile. 2026-11-11 recapture: the profile was rebuilt. /users/edit/207128?tab=settings is gone; the page is /user/207128?tab=settings and the Close account card now sits on the Account and security pill (left list: Notifications, Privacy, Account and security), below Blocked users. It is no longer a sub-page, so there is no Close account link to click and the hidden mobile/desktop duplicate problem is gone; the click is on the Account and security pill. The card (views/User/Profile/settings/CloseAccountCard.vue) holds Close account, Suspend account, Resign and Delete account on the own record of an ADMIN_TENANT, and the shot crops to it (.card.pc-card with a Close account title).",
     "actions": [
-      "wait 2000",
-      "click .is-hidden-mobile a.button:has-text(\"Close account\")",
+      "wait 1500",
+      "click Account and security",
       "wait 1500"
     ],
     "waitFor": "text=Suspend account",
     "viewport": "desktop",
-    "alt": "Close account page showing Close account, Suspend account, Resign and Delete account actions with their explanations",
-    "status": "new"
+    "alt": "Close account card on the Account and security tab showing the Close account, Suspend account, Resign and Delete account actions with their explanations",
+    "status": "new",
+    "selector": ".card.pc-card:has(.pc-title:has-text(\"Close account\"))"
   }
 ]

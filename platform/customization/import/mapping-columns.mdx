@@ -21,9 +21,10 @@ payment or badge exists until you press **Start import**.
 
 ## How the screen opens
 
-On **Settings → Customization → Import**, pick a step and choose your file. For a
-step that supports mapping, the action button reads **"Map columns"** rather than
-**"Start Import"**. Press it and the wizard opens over the whole page.
+On **Settings → Customization → Import**, pick a step and choose your file. Every step on
+the page maps columns, so the action button reads **"Map columns"**. Press it and the wizard
+opens over the whole page. (A spreadsheet is converted first, and the wizard opens by itself
+when that is done.)
 
 The header shows the title **"Map columns"** with the import type underneath it
 (**"Users"**, **"Contacts"**, **"Product Payments"**, **"Event Attendance"** and so
@@ -48,6 +49,18 @@ file name and the number of rows Orgo read (**"200 rows sampled"**). The sampled
 figure is the larger one: Orgo reads up to 200 rows of your file to work out its
 suggestions and to collect the distinct values in each column, and it draws the
 first 20 of them for you to look at.
+
+Three extra bands can appear between that line and the sheet:
+
+- **A warning about wider rows**, such as "3 sampled rows have more columns than the header
+  row". A value that contains the separator is not in quotes, so everything after it has
+  shifted one column across. Re-save the file as CSV UTF-8 now, while abandoning the draft is
+  cheap: the import refuses a file like this.
+- **An offer to reuse your last mapping**: **"Apply your previous mapping from 14 Oct?"**
+  with **Apply** and **Dismiss**. It appears when your organisation's most recent completed
+  import of the same type used only column names this file also has. It is never applied on
+  its own, because the file is new even when the headers match. Form imports never offer it.
+- **The check**, described [below](#the-check-before-you-start).
 
 ### What a column header shows
 
@@ -74,8 +87,8 @@ And one chip per status:
 | Chip | Meaning |
 |---|---|
 | **"System field"** (green) | Going into one of Orgo's own fields for this import type |
-| **"Existing field"** (blue) | Going into a profile field your organization already has |
-| **"New field"** (light blue) | Will create a profile field, at the moment you press **Start import** |
+| **"Existing field"** | Going into a profile field your organization already has |
+| **"New field"** | Will create a profile field, at the moment you press **Start import** |
 | **"Skipped"** (grey) | Left out of the import entirely |
 | **"Needs attention"** (amber) | You picked a kind of destination but not the destination itself, or two columns claim the same system field |
 
@@ -110,11 +123,20 @@ keys nudge it once it has focus.
   </Step>
   <Step title="If it is a system field, pick the field">
     A select labelled **"System field"** opens with the placeholder **"Choose a
-    field"**. Types with grouped fields list them under group headings (**"Payer"**,
-    **"Product"**, **"Price tier"**, **"Event"**, **"Attendee"**, **"Member"**,
-    **"Role"**, **"Company"**, **"Badge"** and the rest); people types list theirs
-    flat. A field another column has already taken is greyed out and its name
-    carries the suffix **"(already used)"**.
+    field"**. Fields are listed under group headings: **"Payer"**, **"Product"**,
+    **"Price tier"**, **"Event"**, **"Attendee"**, **"Member"**, **"Role"**, **"Company"**,
+    **"Badge"** on the types that link to other records, and **"Identity"**,
+    **"Contact"**, **"Membership"**, **"Profession"** and **"Roles"** on a Users file.
+    Contacts and the two modify types list their fields flat. A field
+    another column has already taken is greyed out and its name carries the suffix
+    **"(already used)"**. Under the select, a line of help says what Orgo does with the
+    field, with an **Example** value.
+  </Step>
+  <Step title="If it is a date, set the date format">
+    Columns that land on a date field (or on a custom field of type Date) get a **"Date
+    format"** menu with five spellings. See [Preparing your file](/platform/customization/import/preparing-your-file#dates-in-detail)
+    for what the pre-selected value means, and why an amber **"Ambiguous, please choose"**
+    deserves an answer.
   </Step>
   <Step title="If it is an existing field, search for it">
     **"Existing custom field"** is a search box with the placeholder **"Search your
@@ -154,10 +176,13 @@ Every column arrives with a guess already made, marked **"Suggested"**. Orgo wor
 it out in this order.
 
 First, where the column should go. If the header matches one of the system fields
-for this import type, it points there. If it matches a profile field your
+for this import type, or one of the usual alternative names for it (`DOB`, `zip`,
+`branch`), it points there. If it matches a profile field your
 organization already has, it points at that field with the type that field already
-uses. Otherwise it proposes a new field, and only then does it need to guess a
-type.
+uses; an encrypted field is never suggested, the column is skipped instead. Otherwise,
+on a type that can hold custom fields (members and contacts, plus form questions), it
+proposes a new field, and only then does it need to guess a type. On every other type an
+unrecognised column starts out as **Skipped**.
 
 The type guess looks at the values in the sampled rows and takes the first rule
 that fits:
@@ -171,7 +196,8 @@ that fits:
    casing, so the column becomes **"Yes / No"**.
 3. **Numbers.** Every filled cell is a number, so the column becomes **"Number"**.
 4. **Dates.** Every filled cell is a real date written as `YYYY-MM-DD`, so the
-   column becomes **"Date"**.
+   column becomes **"Date"**. Other spellings are not guessed into a date field here:
+   the column starts as text, and you can change it.
 5. **A short set of repeating values.** At least 20 filled cells sharing no more
    than 15 distinct values, so the column becomes **"Single choice"** and the
    distinct values become its options.
@@ -205,9 +231,44 @@ under the mapping as it stands right now. Change a column and its cells redraw.
   dimmed, so it reads as present but inactive.
 - **An empty cell** shows a faint dash. Empty means empty: the import writes
   nothing for it, so a blank cell cannot be used to clear a value.
+- **A reference column** (a payer, a role) can be tagged **New** when the row would create
+  the record it names, or **Unmatched** when it would find nothing and fail.
 
 Every other column, including system fields, text, numbers and dates, shows its
 raw values unchanged.
+
+---
+
+## The check before you start
+
+A couple of seconds after you stop changing the mapping, Orgo runs the **whole file** through
+it as a dry run. Nothing is written. A line reads **"Checking 1,200 rows..."** with a bar while
+it works, **"Waiting behind another import"** if your organisation has an import running, and
+**"Mapping changed, checking again..."** when you edit mid-way. When it finishes you get five
+tiles:
+
+| Tile | What it counts |
+|---|---|
+| **Will be created** | Rows that will make a new record |
+| **Will be updated** | Rows that will change a record you already have |
+| **Will be skipped** | Rows that match a record and are left alone, or repeat an earlier row |
+| **Will fail** | Rows that cannot be imported as they stand |
+| **With warnings** | Rows that import, but with something left empty or guessed |
+
+Press a tile to list the rows behind it under the sheet, each with Orgo's reason in plain
+words (for example "Payer not found for the supplied identifier"); press it again to close
+the list. On **Local Centers, Units, Roles, Badge Types and Badges** a note says **"Create
+counts are an upper bound for this type"**: two rows naming the same new chapter count as two
+creates in the check but make one chapter in the run.
+
+If the check cannot finish, **"The check could not finish"** appears with the reasons, such
+as a header row that lacks a required column. Fix the file or the mapping and it checks again.
+
+A second strip, shown on types that look up existing records (payments, attendance, role
+assignments, company memberships, badge awards and events), counts the first 20 rows by
+reference: **found**, **new** and **unmatched**. It is covered in
+[Linking records](/platform/customization/import/linking-records). The check above is the
+verdict on the whole file; the strip tells you which column is responsible.
 
 ---
 
@@ -233,15 +294,24 @@ only"** followed by the fields in question, and in the panel the select turns re
 with **"Another column already fills this field"**. Pick a different field for one
 of them, or skip it.
 
-**Start import** also stays disabled while the preview is still loading, while a
-start is already under way, and while a change cannot be saved. In that last case
+**Start import** also stays disabled until the check above has finished for the mapping as
+it stands (a change restarts it), while the preview is still loading, while a start is
+already under way, and while a change cannot be saved. In that last case
 the header replaces **"Draft saved"** with the reason: **"Mapping is not valid"**
 when the choice itself is refused, or **"Could not save the mapping"** when the
 request did not get through.
 
-What does not block the button: columns you left skipped, and columns still
+What does not block the button: columns you left skipped, columns still
 reading **"Needs attention"** because you opened **"Existing field"** and never
-picked one. Those are simply not imported.
+picked one (those are simply not imported), and rows the check says will fail. If
+there are such rows, pressing **Start import** first asks **"Some rows will fail"**: **"5 rows
+will fail and be left out. Import the rest?"** with **Import the rest** or **Cancel**.
+
+On a Users or Contacts file the footer also holds **"Members that already exist"**, a
+choice between **Skip them** (the default) and **Update the mapped fields**. It decides
+what happens to a row whose person is already on file: left alone, or updated the way a
+Modify import would. Changing it restarts the check, and it is saved with the rest of the
+mapping.
 
 ---
 
@@ -271,8 +341,9 @@ whole thing away after asking. The confirmation is explicit about what is lost:
 yet."**
 
 There is one draft per step. Uploading a new file for the same step means dealing
-with the draft first. And a mapping is never reused: each import is mapped from
-scratch, on its own file.
+with the draft first. A mapping is not reused on its own: each import starts from its
+suggestions, and the only help is the **Apply your previous mapping** offer described
+above, which you accept or dismiss.
 
 ---
 
@@ -282,9 +353,10 @@ scratch, on its own file.
   <Accordion title="Start import stays greyed out">
     Read the footer chips first. Any chip that is still grey names what is
     missing, and every chip has to be green before the button wakes up. If they
-    are all green, look at the header where **"Draft saved"** normally sits: a
-    message there means your last change could not be stored, and the button
-    stays disabled until it can be. The usual cause is a column set to **"System
+    are all green, check that the strip under the progress line has finished
+    counting (the button waits for it), then look at the header where **"Draft saved"**
+    normally sits: a message there means your last change could not be stored, and the
+    button stays disabled until it can be. The usual cause is a column set to **"System
     field"** with no field chosen, or two columns fighting over the same field.
   </Accordion>
   <Accordion title="A column shows Needs attention">
@@ -315,7 +387,8 @@ scratch, on its own file.
     that would store them unprotected, so it is refused rather than allowed to
     leak. Clicking the locked row does nothing at all, which is why the column
     stays on **"Needs attention"**. Map the column to something else or skip it,
-    and enter those values through the profile instead.
+    and enter those values through the profile instead. A column whose header matches an
+    encrypted field is suggested as **Skipped** for the same reason.
   </Accordion>
 </AccordionGroup>
 

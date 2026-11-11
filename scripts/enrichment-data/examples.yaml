@@ -952,28 +952,16 @@ operations:
             assigneeCount: 0
             dateCreated: "2026-01-15T10:30:00+00:00"
 
-  - operationId: api_badge_hours_post
+  # badge_hours is gone: logging hours was replaced by a per-step checklist on
+  # the badge assignment (POST /badge_users/{id}/steps, feat/badge-award-date-step-log).
+  - operationId: recordStep
     request:
       "*":
-        summary: "Log 4 hours of volunteer time for a member"
+        summary: "Mark one checklist step completed"
         value:
-          user: "/api/v1/users/42"
-          hours: 4
-          notes: "Booth shift at the January outreach drive."
-    response:
-      "201":
-        application/json:
-          summary: "Hours logged; auto-evaluates hours-based badges"
-          value:
-            id: 1024
-            user:
-              id: 42
-              fullName: "James Patterson"
-            hours: 4
-            notes: "Booth shift at the January outreach drive."
-            totalUserHours: 24
-            newBadgesAwarded: []
-            dateCreated: "2026-01-15T10:30:00+00:00"
+          stepId: 7
+          status: 1
+          note: "Booth shift at the January outreach drive."
 
   # ═══════════════════════════════════════════════════════════════════════════
   # Public listings (no auth)

@@ -1,37 +1,41 @@
 ---
 title: 'Manage local centers and permissions'
-description: 'Create a local center, assign admins, scope roles, and audit who can do what'
+description: 'Create a local center, define roles, assign them to members, and audit who can do what'
 ---
 
-This walkthrough sets up organizational structure: a new local center (chapter, branch, regional office), the admins who run it, and the per-domain permissions that scope what they can do. It uses the [LocalCenter](/api-reference/localcenter), [Unit](/api-reference/unit), [UserRole](/api-reference/userrole), and Role resources.
+This walkthrough sets up organizational structure: a new local center (chapter, branch, regional office), the roles that run it, and the assignments that scope what each person can do. It uses the [LocalCenter](/api-reference/localcenter), [Unit](/api-reference/unit), [Role](/api-reference/role) and [UserRole](/api-reference/userrole) resources.
 
-Who is this for: enterprise-onboarding integrations that spin up multi-tenant structure programmatically, federation tools that synchronize org-chart changes from an upstream system, or admin dashboards that need to audit permissions in bulk.
+Who is this for: enterprise-onboarding integrations that build structure programmatically, federation tools that sync org-chart changes from an upstream system, and admin dashboards that audit permissions in bulk.
 
 ---
 
 ## Concepts
 
-### The three permission domains
+### Permission domains and scopes
 
-Orgo splits permissions into three domains. Each domain has its own roles. Granting one doesn't grant the others.
+Every permission is a pair: a **domain** (what area) and a **scope** (whose data).
 
 | Domain | What it controls |
 |---|---|
-| **ADMIN** | Configuration — branding, modules, custom fields, settings |
-| **HR** | People — registration, profiles, adhesion, contracts, contact CRM |
-| **FINANCIAL** | Money — products, prices, payments, invoices, refunds |
+| `ADMIN` | Configuration: branding, modules, custom fields, settings |
+| `HR` and `HR_ASSISTANT` | People: registration, profiles, applications, contracts, contacts. The assistant domain is the read-and-help subset |
+| `FINANCIAL` | Money: products, prices, payments, invoices, refunds |
+| `EVENT` | Events |
+| `COMMUNICATION` | Newsletters and campaigns |
 
-Each domain has three scope levels: **TENANT** (whole org), **PARENT_LOCAL** (a local center and everything under it), and **LOCAL** (one specific local center).
+Each domain has three scopes: `_TENANT` (the whole organization), `_PARENT_LOCAL` (one chapter and every chapter below it) and `_LOCAL` (one chapter). So `HR_LOCAL` means "manages people for one chapter" and `FINANCIAL_TENANT` means "manages money for the whole organization". Some permissions imply others; the full matrix is in [Permissions](/platform/permissions).
 
-So `HR_LOCAL` means "manages people for this one local center", `ADMIN_TENANT` means "configures the whole organization". The combinations make 9 distinct permission scopes; see [Permissions](/platform/permissions) for the full matrix.
+`ADMIN_TENANT` satisfies every permission check. Granting it is **not** the same as making someone an Orgo administrator: the account flag that unlocks the configuration screens and several endpoints (such as creating roles and webhooks) is separate. See [Permissions](/platform/permissions).
 
 ### Where local centers fit
 
-A `LocalCenter` is a kind of `Unit`. Units are the generic grouping primitive — local centers, role groups (automatic membership by role), private project teams. Most permission scopes attach to a specific `Unit` (which, for local-scope roles, is the LocalCenter itself).
+A `LocalCenter` is a kind of `Unit`. A unit is the generic grouping primitive: local centers, role groups (automatic membership by criteria), and groups. A role assignment attaches a person to a unit, which for chapter roles is the local center itself.
 
 ---
 
-## Step 1 — Create a local center
+## Step 1: Create a local center
+
+Creating a local center needs organization-wide HR rights.
 
 ```bash
 curl -X POST https://acme.orgo.space/api/v1/local_centers \
@@ -39,26 +43,22 @@ curl -X POST https://acme.orgo.space/api/v1/local_centers \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Boston",
-    "description": "Boston chapter — serves Greater Boston and Cambridge.",
-    "country": "/api/v1/countries/1",
     "town": "/api/v1/towns/1",
-    "address": "123 Beacon Street, Boston, MA 02108",
-    "email": "boston@example.com",
-    "phone": "+1 617 555 0177",
-    "isPublic": true,
+    "officeAddress": "123 Beacon Street, Boston, MA 02108",
+    "contactEmail": "boston@example.com",
+    "contactPhone": "+1 617 555 0177",
+    "contactFullName": "James Patterson",
     "isActive": true
   }'
 ```
 
-`isPublic: true` makes the local center appear on the public "find your center" map and listing. `isActive: false` hides it from new-member registration forms while keeping it visible to admins.
-
-Response carries the integer `id` you'll use for `/api/v1/local_centers/{id}` references throughout the rest of the system.
+`isActive: false` hides a center from new-member registration while keeping it visible to admins. Other fields include `parent` and `isParent` (hierarchy, step 6), `region`, `currency`, `website`, social URLs, bank account fields and `whoCanCreateEvents`. The response carries the integer `id` used in `/api/v1/local_centers/{id}` and, as a unit, in `/api/v1/units/{id}`.
 
 ---
 
-## Step 2 — Create a role definition
+## Step 2: Create a role
 
-Roles are the named permission containers ("Chapter Lead", "Treasurer", "Outreach Coordinator"). Create one per distinct responsibility:
+A role is a named position ("Chapter Lead", "Treasurer", "Outreach Coordinator") that can carry permissions. Create one per distinct responsibility. This needs an Orgo administrator.
 
 ```bash
 curl -X POST https://acme.orgo.space/api/v1/roles \
@@ -66,22 +66,20 @@ curl -X POST https://acme.orgo.space/api/v1/roles \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Chapter Lead",
-    "description": "Top admin for a local chapter — full HR and FINANCIAL_LOCAL, plus discussion moderation.",
-    "permissions": [
-      "HR_LOCAL",
-      "FINANCIAL_LOCAL",
-      "ADMIN_LOCAL"
-    ]
+    "namePlural": "Chapter Leads",
+    "isLocalCenter": true,
+    "chartName": "Chapter Lead",
+    "permissions": ["HR_LOCAL", "FINANCIAL_LOCAL", "ADMIN_LOCAL"]
   }'
 ```
 
-Roles live at the tenant level — they're reusable across local centers. The permission strings are constants; the full list lives at `GET /api/v1/permission_definitions` (or see [Permissions](/platform/permissions)).
+`permissions` is the array of permission constants the role grants; they are the values documented in [Permissions](/platform/permissions). Roles live at the organization level and are reusable across centers. Other fields: `namePlural`, `unitType`, `position` (ordering), `isNational`, `isLocalCenterParent`, `isUserType` (the role is a member type), `isVolunteer`, `isNotEligibleForFee`. Changing a role's permissions later recalculates the permissions of the people who hold it (done inline for up to 300 holders, asynchronously for more).
 
 ---
 
-## Step 3 — Assign the role to a user, scoped to a unit
+## Step 3: Assign the role to a person, scoped to a unit
 
-The scoping happens at assignment time. The same role can be assigned to different users with different unit scopes.
+Scoping happens at assignment time. The same role can be assigned to different people at different units.
 
 ```bash
 curl -X POST https://acme.orgo.space/api/v1/user_roles \
@@ -94,32 +92,34 @@ curl -X POST https://acme.orgo.space/api/v1/user_roles \
   }'
 ```
 
-This grants James Patterson the "Chapter Lead" role *for the Boston local center only*. He cannot HR-manage Manchester members.
+This makes James Patterson "Chapter Lead" for the Boston center only. Who may make an assignment depends on the unit: a local center needs HR rights over that center, a role group needs organization-wide HR rights or being a group admin, and a group needs a group admin. Setting `isAdmin` needs group admin or organization-wide HR rights. Other fields: `dateEnded` (end it on a date) and `localCenterPermission` (extra chapters, when the organization uses multi-center access).
 
-Multiple `UserRole` assignments stack. A user can be Chapter Lead in Boston, Outreach Coordinator in Manchester, and Treasurer at the tenant level — three separate `UserRole` records.
+Assignments stack. A person can be Chapter Lead in Boston, Outreach Coordinator in Manchester and Treasurer at the organization level: three separate `UserRole` records. The assignment also creates a follow relationship for the person.
+
+To replace **all** of a person's roles in one call, send the full list to `PATCH /api/v1/users/{id}/update-roles` as `rawUserRoles` entries shaped `roleId_unitId` (and optionally `userType`). Orgo compares it with the person's active roles, adds and ends the difference, creates notifications, and recalculates permissions. It needs HR rights over the person's center.
 
 ---
 
-## Step 4 — Audit who has what
+## Step 4: Audit who has what
 
-### Who admins this local center?
+### Who holds roles at this center?
 
 ```bash
-curl "https://acme.orgo.space/api/v1/user_roles?unit=/api/v1/units/4" \
+curl "https://acme.orgo.space/api/v1/user_roles?unit=/api/v1/units/4&exists[dateEnded]=false" \
   -H "Api-Token: $ORGO_API_TOKEN" \
   -H "Accept: application/ld+json"
 ```
 
-The response includes each assignment with the user, role, and assignment date. `hydra:totalItems` gives the count.
+The answer lists each assignment with the user, role and dates; `hydra:totalItems` gives the count. Without `exists[dateEnded]=false`, ended assignments are included too. Other filters: `role`, `role.isLocalCenter`, `role.isNational`, `user.status`.
 
-### Every assignment for one user
+### Every assignment for one person
 
 ```bash
 curl "https://acme.orgo.space/api/v1/user_roles?user=/api/v1/users/42" \
   -H "Api-Token: $ORGO_API_TOKEN"
 ```
 
-Useful for "show me everything James can do" before revoking.
+Useful for "show everything James can do" before revoking.
 
 ### The org chart
 
@@ -128,26 +128,26 @@ curl https://acme.orgo.space/api/v1/chart-members \
   -H "Api-Token: $ORGO_API_TOKEN"
 ```
 
-Returns a structured view of every person + role across the tenant, suitable for rendering an org chart.
+Returns assignments shaped for an org chart, 100 per page, with the same filters as `user_roles`.
 
 ---
 
-## Step 5 — Revoke
+## Step 5: Revoke
 
-Delete the `UserRole` record:
+Delete the assignment:
 
 ```bash
 curl -X DELETE https://acme.orgo.space/api/v1/user_roles/199 \
   -H "Api-Token: $ORGO_API_TOKEN"
 ```
 
-The user's underlying `User` account is untouched — they remain a member; they just lose the elevated permissions immediately. Active sessions are *not* invalidated; revocation takes effect on the next request that re-evaluates permissions (which, for most endpoints, is the next request).
+This needs HR rights over the unit's center (organization-wide HR bypasses the check). To keep history instead, `PATCH /api/v1/user_roles/{id}` with a `dateEnded`. The member's account is untouched; they only lose the permissions that role granted. A permission check is evaluated on each request, so revocation applies on the person's next request, but a session they already hold is not ended.
 
 ---
 
-## Step 6 — Restructure the hierarchy (parent locals)
+## Step 6: Restructure the hierarchy
 
-For federations with regional hierarchy ("Northeast Region" containing Boston, New York, Philadelphia), set a parent on each local center:
+For federations with regions ("Northeast Region" containing Boston, New York, Philadelphia), set a parent on each child center:
 
 ```bash
 curl -X PATCH https://acme.orgo.space/api/v1/local_centers/4 \
@@ -156,42 +156,42 @@ curl -X PATCH https://acme.orgo.space/api/v1/local_centers/4 \
   -d '{"parent": "/api/v1/local_centers/1"}'
 ```
 
-Now anyone with `HR_PARENT_LOCAL` on the parent (Northeast Region) can manage all children — Boston, New York, Philadelphia — without needing individual `HR_LOCAL` grants on each.
+Anyone holding a `_PARENT_LOCAL` permission anchored at the parent (Northeast Region) can then act on all centers below it, at any depth, without a `_LOCAL` grant on each. Deleting a center needs `ADMIN_TENANT`.
 
 ---
 
-## Step 7 — Self-service join
+## Step 7: Self-service join for groups
 
-For local centers configured as `isOpen: true`, members can join themselves:
+Groups (not local centers) can be opened for members to join themselves. For a group marked joinable:
 
 ```bash
 curl -X POST https://acme.orgo.space/api/v1/group/join \
-  -H "Authorization: Bearer $ORGO_JWT" \
+  -H "Authorization: Bearer $MEMBER_JWT" \
   -H "Content-Type: application/json" \
-  -d '{"unit": "/api/v1/units/4"}'
+  -d '{"unit": "/api/v1/units/12"}'
 ```
 
-Creates a `UserRole` with the default member role for that local center. Useful for self-organizing chapters where any member can join.
+This is called as the member who is joining, with their session. It adds a plain membership (no role and no admin flag). A repeat answers `400 You are already part of this group`, and a group that is not joinable, or belongs to another organization, answers `400 You are not allowed to join the group`.
 
 ---
 
 ## Common gotchas
 
 <AccordionGroup>
-  <Accordion title="I granted ADMIN_TENANT but the user still gets 403 on some endpoints">
-    `ADMIN_TENANT` is the configuration domain — it grants access to settings, branding, modules. It does NOT grant HR (manage people) or FINANCIAL (manage payments). To grant truly everything, assign all three: `ADMIN_TENANT`, `HR_TENANT`, `FINANCIAL_TENANT`. This is intentional — it separates the "configure the org" role from the "see member PII" role from the "issue refunds" role.
+  <Accordion title="The user has ADMIN_TENANT but a settings call still fails">
+    `ADMIN_TENANT` passes every permission check, but configuration endpoints and screens (roles, webhooks, single sign-on) additionally require the **Orgo administrator** account flag, which is set separately on the member's Permissions tab. See [Permissions](/platform/permissions).
   </Accordion>
 
-  <Accordion title="A local center deletion is blocked">
-    Local centers with active members, ongoing fees, or unresolved payments cannot be deleted. Reassign members to another center first (`PATCH /api/v1/users/{id}` setting `localCenter` to the new one), then close out fees, then delete.
+  <Accordion title="A local center cannot be removed">
+    Deleting a center that still has active members or related data does not remove it: it is closed instead (status `CLOSED`, with an end date). A center with nothing attached is deleted for good. To fully wind one down, move members to another center first (`PATCH /api/v1/users/{id}` with a new `localCenter`).
   </Accordion>
 
-  <Accordion title="Parent permissions don't seem to cascade">
-    `PARENT_LOCAL` scope only cascades when the parent relationship is set via `local_centers.parent`. Setting it via the Unit hierarchy alone doesn't grant cascading permissions on local-center-scoped queries. If cascading isn't working, double-check the LocalCenter has `parent` set correctly, not just the Unit.
+  <Accordion title="Parent permissions don't cascade">
+    Regional permissions follow the center hierarchy, so check that each child center has its `parent` set (step 6) and that the person's permission is `_PARENT_LOCAL`, anchored at the parent. A `_LOCAL` grant never cascades.
   </Accordion>
 
-  <Accordion title="How do I bulk-assign one role to all chapter members?">
-    Two options: (1) automatic role groups — create a Unit of type "role group" filtered by membership criteria; new members auto-join. (2) Loop on the client side — paginate through `GET /api/v1/users?localCenter=...` and POST one `UserRole` per. The bulk endpoint doesn't exist for role assignment because the side effects (audit log, permission cache invalidation) are per-user.
+  <Accordion title="How do I give one role to every member of a chapter?">
+    Two options. Automatic role groups (`POST /api/v1/role_groups`) add and remove members from a unit by criteria such as roles, region, age, gender, full-member status and fee level. Or loop on your side: page through `GET /api/v1/users?localCenter=4` and `POST` one `user_roles` per person. There is no bulk role-assignment endpoint, because each assignment has its own notifications and permission recalculation.
   </Accordion>
 </AccordionGroup>
 
@@ -199,6 +199,6 @@ Creates a `UserRole` with the default member role for that local center. Useful 
 
 ## What to do next
 
-- [Permissions](/platform/permissions) — the full domain × scope matrix
-- [Onboard a new member](/api-reference/recipes/onboard-a-new-member) — the adhesion side of getting members into a local center
-- [Tenancy](/api-reference/concepts/tenancy) — how tenant isolation interacts with local-center scoping
+- [Permissions](/platform/permissions): the full domain and scope matrix
+- [Onboard a new member](/api-reference/recipes/onboard-a-new-member): the application side of getting members into a center
+- [Tenancy](/api-reference/concepts/tenancy): how tenant isolation interacts with center scoping

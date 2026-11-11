@@ -1107,43 +1107,43 @@ operations:
               ],
           ]);
 
-  - operationId: api_badge_hours_post
+  - operationId: recordStep
     samples:
       - lang: cURL
         label: cURL
         source: |
-          curl -X POST https://acme.orgo.space/api/v1/badge_hours \
+          curl -X POST https://acme.orgo.space/api/v1/badge_users/1024/steps \
             -H "Api-Token: $ORGO_API_TOKEN" \
             -H "Content-Type: application/json" \
             -d '{
-              "user": "/api/v1/users/42",
-              "hours": 4,
-              "notes": "Booth shift at the January outreach drive."
+              "stepId": 7,
+              "status": 1,
+              "note": "Booth shift at the January outreach drive."
             }'
       - lang: JavaScript
         label: JavaScript (fetch)
         source: |
-          await fetch("https://acme.orgo.space/api/v1/badge_hours", {
+          await fetch("https://acme.orgo.space/api/v1/badge_users/1024/steps", {
             method: "POST",
             headers: {
               "Api-Token": process.env.ORGO_API_TOKEN,
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              user: "/api/v1/users/42",
-              hours: 4,
-              notes: "Booth shift at the January outreach drive.",
+              stepId: 7,
+              status: 1,
+              note: "Booth shift at the January outreach drive.",
             }),
           });
       - lang: PHP
         label: PHP (Guzzle)
         source: |
-          $client->post('/api/v1/badge_hours', [
+          $client->post('/api/v1/badge_users/1024/steps', [
               'headers' => ['Api-Token' => getenv('ORGO_API_TOKEN')],
               'json' => [
-                  'user'  => '/api/v1/users/42',
-                  'hours' => 4,
-                  'notes' => 'Booth shift at the January outreach drive.',
+                  'stepId' => 7,
+                  'status' => 1,
+                  'note'   => 'Booth shift at the January outreach drive.',
               ],
           ]);
 

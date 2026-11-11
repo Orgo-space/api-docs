@@ -1,72 +1,77 @@
 ---
 title: 'Send a newsletter campaign'
-description: 'Compose, segment, and send a newsletter — and clone it to non-openers a week later'
+description: 'Draft, target, test and send a newsletter, then follow up with the people who did not open it'
 ---
 
-This walkthrough drafts a newsletter, targets a specific audience, sends it, and demonstrates a follow-up pattern (re-sending to people who didn't open). It uses the [Newsletter](/api-reference/newsletter) and [Contact](/api-reference/contact) resources.
+This walkthrough drafts a newsletter, targets an audience, sends a test, sends or schedules the campaign, and shows the follow-up pattern for people who did not open it. It uses the [Newsletter](/api-reference/newsletter) and [Contact](/api-reference/contact) resources.
 
-Who is this for: marketing-automation pipelines that compose campaigns from a CRM, A/B testers running variations, or admin tools that schedule sends ahead of time.
+Who is this for: marketing-automation pipelines that compose campaigns from a CRM, and admin tools that schedule sends ahead of time.
+
+Your token needs communication rights over the audience: organization-wide communication rights, or newsletter reach over the chapter you target.
 
 ---
 
-## Step 1 — Draft the newsletter
+## Step 1: Draft the newsletter
 
-Newsletters are owned by a `Unit` — usually a local center or the tenant root. The audience is implicitly everyone in that unit who has newsletter opt-in.
+A newsletter has content, a subject, and exactly one audience. The content is sent from `htmlInline` (the fully inlined HTML). The visual builder also stores its editable source in `design` and a raw copy in `htmlRaw`; an integration that supplies HTML only needs `htmlInline`.
 
 ```bash
 curl -X POST https://acme.orgo.space/api/v1/newsletters \
   -H "Api-Token: $ORGO_API_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "name": "January 2026 — Boston Update",
+    "name": "January 2026: Boston update",
     "subject": "What'\''s happening at Civic Collective in January",
-    "fromName": "Civic Collective — Boston",
-    "fromEmail": "boston@example.com",
-    "replyToEmail": "boston@example.com",
-    "unit": "/api/v1/units/4",
-    "content": "<h1>January Update</h1><p>Hello {{firstName}},</p><p>Here'\''s what'\''s coming up...</p>"
+    "senderName": "Civic Collective Boston",
+    "replyTo": "boston@example.com",
+    "localCenter": "/api/v1/local_centers/4",
+    "includeSubCenters": false,
+    "isGeneral": true,
+    "htmlInline": "<h1>January update</h1><p>Hello {{firstName}},</p><p>Here is what is coming up.</p>"
   }'
 ```
 
-Response:
+The response carries `id`, `uuid` and `status: "Draft"`. Newsletter statuses are capitalized: `Draft`, `Scheduled`, `Sending`, `Sent`, `Stop`, `Failed`. Addresses use the `uuid`: `/api/v1/newsletters/{uuid}`.
 
-```json
-{
-  "id": 44,
-  "uuid": "01938d8e-c2f4-7c2a-b8e1-3f7a9b8c4f44",
-  "name": "January 2026 — Boston Update",
-  "status": "DRAFT",
-  "estimatedRecipientCount": 312
-}
-```
+### Choosing the audience
 
-`estimatedRecipientCount` is the count of recipients the current audience filter would target *right now*. It is recalculated each time you fetch the newsletter.
+Set one of these targeting fields. If several are set, Orgo uses the first that applies, in this order: a follow-up's parent newsletter, `isGeneral`, `unit`, `isContacts`, `event`, `sendToEverybody`, `userList`.
+
+| Field | Reaches |
+|---|---|
+| `isGeneral: true` | All members of the organization (or of the chapter named in `localCenter`) |
+| `unit` | Members of one unit, such as a group or chapter |
+| `isContacts: true` | Contacts (people without accounts) |
+| `event` | People attending an event |
+| `sendToEverybody: true` | Members and contacts together |
+| `userList` | A saved list of people |
+
+`localCenter` caps the audience to one chapter, and `includeSubCenters: true` adds the chapters under it. Unless you set `isInformational: true`, only people who are subscribed to newsletters receive it. `recipients` shows how many people the audience resolves to.
 
 ### Placeholders
 
-`{{firstName}}`, `{{lastName}}`, `{{email}}` and any tenant custom field are resolved per recipient. Use them anywhere in `content` and they're substituted at send time.
+`{{firstName}}`, `{{lastName}}`, `{{email}}` and the organization's custom fields are replaced per recipient at send time. The forms `{x}`, `{{x}}` and `{{ x }}` all work. An unsubscribe link and a preferences link are appended automatically unless your content has `{unsubscribeUrl}`; a public newsletter also gets a "view in browser" link.
 
 ---
 
-## Step 2 — Preview and test-send
+## Step 2: Send a test
 
-Always send a test to yourself first.
+Always test first. Send the newsletter to yourself with the preview flag:
 
 ```bash
-curl -X POST https://acme.orgo.space/api/v1/email_templates/send-test \
+curl -X PATCH https://acme.orgo.space/api/v1/newsletters/01938d8e-c2f4-7c2a-b8e1-3f7a9b8c4f44/send \
   -H "Api-Token: $ORGO_API_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "newsletter": "/api/v1/newsletters/01938d8e-c2f4-7c2a-b8e1-3f7a9b8c4f44",
-    "toEmail": "james.patterson@example.com"
-  }'
+  -H "Content-Type: application/merge-patch+json" \
+  -d '{"is_preview": true}'
 ```
 
-Check the test email rendered correctly — placeholder substitution, links, images, and unsubscribe footer.
+The test goes to the email address of the token's user, with placeholders filled from that user's profile. It does not count in the campaign's statistics, and the unsubscribe link in it is inert. Check placeholders, links, images and the footer. An empty newsletter answers `400 Newsletter content is empty`.
+
+(`POST /api/v1/email_templates/send-test` is for email templates, not newsletters.)
 
 ---
 
-## Step 3 — Choose: schedule or send now
+## Step 3: Send now or schedule
 
 ### Send immediately
 
@@ -77,57 +82,67 @@ curl -X PATCH https://acme.orgo.space/api/v1/newsletters/01938d8e-c2f4-7c2a-b8e1
   -d '{}'
 ```
 
-Status flips to `SENT`. The actual delivery is queued — large campaigns take a few minutes to flush through SES.
+The status moves to `Sending` and then `Sent` as the queue drains. A large campaign takes a few minutes. A newsletter without a valid audience or content answers `400 Newsletter must have a valid target and content`, and one that is already sending or sent answers `400 Newsletter has already been sent`.
 
 ### Schedule for later
 
+Send the same call with `scheduledAt`:
+
 ```bash
-curl -X PATCH https://acme.orgo.space/api/v1/newsletters/01938d8e-c2f4-7c2a-b8e1-3f7a9b8c4f44/schedule \
+curl -X PATCH https://acme.orgo.space/api/v1/newsletters/01938d8e-c2f4-7c2a-b8e1-3f7a9b8c4f44/send \
   -H "Api-Token: $ORGO_API_TOKEN" \
   -H "Content-Type: application/merge-patch+json" \
-  -d '{"sendDate": "2026-01-20T09:00:00-05:00"}'
+  -d '{"scheduledAt": "2026-01-20T14:00:00+00:00", "timezone": "America/New_York"}'
 ```
 
-Status flips to `SCHEDULED` and the worker picks it up at the specified time.
+`scheduledAt` is in UTC, at least 2 minutes ahead, and must fall on a quarter hour (`:00`, `:15`, `:30`, `:45`). `timezone` records the zone it was picked in (default: the organization's) and does not shift the time. The status becomes `Scheduled`. An unparseable time answers `400`.
+
+To move a scheduled send, `PATCH .../schedule` with a new `scheduledAt`. Sending `{"scheduledAt": null}` there cancels the schedule and returns the newsletter to `Draft`. To stop a campaign that is already going out, `PATCH .../stop`.
 
 ---
 
-## Step 4 — Resend to non-openers (one week later)
+## Step 4: Follow up with non-openers
 
-A standard pattern: wait 5-7 days after the initial send, then re-send (with a new subject line) only to people who haven't opened.
-
-First check how many would be re-targeted:
+A common pattern: wait a few days, then re-send to people who did not open the first email.
 
 ```bash
+# How many would be reached?
 curl https://acme.orgo.space/api/v1/newsletters/01938d8e-c2f4-7c2a-b8e1-3f7a9b8c4f44/non-openers-count \
   -H "Api-Token: $ORGO_API_TOKEN"
+# -> {"count": 188}
+
+# Create the follow-up draft
+curl -X PATCH https://acme.orgo.space/api/v1/newsletters/01938d8e-c2f4-7c2a-b8e1-3f7a9b8c4f44/clone-non-openers \
+  -H "Api-Token: $ORGO_API_TOKEN" \
+  -H "Content-Type: application/merge-patch+json" \
+  -d '{}'
 ```
 
-Then clone the original into a new draft targeting only those non-openers:
+The clone is a `Draft` named `Follow-up: <original name>` with the same content. Its audience is fixed to the non-openers of the original (shown in `parentNewsletter` and `recipients`); you cannot widen it. It only works on a newsletter that is `Sent`, and answers `400` when everyone opened it or the remaining recipients bounced or unsubscribed.
+
+Give the follow-up its own subject, then send it as in step 3:
 
 ```bash
-curl -X POST https://acme.orgo.space/api/v1/newsletters/01938d8e-c2f4-7c2a-b8e1-3f7a9b8c4f44/clone-non-openers \
+curl -X PATCH https://acme.orgo.space/api/v1/newsletters/{followUpUuid} \
   -H "Api-Token: $ORGO_API_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "subject": "Reminder — what'\''s happening at Civic Collective in January"
-  }'
+  -H "Content-Type: application/merge-patch+json" \
+  -d '{"subject": "Reminder: what'\''s happening at Civic Collective in January"}'
 ```
-
-The clone keeps the body content but you can edit before sending. Then `PATCH /api/v1/newsletters/{uuid}/send` as usual.
 
 ---
 
-## Step 5 — Read engagement statistics
+## Step 5: Read engagement statistics
 
-Once the send completes (typically a few minutes after triggering), opens and clicks start streaming in. Fetch them on the newsletter resource:
+Once the send runs, opens and clicks accumulate. Read them from the newsletter:
 
 ```bash
 curl https://acme.orgo.space/api/v1/newsletters/01938d8e-c2f4-7c2a-b8e1-3f7a9b8c4f44 \
   -H "Api-Token: $ORGO_API_TOKEN"
 ```
 
-The response includes `recipientCount`, `openCount`, `clickCount`, and `unsubscribeCount`.
+Besides the fields above, the response carries counts named `rateSent`, `rateOpen`, `rateClick`, `rateBounced`, `rateCompliant` (spam complaints) and `rateUnsubscribe`, plus `clicks`, the per-link click statistics. Despite the `rate` prefix, they are counts of unique recipients, not percentages. These statistics fields are not in the OpenAPI schema.
+
+For recipient-level data, `GET /api/v1/newsletters/{uuid}/stats-export` returns `{"url": ...}`, a download link (valid 15 minutes) to a CSV with one row per recipient and a "Yes" under each action recorded (Delivered, Opened, Clicked, Bounced, Complained, Unsubscribed, Rejected, Failed).
 
 ---
 
@@ -135,19 +150,19 @@ The response includes `recipientCount`, `openCount`, `clickCount`, and `unsubscr
 
 <AccordionGroup>
   <Accordion title="My newsletter went to fewer people than I expected">
-    Two filters apply: (1) the `Unit` membership (only people in or under that unit), (2) `isNewsletterSubscribed: true` on each recipient (User or Contact). Run the audience filter manually with `GET /api/v1/users?unit=...&isNewsletterSubscribed=true` to see the same count.
+    Three filters apply: the audience field you chose, the `localCenter` cap (and `includeSubCenters`), and the recipient's newsletter subscription. Unsubscribed people are skipped unless the newsletter is `isInformational`. The newsletter's `recipients` field shows the resolved count before you send.
   </Accordion>
 
-  <Accordion title="Placeholders showed up as `{{firstName}}` instead of names">
-    Placeholders are case-sensitive and must match exactly. `{{FirstName}}` won't work; neither will `{{ firstName }}` (with spaces). If a recipient's field is null, the placeholder resolves to an empty string — consider wrapping with HTML so empty fields don't leave dangling punctuation.
+  <Accordion title="Placeholders showed up as raw text instead of names">
+    Check the spelling against the organization's merge fields; a name that matches no field is left as typed. If a recipient's value is empty the placeholder resolves to nothing, so avoid leaving dangling punctuation around it.
   </Accordion>
 
-  <Accordion title="The send is stuck at SENT but nobody got the email">
-    SES has per-tenant sending limits. New tenants are sandboxed (50 emails/day, verified-recipient only) until granted production access. Check `Settings → Developers → Email` for the current quota. Contact support to lift sandbox.
+  <Accordion title="The status is stuck at Sending">
+    Sending goes through a managed queue and a large audience takes minutes. Read the newsletter again: the status moves to `Sent` when the queue drains. If sends from your organization are failing, check **Settings → Developers → Logs** and contact support.
   </Accordion>
 
   <Accordion title="Can I A/B test subject lines?">
-    Not directly — there's no first-class A/B testing UI. The pattern is: send the campaign to a 10% sample (filter the audience tighter), wait, compare open rates against a held-back variant, then send the winner to the rest.
+    Not directly. The pattern is to send variant A to a smaller list or unit, compare open counts, then send the winner to the rest.
   </Accordion>
 </AccordionGroup>
 
@@ -155,6 +170,6 @@ The response includes `recipientCount`, `openCount`, `clickCount`, and `unsubscr
 
 ## What to do next
 
-- [Sync your CRM with Orgo](/api-reference/recipes/sync-your-crm-with-orgo) — keep contacts subscribed in sync with your CRM source-of-truth
-- [Handle webhooks](/api-reference/recipes/handle-webhooks) — react to `contact.updated` when someone unsubscribes
-- [Rate limits](/api-reference/concepts/rate-limits) — newsletter sends carry email-cost rate limits
+- [Sync your CRM with Orgo](/api-reference/recipes/sync-your-crm-with-orgo): keep contacts and their newsletter subscription in sync with your CRM
+- [Handle webhooks](/api-reference/recipes/handle-webhooks): react to `contact.updated` when someone unsubscribes
+- [Rate limits](/api-reference/concepts/rate-limits): how outbound sending is paced

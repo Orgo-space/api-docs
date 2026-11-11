@@ -17,10 +17,10 @@ Stripe is the payment processor behind every card payment in Orgo. You connect y
 
 ## Where it lives
 
-| Screen | How to reach it | Permission |
+| Screen | How to reach it | Who can open it |
 |---|---|---|
-| Organisation Stripe account | **Settings → Modules → Payments & Fees → Payment Gateway** | `ADMIN_TENANT` |
-| Chapter Stripe account | **Chapter settings → Local online payments settings** | `ADMIN_LOCAL` |
+| Organisation Stripe account | **Settings → Modules → Payments & Fees → Payment Gateway** | The organisation administrator |
+| Chapter Stripe account | **Chapter settings → Stripe integration** | Admin (Chapter) for that chapter |
 
 Both open the same screen, titled **Online payments** followed by the organisation or chapter name. Its direct addresses are `/tenant/settings/online-payments` and `/local/settings/online-payments`, which is also where Stripe returns you after authorisation.
 
@@ -54,7 +54,7 @@ Two buttons appear while no account is linked:
 The authorisation round trip is protected by a signed, single-use token that expires after **1 hour**. If you leave the Stripe tab open too long, or reload the return URL, you get an error toast and simply start again.
 
 <Note>
-  A tenant admin can complete onboarding on behalf of a chapter by opening the chapter, then **Local online payments settings**. The chapter is carried through the Stripe round trip and back.
+  A tenant admin can complete onboarding on behalf of a chapter by opening the chapter, then **Stripe integration** in its settings menu. The chapter is carried through the Stripe round trip and back.
 </Note>
 
 ---
@@ -104,13 +104,15 @@ Orgo pins no list. Checkouts use Stripe's automatic payment methods, so members 
 
 Bank transfer is separate: an offline method you record by hand. See [Recording payments](/platform/fees/record-payment).
 
+**Apple Pay and Google Pay.** The card form only shows these wallets on a web address that is registered with the Stripe account taking the charge. Orgo does that for you: after you connect an account (or a chapter connects its own), and whenever you set up a custom domain or change your website address, it registers your app, payment and website addresses on your account and on every chapter's own account, and a daily job repairs any that went inactive. A rejected address is skipped and never blocks the others. Each Stripe account must still switch the wallets on in its own Stripe Dashboard.
+
 ---
 
 ## Chapter accounts
 
 A chapter (local center) can connect its **own** Stripe account. When it has one, local fees charged to that chapter settle there. When it does not, the charge falls back to the organisation's account, so the chapter is never blocked, its money simply lands centrally.
 
-A chapter's own Stripe account is used by any product the chapter owns, not just fees: a donation campaign or ticket product with **Belongs to a local center** set charges the chapter's account. The fall-back differs, though. Fee payments fall back to the organisation account when the chapter has none. Donation and ticket checkouts do not: connect the chapter's account before selling anything the chapter owns. Donation widgets are the exception and always charge the organisation account.
+A chapter's own Stripe account is used by any product the chapter owns, not just fees: a donation campaign or ticket product that belongs to a chapter charges the chapter's account. The fall-back differs, though. Fee payments fall back to the organisation account when the chapter has none. Donation and ticket checkouts do not: connect the chapter's account before selling anything the chapter owns. Donation widgets are the exception and always charge the organisation account.
 
 <Warning>
   A chapter can only be given its own currency once it has its own Stripe account, and that currency is immutable afterwards. Both rules exist to prevent double currency conversion.
@@ -120,7 +122,7 @@ A chapter's own Stripe account is used by any product the chapter owns, not just
 
 ## Commission, fees and payouts
 
-Orgo takes **no commission**. The platform application fee is present in code but forced to zero on every charge, and the per-organisation rate defaults to 0. What you pay is Stripe's own processing fee, deducted before payout: see [stripe.com/pricing](https://stripe.com/pricing). The settings page also links Stripe's discounted pricing for qualifying non-profits.
+Orgo takes **no commission**. The platform application fee is present in code but forced to zero on every charge, and the per-organisation rate defaults to 0. What you pay is Stripe's own processing fee, deducted before payout: see [stripe.com/pricing](https://stripe.com/pricing). Donors, and members when you allow it, can choose to cover that fee: see [Donations](/platform/fees/donations) and **Let members cover the processing fee** in [Membership Fees](/platform/fees/fees). The settings page also links Stripe's discounted pricing for qualifying non-profits.
 
 Payouts are between Stripe and your bank. Orgo does not set the schedule, does not hold funds, and does not display payout history: use the Stripe Dashboard.
 
@@ -128,9 +130,11 @@ Payouts are between Stripe and your bank. Orgo does not set the schedule, does n
 
 ## Refunds
 
-Refund from the payment's row in the payments list. Orgo refunds exactly that row's amount, which matters when one card charge produced several records (a membership payment plus its registration fee, for example). A refund also cancels any linked event attendance, releases the seat, and recalculates the member's fee validity date. Refunds issued in the Stripe Dashboard are picked up and marked in Orgo too.
+Refund from the payment's row in the payments list. Orgo refunds exactly that row's amount, which matters when one card charge produced several records (a membership payment plus its registration fee, for example). A refund also cancels any linked event attendance, releases the seat, and recalculates the member's fee validity date, and for a donation it takes away any membership the gift earned. Refunds issued in the Stripe Dashboard are picked up and marked in Orgo too.
 
-Refunding requires `FINANCIAL_LOCAL` on the payment's chapter, and `FINANCIAL_TENANT` when the payment carries no chapter, which is the case for every organisation-level payment. `ADMIN_TENANT` qualifies either way. It only works on a payment that succeeded.
+A payment that has no Stripe charge behind it, such as an import or one an admin recorded, shows **Mark as refunded** instead of **Refund**. That only changes its status and runs the same follow-ups; no money moves, so return it yourself first. A payment with an invoice is marked as refunded from the invoice.
+
+Refunding requires the Financial (Chapter) permission on the payment's chapter, and Financial (Organization) when the payment carries no chapter, which is the case for every organisation-level payment. Admin (Organization) qualifies either way. It only works on a payment that succeeded.
 
 ---
 
@@ -138,7 +142,7 @@ Refunding requires `FINANCIAL_LOCAL` on the payment's chapter, and `FINANCIAL_TE
 
 You configure no webhook. Orgo listens on a single platform endpoint and updates records when Stripe reports a successful payment, a failed or action-required invoice, a subscription created, updated or cancelled, a cancelled payment intent, or a refunded charge.
 
-Two settings control receipts, under **Settings → Modules → Payments & Fees**:
+Two settings control receipts, under **Settings → Modules → Payments & Fees → Online Payments**:
 
 | Setting | What it does |
 |---|---|

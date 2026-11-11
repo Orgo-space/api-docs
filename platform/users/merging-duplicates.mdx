@@ -18,8 +18,8 @@ you keep.
 **Replaces** deleting one of the two records and losing everything attached to it.
 
 Merge Records is at **Settings** → **Developers** → **Merge Records**
-(`/admin/merge`). It needs `HR_TENANT`, and the **Merge Profiles** toggle under
-**Settings** → **Users & Profiles** must be on. With the toggle off, the page
+(`/admin/merge`). It needs organization-wide HR manager rights, and the **Merge
+Profiles** toggle under **Settings** → **Modules** → **Users & Profiles** must be on. With the toggle off, the page
 redirects to the dashboard.
 
 <img src="/images/platform/users/merge-records.png" alt="Merge Records page with the manual source and target selectors above a Duplicate Suggestions table showing match scores and reasons" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
@@ -41,6 +41,9 @@ tells you to swap the two: select the contact as source and the member as target
 The **source** is the record that goes away. The **target** is the record you
 keep. The page labels them exactly that way: **Source (will be deleted)** and
 **Target (will be kept)**.
+
+You cannot merge away the account you are signed in with. If you try, Orgo tells
+you to sign in with the other account and merge this one into it.
 
 ---
 
@@ -97,7 +100,7 @@ changes.
 - Related records are re-pointed at the target. Where both records already have
   the same thing, the duplicate is dropped rather than doubled: one attendance
   per event (the source's status and payment win), one value per custom field,
-  one tag, one company membership.
+  one tag, one membership per company. A person who belongs to several companies keeps all of them.
 - The source's sign-in material is destroyed, not moved: sessions, API tokens,
   push tokens and any active impersonation session are deleted.
 - A source **contact** is deleted outright.
@@ -178,4 +181,4 @@ the import back instead.
 - [Contacts](/platform/contacts) - what a contact is, and how it differs from a member
 - [Deletion of Account](/platform/users/deletion-of-account) - removing a record instead of merging it
 - [Custom Fields](/platform/users/custom-fields) - the profile values compared during a merge
-- [Permissions](/platform/permissions) - what HR_TENANT unlocks
+- [Permissions](/platform/permissions) - what organization-wide HR managers can do

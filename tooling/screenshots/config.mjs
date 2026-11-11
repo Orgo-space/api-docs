@@ -39,9 +39,20 @@ export const FRONTEND = process.env.ORGO_FRONTEND || 'http://localhost:8105';
 // 3 races the dev server and yields skeleton-only captures. See the README traps section.
 export const CONCURRENCY = num(process.env.ORGO_CAPTURE_CONCURRENCY, 2);
 
+// The browser's clock. The demo organisation's timezone is America/New_York, and the app
+// formats some fields in the browser's zone and others in the tenant's, so a browser left on
+// UTC produces screenshots where an event's end time reads five hours before its start. Keep
+// these two the same unless you are deliberately photographing a timezone difference.
+export const TIMEZONE = process.env.ORGO_TIMEZONE || 'America/New_York';
+
 export const PHP_CONTAINER = process.env.ORGO_PHP_CONTAINER || 'orgo-1-php';
 export const DB_CONTAINER = process.env.ORGO_DB_CONTAINER || 'orgo-1-database';
-export const DB_NAME = process.env.ORGO_DB_NAME || 'orgo';
+// The documentation database on the orgo-1 instance. The default used to be 'orgo',
+// which is the OTHER checkout's database on the same MySQL server: every script that
+// writes is gated on a marker table that lives only in orgo_docs, so the wrong default
+// made those scripts abort with 'this is not the documentation database' unless the
+// caller remembered ORGO_DB_NAME. Nothing in this pipeline should ever read orgo.
+export const DB_NAME = process.env.ORGO_DB_NAME || 'orgo_docs';
 export const DB_USER = process.env.ORGO_DB_USER || 'orgo';
 export const DB_PASSWORD = process.env.ORGO_DB_PASSWORD || 'orgopass';
 

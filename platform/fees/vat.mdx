@@ -19,12 +19,12 @@ Tax on manual invoices is separate and is set on the invoice template.
 ## Turning them on
 
 **Settings** → **Payments & Fees** → **Membership fees** → **Pricing Options**.
-Requires `ADMIN_TENANT`.
+Requires the Admin (Organization) permission.
 
 | Setting | What it does |
 |---|---|
-| **Enable VAT on Fees** | Shows the VAT fields on membership prices and adds VAT on top at checkout and on invoices |
-| **Enable One-time Registration Fee** | Shows the registration fee field on membership prices and charges it once, on a member's first membership payment |
+| **Enable VAT on Fees** | Shows the VAT fields on membership levels and adds VAT on top at checkout and on invoices |
+| **Enable One-time Registration Fee** | Shows the registration fee field on membership levels and charges it once, on a member's first membership payment |
 
 <Warning>
 These two switches are authoritative. With **Enable VAT on Fees** off, a price
@@ -33,18 +33,28 @@ every invoice line is issued as non-taxable. Turning the switch on later starts
 applying the stored rates immediately, so check your prices before you flip it.
 </Warning>
 
+<Info>
+Most organisations leave both switches off, which is their default. With them
+off, the VAT and registration fee fields do not appear on membership levels, and
+members pay exactly the price on the level.
+</Info>
+
 <img src="/images/platform/fees/fees-vat-settings.png" alt="Pricing Options section of the membership fee settings with Enable VAT on Fees and Enable One-time Registration Fee switches" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
 ## Setting a rate per membership level
 
-Once VAT is on, each membership price on a fee product gains a **VAT** block:
+Once VAT is on, each membership level (open a product, then **Add level** or
+**Edit level**) gains a **VAT on the fee** field under **Extra charges**:
 
-- **VAT exempt (not taxable)**: the level carries no VAT and is excluded from
-  the taxable base.
-- **VAT rate (%)**: used when the level is not exempt. Decimal rates are stored
-  as written, so 13.5 or 19.6 are fine.
+- **Not taxable**: the level carries no VAT and is excluded from the taxable
+  base. The percentage box is disabled while it is ticked.
+- **VAT on the fee**: the rate in percent, used when the level is not marked
+  not taxable. Leave it empty or at 0 and no VAT is added.
+
+The help text under the field reads: "Added on top of the price and shown
+separately at checkout and on the invoice."
 
 That is how one organisation charges VAT on a standard membership and none on a
 reduced or honorary level: they are separate prices, so they carry separate
@@ -71,10 +81,10 @@ from it.
 
 ## The one-time registration fee
 
-The registration fee is a joining fee: it is a field on the membership level,
-and it is charged once per member, on their first membership payment. The field
-carries the note "Charged once, on the member's first membership payment. Leave
-empty for no registration fee."
+The registration fee is a joining fee: it is the **Registration fee** field on a
+membership level, and it is charged once per member, on their first membership
+payment. The field carries the note "Charged once, on the first membership
+payment ever. Never on renewals."
 
 <Note>
 "First payment" means the member has never had a membership validity date. A
@@ -85,11 +95,12 @@ individual short of clearing their membership history.
 
 Other things worth knowing:
 
-- It is only available on organisation-level fee products. A local center fee
-  product does not show the field.
-- It has its own VAT treatment, set independently of the price VAT. Those
-  controls appear only once you have entered a registration fee amount, and only
-  when **Enable VAT on Fees** is also on.
+- It is only available on organisation-level fee products, and not on company
+  levels. A local center fee product or a company level does not show the field.
+- It has its own VAT treatment, set independently of the price VAT, under **VAT
+  on the registration fee** (with its own **Not taxable** tick). Those controls
+  appear only once you have entered a registration fee amount, and only when
+  **Enable VAT on Fees** is also on.
 - It is recorded as its own payment row and appears as its own invoice line, so
   reports separate joining income from recurring dues. It rides on the same card
   charge as the first membership payment, but it stays a separate row: **Refund**
@@ -103,7 +114,7 @@ Other things worth knowing:
 
 ## What the member is charged
 
-At checkout the member sees one total built from up to five parts:
+At checkout the member sees one total built from up to six parts:
 
 | Part | When it applies |
 |---|---|
@@ -112,10 +123,13 @@ At checkout the member sees one total built from up to five parts:
 | Registration fee | Registration fee on, level has an amount, member has never paid |
 | VAT on registration fee | VAT on, registration fee not exempt, rate above zero |
 | Donation | Only if the member adds one at checkout |
+| Processing fee | Only if the member chooses to cover it, and only when **Let members cover the processing fee** is on (it is off by default, and is not offered at all while **Enable VAT on Fees** is on) |
 
 The membership summary card, the fee cards and the card payment panel all
 compute this the same way, so the amount on the button matches the amount on the
-card form.
+card form. The amount charged to the card is rounded to the nearest cent (an
+earlier version cut fractions of a cent off, which could charge one cent less
+than the price).
 
 ---
 
@@ -128,8 +142,14 @@ raised. Changing a price or a template later never rewrites an issued invoice.
 
 The invoice shows a VAT column per line, then a totals block with **Subtotal**,
 one **VAT** row per distinct rate (labelled with the rate and the base it was
-applied to), **Total** and **Amount due**. Line amounts and VAT are rounded to
-two decimals.
+applied to), **Total** and **Amount due**. The VAT on each line is rounded to
+two decimals before the lines are added up, so the invoice total equals what the
+card was charged.
+
+An invoice that Orgo creates for an online card payment never states more than
+was charged. If VAT was configured on the price but was not collected on that
+charge, the invoice is issued with every line non-taxable at the amount actually
+paid.
 
 When at least one line is exempt, the invoice prints the VAT exemption note,
 which is the free-text wording that states the legal basis for the exemption.
@@ -148,8 +168,8 @@ documents, ask support to set it for you.
 ## Tax on manual invoices
 
 Manual invoices take their tax from the invoice template rather than from a
-membership price. **Settings** → **Payments & Fees** → **Invoice templates**,
-`ADMIN_TENANT`.
+membership price. **Settings** → **Payments & Fees** → **Invoice Templates**,
+Admin (Organization) permission.
 
 | Field | What it is for |
 |---|---|

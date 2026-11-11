@@ -84,7 +84,11 @@ A member is skipped entirely when they have an active subscription on that fee
 product, their user type is marked as not eligible for a fee, their membership is
 covered by a company with its own validity date (the company is chased instead,
 not the member who cannot pay), or the fee period is under two months. Monthly
-fees get no ladder.
+fees get no ladder, unless the fee product has **Recurring** switched on (in
+which case a monthly member without a subscription is chased like anyone else).
+With **Require Contract for Membership** on, a member who has already signed the
+renewal contract is skipped too, because the reminder would only tell them to
+sign it. Demonstration organisations send no reminders at all.
 
 **Company memberships.** A second job runs daily at 18:30 UTC on its own seven
 rungs. They are the same milestones with one swap: a company is chased the day
@@ -99,8 +103,13 @@ The job chases companies that are **Active** or **Pending**, and only those with
 a membership plan and a renewal date. A company set to Inactive or deleted gets
 nothing: no reminder, and no renewal invoice raised for it either, since with the
 Invoices module on each reminder carries the company's unpaid renewal invoice as
-a PDF. The status is checked again at the moment of sending, so deactivating a
-company also stops a reminder already queued for that day.
+a PDF. The same open invoice is reused at every rung, so it keeps its number and
+dates from one reminder to the next; it is replaced (the old one voided) only if
+the company changed plan or the period it bills has since been paid. It is due 60
+days after it is issued, or after the number of days set as **Payment Term** on
+your default [invoice template](/platform/fees/invoices). The status is checked
+again at the moment of sending, so deactivating a company also stops a reminder
+already queued for that day.
 
 **Wording and switches.** All fourteen reminders (seven individual, seven
 company) are listed under **Membership & Fees** at **Settings** → **Emails &
@@ -126,8 +135,7 @@ Once the fee is no longer active:
   **My Membership Fee** in their own menu carries a **Due** tag;
 - member-only ticket prices stop: events return an empty member-price list, so
   they see the public price;
-- they cannot create a referral for someone else, and get "You cannot create
-  referrals at the moment" if they try;
+
 - with **Require Contract for Membership** on, their signed membership contract
   is cancelled, so they must sign again before buying a new membership.
 
@@ -145,13 +153,15 @@ the validity date, not the grace window.
 Still reachable, so the payment can be completed: the profile fee and payments
 tabs, product payment pages, onboarding, document previews, donation pages and
 the payment confirmation page. The mandatory-course gate stands down while a fee
-is owed. The redirect never applies to `HR_TENANT` or `FINANCIAL_TENANT` holders,
-to user types not eligible for a fee, or inside the event app.
+is owed. The redirect never applies to holders of the HR (Organization) or Financial
+(Organization) permission, to user types not eligible for a fee, or inside the
+event app.
 
 With **Company Fee Payment Mandatory** on, a member of a company follows the
 company fee instead: primary contacts and financial representatives go to a
 company payment page, everyone else to a page explaining that the company fee is
-outstanding. `ADMIN_TENANT` holders are exempt.
+outstanding. Holders of the Admin (Organization) permission are exempt. This
+needs the Company module on as well as **Company Fee Payment Mandatory**.
 
 ### Automatic deactivation
 
@@ -161,6 +171,13 @@ that range is skipped rather than deactivated). A daily 07:00 UTC job sets any
 active member whose validity date is older than the delay to inactive, skipping
 user types not eligible for a fee and lifetime levels when lifetime membership is
 enabled.
+
+The reverse also happens. When a payment (online, recorded by an administrator,
+approved in a batch, an invoice marked paid, or a counting donation) moves an
+inactive member's validity date into the future, they are set back to active,
+unless a resignation request of theirs was approved. The same applies to members
+imported as inactive once their payments are imported, and after a fee-settings
+change recalculates every member's date.
 
 <Warning>
 The delay counts from the validity date itself, not from the end of the **Fee
@@ -174,18 +191,22 @@ deactivation delay is the number that decides when the account is switched off.
 
 From the user menu, **My Membership Fee**, or from their profile's fee tab:
 
-<img src="/images/platform/fees/member-fee-card-due.png" alt="Member fee card showing an unpaid membership with its status, amount, membership level and Pay button, above a history list with the current year unpaid and the two previous years paid" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/fees/member-fee-card-due.png" alt="The fee tab of a member profile, with the combined total above an organisation fee card and a local fee card, each showing the level, what it costs and a history of periods marked paid or unpaid, and a Pay button on the unpaid local fee" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 | Option | Offered when |
 |---|---|
-| **Pay once** | The level is sold as a one-time price, there is no active subscription, no bank transfer is in progress, and either the membership has expired or the member is inside the advance-payment window. |
-| **Set up automatic renewal** | The level is sold as recurring, the membership has already expired, the member is paying for themselves, and the level's own period override, if it has one, is 12 months or less. Paying by card this way creates the subscription; an administrator recording a payment by hand does not, because there is no card on file. |
+| **Pay once** | The level is sold as a one-time price, there is no active subscription, no bank transfer is in progress, a required membership contract is signed, and either the membership has expired or the member is inside the advance-payment window. With **Fixed Starting Date for Fees** on, a member with unpaid earlier cycles can also pay those while still valid. |
+| **Set up automatic renewal** | The level is sold as recurring, the member is paying for themselves, the level's own period override, if it has one, is 12 months or less, a required membership contract is signed, no bank transfer is in progress, and either the membership has expired or the member is inside the advance-payment window. Paying by card this way creates the subscription; an administrator recording a payment by hand does not, because there is no card on file. |
 | **Pay by bank transfer** | **Enable Membership Payments via Bank Transfer** is on and the invoices module has an invoice product configured. The membership is flagged as having a transfer in progress until the payment is confirmed. |
-| **Ask an administrator to record it** | **Allow Mark as Paid** is on. A `FINANCIAL_TENANT` holder records the organisation fee, a `FINANCIAL_LOCAL` holder the local center fee. |
+| **Ask an administrator to record it** | **Allow Mark as Paid** is on. An administrator with the Financial (Organization) permission records the organisation fee, one with Financial (Chapter) the local center fee. |
 
-Members can switch membership level only while expired, and only when more than
-one level is available to them. A `FINANCIAL_LOCAL` holder can change someone's
-level at any time.
+**Subscribing before expiry.** A member who is still covered can set up automatic renewal once the advance-payment window opens, without paying twice for the days they have left. The card is saved now and the first charge falls on the day their current membership ends, so the panel says nothing is charged today and names the amount and that date. The subscription stays pending until the card is saved, and an unfinished attempt is cancelled when they try again. A one-time donation cannot be added to that first payment, because there is nothing to charge it against today. With **Donations count towards membership** on, membership runs from the payment day instead, so the subscription bills immediately as it always did.
+
+Members can switch membership level only while their membership has expired or
+they are inside the advance-payment window (the same moment they are allowed to
+pay), and only when more than one level is available to them. An administrator
+who has both finance and member-management rights over that member can change
+their level at any time.
 
 **Renewing early.** Paying is always allowed once the membership has expired or
 was never paid. Before expiry it is allowed only inside the advance-payment
@@ -200,6 +221,16 @@ window, at **Settings** → **Payments & Fees** → **Membership fees** →
 After any payment the validity date is set to the end of the last period paid
 for, so an early renewal extends the membership rather than restarting it from
 the payment date.
+
+<Note>
+**Donations count towards membership** (**Settings** → **Payments & Fees** →
+**Membership fees** → **Validity Period**, off by default, and not available
+together with **Fixed Starting Date for Fees**) changes this: every payment then
+covers its own period from the day it is paid, and nothing stacks onto the
+current end. A donation that reaches the minimum of a flexible-amount
+membership level also earns membership. Leave it off to keep the stacking
+behaviour described here.
+</Note>
 
 **Example.** An annual membership valid to 30 June 2026, with the default one
 month advance window and **Fixed Starting Date for Fees** off, so periods follow
@@ -217,7 +248,7 @@ inside a grace window: with **Fee Valid Months** set to 1, a member who pays on
 
 A subscriber's fee card reads "Auto-renewing membership" with an action to cancel
 it, then "Auto-renewal ending" with the last day they are covered. Only the
-member themselves or a `FINANCIAL_TENANT` holder can cancel.
+member themselves or someone with the Financial (Organization) permission can cancel.
 
 Cancelling stops future charges. It does not refund anything already paid and it
 does not end the current period early: the member stays active until the period
@@ -233,7 +264,8 @@ included.
     Work down the list. Do they have an active subscription on the fee product
     (subscribers are skipped by design)? Is their membership covered by a company
     (the company is chased instead)? Is their user type marked as not eligible
-    for a fee? Is the fee period shorter than two months? Then check that the
+    for a fee? Is the fee period shorter than two months? Have they already signed the renewal
+    contract? Then check that the
     reminder is switched on under **Membership & Fees** at **Settings** →
     **Emails & Notifications** → **Emails**. Finally, look at their validity date: the ladder matches
     it against the exact milestone dates, so a validity date that was edited or
@@ -242,11 +274,11 @@ included.
 
   <Accordion title="Members on a monthly membership never hear anything">
     Expected. The under-two-months rule is read from whichever period applies to
-    that member, so a level with a one-month **Cycle period (in months)** override
-    is skipped even on an annual product, and selling the level as a subscription does not
-    put it back in. Monthly subscribers still get their per charge **Renewal
-    Confirmed** or **Renewal Failed** email, which is the only mail they should be
-    getting.
+    that member, so a level with a one-month **Own cycle** override is skipped even
+    on an annual product. The exception is a fee product with **Recurring**
+    switched on: members on it who have no active subscription are still chased.
+    Monthly subscribers get their per charge **Renewal Confirmed** or **Renewal
+    Failed** email, which is the only mail they should be getting.
   </Accordion>
 
   <Accordion title="A member on automatic renewal was not renewed">
@@ -260,12 +292,12 @@ included.
   </Accordion>
 
   <Accordion title="A member cannot switch to the level I told them to pick">
-    The level chooser only offers prices that are not archived, not company only,
+    The level chooser only offers levels that are not archived, not company only,
     not hidden from members, and it only appears to the member while their
-    membership has expired and more than one level is open to them. A price marked
-    **Is only assignable by admins (hidden for members)** is invisible to them by
-    definition: a `FINANCIAL_LOCAL` holder has to assign it, and can do so at any
-    time rather than only at expiry.
+    membership has expired or the advance-payment window is open, and more than
+    one level is open to them. A level marked
+    **Admins only** is invisible to them by definition: an administrator has to
+    assign it, and can do so at any time rather than only at expiry.
   </Accordion>
 
   <Accordion title="Auto-deactivation ran but some expired members are still active">

@@ -54,7 +54,7 @@ notification points at: a discussion, an event, or a drive file.
 | commented on discussion | Everyone following that discussion, except the commenter |
 | replied on your comment | The comment author |
 | mentioned you in a post / comment / reply | The mentioned members |
-| reacted to your post / comment | The author of the discussion or comment |
+| reacted to your post / comment | The author of the discussion or comment. In the app only, never by email |
 | solved task / reopened task / commented on task | Assignees and the creator, except the person acting |
 | invited you to the event | The member an organizer adds to an event |
 | posted in / replied to your post / reacted to your post | Participants in that event feed |
@@ -66,7 +66,8 @@ notification points at: a discussion, an event, or a drive file.
 | accepted your invitation | The inviter, when an invited person joins |
 
 Inactive members are never notified, and nobody is notified about their own
-action.
+action. A notification belongs to the comment, reply or post that caused it:
+when that content is deleted, the notification disappears from the bell with it.
 
 ---
 
@@ -76,7 +77,7 @@ action.
 |---|---|---|
 | In-app | Every notification | Always stored, whatever the member's other preferences say |
 | Push | Everything except file uploads | The member has **Push notifications** on and at least one registered device or browser |
-| Email | Discussions, comments and replies, mentions, events, votes, tasks and support tickets, and membership changes (added to a group or local center, roles changed, registration, invitation accepted) | Content notifications need the matching per-member toggle. Membership changes have no toggle and always email. Reactions, file uploads and networking 1:1 invitations never email. Moderation alerts are not emailed through this path either, but moderators do receive a separate email for each held post, capped at 50 moderators per post, with no toggle. See [Moderation](/platform/discussion/moderation). |
+| Email | Discussions, comments and replies (the email quotes the comment itself), mentions, events, votes, tasks and support tickets, and membership changes (added to a group or local center, roles changed, registration, invitation accepted) | Content notifications need the matching per-member toggle. Membership changes have no toggle and always email. Reactions, file uploads and networking 1:1 invitations never email. Moderation alerts are not emailed through this path either, but moderators do receive a separate email for each held post, capped at 50 moderators per post, with no toggle. See [Moderation](/platform/discussion/moderation). |
 
 Membership and role changes are the surprising row. When an administrator gives
 a member a new role, the member gets an email as well as the in-app entry, and
@@ -95,29 +96,40 @@ toggle does not stop them. That toggle governs support tickets and issues.
 
 ## Member preferences
 
-Members set their own under **Edit profile** → **Notifications**. Admins with
-`ADMIN_LOCAL` see the same tab on a member's profile and can change it for them.
+Members set their own from their profile: **Settings** in the profile header,
+then the **Notifications** tab. Chapter admins and above see the same tab on a
+member's profile and can change it for them. New members are asked for the same
+choices during onboarding.
 
-| Control | Effect |
-|---|---|
-| **Push notification subscribed** | Master switch for browser and mobile push. Off means no device receives anything. |
-| **Newsletter (email)** | Subscription to newsletter campaigns, shown only when the newsletter module is on. Separate from notifications. |
-| **New discussion** | Email for new discussions, with a frequency chip: **Instant**, **Daily**, or **Weekly**. |
-| **New event** | Instant email when an event is published or you are invited. |
-| **Comment on my post** | Instant email when someone comments or replies. |
-| **Task** | Instant email for task and support-ticket activity. |
-| **Mentions** | Instant email when you are @mentioned. |
-| **Voting / Polls** | Instant email when a vote is published or closed. Shown only when the voting module is on. |
+The tab has two groups.
+
+| Group | Control | Effect |
+|---|---|---|
+| **Channels** | **Push Notifications** | Master switch for browser and mobile push. Off means no device receives anything. |
+| **Channels** | **Newsletter** | Subscription to newsletter campaigns, shown only when the newsletter module is on. Separate from notifications. |
+| **Email notifications** | **New discussion** | Email for new discussions. A frequency selector beside it offers **Instant**, **Daily** or **Weekly**; turning the switch on starts at **Instant**. |
+| **Email notifications** | **New event** | Instant email when an event is published or you are invited. |
+| **Email notifications** | **Comment on my post** | Instant email when someone comments or replies. |
+| **Email notifications** | **Task** | Instant email for task and support-ticket activity. |
+| **Email notifications** | **Mentions** | Instant email when you are @mentioned. |
+| **Email notifications** | **Voting / Polls** | Instant email when a vote is published or closed. Shown only when the voting module is on. |
 
 <Note>
 Turning an email toggle off never hides the notification in the app. It only
 stops the email.
 </Note>
 
-Every notification email carries an unsubscribe link that switches off just that
-category, plus a `List-Unsubscribe` header that opens a page switching off
-everything. True one-click unsubscribe, where the mail client acts without
-opening anything, exists on campaign email only.
+Every notification email supports unsubscribing in two ways.
+
+- **The unsubscribe button in the mail app.** Gmail, Apple Mail and similar apps
+  show their own unsubscribe option, which acts at once without opening anything.
+  It switches off just that kind of email (comments, events, mentions and so on)
+  for that one account, in that one organization. The member keeps everything else.
+- **The unsubscribe link in the email footer.** It opens a page that works
+  without signing in and offers two buttons, **Unsubscribe Email Newsletter** and
+  **Unsubscribe ALL email notification**. Nothing changes until one is pressed,
+  and the second one turns off every notification email. Both buttons act on every
+  Orgo account that uses the same email address.
 
 ### Daily and weekly digests
 
@@ -139,7 +151,9 @@ emails with a summary.
 ## Tenant defaults
 
 **Settings** → **Modules** → **Emails & Notifications** → **Notification
-Preferences**. Requires `ADMIN_TENANT`.
+Preferences**. This is a configuration screen, so it needs the **Orgo
+administrator** flag on your account, not only an admin permission. See
+[Permissions](/platform/permissions).
 
 <img src="/images/platform/communication/notification-settings.png" alt="Default Notification Preferences with switches for newsletter, push, comments, tasks, votes, events, mentions and a frequency selector for discussions" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -167,7 +181,9 @@ anyone already in the organization.
 **Browser push** is offered automatically: a supported browser asks for
 permission on first load, and allowing it registers that browser. Revoking
 permission removes the registration. Safari and the native app wrapper skip this
-path.
+path. Firefox does not ask on load, because it ignores a permission request that
+no click started. Firefox users get an **Enable** button at the top of the
+notifications panel instead, and pressing it registers the browser.
 
 **Mobile push** runs through OneSignal. The device registers when the member
 signs in to the Orgo app, tagged with the workspace so the right organization's
@@ -251,9 +267,9 @@ activity feed, not an audit trail: for a durable record of email, use the
     - the matching per-member toggle, and for discussions whether the frequency
       is **Daily** or **Weekly**, in which case the email is waiting for the
       next digest run;
-    - whether they used an unsubscribe link, which switches a category off with
-      no confirmation step and no trace on the profile other than the toggle
-      itself;
+    - whether they unsubscribed, from the mail app's own button or from the footer
+      link. Neither asks for confirmation, and the only trace on the profile is the
+      toggle itself;
     - the address on the account. An empty or malformed address is skipped
       silently, without an entry in the email log;
     - whether this is a demo organization. Demo tenants never send notification
@@ -261,11 +277,11 @@ activity feed, not an audit trail: for a durable record of email, use the
   </Accordion>
 
   <Accordion title="A member unsubscribed in one organization and stopped getting emails from another. Is that expected?">
-    Yes, and it is the most confusing behaviour on this page. Unsubscribe links
-    match on the email address, not on the account, so one click switches that
-    category off for every Orgo account sharing that address, in every
-    organization. The one-click unsubscribe in the mail header does the same for
-    all categories at once.
+    Yes, for the footer link, and it is the most confusing behaviour on this
+    page. The footer link matches on the email address, not on the account, so
+    one click switches the chosen emails off for every Orgo account sharing that
+    address, in every organization. The unsubscribe button inside the mail app is
+    narrower: it switches off one kind of email for one account only.
 
     The fix is to turn the categories back on per account, on each affected
     profile's **Notifications** tab.

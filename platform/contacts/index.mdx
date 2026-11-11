@@ -19,7 +19,7 @@ that plus a login.
 newsletter subscribers, event guests, partner staff, and people who have not joined yet.
 **Replaces** a separate CRM, or a spreadsheet kept alongside the member list.
 
-<img src="/images/platform/contacts/contacts-list.png" alt="Contacts list showing name, email and phone icons, newsletter state, source, status and tags columns, with search and filters for status, tags and newsletter above the table" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/support/contacts-list.png" alt="Contacts list showing name, email and phone icons, newsletter state, source, status and tags columns, with search and filters for status, tags and newsletter above the table" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
@@ -56,10 +56,14 @@ account first: see [Becoming a member](/platform/contacts/becoming-a-member).
 
 ## What a contact can do
 
+<img src="/images/platform/support/contact-record.png" alt="A contact record with the details, status and tags on the left and the related activity on the right" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
 - **Pay you.** Donations, event tickets, invoices and recurring subscriptions all attach to
   a contact. [Payments and the fee boundary](/platform/contacts/payments)
 - **Receive newsletters.** Contacts and members are drawn into the same audiences, and only
   subscribed contacts are included. [Newsletter and consent](/platform/contacts/newsletter)
+- **Get a one-to-one email.** **Send an email** on the record writes to one contact with
+  your branding and an unsubscribe link. [The contact record](/platform/contacts/record)
 - **Register for events.** A non-member attendee is a contact, holds the same QR badge, and
   can sign in to the Event App. [Events and the Event App](/platform/contacts/events)
 - **Arrive on their own.** Contact forms, newsletter signups, public event registrations,
@@ -74,6 +78,7 @@ account first: see [Becoming a member](/platform/contacts/becoming-a-member).
   event-attended triggers, and can be emailed or tagged by a workflow. See
   [Workflows](/platform/workflows)
 - **Become a member.** Merging is the real conversion, and it moves their history across.
+  It also happens by itself when a contact registers with the same email address.
   [Becoming a member](/platform/contacts/becoming-a-member)
 
 Who may see and edit any of this is a separate question with a longer answer:
@@ -83,13 +88,13 @@ Who may see and edit any of this is a separate question with a longer answer:
 
 ## Turning the module on
 
-**Settings** → **Modules** → **Contacts**. Requires `ADMIN_TENANT`.
+**Settings** → **Modules** → **Contacts**. Requires the Orgo administrator flag.
 
-| Setting | Key | Default | What it does |
-|---|---|---|---|
-| **Enable Contacts Module** | `contacts.isActive` | On | Turns contacts on and puts **Contacts** in the sidebar |
-| **Enable Contact Statuses** | `contacts.hasStatuses` | On | Adds a status field to every contact and a **Contact Statuses** page where you define the list, its colours and its order |
-| **Enable Per-Chapter Contacts** | `contacts.perChapterContacts` | Off | Lets a contact belong to a chapter, and adds the chapter filter and column. Needs the Local Centers feature on as well, and the switch stays disabled until it is |
+| Setting | Default | What it does |
+|---|---|---|
+| **Enable Contacts Module** | On | Turns contacts on and puts **Contacts** in the sidebar |
+| **Enable Contact Statuses** | On | Adds a status field to every contact and a **Contact Statuses** page where you define the list, its colours and its order |
+| **Enable Per-Chapter Contacts** | Off | Lets a contact belong to a chapter, and adds the chapter filter and column. Needs the Local Centers feature on as well, and the switch stays disabled until it is |
 
 Both extra switches stay disabled while **Enable Contacts Module** is off.
 
@@ -109,8 +114,8 @@ page rather than a set of tabs. Configuration is elsewhere, under
 **Settings** → **Modules** → **Contacts**.
 
 The sidebar entry is hidden unless you hold a contact permission and, on top of that, either
-a tenant-level permission (`HR_TENANT`, `FINANCIAL_TENANT` or `ADMIN_TENANT`) or
-**Enable Per-Chapter Contacts** is on. A chapter HR manager in an organisation that has not
+an organisation-wide one (organisation-wide HR or financial manager, or organisation admin)
+or **Enable Per-Chapter Contacts** is on. A chapter HR manager in an organisation that has not
 turned per-chapter contacts on will not see **Contacts** in the sidebar at all, and that is
 the expected behaviour rather than a permission fault. The sidebar itself is editable, so
 your organisation may have moved or renamed the entry.
@@ -119,7 +124,7 @@ your organisation may have moved or renamed the entry.
 
 ## How many contacts do we have
 
-The nightly metrics job records `contacts_count` for the whole organisation only. It is
+The nightly metrics job records the contact total for the whole organisation only. It is
 never written per chapter, because contacts have no chapter dimension in that job's model.
 Two consequences:
 

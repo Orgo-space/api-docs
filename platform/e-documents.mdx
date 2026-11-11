@@ -71,6 +71,19 @@ A signed PDF can also be regenerated on demand from the frozen document text, th
 
 ---
 
+## When a document counts as validly signed
+
+One rule decides it everywhere: on the member's signed count, on the required-documents gate, and on the **Require Contract for Membership** block described in [Contracts](/platform/contracts). A document counts as validly signed when all of these hold:
+
+- It has not been cancelled.
+- The member has signed it, or an admin recorded the signature with **Mark as signed**.
+- It has not expired: either the template never expires, or the validity end date is still in the future.
+- If the template requires a countersignature, somebody has provided it. **Either** an admin has actually countersigned, **or** an admin used **Mark as signed**.
+
+That last point is the one that catches people out. On a template that requires an admin countersignature, a document the member has signed is **not** valid on its own, so the member stays blocked until an admin countersigns it or marks it as signed. Using **Mark as signed** satisfies the requirement on its own, which is what makes it the quick way to unblock somebody who signed on paper.
+
+---
+
 ## Validity, expiry and renewal
 
 A template with **Infinite contract duration** produces documents that never expire. Otherwise validity runs from the signing date for the configured number of months, unless the admin set custom dates when sending it.
@@ -86,9 +99,9 @@ A template with **Infinite contract duration** produces documents that never exp
 
 | Action | Who | Effect |
 |---|---|---|
-| **Revoke** on a signed document | `HR_TENANT`, and only when the template has **Enable signature cancellation** on | Deletes the document record |
-| **Delete** on a pending document | `HR_TENANT`, or the person it was assigned to | Deletes the document record |
-| **Cancel all signed** on a template | `ADMIN_TENANT` | Marks every outstanding document from that template as cancelled, records who cancelled it and when, and regenerates the template's identifier so everyone is asked to sign again |
+| **Revoke** on a signed document | Organization HR managers, and only when the template has **Enable signature cancellation** on | Deletes the document record |
+| **Delete** on a pending document | Organization HR managers, or the person it was assigned to | Deletes the document record |
+| **Cancel all signed** on a template | Organization admins | Marks every outstanding document from that template as cancelled, records who cancelled it and when, and regenerates the template's identifier so everyone is asked to sign again |
 | Signing again outside the renewal window rules | The signer | The previous document is marked cancelled with the signer recorded as the canceller, and a new one is created |
 
 Cancelled documents stay in the member's history with a **Canceled** tag, the name of who cancelled them, and the date. Deleted documents are removed.
@@ -120,4 +133,4 @@ In many jurisdictions that is enough for a simple electronic signature on routin
 - [Identity Validation](/platform/identity-validation) - verifying who a member actually is
 - [Privacy Settings](/platform/users/privacy-settings) - what member data is visible and to whom
 - [Files](/platform/files) - general document storage and share links
-- [Permissions](/platform/permissions) - what `HR_TENANT` and `ADMIN_TENANT` unlock
+- [Permissions](/platform/permissions) - what the HR and Admin permissions unlock

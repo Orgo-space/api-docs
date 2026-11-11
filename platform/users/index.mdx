@@ -19,7 +19,7 @@ yourself, invite them, let them sign themselves up, or import a spreadsheet.
 ## The member directory
 
 **Members** in the sidebar lists everyone in your organisation.
-**Settings** → **Users & Profiles** → **Who Can See Members in General Groups**
+**Settings** → **Modules** → **Users & Profiles** → **Who Can See Members in General Groups**
 decides who sees it at all: All Users, HR Local, HR Tenant, Admin Local or Admin
 Tenant. At an admin level, ordinary members never see the directory.
 
@@ -32,29 +32,41 @@ members at `/users?unit={id}`.
 
 <img src="/images/platform/users/user-directory.png" alt="Member directory in table view with the filter bar, member rows and the CSV export button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-Three views share the same filters: the table, **Gallery** (photo cards) and
-**Map**, which plots members who have a town on their profile.
+Three views share the same filters: **Table**, **Gallery** (photo cards) and
+**Map**, which plots members who have a town on their profile. The switch sits at
+the right end of the filter row. The first time someone opens the
+organisation-wide directory on a computer it opens on the map; chapter and group
+lists open on the table. On a phone the first view is the table for
+administrators and Gallery for everyone else. After that the browser remembers
+the last view you picked. In Gallery and Map, **Fullscreen** gives the cards the
+whole window.
 
 ### Filters
 
-The filter bar changes with your permissions and active modules. Only these
-filters exist:
+The filter row shows a handful of filters and keeps the rest under **More
+filters**; a filter you pick from there stays on the row for the session. Which
+ones exist depends on your permissions and on what is switched on. The list opens
+filtered to **Active** members, so people with another status stay out of sight
+until you change **Status**. **Clear filters** puts everything back.
 
 | Filter | What it matches | Shown when |
 |---|---|---|
-| **Name or Keyword** | Full name, profession headline, company, or role at that company | Always |
-| **Location** | Town of residence | Organisation-wide and role-group lists |
-| **Country** / **County** / **State** | Country for international organisations, county or state otherwise | Depends on the organisation country |
-| **Status** | One member status (see [User Statuses](/platform/users/statuses)) | HR_LOCAL on that local center, or HR_TENANT organisation-wide |
-| **Fee status** | Fee paid, Fee not paid, or Grace period | Fees module on and HR_TENANT |
-| **Fee type** | A specific membership fee price | Fees module on and HR_TENANT or FINANCIAL_TENANT |
+| **Status** | One member status (see [User Statuses](/platform/users/statuses)) | You manage members of that chapter, or the whole organisation |
+| **User type** | One user type | **Who Can Filter Users by Type** (All Users or Admin Tenant) allows you |
+| **Country** / **County** / **State** | Country for international organisations, county or state otherwise. County waits until a state is picked where states exist | Organisation-wide and role-group lists; Country only when you have members abroad |
+| **Chapter** | Local center | The organisation has local centers |
+| **Fee status** | Fee paid, Fee not paid, or Grace period | Fees module on and you manage members organisation-wide |
+| Your interests field | The options of the field designated in [Custom Fields](/platform/users/custom-fields#the-interest-field) | That field is set |
+| **Name** | Full name, profession headline, company, or role at that company | Always |
+| **Age** (under the **More filters** menu) | **Under 18** or **Adults** | **Show Age in Lists** is on and you may see ages |
+| **Town** (called **Location** on a phone) | Town of residence | Organisation-wide and role-group lists |
 | **Card ID** | Partial match on the member card number | **Enable Card/Member IDs** is on |
 | **Profession** | Profession industry | Professions module with industries on |
-| Skills, interests, **Availability** | Values from those profile fields | The matching field is enabled |
-| User type | One user type | **Who Can Filter Users by Type** (All Users or Admin Tenant) allows you |
-| **Chapter** | Local center | The organisation has local centers |
-| **All members** / **Only full members** | Full membership | **Full Membership Status** is on |
-| **All permissions** | Members holding one or more permissions | ADMIN_TENANT only |
+| Skills, **Availability** | Values from those profile fields | The matching field is enabled |
+| **Permissions** | Members holding one or more permissions, grouped Organization, Chapter and Regional | You are an Orgo administrator |
+| **Fee type** | A specific membership fee price | Fees module on and you manage members or finances organisation-wide |
+| **Full member** | All members, Only full members, or Only not full members | **Full Membership Status** is on |
+| **Date joined** | A **From** and **Until** range | You manage members of that chapter, or the whole organisation |
 
 <Note>
 **Grace period** only appears when the fee is mandatory, auto deactivation on
@@ -63,57 +75,57 @@ whose fee has expired but who are still inside that delay.
 </Note>
 
 The permission and user-type filters are enforced server side: asking without the
-required permission returns access denied, not an unfiltered list. A date-joined
-range (**From** / **Until**) exists in the mobile filter sheet only; the desktop
-bar has no equivalent.
+required permission returns access denied, not an unfiltered list.
 
 ### Columns, sorting and row actions
 
-Sortable headers: name, user type, full member, age, card ID, town, country or
-county, chapter, fee date and status. Sorting applies to the whole result set,
-not just the current page.
+Sortable headers: name, age, card ID, town, country or county, chapter, fee date,
+status and date joined. Sorting applies to the whole result set, not just the
+current page.
 
 Columns are permission-gated rather than chosen:
 
 | Column | Requires |
 |---|---|
-| Email and phone (copy-to-clipboard icons), age | HR_ASSISTANT_LOCAL |
-| Fee | HR_LOCAL or FINANCIAL_LOCAL, fees module on |
-| Adhesion | HR_LOCAL, adhesion on |
-| Status | HR_LOCAL, and no status filter active |
-| **Groups**, from the column menu | HR_LOCAL on a chapter list, HR_TENANT on the organisation-wide list |
-| One column per [custom field](/platform/users/custom-fields), from the column menu | HR_TENANT |
+| Email and phone (copy-to-clipboard icons) | Chapter HR assistant permission |
+| Age | Chapter HR assistant permission, and **Show Age in Lists** is on |
+| Fee | Chapter HR permission or chapter financial permission, fees module on |
+| Adhesion | Chapter HR permission, adhesion on |
+| Status | Chapter HR permission, and no status filter active (clear the default **Active** filter first) |
+| **Groups**, from the column menu | Chapter HR permission on a chapter list, organization HR permission on the organisation-wide list |
+| One column per [custom field](/platform/users/custom-fields), from the column menu | Organization HR permission, or chapter admin permission on the administrator's own chapter list |
 
-The column menu itself (the table icon above the list) needs HR_TENANT, and it only
-appears in the table view, never in Gallery or Map.
+The column menu itself (**View columns**, the table icon at the right of the filter
+row) needs organization HR permission, or chapter admin permission on your own chapter's list, and it only appears
+in the table view, never in Gallery or Map.
 
 Each row's menu holds **View Profile**, **Modify Profile** and **Modify Roles**
-(ADMIN_LOCAL and above), plus making or removing a unit admin inside a unit.
-Members pending approval (**New request**) or waitlisted get **Approve** and **Add
-to waiting list** shortcuts next to the name, and a **New requests (N)** button
-jumps to that queue. There is no multi-select: actions apply one member at a
+(chapter admin permission and above), plus making or removing a unit admin inside a unit.
+Members pending approval or waitlisted get **Approve** and **Add to waiting list**
+shortcuts next to the name, and a **New requests** button with a count, at the top
+of the page, jumps to that queue. With **Show "&lt;18" Tag in Lists** on, members under 18 carry an **Under 18**
+tag beside the name. There is no multi-select: actions apply one member at a
 time.
 
 ### Export and adding members
 
-The Excel icon exports the current filtered, sorted list as CSV. Exports are
+The Excel icon (**Export CSV**) exports the current filtered, sorted list as CSV. Exports are
 paged at 500 profiles: below that you confirm and download, above it you pick
 which page, so a large organisation needs several exports. Export needs
-HR_TENANT, or HR_LOCAL with a chapter selected, and each export is written to the
+Organization HR permission, or chapter HR permission with a chapter selected, and each export is written to the
 audit log with the exact query used.
 
 A **Members** report in [Reports](/platform/reports) has no such paging: the
 download holds every matching member in one file, however many there are. It
-needs ADMIN_TENANT and it is built from its own column and filter picker rather
+needs organization admin permission and it is built from its own column and filter picker rather
 than from the list you are looking at, so the directory export stays the quicker
 route for a chapter admin or for the list already on screen.
 
-**Register member** creates an account directly; it needs HR_TENANT, or HR_LOCAL
-for your own local center. The status comes from **Default Status for
+**Add member** creates an account directly; it needs organization HR permission, or chapter HR permission
+for your own local center (and the parent-level permission on a parent chapter's list). The status comes from **Default Status for
 Admin-Created Users**, and with an email address supplied the member gets a
 welcome message with a login link. For many people at once, use
-[Import](/platform/customization/import). **Invite a friend**, next to it, sends a
-registration link instead. All four routes side by side:
+[Import](/platform/customization/import). **Invite a friend**, next to it, opens the invitation tools: a registration link to share or addresses to email. All four routes side by side:
 [Adding Members](/platform/users/adding-members).
 
 ---
@@ -122,32 +134,34 @@ registration link instead. All four routes side by side:
 
 Permission names on their own do not tell you what lands on screen, because the
 directory gates the filters, the columns and the export separately. Here is the
-same person, a chapter treasurer holding only `FINANCIAL_LOCAL` on their own
-chapter, walking through the list.
+same person, a chapter treasurer holding only chapter financial permission on their own
+Chapter, walking through the list.
+
+<img src="/images/platform/chapter-leader/members-chapter.png" alt="A chapter's member list as a chapter officer sees it, with the chapter name and member count above the filter pills, and columns for name, age, town, county, fee and adhesion, most fee cells empty" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 | What they want | Do they get it | Why |
 |---|---|---|
-| The **Fee** column | Yes | The fee column asks for `FINANCIAL_LOCAL` or `HR_LOCAL` |
-| Email, phone and age columns | Yes | `FINANCIAL_LOCAL` implies `HR_ASSISTANT_LOCAL`, which is what those columns ask for |
-| The **Fee status** filter (Paid / Not paid / Grace period) | No | That filter asks for `HR_TENANT`, an organisation-wide permission |
-| The **Fee type** filter | No | That filter asks for `HR_TENANT` or `FINANCIAL_TENANT` |
-| The CSV export | No | Export asks for `HR_TENANT` organisation-wide, or `HR_LOCAL` on the chapter being listed |
-| The column menu, to add a custom field column | No | The column menu asks for `HR_TENANT` |
+| The **Fee** column | Yes | The fee column asks for chapter financial permission or chapter HR permission |
+| Email and phone columns, and age when **Show Age in Lists** is on | Yes | Chapter financial permission implies chapter HR assistant permission, which is what those columns ask for |
+| The **Fee status** filter (Paid / Not paid / Grace period) | No | That filter asks for organization HR permission, an organisation-wide permission |
+| The **Fee type** filter | No | That filter asks for organization HR permission or organization financial permission |
+| The CSV export | No | Export asks for organization HR permission organisation-wide, or chapter HR permission on the chapter being listed |
+| The column menu, to add a custom field column | No | The column menu asks for organization HR permission, or chapter admin permission on your own chapter's list |
 
 So a treasurer who needs to work through unpaid members chapter by chapter needs
-`FINANCIAL_LOCAL` **and** `HR_LOCAL` on that chapter: `FINANCIAL_LOCAL` for the
-money, `HR_LOCAL` for the export and the status column. The fee filters are a
-bigger step: `FINANCIAL_TENANT` unlocks **Fee type** but not **Fee status**, which
-only `HR_TENANT` opens, and both reach every chapter in the organisation. Before
+Chapter financial permission **and** Chapter HR permission on that chapter: Chapter financial permission for the
+money, chapter HR permission for the export and the status column. The fee filters are a
+bigger step: Organization financial permission unlocks **Fee type** but not **Fee status**, which
+only organization HR permission opens, and both reach every chapter in the organisation. Before
 widening someone's scope that far, check whether the chapter-scoped screens in
 [Local group fees](/platform/local-group-fees/member-fees) already answer the
 question they are asking.
 
 Two implications worth remembering for any permission you hand out:
 
-- `FINANCIAL_LOCAL`, `HR_LOCAL` and `HR_PARENT_LOCAL` all imply
-  `HR_ASSISTANT_LOCAL`, so any of them unlocks contact details. `EVENT_LOCAL` and
-  `COMMUNICATION_LOCAL` do not.
+- Chapter financial permission, chapter HR permission and parent-chapter HR permission all imply
+  Chapter HR assistant permission, so any of them unlocks contact details. Chapter event manager permission and
+  Chapter communication manager permission do not.
 - Filters and columns are not the same gate. Seeing a value in a column does not
   mean you can filter or sort a list by it, and being able to read the list does
   not mean you can export it.
@@ -156,32 +170,93 @@ Two implications worth remembering for any permission you hand out:
 
 ## The member profile
 
-Clicking a name opens the profile in a modal you can expand to a full page
-(`/user/{id}`). Which tabs appear depends on modules, permissions and whether the
-profile is your own.
+<img src="/images/platform/users/user-profile-logs.png" alt="The Audit Logs tab of a member profile, with a search box above a table of changes showing the id, date, the action, what changed and who made it" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-<img src="/images/platform/users/user-profile-overview.png" alt="Member profile showing status, user type, age, town, chapter, member since, badges, permissions, resignation, identity, adhesion and roles" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+Clicking a name opens the profile in a window you can expand to a full page
+(`/user/{id}`).
+
+<img src="/images/platform/users/user-profile-overview.png" alt="A member profile with the photo, name and the status, membership and fee chips across the top, the Profile, Fee, Payments, Documents, Events, Activity and More tabs below them, and cards for the chapter and membership details, interests, contact, roles, achievements, profession, family and the organisation's own profile fields" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+### The header
+
+Under the photo and name, a row of chips shows where the member stands:
+
+- **Status.** Whoever may manage the member's access can click it to open the **Permissions** pane of the editor. Members waiting for a decision also get **Approve** and, for new requests, **Add to waiting list** buttons next to it.
+- **User type**, when user types are on.
+- **Fee: Paid** or **Fee: Unpaid**, which jumps to the **Fee** tab.
+- A completion percentage, on your own profile only, while **Profile Completion Enabled** is on and you are below 100%. Open it to see which fields are missing and click one to go to it.
+- **Supporter**, for members on your supporter plan.
+
+On the right, **Edit profile** (it turns into **View Profile** while you edit) and **Settings** open the two panes described below, **Send an email** writes to the member, and on someone else's profile with connections on, **Connect** sends a connection request.
+
+### The Profile tab
+
+The Profile tab is a set of cards. The pencil on a card opens the editor at the matching section.
+
+| Card | What is there | Who sees it |
+|---|---|---|
+| The top card, which has no title | Chapter and parent chapters, **Member since** (the full-member date) or, for organisation-wide HR, **Registered on**, age, **Town of residence**, **Hometown**, card ID, the main-info [custom fields](/platform/users/custom-fields), then status rows for **Promise**, **Trainer**, **Identity**, **Fee**, **Adhesion**, **Platform access** (permission levels) and **Resignation**, then **Interests** | Everyone who can see the profile; the status rows follow the permissions of the module behind each |
+| **Contact** | Email, phone, website and social links, **Bio**, **Address**, **Postal code**, **Billing Details** | Address and postal code: the member and HR over their chapter |
+| **Company** | The company the member belongs to | Companies module on and the member belongs to one |
+| **About** | **Skills**, **Availability** | When those fields are enabled |
+| **Tags** | The tags on the member | Organisation-wide HR |
+| **Roles** | Current roles with a **Timeline per role** | The member, or whoever **Who Can See User Types** allows; **Manage roles** for HR |
+| **Membership level** | Points-based tier | When gamification tiers are on |
+| **Achievements** | Badges earned, progress and activity | When gamification is on |
+| **Profession** | Headline, industry, expertise, job, sector, organisation and role | When the Professions module is on |
+| **Courses & trainings** | Trainings attended and courses taken | The organisation runs trainings, and the member has some to show |
+| **Family** | Family members | Family members on, and you are the member or chapter HR permission over them |
+| **Other info** | Every other [custom field](/platform/users/custom-fields) the member filled in, plus required ones left empty (shown as a dash) | Subject to each field's visibility |
+
+### Tabs
+
+Which tabs appear depends on modules, permissions and whose profile it is.
 
 | Tab | What is there | Who sees it |
 |---|---|---|
-| **Profile** | Photo, status, user type, age, town, chapter, member since, badges, permissions, roles, social links, resignation, identity and adhesion shortcuts | Everyone who can see the profile |
+| **Profile** | The cards above | Everyone who can see the profile |
 | **My Network** | Connection requests and accepted connections | Own profile, connections enabled |
-| **Fee** | Fee level, periods and history | Self, HR_LOCAL, FINANCIAL_LOCAL, or a parent managing the profile |
-| **Payments** | Every payment: fees, tickets, donations | Same as Fee, online payments enabled |
-| **e-Documents** | Contracts and documents assigned to the member | Self, HR_LOCAL, or a managing parent |
-| **Events** | Events attended or registered for | Per event-module visibility |
-| **Files** | The member's personal drive | Self and admins in scope |
-| **Referrals** | People they referred or invited | Referral or invitations enabled |
-| **Company** | The company they belong to | Own profile, companies module on |
-| **[Activity](/platform/users/profile-activity)** | Staff notes, donations, form submissions and tag changes on one feed | HR_LOCAL or FINANCIAL_LOCAL over that member, or ADMIN_TENANT, with **Enable Profile Notes & Activity** on |
-| **Logs** | Audit and email history | ADMIN_TENANT |
+| **Fee** | Fee plan, periods and history. For a member with a per-year fee assignment, a plan change is recorded from the next unpaid year and shown as **From** followed by the year | Self, chapter HR permission, chapter financial permission, a trainer, or a parent managing the profile; only when a membership fee exists and the member's user type pays one |
+| **Payments** | Every payment: fees, tickets, donations | Self, chapter financial permission, chapter HR permission or a managing parent, with online payments enabled |
+| **Documents** (**Files** when e-Documents are off) | Contracts and documents assigned to the member, above the member's personal drive | Contracts: self, chapter HR permission or a managing parent. Personal drive: self, chapter HR permission, organization HR permission or organization admin permission, with the personal drive on |
+| **Events** | Events attended or registered for | Self, chapter HR permission or chapter event manager permission |
+| **Referrals** | People they referred or invited | Referral or invitations enabled. On your own profile it is a tab; on someone else's it sits under **More** |
+| **[Activity](/platform/users/profile-activity)** | Staff notes, donations, form submissions, tag changes, resignations and emails sent from the profile on one feed | Chapter HR permission or chapter financial permission over that member, or organization admin permission, with **Enable Profile Notes & Activity** on |
 
-<img src="/images/platform/users/user-profile-logs.png" alt="Logs tab showing the audit log with date, action and author, and the email log sub-tab" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+The **More** menu at the end of the tab row holds the staff views, which take a
+tab of their own once you pick them:
 
-The Logs tab has two sub-tabs. **Audit Logs** records every change with the date,
-the action, who made it, and an expandable before-and-after view of each field.
-**Email Logs** shows what the platform sent this member and what happened to it:
-the fastest answer to "they say they never got it".
+- **Forms**: every form the member submitted, with answers. Needs the Forms module and chapter HR permission or chapter financial permission over the member.
+- **Email Logs**: what the platform sent this member and what happened to it, the fastest answer to "they say they never got it". Organization admin permission only.
+- **Audit Logs**: every change with the date, the action, the fields that changed and who made it. Click a row for the before-and-after value of each field, and search by action, detail or author. Organization admin permission only.
+
+### Editing a profile
+
+**Edit profile** (or a card's pencil) opens the editor. It is available to the
+member, to chapter HR permission over their chapter and to a parent managing the profile. The
+left menu lists only the sections you may use, and **Save** applies to the section
+that is open.
+
+| Section | What it edits | Needs |
+|---|---|---|
+| **Info** | The fields and [custom fields](/platform/users/custom-fields) on your [profile form](/platform/users/profile-fields) | The edit permission above |
+| **Membership status** | Status, **User type**, chapter and chapter transfer, full-member date, trainer, resignation | Chapter HR permission over the chapter; the status, full-member and trainer groups also need local admins to be allowed to change permissions |
+| **Roles** | Roles, with **Add role**, **End role** and per-role dates | Organization HR permission, or chapter HR permission over the chapter |
+| **Permissions** | The member's permission levels | Chapter HR permission over the chapter, unless local admins are barred from changing permissions |
+| **Badges** | Badges and tier | Gamification on, and chapter HR assistant permission |
+| **Profession** | Headline, industry, job, sector, organisation | Professions module on |
+| **Family** | Family members | Family members on |
+
+**Settings** opens a second pane with up to three sections:
+
+- **Notifications**: the member, or chapter admin permission.
+- **Privacy**: the member, a managing parent, or someone who holds both chapter HR permission over the member's chapter and chapter admin permission.
+- **Account and security** (email, password, two-step sign-in, timezone, blocked members, closing the account): the member, a managing parent, or chapter HR permission over the member's chapter.
+
+A chapter administrator who holds chapter admin permission but not chapter HR permission therefore sees
+**Notifications** alone.
+
+Old links to the retired edit page still work: they land on the matching section.
 
 ---
 
@@ -216,8 +291,8 @@ the fastest answer to "they say they never got it".
 
 <img src="/images/platform/users/users-config-page.png" alt="Users and Profiles module configuration with the left sub-navigation and the User Types and Registration setting sections" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-All of this lives under **Settings** → **Users & Profiles** and needs
-ADMIN_TENANT to edit. The left sub-navigation also holds Custom Fields, Tags,
+All of this lives under **Settings** → **Modules** → **Users & Profiles** and needs
+Organization admin permission to edit. The left sub-navigation also holds Custom Fields, Tags,
 Roles & User types, the Registration and Profile forms, the Referral Program,
 Privacy Defaults and Security & Permissions. Entries appear only for what is
 switched on, so the Adhesion form, the Adhesion template and the Registration
@@ -254,11 +329,11 @@ Waitlist are absent until those modules are active.
     required. On their next visit, members with missing required fields are
     redirected to an onboarding screen that lists exactly what is missing.
 
-    That redirect only knows about a fixed set of fields: first name, last name,
-    date of birth, gender, phone, address, town born, town current, and the
+    That redirect only knows about a fixed set of fields: first name, middle name,
+    last name, date of birth, gender, phone, address, town born, town current, and the
     Facebook, Twitter, LinkedIn, Instagram, Telegram and TikTok links, plus any
     custom field. Marking anything else required, in particular **Bio**,
-    **Postal code**, **Website**, **Location on members map**, the three
+    **Personal identification number**, **Postal code**, **Website**, **Location on members map**, the three
     **Profession** fields or any of the company fields, still marks it required
     on the profile form, so a member who opens that form cannot save without it.
     What it does not do is trigger the prompt, so nobody is ever sent there and
@@ -268,13 +343,14 @@ Waitlist are absent until those modules are active.
     check.
   </Accordion>
 
-  <Accordion title="Members see photo cards instead of the table">
-    The directory opens in **Gallery** for everyone who is not an Orgo
-    administrator, and in the table for those who are. Nothing is missing: the
-    view toggle above the list switches between table, Gallery and Map, and your
-    choice is remembered in that browser from then on. If a colleague says a
-    column is missing, first check that they are looking at the table and not at
-    Gallery, since the column menu is only offered in the table view.
+  <Accordion title="Members see photo cards or a map instead of the table">
+    Nothing is missing. The view switch at the right end of the filter row moves
+    between **Table**, **Gallery** and **Map**, and the browser remembers the
+    last one you picked. On a computer the organisation-wide directory opens on
+    the map the first time, and chapter or group lists open on the table. On a
+    phone the first view is Gallery for everyone except Orgo administrators. If a
+    colleague says a column is missing, first check that they are looking at the
+    table, since **View columns** is only offered there.
   </Accordion>
 
   <Accordion title="A colleague sees fewer columns than I do">
@@ -284,36 +360,37 @@ Waitlist are absent until those modules are active.
     colleagues see.
 
     The two that surprise people most: email, phone and age need
-    `HR_ASSISTANT_LOCAL`, which `HR_LOCAL`, `HR_PARENT_LOCAL` and
-    `FINANCIAL_LOCAL` all imply but `EVENT_LOCAL` and `COMMUNICATION_LOCAL` do
-    not; and the custom-field columns need `HR_TENANT`, so a chapter
-    administrator does not get them even on their own chapter's list.
+    Chapter HR assistant permission, which chapter HR permission, parent-chapter HR permission and
+    Chapter financial permission all imply but chapter event manager permission and chapter communication manager permission do
+    not; and the custom-field columns need organization HR permission, or chapter admin permission while
+    looking at their own chapter's list, so a chapter secretary holding only
+    Chapter HR permission does not get them.
   </Accordion>
 
   <Accordion title="The Excel export button is missing">
     Export is gated separately from reading the list. On the organisation-wide
-    list it needs `HR_TENANT`. On a chapter's list it needs `HR_LOCAL` on that
-    chapter. `FINANCIAL_LOCAL`, `ADMIN_LOCAL` and `HR_ASSISTANT_LOCAL` are not
+    list it needs organization HR permission. On a chapter's list it needs chapter HR permission on that
+    Chapter. Chapter financial permission, chapter admin permission and chapter HR assistant permission are not
     enough, even though all of them can read the list and some of them see more
     columns than the export contains.
 
-    A chapter secretary who has `HR_LOCAL` but still sees no button is usually
+    A chapter secretary who has chapter HR permission but still sees no button is usually
     on the organisation-wide list rather than their chapter's. Pick the chapter
     in the **Chapter** filter first.
   </Accordion>
 
-  <Accordion title="The New requests (N) button never appears">
-    Four conditions have to hold at once: **Manual Approval** is on, you hold
-    `ADMIN_LOCAL`, you are looking at either your own chapter's list or the
-    organisation-wide list with `HR_TENANT`, and you are not already filtering by
-    the Unapproved status. The last one catches people out: the button hides once
-    you are in the queue it would take you to.
+  <Accordion title="The New requests button never appears">
+    Five conditions have to hold at once: **Manual Approval** is on, you hold
+    Chapter admin permission, you are looking at either your own chapter's list or the
+    organisation-wide list with organization HR permission, at least one request is waiting, and
+    you are not already filtering by the Unapproved status. The last one catches
+    people out: the button hides once you are in the queue it would take you to.
 
-    `HR_LOCAL` alone does not show the counter. The **Approve** and **Add to
+    Chapter HR permission alone does not show the button. The **Approve** and **Add to
     waiting list** shortcuts on the row are a separate gate and do appear for
-    `HR_LOCAL`, because approving somebody is an ordinary status change and asks
-    for `HR_LOCAL` over that member's chapter. So a chapter secretary can approve
-    people one at a time from the list; what they do not get is the counter that
+    Chapter HR permission, because approving somebody is an ordinary status change and asks
+    for chapter HR permission over that member's chapter. So a chapter secretary can approve
+    people one at a time from the list; what they do not get is the button that
     jumps them to the queue.
   </Accordion>
 
@@ -322,7 +399,7 @@ Waitlist are absent until those modules are active.
     and can disagree. Each entry in the sidebar carries its own permission, set
     in **Settings** → **Customization** →
     [Menu Organizer](/platform/customization/menu-organizer), while what the
-    Members page shows is decided by **Settings** → **Users & Profiles** →
+    Members page shows is decided by **Settings** → **Modules** → **Users & Profiles** →
     **Configuration** → **Who Can See Members in General Groups**. Set the menu
     entry more generously than that setting and people see a link that leads to
     an empty page.

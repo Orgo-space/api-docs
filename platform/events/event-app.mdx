@@ -25,8 +25,10 @@ Access is decided per event, not per organisation.
 |---|---|
 | **A member** (has an Orgo account in your organisation) | Holds a registration for the event that is not cancelled, with status Registered, Invited or Awaiting invoice payment |
 | **A non-member attendee** (a contact created by a ticket purchase or an invitation) | Same registration condition, on an event that belongs to the same organisation |
-| **An event manager** | Has `EVENT_TENANT`, or `EVENT_LOCAL` on that event, even with no registration |
-| **A tenant administrator** | `ADMIN_TENANT` opens any event in the organisation, but only from a full password login (see below) |
+| **An event manager** | Holds event permission organisation-wide, or for that event's chapter, even with no registration |
+| **An organisation admin** | Opens any event in the organisation, but only from a full password login (see below) |
+
+A **draft** event is the exception: its Event App opens only for the people who can manage the draft, whatever registrations exist. Attendees get in once the event is published.
 
 Everyone else is redirected to the normal event page with "You are not registered for this event".
 
@@ -58,7 +60,7 @@ This login is deliberately not the normal member login. It proves that someone c
 
 **What the session can do**
 
-The session is scope limited to member-level and event-level permissions (`USER`, `USER_LOCAL`, `EVENT_TENANT`, `EVENT_LOCAL`, `EVENT_PARENT_LOCAL`). `ADMIN_TENANT`, `HR_TENANT`, `FINANCIAL_TENANT` and their local equivalents are all refused, and administrator roles are stripped from the session token when it is issued.
+The session is limited to member-level and event-level permissions. Organisation admin, people management and finance permissions (organisation-wide or chapter-level) are all refused, and administrator roles are stripped from the session token when it is issued.
 
 <Warning>
 An administrator who signs in with an email code gets an attendee session, not an admin session. They can moderate the events they manage, but the admin areas of Orgo stay closed until they sign in with their password.
@@ -89,11 +91,11 @@ The tab strip adapts to the event:
 
 | Tab | Appears when |
 |---|---|
-| **Program** | The event has at least one sub-event (session). The same label is used for the event sidebar entry that builds it |
+| **Program** | The event has at least one sub-event (session). The event sidebar entry that builds it is called **Program & Speakers** |
 | **Details** | Always. Date, local time, add to calendar, map link, description, media, speakers |
 | **Feed** | Always |
-| **Participants** | Only for people who can manage the event, and only on mobile. This is the administrative roster |
-| **Networking** | **Visibility of attendee list** is on for the event |
+| **Participants** | Only for people who can manage the event, and only on mobile (on a computer the sidebar's attenders entry shows the same roster). This is the administrative roster |
+| **Networking** | **Visibility of attendee list** is set to **Attendees** for the event |
 | **Vote** | The event has at least one vote that is upcoming, live or closed |
 | **Profile** | Always |
 
@@ -105,13 +107,14 @@ Above the tabs, every attendee has a **Badge** button: a QR code identifying the
 
 ## What organisers configure
 
-Everything that shapes the Event App lives on the event itself, under **Features** on the event form. Editing needs the same permission as editing the event: ownership, or `EVENT_LOCAL`, `EVENT_TENANT` or `ADMIN_TENANT`.
+Most of what shapes the Event App lives on the event form, in the collapsible **More options** section. Editing needs the same permission as editing the event: ownership, event permission for the chapter, or organisation-wide event permission.
 
 | Setting | What it does |
 |---|---|
-| **Visibility of attendee list** | Off: the roster is visible to admins only. On: attendees can see each other, which is what creates the Networking tab |
-| **Enable 1:1 networking** | Adds meeting booking inside the Networking tab. Cannot be switched on until the attendee list is visible |
-| **Enable speakers** | Adds the speakers block to the Details tab |
+| **Visibility of attendee list** | **Only hosts**: the roster is visible to organisers only. **Attendees**: attendees can see each other, which is what creates the Networking tab |
+| **Enable 1:1 networking** | Lets attendees book 15-minute meetings inside the Networking tab. Stays off and greyed out until the attendee list is set to **Attendees** |
+
+The speakers block on the Details tab appears once the event has speakers. Adding the first speaker in **Program & Speakers** switches it on; an [event type](/platform/events/event-types) or [template](/platform/events/event-templates) can also turn it on from the start.
 
 ---
 

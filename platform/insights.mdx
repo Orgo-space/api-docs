@@ -10,8 +10,9 @@ description: 'Ask questions about your organisation in plain language, and read 
 Orgo answers questions about your data in three ways. **Ask Orgo** is a chat
 where you type a question in your own words and get a table or chart back.
 **Analytics** is a set of prebuilt dashboards for membership, geography,
-activity, and money. [Reports](/platform/reports) is a builder you fill in
-yourself, for the extract you download again every month.
+activity, money and communication. This page covers those two.
+[Reports](/platform/reports) is a different screen, a builder you fill in
+yourself for the extract you download again every month, and has its own page.
 
 **Built for** admins who need a number now and do not want to file a report
 request or export three spreadsheets to get it.
@@ -27,16 +28,21 @@ to run SQL.
 
 | Surface | Route | Who can open it |
 |---|---|---|
-| **Ask Orgo** | `/ask-orgo`, sidebar item **Ask Orgo** | `ADMIN_TENANT` only |
+| **Ask Orgo** | `/ask-orgo`, sidebar item **Ask Orgo** | Organization admins only |
 | **Analytics** | `/stats`, sidebar item **Analytics** | The **Minimum access level** on the analytics module, then a per-tab role |
-| **Database Queries** | Analytics, **DB Query** tab | `FINANCIAL_TENANT`, or any member a saved query was shared with |
-| **[Reports](/platform/reports)** | `/reports`, sidebar item **Reports** | `ADMIN_TENANT` only |
+| **Database Queries** | Analytics, **DB Query** tab | Organization finance managers, or any member a saved query was shared with |
+
+Reports, the builder for downloadable exports, is covered on its own page:
+[Reports](/platform/reports). It is open to organization admins and does not need
+the Orgo administrator flag.
 
 Analytics needs the analytics module active. The module switch is on **Settings**
-→ **Modules** → **All Modules** (`/tenants/settings/features`), under
-`analytics`. The **Minimum access level** and the per-tab roles are on **Settings**
-→ **Modules** → **Users & Profiles** → **Security & Permissions**, which collects
-those dropdowns from every active module onto one page.
+→ **Modules** → **All Modules**, under `analytics`. The **Minimum access level**
+and the per-tab roles are on **Settings** → **Modules** → **Users & Profiles** →
+**Security & Permissions**, which collects those dropdowns from every active module
+onto one page. Both are configuration screens, so changing them needs the **Orgo
+administrator** flag. The defaults for each row are listed under
+[Minimum access levels](/platform/permissions#minimum-access-levels).
 
 ---
 
@@ -60,7 +66,10 @@ Ask Orgo replies with one of three things:
 Follow-ups stay in the same chat and modify the previous query, so "add their
 email", "only active ones", "break it down by month", and "show as a chart" all
 work. Name the values you want, in business terms, rather than pointing at rows
-on screen: the assistant cannot read the result table. A conversation keeps its
+on screen: the assistant cannot read the result table. It can leave out
+members that an import created, if you ask for "excluding imported members"; members
+an admin added by hand or who signed up themselves are not what that filter
+removes. Monthly breakdowns come back in calendar order. A conversation keeps its
 most recent 20 messages; your chat list shows your own last 50 conversations,
 newest first, with a search box. You can delete a chat, and rate an answer with
 the thumbs up and down buttons.
@@ -73,18 +82,18 @@ and that database entries are worth checking.
 ## What Ask Orgo can reach
 
 Ask Orgo has no free access to the database. It works from a fixed catalogue of
-55 record types and, within each, a hand-picked list of fields.
+62 record types and, within each, a hand-picked list of fields.
 
 | Area | Record types in the catalogue |
 |---|---|
 | **People** | Members, contacts, families and family members, companies and company membership, roles and role assignments, group memberships, tags |
-| **Structure** | Local centers, units, towns, counties, countries |
+| **Structure** | Local centers, units and unit types, towns, counties, countries |
 | **Membership** | Adhesions (applications), resignation requests, waitlist entries, certifications, identity verification records |
 | **Money** | Products, product prices and add-ons, payments, fee payments, invoices, subscription profiles |
-| **Events** | Events, registrations and attendance, attendance add-ons |
-| **Learning** | Courses, sections, lessons, enrolments, badges, badge awards, badge points |
+| **Events** | Events and event types, registrations and attendance, attendance add-ons |
+| **Learning** | Courses, sections, lessons, enrolments, badges, badge categories and steps, badge awards, badge points |
 | **Engagement** | Discussions, newsletters and their recipients, email delivery log, forms and submissions, votes and voting sessions, referrals |
-| **Work** | Projects, tasks, contracts and contract assignments, official gazettes, custom field definitions and values |
+| **Work** | Projects, tasks and their assignees, contracts and contract assignments, official gazettes and their types, custom field definitions and values |
 
 Some are reachable only through a related record: registrations always through
 their event, prices through their product.
@@ -138,9 +147,9 @@ asking you to narrow it: a date range, one local center, or a count instead of
 the detail rows.
 
 <Warning>
-Ask Orgo runs with full tenant-admin reach: an `ADMIN_TENANT` user can ask about
+Ask Orgo runs with full organization-admin reach: an organization admin can ask about
 any member in the organisation, including data they would have to click through
-several profiles to see. Grant `ADMIN_TENANT` accordingly. Local admins do not
+several profiles to see. Grant the organization admin permission accordingly. Chapter admins do not
 get Ask Orgo at all.
 </Warning>
 
@@ -170,25 +179,29 @@ Tabs appear only if you hold the role configured for them. Defaults:
 
 | Tab | Default role | Shows |
 |---|---|---|
-| **Platform** | `ADMIN_TENANT` | Active and inactive members, new members and members lost, contacts, emails sent, newsletter and notification subscription splits, discussions, comments, reactions, events, disk usage, revenue totals, paying and non-paying members |
-| **Members** | `HR_TENANT` | Members by status, by user type, by gender, average age, signups and exits over time, fees paid by year |
+| **Platform** | Organization admins | Active and inactive members, new members and members lost, contacts, emails sent, newsletter and notification subscription splits, discussions, comments, reactions, events, disk usage, revenue totals, paying and non-paying members |
+| **Communication** | Organization admins | How members use Orgo and how posts and newsletters perform. See [Communication analytics](/platform/communication-analytics) |
+| **Members** | Organization HR managers | Members by status, by user type, by gender, average age, signups and exits over time, fees paid by year |
 | **Geography** | Any signed-in member | Members by town, county or state, country, and local center |
 | **Leaderboards** | Any signed-in member | Top members by posts, reactions, events, referrals, and badge points, over 7 days, 30 days, or all time |
-| **Finance** | `FINANCIAL_TENANT` | Total, recurring, and donation revenue, and payment counts over a period. Needs online payments active |
-| **DB Query** | `FINANCIAL_TENANT` | Saved database queries |
+| **Finance** | Organization finance managers | Total, recurring, and donation revenue, and payment counts over a period. Needs online payments active |
+| **DB Query** | Organization finance managers | Saved database queries |
 
-The Platform tab is also open to `ADMIN_LOCAL` and `ADMIN_PARENT_LOCAL` when
+The Platform tab is also open to chapter admins and regional admins when
 local centers are in use, scoped to their own local center and its descendants,
 never organisation-wide. Membership and geography tabs accept a local center
-filter and check the local equivalent of the tab role against it.
+filter and check the local equivalent of the tab role against it. Organizations
+that are alliances see a different set of tabs (Organizations, Platform,
+Geography, Revenue) covering their member organizations.
 
 Period selectors offer 7 days, 30 days, 90 days, 12 months, and a custom range.
 
 Daily totals are aggregated overnight, at 04:00 UTC for the previous day, and the
-page says so. Today's figures are computed live and added on top, and responses
-are cached for five minutes. **Reset cache** next to the page title clears that
-cache and reloads, which is the fix when a number looks stale after a bulk import
-or a large payment run.
+page says so. Today's figures are computed live and added on top. Responses are
+cached on the server for five minutes, and the Platform tab also keeps its figures
+in your browser for up to a day. **Reset cache** next to the page title clears both
+and reloads, which is the fix when a number looks stale after a bulk import or a
+large payment run.
 
 ---
 
@@ -197,8 +210,8 @@ or a large payment run.
 Anything you save from Ask Orgo lands here as a named query that admins can run
 again without the chat. Opening one runs it and shows the results, with
 **Export** for a download. It is stored as the finished statement, with your
-organisation's filter baked in, so it keeps returning your data only. `FINANCIAL_TENANT`
-admins see every saved query in the organisation; everyone else sees only the
+organisation's filter baked in, so it keeps returning your data only. Organization
+finance managers see every saved query in the organisation; everyone else sees only the
 queries shared with them, listed under **Extra access** on the query. Every run
 is recorded in the activity log with the query name and who ran it.
 
@@ -219,7 +232,7 @@ is recorded in the activity log with the query name and who ran it.
     access level**, which ships as any signed-in member.
 
     Worked example: an organisation raises **Minimum access level** to
-    `HR_TENANT` so that ordinary members stop seeing the numbers. That works, but
+    organization HR managers so that ordinary members stop seeing the numbers. That works, but
     it also takes away the Geography and Leaderboards tabs, which default to any
     signed-in member and were the two tabs the organisation actually wanted
     everyone to have. The minimum is a gate on the whole page, evaluated before
@@ -229,23 +242,23 @@ is recorded in the activity log with the query name and who ran it.
     roles did.
   </Accordion>
 
-  <Accordion title="I hold FINANCIAL_TENANT but there is no Finance tab">
+  <Accordion title="I am a finance manager but there is no Finance tab">
     Finance needs the role and online payments switched on. The tab checks both,
     so an organisation that collects fees by bank transfer only never sees it,
     whoever is looking. Revenue totals still show on the Platform tab.
 
-    **DB Query** is the other tab keyed to `FINANCIAL_TENANT`, and it does not
+    **DB Query** is the other tab keyed to the finance role, and it does not
     check the payments setting, so seeing Database Queries but no Finance is the
     normal shape of that combination rather than a fault.
   </Accordion>
 
   <Accordion title="Can I give Ask Orgo to an HR admin, or put it in a custom menu?">
     No, on both counts. The route, the sidebar entry and every endpoint behind
-    the chat require `ADMIN_TENANT`, and the sidebar entry is written into the
-    menu in code rather than drawn from your configurable menu, so it cannot be
-    added to another role's menu or moved.
+    the chat require the organization admin permission, and the sidebar entry is
+    written into the menu in code rather than drawn from your configurable menu,
+    so it cannot be added to another role's menu or moved.
 
-    Someone without `ADMIN_TENANT` who follows a link to Ask Orgo is sent to the
+    Someone without that permission who follows a link to Ask Orgo is sent to the
     login screen rather than shown a permission message, which reads like an
     expired session and is not one. The same is true of any page in Orgo that
     they lack the role for. There is no read-only or delegated version of the
@@ -258,7 +271,7 @@ is recorded in the activity log with the query name and who ran it.
     lets them run that query, and once at least one query is shared with them a
     **queries** entry appears in their sidebar. That entry points at the
     Database Queries tab of Analytics, and the tab itself renders only for
-    `FINANCIAL_TENANT`, so they land on Analytics without it.
+    the finance role, so they land on Analytics without it.
 
     Send them the query's own address instead, the one in your browser bar when
     you have the query open. That page has no role gate of its own and checks the
@@ -334,19 +347,19 @@ is recorded in the activity log with the query name and who ran it.
     address of one can open it.
 
     In practice this changes little, because the feature is limited to
-    `ADMIN_TENANT` and any admin can ask the same question themselves and get the
+    organization admins and any admin can ask the same question themselves and get the
     same data. Treat chats as a shared admin workspace rather than private notes,
     and delete a conversation when you want its text and its stored rows gone.
   </Accordion>
 
   <Accordion title="A dashboard number is stale and I cannot clear the cache">
-    **Reset cache** requires `ADMIN_TENANT`, while the tabs themselves can be
-    opened by `HR_TENANT`, `FINANCIAL_TENANT` or ordinary members depending on
-    your settings. A finance admin looking at a stale figure after a large
-    payment run has no button to press and has to wait out the five minute cache,
-    or ask an organisation admin.
+    **Reset cache** requires the organization admin permission, while the tabs
+    themselves can be opened by HR managers, finance managers or ordinary members
+    depending on your settings. A finance manager looking at a stale figure after a
+    large payment run can press the button, but the request is refused, so they
+    have to wait out the five minute cache, or ask an organisation admin.
 
-    **Reset cache** also only clears the five minute cache. It does not rebuild
+    **Reset cache** also only clears cached figures. It does not rebuild
     the overnight aggregation, so a figure that is a whole day out rather than
     minutes out will not move until the next nightly run, however many times you
     press it.
@@ -375,6 +388,8 @@ is recorded in the activity log with the query name and who ran it.
 
 - [Members](/platform/users) for the directory the answers are drawn from
 - [Email lists](/platform/emails/email-lists) for where a segment proposal ends up
-- [Permissions](/platform/permissions) for what `ADMIN_TENANT` and `FINANCIAL_TENANT` unlock
+- [Permissions](/platform/permissions) for what the organization admin and finance permissions unlock, and the default access level of each analytics tab
+- [Communication analytics](/platform/communication-analytics) for the Communication tab
+- [Reports](/platform/reports) for downloadable exports built from a form, which is a separate screen from the ones on this page
 - [Custom fields](/platform/users/custom-fields) for which values are encrypted
 - [Event analytics](/platform/events/analytics) for per-event numbers, separate from these dashboards

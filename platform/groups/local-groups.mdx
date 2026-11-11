@@ -53,8 +53,8 @@ The app says **Chapters**. **Local center** is the platform term used by the dat
 | Requirement | Where |
 |---|---|
 | **Enable Local Centers Module** switched on | **Settings** → **Modules** → **Groups & Teams** → **Local Centers** |
-| `ADMIN_TENANT` to create a chapter | The **Create chapter** button only appears for organization admins |
-| `ADMIN_LOCAL` to edit one | Scoped to the chapter being edited |
+| Organization admin rights to create a chapter | The **Create chapter** button only appears for organization admins |
+| Chapter admin rights to edit one | Scoped to the chapter being edited |
 
 ---
 
@@ -64,9 +64,9 @@ The app says **Chapters**. **Local center** is the platform term used by the dat
 
 | Section | Fields |
 |---|---|
-| **General information** | **status** (Active, Pending close, Suspended, Closed), **name**, **Alias**, **Who can create events in this chapter**, **founded**. Status and founded are `ADMIN_TENANT` only. |
+| **General information** | **status** (Active, Pending close, Suspended, Closed), **name**, **Alias**, **Who can create events in this chapter**, **founded**. Status and founded are for organization admins only. |
 | **Location** | **town**, **Map location** (address lookup), **Map description** (free text shown in the map pin popup) |
-| **Organization** | **Belongs to parent chapter**, **It's a parent chapter**, **Region**, **isInitiative**, each shown only when its setting is on. The two structural fields are `HR_TENANT` only. |
+| **Organization** | **Belongs to parent chapter**, **It's a parent chapter**, **Region**, **isInitiative**, each shown only when its setting is on. The two structural fields are for organization-wide HR managers only. |
 | **Payments** | Online payments through an independent local Stripe account; chapter members paying membership fees online |
 | **Contact and Online** | **contactName**, **contactEmail**, **contactPhone**, **officeAddress**, **postalAddress**, **website**, Facebook, Instagram, X |
 | **Legal and Banking** | **legalNumber**, **localCenterCurrency**, one IBAN per enabled currency (native, USD, EUR, CHF) |
@@ -75,7 +75,7 @@ The app says **Chapters**. **Local center** is the platform term used by the dat
   A chapter currency can be set once and never changed, because past payments and the connected Stripe account are bound to it. A chapter currency also requires the chapter to have its own Stripe account, otherwise charges land in the organization account and get converted twice.
 </Warning>
 
-**Who can create events in this chapter** sets the bar for this chapter alone: **Event managers (default)** (`EVENT_LOCAL`), **Any member of this chapter** (any signed-in member), or **Chapter admins only** (`ADMIN_LOCAL`). Organization admins clear all three. An organization-wide event manager (`EVENT_TENANT`) clears the first two but is refused by **Chapter admins only**, which only chapter admins and organization admins satisfy. Any chapter admin can change the setting, since editing the chapter is already theirs. The setting does not travel down the chapter tree, so opening one chapter to all its members never opens the chapters beneath it. Somebody below the bar can still open the event form and pick the chapter; the refusal comes when they save. See [Create Event](/platform/events/create-event).
+**Who can create events in this chapter** sets the bar for this chapter alone: **Event managers (default)** (chapter event managers), **Any member of this chapter** (any signed-in member), or **Chapter admins only**. Organization admins clear all three. An organization-wide event manager clears the first two but is refused by **Chapter admins only**, which only chapter admins and organization admins satisfy. Any chapter admin can change the setting, since editing the chapter is already theirs. The setting does not travel down the chapter tree, so opening one chapter to all its members never opens the chapters beneath it. Somebody below the bar can still open the event form and pick the chapter; the refusal comes when they save. See [Create Event](/platform/events/create-event).
 
 <img src="/images/platform/groups/local-center-form.png" alt="Chapter form showing the General information, Location and Organization sections with status, name, Alias, the who can create events selector, founded, town, map location, map description, the parent chapter selector, the parent chapter checkbox and the Region field" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -85,7 +85,7 @@ The app says **Chapters**. **Local center** is the platform term used by the dat
 
 Filter by status (**All statuses**, active, pending close, suspended, closed; defaults to active) and by **town** (searchable). **Remove sorting** appears once you sort a column.
 
-Sortable columns: name, **Region** (when regions are on), status, **members**, **Full members**, town, county, **founded**, **Stripe**, **Online fee activated**. The last two appear only when the matching payment settings are active. Member counts link to a filtered member list for `HR_TENANT`.
+Sortable columns: name, **Region** (when regions are on), status, **members**, **Full members**, town, county, **founded**, **Stripe**, **Online fee activated**. The last two appear only when the matching payment settings are active. Member counts link to a filtered member list for organization-wide HR managers.
 
 With parent chapters on, the list arrives in tree order: each top-level chapter is followed by its whole branch, parents before the chapters under them, siblings alphabetical, and chapters with no family last. A chapter's row is indented by how deep it sits, so the third layer is indented further than the second. A member count followed by `(+N)` is a branch total: the figure is that chapter plus everything under it, and `N` is how much of it came from the chapters beneath, counted through the whole branch rather than one layer down. Subtract `N` for the chapter's own members, which is the number the [Groups page](/platform/groups) shows on the chapter row.
 
@@ -93,9 +93,9 @@ With parent chapters on, the list arrives in tree order: each top-level chapter 
   Sorting a column with the header still flat-sorts the rows on the page you are looking at and breaks the tree grouping. **Remove sorting** restores it. That is unchanged, and it is why the tree order is the default.
 </Note>
 
-The **...** row action opens Members, Events, Discussions, Edit, one entry per local unit type, plus **fees** for organization admins when fees are active. It shows for `ADMIN_TENANT`, `ADMIN_LOCAL` on that chapter, and members of that chapter.
+The **...** row action opens Members, Events, Discussions, Edit, one entry per local unit type, plus **fees** for organization admins when fees are active. It shows for organization admins, admins of that chapter, and members of that chapter.
 
-**map** plots every active chapter that has coordinates on an OpenStreetMap panel above the table; chapters with missing coordinates, or coordinates that are not valid numbers, are skipped rather than breaking the map. With the map open, `ADMIN_LOCAL` also gets **Iframe URL**, an embed link for your own website that renders the map alone and needs no login.
+**map** plots every active chapter that has coordinates on an OpenStreetMap panel above the table; chapters with missing coordinates, or coordinates that are not valid numbers, are skipped rather than breaking the map. With the map open, chapter admins also get **Iframe URL**, an embed link for your own website that renders the map alone and needs no login.
 
 ---
 
@@ -108,10 +108,10 @@ Two independent grouping mechanisms, both off by default, both in **Settings** �
 | **Enable Parent Centers** | A chapter points at another chapter as its parent, forming a tree of any depth. Names then carry an LC or LP prefix, ordering becomes parent-then-descendants, and a parent's member count carries a `(+N)` figure for the members in the chapters beneath it. |
 | **Enable Regions** | A flat **Region** label you assign to each chapter, used for grouping, filtering, and role group eligibility. |
 
-Regions themselves are managed at **Settings** → **Modules** → **Groups & Teams** → **Regions** (`ROLE_ADMIN_TENANT`): add, rename, remove. A region cannot be deleted while any chapter or role group still points at it; Orgo says how many of each and asks you to reassign them first.
+Regions themselves are managed at **Settings** → **Modules** → **Groups & Teams** → **Regions** (Orgo administrators only): add, rename, remove. A region cannot be deleted while any chapter or role group still points at it; Orgo says how many of each and asks you to reassign them first.
 
 <Note>
-  Parent chapters and regions are not the same thing. Parent chapters affect permissions: the `*_PARENT_LOCAL` roles apply across a parent chapter and everything beneath it, at any depth. Regions do not grant anything on their own, and a region is a flat label rather than a layer of the tree.
+  Parent chapters and regions are not the same thing. Parent chapters affect permissions: the parent-chapter permissions apply across a parent chapter and everything beneath it, at any depth. Regions do not grant anything on their own, and a region is a flat label rather than a layer of the tree.
 </Note>
 
 ### How deep the chapter tree goes
@@ -135,7 +135,7 @@ Four rules are checked when you save, and a refused save says which one you hit:
 Separately, you cannot untick **It's a parent chapter** while chapters still point at it. Move or detach them first; Orgo does not detach them for you.
 
 <Warning>
-  Changing where a chapter sits requires `HR_TENANT`. The **Belongs to parent chapter** selector and the **It's a parent chapter** checkbox are shown to chapter administrators but greyed out, so they can see their place in the structure without being able to change it. Everything else on the chapter form stays editable with `ADMIN_LOCAL`. The reason is that the parent link decides who administers whom: moving a chapter hands its whole branch to a different set of administrators. The check only fires when one of those two fields actually changes, so ordinary edits to a chapter are unaffected.
+  Changing where a chapter sits requires organization-wide HR manager rights. The **Belongs to parent chapter** selector and the **It's a parent chapter** checkbox are shown to chapter administrators but greyed out, so they can see their place in the structure without being able to change it. Everything else on the chapter form stays editable with chapter admin rights. The reason is that the parent link decides who administers whom: moving a chapter hands its whole branch to a different set of administrators. The check only fires when one of those two fields actually changes, so ordinary edits to a chapter are unaffected.
 </Warning>
 
 A depth ceiling of 20 exists as a guard against a loop in the data, not as a structural limit you are expected to reach.
@@ -152,7 +152,7 @@ The chapter header carries tabs, each scoped to that chapter:
 | **events** | Events module active |
 | **files** | Drive module active |
 | **members** | Members view rights |
-| Local unit types | `HR_LOCAL` and at least one unit type marked as local (see [Units](/platform/groups/units)) |
+| Local unit types | Chapter HR manager rights and at least one unit type marked as local (see [Units](/platform/groups/units)) |
 | **analytics** | Analytics module active and a matching grant |
 
 <img src="/images/platform/groups/local-center-detail.png" alt="Chapter page showing the status and Chapter badges, the shortcut card, Contact and Address cards, and the Team panel grouping officers by role" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
@@ -163,7 +163,7 @@ The page opens with a card of shortcuts into the chapter (Members, Events, Discu
   The Team panel only lists roles marked as chapter roles in **Settings** → **Users & Profiles** → **Roles**, and a parent chapter reads a different flag from an ordinary one. A top-level parent chapter shows only roles flagged for parent chapters, so a role that appears on a branch page can be absent from its parent. A chapter that is both a parent and a child shows both sets, because it holds both kinds of post.
 </Note>
 
-**analytics** reuses the organization dashboards scoped to the chapter: Platform, Members, geography, Leaderboards, Finance. Each appears only if you hold the local counterpart of the role that grants it organization-wide, so Members analytics granted to `HR_TENANT` shows here with `HR_LOCAL`. Finance also needs online payments active.
+**analytics** reuses the organization dashboards scoped to the chapter: Platform, Members, geography, Leaderboards, Finance. Each appears only if you hold the local counterpart of the role that grants it organization-wide, so Members analytics granted to organization-wide HR managers shows here for chapter HR managers. Finance also needs online payments active.
 
 Chapter-level tasks do not exist, and the **issues** tab is limited to project groups.
 
@@ -175,22 +175,20 @@ Local permissions sit on a member's profile, in the **Permissions** panel, under
 
 | Permission | Scope |
 |---|---|
-| `ADMIN_LOCAL` | Full control of one chapter, including editing it |
-| `HR_LOCAL` | Member management inside the chapter |
-| `FINANCIAL_LOCAL` | Fees and payments for the chapter |
-| `EVENT_LOCAL` | Events for the chapter |
-| `COMMUNICATION_LOCAL` | Communications for the chapter |
-| `HR_ASSISTANT_LOCAL` | Reduced member management |
-| `ADMIN_PARENT_LOCAL` | Every local permission across a parent chapter and every chapter beneath it, at any depth |
-| `HR_PARENT_LOCAL` | Member management across a parent chapter and every chapter beneath it |
-| `FINANCIAL_PARENT_LOCAL` | Fees across a parent chapter and every chapter beneath it |
-| `EVENT_PARENT_LOCAL`, `COMMUNICATION_PARENT_LOCAL`, `HR_ASSISTANT_PARENT_LOCAL` | The same widening for those areas |
+| **Admin** | Full control of one chapter, including editing it |
+| **HR** | Member management inside the chapter |
+| **Financial** | Fees and payments for the chapter |
+| **Event Manager** | Events for the chapter |
+| **Communication Manager** | Communications for the chapter |
+| **HR Assistant** | Reduced member management |
 
-The `_PARENT_LOCAL` variants only mean something when **Enable Parent Centers** is on, and local permissions are hidden entirely when the Local Centers module is off.
+Each of these also exists in a parent-chapter version, shown under the **Parent chapter** heading. The **Admin** version gives every chapter permission across a parent chapter and every chapter beneath it, at any depth. **HR**, **Financial**, **Event Manager**, **Communication Manager** and **HR Assistant** give the same widening for their own area.
+
+The parent-chapter versions only mean something when **Enable Parent Centers** is on, and local permissions are hidden entirely when the Local Centers module is off.
 
 ### What a parent-scope permission reaches
 
-A `_PARENT_LOCAL` permission is anchored to one chapter, and the anchor is worked out from the holder's own primary chapter. You do not choose it.
+A parent-chapter permission is anchored to one chapter, and the anchor is worked out from the holder's own primary chapter. You do not choose it.
 
 | The holder's own chapter | The anchor |
 |---|---|
@@ -202,7 +200,7 @@ The permission then covers the anchor **and every chapter below the anchor, howe
 
 Worked example. National holds North Region; North Region holds Riverside and Hillside; Riverside is itself flagged as a parent and holds Riverside East.
 
-| The holder's chapter | `HR_PARENT_LOCAL` covers |
+| The holder's chapter | Parent-chapter HR covers |
 |---|---|
 | National | National and every chapter beneath it |
 | North Region | North Region, Riverside, Hillside, Riverside East |
@@ -212,15 +210,15 @@ Worked example. National holds North Region; North Region holds Riverside and Hi
 
 Hillside surprises people: an ordinary chapter anchors to the chapter above it, so the grant reads as "everything under the same parent as this person", and at three layers that includes cousins further down. Flagging a chapter as a parent is what pins the anchor to the chapter itself and stops the grant climbing.
 
-`ADMIN_LOCAL` and the other `_LOCAL` permissions are unchanged: exactly the holder's own chapter, never a chapter beneath it.
+Chapter-level permissions do not follow the chain downwards: they never reach a chapter beneath the holder's. They do cover the holder's own chapter and their anchor chapter, which for an ordinary child chapter is the chapter directly above it. So a chapter officer in an ordinary chapter is also recognised one level up, and no further.
 
 Wherever a parent chapter is the filter, the results now cover its whole branch rather than one layer: members, fee and product payments, subscriptions, adhesions, transfer requests, resignation requests, waitlist entries, chapter analytics, and the member counts on the chapters list.
 
 <Note>
-  Filtering payments or subscriptions by a chapter now requires `FINANCIAL_LOCAL` over that chapter and refuses with an access error otherwise. The check existed before but its result was not applied, so the filter answered for anyone who could open the screen.
+  Filtering payments or subscriptions by a chapter now requires chapter finance rights over that chapter and refuses with an access error otherwise. The check existed before but its result was not applied, so the filter answered for anyone who could open the screen.
 </Note>
 
-Every member has exactly one primary chapter. **Multi local center access** lets `HR_TENANT` and `ADMIN_TENANT` grant additional chapters from the profile, each with its own permission level and optional end date; without that setting, extra chapters are unavailable. These are access grants, not a second home chapter, so for cross-chapter work use a [Private Group](/platform/groups/private-groups) or a [Role Group](/platform/groups/role-groups), and to move someone for good raise a [transfer request](/platform/groups/transfers).
+Every member has exactly one primary chapter. **Multi local center access** lets organization-wide HR managers and organization admins grant additional chapters from the profile, each with its own permission level and optional end date; without that setting, extra chapters are unavailable. With it on, a unit position you hold in another chapter (a leader serving a troop elsewhere) also gives you that chapter's place in your sidebar and its discussions, events, files and member list, without granting any permission there; the access ends when the last position there ends. These are access grants, not a second home chapter, so for cross-chapter work use a [Private Group](/platform/groups/private-groups) or a [Role Group](/platform/groups/role-groups), and to move someone for good raise a [transfer request](/platform/groups/transfers).
 
 ---
 
@@ -233,13 +231,13 @@ Every member has exactly one primary chapter. **Multi local center access** lets
 | **Suspended** | Still counted as active |
 | **Closed** | The only inactive status; the chapter drops out of active lists |
 
-Deleting a chapter (`ADMIN_TENANT`) first checks for local Stripe customers, pending invitations, and transfer requests still pointing at it. If any exist, Orgo sets the status to **Closed** and stamps an end date instead; if none exist, the record is removed outright.
+Deleting a chapter (organization admins) first checks for local Stripe customers, pending invitations, and transfer requests still pointing at it. If any exist, Orgo sets the status to **Closed** and stamps an end date instead; if none exist, the record is removed outright.
 
 ---
 
 ## Chapter settings
 
-A chapter has its own settings sidebar, shown to `FINANCIAL_LOCAL` and, for the first entry, to `HR_LOCAL`:
+A chapter has its own settings sidebar, shown to chapter finance managers and, for the first entry, to chapter HR managers:
 
 | Entry | Appears when |
 |---|---|
@@ -273,13 +271,13 @@ With the website builder, chapters also publish to `/chapters` and `/chapter/:id
 
 <AccordionGroup>
   <Accordion title="Can one person administer several chapters?">
-    Three ways: a `_PARENT_LOCAL` permission covers the holder's anchor chapter and every chapter beneath it at any depth, **Multi local center access** grants them named chapters on their profile, or a tenant-level role covers everything.
+    Three ways: a parent-chapter permission covers the holder's anchor chapter and every chapter beneath it at any depth, **Multi local center access** grants them named chapters on their profile, or a tenant-level role covers everything.
   </Accordion>
 
   <Accordion title="Members only see their own chapter. Can I open that up?">
     Turn on **Open Access Local Centers**. Every member then sees content from every chapter and receives its notifications, and can mute individual chapters from the chapter header.
 
-    The opposite setting, **Isolate Local Center Access**, hides the chapters above a member. It is applied one layer at a time: a chapter higher up the chain is visible to them only when their own `HR_PARENT_LOCAL` reach covers that particular chapter, and the same test now hides role groups scoped to a chapter they cannot see. Previously those role groups slipped through the isolation setting. The two settings are mutually exclusive.
+    The opposite setting, **Isolate Local Center Access**, hides the chapters above a member. It is applied one layer at a time: a chapter higher up the chain is visible to them only when their own parent-chapter HR reach covers that particular chapter, and the same test now hides role groups scoped to a chapter they cannot see. Previously those role groups slipped through the isolation setting. The two settings are mutually exclusive.
   </Accordion>
 
   <Accordion title="Which chapters appear in a member's sidebar?">
@@ -332,14 +330,14 @@ With the website builder, chapters also publish to `/chapters` and `/chapter/:id
     then delete.
   </Accordion>
 
-  <Accordion title="ADMIN_PARENT_LOCAL is not reaching the chapters I expected">
-    The reach of a `_PARENT_LOCAL` permission is worked out from the holder's own
+  <Accordion title="A parent-chapter admin is not reaching the chapters I expected">
+    The reach of a parent-chapter permission is worked out from the holder's own
     primary chapter, and it only ever travels downward. You are not choosing which
     branch it covers when you tick the box. The full rule is in
     [What a parent-scope permission reaches](#what-a-parent-scope-permission-reaches).
 
     Worked example: Riverside and Hillside are both children of North Region.
-    Give `ADMIN_PARENT_LOCAL` to a member whose primary chapter is Riverside and
+    Give the parent-chapter Admin permission to a member whose primary chapter is Riverside and
     they administer North Region, Riverside, Hillside and anything below those.
     Give the same permission to a member of a chapter under South Region and it
     covers South Region instead. Nothing you do on the permissions panel points
@@ -348,8 +346,8 @@ With the website builder, chapters also publish to `/chapters` and `/chapter/:id
     Two rules catch people out:
 
     - With **Enable Parent Centers** on, a chapter that has no parent of its own
-      is treated as its own anchor. So `ADMIN_PARENT_LOCAL` on a member of a
-      stand-alone top-level chapter is effectively `ADMIN_LOCAL` over that
+      is treated as its own anchor. So the parent-chapter Admin permission on a member of a
+      stand-alone top-level chapter is effectively chapter Admin over that
       chapter, widening only as chapters appear beneath it.
     - A chapter flagged **It's a parent chapter** is also its own anchor, even
       when it sits in the middle of the chain. A district officer therefore
@@ -409,7 +407,7 @@ With the website builder, chapters also publish to `/chapters` and `/chapter/:id
     Two different refusals, with two different causes.
 
     "Changing chapter hierarchy requires tenant-level permission" means you hold
-    `ADMIN_LOCAL` rather than `HR_TENANT`. Only organization-level HR can move a
+    chapter admin rights rather than organization-wide HR manager rights. Only organization-level HR can move a
     chapter in the tree. Nothing else on the form is affected: save the same
     edit without touching the parent selector or the **It's a parent chapter**
     checkbox and it goes through.
@@ -423,9 +421,9 @@ With the website builder, chapters also publish to `/chapters` and `/chapter/:id
 
   <Accordion title="A local admin opens the chapter edit page and sees a blank screen">
     Two checks disagree, and the failure lands between them. The route asks only
-    whether you hold `ADMIN_LOCAL` somewhere, without looking at which chapter is
+    whether you hold chapter admin rights somewhere, without looking at which chapter is
     in the address, so the page loads. The form then renders only for
-    `ADMIN_TENANT` or for your own primary chapter, so for anyone else the page
+    organization admins or for your own primary chapter, so for anyone else the page
     stays empty. No permission message is shown.
 
     So a chapter admin who follows a link to a different chapter's edit page gets
@@ -433,7 +431,7 @@ With the website builder, chapters also publish to `/chapters` and `/chapter/:id
     holding **Multi local center access** on that chapter, even where the save
     itself would be accepted, because the form checks the primary chapter only.
 
-    A member who holds no `ADMIN_LOCAL` at all fails the route check instead and
+    A member who holds no chapter admin rights at all fails the route check instead and
     is sent to the login screen, which looks like a session that has expired and
     is not one. That behaviour is the same on any page they lack the role for.
   </Accordion>

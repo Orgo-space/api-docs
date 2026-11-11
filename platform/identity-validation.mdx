@@ -17,7 +17,7 @@ Identity validation collects a scan of a member's ID document, stores the detail
 
 ## Enabling it
 
-**Settings** → **Modules** → **Identity Validation**. Requires `ADMIN_TENANT`.
+**Settings** → **Modules** → **Identity Validation**. Only Orgo administrators can change it.
 
 <img src="/images/platform/users/identity-validation-settings.png" alt="Identity Validation module settings with Enable Identity Validation on and toggles for Require for Users, Require for Online Payments, Automated Identity Validation, Hide Address Fields and Cancel Subscriptions Without Identity Reconfirmation" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -68,7 +68,7 @@ There is no central review queue. You open an identity record from wherever it i
 - **Payments** and **Subscribers** on a product;
 - the adhesion list.
 
-Reviewing checks `HR_ASSISTANT_LOCAL` over the member's local center. That is the widest of the HR levels, so it is satisfied by `HR_LOCAL`, `FINANCIAL_LOCAL` and `ADMIN_LOCAL`, by their parent center equivalents, and by the tenant-wide `HR_TENANT`, `FINANCIAL_TENANT` and `ADMIN_TENANT`. If you want identity documents seen by fewer people than that, review who holds local finance and HR permissions before turning the module on.
+Reviewing needs HR assistant rights over the member's local center. That is the widest of the HR levels, so it is satisfied by chapter HR managers, chapter financial managers and chapter admins, by their parent-chapter equivalents, and by the organization-wide HR, financial and admin roles. If you want identity documents seen by fewer people than that, review who holds local finance and HR permissions before turning the module on.
 
 <img src="/images/platform/users/identity-admin-review.png" alt="Identity validation review screen showing the uploaded document on the left and the extracted first name, last name, personal number, birth date, document serial and number, issue and expiry dates on the right, with Validate, Reject and Change identity data controls" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -103,7 +103,7 @@ All of these only run when **Require for Online Payments** is on.
 - For an active subscription, Orgo emails the member 7, 4 and 2 days before the renewal date asking them to confirm or replace their document. The email offers both "same document" and "upload a different one".
 - With **Cancel Subscriptions Without Identity Reconfirmation** on, a subscription renewing within a day and still unconfirmed is cancelled.
 - A member can only replace a subscription document inside the last 7 days before renewal, and not at all while the current one is in the **Orgo validated** state.
-- Every upload attached to a payment emails everyone holding `FINANCIAL_TENANT`.
+- Every upload attached to a payment emails everyone who is an organization-wide financial manager.
 
 ---
 
@@ -111,7 +111,7 @@ All of these only run when **Require for Online Payments** is on.
 
 The document number and the CNP are written to the database twice: once as plain text and once encrypted. Document images go to Orgo's S3 media bucket under an unguessable file name. Every create and every change to an identity record writes an audit entry naming the admin and the fields that changed.
 
-Orgo has no delete operation for an identity record and no retention timer. The record is only removed when the underlying member or contact row is deleted from the database, which closing an account does not do on its own. If your retention policy requires ID scans to be purged after a period, that has to be arranged outside the product, through Orgo support.
+There is no button to delete an identity record, and closing or deleting an account does not remove it (see [Deletion of Account](/platform/users/deletion-of-account)). Two things do: a member's record being hard-deleted, and the **Erase Inactive or Deleted Accounts After** setting under **Settings** → **Modules** → **Users & Profiles** → **Configuration**. When that setting is on and an account with history passes its window, the identity record is anonymised: the names, personal number, document number, dates, addresses and signature are cleared and the document scans are deleted from storage. If your retention policy needs ID scans purged on a different schedule, ask Orgo support.
 
 <Note>
   Identity data is not part of the member privacy switches. A member cannot hide their identity record, and other members never see it: only the permission levels listed above can open one.
@@ -123,6 +123,6 @@ Orgo has no delete operation for an identity record and no retention timer. The 
 
 - [Privacy Settings](/platform/users/privacy-settings) governs the rest of a profile
 - [Adhesion](/platform/users/adhesion) can pair a membership application with a document check
-- [Permissions](/platform/permissions) explains the roles named above
+- [Permissions](/platform/permissions) explains the permission levels named above
 - [Donations](/platform/fees/donations) is where the payment-linked flow is most used
 - [Stripe Integration](/platform/fees/stripe-integration) covers the checkout side of the same flow

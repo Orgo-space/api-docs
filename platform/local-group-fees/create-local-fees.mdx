@@ -17,14 +17,15 @@ A chapter (local center) can charge its own membership fee on top of the organis
 
 ## Turning it on
 
-**Settings** → **Payments & Fees** → **Membership fees**, section **Local Center Fees**. Requires `ADMIN_TENANT`.
+**Settings** → **Modules** → **Payments & Fees** → **Membership fees**, section **Local Center Configuration**. Needs an Orgo administrator.
 
 | Setting | What it does |
 |---|---|
-| **Local Center Fees Enabled** | Master switch. Everything on this page is hidden until it is on. |
+| **Local Center Fees Enabled** | Master switch, off by default. Everything on this page is hidden until it is on. |
+| **Credit Central Fees to Member Local Centers** | Reporting only, off by default. Shows money paid on organisation-level products in each chapter's analytics, so an organisation that collects centrally and redistributes afterwards can still see per-chapter figures. Past figures update only after the statistics are rebuilt. |
 | **Local Center Members Table** | Adds the per-chapter [Member fees table](/platform/local-group-fees/member-fees) used to record offline payments. |
-| **Minimum Members per Local Center** | Flags chapters whose count of paid fees falls below this number, on the chapter fee statistics screen (`/fee/stats`, `FINANCIAL_TENANT`). |
-| **Minimum Active Members Percentage** | Same flag, comparing paid fees against this share of the chapter's active members. |
+| **Minimum Members per Local Center** | Flags chapters whose count of paid fees falls below this number (default 25), on the chapter fee statistics page (at the address `/fee/stats`, Financial (Organization)). |
+| **Minimum Active Members Percentage** | Same flag, comparing paid fees against this share of the chapter's active members (10% to 100%, default 100%). |
 
 ---
 
@@ -34,16 +35,16 @@ A chapter (local center) can charge its own membership fee on top of the organis
 
 <Steps>
   <Step title="Open the chapter's Fees settings">
-    **Finance** → **Fees settings** in the sidebar, or open the chapter and pick **Fees settings** in its settings sidebar. The screen itself requires `ADMIN_LOCAL` on that chapter (`ADMIN_TENANT` qualifies everywhere).
+    In the chapter's settings menu, pick **Membership fees**. It is listed when fees and **Local Center Fees Enabled** are on, and the page, titled **Fees settings** with the chapter's name, needs Admin (Chapter) on that chapter (Admin (Organization) qualifies everywhere).
   </Step>
   <Step title="Create the chapter fee product">
-    With no chapter fee product yet you get **Start local fees by adding your first product** and an **Add product** button. A fee product created by anyone who is not `FINANCIAL_TENANT` is stamped with their own chapter, and if that chapter has no fee product yet it is set as the chapter's fee product automatically.
+    With no chapter fee product yet you get **Start local fees by adding your first product** and an **Add product** button, which opens the [product form](/platform/fees/products) for this chapter. A fee product created by anyone who is not Financial (Organization) is stamped with their own chapter, and if that chapter has no fee product yet it is set as the chapter's fee product automatically, with its first level as the chapter's default.
   </Step>
   <Step title="Add the price tiers">
-    **Add price** opens the product's **Prices** tab. Each price is one membership level (for example Youth, Adult, Family). Archived prices are not offered.
+    **Add price** opens the product's **Membership levels** tab. Each level is one membership tier (for example Youth, Adult, Family). Archived levels are not offered.
   </Step>
   <Step title="Select Product and Default price, then Save">
-    **Product** lists only products belonging to this chapter. **Default price** lists that product's non-archived prices with their amount and the organisation currency symbol.
+    **Product** lists only products belonging to this chapter. **Default price** lists that product's non-archived levels with their amount and the organisation currency symbol. A level's own menu on the product page also offers **Set as default level**.
   </Step>
   <Step title="Connect the chapter's Stripe account (optional)">
     Without one, chapter fee charges fall back to the organisation's Stripe account. See [Stripe Integration](/platform/fees/stripe-integration).
@@ -51,7 +52,7 @@ A chapter (local center) can charge its own membership fee on top of the organis
 </Steps>
 
 <Note>
-  The chapter settings sidebar shows **Fees settings** to `FINANCIAL_LOCAL`, but the screen behind it needs `ADMIN_LOCAL`. A finance-only chapter admin will see the entry and land on an empty page.
+  The **Membership fees** entry and the screen behind it both need Admin (Chapter). A chapter administrator who only holds Financial (Chapter) does not see them: they can still create and edit the chapter's products from **Finance** → **Local products**, but someone with Admin (Chapter) has to choose the chapter's product and default price.
 </Note>
 
 ---
@@ -60,13 +61,15 @@ A chapter (local center) can charge its own membership fee on top of the organis
 
 The default price is not just a suggestion. Whenever the [Member fees table](/platform/local-group-fees/member-fees) or a member's fee view loads, every fee-eligible member of the chapter who has no chapter fee tier yet is given the chapter's **Default price**. With **Enable Age Restrictions on Prices** on, the age-appropriate variant of that price is chosen instead.
 
-Change an individual member's tier from the Member fees table, or from the member's **Fee** tab (needs `FINANCIAL_LOCAL` on their chapter, or the member changing their own).
+Change an individual member's tier from the Member fees table (Financial (Chapter) on their chapter), or from the member's **Fee** tab with **Change plan**. On the **Fee** tab a member can change their own chapter level, and an administrator needs both Financial (Chapter) and HR (Chapter) for that member; a finance-only administrator uses the Member fees table.
+
+When a member moves to another chapter, their chapter level follows: an automatic renewal on the old chapter's fee ends at the end of the period already paid, a paid period is never repriced, and the member is given the new chapter's default level (the age-appropriate one when age restrictions are on) at once, or none if the new chapter charges no fee. If the old chapter's paid period has not ended yet, the new level starts the day after it.
 
 ---
 
 ## How a member pays both fees
 
-A member's profile **Fee** tab shows two cards side by side, **Organisation fee** and **Local fee**. The local card only appears when chapter fees are on, the member's chapter has a fee product, and the member has a chapter fee tier.
+A member's profile **Fee** tab shows a summary card, then two cards side by side, **Organisation fee** and **Local fee**. The summary card shows the status and splits the total into an organisation line and a chapter line (plus the registration fee, when one is due). The local card only appears when chapter fees are on, the member's chapter has a fee product, and the member has a chapter fee level. While the two fees are shown together, the member pays each from its own card; the summary card carries no pay button.
 
 <img src="/images/platform/fees/chapter-fee-member-cards.png" alt="Member profile Fee tab with a summary card splitting the total fee into an organisation line and a chapter line, above an Organisation fee card and a Local fee card side by side, each showing its tier, validity and payment history" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -90,7 +93,7 @@ Paying the chapter fee stamps a billing period and sets the member's **chapter f
 
 ## Recording offline payments
 
-Cash and bank transfers collected by the chapter are recorded in the [Member fees table](/platform/local-group-fees/member-fees), which stages the amounts as a draft and then writes them as one pending fee payment batch for an organisation admin to approve. Settling a single member instead, with **Mark as paid** on their profile's **Fee** tab, needs no approval: that batch is written as already approved and the validity date moves at once. See [Recording a payment](/platform/fees/record-payment).
+Cash and bank transfers collected by the chapter are recorded in the [Member fees table](/platform/local-group-fees/member-fees), which stages the amounts as a draft and then writes them as one pending fee payment batch for an Admin (Organization) to approve. Settling a single member instead, with **Mark as paid** on their profile's **Fee** tab, needs no approval: that batch is written as already approved and the validity date moves at once. See [Recording a payment](/platform/fees/record-payment).
 
 ---
 
@@ -98,14 +101,14 @@ Cash and bank transfers collected by the chapter are recorded in the [Member fee
 
 | Action | Permission |
 |---|---|
-| Turn chapter fees on for the organisation | `ADMIN_TENANT` |
-| Choose the chapter's fee product and default price | `ADMIN_LOCAL` on the chapter |
-| Create or edit the chapter's fee product and prices | `FINANCIAL_LOCAL` on the chapter |
-| Change a member's chapter fee tier | `FINANCIAL_LOCAL` on their chapter (or the member, for themselves) |
-| Mark a chapter fee period as paid | `FINANCIAL_LOCAL` on the member's chapter, and **Allow Mark as Paid** must be on |
-| Record a chapter fee payment batch | `FINANCIAL_LOCAL` on the chapter, or an active unit-admin role in it |
-| Approve a pending batch | `ADMIN_TENANT` |
-| Cancel a pending batch, which deletes it | `ADMIN_LOCAL`, and the server keeps it to that admin's own chapter |
+| Turn chapter fees on for the organisation | Orgo administrator |
+| Choose the chapter's fee product and default price | Admin (Chapter) on the chapter |
+| Create or edit the chapter's fee product and levels | Financial (Chapter) on the chapter |
+| Change a member's chapter fee level | Financial (Chapter) on their chapter (on the Member fees table), or the member for themselves |
+| Mark a chapter fee period as paid | Financial (Chapter) on the member's chapter, and **Allow Mark as Paid** must be on |
+| Record a chapter fee payment batch | Financial (Chapter) on the chapter, or an active unit-admin role in it |
+| Approve a pending batch | Admin (Organization) |
+| Cancel a pending batch, which deletes it | Admin (Chapter), and the server keeps it to that admin's own chapter |
 
 ---
 
@@ -113,11 +116,11 @@ Cash and bank transfers collected by the chapter are recorded in the [Member fee
 
 <AccordionGroup>
   <Accordion title="The Product dropdown is empty on Fees settings">
-    It lists only products that belong to this chapter. A product created by a `FINANCIAL_TENANT` user is an organisation product and will not appear. Create the product from the chapter's Fees settings so it is stamped with the chapter.
+    It lists only products that belong to this chapter. A product created by a Financial (Organization) user is an organisation product and will not appear. Create the product from the chapter's **Membership fees** page or **Finance** → **Local products** so it is stamped with the chapter.
   </Accordion>
 
   <Accordion title="Members of the chapter have no local fee showing">
-    Check that the chapter has both a **Product** and a **Default price** saved, that the member is fee eligible, and that their member type is not flagged as not eligible for fees. Members with no chapter fee tier get one assigned automatically the next time the fee views load.
+    Check that the chapter has both a **Product** and a **Default price** saved, that the member is fee eligible, and that their member type is not flagged as not eligible for fees. Members with no chapter fee level get one assigned automatically the next time the fee views load.
   </Accordion>
 
   <Accordion title="Chapter fee money is landing in the organisation account">

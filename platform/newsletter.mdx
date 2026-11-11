@@ -28,17 +28,26 @@ marketing automation and no A/B testing.
 Campaign Module**. The same page holds the **Default Newsletter Widget UUID**
 used by [signup widgets](/platform/newsletter-widgets).
 
-| Permission | What it allows |
+| Who | What they can do |
 |---|---|
-| `COMMUNICATION_TENANT` | Create, send, and report on any campaign in the organization |
-| `COMMUNICATION_LOCAL` | The same, but only for the local centers you manage and only the **Members from a group** audience. Tenant-wide and event audiences are hidden, recipient counts are refused unless capped to a center you manage, and the send is capped again to that center |
-| `EVENT_TENANT` | Campaigns attached to an event ("event messages") |
-| `ADMIN_TENANT` | Sees every campaign |
+| Organization-wide communication managers | Create, send, and report on any campaign that is not attached to an event |
+| Chapter communication managers and chapter admins | The same, but only for campaigns that belong to a chapter they manage (or one below it). Every campaign they write has to name such a chapter, and they are normally offered only the **Members from a group** and **From a list** audiences. See [Who a campaign can reach](#who-a-campaign-can-reach) |
+| Organization-wide event managers | Campaigns attached to an event ("event messages"), and only those |
+| Organization admins | See every campaign |
+
+The list of campaigns follows the same lines: each person sees only the campaigns they are allowed to work on.
 
 The module adds a **COMMUNICATION** sidebar section: **Email campaigns**
-(`COMMUNICATION_LOCAL`), **Campaign templates**, **Lists & Segments**,
-**Newsletter subscription** (all `COMMUNICATION_TENANT`), and **Email Log**
-(`ADMIN_TENANT`).
+(chapter communication managers and up), **Campaign templates**,
+**Newsletter subscription** (organization-wide communication managers),
+**Lists & Segments** (also open to organization HR managers and to chapter
+communication managers and admins), and **Email Log** (organization-wide
+communication managers).
+
+**Auto-subscribe to newsletter** on the same settings page is offered only to
+organizations in the United States. When it is on, people who submit a form,
+donate or register for an event are subscribed automatically and shown a
+notice, instead of being given an opt-in checkbox.
 
 ---
 
@@ -50,11 +59,13 @@ Three steps: **Configuration**, **Design content**, **Preview & send**.
   <Step title="Fill in the campaign details">
     **Campaign title** is internal, **Email subject** is what recipients see.
     **Sender name** defaults to your organization's short name and **Reply-to
-    email** to its contact email; override either per campaign.
+    email** to its contact email; override either per campaign. The reply-to must
+    be a real email address, or the save is refused.
   </Step>
   <Step title="Choose the audience and a template">
-    Pick a recipient option below (its recipient count appears next to it), then
-    start from Blank or from a saved template.
+    Pick a recipient option below (its recipient count appears next to it), the
+    chapter it belongs to when your organization uses local centers, and the
+    email type, then start from Blank or from a saved template.
   </Step>
   <Step title="Design, test, send">
     Build it in the [editor](/platform/newsletter-builder), check it with
@@ -75,25 +86,83 @@ has gone out. Content auto-saves in the editor.
 
 | Option | Who it resolves to |
 |---|---|
-| **All members and contacts** | Every subscribed member plus every subscribed contact. Gains a local center dropdown when local centers are enabled, which narrows the send to one center |
+| **All members and contacts** | Every subscribed member plus every subscribed contact. Organization-wide communication managers get a **Local center** dropdown (when local centers are enabled) that narrows the send to one center |
 | **Members from a group** | The members of one group, role group, or local center. Leaving the group empty sends to all members |
-| **All subscribed contacts** | Contacts only, no members. Gains the same local center dropdown when contacts are assigned to local centers |
+| **All subscribed contacts** | Contacts only, no members. Gains the same **Local center** dropdown when contacts are assigned to local centers |
 | **From a list** | A [user list](/platform/users/lists), static or dynamic |
-| **Event attendees** | The people registered for one event, members and external registrants |
+| **Event attendees** | Everyone registered for one event, members and external registrants, except people who answered that they are not attending |
 
 A member is included when the account has an email address and newsletter email
 is on in their notification settings; a contact when it has an email address and
 is marked newsletter subscribed. The database-wide audiences also require the
 account to be active. A manual list does not: it sends to the people in it,
 inactive included, and drops only accounts that were merged away or deleted.
-Nothing else filters: previously bounced addresses are not removed automatically,
-so clean those up from the report.
+Addresses that cannot receive mail are skipped automatically: permanent bounces
+and spam complaints put the address on a block list that is checked before every
+send, and a spam complaint also unsubscribes that person from your newsletters.
+A member or contact in that state carries an **Emails not delivered** tag on
+their profile. Only Orgo staff can lift it.
 
 <Note>
 New members inherit the **Newsletter Notifications** default from **Settings** →
 **Modules** → **Emails & Notifications** at the moment their account is created.
 Changing that default later does not touch anyone who already exists.
 </Note>
+
+A list with an attendance rule counts only people who actually attended the
+event. Someone who answered "attending" but was never marked as attended does not
+count. This differs from **Event attendees** above, which includes anyone
+registered who has not declined.
+
+### Email type
+
+Every campaign is either **Marketing** or **Informational**.
+
+- **Marketing** (the default) is sent only to people subscribed to the
+  newsletter.
+- **Informational** is sent to everyone the audience selects, whether or not
+  they are subscribed. Use it only for essential notices such as a change of
+  venue or a legal notice, not for promotion. The recipient count updates when
+  you switch.
+
+Informational campaigns still skip addresses on the block list described above.
+
+### Who a campaign can reach
+
+Reach for lists and newsletters flows down the chapter tree and nowhere else.
+A campaign that belongs to a chapter goes to the people of that chapter, and the
+only way it widens is the **Include sub-chapters** switch, which adds the
+chapters below it. The switch appears only for a chapter that has sub-chapters.
+
+Which chapters a sender may choose from depends on the scope of the permission
+they hold, and the two scopes behave differently:
+
+- A **chapter-scope** permission starts at the sender's own chapter. It never
+  reaches the chapter above or a sibling chapter.
+- A **regional (parent chapter)** permission starts at the sender's anchor
+  chapter instead, and for an ordinary chapter the anchor is the chapter
+  directly above it. Because reach then runs down from the anchor, it covers
+  the sibling chapters under that same parent. That is the intended effect of a
+  regional grant, not an accident: see
+  [what a parent-scope permission reaches](/platform/groups/local-groups#what-a-parent-scope-permission-reaches).
+
+| Sender | Chapters they can choose |
+|---|---|
+| Organization-wide communication managers | Every chapter, or no chapter at all (**All local centers**) |
+| Chapter communication managers and chapter admins | Their own chapter, any chapter where they hold a role that carries communication or admin rights, and all the chapters below those |
+| Regional (parent chapter) communication managers and admins | The same, plus the parent chapter they are anchored to and everything below it |
+
+The chapter is chosen in the **Local center** dropdown under the audience. Its
+rules apply to every audience option, lists and groups included, so a chapter
+campaign sent to a list still reaches only the list members who belong to that
+chapter, or to its sub-chapters when the switch is on. When a chapter sender
+picks a list that belongs to a chapter, the campaign takes that chapter and
+scope. A chapter sender cannot use a list that belongs to a chapter outside
+their reach, and the API refuses the save with a reason shown in the toast.
+
+The rules are checked again when a scheduled campaign is due. If its list was
+deleted, or its owner no longer manages its chapter, the campaign is marked
+**Failed** and does not go out.
 
 Two ways to reuse a campaign:
 
@@ -111,12 +180,12 @@ Two ways to reuse a campaign:
 
 | Behaviour | Detail |
 |---|---|
-| Queue | Recipients are resolved in batches of 2,000 and each email is dispatched individually at roughly three per second per worker, so a large send arrives over minutes rather than all at once |
-| Resend guard | A campaign already **Sent** cannot be sent again, and a resend to the same recipient is skipped even if the queue retries |
+| Queue | The audience is frozen into a list of recipients when you press Send, and the emails are then delivered in the background, so a large send arrives over minutes rather than all at once |
+| Resend guard | A campaign that is already **Sending** or **Sent** cannot be sent or scheduled again, and a resend to the same recipient is skipped even if the queue retries |
 | Schedule window | At least 2 minutes in the future, on a 15-minute boundary (:00, :15, :30, :45), because the scheduler runs every 15 minutes. Today is the earliest selectable date, so a send later this afternoon is fine |
 | Schedule fields | Date, time, and timezone (defaults to your own timezone, falling back to the organization's) |
-| Schedule failure | Retried, then marked **Failed** after three failures |
-| Statuses | **Draft**, **Scheduled**, **Sending**, **Sent**, **Stop**, **Failed** |
+| Schedule failure | Retried, then marked **Failed** after three failures. A scheduled campaign is also marked **Failed**, without retry, if its list was deleted or its owner no longer manages its chapter by the time it is due |
+| Statuses | **Draft**, **Scheduled**, **Sending**, **Sent**, **Stop**, **Failed**. The system sets the status as the campaign moves along; it is never something you edit directly |
 | Sending to Sent | Checked hourly. Automatic once every recipient has a delivered or bounced event, or after 15 minutes with no new events at 95% or better delivery, or after 2 hours at 95% or better, with a hard cut-off at 24 hours regardless |
 
 ### Picking a date and time
@@ -136,8 +205,12 @@ content editor's side menu are the same form and follow the same rules.
   type are read in that timezone, so 09:00 in Europe/Bucharest leaves at 09:00 in
   Bucharest wherever you happen to be sitting. It defaults to your own timezone,
   or the organization's if your profile has none.
-- Rescheduling follows the same rules, and removing a schedule puts the campaign
-  back to Draft.
+- Rescheduling follows the same rules and is possible only while the campaign is
+  **Scheduled**. Removing a schedule puts the campaign back to Draft. Once a
+  campaign is **Sending**, it can no longer be rescheduled.
+- In the campaign list, hovering a **Scheduled** status shows when it will go out
+  (on a phone the date sits beside the status), and opening a scheduled campaign
+  lands on its **Schedule** tab.
 
 <Note>
 The 2-minute check inside the form is measured against your device clock rather
@@ -156,8 +229,9 @@ The **Report** tab shows Sent, Opened, Clicks, Bounce, and Unsubscribed, the
 campaign details (subject, sender, audience, author, sent date, plus reply-to
 and the public URL when those are set), and **Top links** with click counts per
 URL. **Export CSV** gives one row
-per recipient per recorded action (delivered, opened, clicked, bounced,
-complained, unsubscribed, rejected, failed) with name, email, and action.
+per recipient, with their name and email and then one column per action
+(Delivered, Opened, Clicked, Bounced, Complained, Unsubscribed, Rejected,
+Failed), each marked "Yes" when that action was recorded for them.
 
 <img src="/images/platform/communication/newsletter-show.png" alt="Campaign report with Sent, Opened, Clicks, Bounce and Unsubscribed tiles above a campaign details table and a top links panel" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -177,7 +251,11 @@ Numbers come from the mail provider's delivery events, not from the send:
 Four tiles above the campaign list cover all sent campaigns: total campaigns,
 average open rate, average click rate, total recipients. The averages are
 weighted by recipients and clamped per campaign, so odd data cannot push them
-above 100%.
+above 100%. In the list, the bounce and complaint figures open a popup with
+**View recipients** for each of bounced, complained and unsubscribed, so you can
+see exactly who. Newsletter totals for any period, next to discussion
+activity, are on the Communication tab of Analytics. See
+[Communication analytics](/platform/communication-analytics).
 
 ---
 
@@ -186,13 +264,38 @@ above 100%.
 Every campaign email carries one-click unsubscribe headers, so a member can opt
 out from their mail client without opening it. If your design has no unsubscribe
 placeholder, Orgo appends an unsubscribe link (and, for members, a link to their
-notification preferences) to the footer before sending. You cannot re-subscribe
-someone on their behalf.
+notification preferences) to the footer before sending.
+
+The footer link opens an unsubscribe page that works without signing in. It
+offers two buttons, **Unsubscribe Email Newsletter** and **Unsubscribe ALL email
+notification**, and nothing changes until one is pressed. Afterwards the page
+shows a success message and a link to log in (or to the dashboard, for someone
+already signed in).
+
+- **A member** who unsubscribes from the newsletter stops receiving campaigns on
+  every Orgo account that uses the same email address, in every organization.
+  The other button also switches off all their notification emails.
+- **Someone who is not a member**, such as a contact who joined through a signup
+  widget or a form, only ever receives campaigns, so both buttons do the same
+  thing for them: they are marked as no longer subscribed.
+- The unsubscribe is counted against the campaign the link came from. It adds to
+  that campaign's **Unsubscribed** figure and appears in its **View recipients**
+  list.
+- The link works once. Opening it again shows an error, which is harmless
+  because the person is already unsubscribed.
+
+Orgo does not re-subscribe anyone for you after they opt out. An organization HR
+manager can switch a contact back on with **Subscribe** on the contact's panel,
+which warns that it overrides an opt-out and is written to the log. Do this only
+when the person has asked.
 
 **Generate public link for this newsletter** publishes a browser-readable copy:
 copy a short share URL, upload a social preview image, and the campaign appears
 in the campaigns gallery (`/newsletter-gallery`), the in-app archive where
-members see sent campaigns addressed to them or to everyone.
+members see sent campaigns addressed to them or to everyone. Recipients also get
+a **View in browser** link in the email. It always opens in the web browser, even
+for someone who has the Orgo or your branded app installed, and the page shows
+the email at its desktop width with columns side by side.
 
 ---
 
@@ -207,9 +310,11 @@ members see sent campaigns addressed to them or to everyone.
 
   <Accordion title="A member says they never received it">
     Check the account is active, has an email address, has newsletter email on
-    in their notification settings, and fell inside the audience. Then read the
-    [email log](/platform/emails/email-log) and the CSV export, which record
-    bounces and rejections per recipient.
+    in their notification settings (unless the campaign is **Informational**),
+    and fell inside the audience, including the chapter the campaign belongs to.
+    Then check whether the profile carries an **Emails not delivered** tag, and
+    read the [email log](/platform/emails/email-log) and the CSV export, which
+    record bounces and rejections per recipient.
   </Accordion>
 
   <Accordion title="Sending an email about one event">
@@ -228,3 +333,4 @@ members see sent campaigns addressed to them or to everyone.
 - [Notifications](/platform/notifications) for the automatic messages members get
 - [User lists](/platform/users/lists) for building reusable audiences
 - [Contacts](/platform/contacts) for non-member recipients
+- [Communication analytics](/platform/communication-analytics) for newsletter and discussion totals over time

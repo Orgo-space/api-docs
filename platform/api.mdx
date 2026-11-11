@@ -12,7 +12,7 @@ An API token lets a script, an automation platform or an internal tool talk to O
 **Built for** operations teams wiring Orgo into the rest of their stack.
 **Replaces** CSV exports and manual re-keying between systems.
 
-<img src="/images/platform/developers/api-tokens.png" alt="API Tokens page with the create form, the Full access and Restricted scope selector, and a table of existing tokens showing last used, expiry and status" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/developers/api-tokens.png" alt="Create Token dialog over the API Tokens table: a token name, an expiry, the Restricted switch on with a switch per area, Events set to Write, Members set to Read, and Financial and Communications off" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
@@ -20,7 +20,7 @@ An API token lets a script, an automation platform or an internal tool talk to O
 
 **Settings → Developers → API Tokens**
 
-Creating, editing, revoking and deleting a token all require **ADMIN_TENANT**. The menu entry appears only when API access is switched on for your organization.
+Creating, editing, revoking and deleting a token all need the **Orgo administrator** flag on your account, not only an admin permission: see [Permissions](/platform/permissions). The menu entry appears only when API access is switched on for your organization.
 
 The full endpoint catalogue, request and response shapes, and error formats are in the [API Reference](/api-reference/concepts/authentication).
 
@@ -103,6 +103,25 @@ A token also stops working if the account that owns it is no longer active, so r
 Requests are counted per token per day. **Settings → Usage & Billing** shows API requests over the last 30 days against your plan's allowance.
 
 There is no per-minute quota tied to your plan. A handful of expensive or abuse-sensitive endpoints have their own limits and answer `429` with a `Retry-After` header: see [Rate limits](/api-reference/concepts/rate-limits) for the list and a retry pattern.
+
+---
+
+## Checking the API is up
+
+`GET /api/v1/ping` needs no token and is the right thing to point a monitor at.
+
+| Response | Meaning |
+|---|---|
+| `200` | The API is serving requests and can reach its database |
+| `503` | It cannot, so treat the API as down |
+
+The response carries `Cache-Control: no-store`, so no cache or proxy answers on the API's behalf and a check always reaches the application.
+
+<Note>
+The check deliberately ignores the cache layer. A cache fault makes Orgo slower but it keeps serving, so including it would report an outage that members are not experiencing. A `503` here means requests genuinely cannot be served.
+</Note>
+
+Use it for uptime monitoring rather than as a readiness check before each call: a request that is going to fail will tell you so itself, and polling `ping` before every call just doubles your traffic.
 
 ---
 

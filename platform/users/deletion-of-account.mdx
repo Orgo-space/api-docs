@@ -18,20 +18,20 @@ field by field. Read the tables before you promise a member anything.
 **Built for** honouring a member's request to be removed from the community.
 **Replaces** an "archive" flag that leaves the person searchable.
 
-<img src="/images/platform/users/delete-account.png" alt="Close account page showing Close account, Suspend account, Resign and Delete account actions with their explanations" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/users/delete-account.png" alt="The Close account card in a member's settings, offering Close account, Suspend account, Resign and Delete account, each with its explanation" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
 ## Where it lives
 
-**Profile** → **Settings & Privacy** → **Close account**, then **Delete
-account**. A confirmation dialog appears ("Are you sure you want to completely
+**Profile** → **Settings** → **Account and security**, then **Delete account** in
+the **Close account** card. A confirmation dialog appears ("Are you sure you want to completely
 delete the account? This action cannot be undone!") and confirming applies the
 change immediately.
 
 There is no module to enable and no setting that turns deletion on or off.
 
-The same page also offers **Close account** (sets Inactive, reversible) and, for
+The same card also offers **Close account** (sets Inactive, reversible) and, for
 admins, **Suspend account**. Those are the reversible options; see
 [User statuses](/platform/users/statuses).
 
@@ -43,9 +43,9 @@ admins, **Suspend account**. Those are the reversible options; see
 |---|---|
 | A member deleting their own account | **No**, unless their account is on the guest user type. The attempt is refused with "You cannot delete your account, please contact the administrator." |
 | A guest deleting their own account | Yes |
-| An admin deleting a member who belongs to a local group | `ADMIN_LOCAL` over that local group, and the button only appears for `ADMIN_TENANT` |
-| An admin deleting a member with no local group | `ADMIN_TENANT` |
-| An HR admin (`HR_LOCAL`, `HR_TENANT`) | No. They see "This profile can be deleted permanently only by organization Admin" and a **Request delete** button that opens a support request instead. |
+| An admin deleting a member who belongs to a local group | Chapter admin rights over that local group, and the button only appears for organization admins |
+| An admin deleting a member with no local group | Organization admins |
+| An HR manager (chapter or organization-wide) | No. They see "This profile can be deleted permanently only by organization Admin" and a **Request delete** button that opens a support request instead. |
 
 <Note>
 Ordinary members cannot self-delete. An erasure request from a member is
@@ -144,16 +144,34 @@ history: the old record stays where it is, detached.
 
 ---
 
-## Automatic clean-up of unconfirmed registrations
+## Automatic clean-up
 
-One deletion happens without anyone pressing a button. Every night at 05:00 UTC,
-accounts that have been sitting on **Unconfirmed email** for more than two
-months, with no payments and no adhesion, are removed. Where related records
-prevent the row from being removed, the account is marked Deleted instead and is
-anonymised in the same way as above.
+Two things happen without anyone pressing a button.
 
-This only ever touches accounts that never verified their email address. Nothing
-else is cleaned up on a schedule.
+**Unconfirmed registrations.** Every night at 05:00 UTC, accounts that have been
+sitting on **Unconfirmed email** for more than two months, with no payments and no
+adhesion, are removed. Where related records prevent the row from being removed,
+the account is marked Deleted instead and is anonymised in the same way as above.
+
+**Erasing old inactive or deleted accounts.** This one is off until you turn it on:
+**Settings** → **Modules** → **Users & Profiles** → **Configuration** →
+**Erase Inactive or Deleted Accounts After**, with a window of 6, 12, 24 or 36
+months. It runs nightly and is counted from the date an account became Inactive or
+was deleted. Members who still sign in are never included, and Suspended accounts
+are never touched.
+
+- An account with no history (no payments, applications, roles held, events or
+  content) is **deleted** outright.
+- An account with any history is **anonymised**: name, contact details, ID
+  documents, custom field answers, staff notes about them and the profile photo are
+  erased, and the record stays so that invoices, votes and offices keep a valid
+  owner. The member shows as an obfuscated user.
+- The first run comes 14 days after you switch it on, so a mistake can still be
+  switched off in time. Erasure cannot be undone.
+
+Unlike the **Delete account** action, this is a real erasure of the personal data
+on the account. It only reaches accounts that have already been Inactive or Deleted
+for the whole window.
 
 ---
 
@@ -161,8 +179,8 @@ else is cleaned up on a schedule.
 
 <AccordionGroup>
   <Accordion title="A member asked me to delete their data. What do I actually do?">
-    Delete the account from their Close account page as an `ADMIN_TENANT` (or an
-    `ADMIN_LOCAL` for their local group). Then decide, against your own retention
+    Delete the account from their Close account page as an organization admin (or a
+    chapter admin for their local group). Then decide, against your own retention
     policy, what to do with the name, profile fields, custom field values,
     identity documents and adhesion record, which the action leaves in place.
     Record the request and what you did outside Orgo, because the platform does
@@ -199,4 +217,4 @@ else is cleaned up on a schedule.
 - [Resignation](/platform/users/resignation) - recording a departure without removing anything
 - [Privacy settings](/platform/users/privacy-settings) - limiting what others see, short of deletion
 - [Identity validation](/platform/identity-validation) - the identity documents deletion leaves behind
-- [Permissions](/platform/permissions) - the permissions named on this page
+- [Permissions](/platform/permissions) - the permission levels named on this page

@@ -74,7 +74,11 @@ A **Parent chapter** role attaches to the member's own chapter when that chapter
 
 ## Assigning directly on a member
 
-Open **Members**, the person, **Edit**, then the **Permissions** tab. It is visible if you hold HR or higher for that member's chapter and local administrators have not been restricted (below). Checkboxes are grouped under **Organization**, **Chapter** and **Parent chapter**, each heading naming the actual organization, chapter or region. Changes apply on the member's next page load, so ask them to reload if they had Orgo open.
+Open **Members**, the person, **Edit**, then the **Permissions** tab. It is visible if you hold HR or higher for that member's chapter and local administrators have not been restricted (below).
+
+The tab opens with the answer rather than the controls: a summary row showing, per scope, the permissions this member actually ends up with as tags, and **Member only** where they hold none. The checkboxes below are how to change it. They are grouped under **Organization**, **Chapter** and **Parent chapter**, each heading naming the actual organization, chapter or region. Changes apply on the member's next page load, so ask them to reload if they had Orgo open.
+
+The same **Orgo administrator** switch and permission checkboxes also appear on the form that creates a member, so a new administrator can be set up in one pass.
 
 A permission that comes from a role shows a second, locked checkbox beside it with the role's name on an orange tag. You cannot untick that one here; end the role instead.
 
@@ -88,7 +92,7 @@ These are enforced on save, not just hidden in the interface.
 
 | Rule | What it means |
 |---|---|
-| Nobody edits their own permissions | Your own checkboxes and the Orgo administrator switch are disabled on your own profile, and a save is rejected if attempted another way. Another administrator has to make the change. |
+| Nobody edits their own permissions | On your own profile every checkbox and the Orgo administrator switch are disabled, and the tab says so: "You cannot modify your own permissions. Another administrator must change your permission level for security reasons." A save attempted another way is rejected, and an Orgo administrator who tries to drop their own flag through the API is refused and keeps it. Another administrator has to make the change. |
 | You cannot grant above your own level | You only see checkboxes at or below your own level, and only within your own scope. A chapter administrator does not see organization-scope checkboxes at all. |
 | Organization-scope changes need `ADMIN_TENANT` | Adding or removing any `_TENANT` permission is rejected unless you hold `ADMIN_TENANT`. This applies to removals as well as grants. |
 | Only an Orgo administrator can create another one | The **Orgo administrator** switch is only rendered for members who already hold it. |
@@ -172,6 +176,24 @@ Impersonation lets an administrator browse Orgo with a reduced permission set, t
 `ADMIN_TENANT` cannot be impersonated, and the administrator shortcut is switched off for the whole session. That is the point: while impersonating you genuinely lose your own access, so plan to exit before doing admin work. A session lasts 60 minutes, starting a new one ends the previous one, and starts are limited to five per minute. Every start and end is recorded with the simulated permissions, your real permissions, your IP address and your browser.
 </Warning>
 
+### What the reduced view looks like
+
+The clearest way to understand a permission set is to look at the **Administration** section of
+the sidebar under it. A chapter admin who also holds the chapter HR and chapter finance
+permissions sees only the chapter's own work there: **Local products**, **Fee payments** and
+**Local members fees** under Finance, and **Adhesions**, **Badges**, **Resignation requests** and
+**Transfer requests** under Management.
+
+<img src="/images/platform/chapter-leader/sidebar-administration.png" alt="The Administration section of the sidebar as a chapter admin sees it: Local products, Fee payments and Local members fees under Finance, Adhesions, Badges, Resignation requests and Transfer requests under Management, and Waitlist under Settings" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+Compare it with the same section for an organisation admin. The organisation-wide equivalents
+appear (**Products**, **Payments**, **Subscribers**, **Invoices**), so do the records a chapter
+admin never touches (**Contacts**, **Companies**, **Forms**, **Reports**, **Merge Records**,
+**Database Queries**, **e-Documents**), so does **Organisation Settings**, and so does a whole
+**Communication** group that is absent from the chapter view:
+
+<img src="/images/platform/chapter-leader/sidebar-administration-admin.png" alt="The same Administration section for an organisation admin, with Products, Payments, Subscribers, Fee payments and Invoices under Finance, a long Management list from Adhesions through Organisation Settings, and a Communication group holding the email campaign, list and template entries" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
 ---
 
 ## Auditing who holds what
@@ -226,17 +248,15 @@ Run the member filter whenever someone leaves. Ending a member's role removes th
     arise.
   </Accordion>
 
-  <Accordion title="One Settings page opens for someone the rest refuse">
-    **Settings → Users & Profiles → Roles & User types** checks the `ADMIN_TENANT`
-    permission, while every other Settings screen checks the **Orgo administrator**
-    flag. Someone who holds the permission but not the flag has no way into Settings
-    from the interface, since both entry points (the cog in the header and the item in
-    the profile menu) are drawn only for the flag. Send them a direct link, though, and
-    Roles & User types opens while every neighbouring link on that same sidebar bounces
-    them to the login page.
+  <Accordion title="The roles list opens for someone Settings refuses">
+    The roles list has two addresses. Reached through **Settings → Users & Profiles →
+    Roles & User types** it checks the **Orgo administrator** flag, like every other
+    Settings screen. Reached directly at `/role` it checks the `ADMIN_TENANT`
+    permission instead, so a permission-only admin who is sent that link lands on the
+    same screen Settings had refused them, and can edit roles there.
 
-    Treat it as one page having a looser gate than intended, not as a supported way to
-    delegate role editing. If someone needs to manage roles, give them the Orgo
+    Treat it as one address having a looser gate than intended, not as a supported way
+    to delegate role editing. If someone needs to manage roles, give them the Orgo
     administrator flag knowingly, or make the change yourself.
   </Accordion>
 

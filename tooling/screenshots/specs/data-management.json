@@ -2,38 +2,36 @@
   {
     "id": "import-steps-list",
     "image": "/images/platform/customization/data-import.png",
-    "usedOn": [
-      "platform/customization/import.mdx"
-    ],
+    "usedOn": [],
     "tenant": "t187c",
     "route": "/tenants/import",
-    "routeHint": "Settings (gear) -> Customization -> Import",
+    "routeHint": "Settings (gear) -> Customization -> Import DROPPED 2026-11-11: this is the same screen as import-page, one version older (it is headed 'Data Import System' and has Choose CSV buttons, where the screen now reads 'Data import' with Column mapping badges and Example CSV links). The page kept the newer image, so this spec and its file are no longer used.",
     "actions": [],
     "waitFor": "text=Data Import System",
     "viewport": "desktop",
     "alt": "Data Import System page showing the recommended import order as numbered steps, each with a Choose CSV button and an example file download",
-    "status": "keep",
+    "status": "dropped",
     "notes": "Existing file already matches the current view (title, Recommended Import Order banner, numbered cards, Choose CSV + download icon). Only recapture if the run wants a tenant with more modules on, which would also show Units, Products, Events and Companies steps."
   },
   {
     "id": "import-history",
     "image": "/images/platform/customization/import-history.png",
     "usedOn": [
-      "platform/customization/import.mdx"
+      "platform/customization/import/index.mdx"
     ],
     "tenant": "t187c",
     "route": "/tenants/import",
-    "routeHint": "Settings (gear) -> Customization -> Import, then scroll to Import History at the bottom. Do NOT capture this from tenant 214: its import_log still holds un-obfuscated company names, addresses and a real contact email. Seed the demo tenant instead. The rows have to cover more than one status and show a results count that includes failures, otherwise the table contradicts the alt text and the six-status list in the prose below it. The selector crops to the Import History block, because a full-viewport shot spends its top two thirds on import steps 13-17.",
+    "routeHint": "Settings -> Customization -> Import, scrolled to the history at the foot of the page. The heading sits in its own div.import-section-heading and the table is a SIBLING (.orgo-table-wrap.import-history__table), so the old xpath of the heading's parent cropped to the heading strip alone and produced a 5kb sliver. Crop to the table.",
     "actions": [
       "scrollto text=Import History",
-      "wait 1200"
+      "wait 1500"
     ],
-    "waitFor": "text=Import History",
+    "waitFor": ".import-history__table",
     "viewport": "desktop",
     "alt": "Import History table listing past imports by type and status, including a processing import, a failed import and a completed import whose results count shows three failed rows, with a Rollback button on the completed imports",
-    "status": "new",
+    "status": "recapture",
     "notes": "Do NOT expand any row. The seeded demo imports have no import_log rows behind them, and on other tenants the detail panel prints raw imported data.",
-    "selector": "xpath=//h3[normalize-space()='Import History']/.."
+    "selector": ".import-history__table"
   },
   {
     "id": "merge-records",
@@ -98,5 +96,24 @@
     "alt": "Merge History table listing past merges with date, type, source and target records, who performed them and their status, with an Undo button while the rollback window is open and Expired once it has closed",
     "status": "new",
     "notes": "The three rows deliberately cover all three states the column renders: a Contact to User merge still inside its 30-day rollback window (Undo button), an older User to User merge past it (Expired), and a rolled back Contact to Contact merge."
+  },
+  {
+    "id": "import-page",
+    "image": "/images/platform/import/import-page.png",
+    "usedOn": [
+      "platform/customization/import/index.mdx",
+      "platform/contacts/sources.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/tenants/import",
+    "routeHint": "Settings (gear) -> Import, address /tenants/import. The route needs WORKSPACE_ADMIN, which is the Orgo administrator flag rather than the admin permission. Added 2026-11-11: this image was on the import page but no spec wrote it, so it could never be refreshed and had drifted from the screen. Checked against the image on 2026-11-11: the screen is headed 'Data import' with a count badge, and each row carries a Column mapping badge, an Example CSV link and a Choose file button. The older capture of this same screen, headed 'Data Import System' with Choose CSV buttons, is what import-steps-list wrote; that spec is dropped because the two were the same screen a version apart. Also used on platform/contacts/sources.mdx: contacts go through the same wizard, so the same image serves both rather than a second file of the same screen. RECAPTURED 2026-11-11 after the code checkout was fast-forwarded to master cd9f72d67e: commit 021bab83b9 removed the Download a template button from every step card (it returned a file byte-identical to Example CSV), so the image now shows Column mapping, Example CSV and Choose file only. GET /imports/template/{type} still exists for API and support use.",
+    "actions": [
+      "wait 3000"
+    ],
+    "waitFor": "text=Column mapping",
+    "viewport": "desktop",
+    "alt": "The Data import page listing the import steps in their recommended order, each with a Column mapping badge, an Example CSV link and a Choose file button, with one step showing a completed run and its successful row count",
+    "status": "new",
+    "notes": "The four mid-wizard import images are now driven by specs/import-wizard.json, which uses the capture runner's `upload` verb and the committed fixtures. Only orgo-support-conversation.png is left with no spec behind it."
   }
 ]

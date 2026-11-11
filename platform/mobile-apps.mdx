@@ -59,7 +59,7 @@ Push has three moving parts, and all three must be true for a notification to ar
 
 <Steps>
   <Step title="The organization allows push">
-    **Settings → Emails & Notifications → Notification Preferences → Push Notifications** sets the default for new members. Requires `ADMIN_TENANT`.
+    **Settings → Modules → Emails & Notifications → Notification Preferences → Push Notifications** sets the default for new members. Requires an Orgo administrator.
   </Step>
   <Step title="The member has push on">
     **Push notification, mobile app & web browser** on the **Notifications** tab of their profile (`/me/update`). Members who never touched the toggle are treated as opted in.
@@ -81,7 +81,7 @@ Turning the toggle on inside Orgo is not enough on its own: the member must also
 
 ### Testing that push works
 
-Admins with `ADMIN_TENANT` can open `/demo-notification` and send a test push to their own devices or to a specific member id, with a title, body and target link. It is the fastest way to prove a device is registered before debugging anything else.
+Organization admins can open `/demo-notification` and send a test push to their own devices or to a specific member id, with a title, body and target link. It is the fastest way to prove a device is registered before debugging anything else.
 
 ---
 
@@ -97,6 +97,21 @@ Smart links are used for:
 
 Everything else, including all other emails and notifications, links to your normal Orgo address.
 
+### Links to your organization's own address
+
+Your organization's own web address (including a custom domain) is also registered with the apps. On a phone with the Orgo app, or your branded app, installed, a link to it opens in the app instead of the browser. The main buttons in notification emails are deliberately not click-tracked, so the phone can make the hand-over: a link that went through a tracking redirect first would land in the browser instead.
+
+Two kinds of link are the exception and always open in a browser, because they go to people who may not be members:
+
+- The **View in browser** link at the top of a newsletter.
+- Newsletter, product and form **share links** (the addresses that start with `/share/`).
+
+<Note>
+Android 14 and older ignore that exception and may still offer to open the app for these two kinds of link. Android 15 and iOS respect it.
+</Note>
+
+A discussion opened from a link, from an email or a notification, has no earlier page to go back to. Its back button is always shown and, with no history, takes the member to the discussion list.
+
 ---
 
 ## Known limits
@@ -104,6 +119,14 @@ Everything else, including all other emails and notifications, links to your nor
 <AccordionGroup>
   <Accordion title="Members cannot pay fees inside the iOS app">
     Payment buttons are hidden in the iOS app and replaced with "To make a payment, please access app in browser." This is Apple's in-app purchase policy, not an Orgo setting. Members pay from a mobile or desktop browser; the payment then shows in the app like any other.
+  </Accordion>
+
+  <Accordion title="The phone menu shows only some of my groups">
+    The phone sidebar shows a member's first five groups (and five per group category), followed by a **Show more** row that expands the rest. Projects are not listed in the phone menu. This is the same on a phone browser and in the app, and the [Menu Organizer](/platform/customization/menu-organizer) does not change it.
+  </Accordion>
+
+  <Accordion title="There is no emoji button when I write a post on my phone">
+    On mobile devices the emoji button is hidden in post, comment and event-feed composers, since the device's own emoji keyboard is better than any picker. While typing a comment or reply, the image and mention icons stay beside the **send** button so you can attach something mid-comment.
   </Accordion>
 
   <Accordion title="Audio and video recording is disabled in the app">

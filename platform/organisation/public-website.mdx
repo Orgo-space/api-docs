@@ -1,108 +1,88 @@
 ---
 title: 'Public Website'
-description: 'A public front page, chapter directory and events listing that anonymous visitors reach before they ever see a login screen'
+description: 'The public pages visitors reach without signing in, and the setting that decides whether your bare address opens them or the sign-in screen'
 "og:title": 'Public Website | Orgo'
-"og:description": 'A public front page, chapter directory and events listing that anonymous visitors reach before they ever see a login screen'
+"og:description": 'The public pages visitors reach without signing in, and the setting that decides whether your bare address opens them or the sign-in screen'
 "twitter:title": 'Public Website | Orgo'
-"twitter:description": 'A public front page, chapter directory and events listing that anonymous visitors reach before they ever see a login screen'
+"twitter:description": 'The public pages visitors reach without signing in, and the setting that decides whether your bare address opens them or the sign-in screen'
 ---
 
-Orgo ships a small public website that sits in front of the members' area: a homepage, a directory of your local centers, a page per local center, and a public events listing. Nobody has to sign in to see any of it. One setting decides whether a first-time visitor who types your address lands there or on the sign-in screen.
+Some of your organization's pages are open to anyone, with no sign-in: the pages you write in the [website builder](/platform/organisation/website-builder), plus a few built-in pages that show live data, such as your chapter directory and your public events. One setting decides whether a first-time visitor who types your address lands on one of these pages or on the sign-in screen.
+
+<Note>
+  Orgo used to ship a small fixed public site (a `/homepage` page with a hero, a map and a donation block, written in Orgo's own words). It no longer exists. Your public front page is now an ordinary page you write in the website builder. If you pointed **Anonymous Homepage URL** at `/homepage`, change it to the address of your builder page (see below).
+</Note>
 
 **Built for** organizations whose address is handed out to people who are not members yet, including federations recruiting chapters, associations with an open events programme, and anyone whose "join us" link currently opens a login box.
 
-**Replaces** a separate brochure site you would otherwise host, keep in sync, and re-key every chapter and event into.
+**Replaces** a separate brochure site you would otherwise host and keep in sync.
 
 **Settings → Modules → Users & Profiles → Configuration → Advanced Settings**
 
 <Note>
-  Requires **ADMIN_TENANT**. The setting is written through the tenant record, and the server checks both the role and that the tenant is your own, so the menu is not the only thing standing in the way.
+  Requires the **Orgo administrator** flag on your account. The setting is saved on your organization record, and the server checks that you are an Orgo administrator of that same organization.
 </Note>
-
-<img src="/images/platform/website/website-homepage-hero.png" alt="Public website homepage with the organization logo and About, Chapters, Events, Donate and Newsletter navigation across the top, a Login and Become a member button pair, and a centred hero holding an eyebrow badge, headline, sub-headline, Become a member and Donate buttons and three statistics" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
-## The four pages
+## What visitors can open
 
-All four exist and are reachable the moment your community does, whether or not you turn on the front door. They share one header and footer, both drawn from your organization.
+<img src="/images/platform/website/website-public-page.png" alt="The organisation website as a visitor sees it, with the menu across the top, the opening section with its headline and membership figures, and the section that follows" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+These addresses work without a session, on your members' address (for example `yourorg.orgo.space`). They are drawn in the design of your website, with its header and footer.
 
 | Address | What it shows |
 |---|---|
-| `/homepage` | The front page: hero, about, a map of your local centers, your next three public events, a donation block and a newsletter sign-up |
-| `/chapters` | Every active local center as a card, with its town, a short description and a link through to its own page |
-| `/chapter/<id>` | One local center: description, a map of where it meets, languages, meeting days, contact email and phone, social links |
-| `/community-events` | Your public events listing, embedded whole |
+| `/p/<page address>` | A page you wrote in the website builder. The address is the one in the **Address** column of the builder's Pages tab. |
+| `/chapters` | Every active local center as a card with its town and a link through to its own page. A search box appears once you have more than 10 chapters. |
+| `/chapter/<id>` | One local center: description, languages, active days, contact details and a link to join. |
+| `/community-events` | Your public events, in **Upcoming** and **Past** tabs, as a card grid or an agenda. Choose which in the visual editor. Each event opens an editorial page, from which visitors go on to register. |
+| `/news` and `/news/<article>` | Your news archive and one article. Available once you switch on **Enable articles** in the builder. |
 
-The header carries your logo, links that scroll to each homepage section, a **Login** button and a **Become a member** button that opens your registration form. The footer repeats those links and prints your organization's contact email, name and the current year. Your logo is used if you have uploaded one under [Branding](/platform/organisation/branding); without one, the header prints your organization's name as plain text.
+The chapter and event pages show data from your Orgo records, not text you type. A chapter appears only when it is active. An event appears only when it is public (see [Sharing Events](/platform/events/sharing)). To change how these pages are introduced, link to them from a page or a menu in the builder.
+
+Visitors only see any of this while your website is **live**: the **My website is live** switch under the builder's Settings → Domain. While it is off, visitors get "no website is published here". Organization admins with the builder switched on can still preview everything from the application address.
 
 ---
 
-## Turning it on
+## Making your address open the website
 
 <Steps>
-  <Step title="Open the Users & Profiles module settings">
-    **Settings → Modules → Users & Profiles**, stay on **Configuration**, and scroll to the **Advanced Settings** card at the bottom.
+  <Step title="Write and publish the page">
+    In the website builder, create the page you want visitors to land on and publish it. A draft is not visible to visitors.
   </Step>
-  <Step title="Type a path into Anonymous Homepage URL">
-    Enter `/homepage`. It must begin with a forward slash. The field saves itself about a second after you stop typing, and a **Settings saved automatically** toast confirms it, so there is nothing to press.
+  <Step title="Make the website live">
+    Turn on **My website is live** under the builder's Settings. Without it the page is not public.
+  </Step>
+  <Step title="Open the Users & Profiles module settings">
+    **Settings → Modules → Users & Profiles**, stay on **Configuration**, and scroll to the **Advanced Settings** card.
+  </Step>
+  <Step title="Type the page's path into Anonymous Homepage URL">
+    Enter `/p/` followed by your page's address, for example `/p/home`. It must begin with a forward slash. The field saves itself about a second after you stop typing, and a **Settings saved automatically** toast confirms it.
   </Step>
   <Step title="Check it in a private window">
-    Open your community address in a private window or a browser you are not signed into. You should land on the public homepage instead of the sign-in screen. Signing out and reloading is not the same test: what changes is where a visitor with no session is sent.
+    Open your community address in a private window or a browser you are not signed into. You should land on your page instead of the sign-in screen. Signing out and reloading is not the same test: what changes is where a visitor with no session is sent.
   </Step>
 </Steps>
-
-<img src="/images/platform/website/website-anonymous-homepage-setting.png" alt="Users and Profiles module settings with the Advanced Settings card open, showing the Use Custom Dashboard switch, the empty Custom Homepage Route field and the Anonymous Homepage URL field holding /homepage" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 | Setting | What it does |
 |---|---|
 | **Anonymous Homepage URL** | Where a visitor with no session is sent when they open your bare address. Must be a **path**, starting with `/`. Empty by default, which sends them to the sign-in screen |
-| **Custom Homepage Route** | Where a **signed-in member** lands instead of the dashboard. Accepts a path or a Vue route name. It has no effect on visitors who are not signed in |
-| **Use Custom Dashboard** | Unrelated to the public site: it swaps the members' dashboard for the widget layout |
+| **Custom Homepage Route** | Where a **signed-in member** lands instead of the dashboard. Accepts a path or a Vue route name such as `EventList`. It has no effect on visitors who are not signed in |
 
 <Warning>
-  The two homepage fields sit next to each other and do **not** accept the same thing. **Anonymous Homepage URL** takes a path only. **Custom Homepage Route** also takes a route name. Typing `Homepage` into Anonymous Homepage URL therefore does nothing visible in the settings screen and quietly sends every anonymous visitor to the sign-in page, because a value with no leading slash is discarded and the sign-in screen is the fallback. Write `/homepage`, not `Homepage`.
+  The two homepage fields sit next to each other and do **not** accept the same thing. **Anonymous Homepage URL** takes a path only. **Custom Homepage Route** also takes a route name. Typing a value with no leading slash into Anonymous Homepage URL does nothing visible in the settings screen and quietly sends every anonymous visitor to the sign-in page, because the value is discarded and the sign-in screen is the fallback.
 </Warning>
 
-The redirect only fires on your bare address. A visitor who follows a deep link into the members' area, say to a member profile, still meets the sign-in screen, which is the point.
-
----
-
-## What is on the homepage
-
-A hero and five sections, stacked. The header links scroll between them.
-
-**About.** Three fixed pillars describing the shape of the organization.
-
-**Chapters.** A map with a pin on each active local center, and a **See all chapters** button through to the directory. The pins come from the map location on each local center, so a center with no coordinates is simply absent from the map.
-
-<img src="/images/platform/website/website-homepage-chapters.png" alt="Find a chapter near you section showing a map of the organization's local centers with a pin on each one and a See all chapters button underneath" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
-**Events.** Your next three public events, soonest first, each linking to its own [public event page](/platform/events/public-page). **See all events** opens the full listing. With nothing upcoming the section says so and points at the newsletter form rather than sitting empty.
-
-<img src="/images/platform/website/website-homepage-events.png" alt="Upcoming events section showing three event cards with cover images, dates, titles and locations, above a See all events button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
-
-**Donate.** Appears only when you have set a default donation product. It loads the same donation widget you can embed elsewhere, which is what adds the floating **Donate Now** button in the corner, and it adds a **Donate** link to the header and a **Donate** button to the hero. Without that product the whole section, the header link and the hero button are gone. See [Donation Pages & Widgets](/platform/fees/donation-pages).
-
-**Newsletter.** An email field. Submitting it sends a confirmation email to that address; only when the link in it is clicked does the address become a subscriber, as a contact if it is not already a member. Unconfirmed sign-ups never reach your list. See [Newsletter signup widgets](/platform/newsletter-widgets).
-
----
-
-## What is yours and what is fixed
-
-This is a template, not a page builder. Knowing which half is which saves a long search for an editor that does not exist.
-
-**Drawn from your organization:** the logo, the organization name, the contact email in the footer, the interface language, your local centers and their descriptions, coordinates, languages, meeting days and contact details, your public events and their cover images, your donation product, and your newsletter.
-
-**Fixed in the product, the same for every organization:** the hero headline and sub-headline, the three statistics under it, the About pillars, every section heading and sub-heading, and the footer tagline. They are written in the general voice of a community organization and cannot be edited from Settings today. If that copy does not fit you, the honest options are to leave the front door on the sign-in screen and point your public traffic at a site you control, or to talk to support.
+The redirect only fires on your bare address. A visitor who follows a deep link into the members' area, say to a member profile, still meets the sign-in screen, which is the point. If your website runs on its own domain (see [Custom Domain](/platform/custom-domain) and the builder's Domain settings), the bare address of that domain opens your website's homepage without this setting.
 
 ---
 
 ## Search engines and your address
 
-While your community runs on an `orgo.space` address, every page is served with a `noindex, nofollow` instruction, so search engines are told to skip the public site along with everything else. That is deliberate: it keeps members' area URLs out of search results.
+While your community runs on an `orgo.space` address, every page is served with a `noindex, nofollow` instruction, so search engines are told to skip the pages above along with everything else. That is deliberate: it keeps members' area URLs out of search results.
 
-The instruction is tied to the address, not to the pages. Move your community onto a domain you own and it stops being added, which is what makes the public site indexable. Set that up under [Custom Domain](/platform/custom-domain) before you promote these pages anywhere.
+The instruction is tied to the address, not to the pages. Your website has its own address, and can have a domain you own, set up in the builder. That, and not the members' address, is the one to promote. See [Website Builder](/platform/organisation/website-builder#your-address).
 
 ---
 
@@ -110,31 +90,25 @@ The instruction is tied to the address, not to the pages. Move your community on
 
 <AccordionGroup>
   <Accordion title="I filled in the field and visitors still land on the sign-in screen">
-    Almost always a missing leading slash. `/homepage` works, `homepage` and `Homepage` do not, and neither reports an error. Confirm the field reads exactly `/homepage`. If it does, check you tested the bare address in a private window: the redirect only applies to the bare address, and only to a visitor with no session.
+    Almost always a missing leading slash. `/p/home` works, `p/home` does not, and neither reports an error. Check also that the website is live and that the page is published, and test the bare address in a private window: the redirect only applies to the bare address, and only to a visitor with no session.
   </Accordion>
   <Accordion title="Visitors get a Page not found screen">
-    The path is right in shape but wrong in spelling, so it matches no page and falls through to the 404 screen. The four valid paths are `/homepage`, `/chapters`, `/chapter/<id>` and `/community-events`. Almost every case is a typo in `/homepage`.
+    The path matches no published page. If it still reads `/homepage`, that fixed page no longer exists: point the setting at your builder page, for example `/p/home`. Otherwise check the spelling against the **Address** column in the builder's Pages tab, and that the page is published.
   </Accordion>
-  <Accordion title="The map has no pins, or a chapter is missing from it">
-    The map plots the map location saved on each local center. A center with no coordinates, or one that is not active, does not appear. Fill in the map location on the chapter's own form, under [Local Centers](/platform/groups/local-groups). The directory at `/chapters` is a separate list and does show a center with no coordinates, so a chapter visible in the list but absent from the map is missing its location.
+  <Accordion title="The chapter directory is empty, or a chapter is missing">
+    Only active local centers are listed. A chapter that is inactive does not appear. Check its status under [Local Centers](/platform/groups/local-groups).
   </Accordion>
-  <Accordion title="The Events section is empty though we have events coming up">
-    The section only shows events that are both public and in the future. An event that is not marked public is invisible here even to members who are signed in elsewhere. See [Sharing Events](/platform/events/sharing).
+  <Accordion title="The events page is empty though we have events coming up">
+    The listing only shows events that are public. An event that is not marked public is invisible here, even to members who are signed in elsewhere. See [Sharing Events](/platform/events/sharing). Past events are on the **Past** tab.
   </Accordion>
-  <Accordion title="There is no Donate button anywhere">
-    The donation block, the header link and the hero button all hang off one thing: a default donation product on the organization. Set one up under [Donation Pages & Widgets](/platform/fees/donation-pages) and all three appear together.
-  </Accordion>
-  <Accordion title="A chapter's town is followed by a stray placeholder like [object Object]">
-    A display fault, not corrupted data. When a local center has a **Region** assigned, the directory card and the chapter page print the region as a placeholder instead of its name. Nothing else is affected, the region itself is stored correctly, and clearing the Region field on that chapter removes the stray text at the cost of losing the region grouping elsewhere. Report it to support rather than editing your data around it.
-  </Accordion>
-  <Accordion title="The events page shows a calendar but no list of events">
-    `/community-events` embeds your public events listing rather than redrawing it, and the embedded list can come up blank while the calendar beside it still marks the dates. Open the events listing directly to confirm your events are there and reachable. Until it settles, link people to the homepage Events section, which builds its cards independently and is unaffected.
+  <Accordion title="There is no news page">
+    News is off until you switch on **Enable articles** on the builder's Pages tab. Turning it off again hides the section but deletes nothing.
   </Accordion>
   <Accordion title="Members say they get the public site instead of their dashboard">
-    Signing in takes them to the dashboard as usual. What keeps bringing a member back to the public site is a bookmark saved on one of these four pages, since they stay open to everyone. Ask them to open the bare address rather than the bookmark. If signed-in members are landing somewhere other than the dashboard, that is **Custom Homepage Route**, in the same settings card, not this feature.
+    Signing in takes them to the dashboard as usual. What keeps bringing a member back to the public pages is a bookmark saved on one of them, since they stay open to everyone. Ask them to open the bare address rather than the bookmark. If signed-in members are landing somewhere other than the dashboard, that is **Custom Homepage Route**, in the same settings card, not this feature.
   </Accordion>
-  <Accordion title="The public site is not showing up in Google">
-    Expected while you are on an `orgo.space` address: those pages are served with a `noindex` instruction. Move to a domain you own under [Custom Domain](/platform/custom-domain) first, then submit the address to the search engine.
+  <Accordion title="The public pages are not showing up in Google">
+    Expected while you are on an `orgo.space` address: those pages are served with a `noindex` instruction. Promote your website's own address instead, and put it on a domain you own for the best result.
   </Accordion>
 </AccordionGroup>
 
@@ -142,11 +116,11 @@ The instruction is tied to the address, not to the pages. Move your community on
 
 ## Related
 
-- [Website Builder](/platform/organisation/website-builder) - Write a site of your own: your pages, your news, your menus, your domain
-- [Custom Domain](/platform/custom-domain) - Serve the site from an address you own, and make it indexable
-- [Branding](/platform/organisation/branding) - The logo the site's header and footer use
-- [Local Centers](/platform/groups/local-groups) - The chapters behind the map and the directory
+- [Website Builder](/platform/organisation/website-builder) - Write the pages visitors see, set the domain and publish
+- [Custom Domain](/platform/custom-domain) - The address your members sign in at
+- [Branding](/platform/organisation/branding) - The logos and colours of the members' area
+- [Local Centers](/platform/groups/local-groups) - The chapters behind the directory
 - [Sharing Events](/platform/events/sharing) - What makes an event public enough to appear here
-- [Donation Pages & Widgets](/platform/fees/donation-pages) - The donation product the Donate section needs
+- [Donation Pages & Widgets](/platform/fees/donation-pages) - The donation product the builder's donate section needs
 - [Newsletter signup widgets](/platform/newsletter-widgets) - Where the newsletter form's subscribers land
-- [Permissions](/platform/permissions) - What ADMIN_TENANT unlocks
+- [Permissions](/platform/permissions) - What the Orgo administrator flag unlocks

@@ -46,19 +46,19 @@ This is the thing to sort out before the doors open, not on the day.
 
 | Which code you scan | Permission needed |
 |--------------------|-------------------|
-| The code on the emailed PDF ticket, scanned with any phone camera or from the Orgo mobile app | `HR_TENANT` or `EVENT_TENANT` (`ADMIN_TENANT` covers both) |
-| The Event App badge code, which opens the Event App scanner | Event App access to that event, plus `ADMIN_TENANT`, `EVENT_TENANT`, or `EVENT_LOCAL` on the event's group to check anyone in |
+| The code on the emailed PDF ticket, scanned with any phone camera or from the Orgo mobile app | Organization HR managers or organization-wide event managers (organization admins are covered by both) |
+| The Event App badge code, which opens the Event App scanner | Event App access to that event, plus, to check anyone in, being an organization admin, an organization-wide event manager, or a chapter event manager for the event's group |
 
 <Warning>
-Local events permission is not enough for the emailed ticket code. Somebody with `EVENT_LOCAL` who
-scans a PDF ticket gets an access error even though the ticket is perfectly valid. Give door staff
-`EVENT_TENANT`, or have them work in the Event App and scan attendees' badge codes there, where
-`EVENT_LOCAL` is enough. The Event App scanner refuses your own badge, so a helper needs someone
+Local events permission is not enough for the emailed ticket code. Somebody who is only a chapter event manager and
+scans a PDF ticket gets an access error even though the ticket is perfectly valid. Make door staff
+organization-wide event managers, or have them work in the Event App and scan attendees' badge codes there, where
+chapter event management is enough. The Event App scanner refuses your own badge, so a helper needs someone
 else's code to test with.
 </Warning>
 
-Marking somebody present without a scan is wider: the event owner, `EVENT_LOCAL` on the event's group,
-`HR_TENANT` and admins of the event's group can all set an RSVP to **Attended** from the participant
+Marking somebody present without a scan is wider: the event owner, chapter event managers for the event's group,
+organization HR managers and admins of the event's group can all set an RSVP to **Attended** from the participant
 list, and the attendee can set their own row. A refunded registration is the exception: its row shows
 a static **Refunded** tag with no RSVP to change.
 
@@ -93,8 +93,8 @@ check the person in. That is deliberate: sort the money out afterwards rather th
 Speakers, sponsors, staff and anyone who paid by bank transfer often turn up with nothing to scan.
 A code exists only where a registration exists, so the fix is always the same: put them on the list.
 
-Open the event → **Participants** → **Invite**, add them as a member or by email, and Orgo confirms
-them and emails a ticket with a code. Then either scan it or set their RSVP to **Attended** directly.
+Open the event → **Participants** → **Invite**, choose **Add to list**, search for them or type their email, and Orgo
+registers them and emails a ticket with a code. Then either scan it or set their RSVP to **Attended** directly.
 There is no way to issue a bare code without a registration behind it.
 
 ---
@@ -111,8 +111,8 @@ There is no way to issue a bare code without a registration behind it.
   <Accordion title="There is no Scan button on my laptop">
     The scanner on the event page is rendered only inside the Orgo mobile app. Two things still work
     on a laptop: the Event App's own **Scan QR** button, which runs in any browser and accepts
-    `EVENT_LOCAL`, and checking people in by hand from the participant list. You can also scan an
-    emailed ticket with a phone camera and use the page it opens, which needs `EVENT_TENANT`.
+    chapter event managers, and checking people in by hand from the participant list. You can also scan an
+    emailed ticket with a phone camera and use the page it opens, which needs an organization-wide event manager.
   </Accordion>
 
   <Accordion title="The camera never starts">
@@ -148,4 +148,4 @@ There is no way to issue a bare code without a registration behind it.
 - [Ticketing](/platform/events/ticketing): what a ticket is and how it gets paid for
 - [Registration Forms](/platform/events/registration-forms): what confirms a registration
 - [Speakers and Trainers](/platform/events/speakers-trainers): the people who usually arrive without a ticket
-- [Permissions](/platform/permissions): granting `EVENT_TENANT` to door staff
+- [Permissions](/platform/permissions): making door staff organization-wide event managers

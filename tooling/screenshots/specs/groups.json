@@ -25,7 +25,7 @@
     ],
     "tenant": "t187c",
     "route": "/groups/browse",
-    "routeHint": "Sidebar -> Groups, then scroll to the bottom of the list. Community groups and Private groups are the last two sections (Browse.vue:292,312).",
+    "routeHint": "Sidebar -> Groups, then scroll to the bottom of the list. Community groups and Private groups are the last two sections (Browse.vue:292,312). 2026-11-11: spec actions unchanged and still correct (Browse.vue:313 still renders Community groups and Private groups, now under the All / Subscribed / Not subscribed / Archived / Role groups pills). Private groups was missing only because the demo reset put every group back in a category. SETUP before capture: UPDATE `group` SET category_id=NULL WHERE id IN (15669,15671,15674,15672,15678,15682); (Finance Committee, Standards and Ethics Board and Announcements are not joinable so they land in Private groups; Mentoring Programme, Sports and Wellbeing and Events Committee are joinable so they land in Community groups), then delete the Redis key joinable_groups_282 and run the spec alone. TEARDOWN after capture, so the sidebar and every other groups image keep their categories: UPDATE `group` SET category_id=CASE id WHEN 15669 THEN 7 WHEN 15671 THEN 9 WHEN 15674 THEN 8 WHEN 15672 THEN 6 WHEN 15678 THEN 8 WHEN 15682 THEN 8 END WHERE id IN (15669,15671,15674,15672,15678,15682); done on 2026-11-11, so the data is back to the reset state.",
     "actions": [
       "wait 2500",
       "scrollto text=Private groups",

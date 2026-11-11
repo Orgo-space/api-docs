@@ -22,13 +22,13 @@
       "platform/discussion/index.mdx"
     ],
     "tenant": "t187c",
-    "route": "/discuss/9504",
-    "routeHint": "Open /discuss and click the title of a post that has an image, a category and at least one reaction and comment. Discussion 9504 ('Spring regional forum: call for session proposals') sits in the General Discussion group under the Events and meetups category, carries an attached image, 9 reactions, 52 views and 2 comments. Do NOT use 9042: that is a help desk ticket (is_support=1) with no group, no category and no comments, which is what the previous capture showed.",
+    "route": "/discuss/8959",
+    "routeHint": "Open /discuss and click the title of a post that has an image, a category and at least one reaction and comment. Discussion 9504 ('Spring regional forum: call for session proposals') sits in the General Discussion group under the Events and meetups category, carries an attached image, 9 reactions, 52 views and 2 comments. Do NOT use 9042: that is a help desk ticket (is_support=1) with no group, no category and no comments, which is what the previous capture showed. UPDATED 2026-11-11: the demo content was regenerated, so the ids and titles this spec named no longer exist. Discussion 9504 is gone; 8959 (Mentoring: how do we match members well?, Virginia Beach, four posts) is the replacement.",
     "actions": [],
-    "waitFor": "text=Spring regional forum",
+    "waitFor": "text=Mentoring: how do we match members well?",
     "viewport": "desktop",
     "alt": "A single discussion showing its category and group chips, attached image, reaction count and comment count",
-    "status": "new",
+    "status": "recapture",
     "note": "Must be a discussion in a group that includes all members, otherwise the capture account cannot see it: visibility follows group membership and tenant admins are not exempt. The post footer renders reactions and comments only - viewsCount is read by the dashboard discussion cards (components/dashboard/DiscussionCard.vue), never by the feed or the post page, so no alt text here may promise a view count."
   },
   {
@@ -38,13 +38,14 @@
       "platform/discussion/index.mdx"
     ],
     "tenant": "t187c",
-    "route": "/discuss/9501",
-    "routeHint": "A different discussion from discussion-post-detail, scrolled to its comment thread. Discussion 9501 ('Best way to run a hybrid chapter meeting?') has four comments including one nested reply, so the thread and the reply indentation are both visible.",
+    "route": "/discuss/8958",
+    "routeHint": "A different discussion from discussion-post-detail, scrolled to its comment thread. Discussion 9501 ('Best way to run a hybrid chapter meeting?') has four comments including one nested reply, so the thread and the reply indentation are both visible. 2026-11-11 recapture: demo data was regenerated, discussions 9501 and 9504 no longer exist (the route bounced to /). Now /discuss/8958 (Share your achievements, org feed with no unit so every member sees it, 5 comments, the first has 2 nested replies). waitFor is the text of the first comment, which replaced One microphone in the middle.",
     "actions": [
-      "scrollto text=One microphone in the middle",
-      "scroll 500"
+      "scrollto text=5 comments",
+      "scroll 500",
+      "wait 1000"
     ],
-    "waitFor": "text=One microphone in the middle",
+    "waitFor": "text=We are looking for two more mentors this intake",
     "viewport": "desktop",
     "alt": "Comment thread with several members replying, each comment offering Like and Reply, and a Write a comment box at the bottom",
     "status": "new",
@@ -57,13 +58,13 @@
       "platform/discussion/discussion-namespaces.mdx"
     ],
     "tenant": "t187c",
-    "route": "/discuss?unit=15675&category=423",
-    "routeHint": "Sidebar -> General Discussion -> Discussions, then pick a category in the panel. Unit 15675 (General Discussion) includes all members and now carries four group-scoped categories: Questions and answers (423), Ideas and suggestions (424), Resources (425), Events and meetups (426). Category 423 holds four posts. The old route (?unit=456) is not a unit on this tenant, which is why the shot was the empty state.",
+    "route": "/discuss?unit=15675&category=418",
+    "routeHint": "Sidebar -> General Discussion -> Discussions, then pick a category in the panel. Unit 15675 (General Discussion) includes all members and now carries four group-scoped categories: Questions and answers (423), Ideas and suggestions (424), Resources (425), Events and meetups (426). Category 423 holds four posts. The old route (?unit=456) is not a unit on this tenant, which is why the shot was the empty state. UPDATED 2026-11-11: the demo content was regenerated, so the ids and titles this spec named no longer exist. Category 423 no longer exists. The categories are 418 General, 419 Questions and support, 420 Events and meetups, 421 Professional Education and 422 Community Service, and the General Discussion group (unit 15675) holds three threads, all in 418.",
     "actions": [],
-    "waitFor": "text=Questions and answers",
+    "waitFor": "text=How do I update my profile photo?",
     "viewport": "desktop",
     "alt": "Group forum with the category panel listing All plus each of the group's categories, and the post list filtered to the selected category",
-    "status": "new",
+    "status": "recapture",
     "note": "Group categories are fetched with ?unit=<id>, so only categories whose unit_id matches the group appear here. Organization-wide categories are not offered inside a group."
   },
   {
@@ -107,12 +108,12 @@
     ],
     "tenant": "t187c",
     "route": "/discuss/moderation-queue",
-    "routeHint": "Requires Settings -> Modules -> Discussions -> Enable Profanity Check on, and held posts. Both are seeded: two pending and two rejected comments sit on the organization-feed discussions 9510 and 9511, and the tenant custom word list holds crypto, scam, mlm and guaranteed returns. The capture account is ADMIN_TENANT, which is what makes the Custom blocked words editor render.",
+    "routeHint": "Requires Settings -> Modules -> Discussions -> Enable Profanity Check on, and held posts. Both are seeded: two pending and two rejected comments sit on the organization-feed discussions 9510 and 9511, and the tenant custom word list holds crypto, scam, mlm and guaranteed returns. The capture account is ADMIN_TENANT, which is what makes the Custom blocked words editor render. UPDATED 2026-11-11: the demo content was regenerated, so the ids and titles this spec named no longer exist. The queue page itself has the Pending review and Rejected posts tabs; 'Custom blocked words' is on the moderation SETTINGS page, not this one, so the old waitFor could never match.",
     "actions": [],
-    "waitFor": "text=Custom blocked words",
+    "waitFor": "text=Pending review",
     "viewport": "desktop",
     "alt": "Moderation queue with a Pending review table showing the post text, flagged words, author and group with Approve and Reject buttons, a Rejected posts table below, and the custom blocked words editor",
-    "status": "new",
+    "status": "recapture",
     "note": "Held posts must sit on discussions the account can moderate: general feed (no unit) and joinable groups are COMMUNICATION_TENANT, local centers are COMMUNICATION_LOCAL, and private groups never enter the queue at all. The seeded posts are on the general feed. Tall viewport so both tables and the words editor fit in one frame."
   },
   {
@@ -123,7 +124,7 @@
     ],
     "tenant": "t187c-blocker",
     "route": "/discuss/8947",
-    "routeHint": "Signed in as the ordinary member Adrian Whitfield (adrian.whitfield.209246@example.org, no permissions), open the Communications Committee thread 8947 'Refreshing the member newsletter: what should stay and what should go?' started by Iris Vargas (209201, no permissions, so blockable) and click the three-dot button at the top right of the post. The menu holds Report, Block user and Copy discussion link. Block user is only in the menu when the post owner is neither the viewer nor block protected, so a thread started by an HR_LOCAL or admin member (for example anything by Nora Vargas 209197) shows a two-item menu instead and is the wrong subject.",
+    "routeHint": "Signed in as the ordinary member Adrian Whitfield (adrian.whitfield.209246@example.org, no permissions), open the Communications Committee thread 8947 'Refreshing the member newsletter: what should stay and what should go?' started by Iris Vargas (209201, no permissions, so blockable) and click the three-dot button at the top right of the post. The menu holds Report, Block user and Copy discussion link. Block user is only in the menu when the post owner is neither the viewer nor block protected, so a thread started by an HR_LOCAL or admin member (for example anything by Nora Vargas 209197) shows a two-item menu instead and is the wrong subject. 2026-11-11 recapture: the demo data was regenerated. Thread 8947 is now titled \"How do I update my profile photo?\" (the old title was Refreshing the member newsletter) and the route bounced to / because Adrian Whitfield (209246) was no longer a member of Communications Committee (unit 15670), so the discussion was invisible to him. Seeded: INSERT INTO user_unit_role_group (user_id, unit_id) VALUES (209246, 15670); then cache:pool:clear cache.short in orgo-1-php (groups are cached 5 minutes). Selector unchanged and still resolves. CORRECTION to the line above: the seed that works is a user_unit_role_group row (sidebar and visibility) plus a user_role row (member of a joinable group, which the Discussions tab and the group page gate need): INSERT INTO user_role (role_id,user_id,unit_id,date_created) VALUES (2847,209246,15670,\"2026-02-11\"); and INSERT INTO user_unit_role_group (user_id,unit_id) VALUES (209246,15670).",
     "actions": [
       "click [data-icon=\"ellipsis-vertical\"]"
     ],
@@ -141,7 +142,7 @@
     ],
     "tenant": "t187c",
     "route": "/discuss/8957",
-    "routeHint": "The comment three-dot menu is NOT rendered for an ordinary member. CommentItem.vue:54 gates the whole dropdown on `comment.owner.id === user.id || isModerator || canAdministerDiscussion`, so Block user on a comment is only reachable by the comment's own author, a moderator, or someone who can administer the discussion. This shot therefore uses the ADMIN_TENANT session on the organization-feed thread 8957 'Collaboration opportunities' (unit NULL, so isModerator resolves through COMMUNICATION_TENANT). The first comment is by Oliver Whitfield (209220, FINANCIAL_LOCAL, which ranks below HR_LOCAL and is blockable), which is why Block user appears beside the moderator actions. Pick a different thread and the first comment may be by an HR_LOCAL member, whose menu stops at Report.",
+    "routeHint": "The comment three-dot menu is NOT rendered for an ordinary member. CommentItem.vue:54 gates the whole dropdown on `comment.owner.id === user.id || isModerator || canAdministerDiscussion`, so Block user on a comment is only reachable by the comment's own author, a moderator, or someone who can administer the discussion. This shot therefore uses the ADMIN_TENANT session on the organization-feed thread 8957 'Collaboration opportunities' (unit NULL, so isModerator resolves through COMMUNICATION_TENANT). The first comment is by Oliver Whitfield (209220, FINANCIAL_LOCAL, which ranks below HR_LOCAL and is blockable), which is why Block user appears beside the moderator actions. Pick a different thread and the first comment may be by an HR_LOCAL member, whose menu stops at Report. Checked 2026-11-11: the actions resolve and the comment menu opens on Delete, Moderate, Report, Block user and Copy discussion link.",
     "actions": [
       "scroll 900",
       "click .button.is-small.is-white.p-2"
@@ -149,7 +150,7 @@
     "waitFor": "text=Block user",
     "viewport": "desktop",
     "alt": "Open three-dot menu on a comment by Oliver Whitfield inside a discussion, listing Remove, Moderate, Report and Block user",
-    "status": "new",
+    "status": "recapture",
     "note": "Comment menu buttons carry .button.is-small.is-white.p-2 while the post menu button is .button.is-white.is-rounded, so this selector skips the post menu and the runner's .first() lands on the first comment. The scroll is required: without it the first comment sits at the bottom edge and the menu opens downwards off-frame, so the capture showed only Remove and Moderate. Remove and Moderate are in frame because the session holds moderation rights, which is the only way this menu renders at all."
   },
   {
@@ -160,7 +161,7 @@
     ],
     "tenant": "t187c-blocker",
     "route": "/discuss/8947",
-    "routeHint": "Same thread and account as block-post-menu: open the post three-dot menu, then choose Block user. A Buefy confirm dialog opens titled Block user with the message 'You will no longer see posts and comments written by this member.' and Cancel plus a red Block user button. Capture stops here: confirming is what creates the block, and the block for the feed and settings shots is made separately so this spec can be re-run without writing anything.",
+    "routeHint": "Same thread and account as block-post-menu: open the post three-dot menu, then choose Block user. A Buefy confirm dialog opens titled Block user with the message 'You will no longer see posts and comments written by this member.' and Cancel plus a red Block user button. Capture stops here: confirming is what creates the block, and the block for the feed and settings shots is made separately so this spec can be re-run without writing anything. 2026-11-11 recapture: same fix as block-post-menu (Adrian re-added to unit 15670, thread 8947 retitled). No selector change.",
     "actions": [
       "click [data-icon=\"ellipsis-vertical\"]",
       "click text=Block user",
@@ -179,15 +180,17 @@
       "platform/discussion/blocking-members.mdx"
     ],
     "tenant": "t187c-blocker",
-    "route": "/discuss?unit=15670",
-    "routeHint": "The before half of the before/after pair. Communications Committee (unit 15670) holds exactly three threads: two by Iris Vargas ('Upcoming activities and events' and 'Refreshing the member newsletter: what should stay and what should go?') and one by Freya Ashford ('Share your achievements'). The action clicks the layout toggle to the right of the Latest sort control, which switches the feed from image cards to compact rows so all three fit in one frame; in card layout only one and a half cards fit at 1080px. MUST be captured while Adrian Whitfield has no block on Iris Vargas.",
+    "route": "/users?unit=15670",
+    "routeHint": "The before half of the before/after pair. Communications Committee (unit 15670) holds exactly three threads: two by Iris Vargas ('Upcoming activities and events' and 'Refreshing the member newsletter: what should stay and what should go?') and one by Freya Ashford ('Share your achievements'). The action clicks the layout toggle to the right of the Latest sort control, which switches the feed from image cards to compact rows so all three fit in one frame; in card layout only one and a half cards fit at 1080px. MUST be captured while Adrian Whitfield has no block on Iris Vargas. 2026-11-11 recapture: /discuss?unit=15670 now redirects to /users?unit=15670 (GroupHeader.checkAccess sends a non-member of a joinable group to the member list, and the redirect also fires on a cold load before the profile roles arrive). The route is now /users?unit=15670 and the first action clicks the group Discussions tab (.tabs li:has-text(\"Discussions\")), which lands on /discuss?unit=15670; the layout toggle selector is unchanged. The three threads are now: Share your achievements (Freya Ashford), Upcoming activities and events (Iris Vargas), How do I update my profile photo? (Iris Vargas, the old title was Refreshing the member newsletter). Adrian was re-added to the group with the user_role and user_unit_role_group rows listed under block-post-menu.",
     "actions": [
+      "click .tabs li:has-text(\"Discussions\")",
+      "wait 3000",
       "click .discuss-sort-bar-controls > button.discuss-sort-btn",
       "wait 1500"
     ],
-    "waitFor": "text=Refreshing the member newsletter",
+    "waitFor": "text=How do I update my profile photo?",
     "viewport": "desktop",
-    "alt": "Communications Committee discussion list in compact layout showing three threads, two by Iris Vargas and one by Freya Ashford",
+    "alt": "Communications Committee discussion list in compact layout showing three threads: Share your achievements by Freya Ashford, Upcoming activities and events by Iris Vargas, and How do I update my profile photo? by Iris Vargas",
     "status": "new",
     "note": "Pairs with block-feed-after, which must be captured from the same route and viewport after the block exists. The layout toggle is the direct-child button of .discuss-sort-bar-controls; the other .discuss-sort-btn sits inside the sort dropdown's trigger."
   },
@@ -198,9 +201,11 @@
       "platform/discussion/blocking-members.mdx"
     ],
     "tenant": "t187c-blocker",
-    "route": "/discuss?unit=15670",
-    "routeHint": "The after half of the pair, identical route, viewport and actions to block-feed-before, captured once Adrian Whitfield has blocked Iris Vargas through the UI. Both Iris threads are gone and only Freya Ashford's 'Share your achievements' remains. Filtering is done by the Doctrine collection extension, so the list is filtered before it is counted. To reproduce: capture block-feed-before first, block Iris Vargas from the thread 8947 post menu, then capture this one, then unblock from Settings & Privacy if the instance should be left clean.",
+    "route": "/users?unit=15670",
+    "routeHint": "The after half of the pair, identical route, viewport and actions to block-feed-before, captured once Adrian Whitfield has blocked Iris Vargas through the UI. Both Iris threads are gone and only Freya Ashford's 'Share your achievements' remains. Filtering is done by the Doctrine collection extension, so the list is filtered before it is counted. To reproduce: capture block-feed-before first, block Iris Vargas from the thread 8947 post menu, then capture this one, then unblock from Settings & Privacy if the instance should be left clean. 2026-11-11 recapture: /discuss?unit=15670 now redirects to /users?unit=15670 (GroupHeader.checkAccess sends a non-member of a joinable group to the member list, and the redirect also fires on a cold load before the profile roles arrive). The route is now /users?unit=15670 and the first action clicks the group Discussions tab (.tabs li:has-text(\"Discussions\")), which lands on /discuss?unit=15670; the layout toggle selector is unchanged. The three threads are now: Share your achievements (Freya Ashford), Upcoming activities and events (Iris Vargas), How do I update my profile photo? (Iris Vargas, the old title was Refreshing the member newsletter). Adrian was re-added to the group with the user_role and user_unit_role_group rows listed under block-post-menu. 2026-11-11 recapture: block created by the SQL insert listed under blocked-users-panel (same effect as the UI flow, Iris Vargas 209201 blocked by Adrian 209246). Clear cache.short cache.app after inserting or removing the row.",
     "actions": [
+      "click .tabs li:has-text(\"Discussions\")",
+      "wait 3000",
       "click .discuss-sort-bar-controls > button.discuss-sort-btn",
       "wait 1500"
     ],
@@ -217,17 +222,15 @@
       "platform/discussion/blocking-members.mdx"
     ],
     "tenant": "t187c-blocker",
-    "route": "/users/edit/209246",
-    "routeHint": "Own profile -> Settings & Privacy -> Blocked users. The route is /users/edit/{id}; 209246 is Adrian Whitfield, the capture account itself, because the Blocked users button is rendered only when item.id === user.id, so this panel does not exist on anybody else's profile, not even for an administrator. Do NOT rely on the ?setting=blockedUsers deep link alone: it sets openedSettings and pre-loads /user_blocks, but the settings pills live inside the Settings & Privacy tab and the page still opens on Profile, so the capture came out as the name and date-of-birth form. Both clicks are required. Requires at least one live block, otherwise the panel reads 'You have not blocked anyone.'",
+    "route": "/user/209246?tab=settings",
+    "routeHint": "Own profile -> Settings & Privacy -> Blocked users. The route is /users/edit/{id}; 209246 is Adrian Whitfield, the capture account itself, because the Blocked users button is rendered only when item.id === user.id, so this panel does not exist on anybody else's profile, not even for an administrator. Do NOT rely on the ?setting=blockedUsers deep link alone: it sets openedSettings and pre-loads /user_blocks, but the settings pills live inside the Settings & Privacy tab and the page still opens on Profile, so the capture came out as the name and date-of-birth form. Both clicks are required. Requires at least one live block, otherwise the panel reads 'You have not blocked anyone.' 2026-11-11 recapture: the profile was rebuilt. /users/edit/209246 redirects to /user/209246?tab=edit&section=info and there is no Settings & Privacy tab. The page is now /user/209246?tab=settings (header Settings button), left pills Notifications, Privacy, Account and security; the Blocked users card sits on Account and security between Password and Close account. The old two-click Blocked users pill selector is gone. A live block is required and was seeded with SQL after capturing block-feed-before: INSERT INTO user_block (date_created,blocker_id,blocked_id,tenant_id) VALUES (now(),209246,209201,282); then cache:pool:clear cache.short cache.app. Delete that row to restore the before state.",
     "actions": [
-      "click text=Settings & Privacy",
-      "wait 1200",
-      "click [class*=\"button\"]:has-text(\"Blocked users\"):visible",
+      "click Account and security",
       "wait 1500"
     ],
     "waitFor": "text=Iris Vargas",
     "viewport": "desktop",
-    "alt": "Blocked users panel on the member's own profile reading You do not see posts or comments written by these members, with a table listing Iris Vargas, the date she was blocked, and an Unblock button",
+    "alt": "Blocked users card on the Account and security tab of a member's own profile settings, reading You do not see posts or comments written by these members, with a table listing Iris Vargas, the date she was blocked, and an Unblock button",
     "status": "new",
     "note": "User/Update.vue renders the Blocked users pill twice, once per layout branch, and only one of the two is visible. A bare 'click text=Blocked users' resolves to the hidden copy through the runner's .first() and times out, leaving a screenshot of the Profile tab, so the selector pins :visible. waitFor is the blocked member's name so the shot cannot fire on an empty panel."
   }

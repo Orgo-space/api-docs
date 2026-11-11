@@ -1,11 +1,11 @@
 ---
 title: 'Content types'
-description: 'JSON-LD versus plain JSON versus multipart, and the Hydra collection envelope'
+description: 'JSON-LD versus plain JSON, request bodies, and how files are uploaded'
 ---
 
-The Orgo API supports three response formats and two request formats. Most endpoints accept all of them — the format is chosen by the `Accept` and `Content-Type` headers.
+The Orgo API answers in JSON-LD or plain JSON and accepts JSON request bodies. The format is chosen by the `Accept` and `Content-Type` headers. **Files are not sent to the API as multipart bodies**: they go straight to storage through a signed upload, and the API call that follows carries only a reference. See [File uploads](#file-uploads).
 
-For 95% of integrations, **plain `application/json`** is the right choice. Use JSON-LD when you need pagination metadata or generic link discovery, and multipart only when you are uploading files.
+For most integrations, **plain `application/json`** is the right choice. Use JSON-LD when you need pagination metadata or generic link discovery.
 
 ---
 
@@ -14,12 +14,11 @@ For 95% of integrations, **plain `application/json`** is the right choice. Use J
 | `Accept` header | Format | When to use |
 |---|---|---|
 | `application/ld+json` *(default)* | JSON-LD with Hydra | You want collection metadata (`hydra:totalItems`, next-page links) or are building a generic client that follows links |
-| `application/json` | Plain JSON | Most integrations — simpler shape, no `@context`/`@id`/`@type` |
-| `multipart/form-data` | Multipart | Rarely useful as a response format; included for symmetry with multipart requests |
+| `application/json` | Plain JSON | Most integrations: simpler shape, no `@context`, `@id` or `@type` |
 
-If you do not send an `Accept` header at all, JSON-LD is returned by default.
+If you do not send an `Accept` header, JSON-LD is returned. The server also lists `multipart/form-data` as a configured format, but no documented endpoint produces or consumes it, so ignore it.
 
-### Example: the same resource, three ways
+### Example: the same resource, two ways
 
 `GET /api/v1/users/42` returns one of these depending on the `Accept` header:
 
@@ -27,7 +26,7 @@ If you do not send an `Accept` header at all, JSON-LD is returned by default.
   <Tab title="JSON-LD (default)">
     ```json
     {
-      "@context": "/api/contexts/User",
+      "@context": "/api/v1/contexts/User",
       "@id": "/api/v1/users/42",
       "@type": "User",
       "id": 42,
@@ -61,7 +60,9 @@ If you do not send an `Accept` header at all, JSON-LD is returned by default.
   </Tab>
 </Tabs>
 
-The data is the same — JSON-LD just adds the `@context`, `@id`, `@type` wrapping that lets generic clients reason about the response without knowing the schema in advance.
+The data is the same. JSON-LD adds the `@context`, `@id` and `@type` wrapping that lets generic clients reason about the response without knowing the schema in advance. Which fields appear depends on who is asking: a field you are not allowed to see is left out.
+
+Error bodies follow their own shapes, listed in [Errors](/api-reference/concepts/errors#error-envelopes).
 
 ---
 
@@ -71,7 +72,7 @@ JSON-LD collections are wrapped in a Hydra envelope that carries totals and pagi
 
 ```json
 {
-  "@context": "/api/contexts/User",
+  "@context": "/api/v1/contexts/User",
   "@id": "/api/v1/users",
   "@type": "hydra:Collection",
   "hydra:member": [
@@ -102,7 +103,7 @@ Plain JSON returns just the array:
 **You lose `hydra:totalItems` and the next-page links in plain JSON.** If you need to display "showing 60 of 1,248" or iterate every page, use JSON-LD.
 
 <Tip>
-For ad-hoc scripting and one-off integrations, plain JSON is shorter and easier to consume. For data-pipeline integrations that need to paginate through everything, JSON-LD is usually worth the slightly noisier envelope.
+For ad-hoc scripting and one-off integrations, plain JSON is shorter and easier to consume. For data-pipeline integrations that paginate through everything, JSON-LD is usually worth the slightly noisier envelope.
 </Tip>
 
 ---
@@ -111,28 +112,29 @@ For ad-hoc scripting and one-off integrations, plain JSON is shorter and easier 
 
 | `Content-Type` header | Method | When to use |
 |---|---|---|
-| `application/json` | `POST`, `PUT` | Create or full-replace a resource — most common |
-| `application/merge-patch+json` | `PATCH` | Partial update following RFC 7396 (send only fields you want to change) |
-| `application/ld+json` | `POST`, `PUT` | Same as plain JSON but you can include `@id` references to other resources |
-| `multipart/form-data` | `POST`, `PATCH` | File uploads — see below |
+| `application/json` | `POST`, `PUT` | Create or replace a resource: the common case |
+| `application/merge-patch+json` | `PATCH` | Partial update following RFC 7396 (send only the fields you want to change) |
+| `application/ld+json` | `POST`, `PUT` | Same as plain JSON, with `@id` references to other resources |
 
 ### PATCH and merge-patch
 
-Always send `Content-Type: application/merge-patch+json` for PATCH. The endpoint only updates the fields you include — missing fields are left untouched.
+Always send `Content-Type: application/merge-patch+json` for `PATCH`. The endpoint only updates the fields you include; missing fields are left untouched.
 
 ```bash
 # Update James's phone number, leave everything else alone
 curl -X PATCH https://acme.orgo.space/api/v1/users/42 \
   -H "Api-Token: $TOKEN" \
   -H "Content-Type: application/merge-patch+json" \
-  -d '{"phoneNumber":"+1 415 555 0142"}'
+  -d '{"phoneNumber":"+1 617 555 0142"}'
 ```
 
-Sending `null` for a field explicitly clears it (where the field is nullable). Sending an empty string is treated as the literal empty string.
+Sending `null` for a field clears it where the field is nullable. Sending an empty string stores the empty string.
+
+Many action endpoints (publish, send, close, archive, and so on) are `PATCH` or `POST` calls with an empty body. Send `{}` with the matching content type.
 
 ### Referencing other resources
 
-For relations, send the IRI (Internationalized Resource Identifier) of the target:
+For relations, send the IRI (the resource's address) of the target:
 
 ```json
 {
@@ -144,38 +146,51 @@ For relations, send the IRI (Internationalized Resource Identifier) of the targe
 }
 ```
 
-This works for both JSON and JSON-LD requests. Sending the full nested object instead of the IRI is also accepted but slower and more error-prone — prefer IRIs.
+This works for both JSON and JSON-LD requests. A nested object in place of the IRI is accepted on some endpoints, but it is slower and more error-prone, so prefer IRIs. Some resources are addressed by a `uuid`, others by an integer `id`; use whatever the `@id` of the resource you read shows.
 
-### File uploads (multipart)
+Dates and times are ISO 8601 strings (`2026-03-15T18:00:00+00:00`). Fields stored as calendar dates only, such as a date of birth, use `YYYY-MM-DD`.
 
-For endpoints that accept file uploads — ID documents, contract signatures, course media, drive files, profile pictures — use `multipart/form-data`:
+---
 
-```bash
-curl -X POST https://acme.orgo.space/api/v1/adhesion/123/upload-id \
-  -H "Api-Token: $TOKEN" \
-  -F "idMedia=@/path/to/passport.pdf"
-```
+## File uploads
 
-The field name (`idMedia` above) is documented per endpoint. For endpoints that accept both metadata and files, include the metadata as additional form fields:
+Files never pass through the API as request bodies. The pattern has three steps, and the third is an ordinary JSON call:
 
-```bash
-curl -X POST https://acme.orgo.space/api/v1/drives \
-  -H "Api-Token: $TOKEN" \
-  -F "name=Annual Report 2026" \
-  -F "file=@/path/to/report.pdf"
-```
+<Steps>
+  <Step title="Ask for a signed upload">
+    `GET /api/v1/s3-upload` with the query parameters `type` (what the file is for, for example `identity`, `adhesion`, `drive`, `customfield`, `eventimage`, `postimage`), `fileType` (the MIME type) and `fileName`. Which types you may use depends on who you are: anonymous callers get only a few (a registration form's file field, for instance).
+
+    ```bash
+    curl -G https://acme.orgo.space/api/v1/s3-upload \
+      -H "Api-Token: $TOKEN" \
+      --data-urlencode "type=adhesion" \
+      --data-urlencode "fileType=application/pdf" \
+      --data-urlencode "fileName=signed-adhesion.pdf"
+    ```
+
+    The answer carries `url` (where to upload), `additionalData` (form fields that must accompany the file) and `newFileName` (the name the file will have). The signature is valid for 15 minutes and the key is fixed to `newFileName`, so you cannot choose another one. Uploads are capped at 1 GB, and executable and HTML types are refused.
+  </Step>
+  <Step title="Upload the file to the signed address">
+    Send a `multipart/form-data` `POST` **to the `url` from step 1**, with every `additionalData` field first and the file last, in a field named `file`. This request goes to storage, not to the Orgo API.
+  </Step>
+  <Step title="Tell Orgo about the file">
+    Call the endpoint that attaches the file, with a JSON body naming it. For adhesions, `POST /api/v1/adhesion/{id}/upload-signed` takes `{"contentUrl": "<newFileName>", "fileMimeType": "application/pdf", "fileSize": 184320}`.
+  </Step>
+</Steps>
+
+The name is signed for the caller and the type that asked for it. A name that was not issued to you for that type, an old name from before a deployment, or a file that was never uploaded is refused with `400` and the message `Upload the file before saving it.` The fix is to start again from step 1. You cannot point an endpoint at an arbitrary file already in storage.
 
 ---
 
 ## When in doubt
 
-- **You're a human writing a curl by hand**: omit `Accept` (defaults to JSON-LD) for the metadata, or set `Accept: application/json` for cleaner output.
-- **You're writing an integration**: `Accept: application/json` for reads, `Content-Type: application/json` for writes, `Content-Type: application/merge-patch+json` for partial updates, `Content-Type: multipart/form-data` for uploads.
-- **You're building a generic browser/client over the API**: stay on JSON-LD throughout so you get the link relations.
+- **You're writing a curl by hand**: omit `Accept` for the full JSON-LD view, or set `Accept: application/json` for cleaner output.
+- **You're writing an integration**: `Accept: application/json` for reads, `Content-Type: application/json` for writes, `Content-Type: application/merge-patch+json` for partial updates, and the signed-upload pattern for files.
+- **You're building a generic client over the API**: stay on JSON-LD throughout so you get the link relations.
 
 ---
 
 ## Related
 
-- [Pagination and filters](/api-reference/concepts/pagination-and-filters) — how to iterate collections
-- [Errors](/api-reference/concepts/errors) — error envelope shape (same for all content types)
+- [Pagination and filters](/api-reference/concepts/pagination-and-filters): how to iterate collections
+- [Errors](/api-reference/concepts/errors): error envelope shapes

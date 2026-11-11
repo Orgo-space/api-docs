@@ -65,18 +65,29 @@ switched off. Upload your images or paste their URLs.
 ## Placeholders
 
 **Placeholders** in the toolbar copies a token to your clipboard; paste it
-anywhere in the design and it is replaced per recipient at send time.
+anywhere in the design and it is replaced per recipient at send time. The editor
+also has its own merge tag menu in the text and link toolbars, which offers the
+full set below and inserts the token for you.
 
 | Placeholder | Resolves to |
 |---|---|
-| `{firstName}`, `{fullName}` | The recipient's name |
-| `{userPhoneNumber}`, `{userAddress}`, `{userPostalCode}`, `{userTown}`, `{userCountry}` | Their contact details |
+| `{firstName}`, `{lastName}`, `{fullName}` | The recipient's name |
+| `{userEmail}` | Their email address |
+| `{userPhoneNumber}`, `{userAddress}`, `{userPostalCode}`, `{userTown}`, `{userCounty}`, `{userState}`, `{userCountry}` | Their contact details |
+| `{localCenterName}` | Their local center (chapter) |
+| `{userOccupation}`, `{userJobTitle}`, `{userOrganisation}`, `{userIndustry}` | Their professional details |
 | `{userProfileURL}` | A link to their profile |
 | `{userCompanyName}`, `{companyName}` | Their company, when the Companies module is on |
+| `{organizationName}` | Your organization's name |
 | `{contactEmail}` | Your organization's contact email |
 | `{membershipLevelName}`, `{membershipLevelPrice}`, `{currentPeriodEnd}` | Their membership tier, its price, and when it expires |
 | `{preferencesUrl}` | Their notification settings |
 | `{unsubscribeUrl}` | The unsubscribe link |
+| `{viewInBrowserUrl}` | The public "view in browser" page. It resolves only when the campaign has its public link switched on; otherwise it is removed |
+
+Your own custom profile fields appear by name in the editor's merge tag menu
+too. Fields that only admins can see, encrypted fields, files and chapter
+fields are left out.
 
 A campaign attached to an event gets eight more: `{eventTitle}`,
 `{eventDescription}`, `{eventDateBegin}`, `{eventDateEnd}`, `{eventTimezone}`,
@@ -99,6 +110,16 @@ Notes that save people time:
 
 Always use **Send test to your email** before a real send: it renders the
 placeholders against your own record, so an empty field shows up immediately.
+
+### Tag links
+
+In the editor's **Insert Link** dialog, **Tag link** is a link type of its own.
+Pick one or more tags and a destination page: when a recipient clicks the link,
+Orgo assigns those tags to them and then sends them on to the destination. It is
+the way to build a list from who showed interest, for example everyone who
+clicked "I want the summer camp details". Tag links work in campaigns only, not
+in saved templates, and a link whose tags no longer exist is dropped from the
+email.
 
 ---
 

@@ -7,12 +7,12 @@
     ],
     "tenant": "t187c",
     "route": "/vote",
-    "routeHint": "Sidebar -> Voting. Needs the Voting module active (Settings -> Modules -> Voting). Sign in as a member with ADMIN_TENANT so the Create Voting button is visible.",
+    "routeHint": "Sidebar -> Voting. Needs the Voting module active (Settings -> Modules -> Voting). Sign in as a member with ADMIN_TENANT so the Create Voting button is visible. UPDATED 2026-11-11: the button is New voting, not Create Voting.",
     "actions": [],
-    "waitFor": "text=Create Voting",
+    "waitFor": "text=New voting",
     "viewport": "desktop",
     "alt": "Voting list showing live, draft, upcoming and finished votes with question count, target group and a turnout bar per vote",
-    "status": "new",
+    "status": "recapture",
     "notes": "Turnout was 4% on the live vote and 10% on the finished one, so the bars were a few pixels of colour in a full-width track. Ballots are reseeded to 237 of 348 on the live board election and 255 of 348 on the finished funding vote. Make sure the filter row under the title is in frame: keyword search, the status dropdown and the Archived checkbox. The Draft row is a by-product of the voting-create-modal spec: opening Create Voting persists a draft. It is left in place because it gives the list all four lifecycle states the page documents; capture this spec after voting-create-modal."
   },
   {
@@ -23,22 +23,23 @@
     ],
     "tenant": "t187c",
     "route": "/vote",
-    "routeHint": "Sidebar -> Voting -> Create Voting. The form is a modal, not a page: capture the modal with its header Save and Publish buttons.",
+    "routeHint": "Sidebar -> Voting -> Create Voting. The form is a modal, not a page: capture the modal with its header Save and Publish buttons. 2026-11-11: the whole chain failed at its first step. The Create Voting button is now New voting, and the form is no longer a modal but a page (views/Vote/Form.vue) with a Voting > New voting breadcrumb, Save draft and Publish. Starts and Ends are segmented toggles (Now / Schedule, When closed / On date) that reveal a date and a time select, so click text=Add start date and Add end date became clicks on .orgo-segmented-toggle[aria-label=Starts] and [aria-label=Ends] second options (plain click text=Schedule did not take). The old Who is voting audience cards are now the Group vote / Private vote / Company vote toggle. Viewport is wide (1920x1290 keeps the sidebar and fits the page to the encryption note) and the crop selector is gone. Opening the form still persists a draft vote_collection, so each run leaves one behind. The two drafts left by the 2026-11-11 repair runs (vote_collection 253 and 254) were deleted afterwards, so the list is back to its three published votes; repeat that after each capture. Queued for recapture 2026-11-11 after the capture runner was pinned to the demo organisation's timezone: times on this screen had been drawn on the browser's clock instead.",
     "actions": [
-      "click text=Create Voting",
+      "click text=New voting",
       "wait 3000",
       "waitFor .vfq-q-input",
       "fill .vfq-q-input | Should the association adopt the revised statutes?",
       "fill .vfq-opts .vfq-opt-row:nth-child(1) .vfq-opt-input | Approve",
       "fill .vfq-opts .vfq-opt-row:nth-child(2) .vfq-opt-input | Reject",
-      "click text=Add start date",
-      "click text=Add end date",
-      "wait 5000"
+      "click .orgo-segmented-toggle[aria-label=\"Starts\"] .orgo-segmented-option:nth-child(2)",
+      "wait 800",
+      "click .orgo-segmented-toggle[aria-label=\"Ends\"] .orgo-segmented-option:nth-child(2)",
+      "wait 4000"
     ],
     "waitFor": "text=Anonymous voting",
-    "viewport": "tall",
-    "alt": "Create Voting modal with the question builder filled in, the single and multiple answer toggle, start and end dates with timezone, the audience cards and all three settings switches",
-    "status": "new",
+    "viewport": "wide",
+    "alt": "New voting page with the question written and two options, Approve and Reject, the single and multiple answer toggle, the voter group, start and end dates with times and the timezone, and the three privacy switches, with Save draft and Publish at the top",
+    "status": "recapture",
     "notes": "Two separate faults in the old spec. (1) The three fill actions used a space between selector and value; the runner splits on a pipe, so none of them ran and the question builder was captured on its placeholders. (2) The modal is taller than a 1080 frame, so it was cut just below the first Settings switch, leaving out Hide voters list, Anonymous voting and the green encryption banner. Anonymous voting is the setting this page's Anonymity section depends on, so the shot has to reach it: tall viewport plus a crop to the modal itself. The runner treats a selector as CSS only when it starts with . # or [ , so 'input.vfq-q-input' was matched as page text and never resolved; '.vfq-q-input' does. Opening the modal persists a draft, and the autosave leaves Save and Publish as spinners for a few seconds, so the trailing wait has to outlast it. Each run leaves one more draft vote_collection behind; prune them back to a single draft before capturing voting-list, which shows it."
   },
   {
@@ -48,13 +49,13 @@
       "platform/e-voting.mdx"
     ],
     "tenant": "t187c",
-    "route": "/vote/247",
-    "routeHint": "Voting list -> open a vote whose status tag is Live and where the signed-in member has not voted yet (the ballot with the Vote now button only renders for eligible members who have not voted).",
+    "route": "/vote/249",
+    "routeHint": "Voting list -> open a vote whose status tag is Live and where the signed-in member has not voted yet (the ballot with the Vote now button only renders for eligible members who have not voted). UPDATED 2026-11-11: vote 247 ended on 2026-08-13, so no ballot is offered and nothing reads 'Vote now'. Vote 249 (Annual Budget Approval) was moved to 2026-11-02 to 2026-11-25 so it is open while the capture runs.",
     "actions": [],
     "waitFor": "text=Vote now",
     "viewport": "tall",
     "alt": "Live vote showing the three question ballot with radio options, the Vote now button, and the participation panel with turnout percentage and the voter roster",
-    "status": "new",
+    "status": "recapture",
     "notes": "Three questions with four, three and three options push the Vote now button below a 1080 frame; the old capture cut off inside question three. Tall viewport puts the whole ballot, the button and the Participation card in one shot. Turnout is now 237 of 348."
   },
   {

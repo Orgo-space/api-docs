@@ -23,9 +23,9 @@
     ],
     "tenant": "t187c",
     "route": "/tenants/modules/emails/templates",
-    "routeHint": "Settings -> Notifications & Email Campaign -> Emails. One page for every email: section list nested under Emails in the left module menu, search box and filter chips at the top, then one card per section. Replaces both the old Email Templates grid and the Emails Config screen.",
+    "routeHint": "Settings -> Notifications & Email Campaign -> Emails. One page for every email: section list nested under Emails in the left module menu, search box and filter chips at the top, then one card per section. Replaces both the old Email Templates grid and the Emails Config screen. UPDATED 2026-11-11: the old waitFor was 'Search emails', which is the search box's PLACEHOLDER. A placeholder is an attribute, not text on the page, so a text= waitFor can never match it however well the screen renders. The panel header is the reliable wait.",
     "actions": [],
-    "waitFor": "text=Search emails",
+    "waitFor": "text=Notifications & Email Campaign",
     "viewport": "desktop",
     "alt": "Emails page with the section list under Emails in the left module menu, a search box and the All, Editable, Can be turned off and Off filters, and the Users section as a card listing each email with an Edit text button and an on or off switch",
     "status": "recapture"
@@ -72,15 +72,15 @@
     ],
     "tenant": "t187c",
     "route": "/email-log",
-    "routeHint": "Administration -> Email logs -> click the ID link of the first row. Navigating by URL to /email-log/<id> works too, but opening the row from the list is what the page describes. The newest t187c row is entry 4500, a newsletter send with a stored HTML body: type 'newsletter' is one of the types the Type card actually chips, so all four cards are populated.",
+    "routeHint": "Administration -> Email logs -> click the ID link of the first row. Navigating by URL to /email-log/<id> works too, but opening the row from the list is what the page describes. The newest t187c row is entry 4500, a newsletter send with a stored HTML body: type 'newsletter' is one of the types the Type card actually chips, so all four cards are populated. UPDATED 2026-11-11: the detail pane is headed 'Email Log #<id>'; there is no 'Email Preview' heading.",
     "actions": [
       "click .b-table tbody tr:first-child a",
       "wait 2500"
     ],
-    "waitFor": "text=Email Preview",
+    "waitFor": "text=Email Log #",
     "viewport": "desktop",
     "alt": "Email log entry showing recipient, subject, sent date and type cards above a rendered preview of the email body",
-    "status": "new",
+    "status": "recapture",
     "notes": "Recaptured 2026-08-06. The Sent date card used to read item.dateSent, which the API did not expose, so moment(undefined) printed today's date on every entry; it now prints the row's own date (Aug 5, 2026 for entry 4500). Keep the row's date and the list screenshot on the same page consistent."
   }
 ]

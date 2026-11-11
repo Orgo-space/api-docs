@@ -30,7 +30,7 @@ real: a contact who has never been asked is not the same as a contact who said n
 | State | How it arises | Receives campaigns |
 |---|---|---|
 | **Subscribed** | Someone said yes: a confirmed signup, a ticked box at registration or checkout, an import that carried a subscribed value, or an administrator pressing **Subscribe** on the record | Yes |
-| **Unsubscribed** | Someone said no: the unsubscribe link in a campaign, an administrator pressing **Unsubscribe**, an address that bounced or was reported as spam, an import that created the contact with a false value, or Orgo creating the record while checking whether an email already exists | No |
+| **Unsubscribed** | Someone said no: the unsubscribe link in a campaign, an administrator pressing **Unsubscribe**, a spam complaint, an import that created the contact with a false value, or Orgo creating the record while checking whether an email already exists | No |
 | **Not subscribed** | Nobody ever asked. This is how most contacts start: a donor, a ticket buyer or a manually added record arrives with the field unset unless the path that created it carried an opt-in | No |
 
 Only an explicit yes is ever mailed. Every audience query tests for the
@@ -127,33 +127,41 @@ Every campaign carries an unsubscribe link, and Orgo appends one to the footer i
 your design has no placeholder for it. The same emails carry one-click
 unsubscribe headers, so a mail client can offer its own unsubscribe button.
 
-The link does not act on the click itself. It points at Orgo, which records
-nothing and redirects the browser to an unsubscribe page on your organisation's
-address. That page then makes the change: for a contact, who is never signed in,
-it completes on arrival and confirms; for a signed-in member it offers a choice
-between the newsletter and all notifications. Because the address in the email
-only produces the redirect, a mail client or security scanner that pre-fetches
-links cannot opt anybody out. The link is also replaced after each use, so a link
-forwarded from an old email cannot be replayed.
+The link in the email body does not act on the click itself. It points at Orgo, which
+records nothing and redirects the browser to an unsubscribe page on your organisation's
+address. That page asks the visitor to choose: **Unsubscribe Email Newsletter** or
+**Unsubscribe ALL email notification**. It shows the same two buttons whether the visitor
+is signed in or not. For a contact the two do the same thing, because a contact only ever
+receives the newsletter: the subscription switches to unsubscribed and the page confirms.
+For a member the second button also switches off their other notification emails. Because
+the address in the email only produces the redirect, a mail client or security scanner
+that pre-fetches links cannot opt anybody out. The link is also replaced after each use,
+so a link forwarded from an old email cannot be replayed.
+
+The one-click unsubscribe button some mail clients show next to the sender works
+differently: it acts at once, for the newsletter only.
 
 An administrator can do the same from the record: **Unsubscribe** on the
 Newsletter card. Subscribing someone who previously unsubscribed asks you to
-confirm that you are overriding their opt-out. Both buttons need `HR_TENANT`.
+confirm that you are overriding their opt-out. Both buttons need an organisation-wide HR manager.
 
 ### Bounces and complaints
 
-When the mail provider reports a bounce or a spam complaint, Orgo switches that
-address off automatically.
+Orgo keeps its own list of addresses it will not send to, built from the mail provider's
+reports.
 
-<Warning>
-**A bounce unsubscribes the address everywhere it appears on the platform, not
-only in your organisation.** The update is made by email address alone, so if the
-same person is a contact of three organisations on Orgo, one bounce reported to
-any of them unsubscribes all three. There is also no distinction between a
-permanent failure and a temporary one: a full mailbox unsubscribes the contact
-just as a closed mailbox does. Their subscription can be restored by hand once the
-address works again, from the Newsletter card on the record.
-</Warning>
+| What the provider reports | What Orgo does |
+|---|---|
+| A permanent bounce (the mailbox does not exist or does not take mail) | Stops sending to that address from Orgo's main sending account, so every organisation on it is affected. **The newsletter field is left alone**: the person did not opt out, the address just does not work |
+| A temporary bounce, such as a full mailbox | Nothing |
+| A spam complaint | Stops sending to that address, and switches the newsletter to **Unsubscribed** for that person **in the organisation whose email was reported**, and only that one |
+
+A blocked contact shows a red **Emails not delivered** tag under the email address on the
+record, and campaigns skip the address. The block lifts when the address on the record is
+changed, or when Orgo support removes it. Once the address works again, the newsletter
+field is exactly as it was before the bounce, so there is nothing to restore by hand for a
+bounce. After a complaint, only the person can tell you it is acceptable to subscribe them
+again.
 
 Bounced recipients are listed on the campaign's report, and the report's CSV
 export gives one row per recipient per recorded action, which is where to look
@@ -195,17 +203,19 @@ marketing.
 
 <Warning>
 **A change to the subscription field does not appear on the contact's Activity
-feed.** The feed shows notes, tags, donations and form submissions, but not
-subscribes and unsubscribes. Nothing at all is written when the change comes from
-the unsubscribe link, a signup confirmation, an import, a ticked box at checkout,
-a bounce, or an edit through the API. So the record does not answer "when and how
-did this person opt in, and when did they opt out".
+feed.** The feed shows notes, tags, donations, form submissions and emails sent from the
+record, but not subscribes and unsubscribes. Nothing at all is written when the change
+comes from a signup confirmation, an import, a ticked box at checkout, a complaint, or an
+edit through the API. So the record does not answer "when and how did this person opt in,
+and when did they opt out".
 </Warning>
 
-The one place a change is written down is the organisation-wide [Activity
-Log](/platform/logs): pressing **Subscribe** or **Unsubscribe** on a contact
-record writes an entry there naming the administrator, the contact and the time.
-That log needs `ADMIN_TENANT` to read, and it covers only those two buttons.
+The places a change is written down are in the organisation-wide [Activity
+Log](/platform/logs), which needs an organisation admin to read: pressing **Subscribe** or
+**Unsubscribe** on a contact record writes an entry naming the administrator, the contact
+and the time, and using the unsubscribe link in an email writes an entry reading
+"Unsubscribed via email link" with the contact and the time, and no administrator. When the link came from a campaign, the
+unsubscribe is also counted on that campaign's report.
 
 If you need to evidence how someone came to be on your mailing list, do not rely
 on the field:
@@ -216,7 +226,8 @@ on the field:
 - Read the record's **Source** and creation date together. They tell you which
   path created the contact, which is a strong hint at how they arrived even
   though it is not a consent record.
-- Write a note on the contact at the time, and keep the campaign CSV exports and
+- Write a note on the contact at the time (this needs **Enable Profile Notes & Activity**
+  switched on), and keep the campaign CSV exports and
   the [email log](/platform/emails/email-log), which are dated per recipient.
 - Keep your own record of the wording people agreed to, since Orgo stores the
   answer but not the question.
@@ -234,14 +245,15 @@ organisation compliant with data protection law.
 
 | Action | Permission |
 |---|---|
-| Create and send a campaign, including one that reaches contacts | `COMMUNICATION_TENANT`, or `EVENT_TENANT` for event messages |
-| Send within one chapter | `COMMUNICATION_LOCAL` |
-| Subscribe or unsubscribe a contact from the record | `HR_TENANT` |
-| See the contacts list and its newsletter counts | `HR_LOCAL` or `FINANCIAL_LOCAL`, which every tenant-level and parent-level administrator also satisfies |
-| Add or remove someone on a manual list | `ADMIN_TENANT` |
+| Create and send a campaign, including one that reaches contacts | Organisation-wide Communication managers, or organisation-wide event managers for event messages |
+| Send within one chapter | Chapter Communication managers |
+| Subscribe or unsubscribe a contact from the record | Organisation-wide HR managers |
+| Send one email to one contact from the record | Communication permission over the contact's chapter |
+| See the contacts list and its newsletter counts | Chapter HR or chapter financial managers, which every regional and organisation-wide administrator also satisfies |
+| Add or remove someone on a manual list | Organisation admins |
 
-A chapter campaign manager, meaning someone holding `COMMUNICATION_LOCAL` and no
-tenant-wide communication permission, is offered only the **Members from a group**
+A chapter campaign manager, meaning someone holding chapter Communication permission and no
+organisation-wide communication permission, is offered only the **Members from a group**
 audience in the form. That is a convenience, not the control. The real control is
 applied when the campaign is sent: the resolved recipients are filtered down to
 the chapters that manager holds, whatever audience was stored, so a request made
@@ -285,11 +297,12 @@ counts follow the same rule and are refused when they would not be capped.
   <Accordion title="Someone unsubscribed and I do not know when">
     The subscription field carries no date and the contact's Activity feed does
     not show the change, so the record cannot tell you. If an administrator used
-    the button on the record, the organisation-wide [Activity
-    Log](/platform/logs) has an entry with the administrator, the contact and the
-    time. Otherwise, narrow it down from the campaigns: the CSV export on each
-    campaign report lists unsubscribes per recipient, and a bounce or complaint on
-    a dated campaign explains an automatic opt-out.
+    the button on the record, or the person used the link in an email, the
+    organisation-wide [Activity Log](/platform/logs) has an entry with the contact
+    and the time (and the administrator, for the button). Otherwise, narrow it down
+    from the campaigns: the CSV export on each campaign report lists unsubscribes
+    per recipient, and a spam complaint on a dated campaign explains an automatic
+    opt-out.
   </Accordion>
 
   <Accordion title="A contact subscribed on the website but is not in the list">

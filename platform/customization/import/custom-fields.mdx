@@ -21,7 +21,7 @@ This page covers the custom field destinations only. For the sheet, the settings
 and the rest of the mapping screen, see
 [Mapping columns](/platform/customization/import/mapping-columns).
 
-<img src="/images/platform/import/wizard-value-map.png" alt="A column set to a new single choice field, with the Match values to options table pairing each value found in the file against the option it will be stored as" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/import/wizard-value-map.png" alt="A column pointed at an existing dropdown field, with the Match values to options table pairing each value found in the file against the option it will be stored as, and a count of how many rows carry each value" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
@@ -35,6 +35,7 @@ Custom fields belong to people, so only the four person imports offer them:
 | **Contacts** | Yes |
 | **Modify Users** | Yes |
 | **Modify Contacts** | Yes |
+| **Forms** | The form's own questions (shown as **Existing question** and **New question**) rather than profile fields |
 | Every other type (payments, events, roles, badges, chapters, products, companies, units, lists) | No |
 
 On the other types the settings panel offers **System field** and **Skip** only. A
@@ -50,8 +51,9 @@ however many fields your organisation has.
 </Note>
 
 The fields offered are your organisation's **profile** custom fields, the ones at
-**Settings** → **Users & Profiles** → **Custom Fields**. Fields belonging to a single
-event or to a form in the form builder are not in the list.
+**Settings** → **Modules** → **Users & Profiles** → **Custom Fields**. Fields belonging to a
+single event or to a form in the form builder are not in the list (a Forms import offers
+that form's questions instead).
 
 ---
 
@@ -89,7 +91,7 @@ you can rewrite, and asks for a type:
 | **Text** | Anything. Stored as typed, with surrounding spaces trimmed |
 | **Long text** | Anything, for longer answers |
 | **Number** | A number. Nothing checks this, so whatever is in the cell is stored as it stands |
-| **Date** | `YYYY-MM-DD`, for example `2026-03-14`. Any other spelling of a date is reported as an error on that row |
+| **Date** | One spelling per column. Pick it in the **Date format** menu (`2026-03-14`, `14/03/2026`, `03/14/2026`, `14.03.2026` or `14-03-2026`). Until you pick one, only `2026-03-14` is accepted. A cell that does not fit is reported as an error on that row |
 | **Yes / No** | `true`, `1` or `yes`, in any capitalisation, for yes. Everything else is stored as no |
 | **Dropdown** | One option, chosen from a list |
 | **Single choice** | One option, shown as radio buttons |
@@ -289,8 +291,8 @@ before running the real file.
     variants together; on an existing field, pick the option from the dropdown instead of
     leaving it on **Create new option**.
 
-    Options already created can be renamed or removed in **Settings** → **Users &
-    Profiles** → **Custom Fields**. Prefer renaming: answers point at the option rather
+    Options already created can be renamed or removed in **Settings** → **Modules** →
+    **Users & Profiles** → **Custom Fields**. Prefer renaming: answers point at the option rather
     than at its text, so a rename fixes every record at once.
   </Accordion>
 

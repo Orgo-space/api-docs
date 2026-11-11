@@ -51,14 +51,16 @@
     ],
     "tenant": "t187c",
     "route": "/newsletter/c724c34c8ff511f1832cde84ab",
-    "routeHint": "Email campaigns -> open a campaign whose status is Sent; the Report tab opens automatically (a sent campaign ignores ?tab= entirely). This is campaign 630, 314 recipients, 144 opens, 32 clicks.",
+    "routeHint": "Email campaigns -> open a campaign whose status is Sent; the Report tab opens automatically (a sent campaign ignores ?tab= entirely). This is campaign 630, 314 recipients, 144 opens, 32 clicks. UPDATED 2026-11-11: the report is behind the Report tab on the campaign page, which the spec never clicked, so it waited on 'Top links' while looking at the campaign itself.",
     "actions": [
-      "wait 4000"
+      "wait 3000",
+      "click text=Report",
+      "wait 2500"
     ],
     "waitFor": "text=Top links",
     "viewport": "desktop",
     "alt": "Campaign report with Sent, Opened, Clicks, Bounce and Unsubscribed tiles above a campaign details card and a Top links panel",
-    "status": "new",
+    "status": "recapture",
     "notes": "Top links is served by NewsletterMetricsService::getLinkClickStats, which for a finalized cache reads newsletter_metrics_cache.details.link_stats (a JSON object keyed by URL with total/unique), not newsletter_user.click_link. The seeded cache for 630 had link_stats [], so the panel was hidden and the frame ended after the details card; it now holds six links totalling the 42 recorded clicks. Follow up with non-openers only appears when nonOpenersCount is above zero, which this seed does not produce."
   },
   {

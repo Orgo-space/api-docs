@@ -21,10 +21,10 @@ Moderation rights follow the same routing as the rest of discussions: where the 
 
 | Where the post is | Who moderates it |
 |-------------------|------------------|
-| Organization feed (no group) | `COMMUNICATION_TENANT` |
-| A public group (members can join it) | `COMMUNICATION_TENANT` |
-| A role group forum | `COMMUNICATION_TENANT` |
-| A local center forum | `COMMUNICATION_LOCAL` for that local center. `COMMUNICATION_TENANT` also covers it. |
+| Organization feed (no group) | Organization-wide communication managers |
+| A public group (members can join it) | Organization-wide communication managers |
+| A role group forum | Organization-wide communication managers |
+| A local center forum | Communication managers of that local center. Organization-wide communication managers also cover it. |
 | A private group | Nobody. Private group posts are never filtered and never appear in a queue. |
 
 Local moderators only ever see their own local center's held posts, never another center's.
@@ -35,7 +35,7 @@ Local moderators only ever see their own local center's held posts, never anothe
 
 <img src="/images/platform/communication/discussion-module-config.png" alt="Discussions module settings with the module toggle, Who Can Create Public Discussions, Enable Discussion Namespaces and Enable Profanity Check" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-**Settings** and then **Discussions**, and switch on **Enable Profanity Check**. It is off by default, and only `ADMIN_TENANT` can change it.
+**Settings** and then **Discussions**, and switch on **Enable Profanity Check**. It is off by default. The module settings are a configuration screen, so changing them needs the **Orgo administrator** flag on your account, not only an admin permission. See [Permissions](/platform/permissions).
 
 Once on, the filter runs on the title and body of every new discussion, every comment, every reply and every edit of one. If it matches, the post is held before it becomes visible.
 
@@ -44,7 +44,7 @@ Once on, the filter runs on the title and body of every new discussion, every co
 | Word list | A built-in English list, plus any custom words you add |
 | Matching | Words of four letters or more also match inside a longer word. Short words, and words that occur inside innocent ones, match whole words only, so "class" does not trip on "ass". |
 | Accents | Folded before matching, so "fück" matches "fuck" |
-| Custom words | Up to 500, added in the moderation queue screen and editable by `ADMIN_TENANT` only |
+| Custom words | Up to 500, added in the moderation queue screen and editable by Orgo administrators only |
 
 <Note>
 Matching runs inside Orgo against a word list. No post content is sent to any external service.
@@ -64,7 +64,7 @@ Nothing. A held post is hidden from the feed, from comment threads, from its dir
 
 <img src="/images/platform/communication/discussion-moderation-queue.png" alt="Moderation queue with a Pending review table showing the post text, flagged words, author and group with Approve and Reject buttons, a Rejected posts table below, and the custom blocked words editor" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-The queue is at `/discuss/moderation-queue`. Two things link to it: a **Moderation queue** entry appears in the **COMMUNICATION** section of the Administration sidebar once the profanity check is on, and on a local center a **Moderation queue** button with a pending count appears in the header next to Info.
+The queue is at `/discuss/moderation-queue`. A **Moderation queue** entry appears under **MANAGEMENT** in the Administration sidebar once the profanity check is on. Chapter communication managers see it too, so a chapter moderator with no other admin rights still has the section.
 
 The screen has two tables:
 
@@ -80,7 +80,7 @@ You only ever see posts you are allowed to act on, so the two tables are already
 
 Approving a rejected post reverses the rejection.
 
-Below the tables, `ADMIN_TENANT` holders manage the **Custom blocked words** list. It is a single organization-wide list, so one edit changes what gets held everywhere. Moderators can work the queue without being able to change it.
+Below the tables, Orgo administrators manage the **Custom blocked words** list. It is a single organization-wide list, so one edit changes what gets held everywhere. Moderators can work the queue without being able to change it.
 
 ### Being told about a hold
 
@@ -94,9 +94,9 @@ The word filter only catches what it knows. For anything already published, open
 
 | Action | Who | Effect |
 |--------|-----|--------|
-| **Moderate** | `COMMUNICATION_LOCAL` on the discussion, and not on your own post | Hides the text and any attachments. The discussion shows "Moderated discussion", the comment count drops, and the action is written to the audit log with the original content. |
+| **Moderate** | Communication managers for that discussion's group or chapter (organization-wide ones included), and not on your own post | Hides the text and any attachments. The discussion shows "Moderated discussion", the comment count drops, and the action is written to the audit log with the original content. |
 | **Remove moderation** | Same permission | Restores the post and its count |
-| **Delete** | The author, an `ADMIN_LOCAL` of the group, or `ADMIN_TENANT` on the organization feed | Removes it. Deleting someone else's content is logged. |
+| **Delete** | The author, an admin of the group's chapter, or an organization admin on the organization feed | Removes it, and a deleted comment takes its replies with it. Deleting someone else's content is logged. |
 
 Hiding is reversible and keeps the evidence. Prefer it to deletion when a decision might be challenged later.
 
@@ -126,7 +126,7 @@ A member who simply does not want to read another member does not need a moderat
   </Accordion>
 
   <Accordion title="I cannot find the moderation queue">
-    The sidebar entry needs `COMMUNICATION_TENANT` and only appears once **Enable Profanity Check** is on, and the header button only appears in a local center. Open `/discuss/moderation-queue` directly if you have neither. If both tables are empty, either there is nothing held or you do not hold moderation rights for any group with held posts.
+    The sidebar entry is under **MANAGEMENT** in the Administration sidebar. It needs a communication manager role (organization-wide or for a chapter) and only appears once **Enable Profanity Check** is on. If both tables are empty, either there is nothing held or you do not hold moderation rights for any group with held posts.
   </Accordion>
 
   <Accordion title="Private group posts never appear in the queue">
@@ -140,6 +140,6 @@ A member who simply does not want to read another member does not need a moderat
 
 - [Discussions](/platform/discussion) posting, comments and reactions
 - [Discussion Categories](/platform/discussion/discussion-namespaces) category scope and posting permissions
-- [Permissions](/platform/permissions) what `COMMUNICATION_TENANT` and `COMMUNICATION_LOCAL` cover
+- [Permissions](/platform/permissions) what the Communication Manager permission covers, and the Orgo administrator flag
 - [Notifications](/platform/notifications) how moderators are alerted
 - [Groups](/platform/groups) public, private and role groups

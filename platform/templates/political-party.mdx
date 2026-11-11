@@ -27,9 +27,9 @@ Five decisions shape everything below. Settle them on paper first. Each one turn
 - [ ] **Reviewers named, branch by branch.** For each branch, who validates the application, who runs the interview, and who takes the decision.
 
 <Note>
-The decision that bites later is the identity document. Orgo has no delete operation for an identity record and no retention timer, so "we will tidy that up later" is not available to you. Decide what you collect and how you will purge it before the first upload, not after.
+The decision that bites later is the identity document. Orgo has no button to delete an identity record. The only automatic purge is the **Erase Inactive or Deleted Accounts After** setting, which anonymises the record of an account that has been inactive or deleted for 6, 12, 24 or 36 months, and does nothing for members who are still active. Decide what you collect and how you will purge it before the first upload, not after.
 
-The decision that bites soonest is who reviews. The adhesion queue is scoped per chapter: `HR_TENANT` sees the whole party, everyone else sees only the chapters they hold `HR_LOCAL` on. A branch with nobody holding `HR_LOCAL` has nobody watching its applications except tenant-wide officers.
+The decision that bites soonest is who reviews. The adhesion queue is scoped per chapter: organization-wide HR managers see the whole party, everyone else sees only the chapters where they are a chapter HR manager. A branch with nobody holding chapter HR has nobody watching its applications except organization-wide officers.
 </Note>
 
 ---
@@ -53,7 +53,7 @@ If people simply register and pay, you do not need the adhesion machinery. Set n
 
 Adhesion is Orgo's membership application module, and for a party it is the centre of the setup. An applicant fills in a form you define, uploads an identity document, signs the application in the browser, and sends it. Your team then moves it through a review chain and approves or rejects it. Full detail: [Adhesion](/platform/users/adhesion).
 
-Turn it on at **Settings** → **Modules** → **Users & Profiles** → **Configuration** → **Adhesion & Membership** → **Enable Adhesion Module** (`ADMIN_TENANT`). The module is off by default; **Review steps** and **Require identity verification** are both on by default once it is.
+Turn it on at **Settings** → **Modules** → **Users & Profiles** → **Configuration** → **Adhesion & Membership** → **Enable Adhesion Module** (Orgo administrators only). The module is off by default; **Review steps**, **Require identity verification** and **Allow signing in the app** are all on by default once it is.
 
 <img src="/images/platform/users/adhesion-settings.png" alt="Adhesion and Membership settings section with the Enable Adhesion Module, Mandatory Adhesion, Video recording, Review steps and Require identity verification switches above the Default User Type After Approval, Admin Email Address and Draft Change Reasons fields" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -61,21 +61,21 @@ Turn it on at **Settings** → **Modules** → **Users & Profiles** → **Config
 
 | Piece | Where | What it decides |
 |---|---|---|
-| The module switches | **Settings** → **Modules** → **Users & Profiles** → **Configuration** → **Adhesion & Membership** | Whether applying is mandatory, whether there is a video step, whether the full review chain runs, whether an ID is required, and which [user type](/platform/users/user-types) approval grants |
+| The module switches | **Settings** → **Modules** → **Users & Profiles** → **Configuration** → **Adhesion & Membership** | Whether applying is mandatory, whether there is a video step, whether the full review chain runs (and whether it can be run in any order), whether an ID is required, whether applicants sign on screen or on paper, and which [user type](/platform/users/user-types) approval grants |
 | The form | **Settings** → **Modules** → **Users & Profiles** → **Adhesion Form** | Which profile and [custom fields](/platform/users/custom-fields) the applicant fills in, and which of them are required |
 | The document | **Settings** → **Modules** → **Users & Profiles** → **Adhesion Template** | The HTML the signed PDF is rendered from, with placeholders for the applicant's details |
 
-The template editor is three raw HTML areas (Header, Main Template, Footer). Put your statutes' declaration of adherence in the Main Template, with the placeholders for name, personal number, address and chapter, and `{{signature}}` and `{{dateSignature}}` in the signature block. Leave an area empty and Orgo falls back to its own default for that part.
+The template is written in a rich text editor with a **Placeholders** panel beside it: click a placeholder to insert it where your cursor is, and **Preview** shows the document with each placeholder highlighted. Put your statutes' declaration of adherence in it, with the placeholders for name, personal number, address and chapter, and `{{signature}}` and `{{dateSignature}}` in the signature block.
 
 ### What the applicant does
 
 Start the application, upload the front of an identity document (and the back if the document carries information there), fill in the form, sign on a canvas, and send. Signing is what generates the PDF from your template with the signature embedded, and stores it as the application's signed document. **Send** is refused until a signed document exists and, while **Require identity verification** is on, until an ID has been uploaded.
 
-Staff holding `HR_LOCAL` over the applicant's chapter can fill the form in on somebody's behalf, for a paper application received at a branch office. They get no signature canvas: they upload the signed file instead, up to five files.
+Chapter HR managers over the applicant's chapter can fill the form in on somebody's behalf, for a paper application received at a branch office. They get no signature canvas: they upload the signed file instead, up to five files. Switch **Allow signing in the app** off if your statutes require a handwritten signature for every applicant: everyone then downloads the form, signs it on paper and uploads the scan.
 
 ### Reviewing
 
-**Management** → **Adhesions** in the sidebar, `HR_LOCAL`. The queue is scoped: `HR_TENANT` sees the whole party, everyone else sees only chapters they hold `HR_LOCAL` on, and `HR_PARENT_LOCAL` and above get a chapter filter.
+**Management** → **Adhesions** in the sidebar, for chapter HR managers and above. The queue is scoped: organization-wide HR managers see the whole party, everyone else sees only the chapters they manage, and regional (parent chapter) HR managers and above get a chapter filter. A **Member status** filter starts on **Hide inactive and suspended**, so applications of inactive or suspended members are hidden until you choose **All members**.
 
 One row is one application. The chips across the top carry live counts per status, so the queue doubles as your backlog report, and the per-row controls open the signed document, the video, the identity record and the status picker without leaving the list.
 
@@ -83,12 +83,12 @@ One row is one application. The chips across the top carry live counts per statu
 
 With **Review steps** on, an application walks the full chain: sent, **Adhesion form validated**, **Background checked**, **Interviewed**, then the decision. Each move is gated, which is what makes the chain worth having:
 
-- **Adhesion form validated** is refused until the identity document has been validated, unless you turned identity verification off.
+- **Adhesion form validated** is refused until the identity document has been validated, unless you turned identity verification off or turned on **Flexible review steps**.
 - **Adhesion success** and **Adhesion rejected** are refused until both the Interview conclusion and the Background conclusion have been saved on the **Conclusions** screen.
 - **Adhesion canceled** requires a cancel reason.
 - Sending an application back to **Initiated** opens your **Draft Change Reasons** picker, **deletes the signed document** so it must be signed again, and emails the applicant the reasons you selected.
 
-Turn **Review steps** off if your statutes do not require an interview and a background step, and an admin decides straight from a sent application.
+Turn **Review steps** off if your statutes do not require an interview and a background step, and an admin decides straight from a sent application. If interviews and checks happen outside Orgo, leave **Review steps** on and add **Flexible review steps**: every review status then opens from any active status, in any order, without a validated ID or written conclusions, so you can record the stages as they happened.
 
 ### What approval actually does
 
@@ -100,14 +100,14 @@ Approval does not change the account [status](/platform/users/statuses). An appl
 
 ### The audit record
 
-**Conclusions** and **Log** on a queue row open the same screen (`/adhesion/{id}/log`, `HR_LOCAL`). The log names who sent, validated, interviewed, decided on and last updated the application, each with a timestamp and a link to the person, followed by the field-level changes. That, plus the signed PDF, is the evidence that a member was admitted according to your statutes.
+**Conclusions** and **Log** on a queue row open the same screen (`/adhesion/{id}/log`, for chapter HR managers). The log names who sent, validated, interviewed, decided on and last updated the application, each with a timestamp and a link to the person, followed by the field-level changes. That, plus the signed PDF, is the evidence that a member was admitted according to your statutes.
 
 <img src="/images/platform/templates/political-party-adhesion-review-log.png" alt="Adhesions queue with the Log panel open over it, listing the dated entries for one application: validated by, interview by, decision by with a success tag, and updated by" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 Read it as the chain your statutes describe: each move is a separate act by a named person on a named date, and an application that skipped a step has a gap where that entry should be.
 
 <Note>
-**Mandatory Adhesion** redirects every member to their application on every route until it reaches **Adhesion success**. Members holding `ADMIN_LOCAL` or above, and members who already hold the configured success user type, are exempt. It is the right setting for a party that admits nobody without an application, and it makes your review turnaround into a support problem if the queue is slow. Turn it on after the first review round, not before.
+**Mandatory Adhesion** redirects every member to their application on every route until it reaches **Adhesion success**. Chapter admins and above, and members who already hold the configured success user type, are exempt. Every new account also gets an application in Initiated status the moment it is created. It is the right setting for a party that admits nobody without an application, and it makes your review turnaround into a support problem if the queue is slow. Turn it on after the first review round, not before.
 </Note>
 
 ---
@@ -124,7 +124,7 @@ Many jurisdictions require a verifiable identity before someone can be enrolled 
 - Puts the record in front of a reviewer who **Validate**s or **Reject**s it, stamping who approved it and when. Rejection requires one of three reasons and emails the applicant, who can upload again.
 - Records the states **Pending**, **Orgo validated** (read automatically, still open for a human), **Validated** and **Rejected**.
 
-Reviewing requires `HR_ASSISTANT_LOCAL` over the member's chapter, which `HR_LOCAL`, `HR_PARENT_LOCAL`, `FINANCIAL_LOCAL` and `ADMIN_LOCAL` all satisfy, as do the tenant-wide `ADMIN_TENANT`, `HR_TENANT` and `FINANCIAL_TENANT`.
+Reviewing requires HR assistant rights over the member's chapter, which chapter HR, regional HR, chapter finance and chapter admin all satisfy, as do the organization-wide Admin, HR and Financial permissions.
 
 The review screen is the whole feature in one place: the uploaded document on the left, and beside it the details read off it and the decision. Below is that second column.
 
@@ -166,9 +166,9 @@ Orgo calls a territorial branch a **chapter** (**local center** in the data mode
 | Sections inside a branch | **Unit**, with a unit type you define | **Enable Organizational Units** |
 | A label for reporting only, granting nothing | **Region** | **Enable Regions** |
 
-All four live at **Settings** → **Modules** → **Groups & Teams**, and all require `ADMIN_TENANT`. See [Chapters](/platform/groups/local-groups) and [Units](/platform/groups/units).
+All four live at **Settings** → **Modules** → **Groups & Teams**, and all require the **Orgo administrator** flag on your account. See [Chapters](/platform/groups/local-groups) and [Units](/platform/groups/units).
 
-There is no limit of two layers. Federal state holding region holding county holding branch is one chapter tree, built by flagging every tier that holds another with **It's a parent chapter** and then setting **Belongs to parent chapter** on each tier below it. A tier in the middle carries both settings at once. Moving a chapter in the tree afterwards requires `HR_TENANT`, so plan the shape before you delegate.
+There is no limit of two layers. Federal state holding region holding county holding branch is one chapter tree, built by flagging every tier that holds another with **It's a parent chapter** and then setting **Belongs to parent chapter** on each tier below it. A tier in the middle carries both settings at once. Moving a chapter in the tree afterwards is for organization-wide HR managers, so plan the shape before you delegate.
 
 Once they exist, **Chapters** in the sidebar is your map of the party. Each tier is indented under the one above it, in tree order, and a chapter's members figure carries a `(+N)` count for everyone in the chapters beneath it, counted through the whole branch rather than one tier down.
 
@@ -180,25 +180,25 @@ Permissions belong on [roles](/platform/organisational-chart#the-role-form), nev
 
 | Post | Role level | Permission family |
 |---|---|---|
-| Party president, general secretary, national HR | **Organisation** | `ADMIN_TENANT`, `HR_TENANT`, `FINANCIAL_TENANT` |
-| Chair of any tier that holds other chapters | **Parent chapter** | `ADMIN_PARENT_LOCAL`, `HR_PARENT_LOCAL`, `FINANCIAL_PARENT_LOCAL` |
-| Branch chair, branch secretary, branch treasurer | **Chapter** | `ADMIN_LOCAL`, `HR_LOCAL`, `FINANCIAL_LOCAL` |
+| Party president, general secretary, national HR | **Organisation** | Organization-wide Admin, HR, Financial |
+| Chair of any tier that holds other chapters | **Parent chapter** | Regional (parent chapter) Admin, HR, Financial |
+| Branch chair, branch secretary, branch treasurer | **Chapter** | Chapter Admin, HR, Financial |
 
-`ADMIN_PARENT_LOCAL` grants every local permission across one anchor chapter and every chapter beneath it, however many tiers down; `ADMIN_LOCAL` grants every non-parent local permission inside its own chapter alone. Both are computed from the holder's own primary chapter, so a regional officer's reach follows them if they move.
+Regional Admin grants every chapter-level permission across one anchor chapter and every chapter beneath it, however many tiers down; chapter Admin grants every chapter-level permission inside its own chapter alone, and nothing at regional scope. See [Permissions](/platform/permissions). Both are computed from the holder's own primary chapter, so a regional officer's reach follows them if they move.
 
 The anchor is the officer's own chapter when that chapter is flagged **It's a parent chapter**, and otherwise the chapter directly above theirs. A county chair filed against a county that is flagged as a parent therefore administers the county and its branches and nothing above it, which is what you want. A branch officer given the same permission anchors to their county instead, and so reaches every branch of that county.
 
 <Warning>
-The `_PARENT_LOCAL` family only travels downward, never up and never sideways into another branch, and it only means anything while **Enable Parent Centers** is on. `HR_LOCAL` on a chapter is exactly that chapter, with no reach into the chapters below it. Read [What a parent-scope permission reaches](/platform/groups/local-groups#what-a-parent-scope-permission-reaches) before you hand out `ADMIN_PARENT_LOCAL` to a county chair, especially if your structure has three tiers or more.
+The regional (parent chapter) permissions only travel downward, never up and never sideways into another branch, and they only mean anything while **Enable Parent Centers** is on. Chapter HR on a chapter is exactly that chapter, with no reach into the chapters below it. Read [What a parent-scope permission reaches](/platform/groups/local-groups#what-a-parent-scope-permission-reaches) before you hand out regional Admin to a county chair, especially if your structure has three tiers or more.
 </Warning>
 
 ### When a member moves
 
 A member has exactly one primary chapter. Moving them is a [transfer request](/platform/groups/transfers): somebody raises it with a written reason, and **the receiving chapter approves it**, not the one being left. That asymmetry is usually what a party wants, because the branch taking somebody on is the one with an interest in checking.
 
-Approval does three things: sets the primary chapter, ends the member's open member-type role assignment stamped to the chapter they are leaving, and creates a new one in the destination. Everything else stays where it was created, including fee payments, invoices, discussions and any additional roles. Treat a transfer as a change of home branch, not as a data migration.
+Approval sets the primary chapter, ends the member's open member-type role assignment stamped to the chapter they are leaving and creates a new one in the destination, ends their other plain memberships in the old chapter and its units, and, when chapter fees are in use, moves their local fee to the destination chapter. Positions that carry permissions stay where they were, as do fee payment history, invoices and discussions. Treat a transfer as a change of home branch, not as a data migration.
 
-The alternative, direct reassignment from the chapter selector on a member's **Permissions** panel, needs `HR_TENANT`, records no reason and rewrites no role assignments. Use it to correct an import mistake, not to move a real person.
+The alternative, direct reassignment from the **Chapter** selector on the member's **Membership status** tab, is for organization-wide HR managers, records no reason and opens no new role assignment at the destination. Use it to correct an import mistake, not to move a real person.
 
 ---
 
@@ -216,13 +216,15 @@ Nothing charges anybody until both **Membership Fee Product** and **Default Pric
 | **Continuity Mandatory** | Requires an unbroken payment history, for statutes that treat a lapse as a break in membership |
 | **Allow Mark as Paid** | Branch treasurers collect cash. On by default, and it is what lets an administrator record money taken outside the platform |
 
+Three more are worth knowing. **Let members cover the processing fee** adds a tick to the card step so the party receives the full price (hidden while **Enable VAT on Fees** is on), and **Flexible amount** (chosen under **Pricing model** when you create the product) replaces fixed levels with one level where each member chooses an amount above your minimum, which suits solidarity dues. **Donations count towards membership** lets a gift to a campaign extend a member's membership when it reaches the flexible level's minimum.
+
 Renewal reminders, the grace window and what expiry actually changes are on [Renewals](/platform/fees/renewals).
 
 ### Chapter dues
 
 If branches keep part of what they collect, turn on **Local Center Fees Enabled** and give each chapter its own fee product and default price. A member then carries two independent validity dates, one for the party and one for the branch, and can be current on one and expired on the other. A chapter that connects its own Stripe account receives its own chapter fee payments; without one they fall back to the party account. See [Chapter fees](/platform/local-group-fees/create-local-fees).
 
-For the branch treasurer collecting cash at a meeting, switch on **Local Center Members Table**. That gives the [Member fees table](/platform/local-group-fees/member-fees): one row per member, one column per period, a checkbox on everything still owed. Ticking and pressing **Pay** writes one pending payment batch stamped as a bank transfer, which an `ADMIN_TENANT` then approves. Only approval moves anybody's validity date.
+For the branch treasurer collecting cash at a meeting, switch on **Local Center Members Table**. That gives the [Member fees table](/platform/local-group-fees/member-fees): one row per member, one column per period, a checkbox on everything still owed. Ticking and pressing **Pay** writes one pending payment batch stamped as a bank transfer, which an organization admin then approves. Only approval moves anybody's validity date.
 
 <Note>
 The two fees are charged separately and never in one checkout, and chapter fees are one-off only: there is no recurring subscription for a chapter fee. Members start their own chapter fee payment; administrators record payments on a member's behalf rather than paying for them.
@@ -249,7 +251,7 @@ If your jurisdiction caps donations per donor or requires published donor report
 
 ### Eligibility
 
-Three audiences, set on the **Who is voting?** cards:
+Three of the four audiences, set on the **Who is voting?** cards, apply to a party. The fourth, **Company vote**, is for organizations whose members are companies (see [Federations](/platform/templates/federations)):
 
 | Audience | Who is eligible |
 |---|---|
@@ -264,9 +266,9 @@ A multi-question ballot is one question per seat, answered in a single submissio
 The same two-column layout carries a vote from open to closed. While it runs, the left column is the ballot and the right is your turnout; once it closes, the left column becomes result bars per option and the right keeps the roster.
 
 <Warning>
-**Creating a vote requires `ADMIN_TENANT` or `HR_TENANT`.** A branch chair holding `ADMIN_LOCAL` cannot open a ballot for their own branch, even though a group vote can be scoped to it. Either a national officer creates chapter ballots on request, or the people running branch elections hold a tenant-level permission, which is a much wider grant than it sounds. Decide this before your first branch election, not during it.
+**Creating a vote is for organization admins and organization-wide HR managers.** A branch chair who is only a chapter admin cannot open a ballot for their own branch, even though a group vote can be scoped to it. Either a national officer creates chapter ballots on request, or the people running branch elections hold a tenant-level permission, which is a much wider grant than it sounds. Decide this before your first branch election, not during it.
 
-Once a vote exists, `HR_LOCAL` on the vote's group can edit, publish, close, archive, duplicate and export it, alongside `ADMIN_TENANT` and the creator.
+Once a vote exists, a chapter HR manager over the vote's group can edit, publish, close, archive, duplicate and export it, alongside organization admins and the creator.
 </Warning>
 
 ### Anonymity, stated precisely
@@ -278,7 +280,7 @@ With it off, each ballot is linked to its voter, the voter is warned of that on 
 The setting freezes once the vote is published or the first ballot is cast. A vote presented as secret can never be opened up afterwards, and the reverse is blocked too.
 
 <Note>
-Orgo records who has voted and when each ballot was stored. In a small electorate, anyone watching the live participation roster can narrow down who voted when, and combine that with the arrival of results. That is inherent to showing live turnout. Switch on **Hide voters list** for any ballot where it matters, which restricts the roster to `HR_LOCAL` on the vote's group and above.
+Orgo records who has voted and when each ballot was stored. In a small electorate, anyone watching the live participation roster can narrow down who voted when, and combine that with the arrival of results. That is inherent to showing live turnout. Switch on **Hide voters list** for any ballot where it matters, which restricts the roster to chapter HR managers over the vote's group and above.
 </Note>
 
 ### What the integrity record proves, and what it does not
@@ -299,7 +301,7 @@ Finally: **Orgo has no quorum and no majority threshold setting.** It reports ra
 
 ### The register of decisions
 
-The [Official Gazette](/platform/official-gazette) is a dated, numbered register of your formal documents: congress resolutions, executive decisions, statutes, minutes. Turn it on at **Settings** → **Modules** → **Files & eDocuments** → **Official Gazette** → **Enable Official Gazette Module** (`ADMIN_TENANT`, off by default). It then appears in the sidebar as **Official documents**.
+The [Official Gazette](/platform/official-gazette) is a dated, numbered register of your formal documents: congress resolutions, executive decisions, statutes, minutes. Turn it on at **Settings** → **Modules** → **Files & eDocuments** → **Official Gazette** → **Enable Official Gazette Module** (Orgo administrators only, off by default). It then appears in the sidebar as **Official documents**.
 
 Each entry has a type, a subject, an optional document number, an official document date (which is what the list sorts by), free text for search, and one attached file. Numbering is yours: Orgo stores what you type and never generates one.
 
@@ -310,7 +312,7 @@ Put your numbering scheme in the title, as the entries above do. The list has co
 | Action | Permission |
 |---|---|
 | Read the list and open any entry | Any signed-in member |
-| Create, edit, replace the file, delete | `HR_TENANT` |
+| Create, edit, replace the file, delete | Organization-wide HR managers |
 
 <Warning>
 The register is not public and not selectively private. Every signed-in member of the party can open every entry, and the **Private** / **Public** choice on the form is a label recorded on the entry, not a restriction on who can read it. Do not file anything there that some of your members should not see. Use [Files](/platform/files), which has folder and group level permissions, for that.
@@ -324,7 +326,7 @@ Publishing an entry notifies nobody. Announce the ones that matter through a [ne
 
 The [Organizational Chart](/platform/organisational-chart) draws your leadership from the roles you defined and who currently holds them. Nothing is drawn by hand: each box is a role, the number on it is how many members hold it with an open assignment and an **Active** account, and clicking it lists them.
 
-It needs **Enable Roles** (on by default) and **Organizational Chart** (off by default), both at **Settings** → **Modules** → **Users & Profiles** → **Configuration**, both `ADMIN_TENANT`. Roles land in sections by level: **Central** for organisation roles, **Parent local centers**, **Chapters**, and one section per unit type.
+It needs **Enable Roles** (on by default) and **Organizational Chart** (off by default), both at **Settings** → **Modules** → **Users & Profiles** → **Configuration**, both for Orgo administrators. Roles land in sections by level: **Central** for organisation roles, **Parent local centers**, **Chapters**, and one section per unit type.
 
 Every signed-in member can open it. There is no anonymous or public version, so it cannot serve as the leadership page on your website.
 
@@ -345,9 +347,9 @@ Four independent layers, and they do different jobs.
 | **Who Can See Members in General Groups** | **Settings** → **Modules** → **Users & Profiles** → **Configuration** → **Privacy & Visibility** | The minimum permission needed to browse the full member list. Below it, a member must narrow the list by group, chapter or profession first. Options: All Users, HR Local, HR Tenant, Admin Local, Admin Tenant |
 | **Who Can See Local Center Members** | Same section | The minimum permission needed to filter members by a given chapter |
 | **Restrict Profiles to Shared Local Centers** | Same section | A member can only open profiles of people they share a chapter with. Admins and regional admins are exempt |
-| Per-member [privacy settings](/platform/users/privacy-settings) | The member's own **Settings & Privacy** → **Privacy** | Which of their own fields other members see, plus **Make my profile completely private** |
+| Per-member [privacy settings](/platform/users/privacy-settings) | The member's own **Settings** → **Privacy** | Which of their own fields other members see, plus **Make my profile completely private** |
 
-The first three require `ADMIN_TENANT` and sit in one section of one screen, beside a fourth switch, **Allow Local Admins to Modify User Permissions**, which decides whether branch administrators can change statuses, permissions and roles at all.
+The first three require the **Orgo administrator** flag and sit in one section of one screen, beside a fourth switch, **Allow Local Admins to Modify User Permissions**, which decides whether branch administrators can change statuses, permissions and roles at all.
 
 <img src="/images/platform/templates/political-party-privacy-visibility.png" alt="Privacy and Visibility settings section with the Who Can See Members in General Groups and Who Can See Local Center Members selectors above the Restrict Profiles to Shared Local Centers and Allow Local Admins to Modify User Permissions switches" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -358,16 +360,18 @@ Both selectors ship on **All Users**, which means that out of the box every sign
 <Warning>
 **Privacy Defaults are copied onto an account once, at creation, and never re-applied.** Changing them at **Settings** → **Modules** → **Users & Profiles** → **Privacy Defaults** does not touch a single existing member, and nothing stops a member switching a field you defaulted to admin-only back on for themselves. If a field must never be visible to other members, keep it off the profile form rather than relying on the default.
 
-**Financial permissions grant full profile visibility.** `FINANCIAL_LOCAL` on a chapter reads every field on every member of that chapter, privacy switches included, because it implies the assistant-level HR read. A branch treasurer is a full member-data reader for that branch. Weigh that before appointing one.
+**Financial permissions grant full profile visibility.** Chapter Financial on a chapter reads every field on every member of that chapter, privacy switches included, because it implies the assistant-level HR read. A branch treasurer is a full member-data reader for that branch. Weigh that before appointing one.
 </Warning>
 
-**Make my profile completely private** is the strongest member-side control: it removes them from member lists and directory queries entirely, and their profile URL returns "This profile is private". It is overridden only by `ADMIN_TENANT`, `HR_TENANT`, `HR_LOCAL` over their chapter, and `ADMIN_PARENT_LOCAL` inside its regional scope.
+**Make my profile completely private** is the strongest member-side control: it removes them from member lists and directory queries entirely, and their profile URL returns "This profile is private". It is overridden only by organization admins, organization-wide HR managers, chapter HR managers over their chapter, and regional (parent chapter) admins inside their regional scope, and by an accepted connection with another member.
+
+Members can also connect with each other. An accepted connection opens the other person's profile even when **Make my profile completely private** is on and even when **Restrict Profiles to Shared Local Centers** would keep it closed, and it is the only way email, phone and social links are shown to another ordinary member. Your per-field switches still win. For a party, that means a member can choose to share contact details with a fellow member outside their branch.
 
 Three fields are hidden from ordinary members however the switches are set: **date of birth**, **member card ID**, and the **identity verification record**. Anonymous visitors and guest accounts always get the strictest treatment.
 
 ### Exporting the member list
 
-Exporting members to CSV requires `HR_LOCAL` at minimum and is capped at 500 rows per page. A plain member cannot download the directory even for fields they can read on screen, so field visibility and bulk access are two separate controls. Every export writes a `csv` entry to your organization's activity log naming who ran it.
+Exporting members to CSV requires chapter HR manager rights at minimum and is capped at 500 rows per page. A plain member cannot download the directory even for fields they can read on screen, so field visibility and bulk access are two separate controls. Every export writes a `csv` entry to your organization's activity log naming who ran it.
 
 ### What is stored about identity documents, and in what form
 
@@ -381,7 +385,7 @@ Exporting members to CSV requires `HR_LOCAL` at minimum and is capped at 500 row
 Identity data sits outside the member privacy switches entirely: a member cannot hide their identity record, and other members never see it. Only the permission levels named under [Verifying identity](#verifying-identity) can open one.
 
 <Warning>
-**Orgo has no delete operation for an identity record and no retention timer.** The record is only removed when the underlying member or contact row is deleted from the database, which closing or deleting an account does not do. If your retention policy requires ID scans to be purged after a period, that has to be arranged outside the product, through Orgo support.
+**Orgo has no button to delete an identity record.** Closing or deleting an account does not remove it. What does is the **Erase Inactive or Deleted Accounts After** setting (**Settings** → **Modules** → **Users & Profiles** → **Configuration**, off by default, 6, 12, 24 or 36 months): once an account that has been inactive or deleted for the whole window comes up in the nightly run, its identity record is anonymised and the document scans are deleted from storage. Members who still sign in are never touched, and the first run comes 14 days after you switch it on. If your retention policy needs ID scans purged on a different schedule, that has to be arranged through Orgo support.
 </Warning>
 
 For sensitive answers you collect yourself rather than read off a document, [custom fields](/platform/users/custom-fields) with **Admin** visibility are enforced on the server for both reading and writing, and text, numeric, textarea and date fields can be encrypted at rest (AES-256-GCM, bound to your organization and that field, five encrypted fields per organization). Every request that decrypts a value writes a log entry naming the reader, their IP address and the endpoint.
@@ -395,12 +399,12 @@ This is the section to read before you answer a member's request, because [accou
 **Deletion keeps:** first and last name, date of birth, gender, addresses and town, bio, profile photo, social links, profession and education fields, custom field values, **uploaded identity documents**, **the adhesion record and its attachments**, payments and invoices, event registrations and attendance, and discussion posts and comments. The account row itself stays; deletion sets a status.
 
 <Warning>
-"Deleted" in Orgo is an anonymisation of contact identifiers plus a permanent access block. It is not erasure. For a party this matters twice over, because the two records that most clearly evidence party membership, the signed adhesion and the identity document, are both among the things deletion leaves behind. Treat the built-in action as step one and remove the rest yourself against your own retention policy.
+"Deleted" in Orgo is an anonymisation of contact identifiers plus a permanent access block. It is not erasure. For a party this matters twice over, because the two records that most clearly evidence party membership, the signed adhesion and the identity document, are both among the things deletion leaves behind. Treat the built-in action as step one. Either remove the rest yourself against your own retention policy, or switch on **Erase Inactive or Deleted Accounts After**, which does erase the personal data of an account once it has been inactive or deleted for the window you choose (6, 12, 24 or 36 months): an account with no history is deleted outright, and one with history is anonymised, including its identity documents, custom field answers and photo, while invoices, votes and offices keep a valid owner.
 
 Deletion also **notifies nobody and writes no audit entry**, so record the request and what you did in your own system.
 </Warning>
 
-Note who may delete: `ADMIN_TENANT` (the button only appears for them), or `ADMIN_LOCAL` over the member's chapter for a member who has one. `HR_LOCAL` and `HR_TENANT` cannot: they see "This profile can be deleted permanently only by organization Admin" and a **Request delete** button that opens a support request. **Ordinary members cannot delete their own account** unless they are on the guest user type, so build the erasure route into your privacy procedure rather than pointing members at a button they will not find.
+Note who may delete: organization admins (the button only appears for them), or chapter admins over the member's chapter for a member who has one. Chapter and organization-wide HR managers cannot: they see "This profile can be deleted permanently only by organization Admin" and a **Request delete** button that opens a support request. **Ordinary members cannot delete their own account** unless they are on the guest user type, so build the erasure route into your privacy procedure rather than pointing members at a button they will not find.
 
 ### Leaving, and the three ways to record it
 
@@ -408,7 +412,7 @@ A member who wants out and a member who wants their data gone are making differe
 
 | Request | Use | What happens |
 |---|---|---|
-| "I resign from the party" | [Resignation](/platform/users/resignation) | A request with a mandatory reason, approved by `HR_LOCAL` over their chapter. Approval end-dates every open role, sets the user type to your **Guest User Type**, clears the adhesion link, sets the account Inactive or leaves it Active according to their choice, and emails them. Nothing is deleted |
+| "I resign from the party" | [Resignation](/platform/users/resignation) | A request with a mandatory reason, approved by a chapter HR manager over their chapter. Approval end-dates every open role, sets the user type to your **Guest User Type**, clears the adhesion link, sets the account Inactive or leaves it Active according to their choice, and emails them. Nothing is deleted |
 | "Put me down as lapsed / expelled / unreachable" | A [status](/platform/users/statuses) change | Any status other than Active blocks sign-in, hides the profile from the directory and end-dates open roles. **Excluded** exists precisely so your records can say the departure was permanent |
 | "Delete my data" | [Account deletion](/platform/users/deletion-of-account), then manual work | See above |
 
@@ -418,15 +422,15 @@ Resignation approval reassigns the user type on every approval. **If no Guest Us
 
 ### The audit trail you actually have
 
-**Settings** → **Developers** → **Logs**, `ADMIN_TENANT` only. There is no local-admin view of it. It records adhesion creation and status changes, identity creation and changes, `upload_identity`, member profile edits with the before and after values, CSV exports of members and contacts, and encrypted custom field reads.
+**Settings** → **Developers** → **Logs**, which needs the **Orgo administrator** flag. There is no local-admin view of it. It records adhesion creation and status changes, identity creation and changes, `upload_identity`, member profile edits with the before and after values, CSV exports of members and contacts, and encrypted custom field reads.
 
-It does **not** record account deletion, and it does not write a row per record for cascades, bulk operations run by Orgo support, or background jobs. The per-application adhesion log at `/adhesion/{id}/log` is separate and reachable with `HR_LOCAL`.
+It does **not** record account deletion, and it does not write a row per record for cascades, bulk operations run by Orgo support, or background jobs. The per-application adhesion log at `/adhesion/{id}/log` is separate and reachable by chapter HR managers.
 
 ---
 
 ## What to turn on
 
-Everything below requires `ADMIN_TENANT` to change, and the Settings screens themselves also require the **Orgo administrator** flag on your profile, which is a separate thing from the permission. See [Permissions](/platform/permissions).
+Everything below is a Settings screen and needs the **Orgo administrator** flag on your account, which is a separate switch from the Admin permission. See [Permissions](/platform/permissions).
 
 ### Joining and leaving
 
@@ -441,7 +445,9 @@ Everything below requires `ADMIN_TENANT` to change, and the Settings screens the
 | Who is emailed about a new application | **Admin Email Address** | Same section | None. The chapter's HR team is always notified as well |
 | The send-back reason picker | **Draft Change Reasons** | Same section | None |
 | The application form | Field include and require checkboxes | **Settings → Modules → Users & Profiles → Adhesion Form** | Email always included |
-| The signed document | Header, Main Template, Footer | **Settings → Modules → Users & Profiles → Adhesion Template** | Orgo's built-in default |
+| The signed document | Rich text editor with a Placeholders panel | **Settings → Modules → Users & Profiles → Adhesion Template** | Orgo's built-in default |
+| Review in any order | **Flexible review steps** | Same section as the module switches | Off |
+| Paper signature instead of on-screen | **Allow signing in the app** (turn off) | Same section | On |
 | Formal departures | **Enable Resignation Module** | **Settings → Modules → Users & Profiles → Configuration → Resignation & Membership Termination** | Off |
 | Force deactivation on approval | **Automatically Inactivate Accounts After Resignation** | Same section | Off |
 | What a resigned member becomes | **Guest User Type** | **Settings → Modules → Users & Profiles → Configuration → User Types & Roles** | None. Set it before enabling resignation |
@@ -517,7 +523,7 @@ The order matters. Several screens stay hidden until an earlier switch is on, an
 
     Set each chapter's currency carefully. A chapter currency is set once and can never be changed afterwards.
 
-    **Done when** the Chapters list shows every tier indented under the right one above it, each carrying the currency you intend to collect dues in. Reshaping the tree later needs `HR_TENANT`, so get it right while you still hold everything yourself.
+    **Done when** the Chapters list shows every tier indented under the right one above it, each carrying the currency you intend to collect dues in. Reshaping the tree later is for organization-wide HR managers, so get it right while you still hold everything yourself.
   </Step>
   <Step title="Create roles for your offices and user types for membership categories">
     **Settings** → **Modules** → **Users & Profiles** → **Roles & User types**. Set the level to match the post (**Organisation**, **Parent chapter**, **Chapter**, or a unit type) and attach permissions to roles, never to user types, because a user type cannot carry a permission at all.
@@ -534,7 +540,7 @@ The order matters. Several screens stay hidden until an earlier switch is on, an
     **Done when** every field on your list exists and, for each one, you can say in a sentence who reads it and whether it is encrypted.
   </Step>
   <Step title="Write the adhesion template, then build the adhesion form">
-    Template first, at **Settings** → **Modules** → **Users & Profiles** → **Adhesion Template**: it is the document members sign, and the form only makes sense once you know what the document has to print. The three HTML areas and the placeholders are described under [The three pieces you configure](#the-three-pieces-you-configure).
+    Template first, at **Settings** → **Modules** → **Users & Profiles** → **Adhesion Template**: it is the document members sign, and the form only makes sense once you know what the document has to print. The editor and placeholders are described under [The three pieces you configure](#the-three-pieces-you-configure).
 
     Then **Adhesion Form**, ticking the profile and custom fields the applicant fills in and which of them are required.
 
@@ -555,7 +561,7 @@ The order matters. Several screens stay hidden until an earlier switch is on, an
     **Done when** your row sits at **Adhesion success** in the queue, the signed PDF opens from the **Signed document** column and prints your details in the right places, and the **Log** panel carries a dated entry for the validation, the interview and the decision.
   </Step>
   <Step title="Set up dues at Payments & Fees">
-    Connect Stripe first (the organization needs a **Country** before it will connect). Then create the fee product with its **Period** and **Cycle beginning**, add one price per membership level, and point **Membership Fee Product** and **Default Price** at it under **Settings** → **Modules** → **Payments & Fees** → **Membership fees**.
+    Connect Stripe first (the organization needs a **Country** before it will connect). Then create the fee product with its **Cycle length** and **Cycle starts in**, add one level per membership category on its **Membership levels** tab, and point **Membership Fee Product** and **Default Price** at it under **Settings** → **Modules** → **Payments & Fees** → **Membership fees**.
 
     Add **Local Center Fees Enabled** and **Local Center Members Table** if branches collect their own. See [Membership fees](/platform/fees/fees).
 
@@ -579,7 +585,7 @@ The order matters. Several screens stay hidden until an earlier switch is on, an
   <Step title="Only then consider Mandatory Adhesion">
     Switching it on redirects every member without a successful application to their own application page on every route. Run it against one small chapter first, and watch your queue turnaround before widening it.
 
-    **Done when** a member of the pilot chapter without a successful application lands on their application page wherever they navigate, while members holding `ADMIN_LOCAL` or above still reach the rest of the platform.
+    **Done when** a member of the pilot chapter without a successful application lands on their application page wherever they navigate, while chapter admins and above still reach the rest of the platform.
   </Step>
 </Steps>
 
@@ -591,11 +597,11 @@ The order matters. Several screens stay hidden until an earlier switch is on, an
 - **Automatic document reading is Romania only.** Old ID card, new ID card and passport, keyed off the CNP. Everywhere else an administrator types the details in.
 - **PDFs are rejected as identity uploads.** PNG, GIF and JPEG only.
 - **There is no expired identity state and no re-check reminder for members.** Expiry is only checked at the moment somebody tries to validate a document.
-- **Identity records cannot be deleted from the product, and there is no retention timer.** Purging ID scans has to be arranged through Orgo support.
-- **Account deletion is not erasure.** It keeps the name, profile fields, custom field values, uploaded identity documents and the adhesion record, writes no audit entry and notifies nobody.
+- **Identity records have no delete button.** They are anonymised only by **Erase Inactive or Deleted Accounts After** (off by default, 6 to 36 months after an account goes inactive or is deleted), or through Orgo support.
+- **Account deletion is not erasure.** It keeps the name, profile fields, custom field values, uploaded identity documents and the adhesion record, writes no audit entry and notifies nobody. The retention setting above is what erases them later.
 - **Ordinary members cannot delete their own account** unless they are on the guest user type. An administrator does it on their behalf.
 - **Adhesion approval does not change the account status.** A member approved while sitting on **New request** still cannot sign in.
-- **Creating a vote needs `ADMIN_TENANT` or `HR_TENANT`.** A branch administrator cannot open a ballot for their own branch.
+- **Creating a vote is for organization admins and organization-wide HR managers.** A branch administrator cannot open a ballot for their own branch.
 - **Orgo has no quorum or majority threshold.** It reports counts and percentages; your statutes are applied by people.
 - **The integrity code is tamper evidence, not a signature.** It says no ballot recorded at or before that point was altered afterwards. It says nothing about identity, eligibility or the choice made.
 - **Event App ballots carry no voter link, even on a non-anonymous vote.** Run non-anonymous votes on the main member app.
@@ -605,11 +611,11 @@ The order matters. Several screens stay hidden until an earlier switch is on, an
 - **The organizational chart has no public version.** It cannot serve as the leadership page on your website.
 - **Privacy defaults apply once, at account creation.** Changing them later touches nobody, and a member can turn a field back on.
 - **Financial permissions read every profile field on their chapter's members**, privacy switches included.
-- **A transfer moves the person, not their data.** Fees, invoices, discussions, additional roles and group memberships all stay attached to where they were created.
+- **A transfer moves the person, not their history.** Payment history, invoices and discussions stay where they were created, and positions that carry permissions stay put. The member's local fee and plain memberships follow the move.
 - **A transfer is approved by the receiving chapter**, never by the one being left.
 - **Chapter fees are one-off only** and are never charged in the same checkout as the party fee.
 - **Donations produce no receipt document**, and a chapter designation on a gift does not route the money to that chapter's account.
-- **The activity log is `ADMIN_TENANT` only.** There is no chapter-scoped audit view for a branch secretary.
+- **The activity log needs the Orgo administrator flag.** There is no chapter-scoped audit view for a branch secretary.
 
 ---
 
@@ -631,7 +637,7 @@ Work down this list once and your party is live. Each line is an outcome you can
 - [ ] **Official documents** in the sidebar and the organizational chart drawing your real leadership
 - [ ] Resignation module on, with a test resignation leaving the member on the guest user type rather than on none
 - [ ] Existing membership imported, spot-checked for chapter and membership category
-- [ ] A written answer to "what do we do when a member asks us to erase their data", because the product's Delete does not answer it
+- [ ] A written answer to "what do we do when a member asks us to erase their data", because the product's Delete does not answer it on its own, and a decision on **Erase Inactive or Deleted Accounts After**
 - [ ] **Mandatory Adhesion** switched on only after a pilot chapter has run through the queue at a turnaround you are happy to defend
 
 ---
@@ -642,7 +648,7 @@ Work down this list once and your party is live. Each line is an outcome you can
   <Accordion title="Why can I not move an application to Adhesion form validated?">
     The identity document has to be validated first, with the **Validate** button in the Identity column of the queue. That precondition is enforced whenever **Require identity verification** is on for your organization.
 
-    If you do not run identity checks at all, turn **Require identity verification** off and both the precondition and the upload step disappear. If you do run them but somebody else does the validating, note that reviewing an identity needs `HR_ASSISTANT_LOCAL` over the applicant's chapter, which `HR_LOCAL`, `FINANCIAL_LOCAL` and `ADMIN_LOCAL` all satisfy, so it does not have to be the same person who handles the adhesion.
+    If you do not run identity checks at all, turn **Require identity verification** off and both the precondition and the upload step disappear. If you do run them but somebody else does the validating, note that reviewing an identity needs HR assistant rights over the applicant's chapter, which chapter HR, chapter finance and chapter admin all satisfy, so it does not have to be the same person who handles the adhesion.
   </Accordion>
 
   <Accordion title="The queue refuses my decision and asks for conclusions">
@@ -664,9 +670,9 @@ Work down this list once and your party is live. Each line is an outcome you can
   </Accordion>
 
   <Accordion title="A branch chair cannot open a vote for their own branch">
-    Creating a vote requires `ADMIN_TENANT` or `HR_TENANT`, which are both organization-wide. `ADMIN_LOCAL` over a chapter does not qualify, even though the vote itself can be scoped to that chapter as a group vote.
+    Creating a vote requires the organization-wide Admin or HR permission. Chapter admin over a chapter does not qualify, even though the vote itself can be scoped to that chapter as a group vote.
 
-    Two workable shapes. A national officer creates each branch ballot and hands management over: once a vote exists, `HR_LOCAL` on the vote's group can publish, close, archive, duplicate and export it. Or you accept the wider grant and give branch election officers `HR_TENANT`, which lets them see and manage member data across the whole party. For most parties the first is the right trade.
+    Two workable shapes. A national officer creates each branch ballot and hands management over: once a vote exists, a chapter HR manager over the vote's group can publish, close, archive, duplicate and export it. Or you accept the wider grant and give branch election officers organization-wide HR, which lets them see and manage member data across the whole party. For most parties the first is the right trade.
   </Accordion>
 
   <Accordion title="Can we prove to a member that their vote was counted correctly?">
@@ -680,7 +686,7 @@ Work down this list once and your party is live. Each line is an outcome you can
   <Accordion title="Our members can see the whole party membership list">
     **Who Can See Members in General Groups** is at its default of All Users. Raise it under **Settings** → **Modules** → **Users & Profiles** → **Configuration** → **Privacy & Visibility**, along with **Who Can See Local Center Members**, and switch **Restrict Profiles to Shared Local Centers** on so a member of one branch cannot open profiles in another.
 
-    Then check the two things those settings do not cover. Privacy defaults were copied onto existing accounts when they were created, so tightening them now changes nobody: existing members keep whatever their fields were set to, and can change them themselves. And anyone holding a financial permission on a chapter reads every field on every member of that chapter regardless, so audit who holds `FINANCIAL_LOCAL`.
+    Then check the two things those settings do not cover. Privacy defaults were copied onto existing accounts when they were created, so tightening them now changes nobody: existing members keep whatever their fields were set to, and can change them themselves. And anyone holding a financial permission on a chapter reads every field on every member of that chapter regardless, so audit who holds chapter Financial.
   </Accordion>
 
   <Accordion title="A member asked us to erase their data. What actually happens if we press Delete?">
@@ -688,7 +694,7 @@ Work down this list once and your party is live. Each line is an outcome you can
 
     It keeps the name, date of birth, gender, addresses, profile photo, custom field values, payments and invoices, event attendance, discussion posts, **the uploaded identity documents** and **the adhesion record and its attachments**. For a party those last two are exactly the records that evidence membership, so deletion on its own is not an answer to an erasure request.
 
-    Treat it as step one. Then decide, against your own retention policy, what to do with the remaining fields, and note that identity records cannot be removed from the product at all: that needs Orgo support. Record the request and your actions outside Orgo, because deletion writes no audit entry and notifies nobody.
+    Treat it as step one. Then decide, against your own retention policy, what to do with the remaining fields. Identity records have no delete button: they are cleared only by **Erase Inactive or Deleted Accounts After**, once the account has passed your chosen window, or through Orgo support. Record the request and your actions outside Orgo, because deletion writes no audit entry and notifies nobody.
   </Accordion>
 
   <Accordion title="Should a departing member resign, be excluded, or be deleted?">
@@ -708,11 +714,11 @@ Work down this list once and your party is live. Each line is an outcome you can
   </Accordion>
 
   <Accordion title="A member moved city and their branch says they never arrived">
-    A [transfer request](/platform/groups/transfers) is approved by `HR_LOCAL` on the **destination** chapter, not the source. A source-side administrator can raise the request but cannot wave it through, so an unapproved request sits in the queue indefinitely: nothing expires it and nothing auto-approves it.
+    A [transfer request](/platform/groups/transfers) is approved by a chapter HR manager on the **destination** chapter, not the source. A source-side administrator can raise the request but cannot wave it through, so an unapproved request sits in the queue indefinitely: nothing expires it and nothing auto-approves it.
 
-    The list has no menu entry of its own, which is why requests get forgotten. Bookmark it, and check that the destination branch has somebody holding `HR_LOCAL`.
+    The list has no menu entry of its own, which is why requests get forgotten. Bookmark it, and check that the destination branch has somebody holding chapter HR.
 
-    When it is approved, remember what does not move: their dues history, invoices, discussions, additional roles and group memberships all stay attached to where they were created. Settle anything outstanding at the old branch before approving if your accounting requires it.
+    When it is approved, remember what does not move: their dues history, invoices and discussions stay attached to where they were created, and positions that carry permissions stay in the old chapter. Their local fee moves to the new chapter and their plain memberships in the old one end. Settle anything outstanding at the old branch before approving if your accounting requires it.
   </Accordion>
 
   <Accordion title="Our congress resolutions are visible to every member and some should not be">
@@ -728,9 +734,9 @@ Work down this list once and your party is live. Each line is an outcome you can
   </Accordion>
 
   <Accordion title="Applications are piling up and Mandatory Adhesion has locked members out">
-    That is the setting working as designed: with **Mandatory Adhesion** on, every member without a successful application is redirected to their own application page on every route until it succeeds. Only members holding `ADMIN_LOCAL` or above, and members who already hold the configured success user type, are exempt.
+    That is the setting working as designed: with **Mandatory Adhesion** on, every member without a successful application is redirected to their own application page on every route until it succeeds. Only chapter admins and above, and members who already hold the configured success user type, are exempt.
 
-    Short term, switch **Mandatory Adhesion** off while you clear the queue; the applications themselves are untouched. Longer term, either widen who reviews (the queue is open to `HR_LOCAL` per chapter, so branch secretaries can clear their own) or turn **Review steps** off if the interview and background steps are not something your statutes require.
+    Short term, switch **Mandatory Adhesion** off while you clear the queue; the applications themselves are untouched. Longer term, either widen who reviews (the queue is open to chapter HR managers per chapter, so branch secretaries can clear their own) or turn **Review steps** off if the interview and background steps are not something your statutes require.
   </Accordion>
 </AccordionGroup>
 

@@ -15,7 +15,7 @@ Privacy in Orgo works on two independent layers. You set organisation defaults t
 
 ## Organisation defaults
 
-**Settings** → **Users & Profiles** → **Privacy Defaults**. Requires `ADMIN_TENANT`. Toggle ON means the field is visible to the community by default.
+**Settings** → **Modules** → **Users & Profiles** → **Privacy Defaults**. Only Orgo administrators can change it. Toggle ON means the field is visible to the community by default.
 
 | Setting | Help text in the app |
 |---|---|
@@ -36,9 +36,9 @@ Privacy in Orgo works on two independent layers. You set organisation defaults t
 
 ## What a member controls
 
-A member opens their own profile, then **Settings & Privacy** → **Privacy**. Local admins (`ADMIN_LOCAL` and above) and a parent managing a child's profile see the same panel.
+A member opens their own profile, then **Settings** → **Privacy**. Chapter admins and above and a parent managing a child's profile see the same panel.
 
-<img src="/images/platform/users/privacy-user-controls.png" alt="Member privacy panel with the Make my profile completely private master switch above toggles for Name, Email, Phone, Age, Profile image and town, and Profession and social media" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/users/privacy-user-controls.png" alt="Privacy section of a member's own settings, with the Make my profile completely private switch above a Who sees your data list where Name, Email, Phone, Age, Profile image and town, and Profession and social media each carry an Admins and a Community button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 The member panel groups fields more tightly than the admin defaults do: **Profile image & town** is one switch, and **Profession & social media** is another. Setting either one applies to both fields behind it. Each card shows its current state as "All community" or "Only by admins".
 
@@ -53,13 +53,15 @@ This is what a signed-in member without HR or Financial permissions sees on some
 | Setting is private | Effect |
 |---|---|
 | **Name** | Last name is cut to its initial and a full stop, and a multi-part first name is cut to its first part. "Maya Louise Marino" reads as "Maya M." |
-| **Email** | Email address is blank |
-| **Phone** | Phone number, local number and country code are all blank |
+| **Email** | Email address is blank. See also [Connections](#connections-and-contact-details) |
+| **Phone** | Phone number, local number and country code are all blank. See also [Connections](#connections-and-contact-details) |
 | **Age** | Age is blank |
 | **Town** | Current town and home town are blank |
 | **Profile image** | Photo is blank |
 | **Profession** | Profession headline and industry are blank |
 | **Social media** | Every social link is blank: TikTok, Telegram, Instagram, Facebook, Website, LinkedIn, Twitter, Signal, Bluesky |
+
+Email, phone and social links have a second condition on top of their switches: see [Connections](#connections-and-contact-details) below.
 
 Three things are hidden from ordinary members no matter how the switches are set: **date of birth**, **member card ID**, and the **identity verification record**. Age can still be shown, date of birth cannot.
 
@@ -77,11 +79,13 @@ Field-level privacy is skipped for:
 
 - the member themselves;
 - a parent who manages that member's profile through the family feature;
-- `ADMIN_TENANT`;
-- anyone with `HR_TENANT` or `FINANCIAL_TENANT`, because both imply the assistant-level HR read;
-- anyone with `HR_LOCAL`, `HR_PARENT_LOCAL`, `FINANCIAL_LOCAL` or `FINANCIAL_PARENT_LOCAL` over that member's local center, for the same reason.
+- organization admins;
+- organization-wide HR managers and financial managers, because both imply the assistant-level HR read;
+- chapter HR managers, parent-chapter HR managers, and chapter or parent-chapter financial managers over that member's local center, for the same reason.
 
-The private-profile master switch is narrower: it is overridden only by `ADMIN_TENANT`, `HR_TENANT`, `HR_LOCAL` over the member's local center, and `ADMIN_PARENT_LOCAL` inside its regional scope.
+A member without a chapter is reached only through the organization-wide rights, so a chapter admin or chapter HR manager gets no special view of them.
+
+The private-profile master switch is narrower: it is overridden only by organization admins, organization-wide HR managers, chapter HR managers over the member's local center, and parent-chapter admins inside their regional scope. An accepted connection also opens the profile, see below.
 
 <Warning>
   Financial permissions grant full profile visibility. If you appoint a treasurer at a local center, they can read every field on every member of that local center, privacy switches included.
@@ -89,9 +93,20 @@ The private-profile master switch is narrower: it is overridden only by `ADMIN_T
 
 ---
 
+## Connections and contact details
+
+Members can connect with each other. An **accepted** connection (pending or declined ones count for nothing) changes two things for regular members:
+
+- It opens the profile past the walls above. A connected member can open your profile even when **Make my profile completely private** is on, and even when **Restrict Profiles to Shared Local Centers** would otherwise keep them out. Minors stay hidden.
+- It is the only way contact details are shown. A regular member sees another member's **email, phone and social links only when the two are connected**. Your per-field switches still win: a field you made private stays hidden from your connections too.
+
+So with every switch on, a stranger still sees no email, phone or social links, and a connection sees them. Name, age, town, photo and profession follow their switches without needing a connection. Administrators and the other people listed under "Who sees the unredacted profile" do not need a connection.
+
+---
+
 ## Directory-wide visibility
 
-**Settings** → **Users & Profiles** → **Configuration**, section **Privacy & Visibility**. All three require `ADMIN_TENANT` to change.
+**Settings** → **Modules** → **Users & Profiles** → **Configuration**, section **Privacy & Visibility**. All three need an Orgo administrator to change.
 
 | Setting | What it does |
 |---|---|
@@ -103,7 +118,7 @@ The private-profile master switch is narrower: it is overridden only by `ADMIN_T
 
 ## Bulk export
 
-Exporting members to CSV requires `HR_LOCAL` at minimum, and the export is capped at 500 rows per page. A plain member cannot download the directory even for fields they are allowed to read on screen, so field visibility and bulk access are two separate controls.
+Exporting members to CSV requires chapter HR manager rights at minimum, and the export is capped at 500 rows per page. A plain member cannot download the directory even for fields they are allowed to read on screen, so field visibility and bulk access are two separate controls.
 
 ---
 
@@ -111,6 +126,6 @@ Exporting members to CSV requires `HR_LOCAL` at minimum, and the export is cappe
 
 - [Profile Fields](/platform/users/profile-fields) covers what data a profile holds in the first place
 - [Custom Fields](/platform/users/custom-fields) has its own visibility and encryption options
-- [Permissions](/platform/permissions) explains the roles named above
+- [Permissions](/platform/permissions) explains the permission levels named above
 - [Identity Validation](/platform/identity-validation) covers ID documents, which privacy switches do not govern
 - [Account Deletion](/platform/users/deletion-of-account) is the permanent option

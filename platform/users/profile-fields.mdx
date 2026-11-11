@@ -17,7 +17,7 @@ It is separate from the [registration form](/platform/users/registration-form), 
 
 ## How to access
 
-**Settings** → **Users & Profiles** → **Profile Form**. Requires `ADMIN_TENANT`.
+**Settings** → **Modules** → **Users & Profiles** → **Profile Form**. Requires organization admin permission.
 
 ---
 
@@ -25,7 +25,7 @@ It is separate from the [registration form](/platform/users/registration-form), 
 
 <Steps>
   <Step title="Pick fields from the left panel">
-    **Available Fields** has two tabs: **System Fields** (Orgo's built-in profile columns) and **Custom Fields** (the ones you created). The Custom Fields tab is disabled until you have at least one custom field. Click a field or drag it across to add it. Fields already in the form are greyed out and marked **in form**.
+    **Available Fields** has two tabs: **System Fields** (Orgo's built-in profile columns) and **Custom Fields** (the ones you created). To make a new custom field without leaving the builder, press **Create Custom Field** at the top of the Custom Fields tab: it opens the field editor in a window and adds the field to the form when you save. The pencil next to a field edits it the same way. Click a field or drag it across to add it. Fields already in the form are greyed out and marked **in form**.
   </Step>
   <Step title="Order them">
     Drag rows in the right panel to reorder. The order you set is the order members see, with built-in and custom fields interleaved however you arrange them.
@@ -46,7 +46,7 @@ Removing a field with the **X** takes it off the form. It does not delete data a
 
 | Group | Fields |
 |---|---|
-| Identity | First Name, Last Name, Date of birth, Gender, Bio |
+| Identity | First Name, Middle name, Last Name, Personal identification number, Date of birth, Gender, Bio |
 | Location | Town born, Town current, Location on members map, Address, Postal code |
 | Contact | Phone number, Website |
 | Social | Signal, Bluesky, Facebook, Twitter, LinkedIn, Instagram, Telegram, TikTok |
@@ -57,7 +57,7 @@ Removing a field with the **X** takes it off the form. It does not delete data a
 Profile picture is not on this list. It is always available and is not configurable here.
 
 <Note>
-The profession, organisation, and billing fields do not render on the **Profile** tab. They appear on a separate **Profession** tab on the member's profile, and only when the Professions module is active. Profession headline is the exception: with Professions switched off it renders inline on the Profile tab instead.
+When the Professions module is active, the profession and organisation fields are edited in the **Profession** section of the profile editor and shown on the **Profession** card on the Profile tab. Profession headline is the exception: with Professions switched off it appears in the main **Info** section of the editor instead. The billing fields show under **Billing Details** on the **Contact** card.
 </Note>
 
 ---
@@ -66,12 +66,12 @@ The profession, organisation, and billing fields do not render on the **Profile*
 
 Marking a field **Required** does more than star it on the form. On their next page load, any member with an empty required field is redirected to a completion screen at `/hello-member` and cannot navigate away until they fill it in.
 
-That screen is shared with the other things Orgo asks a member to settle on first sight: profile, privacy, notifications, timezone, groups, and unsigned e-documents. Only the steps that actually apply are shown.
+That screen is shared with the other things Orgo asks a member to settle on first sight: the profile itself, their settings (privacy, notifications and timezone), and unsigned e-documents. Only the steps that actually apply are shown.
 
 Two exceptions are worth knowing:
 
 - **Admin-only custom fields are never required of members.** If a custom field's visibility is Admin, it is skipped when checking whether the member's profile is complete.
-- **Not every built-in field can enforce itself.** The completion check only recognises first name, last name, date of birth, gender, phone number, address, town born, town current, and the Facebook, Twitter, LinkedIn, Instagram, Telegram, and TikTok fields. Marking any other built-in field required (bio, postal code, website, map location, Signal, Bluesky, or any profession, organisation, or billing field) shows it as required on the form but does not trigger the completion screen. Required custom fields are always enforced.
+- **Not every built-in field can enforce itself.** The completion check only recognises first name, middle name, last name, date of birth, gender, phone number, address, town born, town current, and the Facebook, Twitter, LinkedIn, Instagram, Telegram, and TikTok fields. Marking any other built-in field required (personal identification number, bio, postal code, website, map location, Signal, Bluesky, or any profession, organisation, or billing field) shows it as required on the form but does not trigger the completion screen. Required custom fields are always enforced.
 
 A custom field counts as filled when it has any value, or, for file fields, an uploaded file.
 
@@ -93,7 +93,7 @@ Immutable locks the field for everyone editing through the profile form, adminis
 
 ## Profile completion percentage
 
-When **Profile Completion Enabled** is on (**Settings** → **Users & Profiles** → **Configuration**, on by default), members see a completion ring in the header and sidebar with the fields they are still missing.
+When **Profile Completion Enabled** is on (**Settings** → **Modules** → **Users & Profiles** → **Configuration**, on by default), a member below 100% sees a percentage chip in the header of their own profile. Opening it lists the fields they are still missing, and clicking one takes them to it.
 
 The percentage is calculated over profile picture and email, which always count, plus first name, last name, date of birth, gender, and town current when those are on the profile form, plus one combined "social profile" item when any social field is on the form. Having any single social link filled satisfies that item. Fields that are not on your profile form are not counted against members.
 
@@ -106,7 +106,7 @@ The percentage is calculated over profile picture and email, which always count,
 | When it is asked | During sign-up | After login, on the member's profile |
 | Effect of Required | Blocks the sign-up submission | Sends the member to the completion screen |
 | Immutable option | Not available | Available for custom fields |
-| Ordering | Fixed list of toggles | Drag and drop, custom fields interleaved |
+| Ordering | Drag and drop, custom fields interleaved | Drag and drop, custom fields interleaved |
 
 A field can sit on both with different settings. Phone can be optional at registration and required on the profile, so new members can skip it while signing up and get asked for it on their next visit.
 
@@ -120,7 +120,7 @@ A field can sit on both with different settings. Phone can be optional at regist
   </Accordion>
 
   <Accordion title="I marked a field required but nobody is being prompted">
-    Check it against the enforced list above. Several built-in fields, including bio, postal code, website, and everything on the Profession tab, display as required but do not drive the completion screen. Use a custom field if you need enforcement.
+    Check it against the enforced list above. Several built-in fields, including bio, postal code, website, personal identification number, and everything in the Profession section, display as required but do not drive the completion screen. Use a custom field if you need enforcement.
   </Accordion>
 
   <Accordion title="A member entered the wrong value in an immutable field">
@@ -140,4 +140,4 @@ A field can sit on both with different settings. Phone can be optional at regist
 - [Registration Form](/platform/users/registration-form) for what is asked at sign-up
 - [Privacy Settings](/platform/users/privacy-settings) for who can see profile data
 - [Adhesion](/platform/users/adhesion) for the membership application form
-- [Permissions](/platform/permissions) for what `ADMIN_TENANT` covers
+- [Permissions](/platform/permissions) for what organization admin permission covers

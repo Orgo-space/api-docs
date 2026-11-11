@@ -1,4 +1,4 @@
-# Orgo API docs — Runbook
+# Orgo API docs runbook
 
 Operational guide for maintaining the docs at https://orgo.space/docs.
 
@@ -11,15 +11,23 @@ When you change anything, push to `main` and Mintlify auto-deploys.
 
 ---
 
-## Routine 1 — Regenerate the OpenAPI spec from the backend
+## Routine 1: regenerate the OpenAPI spec from the backend
 
 Run after any change to API Platform resources, controllers, or serialization groups in the Symfony app.
 
+The container's `vendor/` has to match the checkout first. If the export dies with `Class "Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle" not found` or similar, the checkout has moved ahead of the container: `docker exec orgo-1-php sh -c 'cd /srv/api && composer install --no-interaction'`, then export.
+
 ```bash
-# 1. Export from the Symfony backend (run inside the api container)
-docker exec orgo-php bin/console api:openapi:export \
-  --output=json --spec-version=3.1 \
-  > /Users/alex/api-docs/api-reference/openapi.json
+# 1. Export from the Symfony backend.
+#    -o takes a FILE PATH, not a format: `--output=json` writes a file called
+#    "json" inside the container and leaves you with "[OK] Data written to json."
+#    in your redirect. JSON is the default format (-y switches to YAML), and
+#    --spec-version takes 2 or 3, not 3.1 (it emits 3.1.0 for 3).
+#    Use orgo-1-php for docs work; orgo-php is the main dev instance.
+docker exec orgo-1-php php -d memory_limit=1G bin/console api:openapi:export \
+  --spec-version=3 --output=/tmp/openapi-fresh.json
+docker cp orgo-1-php:/tmp/openapi-fresh.json \
+  /Users/alex/api-docs/api-reference/openapi.json
 
 # 2. Reapply all enrichment
 cd /Users/alex/api-docs
@@ -28,7 +36,7 @@ python3 scripts/postprocess-openapi.py api-reference/openapi.json
 # 3. Preview locally
 mint dev
 
-# 4. Commit and push — Mintlify deploys
+# 4. Commit and push, and Mintlify deploys
 git add api-reference/openapi.json
 git commit -m "chore: regenerate openapi.json"
 git push
@@ -36,7 +44,7 @@ git push
 
 ### What the script does
 
-Thirteen idempotent passes:
+Sixteen idempotent passes:
 
 | Pass | What it does | Source of truth |
 |---|---|---|
@@ -44,12 +52,16 @@ Thirteen idempotent passes:
 | 5-7 | `info.description`, `info.contact`, `info.license`, `info.termsOfService`, `servers[].url` | `enrichment-data/info.md` |
 | 8-9 | `components.securitySchemes`, top-level `security:`, per-op anonymous opt-outs | `enrichment-data/security.yaml` |
 | 10 | Tag descriptions | `enrichment-data/tags.yaml` |
-| 11 | Traceability timestamp under `info.x-orgo-postprocessed` | (built-in) |
-| 12 | Request + response examples (synthesized for all 743 ops, hand-curated for top 30) | `enrichment-data/examples.yaml` + `scripts/synthesize.py` |
+| 11 | Request + response examples (synthesized across the spec, hand-curated for the top operations). An example that synthesizes to `{}` or `[]` is skipped: it only prefills the playground with an empty body | `enrichment-data/examples.yaml` + `scripts/synthesize.py` |
+| 12 | Repairs operations the backend hand-declares: a `requestBody` with no `content`, and parameters whose `schema` is `[]`. Both are invalid under OpenAPI 3.1 and either one makes Mintlify reject the entire file | (built-in) |
 | 13 | `x-codeSamples` (curl + JS + PHP) | `enrichment-data/code_samples.yaml` |
 | 14 | `webhooks:` block + per-event schemas | `enrichment-data/webhooks.yaml` |
+| 15 | Traceability timestamp under `info.x-orgo-postprocessed` | (built-in) |
+| 16 | Drop redundant content-type variants and unreferenced schemas | (built-in) |
 
-**Idempotent** — running it twice produces byte-identical output. Safe to re-run any time.
+**Always run it on a raw export, never on its own output.** Re-running it over an already-processed spec is safe but lossy: pass 16 prunes `application/ld+json` and `multipart/form-data`, so on a second pass the hand-curated entries that targeted those content types have nothing to attach to and silently drop out. On this spec that is the difference between 53 and 21 hand-curated request examples, with no warning. Export fresh, process once.
+
+Processing the same raw export twice does give the same output apart from the traceability timestamp.
 
 ### Reading the output
 
@@ -60,22 +72,28 @@ schemas dropped              : (none)
 info.description bytes       : 8293
 servers[0].url               : https://app.orgo.space
 securitySchemes              : ApiToken, JWT, OAuth2, ContactHash
-public operations            : 43 / 743
-tag descriptions enriched    : 40
-examples synthesized (req)   : 553
-examples synthesized (resp)  : 1225
-examples hand-curated (req)  : 55
-examples hand-curated (resp) : 33
+public operations            : 43 / 915
+tag descriptions enriched    : 44
+examples synthesized (req)   : 620
+examples synthesized (resp)  : 1423
+examples hand-curated (req)  : 53
+examples hand-curated (resp) : 32
+contentless bodies repaired  : 18
+param schemas repaired       : 0
 x-codeSamples injected       : 30
 webhook events declared      : 18
-file size                    : 5,247,267 bytes
+content variants pruned      : 1808
+schemas pruned (unreferenced): 1584 of 2630
+file size                    : 3,202,074 bytes
 ```
 
-Counts that change after a regen are normal — new endpoints are auto-covered by synthesis. Watch for:
+That is a real run, 2026-11-11: 594 paths and 915 operations in, 1046 schemas left after pruning. The `contentless bodies repaired : 18` line is the website endpoints described under Troubleshooting; expect a non-zero count on every fresh export until the backend factory passes real schemas.
 
-- **`file size`** approaching 10 MB — Mintlify's hard limit. Currently at 50% headroom.
-- **`public operations`** dropping significantly — probably means the backend renamed paths that were in `security.yaml`. Check the patterns.
-- **`[stale]` warnings** at the bottom — hand-curated entries reference operationIds the backend no longer emits. See Troubleshooting below.
+Counts that change after a regen are normal, because new endpoints are auto-covered by synthesis. Watch for:
+
+- **`file size`** growing by more than a megabyte in one regeneration. There is headroom at 2.5 MB and size has never been the thing that broke a build, so treat a jump as a signal that synthesis has gone deep somewhere new, not as an emergency.
+- **`public operations`** dropping significantly, which probably means the backend renamed paths that were in `security.yaml`. Check the patterns.
+- **`[stale]` warnings** at the bottom: hand-curated entries reference operationIds the backend no longer emits. See Troubleshooting below.
 
 ### What is and isn't safe to overwrite
 
@@ -84,7 +102,7 @@ Counts that change after a regen are normal — new endpoints are auto-covered b
 
 ---
 
-## Routine 2 — Add or update enrichment
+## Routine 2: add or update enrichment
 
 All editable enrichment lives in `scripts/enrichment-data/`. After editing any file there, re-run `python3 scripts/postprocess-openapi.py api-reference/openapi.json`.
 
@@ -100,8 +118,8 @@ All editable enrichment lives in `scripts/enrichment-data/`. After editing any f
 | Code samples for an endpoint | `code_samples.yaml` | postprocess script |
 | Webhook event payload | `webhooks.yaml` | postprocess script |
 | Synthesizer field-name patterns | `scripts/synthesize.py` | postprocess script |
-| A concept page | `api-reference/concepts/*.mdx` | nothing — Mintlify picks it up |
-| A recipe | `api-reference/recipes/*.mdx` | nothing — but add to `docs.json` if new |
+| A concept page | `api-reference/concepts/*.mdx` | nothing, Mintlify picks it up |
+| A recipe | `api-reference/recipes/*.mdx` | nothing, but add to `docs.json` if new |
 | Navigation | `docs.json` | nothing |
 
 ### Adding a hand-curated example for the 31st endpoint
@@ -137,7 +155,7 @@ Append to `scripts/enrichment-data/code_samples.yaml`. Use the same persona (`ac
 
 ### Adding a new recipe page
 
-1. Create `api-reference/recipes/<slug>.mdx`. Match the voice of existing recipes — second-person, concrete, with curl examples and a "Common gotchas" `<AccordionGroup>`.
+1. Create `api-reference/recipes/<slug>.mdx`. Match the voice of existing recipes: second person, concrete, with curl examples and a "Common gotchas" `<AccordionGroup>`.
 2. Add the slug to `docs.json` under the API Reference tab's "Recipes" group:
    ```json
    "api-reference/recipes/<slug>"
@@ -146,7 +164,7 @@ Append to `scripts/enrichment-data/code_samples.yaml`. Use the same persona (`ac
 
 ---
 
-## Routine 3 — Add a new webhook event
+## Routine 3: add a new webhook event
 
 When the backend ships a new event type:
 
@@ -164,8 +182,8 @@ No code changes needed.
 
 The backend renamed an operation. Either:
 
-- **Update the entry** — find the new operationId and rename it in the YAML.
-- **Remove the entry** — if the operation truly went away, drop the YAML block. Synthesis will cover anything left.
+- **Update the entry.** Find the new operationId and rename it in the YAML.
+- **Remove the entry.** If the operation truly went away, drop the YAML block. Synthesis will cover anything left.
 
 Until you do, the hand-curated content for that endpoint is silently ignored.
 
@@ -175,7 +193,7 @@ Same as above, but for `code_samples.yaml`. Same fix.
 
 ### `public entries with NO match in spec`
 
-`security.yaml`'s `public:` list contains patterns the OpenAPI spec doesn't expose. Usually these are custom Symfony routes (login, OAuth callbacks, Stripe webhooks) that have no API Platform metadata — harmless, just clutter. Remove the ones that have been gone for a while.
+`security.yaml`'s `public:` list contains patterns the OpenAPI spec doesn't expose. Usually these are custom Symfony routes (login, OAuth callbacks, Stripe webhooks) that have no API Platform metadata, so they are harmless clutter. Remove the ones that have been gone for a while.
 
 ### `PyYAML not installed` on first run
 
@@ -185,21 +203,55 @@ Self-resolves. The script bootstraps a local venv at `scripts/.venv/` on first r
 
 Cosmetic. It's a Node 23/24 streaming-API change the Mintlify CLI hasn't caught up to. Pages still render correctly and production deploys are unaffected. Ignore unless `mint dev` stops serving pages entirely.
 
-### File size approaching 10 MB
+### "Failed to fetch OpenAPI file for anchor or tab", and nothing deploys
 
-Mintlify's hard limit. Mitigations in order:
+The single most expensive failure in this repo, so read this before doing anything else.
 
-1. Reduce synthesizer depth — change `MAX_DEPTH = 6` in `scripts/synthesize.py` to `4` for response synthesis only (each level costs roughly 1 MB on the deepest endpoints).
-2. Skip synthesis on a content-type — extend the "skip multipart-as-response" guard in `postprocess-openapi.py` to other content types.
-3. Audit `components.schemas` for orphans — schemas with no `$ref` to them anywhere can be dropped.
+One invalid construct anywhere in `openapi.json` makes Mintlify reject the **whole** file. The hosted build log ends:
 
-### Mintlify build fails after push
+```
+Fetched 0 OpenApi file(s)
+Fetched 0 AsyncApi file(s)
+Failed to fetch OpenAPI file for anchor or tab
+```
 
-Check the Mintlify dashboard for the validator error. Most failures fall into:
+and locally `mint dev` says `Openapi file api-reference/openapi.json defined in tab in your docs.json does not exist`, which is misleading: the file is right there. **The whole site stops deploying, not just the API tab**, so unrelated pages pushed in the same period silently never go live. Check the Mintlify dashboard after any push that touches the spec.
 
-- **Invalid OpenAPI** — schema has `links: []` somewhere new (extend `fix_links` in the script).
-- **Invalid MDX** — a recipe or concept page has unescaped JSX (`{` inside prose). Wrap problem strings in backticks or escape the brace.
-- **Broken internal link** — a `[Foo](/api-reference/...)` points at a slug that doesn't exist. Mintlify won't fail the build but will warn; check the warnings tab.
+**Do not start by bisecting the file, and do not assume size.** Run a real validator:
+
+```bash
+python3 -m venv /tmp/oasvenv && /tmp/oasvenv/bin/pip install -q openapi-spec-validator
+/tmp/oasvenv/bin/python -c "
+import json
+from openapi_spec_validator import OpenAPIV31SpecValidator
+d = json.load(open('/Users/alex/api-docs/api-reference/openapi.json'))
+for e in OpenAPIV31SpecValidator(d).iter_errors():
+    print('/'.join(str(x) for x in e.absolute_path), '->', e.message[:120])
+"
+```
+
+A venv is needed because Homebrew Python is PEP 668 locked.
+
+Then separate the fatal errors from the noise:
+
+| Validator message | Verdict |
+|---|---|
+| `[] is not of type 'object', 'boolean'` on a `schema` | **Fatal.** Pass 12 repairs the known cases |
+| A `requestBody` with no `content` key | **Fatal.** Pass 12 repairs it |
+| `links: []` where a map is expected | **Fatal.** Extend `fix_links` in the script |
+| An example value whose type does not match its schema | Harmless |
+| `N is greater than the maximum of 100` on an example | Harmless |
+| `Path parameter 'x' ... was not resolved` | Harmless |
+
+Roughly 86 of the harmless kind sit in the spec permanently and it builds fine, so a non-empty validator run is not itself a problem. Only the structural errors matter.
+
+**Where fatal ones come from.** Anything the backend declares by hand rather than through API Platform metadata. `api/src/OpenApi/WebsiteOpenApiFactory.php` builds the website endpoints with `new RequestBody('...')` and `new Parameter($name, $in, $description, $required)`, never reaching the schema argument, so API Platform serialises 17 contentless bodies and 13 parameters with `schema: []`. Pass 12 repairs both on every run, so a regeneration cannot reintroduce them, but the PHP still emits the bad shapes: a new hand-written OpenAPI factory is the first suspect for a new fatal error.
+
+### Mintlify build fails after push, with the API reference intact
+
+- **Invalid MDX.** A page has unescaped JSX: a bare `{` in prose. Wrap it in backticks.
+- **Broken internal link.** A `[Foo](/api-reference/...)` points at a slug that does not exist. This warns rather than failing; check the warnings tab.
+- **A page missing from `docs.json`**, or a `docs.json` entry with no file behind it.
 
 ---
 
@@ -211,8 +263,8 @@ api-docs/
 ├── RUNBOOK.md                             # this file
 ├── README.md                              # public README
 ├── api-reference/
-│   ├── openapi.json                       # AUTO-GENERATED — never edit
-│   ├── introduction.mdx                   # (legacy, unwired — safe to delete)
+│   ├── openapi.json                       # AUTO-GENERATED, never edit
+│   ├── introduction.mdx                   # (legacy, unwired, safe to delete)
 │   ├── concepts/                          # hand-written conceptual docs
 │   │   ├── authentication.mdx
 │   │   ├── tenancy.mdx
@@ -256,11 +308,11 @@ When adding a new recipe or example, reuse these. The docs tell a coherent story
 
 ## Known limitations to track for the roadmap
 
-1. **Schema name explosion** — 204 `User-*` variants in `components.schemas` are auto-generated from API Platform serialization groups. Cosmetic for LLMs (the per-page `.md` mirrors are not affected), but bloats the OpenAPI playground's schema explorer. Fix requires renaming serializer groups in the Symfony backend.
+1. **Schema name explosion.** 204 `User-*` variants in `components.schemas` are auto-generated from API Platform serialization groups. Cosmetic for LLMs (the per-page `.md` mirrors are not affected), but bloats the OpenAPI playground's schema explorer. Fix requires renaming serializer groups in the Symfony backend.
 
 2. **No per-plan rate limits in the application layer**. `concepts/rate-limits.mdx` documents this honestly. If the backend ships per-plan limits, update that page.
 
-3. **The hand-curated layer covers the top 30 of 743 operations**. Everything else uses synthesized examples — solid but generic. To improve coverage, hand-curate more entries in `examples.yaml` and `code_samples.yaml` as demand surfaces.
+3. **The hand-curated layer covers a few dozen of 792 operations**. Everything else uses synthesized examples, which are solid but generic. To improve coverage, hand-curate more entries in `examples.yaml` and `code_samples.yaml` as demand surfaces.
 
 ---
 

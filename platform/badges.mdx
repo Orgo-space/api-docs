@@ -1,19 +1,19 @@
 ---
 title: 'Badges'
-description: 'Named awards on a member profile, given by hand or awarded automatically from hours, events, and courses'
+description: 'Named awards on a member profile, given by hand or awarded automatically from checklists, events, and courses'
 "og:title": 'Badges | Orgo'
-"og:description": 'Named awards on a member profile, given by hand or awarded automatically from hours, events, and courses'
+"og:description": 'Named awards on a member profile, given by hand or awarded automatically from checklists, events, and courses'
 "twitter:title": 'Badges | Orgo'
-"twitter:description": 'Named awards on a member profile, given by hand or awarded automatically from hours, events, and courses'
+"twitter:description": 'Named awards on a member profile, given by hand or awarded automatically from checklists, events, and courses'
 ---
 
-A badge is a named, illustrated award attached to a member's profile. You define the catalogue once, then badges reach members either because someone gives them out or because Orgo awards them from something the member did: hours logged, an event attended, a course finished.
+A badge is a named, illustrated award attached to a member's profile. You define the catalogue once, then badges reach members either because someone gives them out or because Orgo awards them from something the member did: a checklist worked through, an event attended, a course finished.
 
-**Built for** organizations that already recognise members informally (training passed, hours volunteered, levels reached) and want that recognition on the member record instead of in a spreadsheet.
+**Built for** organizations that already recognise members informally (training passed, levels reached, service given) and want that recognition on the member record instead of in a spreadsheet.
 
 **Replaces** the certificates spreadsheet and the "who is first aid certified?" email thread. It is not a qualifications register: a badge has no expiry date and no renewal.
 
-Badges need the Gamification module. Turn it on at **Settings** → **Modules** → **Gamification & Courses** → **Gamification** with **Enable Gamification Module**. That settings area needs `ADMIN_TENANT`.
+Badges need the Gamification module. Turn it on at **Settings** → **Modules** → **Gamification & Courses** → **Gamification** with **Enable Gamification Module**. That settings area is for the Orgo administrator.
 
 ---
 
@@ -32,13 +32,12 @@ Badges themselves live one level down, at **Settings** → **Modules** → **Gam
 | Image | Circular badge artwork, cropped on upload |
 | **Title** | The badge name. Required, saving without one is blocked |
 | **Badge type** | The category. Shown only when **Enable badge categories** is on |
-| **Hours number** | Volunteering-hours threshold, see [by volunteering hours](#by-volunteering-hours). Shown only when **Enable hours tracking** is on |
 | **Points required** | Tier threshold, see [Gamification](/platform/gamification). Shown only when **Enable tiers/levels by points** is on |
 | **Default note explanation** | Pre-fills the note when someone awards this badge, so the same wording is used every time |
 
-<img src="/images/platform/features/badges-list.png" alt="Badges list inside the Gamification and Courses module, each row showing the badge artwork, its name, its Type and the hours threshold that awards it, with an Add badge button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/features/badges-list.png" alt="Badges list inside the Gamification and Courses module, each row showing the badge artwork, its name and its Type, with an Add badge button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-Creating, editing, and deleting badges and categories all need `ADMIN_TENANT`.
+Creating, editing, and deleting badges and categories all need the organization Admin permission.
 
 <Warning>
 Deleting a badge also deletes every award of it from every member. Deleting a category deletes the badges filed under it, and their awards with them. Courses and events that pointed at a deleted badge simply lose the link.
@@ -62,19 +61,30 @@ A save that fails leaves the modal open and reports the error, so an award that 
 
 Pending is for work in progress: the member holds the record, and it is counted and filtered separately from completed awards everywhere it appears.
 
-The **Add badge** button appears for `HR_TENANT` and for `HR_LOCAL` on the member's local center. Awarding is checked again when you save: it needs `HR_ASSISTANT_LOCAL` over that member's local center, which `HR_LOCAL`, `FINANCIAL_LOCAL` and `ADMIN_LOCAL` all satisfy, or one of the tenant-wide equivalents. Editing or removing an existing award needs the same permission, or that you are the person who gave it. Every award stores who gave it, shown as **Offered by** on the profile and **Given by** in the centralizer.
+The **Add badge** button appears for organization HR managers and for chapter HR managers over the member's chapter. Awarding is checked again when you save: it needs the HR assistant permission over that member's chapter, which chapter HR, chapter financial and chapter admin all satisfy, as do their organization-wide equivalents. Editing or removing an existing award needs the same permission, or that you are the person who gave it. Every award stores who gave it, shown as **Offered by** on the profile and **Given by** in the centralizer.
 
 Nobody is notified when a badge is awarded or removed, so announce the ones that matter yourself.
 
-### By volunteering hours
+### By working through a checklist
 
-With **Enable hours tracking** on, the Badges tab gains **Add volunteering hours**, which needs `HR_ASSISTANT_LOCAL` on the member. Each entry has a period (start and end date), a number of hours, a title, and notes.
+Turn on **Badges with a checklist of steps** (**Settings → Modules → Gamification**) and every badge gains a **Checklist** editor, while member profiles gain a progress panel. Badges with no steps keep working exactly as before, so switching it on changes nothing until you add steps.
 
-Saving or editing an entry re-totals every hour logged for that member and awards, as Completed, each badge whose **Hours number** is above zero and at or below that total. Deleting an hours entry does not take a badge back, so revoke it by hand if the total no longer holds.
+A step has a title, an optional description, and a position you can reorder. Mark one **Optional** and it does not block the badge from completing. Steps are added after the badge exists: the editor says "Save the badge first, then add its checklist".
+
+Each step on a member's badge sits at **Not started yet**, **Began** or **Completed**, and every change records the time and who made it, so the badge carries its own history rather than just a final date.
+
+| Who records progress | When |
+|---|---|
+| The member themselves | While **Members may record their own progress** is on, which is the default |
+| A chapter HR assistant over that member, or an organization HR assistant | Always |
+
+Switch **Members may record their own progress** off and the member still sees the checklist, read only, with "Only a leader can record progress on this badge".
+
+When a badge has required steps, its own status follows them **in both directions**: completing the last required step completes the badge, and reopening a step takes the completion back. Clear a step back to not started and its progress record is removed.
 
 ### From an event
 
-With both **Enable tiers/levels by points** and **Enable badge per event** on, the event form gains a **Gamification** section containing **Award badge on event attendance**, visible to `EVENT_TENANT`. Participants receive the badge when their attendance is set to Attended. If the attendance is deleted or moved away from attending, the badge is removed again.
+With both **Enable tiers/levels by points** and **Enable badge per event** on, the event form gains a **Gamification** section containing **Award badge on event attendance**, visible to organization-wide event managers. Participants receive the badge when their attendance is set to Attended. If the attendance is deleted or moved away from attending, the badge is removed again.
 
 ### From a course
 
@@ -88,9 +98,9 @@ A member can hold a given badge only once. Every automatic path checks first and
 
 ## Where badges show up
 
-On a member profile, the overview card lists badge artwork and names, and the **Badges** tab holds the full table: badge, category, status, who offered it, and the date. Volunteering hours get their own table below it when hours tracking is on.
+On a member profile, the overview card lists badge artwork and names, and the **Badges** tab holds the full table: badge, category, status, who offered it, and the date. With checklists on, a badge that has steps also shows its progress panel and its step history.
 
-**Badges** in the sidebar (`/badge-users`) is the tenant-wide view, shown to `HR_ASSISTANT_LOCAL` and above once the module is on. Filter by category, badge, Completed or Pending, and local center, then read across three tabs.
+**Badges** in the sidebar is the organization-wide view, shown to chapter HR assistants and above once the module is on. Filter by category, badge, Completed or Pending, and local center, then read across three tabs.
 
 | Tab | What it shows |
 |---|---|
@@ -136,4 +146,4 @@ Someone whose HR permission is local-only sees just the awards for members of th
 - [Courses](/platform/courses) - Award a badge when a course is completed
 - [Event attendance](/platform/events/attendance) - Award a badge to everyone marked as attended
 - [Members](/platform/users) - The profile where badges appear
-- [Permissions](/platform/permissions) - What HR_LOCAL and HR_ASSISTANT_LOCAL cover
+- [Permissions](/platform/permissions) - what the HR and HR assistant permissions cover

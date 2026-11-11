@@ -31,7 +31,7 @@ The Organizational Chart draws your leadership structure from the roles you have
   </Step>
 </Steps>
 
-Both settings require `ADMIN_TENANT`. Once the chart is visible, every signed in member of your organization can open it. There is no anonymous or public version of the chart, and no per group visibility setting.
+Both settings are for the Orgo administrator. Once the chart is visible, every signed in member of your organization can open it. There is no anonymous or public version of the chart, and no per group visibility setting.
 
 ---
 
@@ -86,7 +86,7 @@ For chapter and parent chapter roles a dropdown at the top filters the list to o
 
 ## Editing the structure
 
-Administrators with `ADMIN_TENANT` see an **Edit Positions** button. Everyone else sees a read only chart.
+Organization admins see an **Edit Positions** button. Everyone else sees a read only chart.
 
 <img src="/images/platform/features/org-chart-edit-mode.png" alt="Chart in edit mode showing Add level buttons, plus buttons on each row, a pencil on every role box and a drag handle at the end of each row" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -115,7 +115,7 @@ The **Roles** button in the top right opens the full role list at **Settings** â
 User types additionally expose **Not eligible for fee**, **Parent**, **Volunteer**, and font and background colours. Selecting the User type level clears any permissions on the role: user types never carry permissions.
 
 <Warning>
-Permissions on a role are real access, not decoration. Adding `ADMIN_TENANT` to a role grants full administrative access to everyone holding it. See [Permissions](/platform/permissions) before editing this field.
+Permissions on a role are real access, not decoration. Giving a role the organization Admin permission grants full administrative access to everyone holding it. See [Permissions](/platform/permissions) before editing this field.
 </Warning>
 
 ---
@@ -126,13 +126,13 @@ Assignments are made on the member, not on the chart. Open a member, go to the *
 
 | Role level | Permission needed to assign |
 |---|---|
-| Organisation | `HR_TENANT` |
-| Parent chapter | `HR_PARENT_LOCAL` on the member's chapter |
-| Chapter | `HR_LOCAL` on the member's chapter |
+| Organisation | Organization HR managers |
+| Parent chapter | Regional HR managers anchored on the member's chapter |
+| Chapter | Chapter HR managers over the member's chapter |
 
 A parent-chapter assignment is filed against the member's own chapter when that chapter is flagged **It's a parent chapter**, and otherwise against the chapter directly above it. It is never filed further up, so a district officer's parent-chapter role stays with the district rather than moving to the region.
 
-The tab itself appears for `HR_TENANT`, or for `HR_LOCAL` on that member's chapter. When **Allow Local Admins to Modify User Permissions** is turned off, local administrators can see the tab but the checkboxes are read only, and only `HR_TENANT` can change assignments.
+The tab itself appears for organization HR managers, and for chapter HR managers over that member's chapter. When **Allow Local Admins to Modify User Permissions** is turned off, chapter administrators can see the tab but the checkboxes are read only, and only organization HR managers can change assignments.
 
 A chapter's own page also shows its team, grouped by role in the same position order as the chart.
 

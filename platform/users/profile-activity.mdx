@@ -1,15 +1,15 @@
 ---
 title: 'Profile Activity & Notes'
-description: 'The Activity tab: staff notes, donations, form submissions and tag changes on one feed, and who can read it'
+description: 'The Activity tab: staff notes, donations, form submissions, tag changes, resignations and emails on one feed, and who can read it'
 "og:title": 'Profile Activity & Notes | Orgo'
-"og:description": 'The Activity tab: staff notes, donations, form submissions and tag changes on one feed, and who can read it'
+"og:description": 'The Activity tab: staff notes, donations, form submissions, tag changes, resignations and emails on one feed, and who can read it'
 "twitter:title": 'Profile Activity & Notes | Orgo'
-"twitter:description": 'The Activity tab: staff notes, donations, form submissions and tag changes on one feed, and who can read it'
+"twitter:description": 'The Activity tab: staff notes, donations, form submissions, tag changes, resignations and emails on one feed, and who can read it'
 ---
 
 Activity is a single feed of what a person has done with you and what your staff
-have written about them: donations, form submissions, tag changes and notes, all
-merged newest first. It is where your team keeps the running story of a member
+have written about them: donations, form submissions, tag changes, notes,
+resignation requests and emails sent from their profile, all merged newest first. It is where your team keeps the running story of a member
 or a contact, in the words of the people who spoke to them.
 
 **Built for** the membership officer who needs to know what happened with
@@ -23,7 +23,7 @@ spoke to whom" and the notes people keep in their own inbox.
 ## Turning it on
 
 **Settings** → **Modules** → **Users & Profiles** → **Configuration** →
-**Enable Profile Notes & Activity**. It needs `ADMIN_TENANT` and it is **off**
+**Enable Profile Notes & Activity**. It needs organization admin permission and it is **off**
 until you switch it on.
 
 <img src="/images/platform/users/profile-activity-setting.png" alt="The Users and Profiles configuration page with Enable Profile Notes & Activity switched on, sitting below Enable Skills Field and Enable Weekly Availability" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
@@ -43,20 +43,21 @@ goes back on.
 ## Who can see it
 
 Two conditions have to hold at once: the setting is on, and you hold **HR** or
-**Financial** permission over the person you are looking at. `ADMIN_TENANT`
+**Financial** permission over the person you are looking at. Organization admin permission
 covers everybody. Contacts use the identical gate.
 
-| | Activity | Logs |
+| | Activity | Audit Logs |
 |---|---|---|
-| Permission | `HR_LOCAL` or `FINANCIAL_LOCAL` over that person, or `ADMIN_TENANT` | `ADMIN_TENANT` only |
+| Permission | Chapter HR permission or chapter financial permission over that person, or organization admin permission | Organization admin permission only |
 | Needs a setting switched on | Yes, **Enable Profile Notes & Activity** | No |
-| What it shows | Donations, form submissions, tags and notes | Every recorded change, with before and after values |
+| What it shows | Donations, form submissions, tags, notes, resignations and emails sent from the profile | Every recorded change, with before and after values |
 | Exists on contacts | Yes | No |
 
-So the two tabs answer different questions for different people. A chapter
-secretary with `HR_LOCAL` gets Activity on their own chapter's members and never
-sees Logs. Someone auditing a disputed profile edit wants Logs, and only a
-tenant administrator has it.
+So the two answer different questions for different people. A chapter
+secretary with chapter HR permission gets Activity on their own chapter's members and never
+sees the logs. Someone auditing a disputed profile edit wants Audit Logs, which
+sit under the **More** menu at the end of the profile's tab row, and only a
+tenant administrator has them.
 
 <Warning>
 Staff who hold HR or Financial permission get the Activity tab on **their own
@@ -70,19 +71,19 @@ reassuring than the behaviour, so do not rely on it.
 
 ## Where it lives
 
-On a **member profile**, Activity is a tab, next to Logs. The note composer sits
+On a **member profile**, Activity is a tab in the main tab row. The note composer sits
 at the top of the tab and the feed underneath it.
 
 On a **contact record**, there is no tab strip, so Notes and Activity are two
 stacked cards in the body of the record, below Tags. They behave the same way.
 
-<img src="/images/platform/users/contact-activity-panel.png" alt="Contact record with Tags, Notes and Activity as stacked cards, the Notes card holding an Add a note about this contact box with an Action select, and the Activity card listing three Note added entries and a Donated 50 usd entry" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/users/contact-activity-panel.png" alt="A contact record with Tags, Notes and Activity as stacked cards in the left column: the Notes card holds the composer with its Action select, and the Activity card lists a call, an email, a plain note and a donation, each under its own date" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
 ## What appears in the feed
 
-Four kinds of entry, merged into one list, newest first.
+Six kinds of entry, merged into one list, newest first.
 
 | Entry | Where it comes from | What it says | Opens |
 |---|---|---|---|
@@ -90,10 +91,14 @@ Four kinds of entry, merged into one list, newest first.
 | **Form** | A form the person submitted | 'Completed form "Volunteer Application Form"'. No author | Yes, the answers |
 | **Note** | A note your staff wrote | "Note added" or "Note modified", or **Called** or **Emailed** when the note carries that action, with the author and the time | Yes, the note |
 | **Tag** | A tag added to or removed from the profile | 'Tag "Leadership" added' or 'Tag "Sports" removed', with who did it | No |
+| **Resignation** | A resignation request made, approved, rejected or withdrawn | "Resignation request submitted", "approved by Name", "rejected by Name" or "withdrawn" | No |
+| **Email** | An email somebody sent from the **Send an email** button on the profile | 'Email "Subject line" sent', with who sent it | No |
 
-A fifth row appears once a note is deleted: **Note removed**, recording that
+A further row appears once a note is deleted: **Note removed**, recording that
 something was there. It carries no text and it does not open, because the text
-is gone.
+is gone. When a member's personal ID number changes, the feed also shows "Personal
+ID number changed on profile" (or "during donation") without the number itself;
+that row has no type chip and shows only while no type chip is selected.
 
 Donations and form submissions never carry an author, because they are things
 the person did rather than things somebody did to their record. Tag changes are
@@ -109,14 +114,15 @@ write tag links directly and produce no entry at all.
 **Profile field edits are deliberately absent.** Somebody changing a member's
 email address or town writes nothing to Activity. Those belong in the
 [Activity Log](/platform/logs), which stores the old value beside the new one,
-and they are reachable from the **Logs** tab on the same profile.
+and they are reachable from **Audit Logs** in the **More** menu on the same profile.
 
 Also absent, and not planned for this feed: fees and any payment that is not a
-donation, event registrations, emails sent or received, logins, e-documents,
-roles, permission changes, custom field changes and badges. Payments have the
+donation, event registrations, newsletters and system emails (only an email sent
+from the profile's own button appears), logins, e-documents, roles, permission
+changes, custom field changes and badges. Payments have the
 [Payments tab](/platform/users), emails have the
 [email log](/platform/emails/email-log), and everything else with an audit trail
-is in Logs.
+is in Audit Logs.
 
 ---
 
@@ -148,13 +154,13 @@ marker after the fact.
 <img src="/images/platform/users/profile-activity-note-edit.png" alt="The same note modal in edit mode, with the note text in an editable box, the Action select showing Called and outlined as focused, and Cancel and Save buttons" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 **Edit** and **Delete** are offered to the note's **author** and to
-`ADMIN_TENANT`, and to nobody else. A colleague with the same HR permission can
+Organization admin permission, and to nobody else. A colleague with the same HR permission can
 read a note you wrote but cannot change or remove it.
 
 <Note>
 Notes that existed before this feature keep their original date and appear in
 the feed at that point in time. Contact notes carried over from the older
-single-box field have no author recorded, so only an `ADMIN_TENANT` can edit or
+single-box field have no author recorded, so only organization admins can edit or
 delete those.
 </Note>
 
@@ -173,7 +179,7 @@ This is a wider audience than the [Forms](/platform/forms) module itself.
 Anyone who can see the timeline can open the answers, so an HR administrator who
 has no access to a form at all can still read that form's answers for a member
 in their own chapter. If a form collects anything you would not show your
-chapter administrators, do not rely on form permissions to keep it from them.
+Chapter administrators, do not rely on form permissions to keep it from them.
 </Warning>
 
 ---
@@ -184,7 +190,7 @@ The chips above the feed narrow it. They combine, and they all apply at once.
 
 | Filter | What it does |
 |---|---|
-| **Donations**, **Notes**, **Tags**, **Forms** | Type chips. Select any combination; none selected means all four |
+| **Donations**, **Notes**, **Tags**, **Forms**, **Resignations**, **Emails** | Type chips. Select any combination; none selected means all six |
 | **Date** | Three presets only: **Last 7 days**, **Last 30 days**, **This year**. There is no custom range picker |
 | **Author** | One person from the list of people who appear in this feed, searchable by name |
 | **Search** | Free text |
@@ -225,13 +231,14 @@ narrowing by type or date searches everything and not only the first 40 rows.
     **Configuration**. It is off by default, and a tenant administrator has to
     switch it on once for the whole organisation.
 
-    Second, your permission over the person you are looking at: `HR_LOCAL` or
-    `FINANCIAL_LOCAL` on their chapter, or `ADMIN_TENANT`. `EVENT_LOCAL`,
-    `COMMUNICATION_LOCAL` and `ADMIN_LOCAL` on their own are not enough.
+    Second, your permission over the person you are looking at: Chapter HR permission or
+    Chapter financial permission on their chapter, or organization admin permission. Chapter event manager permission,
+    Chapter communication manager permission and chapter admin permission on their own are not enough.
 
-    Do not use the **Logs** tab as a guide. That one asks for `ADMIN_TENANT` and
-    nothing else, so seeing Logs but not Activity means the setting is off, and
-    seeing Activity but not Logs is entirely normal for a chapter administrator.
+    Do not use **Audit Logs** in the **More** menu as a guide. That one asks for
+    Organization admin permission and nothing else, so seeing Audit Logs but not Activity means
+    the setting is off, and seeing Activity but not Audit Logs is entirely normal
+    for a chapter administrator.
   </Accordion>
 
   <Accordion title="An entry has no author name">
@@ -246,7 +253,7 @@ narrowing by type or date searches everything and not only the first 40 rows.
 
     Contact notes carried over from the older single-box notes field also show
     without an author, and those can only be edited or deleted by an
-    `ADMIN_TENANT`.
+    Organization admin permission.
   </Accordion>
 
   <Accordion title="I can see notes colleagues wrote about me">

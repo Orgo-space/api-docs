@@ -25,12 +25,13 @@
     ],
     "tenant": "t187c",
     "route": "/tenants/modules/emails/templates",
-    "routeHint": "Settings -> Notifications & Email Campaign -> Emails, then Membership & Fees in the section list nested under Emails, which scrolls the page to that card.",
+    "routeHint": "Settings -> Notifications & Email Campaign -> Emails, then Membership & Fees in the section list nested under Emails, which scrolls the page to that card. UPDATED 2026-11-11: the Emails page was rebuilt as a searchable list of section cards, so 'Membership & Fees' is a heading to scroll to rather than a nested link to click; the click silently did nothing and the capture was of the top of the page. Third correction the same day: scrolling did nothing because the Membership & Fees card is already in view when the page opens, and the runner takes a viewport screenshot, so the result was byte for byte the same image as organisation/email-templates-grid. The spec now types 'reminder' into the page's search box, which is what an administrator looking for the renewal emails would do, and the capture is of the filtered list.",
     "actions": [
-      "click text=Membership & Fees",
-      "wait 2500"
+      "wait 2500",
+      "fill input[placeholder=\"Search emails\"] | reminder",
+      "wait 2000"
     ],
-    "waitFor": "text=1 Month Reminder",
+    "waitFor": "text=Reminder",
     "viewport": "desktop",
     "alt": "Membership and Fees section of the Emails page, listing the renewal reminders with their send timing from 1 Month Reminder through 30 Days After Reminder, each with Edit text and its switch",
     "status": "recapture",
@@ -44,12 +45,12 @@
     ],
     "tenant": "t187c-member",
     "route": "/me?tab=fees",
-    "routeHint": "Log in as a member whose membership fee has expired, open the avatar menu -> My Membership Fee (it carries a red 'Due' tag). t187c has fees.fixedStartingDateFee = true, so AppSidebarUserMenu.openProfileFeeTab() routes to /me?tab=fees, NOT /me?tab=payments&subtab=fees - the old route landed on the Payments tab instead.",
+    "routeHint": "Log in as a member whose membership fee has expired, open the avatar menu -> My Membership Fee (it carries a red 'Due' tag). t187c has fees.fixedStartingDateFee = true, so AppSidebarUserMenu.openProfileFeeTab() routes to /me?tab=fees, NOT /me?tab=payments&subtab=fees - the old route landed on the Payments tab instead. STILL WRONG after the 2026-11-11 session refresh: the capture is the first-login wizard, not the fee card. The onboarding flags were set on user 209205 AFTER state-t187c-member.json was written, and the saved session carries a persisted Vuex snapshot of the old flags, so the app replays the wizard. The fix is to open the app once with that session and save the storage state again, which is what was done for state-t187c-chapter. 2026-11-11, after the session was re-saved: the card renders. The wait was on 'Change plan', which this tenant does not show; 'Organisation fee' is the reliable one. The history now reads 2026 paid with 2025 and 2024 unpaid, the opposite way round from the note below, because the demo payments were regenerated; the screen still shows what the page describes, a Pay button on an unpaid period.",
     "actions": [],
-    "waitFor": "text=Change plan",
+    "waitFor": "text=Organisation fee",
     "viewport": "desktop",
-    "alt": "Member fee card showing an unpaid membership with its status, amount and Pay button, above a history list with the current period unpaid and the two previous years paid",
-    "status": "new",
+    "alt": "The fee tab of a member profile, with the combined total above an organisation fee card and a local fee card, each showing the level, what it costs and a history of periods marked paid or unpaid, and a Pay button on the unpaid local fee",
+    "status": "recapture",
     "notes": "Captured as Maya Vargas (user 209205, ROLE_USER, valid_fee_date 2025-12-31, tenant price 2085) through the separate session state-t187c-member.json. She stopped being a genuinely unpaid member when PRODUCT-BUGS #12 was fixed: her two 85 USD organisation-fee payments were stored with is_refunded = 0, invisible to feeLocalMembersHistory(), and became visible on 2026-08-06, which made the card read Unpaid in the header and Paid 161.50 for 2026 at the same time. Their periods were moved to 2024 and 2025 (payments 208632, 208633) so the ladder reads 2026 unpaid, 2025 and 2024 paid, which is the state the page describes. Three traps: (1) never capture this as the admin - HR_TENANT and FINANCIAL_TENANT holders are exempt from the state this shot illustrates; (2) do NOT waitFor 'Organisation fee' or 'My Membership Fee' - this tenant renders a single fee card with no 'Organisation fee' heading, and en.json translates the menu key to 'Membership Fee'; the waitFor is 'Change plan'; (3) pick a member with no company_user row, otherwise the card is replaced by a 'Membership managed by company' notice."
   }
 ]

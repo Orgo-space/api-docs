@@ -19,7 +19,7 @@ Adhesion is Orgo's membership application module. An applicant fills a form you 
 
 ## Turning it on
 
-**Settings** → **Users & Profiles** → **Configuration** → **Adhesion & Membership**. Requires `ADMIN_TENANT`.
+**Settings** → **Modules** → **Users & Profiles** → **Configuration** → **Adhesion & Membership**. Only Orgo administrators can change it.
 
 <img src="/images/platform/users/adhesion-settings.png" alt="Adhesion and Membership settings section with the Enable Adhesion Module, Mandatory Adhesion, Video recording, Review steps and Require identity verification switches" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -29,24 +29,28 @@ Adhesion is Orgo's membership application module. An applicant fills a form you 
 | **Mandatory Adhesion** | Every new account gets an application in Initiated status the moment it is created, and the member is redirected to it on every page until the application succeeds. | Off |
 | **Video recording** | Adds a video step after sending, where the applicant answers questions on camera. | Off |
 | **Review steps** | Runs applications through form validation, background check and interview before the decision. Turn it off to decide straight from a sent application. | On |
+| **Flexible review steps** | Only matters with Review steps on. Lets admins set any review step in any order, without a validated ID or written conclusions. Useful when interviews and checks happen outside Orgo. | Off |
 | **Require identity verification** | Requires an ID document upload, and blocks the "form validated" step until that document is validated. | On |
+| **Allow signing in the app** | Lets the applicant draw their signature on screen. Turn it off where a handwritten signature is required: the applicant then downloads the form, signs it on paper and uploads the scan. | On |
 | **Default User Type After Approval** | The [user type](/platform/users/user-types) assigned when an application is approved. | None |
 | **Admin Email Address** | Extra address notified when an applicant sends an application. The local HR team is always notified as well. | None |
 | **Draft Change Reasons** | The pick list an admin chooses from when sending an application back. Entries are separated by a pipe character, not by commas. | None |
 
 <Warning>
-  With **Mandatory Adhesion** on, members are redirected to their application on every route until it reaches Adhesion success. Members holding `ADMIN_LOCAL` or above, and members who already hold the configured success user type, are exempt. Keep your review turnaround short.
+  With **Mandatory Adhesion** on, members are redirected to their application on every route until it reaches Adhesion success. Chapter admins and above, and members who already hold the configured success user type, are exempt. Keep your review turnaround short.
+
+If a member also owes a mandatory membership fee, the adhesion comes first: they are sent to the application, and payment is enforced once it succeeds.
 </Warning>
 
 ---
 
 ## Building the form
 
-**Settings** → **Users & Profiles** → **Adhesion Form** (`ADMIN_TENANT`). Each row has two checkboxes, include the field and make it required. Email is always included, always required, and cannot be unchecked.
+<img src="/images/platform/users/adhesion-form-builder.png" alt="The adhesion form builder in two panes: Available Fields on the left with its System Fields and Custom Fields tabs, and Form Fields on the right holding the chosen fields, each with a Required toggle and a remove control" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-<img src="/images/platform/users/adhesion-form-builder.png" alt="Adhesion form builder listing built-in profile fields with an include checkbox and a required checkbox on each row" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+**Settings** → **Modules** → **Users & Profiles** → **Adhesion Form** (Orgo administrators). The page has two panels. **Available Fields** on the left has a **System Fields** tab and a **Custom Fields** tab: click a field, or drag it across, to add it to the form. Fields already added carry an **in form** tag. **Form Fields** on the right lists what the applicant will see, in the fixed order the application page draws them, each with a **Required** checkbox. **Save** stores the form. Email is always included, always required, and cannot be removed.
 
-The selectable built-in fields are: first name, last name, date of birth, gender, address street, address details, town born, town current, location on members map, chapter, user types, profession headline, profession job, profession expertise, profession sector, profession industry, phone number, ID serial and number, Facebook, Twitter, LinkedIn, Instagram, Telegram and TikTok profiles, personal number, education status, certifications, experience history, and fee level. Every [custom field](/platform/users/custom-fields) you have defined is listed underneath and can be added the same way.
+The system fields you can add are: first name, middle name, last name, personal identification number, address, date of birth, gender, address street, address details, town born, town current, location on members map, chapter, user types, profession headline, profession job, profession expertise, profession sector, profession industry, phone number, ID serial and number, Facebook, Twitter, LinkedIn, Instagram, Telegram and TikTok profiles, personal number, education status, certifications, experience history, and fee level. Every [custom field](/platform/users/custom-fields) you have defined is listed on the **Custom Fields** tab and can be added the same way; **Create Custom Field** there makes a new one without leaving the page.
 
 Personal number, ID serial and number, and date of birth are only shown to people allowed to see private data. **Fee level** lets the applicant choose which [membership fee price](/platform/fees/fees) applies to them; that choice is written to their profile and printed on the generated document.
 
@@ -56,7 +60,7 @@ The **Iframe URL** button copies an embeddable link to the application page for 
 
 ## What the applicant does
 
-The member opens **My Adhesion** from their profile menu (`/adhesion`), or lands on it automatically when adhesion is mandatory. Staff with `HR_LOCAL` over the member's chapter can fill it in on their behalf from the member's profile, which opens the same page for that member. `/adeziune` still resolves to it as well.
+The member opens **My Adhesion** from their profile menu (`/adhesion`), or lands on it automatically when adhesion is mandatory. Chapter HR managers can fill it in on their behalf from the member's profile, which opens the same page for that member. `/adeziune` still resolves to it as well.
 
 <img src="/images/platform/users/adhesion-member-steps.png" alt="Member adhesion page on a phone, headed with the organization name and the applicant's name, showing the first step Upload identity scan image with a Front document drop area accepting JPG or PNG up to 10 MB, a note that the document is stored securely for identity verification, and a Continue button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -71,7 +75,7 @@ The member opens **My Adhesion** from their profile menu (`/adhesion`), or lands
     The fields you selected in the form builder. Required custom fields must all have a value before the next step unlocks.
   </Step>
   <Step title="Adhesion signature">
-    The applicant can download the unsigned document first, then signs on a canvas. Signing generates the PDF from your template with the signature embedded and stores it as the application's signed document. Staff filling the form on someone else's behalf get no canvas: they upload the signed file instead, up to 5 files.
+    The applicant can download the unsigned document first, then signs on a canvas. Signing generates the PDF from your template with the signature embedded and stores it as the application's signed document. Staff filling the form on someone else's behalf get no canvas, and neither does anyone when **Allow signing in the app** is off: they upload the signed file instead, up to 5 files.
   </Step>
   <Step title="Send adhesion">
     Moves the application to **pending**. Blocked until a signed document exists and, when identity verification is on, until an ID document has been uploaded. When the member sends it themselves, Orgo emails the configured admin address plus every HR member of their chapter.
@@ -85,11 +89,13 @@ The member opens **My Adhesion** from their profile menu (`/adhesion`), or lands
 
 ## Reviewing applications
 
-**Management** → **Adhesions** in the sidebar, or `/adhesions`. Requires `HR_LOCAL`.
+**Management** → **Adhesions** in the sidebar, or `/adhesions`. Requires chapter HR manager rights or above.
 
 <img src="/images/platform/users/adhesion-admin-list.png" alt="Adhesions queue with status filter chips and counts, and per-row signed document download, video, identity state and status controls" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-Status chips with live counts sit above a table of the applicant, age, chapter, sent and updated dates, the signed document and video downloads, the identity state, and a status dropdown. Filter by name, by user ID, and, with `HR_PARENT_LOCAL` or above, by chapter. `HR_TENANT` sees the whole tenant; everyone else is restricted to chapters they hold `HR_LOCAL` on. Applications marked Duplicated, and applications belonging to deleted members, never appear.
+Status chips with live counts sit above a table of the applicant, age, chapter, sent and updated dates, the signed document and video downloads, the identity state, and a status dropdown. Filter by name, by user ID, by **Member status**, and, for parent-chapter HR managers and above, by chapter. Organization-wide HR managers see the whole organization; everyone else is restricted to the chapters they manage. Applications marked Duplicated, and applications belonging to deleted members, never appear.
+
+**Member status** is the account status, not the application status. It starts on **Hide inactive and suspended**, so applications of members who are Inactive or Suspended (or deleted) are hidden while every other status, including awaiting approval and waiting list, stays visible, and the status chip counts follow the same filter. Choose **All members**, or one specific status, to see the rest. A row whose member is not Active carries a red `member:` tag with that status.
 
 | Status shown | Meaning |
 |---|---|
@@ -103,9 +109,9 @@ Status chips with live counts sit above a table of the applicant, age, chapter, 
 | **Adhesion canceled** | Withdrawn or dropped, with a reason. |
 | **Duplicated** | Marked as a duplicate and removed from the queue. |
 
-With **Review steps** on, the queue offers the full chain: pending, validated, background checked, interviewed, then the decision. With it off, the review statuses are hidden and an admin goes straight from a sent application to success, rejected or canceled.
+With **Review steps** on, the queue offers the full chain: pending, validated, background checked, interviewed, then the decision. With it off, the review statuses are hidden and an admin goes straight from a sent application to success, rejected or canceled. With **Flexible review steps** on as well, every review status is open from any active status, in any order, so stages that happened outside Orgo can be recorded as they are.
 
-Gates on each move:
+Gates on each move (the first two do not apply under Flexible review steps):
 
 - **Adhesion form validated** requires a validated identity document, unless identity verification is off for the tenant.
 - **Adhesion success** and **Adhesion rejected** require both the Interview conclusion and the Background conclusion, whenever Review steps is on.
@@ -122,7 +128,7 @@ Approving flags the member as a full member, assigns the **Default User Type Aft
 
 ### Conclusions and the audit log
 
-The **Conclusions** and **Log** buttons on each row open the same screen, also at `/adhesion/{id}/log` with `HR_LOCAL`.
+The **Conclusions** and **Log** buttons on each row open the same screen, also at `/adhesion/{id}/log` for chapter HR managers.
 
 **Conclusions** holds three free-text notes: Interview conclusion, Background conclusion, and Adhesion cancel reason. They can be saved while the application sits at validated, background checked, interviewed or canceled. They are read-only once it reaches Adhesion success or Adhesion rejected, and cannot be saved at all while it is still Initiated, pending, Duplicated or a decision has been made.
 
@@ -132,9 +138,9 @@ The **Conclusions** and **Log** buttons on each row open the same screen, also a
 
 ## The generated document
 
-**Settings** → **Users & Profiles** → **Adhesion Template** (`ADMIN_TENANT`). The editor is three raw HTML areas (Header, Main Template, Footer), not a rich text editor. Leave one empty and Orgo falls back to its built-in default for that part. **Preview** renders your markup in a modal.
+<img src="/images/platform/users/adhesion-template.png" alt="The adhesion document template open in the rich text editor, with the panel of placeholders that can be dropped into the text" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-<img src="/images/platform/users/adhesion-template.png" alt="Adhesion template editor with Header, Main Template and Footer HTML code areas and a Preview button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+**Settings** → **Modules** → **Users & Profiles** → **Adhesion Template** (Orgo administrators). This is the document a member signs when joining. You write it in a rich text editor, with a **Placeholders** panel beside it: click a placeholder to insert it where your cursor is. **Preview** shows the document with each placeholder highlighted, and **Save** stores it.
 
 These placeholders are replaced when the PDF is generated:
 
@@ -147,13 +153,13 @@ These placeholders are replaced when the PDF is generated:
 | Education | `{{educationStatus}}`, `{{educationDegree}}`, `{{certifications}}` |
 | Signature block | `{{signature}}`, `{{dateSignature}}` |
 
-For a custom field, use `{custom_field_<id>}` with the field's numeric id (single braces). File-type custom fields render as a download link; yes/no fields render the labels you configured. `{{educationDegree}}`, `{{certifications}}` and `{{experiences}}` expand to HTML tables, so put them on their own line rather than inside a sentence.
+For a custom field, use `{custom_field_<id>}` with the field's numeric id (single braces); only custom fields of type input and textarea are offered this way. To drop a section when the member left a field empty, wrap it as `{if|custom_field_<id>}` ... `{custom_field_<id>|endif}`. `{{educationDegree}}`, `{{certifications}}` and `{{experiences}}` expand to tables, so put them on their own line rather than inside a sentence.
 
 ---
 
 ## Emails
 
-Five emails belong to this flow. They are listed under **Adhesion** at **Settings** → **Emails & Notifications** → **Emails**, each with its own switch and **Turn all off** for the five together, and each can be reworded with **Edit text** (see [Email templates](/platform/emails/email-templates)). Your wording reaches every applicant as written, whatever language they read the platform in.
+Five emails belong to this flow. They are listed under **Adhesion** at **Settings** → **Modules** → **Emails & Notifications** → **Emails**, each with its own switch and **Turn all off** for the five together, and each can be reworded with **Edit text** (see [Email templates](/platform/emails/email-templates)). Your wording reaches every applicant as written, whatever language they read the platform in.
 
 | Email | Sent to | Trigger |
 |---|---|---|
@@ -185,7 +191,7 @@ Five emails belong to this flow. They are listed under **Adhesion** at **Setting
   </Accordion>
 
   <Accordion title="An application needs to be redone from scratch">
-    Set its status back to **Initiated**: this deletes the signed document and reopens every step. Applications that were rejected or marked Duplicated also show a **Reopen** button on the applicant's own page for staff with `HR_LOCAL`.
+    Set its status back to **Initiated**: this deletes the signed document and reopens every step. Applications that were rejected or marked Duplicated also show a **Reopen** button on the applicant's own page for chapter HR managers.
   </Accordion>
 
   <Accordion title="A member resigned but still shows an application">

@@ -25,7 +25,7 @@ These are the two member-run access modes. Pick deliberately, because they behav
 | | **Private** | **Open to join** |
 |---|---|---|
 | Description in the app | Only invited members have access | Anyone in community can join |
-| Who can create it | Anyone allowed to create groups | `ADMIN_TENANT` only |
+| Who can create it | Anyone allowed to create groups | Organization admins only |
 | Visible to non-members | No | Yes, under **Community groups** |
 | How people get in | A group admin adds them | They join themselves, or an admin adds them |
 | Approval step | None, adding is immediate | None, joining is immediate |
@@ -36,7 +36,7 @@ These are the two member-run access modes. Pick deliberately, because they behav
   Joining an open group never waits for approval. Any member who follows the link or clicks **Join** is in straight away. If you need to vet people, use **Private** and add them yourself.
 </Warning>
 
-You can switch a group between the two modes later by editing it, provided you have `ADMIN_TENANT` for the open modes. Starting private and opening up later is safer than the reverse.
+You can switch a group between the two modes later by editing it, but only organization admins see the **Access** selector. Starting private and opening up later is safer than the reverse.
 
 ---
 
@@ -49,19 +49,19 @@ You can switch a group between the two modes later by editing it, provided you h
     A name that explains the purpose. "Q4 Marketing Campaign" beats "Marketing Group". Optionally pick a **Menu emoji** that shows beside it in the sidebar.
   </Step>
   <Step title="Set Access">
-    **Private** for invite-only. Organization admins also see **Open to join**, **Auto-enroll all members** and **Role group**. Members without `ADMIN_TENANT` do not see the Access selector at all and get a private group.
+    **Private** for invite-only. Organization admins also see **Open to join**, **Auto-enroll all members** and **Role group**. Members who are not organization admins do not see the Access selector at all and get a private group.
   </Step>
   <Step title="Pick a category">
     Only offered on open and auto-enroll groups, and only when **Enable Group Categories** is on. You only see the categories you are allowed to create in.
   </Step>
   <Step title="Choose Features">
-    **Discussions**, **Files** and **Events**. At least one must stay on. Each one also needs its module enabled organization-wide to appear.
+    **Discussions**, **Files**, **Events** and **Guide**. At least one must stay on. Discussions, Files and Events also need their module enabled organization-wide to appear. The Guide adds a **Guide** tab that the group's admins write.
   </Step>
   <Step title="Set Who can post?">
-    **Everyone in the group** or **Only admins**. This one control covers discussions, files and events together.
+    **Everyone in the group** or **Only admins**. This one control covers discussions, files and events together. It does not apply to the Guide, which only the group's admins write.
   </Step>
   <Step title="Add a description">
-    Rich text, with images. Once set, it becomes the group's **About** tab.
+    One optional line (up to 255 characters) about what the group is for, shown under its name. For longer text, switch on **Guide** and write the full page on the group's **Guide** tab.
   </Step>
   <Step title="Save">
     You become the group's owner and its first admin, and you land on the Members tab ready to add people.
@@ -94,7 +94,7 @@ For an **Open to join** group, the **Join group link** button copies a URL you c
 
 Promote or demote from the row menu on the Members tab: **Make Admin** and **Dismiss as Admin**.
 
-Adding someone to a group requires an active admin role inside that group. Removing a member and changing who is an admin is also open to organization moderators (`HR_TENANT`), and `ADMIN_TENANT` can edit, archive and delete any group whether or not they are in it.
+Adding someone to a group requires an active admin role inside that group. Removing a member and changing who is an admin is also open to organization-wide HR managers, and organization admins can edit, archive and delete any group whether or not they are in it.
 
 ### Leaving and removing
 
@@ -110,7 +110,7 @@ Admins remove members from the row menu on the Members tab. Removal takes effect
 |-----------|--------|
 | A non-member opens a private group | Access denied. The group is not listed for them either. |
 | A non-member opens an open group | They see it and can join |
-| An organization admin (`ADMIN_TENANT`) opens any group | Full access, including editing and deleting it |
+| An organization admin opens any group | Full access, including editing and deleting it |
 | A member is removed | Immediate loss of access to discussions, files and events |
 
 ---
@@ -121,9 +121,9 @@ Open the group's **Settings** from its header, or edit it from the Groups page.
 
 | Action | Who | What happens |
 |--------|-----|--------------|
-| **Archive** | Owner, group admin, or `ADMIN_TENANT` | The group moves to the **Archived** tab. Members stay members and no content is removed. |
-| **Unarchive** | `ADMIN_TENANT` | Restores it from the **Archived** tab, exactly as it was |
-| **Delete** | Owner or `ADMIN_TENANT` | Permanent. Confirm dialog only, no recovery. |
+| **Archive** | Owner, group admin, or an organization admin | The group moves to the **Archived** tab. Members stay members and no content is removed. |
+| **Unarchive** | An organization admin | Restores it from the **Archived** tab, exactly as it was |
+| **Delete** | Owner or an organization admin | Permanent. Confirm dialog only, no recovery. |
 
 <Info>
   Prefer archiving. Archived groups keep their discussions, decisions and files, and an organization admin can bring them back at any time. A group with a newsletter attached refuses to delete until you remove the newsletter, so archive it instead.
@@ -147,7 +147,7 @@ Open the group's **Settings** from its header, or edit it from the Groups page.
   </Accordion>
 
   <Accordion title="The group owner left the organization">
-    Any member with `ADMIN_TENANT` can open the group's settings and manage it, including archiving or deleting it. Ownership itself stays with the original account and is not reassignable from the interface.
+    Any organization admin can open the group's settings and manage it, including archiving or deleting it. Ownership itself stays with the original account and is not reassignable from the interface.
   </Accordion>
 
   <Accordion title="I want a group everyone can find but only admins post to">
@@ -171,4 +171,4 @@ Open the group's **Settings** from its header, or edit it from the Groups page.
 - [Role Groups](/platform/groups/role-groups) - criteria-based automatic membership
 - [Main Group](/platform/groups/main-group) - the organization-wide space
 - [Local Centers](/platform/groups/local-groups) - geographic branches
-- [Permissions](/platform/permissions) - what `ADMIN_TENANT` and `HR_TENANT` cover
+- [Permissions](/platform/permissions) - what organization admins and organization HR managers cover

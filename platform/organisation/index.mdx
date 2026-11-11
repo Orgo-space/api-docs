@@ -9,12 +9,12 @@ description: 'The settings area: your organization identity, the modules you swi
 
 Settings is where you define what your workspace is and what it does: your legal and contact identity, which features members can see, how the app is worded and laid out, and who gets programmatic access. This page is the map.
 
-Open it from the cog icon in the top bar, or from your avatar menu, **Organisation Settings**.
+Open it from the cog icon in the top bar (desktop only), or from your avatar menu, **Organisation Settings**.
 
 <img src="/images/platform/organisation/settings-full-page.png" alt="Settings area with the Organization, Modules, Customization and Developers sidebar next to a module configuration page" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 <Note>
-  The cog icon and the menu entry both require **ADMIN_TENANT**, and so does nearly every page inside. Two exceptions: **Merge Records** is open to **HR_TENANT** and **Billing** to **FINANCIAL_TENANT**.
+  The cog icon, the menu entry and nearly every page inside need the **Orgo administrator** flag on your account. Having the organization admin permission is not enough for those. A few pages are open on the permission alone: **Usage & Billing**, **API Tokens** and **OAuth Apps** (organization admins), **Merge Records** (organization HR managers), and the **Website** builder (organization admins and organization-wide communication managers, although only admins see its link in this sidebar). See [Permissions](/platform/permissions) for the difference between the flag and the permission.
 </Note>
 
 ---
@@ -27,7 +27,8 @@ Who you are.
 |------|----------------|
 | [Organisation info](/platform/organisation/organisation-info) | Name, country, timezone, default language, office contact details, legal links, social URLs, currency, VAT and registration numbers, bank IBANs |
 | [Branding](/platform/organisation/branding) | Logo variants and the login background |
-| **Usage & Billing** | Your workspace's resource usage and Orgo subscription |
+| [Website](/platform/organisation/website-builder) | Pages, news, menus, design and domain of your public website, shown when the website module is on |
+| [Usage & Billing](/platform/usage-billing) | Your workspace's resource usage and Orgo subscription |
 
 ---
 
@@ -53,7 +54,8 @@ How the app looks, reads and is filled with data.
 | [Languages](/platform/customization/languages) | Which languages members can pick |
 | [Texts](/platform/customization/labels) | Renaming product vocabulary to match your organization |
 | [Menu Organizer](/platform/customization/menu-organizer) | Reordering and hiding sidebar entries |
-| [Dashboard Organizer](/platform/customization/dashboard-organizer) | Dashboard widgets and categories, shown when the custom dashboard setting is on |
+| **Terminology** | Renaming platform concepts, shown only on workspaces where Orgo has switched it on |
+| [Dashboard builder](/platform/customization/dashboard-organizer) | Dashboard sections and widgets |
 | [Dashboard Welcome](/platform/customization/dashboard-welcome) | The welcome message on the member dashboard |
 | [Import](/platform/customization/import) | Bringing members and other records in from a file |
 
@@ -70,7 +72,7 @@ Demo workspaces get two extra entries here, Demo Data and AI Provisioning, for s
 | [OAuth Apps](/platform/oauth) | Apps that sign members in, shown when the API module is on |
 | **Webhooks** | Outbound notifications when records change |
 | [Merge Records](/platform/users/merging-duplicates) | Combining duplicate people |
-| **Logs** | Activity history for your workspace |
+| [Logs](/platform/logs) | Who changed what across your workspace |
 | **API Documentation** | Opens the API reference in a new tab |
 
 ---
@@ -110,10 +112,10 @@ There are several hundred individual toggles. Rather than hunt through the menu,
 
 <AccordionGroup>
   <Accordion title="I cannot see the cog icon">
-    It renders for ADMIN_TENANT only, and only on desktop. Local admins, HR and finance managers, and regular members do not get it. On a phone, use the avatar menu instead.
+    It renders for Orgo administrators only, and only on desktop. A member who holds the organization admin permission without the Orgo administrator flag does not get it, and neither do chapter admins, HR and finance managers or regular members. On a phone, use the avatar menu, which has the same condition.
   </Accordion>
   <Accordion title="A module I expected is missing from the sidebar">
-    Some entries are conditional: Files & eDocuments appears only when the Drive module is active, eDocuments templates only when eDocuments is on, Dashboard Organizer only when the custom dashboard setting is on, and API Tokens and OAuth Apps only when the API module is on. Turn the module on under **All Modules** and the entry appears.
+    Some entries are conditional: Files & eDocuments appears only when the Drive module is active, eDocuments templates only when eDocuments is on, Terminology only when Orgo has switched it on for your workspace, Website only when the website module is on, and API Tokens and OAuth Apps only when the API module is on. Turn the module on under **All Modules** and the entry appears.
   </Accordion>
   <Accordion title="The keyboard shortcut does not open the search">
     `Cmd` + `K` is only bound inside the settings area. Open any settings page first, then press it.
@@ -129,3 +131,5 @@ There are several hundred individual toggles. Rather than hunt through the menu,
 - [Modules](/platform/organisation/modules) the full module reference
 - [Customization](/platform/customization) languages, labels, menu and dashboard
 - [Permissions](/platform/permissions) who can reach what
+- [Website Builder](/platform/organisation/website-builder) your public website
+- [Usage & Billing](/platform/usage-billing) meters, plan and invoices

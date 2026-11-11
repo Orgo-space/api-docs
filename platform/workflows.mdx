@@ -16,7 +16,7 @@ A workflow watches for something happening in your organization (a member regist
 **Settings → Customization → Workflows**
 
 <Note>
-  Requires **ADMIN_TENANT**. Every workflow endpoint, including the trigger and action catalogues the builder loads, checks the tenant admin role server side.
+  Requires the **Orgo administrator** flag. An admin who only holds the organization admin permission is refused: every workflow endpoint, including the trigger and action catalogues the builder loads, checks the flag on the server. See [Permissions](/platform/permissions).
 </Note>
 
 <img src="/images/platform/workflows/workflows-list.png" alt="Workflows list showing workflow cards with trigger and action counts and an active toggle on each" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
@@ -76,8 +76,11 @@ The catalogue, grouped as it appears in the dropdown:
 | Identity Events | Identity Submitted, Identity Validated, Identity Rejected |
 | Donation Events | Donation Payment Success |
 | Event Attendance | Event Attendance |
+| Form Events | Form Submitted |
 
-Three triggers narrow further with a filter on a specific record: **Donation Payment Success** by donation product, **Event Attendance** by event, and **Tag Added** / **Tag Removed** by tag. An empty selection means "any". The event picker loads up to 500 events alphabetically, so a very large calendar will not offer every event as a filter option.
+Four triggers narrow further with a filter on a specific record: **Donation Payment Success** by donation product, **Event Attendance** by event, **Tag Added** / **Tag Removed** by tag, and **Form Submitted** by form. An empty selection means "any". The event and form pickers load up to 500 entries alphabetically, so a very large calendar will not offer every event as a filter option.
+
+**Form Submitted** fires once a response to one of your [forms](/platform/forms) counts as confirmed: straight away for a signed-in member submitting their own form, and when the respondent clicks the confirmation link for everyone else, so a workflow never emails an address nobody has confirmed. It runs for the member or contact the email matched. Anonymous forms never trigger it (the picker marks them "anonymous - cannot trigger"), and picking a user type excludes submissions from contacts, who have no user type.
 
 **User Inactive (X Days)** asks for a number of days between 1 and 365. It fires once, on the day a member crosses that threshold, based on the last time their record changed, and is evaluated by a daily job at 06:00 UTC.
 
@@ -95,9 +98,9 @@ Person-related triggers can also be restricted **by user type** with checkboxes;
 | **Add Tag** | Adds a tag to the member's profile. You can pick an existing tag or type a new name and create it inline |
 | **Remove Tag** | Removes a tag from the member's profile |
 
-**Send Email** needs a **Subject Line** and **Email Content** in the rich editor; the builder refuses to save without both, as tag actions refuse to save without a tag. These placeholders are replaced per recipient at send time, in the subject line as well as in the body. The **Insert Placeholder** control writes into the body editor only, so type them by hand in the subject.
+**Send Email** needs a **Subject Line** and **Email Content** in the rich editor; the builder refuses to save without both, as tag actions refuse to save without a tag. Placeholders are replaced per recipient at send time, in the subject line as well as in the body. The **Insert Placeholder** control writes into the body editor only, so type them by hand in the subject.
 
-`{{firstName}}` · `{{lastName}}` · `{{fullName}}` · `{{userEmail}}` · `{{userCompanyName}}` · `{{platformLink}}` · `{{profileLink}}` · `{{unsubscribeUrl}}`
+The control offers the recipient's details (first, last and full name, email, phone number, address, postal code, town, county, state, country, chapter, occupation, job title, organisation, industry, company name, membership level name and price, and the end of the current period), the organisation name, three links (the platform, the profile and unsubscribe), and each of your profile custom fields. Examples: `{{firstName}}`, `{{fullName}}`, `{{userEmail}}`, `{{localCenterName}}`, `{{platformLink}}`, `{{unsubscribeUrl}}`. Custom fields are written `{{custom_field_<id>}}` by the control; admin-only, encrypted, file and chapter fields are left out of the list.
 
 ### Delays
 
@@ -142,7 +145,7 @@ Workflows run in the background, so a run appears in the log a moment after the 
 ## Things worth knowing
 
 - **Actions belong to the trigger they are connected to.** With two triggers on one canvas, only the actions wired to the trigger that fired will run.
-- **A clone does not carry those connections over.** The drawing is copied, the links are not, so every action in the copy would run for every trigger. Open the copy, check the wiring, save once before activating.
+- **A clone keeps the connections.** Each copied action stays wired to the copy of its own trigger. A clone is still created inactive, so check it over before switching it on.
 - **Editing replaces, it does not merge.** Saving rewrites the workflow's triggers and actions from what is on the canvas.
 - **Deactivating keeps everything.** An inactive workflow stops reacting to events but keeps its configuration and its logs.
 

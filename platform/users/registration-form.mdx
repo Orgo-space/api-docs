@@ -19,9 +19,9 @@ Self-registration is one of four ways somebody gets an account. To create one yo
 
 ## Where it lives
 
-**Settings** → **Users & Profiles** → **Registration Form**. Requires `ADMIN_TENANT`.
+**Settings** → **Modules** → **Users & Profiles** → **Registration Form**. Requires organization admin permission.
 
-The entry appears only when **Enable Registration Form** is on (**Settings** → **Users & Profiles** → **Configuration** → Registration & Membership). While it is off, self-registration is refused with "Registration is not possible." and the Register link disappears from the login page. [Invitation](/platform/users/invitations) links are the exception: a valid one opens the form as normal, so you can close the door to the public and still admit the people you invite.
+The entry appears only when **Enable Registration Form** is on (**Settings** → **Modules** → **Users & Profiles** → **Configuration** → Registration & Membership). While it is off, self-registration is refused with "Registration is not possible." and the Register link disappears from the login page. [Invitation](/platform/users/invitations) links are the exception: a valid one opens the form as normal, so you can close the door to the public and still admit the people you invite.
 
 <img src="/images/platform/users/registration-form-list.png" alt="Registration Forms page showing a table of forms with slug, status, URL and Iframe copy buttons and Configure actions, and the Floating and Side Panel layout choices below it" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -52,6 +52,8 @@ Two panels: **Available Fields** on the left with a **System Fields** and a **Cu
 |---|---|
 | **Email** | Always present and required |
 | **First Name**, **Last Name** | Rendered side by side on the public page |
+| **Middle name** | General form only |
+| **Personal identification number** | General form only. Stored encrypted and never shown back, for organisations that must record it for donations |
 | **Birthday** | Day, month and year selectors |
 | **Gender** | Female, Male, Other |
 | **Phone number** | Country prefix plus number, normalized to international format on save |
@@ -71,12 +73,14 @@ These are the default labels. Rename vocabulary in [Labels](/platform/customizat
 </Warning>
 
 <Note>
-Some older forms contain fields the builder no longer offers, such as a members-map location pin or a personal identification number. They keep working on `/register` if they were already enabled, but you cannot add them to a new form. Use a [custom field](/platform/users/custom-fields) for identification numbers, which also lets you encrypt the value.
+Some older forms contain a field the builder no longer offers, such as a members-map location pin. It keeps working on `/register` if it was already enabled, but you cannot add it to a new form. For other identification numbers, use a [custom field](/platform/users/custom-fields), which also lets you encrypt the value.
 </Note>
 
 ### Custom fields
 
-Every profile [custom field](/platform/users/custom-fields) is on the **Custom Fields** tab and can sit anywhere in the order, including between system fields. Two exclusions: file-upload custom fields cannot be used on a registration form, and admin-only custom fields never reach the public page.
+Every profile [custom field](/platform/users/custom-fields) is on the **Custom Fields** tab and can sit anywhere in the order, including between system fields. You do not have to leave the builder to make one: **Create Custom Field** at the top of the tab opens a window where you name the field, pick its type and options, and save, and the new field is added to the form straight away. The pencil next to a field edits it in the same window. A field created here starts with **User** visibility, and the **Visibility** choice only appears for a field that is also on your [profile form](/platform/users/profile-fields), where it offers **Public** or **User**.
+
+Two exclusions: file-upload custom fields cannot be used on a registration form, and admin-only custom fields are not meant for it. A `/join/<slug>` page strips them before it loads; on `/register` they would show and their answer would be thrown away.
 
 ### Form settings
 
@@ -142,7 +146,7 @@ Set the slug on the user type itself (**Roles & User types** → edit the type �
 
 ## Settings that change registration
 
-Found under **Settings** → **Users & Profiles** → **Configuration**.
+Found under **Settings** → **Modules** → **Users & Profiles** → **Configuration**.
 
 | Setting | Effect |
 |---|---|
@@ -203,7 +207,7 @@ The registration form has no age gate. Birthday is collected as data only. The m
     someone filling the form on your registration page, and it is not enforced anywhere
     else, so an account created by any other route arrives without those answers:
 
-    - A member an administrator creates with **Register member** from the directory
+    - A member an administrator creates with **Add member** from the directory
     - Anyone loaded through [Import](/platform/customization/import)
     - A child registered by their parent from inside the app
 
@@ -215,9 +219,9 @@ The registration form has no age gate. Birthday is collected as data only. The m
     [profile form](/platform/users/profile-fields) and mark it required there: that one
     is re-checked on every visit and members are redirected until it is filled in.
 
-    A separate cause for the public form specifically: custom fields set to **User** or
-    **Admin** visibility render on the page and are then discarded, whether or not they
-    are marked required. Only Public custom fields survive registration. See
+    A separate cause for the public form specifically: a custom field set to **Admin**
+    visibility is never saved at registration, whether or not it is marked required. **Public**
+    and **User** custom fields are saved. See
     [Custom Fields](/platform/users/custom-fields#where-a-value-actually-saves).
   </Accordion>
 
@@ -256,7 +260,7 @@ The registration form has no age gate. Birthday is collected as data only. The m
 
 - [Adding Members](/platform/users/adding-members): all four routes into the platform compared
 - [User Types & Roles](/platform/users/user-types): per-type forms, slugs and what a type changes
-- [Custom Fields](/platform/users/custom-fields): organization-specific questions
+- [Custom Fields](/platform/users/custom-fields): Organization-specific questions
 - [Profile Fields](/platform/users/profile-fields): what members fill in after joining
 - [Waitlist](/platform/users/waitlist): queueing sign-ups instead of admitting them
 - [Adhesion](/platform/users/adhesion): formal membership application after registration

@@ -1,12 +1,12 @@
 ---
 title: 'Integrate "Log in with Orgo" (OAuth)'
-description: 'End-to-end OAuth 2.0 Authorization Code flow — register the app, redirect, exchange, fetch user info'
+description: 'End-to-end OAuth 2.0 Authorization Code flow: register the app, redirect, exchange, fetch user info'
 ---
 
 This walkthrough adds "Log in with Orgo" to a third-party application. It uses the OAuth 2.0 authorization code flow with PKCE.
 
 <Note>
-Every URL here is on the tenant's own host — `acme.orgo.space` in these examples, or the organization's custom domain. The bare `app.orgo.space` domain resolves no tenant and returns `404`. See [Tenancy](/api-reference/concepts/tenancy).
+Every URL here is on the tenant's own host: `acme.orgo.space` in these examples, or the organization's custom domain. The bare `app.orgo.space` domain resolves no tenant and returns `404`. See [Tenancy](/api-reference/concepts/tenancy).
 </Note>
 
 Who is this for: SaaS apps your members use that should not require a second login (member-only forums, member-only deals platforms, internal tools, partner services).
@@ -15,8 +15,8 @@ Who is this for: SaaS apps your members use that should not require a second log
 
 ## When to use OAuth vs Api-Token
 
-- **Api-Token** — your server acts as itself; the data is yours. Use for backend integrations, dashboards, batch jobs.
-- **OAuth** — your server acts on behalf of an Orgo user; you only see what that user can see. Use when each end-user logs into your app *as themselves*.
+- **Api-Token**: your server acts as itself; the data is yours. Use for backend integrations, dashboards, batch jobs.
+- **OAuth**: your server acts on behalf of an Orgo user; you only see what that user can see. Use when each end-user logs into your app *as themselves*.
 
 If you're building a single integration that consumes "all members of Civic Collective", that's an Api-Token. If you're building a forum where each Orgo member logs in individually, that's OAuth.
 
@@ -29,7 +29,7 @@ If you're building a single integration that consumes "all members of Civic Coll
 
 ---
 
-## Step 0 — Read the discovery document
+## Step 0: Read the discovery document
 
 Don't hardcode endpoints. Every tenant publishes its own metadata, and `issuer` reflects the host you fetch it from:
 
@@ -37,11 +37,11 @@ Don't hardcode endpoints. Every tenant publishes its own metadata, and `issuer` 
 curl https://acme.orgo.space/.well-known/oauth-authorization-server
 ```
 
-Use `authorization_endpoint`, `token_endpoint` and `userinfo_endpoint` from the response. Fetch this once per tenant you integrate with — never reuse one tenant's document for another.
+Use `authorization_endpoint`, `token_endpoint` and `userinfo_endpoint` from the response. Fetch this once per tenant you integrate with, and never reuse one tenant's document for another.
 
 ---
 
-## Step 1 — Register your client
+## Step 1: Register your client
 
 <Tabs>
   <Tab title="Public client (self-service)">
@@ -56,18 +56,18 @@ Use `authorization_endpoint`, `token_endpoint` and `userinfo_endpoint` from the 
       }'
     ```
 
-    Returns `201` with a `client_id`. **No secret is issued** — PKCE is your only client authentication. Optional metadata: `client_uri`, `logo_uri`, `policy_uri`, `tos_uri`.
+    Returns `201` with a `client_id`. **No secret is issued**, so PKCE is your only client authentication. Optional metadata: `client_uri`, `logo_uri`, `policy_uri`, `tos_uri`.
   </Tab>
 
   <Tab title="Confidential client (admin)">
-    In the Orgo admin UI: **Developer → Apps → Create Application**.
+    A user with organization-wide admin rights creates the app at **Settings → Developers → OAuth Apps** (the screen appears when the API module is on).
 
     | Field | What to enter |
     |---|---|
-    | **Name** | What users see during authorization — "Civic Forum" |
-    | **Redirect URIs** | Exact callback URLs (one per line) — exact match required |
+    | **Name** | What users see during authorization, for example "Civic Forum" |
+    | **Redirect URIs** | Exact callback URLs (one per line); an exact match is required |
     | **Scopes** | What the app requests on the consent screen |
-    | **Act on behalf of members** | Off makes the app read-only — see [step 7](#step-7-know-what-your-token-cannot-do) |
+    | **Act on behalf of members** | Off makes the app read-only, see [step 7](#step-7-know-what-your-token-cannot-do) |
 
     Orgo returns a **Client ID** and a **Client Secret** (one-time, store server-side only).
   </Tab>
@@ -75,7 +75,7 @@ Use `authorization_endpoint`, `token_endpoint` and `userinfo_endpoint` from the 
 
 ---
 
-## Step 2 — Redirect the user to authorize
+## Step 2: Redirect the user to authorize
 
 When a user clicks "Log in with Orgo" in your app, redirect them to:
 
@@ -95,23 +95,23 @@ https://acme.orgo.space/authorize
 | `response_type` | Always `code` |
 | `client_id` | The Client ID from Step 1 |
 | `redirect_uri` | Must match a registered URI exactly (including trailing slash) |
-| `scope` | Space-separated list — see [scopes](#available-scopes) |
+| `scope` | Space-separated list, see [scopes](#available-scopes) |
 | `state` | Random string you generate per-request; check on callback to prevent CSRF |
 | `code_challenge` | `BASE64URL(SHA256(code_verifier))` |
 | `code_challenge_method` | Always `S256` |
 
 <Warning>
-**PKCE is mandatory for every client**, confidential ones included — this is stricter than baseline OAuth 2.0 and matches OAuth 2.1. The server rejects violations with `invalid_request`:
+**PKCE is mandatory for every client**, confidential ones included. This is stricter than baseline OAuth 2.0 and matches OAuth 2.1. The server rejects violations with `invalid_request`:
 
 - `code_challenge_method` must be `S256`; `plain` is not supported.
 - Both `code_challenge` and `code_verifier` must match `[A-Za-z0-9-._~]{43,128}`.
 </Warning>
 
-If the member isn't signed in, Orgo handles login and returns them to the consent screen automatically — including via Google, Apple or Microsoft. You don't handle that.
+If the member isn't signed in, Orgo handles login and returns them to the consent screen automatically, including via Google, Apple or Microsoft. You don't handle that. If the member's email domain requires their organization's identity provider, Orgo sends them there instead; your flow is unchanged.
 
 ---
 
-## Step 3 — Receive the callback
+## Step 3: Receive the callback
 
 Orgo sends the user back to your `redirect_uri` with two parameters:
 
@@ -123,9 +123,9 @@ Verify `state` matches the one you stored, then move on.
 
 ---
 
-## Step 4 — Exchange the code for an access token
+## Step 4: Exchange the code for an access token
 
-Form-encoded body, not JSON. A confidential client does this server-side — the Client Secret must never reach the browser.
+Form-encoded body, not JSON. A confidential client does this server-side: the Client Secret must never reach the browser.
 
 <Tabs>
   <Tab title="Public client">
@@ -143,7 +143,7 @@ Form-encoded body, not JSON. A confidential client does this server-side — the
   </Tab>
 
   <Tab title="Confidential client">
-    Send the `code_verifier` **and** authenticate. Pick exactly one authentication method — `client_secret_basic` here, or `client_secret_post` via a `client_secret` field:
+    Send the `code_verifier` **and** authenticate. Pick exactly one authentication method: `client_secret_basic` here, or `client_secret_post` via a `client_secret` field:
 
     ```bash
     curl -X POST https://acme.orgo.space/api/v1/oauth/token \
@@ -171,12 +171,12 @@ Response:
 ```
 
 <Warning>
-The code is **single use**. Redeeming it twice fails with `invalid_grant` — and a replay by an authenticated client **revokes the tokens that code already produced**. Never retry a code after a successful exchange. (A retry after a *failed client authentication* is safe: the code stays redeemable so you can fix credentials and try again.)
+The code is **single use**. Redeeming it twice fails with `invalid_grant`, and a replay by an authenticated client **revokes the tokens that code already produced**. Never retry a code after a successful exchange. (A retry after a *failed client authentication* is safe: the code stays redeemable so you can fix credentials and try again.)
 </Warning>
 
 ---
 
-## Step 5 — Use the access token
+## Step 5: Use the access token
 
 The access token works as a normal Bearer JWT.
 
@@ -185,20 +185,24 @@ curl https://acme.orgo.space/api/v1/oauth/userinfo \
   -H "Authorization: Bearer $ACCESS_TOKEN"
 ```
 
-Response:
+Response (with the `profile email groups roles` scopes approved):
 
 ```json
 {
   "sub": "42",
   "name": "James Patterson",
+  "given_name": "James",
+  "family_name": "Patterson",
+  "picture": "https://cdn.orgo.space/media/user/42-avatar.jpg",
   "email": "james.patterson@example.com",
-  "picture": "https://cdn.orgo.space/users/42/avatar.jpg",
-  "groups": ["main-group", "boston-local"],
-  "roles": ["ROLE_USER", "ROLE_MEMBER"]
+  "email_verified": true,
+  "groups": ["Boston"],
+  "roles": ["ROLE_USER"],
+  "tenant_id": 142
 }
 ```
 
-`sub` is the user's stable Orgo ID — use this as the primary key in your app's users table. Email can change; `sub` cannot.
+Claims follow the scopes the member approved: `profile` adds the name and picture, `email` adds the address, `groups` adds the member's local center name, and `roles` adds `["ROLE_USER"]` (an app token is always capped to member level, whatever roles the member holds in Orgo). `sub` and `tenant_id` are always present.
 
 You can also use the same access token to call other API endpoints scoped to the user's permissions:
 
@@ -209,7 +213,7 @@ curl https://acme.orgo.space/api/v1/me \
 
 ---
 
-## Step 6 — Refresh expired tokens
+## Step 6: Refresh expired tokens
 
 Access tokens last **1 hour** (`expires_in` in the original response). Refresh tokens last **30 days**. Use the refresh token to get a new pair without sending the user back through the consent screen:
 
@@ -224,14 +228,14 @@ curl -X POST https://acme.orgo.space/api/v1/oauth/token \
 Confidential clients authenticate here too, exactly as in step 4.
 
 <Warning>
-**Refresh tokens rotate.** Each refresh returns a *new* `refresh_token` and invalidates the one you just sent. Persist the new value every time — an app that keeps replaying its original refresh token will work once and then start failing with `invalid_grant`.
+**Refresh tokens rotate.** Each refresh returns a *new* `refresh_token` and invalidates the one you just sent. Persist the new value every time: an app that keeps replaying its original refresh token will work once and then start failing with `invalid_grant`.
 </Warning>
 
-Do not call refresh on every API request — only when a request returns `401`.
+Do not call refresh on every API request, only when a request returns `401`.
 
 ---
 
-## Step 7 — Know what your token cannot do
+## Step 7: Know what your token cannot do
 
 Two limits catch most integrations, and neither is adjustable per request.
 
@@ -243,7 +247,7 @@ Two limits catch most integrations, and neither is adjustable per request.
 This application has read-only access and may not act on your behalf.
 ```
 
-The gate is by method, not intent — an endpoint that performs a read via `POST` is still blocked. If you need those, register the app with acting enabled.
+The gate is by method, not intent: an endpoint that performs a read via `POST` is still blocked. If you need those, register the app with acting enabled.
 
 ---
 
@@ -253,14 +257,14 @@ The gate is by method, not intent — an endpoint that performs a read via `POST
 |---|---|
 | `profile` | Name, profile picture, display name |
 | `email` | Email address |
-| `groups` | Group + local-center memberships |
-| `roles` | User roles (`ROLE_USER`, `ROLE_MEMBER`, `ROLE_ADMIN`, etc.) |
+| `groups` | The member's local center |
+| `roles` | The roles the token carries (`ROLE_USER` for an app token) |
 
 <Note>
 Scopes describe what an application **requests** and what the member **approves** when they authorize it. What the resulting token can actually reach is bounded by the member-level cap and the application's read-only / act-on-behalf setting in [step 7](#step-7-know-what-your-token-cannot-do).
 </Note>
 
-Request only what you need — fewer scopes makes the consent screen shorter and clearer.
+Request only what you need. Fewer scopes make the consent screen shorter and clearer.
 
 ---
 
@@ -272,31 +276,31 @@ Request only what you need — fewer scopes makes the consent screen shorter and
   </Accordion>
 
   <Accordion title="The user authorized but I never received the code">
-    Check that your callback handler is reachable from Orgo's servers (not localhost-only behind a firewall) and serves HTTPS (except for `localhost` URIs which can use HTTP). Check browser network tab — Orgo issues a `302` to the callback; if your handler 500s, it shows there.
+    Check that your callback handler is reachable from Orgo's servers (not localhost-only behind a firewall) and serves HTTPS (except for `localhost` URIs which can use HTTP). Check the browser network tab: Orgo issues a `302` to the callback; if your handler 500s, it shows there.
   </Accordion>
 
   <Accordion title="Token exchange returns `invalid_client`">
-    Wrong `client_id`, wrong `client_secret`, or a confidential client omitting its secret entirely (that one returns `401` with `WWW-Authenticate: Basic realm="orgo-oauth"`). A **public** client sending a `client_secret` also fails — it has none, and PKCE is its only authentication.
+    Wrong `client_id`, wrong `client_secret`, or a confidential client omitting its secret entirely (that one returns `401` with `WWW-Authenticate: Basic realm="orgo-oauth"`). A **public** client sending a `client_secret` also fails because it has none, and PKCE is its only authentication.
 
-    Note that sending `client_secret` *and* `code_verifier` together is correct for a confidential client: PKCE applies to every client. What is not allowed is sending credentials by more than one method at once — Basic header *and* form field — which returns `invalid_request`.
+    Note that sending `client_secret` *and* `code_verifier` together is correct for a confidential client: PKCE applies to every client. What is not allowed is sending credentials by more than one method at once (Basic header *and* form field), which returns `invalid_request`.
   </Accordion>
 
   <Accordion title="Token exchange returns `429 rate_limit_exceeded`">
-    Repeated *failed* client authentications for the same `client_id` are throttled: after 10 failures in 5 minutes you get `429` with a `Retry-After` header instead of `401`. This means your credentials are wrong, not that you are calling too often — a request with the correct secret is never throttled, however many failures came before it. Fix the secret rather than backing off.
+    Repeated *failed* client authentications for the same `client_id` are throttled: after 10 failures in 5 minutes you get `429` with a `Retry-After` header instead of `401`. This means your credentials are wrong, not that you are calling too often. A request with the correct secret is never throttled, however many failures came before it. Fix the secret rather than backing off.
   </Accordion>
 
   <Accordion title="The user's groups don't match what I see in the Orgo UI">
-    The `groups` scope returns *slug-style* group names, not display names. To resolve to a full `Group` resource, call `GET /api/v1/units?slug=boston-local` separately.
+    The `groups` claim lists only the member's local center, by display name (for example `Boston`). It does not include role groups, interest groups or other units. To get the full record, read the `localCenter` field of `GET /api/v1/me` with the member's access token.
   </Accordion>
 
-  <Accordion title="My app is a SPA — can I skip the backend entirely?">
+  <Accordion title="My app is a SPA: can I skip the backend entirely?">
     Use PKCE without a Client Secret. Generate a verifier (random 43-128 chars), hash it with SHA-256, base64url-encode the hash, send the hash as `code_challenge` on authorize, then send the verifier as `code_verifier` on token exchange. The Client Secret stays unused.
   </Accordion>
 
   <Accordion title="A token that looks valid is being rejected">
     Access tokens are RS256 JWTs, but they are **revocable server-side** and revocation takes effect on the **next request**. A token whose signature verifies and whose `exp` is still in the future can still be rejected.
 
-    Do not treat a local expiry check as proof a token works — handle `401` at any point in a token's lifetime and fall back to refresh, then to re-authorization. Verify signatures against `jwks_uri` from the discovery document.
+    Do not treat a local expiry check as proof a token works. Handle `401` at any point in a token's lifetime and fall back to refresh, then to re-authorization. Verify signatures against `jwks_uri` from the discovery document.
   </Accordion>
 </AccordionGroup>
 
@@ -304,7 +308,7 @@ Request only what you need — fewer scopes makes the consent screen shorter and
 
 ## What to do next
 
-- [Authentication](/api-reference/concepts/authentication) — comparison of OAuth vs Api-Token vs JWT vs OTP, and the full discovery reference
-- [Migrating from legacy SSO](/api-reference/concepts/authentication#legacy-sso-deprecated) — if you already use the `*-sso` handshake
-- [OAuth Server](/platform/oauth) — admin-side documentation on managing OAuth applications
-- [Tenancy](/api-reference/concepts/tenancy) — how OAuth tokens carry tenant scope
+- [Authentication](/api-reference/concepts/authentication): comparison of OAuth vs Api-Token vs session sign-in, and the full discovery reference
+- [Migrating from legacy SSO](/api-reference/concepts/authentication#legacy-sso-deprecated): if you already use the `*-sso` handshake
+- [OAuth Server](/platform/oauth): admin-side documentation on managing OAuth applications
+- [Tenancy](/api-reference/concepts/tenancy): how OAuth tokens carry tenant scope

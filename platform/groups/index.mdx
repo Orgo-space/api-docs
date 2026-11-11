@@ -26,7 +26,7 @@ A group is a space with its own discussions, files and events, plus a member lis
 | **[Role group](/platform/groups/role-groups)** | Aggregate members by roles or profile | Everyone matching the criteria you set, recalculated automatically | Teams | Everyone with a given role, age or chapter |
 
 <Note>
-  Only organization admins (`ADMIN_TENANT`) can create **Auto-enroll all members**, **Open to join** and **Role group** groups. A member without that permission who creates a group gets a **Private** group.
+  Only organization admins can create **Auto-enroll all members**, **Open to join** and **Role group** groups. The **Access** selector is not shown to anyone else, so a member who creates a group gets a **Private** group.
 </Note>
 
 You can change the Access mode later by editing the group. A group filed under a [category](#group-categories) is listed under **Programs and activities** instead of Community groups or Private groups. For a geographic branch with its own admins and fees, use a [local center](/platform/groups/local-groups) rather than a group. Local centers chain to any depth, so a national body, its regions and their branches are three layers of the same structure rather than three kinds of group.
@@ -35,15 +35,16 @@ You can change the Access mode later by editing the group. A group filed under a
 
 ## What a group gives you
 
-Each group carries three optional features, chosen with the **Features** selector when you create or edit it:
+Each group carries four optional features, chosen with the **Features** selector when you create or edit it:
 
 | Feature | What it adds | Also requires |
 |---------|-------------|---------------|
 | **Discussions** | A discussion feed inside the group | The Discussions module enabled |
 | **Files** | A file area scoped to the group | The Files & eDocuments module enabled |
 | **Events** | An event list and calendar scoped to the group | The Events module enabled |
+| **Guide** | A **Guide** tab holding a page the group's admins write: what the group is for, how to take part and who to contact | Nothing |
 
-At least one feature must stay switched on. Every group also has a **Members** tab and, once you write a description, an **About** tab; auto-enroll groups have no Members tab, because the membership is simply everyone. A group can also carry a logo, a **Menu emoji** shown next to its name in the sidebar, and a rich text description.
+At least one feature must stay switched on. Every group also has a **Members** tab, except auto-enroll groups, where the membership is simply everyone. A group can also carry a logo, a **Menu emoji** shown next to its name in the sidebar, and a one-line description (up to 255 characters) under its name. Longer text belongs on the **Guide** tab.
 
 ### Who can post
 
@@ -52,13 +53,15 @@ A single **Who can post?** control covers discussions, files and events together
 | Option | Effect |
 |--------|--------|
 | **Everyone in the group** | Any member can start discussions, upload files and create events |
-| **Only admins** | Only group admins can. Organization moderators keep access: `HR_TENANT` for discussions and files, `EVENT_TENANT` for events |
+| **Only admins** | Only group admins can. Organization moderators keep access: organization-wide HR managers for discussions and files, organization-wide event managers for events |
+
+The setting covers discussions, files and events. The Guide is always written by the group's admins.
 
 ---
 
 ## Enabling the module
 
-**Settings** → **Groups & Teams** → **Configuration**
+**Settings** → **Modules** → **Groups & Teams** → **Configuration**
 
 <img src="/images/platform/groups/groups-module-config.png" alt="Groups and Teams module settings showing the master toggle plus Group Types and Group Features sections" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -67,6 +70,7 @@ A single **Who can post?** control covers discussions, files and events together
 | **Enable Groups & Teams Module** | Master switch. With it off, the group form does not render. |
 | **Enable Group Categories** | Adds a category picker to the group form and a **Group Categories** page in settings |
 | **Enable Role Groups** | Adds the **Role group** access mode, the **Create role group** action and the **Role groups** tab |
+| **Role groups: only my chapters** | Shown when role groups are on. With it on, an admin creating or editing a role group can pick only the chapters they belong to (including the chapters above their own, and chapters they hold a role in) and any chapter below one they are directly in instead of every chapter. A chapter already set on the group stays. |
 | **Enable Organizational Units** | Adds a **Unit Types** page for sub-units inside chapters |
 | **Group Tasks** | Reserved for group task tracking. It has no effect on the current interface. |
 | **All Members Group** | Reserved for the all-members space. It has no effect on the current interface; use the **Auto-enroll all members** access mode instead. |
@@ -83,20 +87,20 @@ Two checks apply, in this order.
 
 <Steps>
   <Step title="The organization-wide minimum">
-    **Settings** → **Users & Profiles** → **Permissions setup** → **Groups Module** → **Who can create**. The default is `USER`, so any signed-in member can create a group. Raise it to `ADMIN_LOCAL`, `HR_TENANT` or `ADMIN_TENANT` to restrict creation.
+    **Settings** → **Modules** → **Users & Profiles** → **Permissions setup** → **Groups Module** → **Who can create**. The default is any signed-in member. Raise it to chapter admins, organization HR managers or organization admins to restrict creation.
   </Step>
   <Step title="The category minimum">
     A group filed under a category must also satisfy that category's **Who can create group in this category** permission.
   </Step>
 </Steps>
 
-Separately, the **Auto-enroll all members**, **Open to join** and **Role group** modes always require `ADMIN_TENANT`. Members who fail the check do not see the **Create group** button on the Groups page or in the sidebar; guest accounts never see it unless they also hold `ADMIN_TENANT`.
+Separately, the **Auto-enroll all members**, **Open to join** and **Role group** modes always require an organization admin. Members who fail the check do not see the **Create group** button on the Groups page or in the sidebar; guest accounts never see it unless they are also organization admins.
 
 ---
 
 ## Group categories
 
-Categories group related spaces together on the Groups page and in the sidebar, and let you delegate creation rights per category. Enable **Enable Group Categories**, then go to **Settings** → **Groups & Teams** → **Group Categories**. Managing categories requires `HR_TENANT`, and members only see the categories they are allowed to create in.
+Categories group related spaces together on the Groups page and in the sidebar, and let you delegate creation rights per category. Enable **Enable Group Categories**, then go to **Settings** → **Modules** → **Groups & Teams** → **Group Categories**. The settings pages are for the Orgo administrator, and members only see the categories they are allowed to create in.
 
 <img src="/images/platform/groups/group-categories.png" alt="Group Categories settings page listing categories with their colour and the permission required to create groups in each" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -104,7 +108,7 @@ Categories group related spaces together on the Groups page and in the sidebar, 
 |-------|-------------|
 | **Name** | The section heading members see on the Groups page |
 | **Color** | A preset colour or a custom hex value. Tints the category label and the group's bullet. |
-| **Who can create group in this category** | The permission a member needs to file a new group here. The picker offers `USER`, `HR_LOCAL`, `ADMIN_LOCAL`, `HR_TENANT` and `ADMIN_TENANT`. The list column shortens these to the labels **USER**, **HR** and **Admin**, so the tenant and local variants of a permission read the same there. |
+| **Who can create group in this category** | The permission a member needs to file a new group here: any member, or HR or Admin at chapter or organization level. The list column shows only **USER**, **HR** or **Admin**, so the chapter and organization variants of a permission read the same there. |
 
 <Note>
   The category picker only appears on the group form for **Auto-enroll all members** and **Open to join** groups. Private groups cannot be categorized.
@@ -122,9 +126,9 @@ Categories group related spaces together on the Groups page and in the sidebar, 
 | **Subscribed** | Spaces you get notifications from |
 | **Not subscribed** | Spaces you have muted or never subscribed to |
 | **Archived** | Closed groups and role groups |
-| **Role groups** | Role groups only. Visible to `ADMIN_TENANT` when **Enable Role Groups** is on. |
+| **Role groups** | Role groups only. Visible to organization admins when **Enable Role Groups** is on. |
 
-Below the tabs, the page lists your organization space and your chapter first, then **Teams** (role groups), **Programs and activities** (groups with a category), **Community groups**, **Private groups** and **Archived groups**. A search box filters by name.
+Below the tabs, the page lists your organization space and your chapter first, then **Teams** (role groups), **Programs and activities** (groups with a category), **Community groups**, **Private groups** and **Archived groups**. A search box filters by name. A group you own is listed for you even when you are not a member of it. Organization-wide HR managers also see every role group in the organization here, including those scoped to a chapter they are not part of, and can open one. Changing a role group still takes an organization admin.
 
 Every row except the organization space carries a member count. For a group or a team it is the active members in it; for your chapter it is the active members filed against that chapter itself, and nobody from the chapters underneath it. The [chapters list](/platform/groups/local-groups) counts the same members but adds the branch, so a parent chapter's number there is the larger one.
 
@@ -136,9 +140,9 @@ The **Create group** button opens a menu with **Create group** and, for organiza
 
 | Action | Who | What happens |
 |--------|-----|--------------|
-| **Archive** | The owner, a group admin, or `ADMIN_TENANT` | The group moves to the Archived tab. Members, discussions, files and events are kept untouched. |
-| **Unarchive** | `ADMIN_TENANT` | Restores the group from the Archived tab |
-| **Delete** | The owner or `ADMIN_TENANT` | Removes the group permanently |
+| **Archive** | The owner, a group admin, or an organization admin | The group moves to the Archived tab. Members, discussions, files and events are kept untouched. |
+| **Unarchive** | An organization admin | Restores the group from the Archived tab |
+| **Delete** | The owner or an organization admin | Removes the group permanently |
 
 Archiving is reversible and loses nothing, so prefer it over deleting. A group with a newsletter attached cannot be deleted until the newsletter is removed.
 
@@ -154,11 +158,11 @@ Archiving is reversible and loses nothing, so prefer it over deleting. A group w
   <Accordion title="Our chapters are nested. Which chapter spaces does a member get?">
     Their own chapter and every chapter above it, all the way to the top of the tree. Membership travels up; it never travels down, so somebody filed against the national body is not placed in the branches beneath it.
 
-    **Isolate Local Center Access** narrows this one layer at a time: a chapter above them is shown only when their own `HR_PARENT_LOCAL` reach covers that particular chapter, and role groups scoped to a chapter they cannot see are hidden with it.
+    **Isolate Local Center Access** narrows this one layer at a time: a chapter above them is shown only when their own parent-chapter HR reach covers that particular chapter, and role groups scoped to a chapter they cannot see are hidden with it.
   </Accordion>
 
   <Accordion title="Why can I not see a group a colleague mentioned?">
-    Private groups are invisible to non-members. Opening one you are not in returns an access error unless you are the owner, a member, or hold `ADMIN_TENANT`.
+    Private groups are invisible to non-members. Opening one you are not in returns an access error unless you are the owner, a member, or an organization admin.
   </Accordion>
 
 </AccordionGroup>

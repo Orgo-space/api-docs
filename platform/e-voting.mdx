@@ -51,9 +51,9 @@ Orgo E-Voting runs elections, motions and polls on a timed ballot, with one vote
 
 ## Creating a vote
 
-Open **Voting** and select **Create Voting**, shown to members with `ADMIN_TENANT` or `HR_TENANT`.
+Open **Voting** and select **New voting**, shown to organization admins and organization HR managers. The vote opens as a full page rather than a dialog, with **Save draft** and **Publish** in its top bar.
 
-<img src="/images/platform/voting/vote-create.png" alt="Create Voting modal with the question builder filled in, the single and multiple answer toggle, start and end dates with timezone, the audience cards and all three settings switches" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/voting/vote-create.png" alt="New voting page with the question written and two options under it, the single and multiple answer toggle, the Who is voting choice of group, private or company vote, start and end scheduling with a timezone, and the anonymous voting, hide voters list and real-time results switches" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 <Steps>
   <Step title="Write the question and its options">
@@ -83,9 +83,23 @@ The **Who is voting?** cards set eligibility.
 |---|---|
 | **Group vote** | Everyone in the selected group. With no group selected, every active member of the organisation. For a local group, its members. For a role group, everyone bound to it. For a regular group, everyone with a role in it that has not ended. |
 | **Private vote** | Only the members the vote creator adds by name. The creator is added automatically when the vote is created. |
+| **Company vote** | The voting representative of every company in good standing. Offered to organization admins when the Companies module is on. |
 | **Event attendees** | Set automatically when you start the vote from an event. Eligible attendees are those invited or fully registered, and not cancelled. Pending approval, waiting list and awaiting payment are excluded. |
 
 On a private vote only the creator can add or remove voters, using the member search in the Participation panel and only while the vote is still editable. A voter who has already cast a ballot cannot be removed.
+
+### Company votes
+
+For organizations whose members are companies rather than people, a **Company vote** puts the ballot in the hands of each company's **Voting representative**, set on the company record.
+
+| Rule | Detail |
+|---|---|
+| Who is eligible | The voting representative of every company whose status is active and whose membership is paid through the vote's start date. A company that has not paid that far ahead is left out. |
+| How many votes a company gets | One. A company has a single voting representative: assigning the role to somebody else takes it off the previous holder automatically. |
+| Someone representing several companies | Still one vote. Being the voting representative of three companies does not give three ballots. |
+| When the roll is fixed | The list is worked out live while the vote is a draft or still upcoming, so changes to companies and representatives keep flowing in. It is frozen once, at the moment the vote starts, and later changes to companies or representatives do not affect a vote already running. |
+
+Because the roll is only frozen when voting opens, get the representatives and the company fee records right **before** the start time. See [Companies](/platform/users/companies) for setting a voting representative.
 
 ---
 
@@ -94,7 +108,7 @@ On a private vote only the creator can add or remove voters, using the member se
 | Setting | What it controls |
 |---|---|
 | **Real-time results** | Voters see running totals while voting is live. Off means results appear only after the vote closes. |
-| **Hide voters list** | Hides who has and has not voted from ordinary voters; `HR_LOCAL` on the vote's group and above still see it. Leave it off and every eligible voter sees the roster and each person's voted or pending state. |
+| **Hide voters list** | Hides who has and has not voted from ordinary voters. Chapter HR managers over the vote's group, and anyone above them, still see it. Leave it off and every eligible voter sees the roster and each person's voted or pending state. |
 | **Anonymous voting** | On by default. See [Anonymity](#anonymity-and-integrity). Changeable only while the vote is an unpublished draft with no ballots cast. |
 
 ---
@@ -165,7 +179,7 @@ A code that validates means no ballot recorded at or before that point was alter
 
 ## Event votes, sharing and notifications
 
-Start a vote from an event and it is bound to that event's attendees for its whole life. Attaching it requires you to be the event owner or to hold `EVENT_LOCAL` on the event. Published event votes appear on a **Votes** tab on the event page and in the [Event App](/platform/events/event-app), where attendees answer on their phone. Non-member attendees invited as contacts get an emailed link to a public voting page.
+Start a vote from an event and it is bound to that event's attendees for its whole life. Attaching it requires you to be the event owner, or an event manager for that event's chapter. Published event votes appear on a **Votes** tab on the event page and in the [Event App](/platform/events/event-app), where attendees answer on their phone. Non-member attendees invited as contacts get an emailed link to a public voting page.
 
 **Share** in the actions menu mints a stable link and QR code that you can show fullscreen for a room to scan. It appears only while the vote is live, and only for people who can manage it; draft votes cannot be shared. The link routes to the vote page, or to the Event App for an event vote, and asks anyone not signed in to log in first. It does not grant eligibility: the rules above still decide who may vote.
 
@@ -178,13 +192,13 @@ Publishing a vote sends a notification: to the listed voters on a private vote, 
 | Action | Who |
 |---|---|
 | See the Voting section and vote | Any member who is eligible for the vote |
-| Create a vote | `ADMIN_TENANT`, `HR_TENANT` |
-| Edit, publish, close, archive, duplicate, export | `ADMIN_TENANT`, the vote's creator, or `HR_LOCAL` on the vote's group |
+| Create a vote | Organization admins, organization HR managers |
+| Edit, publish, close, archive, duplicate, export | Organization admins, the vote's creator, or a chapter HR manager over the vote's group |
 | Add or remove voters on a private vote | The vote's creator |
-| See the voters list when **Hide voters list** is on | `HR_LOCAL` on the vote's group and above |
-| See Individual results on a non-anonymous vote | `ADMIN_TENANT`, the vote's creator, or `HR_LOCAL` on the vote's group, after it closes |
-| Attach a vote to an event | The event owner, or `EVENT_LOCAL` on the event |
-| Turn the module on or off | `ADMIN_TENANT` |
+| See the voters list when **Hide voters list** is on | Chapter HR managers over the vote's group, and above |
+| See Individual results on a non-anonymous vote | Organization admins, the vote's creator, or a chapter HR manager over the vote's group, after it closes |
+| Attach a vote to an event | The event owner, or an event manager for that event's chapter |
+| Turn the module on or off | The Orgo administrator |
 
 See [Permissions](/platform/permissions) for what each level means.
 

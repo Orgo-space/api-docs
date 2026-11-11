@@ -14,7 +14,7 @@ One form holds your organization's identity. Invoices, automated emails, registr
 <img src="/images/platform/organisation/org-info-basic-details.png" alt="Basic details card with organization name, short name, country, timezone, international organisation checkbox and default language" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 <Note>
-  Requires **ADMIN_TENANT**. Open it from the cog icon in the top bar, or from your avatar menu, **Organisation Settings**.
+  Requires the **Orgo administrator** flag on your account. Open it from the cog icon in the top bar, or from your avatar menu, **Organisation Settings**.
 </Note>
 
 ---
@@ -45,7 +45,7 @@ Two rules govern language. In the app, a member's own language wins, unless the 
 
 | Field | What it does |
 |-------|--------------|
-| **Office Email** | Required. The Reply-To on automated email, the contact address printed on invoices, and the organizer address on event calendar invitations. |
+| **Office Email** | Required, and it must be a valid email address (a value with stray spaces or characters is refused on save). The Reply-To on automated email, the contact address printed on invoices, and the organizer address on event calendar invitations. |
 | **Office Phone** | Pick the country code first: the number box stays disabled until you do, then shows a sample number for that country. Printed on invoices. |
 | **Office Address** | Printed in the organization block on every invoice. |
 
@@ -57,10 +57,10 @@ Two rules govern language. In the app, a member's own language wins, unless the 
 
 ## Legal links
 
-Three URL fields: **Privacy/GDPR URL**, **Terms of service for members, page URL** and **Internal rules, page URL**.
+Four URL fields: **Privacy/GDPR URL**, **Terms of service for members, page URL**, **Internal rules, page URL** and **Event registration terms, page URL**.
 
 <Warning>
-  Each URL you fill in adds a **required** consent checkbox to the registration form. A member cannot finish signing up without ticking it. The GDPR and Terms links do the same on the event checkout. Leave a field blank and no checkbox is shown.
+  The Privacy/GDPR, member terms and internal rules URLs each add a **required** consent checkbox to the registration form. A member cannot finish signing up without ticking it. On the checkout for a public event, visitors tick the privacy checkbox and a terms checkbox. The terms checkbox links to **Event registration terms** when you fill it in, and to the member terms otherwise, so event visitors are not asked to accept your membership terms unless you want that. Leave a field blank and its checkbox is not shown.
 </Warning>
 
 ---
@@ -69,7 +69,7 @@ Three URL fields: **Privacy/GDPR URL**, **Terms of service for members, page URL
 
 <img src="/images/platform/organisation/org-info-social-media.png" alt="Social media card with Facebook, X.com, Youtube, Linkedin, Instagram and Tiktok URL fields" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-Six fields: Facebook, X.com, Youtube, Linkedin, Instagram and Tiktok. Paste the full URL. Orgo stores them on the organization record and returns them in the tenant payload the API serves, but no built-in page or email template renders them, so treat them as data for your own integrations rather than as links members will see.
+Six fields: Facebook, X.com, Youtube, Linkedin, Instagram and Tiktok. Paste the full URL. Orgo stores them on the organization record and returns them through the API, but no built-in page or email template renders them, so treat them as data for your own integrations rather than as links members will see. The footer of your [website](/platform/organisation/website-builder) has its own social links, set under Header & Footer in the website builder.
 
 ---
 
@@ -119,7 +119,7 @@ The header carries two read-only badges: your connected Stripe account id, if th
     That is the default sender for every workspace. Your Office Email is used as the Reply-To. Sending from your own domain requires domain verification, which is part of [Custom Domain](/platform/custom-domain) setup.
   </Accordion>
   <Accordion title="Save does nothing">
-    Name or Office Email is empty; the browser blocks the submit and highlights the field. Only ADMIN_TENANT can save this form, and only for their own organization.
+    Name or Office Email is empty; the browser blocks the submit and highlights the field. Only an Orgo administrator can save this form, and only for their own organization. An Office Email that is not a valid address is refused with an error message.
   </Accordion>
   <Accordion title="I renamed the organization but old emails and invoices still show the old name">
     Sent emails and generated invoices keep the values they were built with. New documents pick up the new name. Members may also need to reload the app.

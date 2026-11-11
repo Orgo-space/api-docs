@@ -7,13 +7,21 @@
     ],
     "tenant": "t187c",
     "route": "/api-tokens",
-    "routeHint": "Settings -> Developers -> API Tokens. Requires ADMIN_TENANT and settingFeatures.api.isActive. Seed 2-3 tokens first (one full access, one read-only, one restricted with e.g. members:read + events:write) so the Access column shows both the Full access tag and the per-area scope tags.",
+    "routeHint": "Settings -> Developers -> API Tokens. Requires ADMIN_TENANT and settingFeatures.api.isActive. Seed 2-3 tokens first (one full access, one read-only, one restricted with e.g. members:read + events:write) so the Access column shows both the Full access tag and the per-area scope tags. 2026-11-11: the demo reset left no tokens, and the form is no longer inline: Create Token opens a dialog (views/Developer/App/ApiTokens.vue) whose Access field is a Restricted switch (components/ScopeMatrix.vue); turning it on shows one switch per area (Financial, Events, Members, Communications) and a Write switch beside each area that is on. The old click text=Restricted matched nothing because the table was empty and the dialog was closed. Two tokens were created through the UI as the admin (never by inserting rows): Zapier integration (Restricted, Events Write, Members Read, 90 days) and Reporting dashboard (Full access, 90 days). The secrets were shown once and discarded. The spec opens the dialog and sets the matrix but never submits it, so no third token is created; the name typed into it is only for the picture. Imperfect by design: the dialog covers the Access column, so the two existing tokens show only their name edges, expiry and action icons; the Full access and scope tags are visible only without the dialog.",
     "actions": [
-      "click text=Restricted"
+      "click text=Create Token",
+      "wait 1200",
+      "fill input[placeholder=\"e.g. Zapier Integration\"] | Partner CRM sync",
+      "click .scope-matrix >> text=Restricted",
+      "wait 700",
+      "click .scope-rows >> text=Events",
+      "click .scope-rows >> text=Write",
+      "click .scope-rows >> text=Members",
+      "wait 800"
     ],
     "waitFor": "text=Communications",
     "viewport": "desktop",
-    "alt": "API Tokens page with the create form showing the Restricted access matrix (Financial, Events, Members, Communications each set to None, Read or Write) above a table of existing tokens",
+    "alt": "Create Token dialog over the API Tokens table: a token name, an expiry, the Restricted switch on with a switch per area, Events set to Write, Members set to Read, and Financial and Communications off",
     "status": "new",
     "why": "The stored image predates the scope matrix. Current UI (client/src/views/Developer/App/ApiTokens.vue + components/ScopeMatrix.vue) has an Access field with Full access / Restricted modes, an Access column showing scope tags, and an Edit action per row."
   },

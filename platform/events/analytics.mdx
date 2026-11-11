@@ -18,13 +18,15 @@ input from the organiser.
 
 ## Opening it
 
-Open the event, then **Analytics** in the event sidebar. No module setting controls it: the
-entry is there for every event.
+Open the event, then **Analytics** in the event sidebar (on a phone, the same entry in the
+event tabs). No module setting controls it, but an event type can hide it: if the entry is
+missing on one kind of event, check which menu items that [event type](/platform/events/event-types)
+shows.
 
-You see it if you can manage the event, meaning you are the **event owner**, or you hold
-**EVENT_LOCAL** for the event's local centre, or **EVENT_TENANT** organisation-wide.
-`ADMIN_TENANT` covers all of these. Ordinary members have no analytics entry, and the
-underlying request is refused for anyone outside those roles or from another organisation.
+You see it if you can manage the event: you are the **event owner**, or you hold event
+permission for the event's chapter, or event permission organisation-wide. Organisation admins
+have all of these. Ordinary members have no analytics entry, and the underlying request is
+refused for anyone outside those roles or from another organisation.
 
 ---
 
@@ -61,8 +63,9 @@ through one signal and not the other appears in one section and not the other.
 
 ## RSVP
 
-A donut with a coloured tile per response: **attending**, **maybe**, **attended** and
-**not attending**. Responses with no one in them are left out rather than shown as zero.
+A donut with a coloured tile per response: **attending**, **maybe**, **attended**,
+**not attending** and **No response** (registered but never answered, shown in grey).
+Responses with no one in them are left out rather than shown as zero.
 
 The RSVP figures cover registrations that have not been cancelled, again excluding guest and
 add-on rows attached to another registration. Someone who registered,
@@ -75,13 +78,17 @@ any, stays in the revenue figures until it is actually refunded.
 
 <img src="/images/platform/events/event-analytics-revenue.png" alt="Revenue by ticket table with sold, revenue and refunded columns beside a donut of revenue share, above the registrations over time chart" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-This section appears only when the event has ticketing enabled. It lists one row per ticket
+This section appears only when the event has ticketing enabled and at least one row exists. It lists one row per ticket
 tier with **Ticket**, **Sold**, **Revenue** and **Refunded**, beside a donut showing each
 tier's share of gross revenue. Tiers that have taken no money are left out of the donut but
 stay in the table.
 
 Attendees who are not attached to a ticket tier, such as people added by an organiser, are
 grouped into a single **Unspecified** row.
+
+If the event's tickets belong to a restricted product, organisers who are not allowed to see
+that product's payments still see attendance and the **Sold** column, but every money figure
+shows as zero.
 
 Two counting rules are worth knowing, because they make the columns disagree in a way that
 is deliberate:
@@ -109,7 +116,7 @@ whenever something relevant changes: a registration is added, cancelled or moved
 ticket, or a payment is created, refunded or changes amount. Bulk operations such as an
 import or a batch cancellation trigger one recompute for the event rather than one per row.
 
-A nightly job (`app:event-analytics:refresh-stale`) recomputes any summary older than 24
+A nightly job recomputes any summary older than 24
 hours, so a missed update corrects itself within a day. Capacity is always read live from the
 event, so changing the maximum capacity moves the **Capacity used** tile immediately.
 

@@ -15,13 +15,23 @@ Two separate lists shape how events are labelled. **Event types** say what kind 
 
 ## Event types
 
-**Settings → Modules → Events → Event Types**. Creating, renaming, and deleting types requires `ADMIN_TENANT`. Every member can see and choose types.
+**Settings → Modules → Events → Event Types**. Creating, renaming, and deleting types requires the **Orgo administrator** flag on your account, not only an admin permission. Every member can see and choose types.
 
-<img src="/images/platform/events/event-types-config.png" alt="Event types settings page listing type names with inline editing and delete actions, and a Create Event type button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/events/event-types-config.png" alt="Event types settings page listing the types in order, each with a drag handle, a color dot, an editable name, a gear icon for the event form and a trash icon, with an Add event type row at the bottom" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-A type has one field: its **name**. Select **Create Event type** to add one, or click a name in the table to rename it in place.
+The page lists your types in the order members see them. To add one, type a name in the **Add event type, then press Enter** row at the bottom. To rename a type, edit its name in the row; the coloured dot beside it sets the type's **Color**. Drag the handle at the left of a row to reorder the types. The gear icon (**Event form**) opens the type's settings, and the trash icon deletes it.
 
-Once created, the type appears in the **Event type** dropdown on the event form and in the **All event types** filter on the events list. The type name shows on event cards alongside the Free or Ticket badge.
+Once created, the type appears in the **Event type** dropdown on the event form and in the **Type** filter on the events list. Its coloured name shows on event cards.
+
+### What a type controls
+
+The gear icon opens a panel with two sections. Both only shape events created from now on: existing events are not changed.
+
+**Event form** lists the fields of the event form in groups (Details, Access and audience, Registration, Features, Other). Each row has a switch to show or hide that field for events of this type. Where a field has a starting value, a **Default value** appears beside it, for example Access (**Free** or **Paid**), Audience (**Members only**, **Public** or **Private (link only)**), **Max capacity**, or **Send reminder 1 hour before event starts**. When you hide a field, every event of that type gets its default value and the organizer never sees the field. **Default duration (hours)** prefills the end time from the start time; when the end time is hidden, events end after this duration (leave it empty for no end time).
+
+**Event menu** has a switch for each sidebar entry an event of this type can show: **Event app**, **Program**, **Votes**, **Analytics**, **Messages**, and **Report** (when event reports are on). Switch one off and that entry disappears from the sidebar of every event of this type.
+
+A type you leave untouched keeps showing every field and entry, with the usual defaults.
 
 <Warning>
 Deleting a type does not delete its events. Those events simply lose their type and become uncategorized, which also removes them from type-filtered views. Reassign them first if the history matters.
@@ -34,7 +44,7 @@ Two settings under **Settings → Modules → Events → Configuration** point a
 | Setting | What selecting that type adds to the event form |
 |---|---|
 | **Training Event Type** | A **Training type** selector. The event also gains a **Trainers** entry in its sidebar. Members flagged as trainers can pick this type even when their permission level would not normally allow it. |
-| **General Meeting Event Type** | Three checkboxes: general meeting (set automatically and read-only), elective general meeting, and extraordinary general meeting. Switching away from the type clears all three. |
+| **General Meeting Event Type** | Three checkboxes: **is general meeting** (set automatically and read-only), **with elections** and **is extraordinary**. Switching away from the type clears all three. |
 
 Nothing else about an event changes with its type. Ticketing, capacity, visibility, and permissions are all set on the event itself.
 
@@ -42,7 +52,7 @@ Nothing else about an event changes with its type. Ticketing, capacity, visibili
 
 ## Custom event statuses
 
-Statuses are off by default. Turn on **Enable Custom Statuses** in **Settings → Modules → Events → Configuration** and an **Event Statuses** entry appears in the module menu.
+Statuses are off by default. Turn on **Enable Custom Statuses** in **Settings → Modules → Events → Configuration** and an **Event Statuses** entry appears in the module menu. Click **Create Event status** to add one; each row can be edited or deleted.
 
 <img src="/images/platform/events/event-statuses.png" alt="Event statuses settings listing named statuses with their colors and a final-status marker" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -52,18 +62,18 @@ Each status has:
 |---|---|
 | **Name** | What shows in the status dropdown and the events list filter. |
 | **Color** | The colour of the status tag. New statuses default to amber. |
-| **Mark as final status** | Flags the status as an end state. Statuses marked final are labelled **Final** in the dropdown, and saving an event into one shows the organizer a congratulations dialog. Only one status can be final: marking a second one silently un-marks the first. |
+| **Mark as final status** | Flags the status as an end state. Statuses marked final are labelled **Final** in the status dropdown on the event form. Each time someone saves an event whose status is a final one, a **Congratulations!** dialog appears for them ("Your event has wrapped up successfully"), not only the first time. Only one status can be final: when you mark a second one in this settings screen, the first is un-marked for you. |
 
-Creating, editing, and deleting statuses requires `ADMIN_TENANT`.
+Creating, editing, and deleting statuses requires the **Orgo administrator** flag on your account, not only an admin permission.
 
 ### Using statuses
 
-On the event form, a **Custom Status** dropdown appears above the description with your statuses plus a **None** option. Admins get a **Manage event statuses** shortcut next to it.
+On the event form, a **Custom Status** dropdown appears (unless the event's type hides it) with your statuses plus a **None** option. Admins get a **Manage event statuses** shortcut next to it.
 
-On the events list, an **All statuses** filter appears next to the event type filter.
+On the events list, a **Custom status** filter appears in the filter bar next to **Type**.
 
 <Note>
-Custom statuses are a label you control. They are independent of the built-in draft and published states, which decide who can actually see an event. Moving an event to a status named "Cancelled" does not hide it or stop registrations; use **Close registrations** on the event form for that.
+Custom statuses are a label you control. They are independent of the built-in draft and published states, which decide who can actually see an event. Moving an event to a status named "Cancelled" does not hide it or stop registrations; use **Close registrations** in the event's **Actions** menu for that.
 </Note>
 
 ---

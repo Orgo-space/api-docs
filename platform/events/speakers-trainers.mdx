@@ -25,56 +25,66 @@ must be added on **Participants** as well. See [Attendance](/platform/events/att
 
 ## Speakers
 
-### Turning the list on
+### Where the list lives
 
-Open the event → **Modify** → **Features** → **Enable speakers**. A **Speakers** entry then appears in
-the event sidebar.
+Open the event and choose **Program & Speakers** in the sidebar. It has two tabs: **Program** (the
+sessions) and **Speakers** (everyone who speaks). Adding the first speaker switches speakers on for the
+event; there is no separate switch to find.
+
+On the **Speakers** tab, a **Speaker / Coordinator / Moderator** choice renames the list for this event
+("Coordinators", "Moderators") everywhere attendees see it. It is a label only.
 
 ### Adding speakers
 
 <Steps>
-  <Step title="Search">
-    **Add speaker** opens a search across members and contacts. Pick as many as you need; they stack
-    up in a list before you commit.
+  <Step title="Click Add speaker">
+    The button is at the top of the page and as the first card of the **Speakers** tab. A dialog opens
+    with **Find a member or contact**: search and pick the person.
   </Step>
   <Step title="Or create one">
-    **Create new speaker** takes a full name and an optional email. If the email matches an existing
-    member or contact, that record is used instead of creating a duplicate. Otherwise a new contact is
-    created.
+    Skip the search and fill in the form instead: **Name** (required), **Role and organization**, **Bio**,
+    a photo (**Upload photo**, square, at least 400 px) and an optional **Profile link**. This creates a
+    contact record for the speaker.
   </Step>
-  <Step title="Add">
-    The button confirms the count, for example **Add 3 speakers**. Adding somebody twice is rejected.
+  <Step title="Save">
+    The speaker appears as a card with their photo, name, headline and the sessions they are in.
+    Adding somebody who is already on the list is ignored.
   </Step>
 </Steps>
 
+Click a card to edit it, or the trash icon to remove it. Removing a speaker takes them off the event and
+off every session they were in.
+
 ### What the audience sees
 
-Each speaker is rendered as a card with their photo, name, role and organisation, and their bio.
+Each speaker is rendered as a card with their photo, name, headline and bio.
 
 <img src="/images/platform/events/event-speakers.png" alt="Speakers tab of an event listing speakers with profile photos, names and bios" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
-All of that comes from the underlying member profile or contact record. There are no speaker-specific
-fields, so to fix a title or a bio you edit the person: the pencil on a speaker card opens the
-member's profile edit screen, or the contact record for a non-member.
+A member's name, photo and bio come from their profile, so the speaker dialog shows them read-only:
+to fix a title or a bio, edit the member. For a contact (a non-member) you edit the details in the
+speaker dialog itself.
 
-Speakers show on the event page inside Orgo and on the [public event page](/platform/events/public-page),
-which is the argument for filling in a decent photo and headline before you publish.
+Speakers show on the event page inside Orgo and on the [public event page](/platform/events/public-page)
+(as a **Speakers** tab, once there is at least one), which is the argument for filling in a decent photo
+and headline before you publish.
 
 ### Speakers per session
 
-Events with an agenda can give each session its own speakers. Edit a session and use the same search
-and **Create new speaker** controls there. Session speakers are independent of the event-level list,
-so somebody chairing two sessions is listed on both.
+Each session can have its own speakers. In **Add session** (or when you edit a session), use the
+**Speakers** field: search for someone already on the list, or choose **Find or add** to create them.
+A speaker added to a session joins the event's speaker list, and the dialog warns you when someone is
+already busy in another session at the same time. Somebody chairing two sessions appears on both.
 
 ### Permissions
 
 | Action | Who |
 |--------|-----|
-| Add a speaker | The event owner, or `EVENT_LOCAL` on the event's group, which `EVENT_TENANT` and `ADMIN_TENANT` satisfy |
-| Edit or remove a speaker | The event owner, or `ADMIN_TENANT` |
+| Add a speaker | The event owner, a chapter event manager for the event's group, an organization-wide event manager, or an organization admin |
+| Edit or remove a speaker | The event owner, or an organization admin |
 
 <Warning>
-Removing a speaker is narrower than adding one. Somebody with `EVENT_TENANT` who does not own the
+Removing a speaker is narrower than adding one. Somebody who is an organization-wide event manager but does not own the
 event can add speakers but cannot delete them. Either hand the event over or ask an organisation
 administrator.
 </Warning>
@@ -95,15 +105,15 @@ event using that type, and nowhere else.
 
 **Add trainer** searches members only: a trainer has to be a member record, because the assignment is
 written back to their profile. Removing one asks for confirmation and needs the event owner or
-`ADMIN_TENANT`.
+an organization admin.
 
 Trainers carry no dates, topics or rates. The record is simply "this member trained at this event".
 
 ### The trainer flag on a member
 
-A member's **Permissions** tab (member → **Modify** → **Permissions**) has an **is Trainer** checkbox,
-visible once a Training Event Type is configured. Editing that tab needs `HR_LOCAL` on the member's
-local centre, and `HR_TENANT` when the organisation does not let local admins change permissions.
+A member's **Membership status** tab (member → **Edit** → **Membership status**) has an **is Trainer**
+checkbox, with a **Trainer since** date, visible once a Training Event Type is configured and only to
+people allowed to change the member's permissions.
 
 The flag does two things:
 
@@ -127,11 +137,6 @@ in Orgo turns an attendance record into a certificate automatically.
 ## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="There is no Speakers entry in the sidebar">
-    **Enable speakers** is off for that event. It is per event, not organisation-wide, so a new event
-    starts without it.
-  </Accordion>
-
   <Accordion title="There is no Trainers entry">
     Either the organisation has no Training Event Type set, or this event is not using that type.
     Check the event's type first.
@@ -147,9 +152,8 @@ in Orgo turns an attendance record into a certificate automatically.
     seat or a ticket.
   </Accordion>
 
-  <Accordion title="Adding a speaker says they are already added">
-    They are on the event-level list already. Session-level speakers are stored separately, so check
-    the agenda session as well before assuming it is a bug.
+  <Accordion title="The Speakers tab is missing on the public page">
+    It appears only once at least one speaker is on the event. Add one on **Program & Speakers**.
   </Accordion>
 </AccordionGroup>
 
@@ -158,7 +162,7 @@ in Orgo turns an attendance record into a certificate automatically.
 ## Related
 
 - [Attendance](/platform/events/attendance): the participant list, where speakers also need a place
-- [Create an Event](/platform/events/create-event): the Features section and the event type
+- [Create an Event](/platform/events/create-event): the event form and the event type
 - [Event Types](/platform/events/event-types): including the type used for training
 - [Public Event Page](/platform/events/public-page): where the speaker line-up is shown
 - [QR Check-in](/platform/events/check-in): getting speakers through the door

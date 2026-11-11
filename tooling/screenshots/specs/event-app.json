@@ -24,7 +24,7 @@
     ],
     "tenant": "eventappcontact",
     "route": "/event-app/my-events",
-    "routeHint": "PREREQUISITE: this page only renders for a Contact (non-member) session. /api/v1/event-app/my-events throws AccessDenied for a User principal (EventAppMyEventsController), which is why the shared 'eventapp' member session lands on the platform Home dashboard instead. Contact Dana Fielding (contact 26797, dana.fielding@example.org, tenant 282) has three EventAttend rows via event_attend.external_id. Build the session with: EVENT_APP_EMAIL=dana.fielding@example.org EVENT_APP_STATE=state-eventappcontact.json ORGO_DB_CONTAINER=orgo-1-database node event-app-login.mjs",
+    "routeHint": "PREREQUISITE: this page only renders for a Contact (non-member) session. /api/v1/event-app/my-events throws AccessDenied for a User principal (EventAppMyEventsController), which is why the shared 'eventapp' member session lands on the platform Home dashboard instead. Contact Dana Fielding (contact 26797, dana.fielding@example.org, tenant 282) has three EventAttend rows via event_attend.external_id. Build the session with: EVENT_APP_EMAIL=dana.fielding@example.org EVENT_APP_STATE=state-eventappcontact.json ORGO_DB_CONTAINER=orgo-1-database node event-app-login.mjs UPDATE 2026-11-11: contact 26797 (dana.fielding@example.org) no longer exists. The demo contact set was regenerated and its emails are now contact.<id>@example.org. The only contact in tenant 282 with event_attend rows is 23859 (Elena Vargas, contact.23859@example.org, two attendances), so build the session with: EVENT_APP_EMAIL=contact.23859@example.org ORGO_EVENT_APP_STATE=state-eventappcontact.json ORGO_DB_NAME=orgo_docs node capture/event-app-login.mjs",
     "actions": [],
     "waitFor": "text=My events",
     "viewport": "mobile",
@@ -107,13 +107,13 @@
     ],
     "tenant": "eventapp",
     "route": "/event-app/2ld07n8veu9v6bvh3u0gfrfe34/profile",
-    "routeHint": "The Badge button sits in the Event App header on every tab, but it only renders when the signed-in principal has an EventAttend row on this event (currentEventAttend.hash). Sign in as a registered attendee, open any tab, tap 'Badge'. The QR encodes a smart link to the registration, so the obfuscated tenant data is safe to show.",
+    "routeHint": "The Badge button sits in the Event App header on every tab, but it only renders when the signed-in principal has an EventAttend row on this event (currentEventAttend.hash). Sign in as a registered attendee, open any tab, tap 'Badge'. The QR encodes a smart link to the registration, so the obfuscated tenant data is safe to show. UPDATED 2026-11-11: the badge screen offers a Scan QR Code action rather than drawing a QR canvas on load, so the old waitFor could not match.",
     "actions": [
       "click text=Badge"
     ],
-    "waitFor": "canvas, img[alt*='QR'], .event-app-badge",
+    "waitFor": "text=Scan QR Code",
     "viewport": "mobile",
     "alt": "Attendee badge modal on a phone showing the event name, the attendee photo and name, and a large QR code",
-    "status": "new"
+    "status": "recapture"
   }
 ]

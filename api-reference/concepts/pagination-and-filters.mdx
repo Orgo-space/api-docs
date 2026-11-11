@@ -3,19 +3,18 @@ title: 'Pagination and filters'
 description: 'Iterating collections and narrowing them with filters and ordering'
 ---
 
-Every collection endpoint in Orgo (`GET /api/v1/users`, `GET /api/v1/events`, `GET /api/v1/payments`, ...) supports the same pagination, filtering, and ordering query parameters. Once you learn the pattern on one endpoint, the rest follow the same shape.
+Every collection endpoint in Orgo (`GET /api/v1/users`, `GET /api/v1/events`, `GET /api/v1/product_payments`, ...) supports the same pagination, filtering, and ordering query parameters. Once you learn the pattern on one endpoint, the rest follow the same shape. Which filters a given collection accepts is listed under that endpoint's **Parameters** in the reference.
 
 ---
 
 ## Pagination basics
 
-Defaults: **30 items per page**, maximum **100 per page**.
-
 | Query parameter | Purpose | Default |
 |---|---|---|
 | `page` | 1-indexed page number | `1` |
-| `itemsPerPage` | Page size (capped at 100) | `30` |
-| `pagination` | Set to `false` to disable pagination, where allowed | `true` |
+| `itemsPerPage` | Page size, capped at **100** | per resource |
+
+The default page size is set per resource. Most collections use 30, users use 50, and a few reference lists are larger (countries use 1000). The reference shows the default under each endpoint's `itemsPerPage` parameter. Whatever the default, a request that asks for more than 100 with `itemsPerPage` gets at most 100.
 
 ```bash
 # First page, default size
@@ -23,18 +22,34 @@ GET /api/v1/users
 
 # Second page, 50 items per page
 GET /api/v1/users?page=2&itemsPerPage=50
-
-# As many items as the endpoint allows in one go
-GET /api/v1/countries?pagination=false
 ```
 
-`pagination=false` is only honored on endpoints flagged for it (mostly small reference lists like countries and counties). On large collections it is ignored — you must paginate.
+### `page` must be a positive whole number
+
+A `page` of `0`, a negative number, or a value that is not a number is a client error. The API answers **`400 Bad Request`**, not `500`:
+
+```bash
+curl -i "https://acme.orgo.space/api/v1/countries?page=0"
+```
+
+```http
+HTTP/1.1 400 Bad Request
+Content-Type: application/json
+
+{"detail":"Page should not be less than 1","title":"Bad Request","status":400}
+```
+
+A `page` beyond the last page is not an error: you get an empty collection. Stop iterating when the collection is empty (or `hydra:next` is absent), not when you see an error.
+
+### `pagination=false`
+
+Clients cannot switch pagination off in general. The cap exists so one request cannot pull a whole tenant's data, so `?pagination=false` is ignored on almost every collection. The few collections that opt in advertise a `pagination` parameter in the reference (events and units, for example). On everything else, paginate.
 
 ---
 
 ## Iterating every page
 
-The reliable way to iterate all pages depends on which response format you accept.
+The reliable way to iterate depends on which response format you accept.
 
 ### With JSON-LD (the default)
 
@@ -58,7 +73,7 @@ while url:
 
 ### With plain JSON
 
-You do not get totals or next-page links — increment `page` until the response is shorter than `itemsPerPage`:
+You get no totals or next-page links. Increment `page` until the response is shorter than `itemsPerPage`:
 
 ```python
 page = 1
@@ -76,32 +91,34 @@ while True:
 ```
 
 <Tip>
-For long-running exports, prefer JSON-LD — `hydra:totalItems` lets you display progress and `hydra:next` is a stable signal that the server still has more rows.
+For long-running exports, prefer JSON-LD. `hydra:totalItems` lets you display progress, and `hydra:next` is a stable signal that the server still has more rows.
 </Tip>
 
 ---
 
 ## Filtering
 
-Filters are query-string parameters. The available filters differ per resource and are listed under each endpoint's **Parameters** section in the reference.
+Filters are query-string parameters. The available filters differ per resource. Unknown parameters are ignored rather than rejected, so a misspelled filter returns the unfiltered collection. Check that the result shrank.
 
 ### Exact-value filter
 
 ```bash
 GET /api/v1/users?status=ACTIVE
-GET /api/v1/events?isPublic=true
+GET /api/v1/events?status=published
 ```
 
-### Filter by relation (IRI)
+User statuses are uppercase (`ACTIVE`). Several other statuses, such as event, payment, invoice, contract and vote statuses, are lowercase. Read the enum in the reference rather than guessing.
 
-When filtering by a relation, pass the related resource's IRI:
+### Filter by relation
+
+For most relations, pass the related resource's IRI:
 
 ```bash
-GET /api/v1/users?localCenter=/api/v1/local_centers/4
-GET /api/v1/event_attends?event=/api/v1/events/9c4f...
+GET /api/v1/event_attends?event=/api/v1/events/01938d8e-9c4f-7c2a-b8e1-3f7a9b8c4f12
+GET /api/v1/contract_users?contract=/api/v1/contracts/9
 ```
 
-You can also pass just the ID — the server resolves both shapes:
+Local centers are the exception on the people-related collections (users, contacts, adhesions, fee and product payments, roles). Their `localCenter` filter takes the **numeric id**, one value at a time, and answers `400 No Local Center with this id` for an id that does not exist or is out of reach:
 
 ```bash
 GET /api/v1/users?localCenter=4
@@ -109,67 +126,67 @@ GET /api/v1/users?localCenter=4
 
 ### Multi-value (OR)
 
-Repeat the parameter to filter against any of several values:
+Where a filter advertises the `name[]` form in the reference, repeat the parameter to match any of several values:
 
 ```bash
-GET /api/v1/users?localCenter[]=4&localCenter[]=7&localCenter[]=12
+GET /api/v1/users?status[]=ACTIVE&status[]=INACTIVE
 ```
-
-Returns users in local center 4, 7, *or* 12.
 
 ### Keyword search
 
-Most user-facing collections support a `keyword` parameter for full-text search across the most-relevant fields:
+User and event-like collections that support it take a `keyword` parameter. Check the endpoint for it, because the name differs on some resources (contacts use `search`, events use `name`):
 
 ```bash
 GET /api/v1/users?keyword=patterson
-GET /api/v1/events?keyword=annual+meeting
+GET /api/v1/events?name=annual+meeting
+GET /api/v1/contacts?search=olivia
 ```
 
 ### Date range
 
-Date filters use the `[before]`, `[after]`, `[strictly_before]`, `[strictly_after]` modifiers:
+Date filters use the `[before]`, `[after]`, `[strictly_before]`, `[strictly_after]` modifiers on the date properties each resource names:
 
 ```bash
-GET /api/v1/events?startDate[after]=2026-01-01T00:00:00Z
-GET /api/v1/payments?datePaid[after]=2026-01-01&datePaid[before]=2026-12-31
+GET /api/v1/events?dateTimeBegin[after]=2026-01-01T00:00:00Z
+GET /api/v1/product_payments?stripePaymentDate[after]=2026-01-01&stripePaymentDate[before]=2026-12-31
+GET /api/v1/users?dateJoined[after]=2025-01-01
 ```
 
-### Boolean
+### Presence
 
-Use `true` / `false`:
+`exists[property]=true|false` tests whether a nullable property is set:
 
 ```bash
-GET /api/v1/users?isFullMember=true
-GET /api/v1/events?isPublic=false
+GET /api/v1/users?exists[isFullMember]=true
+GET /api/v1/events?exists[unit]=false
 ```
 
 ### Custom-field filters
 
-User and Contact resources expose a `customFieldValues.value` filter that targets the value column of the custom-fields table. Pair with `customFieldValues.customField` (the custom field IRI) to target a specific field:
+User collections accept `customFieldValues.field` (the custom field) and `customFieldValues.value` (the stored value), which narrow to members who hold that value for that field:
 
 ```bash
-GET /api/v1/users?customFieldValues.customField=/api/v1/custom_fields/8&customFieldValues.value=Vegetarian
+GET /api/v1/users?customFieldValues.field=/api/v1/custom_fields/8&customFieldValues.value=Vegetarian
 ```
 
 ---
 
 ## Ordering
 
-Use `order[field]=asc|desc`. Order by multiple fields by repeating the parameter:
+Use `order[field]=asc|desc`. Order by several fields by repeating the parameter. Only the fields listed under the endpoint's parameters can be ordered:
 
 ```bash
 # Single field, descending
-GET /api/v1/events?order[startDate]=desc
+GET /api/v1/events?order[dateTimeBegin]=desc
 
-# Two fields — first by status, then by name
-GET /api/v1/events?order[status]=asc&order[name]=asc
+# Two fields: first by name, then by start date
+GET /api/v1/events?order[name]=asc&order[dateTimeBegin]=desc
 
 # By a related resource's field
 GET /api/v1/users?order[localCenter.name]=asc&order[lastName]=asc
 ```
 
-The default order varies per resource (usually `dateCreated` descending for "feed" resources like Events and Newsletters, alphabetic for reference data).
+The default order varies per resource (usually newest first for "feed" resources like events and newsletters, alphabetic for reference data).
 
 ---
 
@@ -179,26 +196,26 @@ Stack them with `&`:
 
 ```bash
 GET /api/v1/users?status=ACTIVE
-              &localCenter=/api/v1/local_centers/4
+              &localCenter=4
               &keyword=james
               &order[lastName]=asc
               &page=1
               &itemsPerPage=50
 ```
 
-URL-encode parameter values that contain spaces or special characters (`?keyword=annual%20meeting`). Most HTTP clients do this automatically.
+URL-encode parameter values that contain spaces or special characters (`?name=annual%20meeting`). Most HTTP clients do this for you.
 
 ---
 
 ## Performance notes
 
-- Collection endpoints fetch and serialize each row's full read group. For large datasets, prefer narrow filters before broad ones (`?status=ACTIVE` shrinks the row count *before* any extra joins).
-- `itemsPerPage=100` is the maximum — larger requests return at most 100 and the rest must be paginated.
-- Sorting by a non-indexed column on a large collection can be slow. If a sort feels slow, check whether the column is documented as filterable — those are guaranteed indexed.
+- Collection endpoints fetch and serialize each row's full read group. For large datasets, apply narrow filters first (`?status=ACTIVE` shrinks the row count before anything else happens).
+- `itemsPerPage=100` is the maximum, so use it for exports to keep the request count low.
+- Sorting by a non-indexed column on a large collection can be slow. Stick to the `order[...]` fields the reference lists.
 
 ---
 
 ## Related
 
-- [Content types](/api-reference/concepts/content-types) — the Hydra envelope shape used in JSON-LD pagination
-- [Errors](/api-reference/concepts/errors) — what bad filter / order values produce
+- [Content types](/api-reference/concepts/content-types): the Hydra envelope shape used in JSON-LD pagination
+- [Errors](/api-reference/concepts/errors): the `400` a bad `page` produces

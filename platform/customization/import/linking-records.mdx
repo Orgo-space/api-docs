@@ -1,10 +1,10 @@
 ---
 title: 'Linking Records'
-description: 'How the import wizard finds the member, product, role or company a spreadsheet row refers to, and how to read the match preview before you start'
+description: 'How the import wizard finds the member, product, role or company a spreadsheet row refers to, and how to read the match strip and the check before you start'
 "og:title": 'Linking Records | Orgo'
-"og:description": 'How the import wizard finds the member, product, role or company a spreadsheet row refers to, and how to read the match preview before you start'
+"og:description": 'How the import wizard finds the member, product, role or company a spreadsheet row refers to, and how to read the match strip and the check before you start'
 "twitter:title": 'Linking Records | Orgo'
-"twitter:description": 'How the import wizard finds the member, product, role or company a spreadsheet row refers to, and how to read the match preview before you start'
+"twitter:description": 'How the import wizard finds the member, product, role or company a spreadsheet row refers to, and how to read the match strip and the check before you start'
 ---
 
 Some files do not describe new things. They describe things that happen to
@@ -25,11 +25,12 @@ wrong person.
 
 In the mapping screen, the columns that point at an existing record are gathered
 into groups named after the thing they identify: **Payer**, **Product**,
-**Price tier**, **Member**, **Role**, **Unit**, **Company**, **Badge**.
+**Price tier**, **Event**, **Attendee**, **Member**, **Role**, **Unit**, **Company**,
+**Badge**.
 
 A group usually offers several ways to name the same record, and you map at least
-one column per required group. A payer can be given by legacy id, by email, or by
-name; a role by legacy id or by name. The chips in the footer of the mapping
+one column per required group. A payer can be given by legacy id, by email, by personal
+number or by name; a role by legacy id or by name. The chips in the footer of the mapping
 screen spell out the choice for you, for example **Payer: Payer email or Payer
 name**, and turn green once one of the alternatives is mapped. Groups marked
 optional, such as **Unit** on a role file, can be left unmapped entirely.
@@ -39,7 +40,7 @@ page is about that order.
 
 ---
 
-## The match preview
+## The match strip
 
 Once a group has at least one column mapped, a strip of tiles appears above the
 sheet, one tile per group, each with three numbers.
@@ -47,7 +48,7 @@ sheet, one tile per group, each with three numbers.
 | Number | What it counts |
 |---|---|
 | **found** | Rows whose reference resolved to exactly one existing record. The import will attach the row to it. |
-| **new contacts**, **new products**, **new price tiers** | Rows that matched nothing, but carry enough detail for Orgo to create the missing record and use it. The wording names what would be created. |
+| **new contacts**, **new products**, **new price tiers**, **new events**, **new companies** | Rows that matched nothing, but carry enough detail for Orgo to create the missing record and use it. The wording names what would be created. |
 | **unmatched** | Rows that matched nothing and cannot be created either, plus rows whose value matched more than one record. Both fail at import time. |
 
 The sheet marks the individual cells too: a row that would create a record is
@@ -65,10 +66,11 @@ gets created.
 </Note>
 
 <Warning>
-The preview reads at most 20 rows from the start of your file, however large the
+The strip reads at most 20 rows from the start of your file, however large the
 file is. "18 found, 2 unmatched" is a verdict on 20 rows and says nothing about
-rows 21 onwards. A file whose clean rows happen to sit at the top previews
-perfectly and can still fail thousands of rows further down.
+rows 21 onwards. The whole-file verdict is the check above the sheet (**Will be created**,
+**Will fail** and the other tiles, see [Mapping columns](/platform/customization/import/mapping-columns#the-check-before-you-start)):
+read it before you start, and press **Will fail** to see which rows and why.
 </Warning>
 
 Two smaller effects of the same sampling. If an optional group has no value in any
@@ -79,14 +81,14 @@ not have to add up to the number of rows sampled.
 
 ### It never writes anything
 
-Running the preview reads your data and nothing else. It looks up the values in
+Running the strip reads your data and nothing else. It looks up the values in
 your own organisation, counts what it found, and stops. No contact, product, price
 tier or anything else is created while you are still on the mapping screen, and
 nothing at all is written until you press **Start import**. You can change the
 mapping and let the numbers settle as many times as you like.
 
-Unmatched rows do not block **Start import** either. They are a warning, and it is
-your call whether to fix the file first.
+Unmatched rows do not block **Start import** either. Rows that will fail are counted in
+the check, and you are asked once, **Some rows will fail**, before they are left out.
 
 ---
 
@@ -105,13 +107,21 @@ bottom are guesses at a name.
 | 1 | `user_legacy_id` | A member carrying that id from your old system |
 | 2 | `payer_email` | A member with that email address, letter case ignored |
 | 3 | `payer_email` | A contact with that email address |
-| 4 | `payer_name`, together with `payer_email` and `payer_organisation` when they are mapped | Nothing to find. A new contact is created and the payment is booked against it |
+| 4 | `payer_personal_number` | A member with that personal identification number |
+| 5 | `payer_personal_number` | A contact with that personal identification number |
+| 6 | `payer_name`, together with `payer_email`, `payer_organisation` and `payer_personal_number` when they are mapped | Nothing to find. A new contact is created and the payment is booked against it |
 
 If nothing matches and the row has no `payer_name`, the row fails with **Payer not
 found for the supplied identifier**.
 
+The personal number is the way to find payers when your old system had no emails. It is
+compared after removing spaces and nothing else, so `123 456` finds `123456`, but
+`123-456` does not. Numbers are stored encrypted, so the lookup reads every holder of a
+number in your organisation: it only runs for the rows the email steps left unmatched.
+A contact created in step 6 keeps the number, encrypted.
+
 <Note>
-Step 4 is the one that surprises people. An email that belongs to no member is not
+Step 6 is the one that surprises people. An email that belongs to no member is not
 an error: Orgo creates a contact and books the payment to the contact. The money
 is recorded, but it sits on a contact record rather than on a member profile, and
 a payment held by a contact can never be a membership fee. See
@@ -138,6 +148,39 @@ Both groups are optional. Leave the product columns unmapped and the payment is
 recorded with no product attached, which is how a donation looks. Products are
 resolved before price tiers, so a tier can attach to a product that the same run
 created moments earlier.
+
+### Event attendance
+
+One row is one person at one event, so both ends are looked up.
+
+**Attendee**
+
+| Order | Column | What Orgo looks for |
+|---|---|---|
+| 1 | `user_legacy_id` | A member carrying that id from your old system |
+| 2 | `attendee_email` | A member with that email address |
+| 3 | `attendee_email` | A contact with that email address |
+| 4 | `attendee_name`, with `attendee_organisation` when mapped | Nothing to find. A new contact is created and the attendance is booked against it |
+
+The same rules as payers apply: an email that belongs to nobody becomes a contact rather
+than an error, and a person with a name but no email is created again on every run.
+
+**Event**
+
+| Order | Column | What Orgo looks for |
+|---|---|---|
+| 1 | `event_legacy_id` | An event carrying that id from your old system. Nothing is created: when this is the only event column mapped, an unknown id fails the row |
+
+Map the event legacy id wherever your old system had one. Events can also be named by
+`event_name` together with `chapter` or `event_datetime`, in which case Orgo reuses an
+event of that name or creates a new draft event for it. That route compares the name
+exactly as written, so the spelling and capitals in the file have to match the event in
+Orgo character for character. Prefer the legacy id.
+
+A person already recorded at the event is skipped (**Attendance already recorded for this
+event**), and so is a repeat of the same person and event inside one file (**Duplicate of
+row 12 in this file**). `status` takes `attending`, `not_attending`, `maybe` or `attended`;
+empty means attended, and anything else fails the row.
 
 ### Role assignments
 
@@ -185,8 +228,8 @@ so import your badge types and badges first.
 
 Adding people to a static list is mapped like the others, with a single **Member**
 group offering `email`, `user_legacy_id`, `phone` and `name`. It is the one type
-with no match preview: the run applies its own order rather than the one the
-mapping declares, so a preview would tell you something other than what happens.
+with no match strip: the run applies its own order rather than the one the
+mapping declares, so a strip would tell you something other than what happens.
 
 The order it uses is a member by email, then a member by legacy id, then a member
 by phone number, then a contact by email, then a contact by phone number. If
@@ -268,7 +311,7 @@ named "Membership 2026", separating them again is manual work.
 ## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="The preview says most rows are unmatched">
+  <Accordion title="The strip says most rows are unmatched">
     The column you mapped is not the one that identifies the record, or its values
     do not exist in Orgo. Check three things in order: that legacy id columns hold
     the ids from the system you are migrating from and not row numbers; that name
@@ -305,8 +348,8 @@ named "Membership 2026", separating them again is manual work.
     The same applies to units, companies and badges.
   </Accordion>
 
-  <Accordion title="The preview looks fine but the import created more records than expected">
-    The preview judged the first 20 rows. If your file is sorted so that the
+  <Accordion title="The strip looks fine but the import created more records than expected">
+    The strip judged the first 20 rows; the check above the sheet covers the whole file, so read its numbers too. If your file is sorted so that the
     well-identified rows come first, the rows further down can behave completely
     differently. Sort or spot-check the file before importing, and after a large
     run compare the counts in the import history with what you expected. A file

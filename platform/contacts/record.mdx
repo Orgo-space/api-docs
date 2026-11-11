@@ -18,7 +18,7 @@ holds no login, no roles, no unit membership and no membership fee.
 This page is the field-level reference. For what a contact is and how it differs
 from a member, start at [Contacts](/platform/contacts).
 
-<img src="/images/platform/contacts/contact-record.png" alt="A contact record showing the contact information card with source and dates, the newsletter card, tags, the status pipeline, the payments card, e-documents and email logs" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+<img src="/images/platform/support/contact-record.png" alt="A contact record showing the contact information card with source and dates, the newsletter card, tags, the status pipeline, the payments card, e-documents and email logs" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
 ---
 
@@ -28,11 +28,11 @@ from a member, start at [Contacts](/platform/contacts).
 |---|---|
 | **Name** | One combined field. Required by the Add Contact form. |
 | **Middle name** | Shown when your organisation collects it at checkout, or when the contact already has one. |
-| **Email** | Lower-cased and stripped of stray spaces on save. Not required, and not unique. |
+| **Email** | Lower-cased and stripped of stray spaces on save. Not required, and not unique. A red **Emails not delivered** tag appears under it when Orgo has stopped sending to the address after a hard bounce or a spam complaint. Orgo support can unblock it. |
 | **Phone** | A single free-text field, not split into country code and number. |
 | **Gender** | Female, male, or other. |
 | **Date of birth** | Displayed with the current age beside it. |
-| **Personal identification number** | Stored encrypted. Only `HR_TENANT` and `FINANCIAL_TENANT` see the field, it is masked until revealed, and every reveal is logged. |
+| **Personal identification number** | Stored encrypted. Only organisation-wide HR and financial managers see the field, it is masked until revealed, and every reveal is logged. In edit mode, leaving the field empty keeps the stored value. |
 | **Bio** | A short free-text description. |
 | **Photo** | Uploaded on create, or from the record's edit mode. |
 
@@ -68,8 +68,9 @@ those records arrived without a name, not that anything went wrong.
 | **Instagram URL** | Full URL, `https://www.instagram.com/username` |
 | **Bluesky** | The handle, `handle.bsky.social` |
 
-The record page shows these as icon links. With none of them filled in, the card
-reads "No social profiles added".
+The record page shows LinkedIn, Twitter and Instagram as icon links. With none of those
+filled in, the card reads "No social profiles added". The Bluesky handle can be edited
+and is kept, but the record page does not display it.
 
 ---
 
@@ -256,11 +257,11 @@ can carry as many as you like.
 
 | Action | Permission |
 |---|---|
-| Add a tag to a contact, or remove one | `HR_TENANT` |
-| Create a new tag name in the catalogue | `ADMIN_TENANT` |
+| Add a tag to a contact, or remove one | Organisation-wide HR managers |
+| Create a new tag name in the catalogue | Organisation admins |
 
 <Note>
-The two are separate. Someone with `HR_TENANT` can tag contacts all day using
+The two are separate. An organisation-wide HR manager can tag contacts all day using
 tags that already exist, but typing a name that is not in the catalogue yet and
 pressing Enter will be refused. Ask an organisation administrator to add the tag
 once, then everyone can use it.
@@ -275,7 +276,7 @@ the contact's activity feed.
 ## Custom fields
 
 Custom fields are how you record anything Orgo has no column for. They are
-defined once under **Settings** → **Users & Profiles** → **Custom Fields** and
+defined once under **Settings** → **Modules** → **Users & Profiles** → **Custom Fields** and
 reused across members and contacts.
 
 **Only profile fields attach to a contact.** A custom field belongs to one of
@@ -312,25 +313,25 @@ Two cards that work together.
 **Notes** is what your team writes about the contact: what was said on the call,
 what to do next. Each note records its author and the time, is capped at 512
 characters, and can carry an optional **Called** or **Emailed** action. The
-author of a note can edit or delete it, and so can `ADMIN_TENANT`; nobody else
-can change someone else's note.
+author of a note can edit or delete it, and so can an organisation admin; nobody
+else can change someone else's note. This is the only notes field a contact has.
 
 **Activity** is the feed underneath, merged newest first. It combines the notes
-with things Orgo records on its own.
+with a few things Orgo records on its own.
 
-| Recorded automatically | When |
+| Shown on the feed | When |
 |---|---|
+| Note added, edited or removed | Any change to a note. A removed note leaves a trace |
 | Tag added or removed | Any time a tag changes, whether by hand or by a workflow |
-| Newsletter subscribed or unsubscribed | Only when an administrator uses the subscribe or unsubscribe button on the record, and only in the organization-wide activity log, not on this feed. See [Contacts and the newsletter](/platform/contacts/newsletter) |
-| Profile field edited | Any change to a field on the record |
-| Personal identification number revealed | Every reveal, with who revealed it |
+| Donation made | Each donation the contact made |
+| Form completed | Each form submission by the contact |
+| Email sent | A one-to-one email sent from **Send an email** on the record, with its subject |
 | Personal identification number changed | Every change to the stored value |
-| Note deleted | So a removed note leaves a trace |
-| CSV export | Every export of the contacts list |
-| Merge and rollback | On both records involved |
 
-Donations and form submissions the contact made appear in the same feed, so the
-card reads as one running story rather than an audit dump.
+Some things are recorded for auditing but never shown on this card: field edits,
+personal identification number reveals, newsletter subscribe and unsubscribe, and
+CSV exports. See [Contact permissions](/platform/contacts/permissions) for what is
+recorded and where an organisation admin reads it.
 
 <Note>
 Profile field edits are recorded but are not shown in the feed, which is
@@ -339,17 +340,24 @@ entries exist for auditing, so ask an organisation administrator if you need to
 see them.
 </Note>
 
-**Who can write and read:** `HR_LOCAL` or `FINANCIAL_LOCAL` over that contact, or
-`ADMIN_TENANT`.
+**Who can write and read:** chapter HR or chapter financial managers over that
+contact, or anyone above them, including organisation admins.
 
 <Warning>
 Both cards sit behind **Enable Profile Notes & Activity** under **Settings** →
 **Modules** → **Users & Profiles** → **Configuration**, which is **off** until
-you switch it on and needs `ADMIN_TENANT`. Switching it back off hides the cards
+an Orgo administrator switches it on. Switching it back off hides the cards
 and closes the endpoints behind them, but deletes nothing: existing notes
-reappear with their authors and dates when it goes back on. Full detail:
+reappear with their authors and dates when it goes back on. With it off, a contact
+record has nowhere to write or read notes at all. Full detail:
 [Profile Activity & Notes](/platform/users/profile-activity).
 </Warning>
+
+<Note>
+Older notes that were written in a single free-text notes box on the contact were moved
+into this card, with an author, and that box no longer exists. If a note you remember
+writing is missing, check that **Enable Profile Notes & Activity** is on.
+</Note>
 
 ---
 
@@ -364,27 +372,39 @@ they have nothing to show, so not every contact displays every card below.
 
 Left column, top to bottom:
 
-1. **Contact info** with the **Edit** button that turns the whole card into the form
+1. **Contact info**, with the **Edit** button that turns the whole card into the form
 2. **Status** (on a phone only, so it stays near the top)
 3. **Newsletter**, with a single Subscribe or Unsubscribe button
 4. **Social profiles**
 5. **Tags**
-6. **Notes**
-7. **Activity**
+6. **Notes**, the box for writing a new note (when **Enable Profile Notes & Activity** is on)
+7. **Activity**, the feed (same condition)
 8. **Additional information**, the custom field answers
-9. **Create user account** and **Delete contact** buttons
+9. **Send an email**, **Create user account** and **Delete contact** buttons. **Send an
+   email** appears only when the contact has an email address and you hold Communication
+   permission over their chapter
 
 Right column, top to bottom:
 
 1. **Status**, as a left-to-right pipeline of chips
 2. **Events** the contact registered for
-3. **Payments & Subscriptions**, with the subscription table above the payment list
+3. **Payments & Subscriptions**, with the subscription table above the payment list and an
+   **Add payment record** button for organisation-wide financial managers
 4. **Company Membership**, when the contact is on a company account
 5. **e-Documents**, when that module is on
-6. **Email logs**, every message Orgo sent to this address
+6. **Forms**, the forms the contact has submitted, for chapter HR or financial managers
+7. **Email logs**, every message Orgo sent to this address, for organisation-wide
+   Communication managers
 
-On a phone the right column falls below the left one, and the Create user account
-and Delete buttons move into the menu at the top of the record.
+On a phone the right column falls below the left one, and the Send an email, Create user
+account and Delete buttons move into the menu at the top of the record.
+
+**Send an email** opens a small compose window with a subject, a message and an **Insert
+name** helper. The message goes out with your organisation's branding and an unsubscribe
+link, and is limited to 30 sends an hour per administrator. It is refused for a contact
+who has unsubscribed from the newsletter. **Create user account** is explained on
+[Becoming a member](/platform/contacts/becoming-a-member); it opens the new member's
+profile when it finishes.
 
 ---
 
@@ -409,7 +429,7 @@ Date created, Stripe.
 
 ### Search
 
-One box, and it matches **name and email**. It runs when you press Enter or click
+One box, **Search by name or email**, and it matches **name and email**. It runs when you press Enter or click
 the search button next to it, not as you type, so a long list does not re-query
 on every keystroke. The X clears it and returns you to the first page. On a phone
 the box is behind the search icon in the header.
@@ -426,7 +446,9 @@ Four dropdowns, and they combine with each other and with the search.
 | **Newsletter** | Always | All, Subscribed, Not subscribed, Unsubscribed, each with a count |
 
 Counts on the Status and Newsletter dropdowns are fetched the first time you open
-them, so they are current rather than cached from page load.
+them, and again after your filters change. Each count is what picking that option would
+show you given your current search and the other filters, so searching for a name first
+narrows every count to the matches.
 
 ### Paging and bulk actions
 
@@ -439,10 +461,11 @@ newsletter action, so those stay one contact at a time.
 
 <Warning>
 Bulk delete is the only bulk action, and it is not reversible. Contacts that
-cannot be deleted, because they have a successful payment against them, are
-skipped, and the confirmation tells you how many were skipped. Read that number:
-a batch that reports fewer deletions than you selected has left records behind on
-purpose.
+cannot be deleted, because they have a payment, an invoice or a contract against
+them, are skipped, and the message afterwards reads **Deleted** with a count and
+**Skipped** with a count. Read that number: a batch that reports fewer deletions
+than you selected has left records behind on purpose. The confirmation dialog only
+mentions successful payments, but invoices and contracts block a deletion too.
 </Warning>
 
 ---

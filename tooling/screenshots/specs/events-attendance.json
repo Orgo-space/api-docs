@@ -12,7 +12,7 @@
     "waitFor": "text=Columns",
     "viewport": "desktop",
     "alt": "Participants screen listing attendees with name, town, ticket, RSVP and invited status",
-    "status": "new",
+    "status": "recapture",
     "notes": "Control bar: <n> persons, filter icon, Name box, Email box, RSVP select, Ticket select, Invited checkbox, refresh, Columns, Export, Invite. No t187c event has both ticketing and a registration form, so the Registration column cannot appear here; Summer Social Arlington is the ticketed contrast shot."
   },
   {
@@ -28,7 +28,7 @@
     "waitFor": "text=Columns",
     "viewport": "desktop",
     "alt": "Participant list of an event without ticketing, showing only the RSVP column with Attending, Attended and Not attending values",
-    "status": "new",
+    "status": "recapture",
     "notes": "Do NOT reuse the Summer Social Arlington UUID here: that is the ticketed event captured by event-attendees. RSVP values render as native <select> options, invisible to a text= waitFor, so wait on the Columns button."
   },
   {
@@ -39,16 +39,20 @@
     ],
     "tenant": "t187c",
     "route": "/events/attend/2ld07n8veu9v6bvh3u0gfrfe34",
-    "routeHint": "Events -> open a published event -> Participants -> Invite (top right), then expand Guest tickets at the bottom of the dialog. Use the class selector for Invite: text=Invite matches the Invited filter checkbox first and silently toggles the filter instead of opening the dialog.",
+    "routeHint": "Events -> open a published event -> Participants -> Invite (top right), then expand Guest tickets at the bottom of the dialog. Use the class selector for Invite: text=Invite matches the Invited filter checkbox first and silently toggles the filter instead of opening the dialog. 2026-11-11: the old first action matched 3 .button.is-primary.is-rounded.is-small nodes (the mobile and embedded Invite buttons in views/Event/Attend.vue are hidden on desktop), so the click timed out on a hidden one; >> visible=true picks the desktop button. The dialog is now components/event/EventPeopleDialog.vue: tabs Add to list / Send invitation (and Add all members when the group invite is offered), title Add attendee unless the event has a registration form (then Invite participant), and the guest tickets counter is a stepper per picked person shown only when the event setting guestTickets is on. There is no .guest-tickets-toggle any more. Event 200250 Summer Social Arlington has no registration form and guestTickets was unset, so seeded: UPDATE event SET settings=JSON_SET(settings,'$.guestTickets',true) WHERE id=200250 AND tenant_id=282. The spec now searches Isla Varg (Isla Vargas, not on the event), clicks the result, and waits for To add (1). The search box is cleared after the pick, otherwise the list under it reads No results because the picked person is filtered out of the results.",
     "actions": [
-      "click .button.is-primary.is-rounded.is-small",
+      "click .button.is-primary.is-rounded.is-small >> visible=true",
+      "wait 1500",
+      "fill input[placeholder=\"Search a member or type an email\"] | Isla Varg",
       "wait 2000",
-      "click .guest-tickets-toggle",
-      "wait 1500"
+      "click .pp-row",
+      "wait 1000",
+      "fill input[placeholder=\"Search a member or type an email\"] | ",
+      "wait 800"
     ],
-    "waitFor": "text=Invite participant",
+    "waitFor": "text=To add (1)",
     "viewport": "desktop",
-    "alt": "Invite participant dialog with Member and External tabs, a member search box, and the guest tickets number control",
+    "alt": "Add attendee dialog on the participants page with Add to list and Send invitation tabs, a member search box, and one chosen person in the To add list with a guest tickets counter beside the name",
     "status": "new",
     "notes": "Show the Member tab selected with the search field visible, plus the expanded Guest tickets control. Do not type a real member name into the search box."
   },
@@ -61,7 +65,7 @@
     ],
     "tenant": "t187c",
     "route": "/event/a2a328fc8fc711f19aed9e396b",
-    "routeHint": "Superseded. events-ticketing/event-qr-ticket writes the same file from the public event page, where the confirmed-registration box actually renders.",
+    "routeHint": "Superseded. events-ticketing/event-qr-ticket writes the same file from the public event page, where the confirmed-registration box actually renders. (A 2026-11-11 sweep briefly set this back to recapture because two specs share the id event-qr-ticket; it is dropped and must stay dropped, or it overwrites the good file from the wrong page.)",
     "actions": [],
     "waitFor": "canvas, svg",
     "viewport": "desktop",

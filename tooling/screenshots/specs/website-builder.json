@@ -1,0 +1,110 @@
+[
+  {
+    "id": "website-builder-pages",
+    "image": "/images/platform/website/website-builder-pages.png",
+    "usedOn": [
+      "platform/organisation/website-builder.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/website-builder",
+    "routeHint": "Settings (gear) -> Website, or the address /website-builder. The route is gated client-side by settingFeatures.website.isActive (client/src/utils/websiteBuilder.js) and server-side by WebsiteBuilderFeatureSubscriber; with the flag off the guard sends you to the dashboard, which is what a blank capture of this spec means. The flag was off on tenant 282 until 2026-11-11 and the tenant had no pages, articles or menu items at all, so the site was built from the Professional starter template before capturing. Note the separate settingWebsite.isActive, which is whether the published site answers anonymous visitors, not whether the builder opens.",
+    "actions": [
+      "wait 4000"
+    ],
+    "waitFor": "text=Publish live",
+    "viewport": "desktop",
+    "alt": "Website builder on its Pages area, showing the site's pages in order with the homepage marked, and the Connect MCP, Preview website, Live website and Publish live buttons across the top",
+    "status": "new",
+    "notes": "The hero shot for the page: it has to show the five areas (Pages, Articles, Header and Footer, Settings, Design) and the four top buttons, because the page's first table describes exactly those."
+  },
+  {
+    "id": "website-builder-page-settings",
+    "image": "/images/platform/website/website-builder-page-settings.png",
+    "usedOn": [
+      "platform/organisation/website-builder.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/website-builder/page/9b43c922ae0e3e7635a843c34b",
+    "routeHint": "Pages -> open a page. This is the page editor: the page's own settings, not a list of sections. The homepage of the Professional template is page uuid 9b43c922ae0e3e7635a843c34b. RENAMED from website-builder-page-sections on 2026-11-11, because it never showed sections: the editor carries Title, Address, Mark as draft, the search engine fields and Delete page, plus a preview card whose own text reads 'Sections are added and arranged in the visual editor' (views/Website/Admin/PageEdit.vue). Its header carries Duplicate, Preview and Visual editor, each of which opens the live page in a new tab. Sections are illustrated by website-builder-visual-editor now, and this image sits beside a new paragraph documenting the page settings, which the prose had not covered at all.",
+    "actions": [
+      "wait 4000"
+    ],
+    "waitFor": "text=Search engines and sharing",
+    "viewport": "wide",
+    "alt": "A page's own settings in the builder: its title and address, the Mark as draft box, a preview of the page with an Edit page card that sends you to the visual editor, the search engine title, description and sharing image, and Delete page",
+    "status": "new"
+  },
+  {
+    "id": "website-builder-design",
+    "image": "/images/platform/website/website-builder-design.png",
+    "usedOn": [
+      "platform/organisation/website-builder.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/website-builder",
+    "routeHint": "The Design area: colours, fonts and the starter templates. The templates are defined in api/src/Service/Website/Template/ (Professional, Civic, Educational, Cultural). The tabs are a Buefy b-tabs, so each one is a span inside li > a with no class of its own; a plain text match on the tab name is not reliable while the page is still loading, which is why the click is scoped to li > a span and preceded by a wait.",
+    "actions": [
+      "wait 4000",
+      "click li > a span:has-text(\"Design\")",
+      "wait 3000"
+    ],
+    "waitFor": "text=Colour palette",
+    "viewport": "desktop",
+    "alt": "Design area of the website builder with the colour palette, font pack, corner and density choices, and the Theme and Templates buttons above them",
+    "status": "new"
+  },
+  {
+    "id": "website-builder-settings",
+    "image": "/images/platform/website/website-builder-settings.png",
+    "usedOn": [
+      "platform/organisation/website-builder.mdx",
+      "platform/organisation/public-website.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/website-builder",
+    "routeHint": "The Settings area: whether the site is live, the domain, custom code and redirects. This is the screen the 'Your address' and 'Publishing' sections describe, and the one public-website.mdx points at for making an address open the website.",
+    "actions": [
+      "wait 4000",
+      "click li > a span:has-text(\"Settings\")",
+      "wait 3000"
+    ],
+    "waitFor": "text=My website is live",
+    "viewport": "desktop",
+    "alt": "Settings area of the website builder showing the live switch, the Orgo website address, the custom domain field and the Domain, Custom code and Redirects controls",
+    "status": "new"
+  },
+  {
+    "id": "website-builder-visual-editor",
+    "image": "/images/platform/website/website-builder-visual-editor.png",
+    "usedOn": [
+      "platform/organisation/website-builder.mdx"
+    ],
+    "tenant": "t187c",
+    "route": "/p/home?edit=1",
+    "routeHint": "The visual editor is the published page with an edit layer over it, at /p/<slug>?edit=1. Reaching it from the page editor opens a NEW TAB, which the capture runner cannot follow, so the spec goes to the address directly. UPDATED 2026-11-11: the spec used to click 'Visual editor' on the page editor and wait for 'Edit page'. The click matched nothing, so the capture was a second copy of the page editor, byte-near-identical to website-builder-page-sections and visibly duplicated on the page.",
+    "actions": [
+      "wait 6000"
+    ],
+    "waitFor": "text=Add card",
+    "viewport": "wide",
+    "alt": "Visual editor showing a page as visitors will see it, with the Edit page switch, the device preview sizes and the Discard, Save and Publish buttons",
+    "status": "new"
+  },
+  {
+    "id": "website-public-page",
+    "image": "/images/platform/website/website-public-page.png",
+    "usedOn": [
+      "platform/organisation/public-website.mdx"
+    ],
+    "tenant": "anon-t187c",
+    "route": "/p/home",
+    "routeHint": "The site's pages are served at /p/<slug> and that route is anonymous, so this is what a visitor gets. Captured signed out, so no application chrome is in the shot. Two things to know: the builder's Preview website button opens this same route, and the separate static publish cannot run on a local instance at all, because WEBSITE_RENDERER_URL is unset and the build fails with 'No static renderer is configured in this environment'. settingWebsite.isActive (whether the site answers visitors) is a different field from settingFeatures.website.isActive (whether the builder opens); both are on for tenant 282 since 2026-11-11.",
+    "actions": [
+      "wait 3500"
+    ],
+    "waitFor": "text=Membership",
+    "viewport": "desktop",
+    "alt": "The organisation's website as a visitor sees it, with the header menu, the opening section and the sections that follow it",
+    "status": "new"
+  }
+]

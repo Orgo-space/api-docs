@@ -18,10 +18,12 @@ Which action you need depends entirely on whether money changed hands.
 | The invoice is unpaid and should not exist | **Void** | The invoice |
 | The invoice was paid and you have already returned the money yourself | **Mark as refunded** | The invoice |
 | The customer paid by card and you need Stripe to send the money back | **Refund** | **Payments** |
+| A payment was made outside Orgo (recorded by hand or imported), has no invoice, and you have already returned the money | **Mark as refunded** | **Payments** |
 
-All three need administrator rights: voiding and marking refunded need
-`ADMIN_TENANT`, and the Stripe refund needs `FINANCIAL_LOCAL` for the payment's
-local centre, or `FINANCIAL_TENANT` when the payment has no local centre on it.
+All of them need administrator rights: voiding and marking an invoice refunded
+need the Admin (Organization) permission, and refunding from **Payments** needs
+Financial (Chapter) for the payment's chapter, or Financial (Organization) when
+the payment has no chapter on it.
 
 ---
 
@@ -93,9 +95,11 @@ What it does do is unwind everything the payment set off:
 - The invoice becomes **refunded**, with your name and the date recorded, and a
   **REFUNDED** badge added to the document.
 - The linked payment record is marked refunded, so it drops out of your totals.
-- On a **membership** invoice, the member's fee validity date is recalculated
-  from the payments that survive, and a company's membership is rolled back to
-  what its remaining payments justify.
+- On a **membership** invoice that Orgo raised (a bank-transfer request, a
+  renewal reminder to a company, or a membership invoice made after an online
+  payment), the member's fee validity date is recalculated from the payments
+  that survive, and a company's membership is rolled back to what its remaining
+  payments justify.
 - On an **event registration** invoice, the confirmed registrations are cancelled
   and their seats and add-on places are released.
 
@@ -106,9 +110,11 @@ outstanding, rather than continuing to read as paid in full.
 Marking as refunded does not email the customer. Tell them yourself.
 </Note>
 
-A paid manual or membership invoice with no payment record behind it cannot be
-marked refunded: the action stops with an error rather than changing the invoice
-and leaving the payment untouched. An event registration invoice is more
+A paid invoice of the first two kinds with no payment record behind it cannot be
+marked refunded: the action stops with the error "Cannot refund invoice: no
+linked payment record found." rather than changing the invoice and leaving the
+payment untouched. Marking an invoice refunded twice, or one that is not paid,
+is refused too. An event registration invoice is more
 forgiving: if no payment or registration can be resolved it is still marked
 refunded, on the assumption the money was handled in Stripe.
 
@@ -118,16 +124,32 @@ refunded, on the assumption the money was handled in Stripe.
 
 If the customer paid by card and you want Stripe to send the money back, do it
 from **Payments**. Open the row menu on the payment and choose **Refund**. The
-option only appears on a successful payment that has a Stripe charge behind it.
+option only appears on a successful payment.
 
 The refund covers that payment row in full. There is no partial-amount option in
 the interface, and where one charge produced several payment rows (a membership
 fee and its separate joining fee, for example) only the row you acted on is
-refunded.
+refunded. The amount sent to Stripe is the row's amount rounded to the nearest
+cent.
 
 Refunding through Stripe also cancels any event registrations paid for by that
 payment, releasing their seats and add-on places, and recalculates the member's
-fee validity if the payment was for a membership fee.
+fee validity if the payment was for a membership fee (or for a donation, when
+**Donations count towards membership** is on).
+
+### Payments made outside Orgo
+
+A payment with no Stripe reference was paid outside Orgo: recorded by hand
+or imported. Its row menu on **Payments** says **Mark
+as refunded** instead of **Refund**, and the confirmation reads "Nothing is sent
+back through Orgo. Confirm you have already refunded it outside Orgo." No money
+moves. The payment becomes refunded, its event registrations are cancelled and
+the member's fee validity is recalculated, exactly as for a Stripe refund.
+
+If such a payment belongs to an invoice, the row has no refund action, and
+the server refuses the request with "This payment has an invoice. Mark the
+invoice as refunded instead." Use **Mark as refunded** on the invoice, so the invoice and
+its payment stay in step.
 
 <Warning>
 Do not mark an invoice as refunded and expect the customer to get their money.

@@ -16,7 +16,7 @@ By default your community lives at `yourorg.orgo.space`. A custom domain moves i
 **Settings → Customization → Custom Domain**
 
 <Note>
-  Requires **ADMIN_TENANT**. Every endpoint behind this page enforces it server side, not just the menu.
+  Requires the **Orgo administrator** flag on your account. Every action on this page enforces it server side, not just the menu.
 </Note>
 
 <img src="/images/platform/custom-domain/custom-domain-start.png" alt="Custom Domain setup page showing the before-you-start checklist and the App host field" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
@@ -43,7 +43,7 @@ Two rules are enforced when you submit. **It must be a subdomain**: `members.acm
     Type the address, for example `community.acme.com`; the page previews the final URL. **Start setup** immediately requests a wildcard TLS certificate for `*.<your apex>`, creates a sender identity for the same apex, and points that identity's bounce address at `bounce.<your apex>`.
   </Step>
   <Step title="Add the DNS records">
-    Once both requests come back, the status becomes **Awaiting DNS** and two record groups appear. Add every record exactly as shown at your DNS provider. Use **Copy all as text** or **Download as CSV** rather than retyping.
+    Once both requests come back, the status becomes **Awaiting DNS** and two record groups appear, **Domain Validation** and **Email Setup**. If Orgo recognises your DNS provider, a panel above them offers to do it for you (see below). Otherwise, add every record exactly as shown at your DNS provider. Use **Copy all as text** or **Download as CSV** rather than retyping.
   </Step>
   <Step title="Wait for detection">
     Orgo checks for the records on its own. The page refreshes every 10 seconds while setup is running, and **Check now** forces an immediate check.
@@ -55,7 +55,17 @@ Two rules are enforced when you submit. **It must be a subdomain**: `members.acm
 
 ---
 
+## Let your DNS provider add the records
+
+As soon as you enter the domain, Orgo looks up who hosts its DNS. For providers that support automatic setup, a panel reading **Your DNS is on** and the provider's name appears with up to three buttons: **Add certificate record**, **Add domain record** and **Add email records**. Each sends you to your provider's own page to review one set of records and confirm it. Nothing changes until you approve there, and you come back to this page afterwards. Orgo's checks then pick the records up like any others.
+
+If the automatic setup cannot start, the page says so and you add the records by hand. You can also ignore the panel: **Prefer to add them yourself? The exact records are below.**
+
+---
+
 ## The two record groups
+
+The records are in two collapsible groups, each with a counter such as 2/2 verified.
 
 ### Domain Validation
 
@@ -168,7 +178,11 @@ The status reads **Active** only once both halves are done, so a domain can be s
   Set your contact email **before** the DKIM records verify. Orgo checks the contact email once, on the first check where domain verification and all three DKIM keys are green, and never revisits it. If the address was on another domain at that moment, changing it afterwards in [Organization Info](/platform/organisation/organisation-info) will not promote it on its own; ask support to re-run the promotion.
 </Warning>
 
+Once the domain is live, Orgo also registers it with your Stripe accounts, which is what lets Apple Pay and Google Pay appear on payment pages served from it. Nothing for you to do.
+
 Payment and donation short links (`/pay/<slug>`) use a separate payment host this setup does not change; ask support if you want those on your domain too.
+
+A live domain shows **is live** with an **Open your community** button. The DNS records stay available under **View DNS records**, and **Remove custom domain** sits below them.
 
 ---
 
@@ -220,8 +234,9 @@ Payment and donation short links (`/pay/<slug>`) use a separate payment host thi
 
 ## Related
 
+- [Website Builder](/platform/organisation/website-builder) - Your public website has its own domain setting, separate from this one
 - [Branding](/platform/organisation/branding) - Logos, login background, and interface theme
 - [Organization Info](/platform/organisation/organisation-info) - Contact email and sender identity
 - [Modules](/platform/organisation/modules) - Turn platform features on and off
 - [Mobile Apps](/platform/mobile-apps) - Shared app and branded apps
-- [Permissions](/platform/permissions) - What ADMIN_TENANT unlocks
+- [Permissions](/platform/permissions) - What the Orgo administrator flag unlocks

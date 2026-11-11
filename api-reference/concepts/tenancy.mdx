@@ -3,7 +3,7 @@ title: 'Tenancy'
 description: 'How the API resolves the current tenant and why subdomain choice matters'
 ---
 
-Orgo is multi-tenant. Every organization that uses Orgo gets its own isolated workspace — its own users, events, payments, contracts, files. Two organizations cannot see each other's data, ever, even if a query is misconfigured.
+Orgo is multi-tenant. Every organization that uses Orgo gets its own isolated workspace: its own users, events, payments, contracts, files. Two organizations cannot see each other's data, even if a query is misconfigured.
 
 This page explains how the API knows which tenant a request is for, and what to do when the answer is wrong.
 
@@ -11,7 +11,7 @@ This page explains how the API knows which tenant a request is for, and what to 
 
 ## Tenant resolution: the `Host` header
 
-The tenant is resolved from the HTTP `Host` header of the incoming request. Each organization has either a subdomain on `orgo.space` or a fully-custom domain:
+The tenant is resolved from the HTTP `Host` header of the incoming request. Each organization has either a subdomain on `orgo.space` or a fully custom domain:
 
 ```
 https://acme.orgo.space/api/v1/users        →  tenant = "acme"
@@ -21,12 +21,12 @@ https://members.your-org.com/api/v1/users   →  tenant = "your-org"
 There is **no header, query parameter, or JWT claim that overrides this**. The host *is* the tenant selector.
 
 ```bash
-# ✓ Correct — host is the tenant
+# Correct: the host is the tenant
 curl https://acme.orgo.space/api/v1/users \
   -H "Api-Token: $TOKEN"
 
-# ✗ Wrong — calling the bare app.orgo.space domain returns 404
-# for tenant-scoped endpoints because no tenant resolves
+# Wrong: the bare app.orgo.space domain resolves no tenant,
+# so tenant-scoped endpoints cannot answer
 curl https://app.orgo.space/api/v1/users \
   -H "Api-Token: $TOKEN"
 ```
@@ -42,32 +42,40 @@ The OpenAPI spec lists `https://app.orgo.space` as the base URL only because the
 Tokens are tenant-scoped at the moment they are issued:
 
 - **Api-Token**: tied to the user who created it; that user belongs to one tenant; the token only works against that tenant's host.
-- **JWT** (from `/login-check` or `/verify-login-otp`): contains a `session_id` claim bound to the tenant of the host the login was performed against.
-- **OAuth access tokens**: bound to the tenant where the OAuth application was registered.
+- **Session JWT** (from `/login-check`, `/verify-login-otp`, a social button or an identity provider): contains a `session_id` claim bound to the tenant of the host the login was performed against. A sign-in made on the platform portal can hold a separate session per organization that shares the member's email, each valid only on its own host.
+- **OAuth access tokens**: bound to the tenant where the OAuth application was registered, and capped to member level. See [Authentication](/api-reference/concepts/authentication).
 
-A token from tenant A cannot be used against tenant B. Trying produces `401 Unauthorized`.
+A token from tenant A cannot be used against tenant B. A JWT or OAuth token trying produces `401 Unauthorized`; an Api-Token is looked up by its own value, so presenting it to another host finds no usable session there and fails as well.
 
 ---
 
 ## Cross-tenant access is blocked at the persistence layer
 
-Inside Orgo's backend, Doctrine extensions automatically add `WHERE entity.tenant = current_tenant` to every read. Even if a developer wrote `SELECT * FROM users` without a tenant filter, the extension would inject the filter before the query runs. This is enforced at the ORM level so no API endpoint can leak across tenants.
+Inside Orgo's backend, every read and write is automatically restricted to the current tenant before the query runs. Even if a developer wrote a query without a tenant condition, the restriction would be added for them. This is enforced at the ORM level, so no API endpoint can leak across tenants.
 
-The one exception is OTP-issued JWTs used by the event-app surface (members opening an event landing page from a different tenant they were invited to). Those JWTs carry an `auth_strength: OTP` claim and a `verified_email` instead of a `session_id`, and they can cross tenants but only for the event-attendance endpoints.
+### The one exception: the event app
+
+Members who open an event page of an organization they were invited to, from a different tenant, can switch organizations with an emailed code. The session exchange `POST /api/v1/event-app/session/{tenantSlug}` works like this:
+
+- It is only available on the tenant-agnostic host (`app.orgo.space`). From a tenant subdomain or custom domain the only legal target is that tenant itself, anything else is refused with `403`.
+- A session created by the event app's own emailed code (`POST /api/v1/event-app/verify-otp`) carries an `auth_strength: otp` claim and a `verified_email`. That proves the address, so the exchange may target any organization where the address is registered. If the address is not registered there, the exchange is refused with `403`.
+- A session that did not come through an emailed code (a password session, say) proves the account but not the address. It can open the event app for the account it is already signed in to, and nothing else.
+- A member whose email domain requires the organization's identity provider gets a token only from a session that came through that provider (see [Authentication](/api-reference/concepts/authentication#sign-in-through-an-identity-provider)).
+- An emailed-code session is a full login with the same permissions as a password session, so what the exchanged token can do in the target organization is decided by the member's roles there, not by how the session began.
 
 ---
 
 ## Resolving your tenant host
 
-Every tenant admin can find their host in the admin UI under **Settings → Organisation → Domains**. Common shapes:
+An administrator finds the host in the admin UI under **Settings → Customization → Custom Domain**; see [Custom domain](/platform/custom-domain). Common shapes:
 
 | Shape | Example | Notes |
 |---|---|---|
 | Default subdomain | `acme.orgo.space` | Always available, even after custom-domain setup |
-| Custom subdomain | `members.acme.org` | Configured by the admin |
+| Custom subdomain | `members.acme.org` | Configured by the administrator |
 | Apex custom domain | `acme.org` | Less common; requires DNS at the apex |
 
-The default subdomain always works, even when a custom domain is also configured. Use it for integrations to avoid breakage if the admin changes the custom-domain setup.
+The default subdomain always works, even when a custom domain is also configured. Use it for integrations to avoid breakage if the administrator changes the custom-domain setup.
 
 ---
 
@@ -75,11 +83,11 @@ The default subdomain always works, even when a custom domain is also configured
 
 | Scenario | Response |
 |---|---|
-| Host doesn't match any tenant | `404 Not Found` from the load balancer before Symfony sees the request |
-| Host matches a tenant, but token is from another tenant | `401 Unauthorized` |
-| Host matches, token is valid, but the requested resource belongs to a different tenant | `404 Not Found` (not `403` — leaking "exists but forbidden" would itself be a tenant leak) |
+| Host doesn't match any tenant | `404 Not Found` from the platform before the API sees the request |
+| Host matches a tenant, but the JWT or OAuth token is from another tenant | `401 Unauthorized` |
+| Host matches, token is valid, but the requested resource belongs to a different tenant | `404 Not Found` (not `403`) |
 
-The 404 in the last row is intentional. From outside, "not found" and "exists in another tenant" are indistinguishable. This is the same pattern GitHub uses for private repos.
+The 404 in the last row is intentional. From outside, "not found" and "exists in another tenant" are indistinguishable, so the response never confirms that a record exists somewhere else. This is the same pattern GitHub uses for private repositories.
 
 ---
 
@@ -103,19 +111,24 @@ Webhook payloads carry a top-level `tenant_id` field so a single receiver subscr
 
 <AccordionGroup>
   <Accordion title="I'm getting 401 errors with a valid-looking token">
-    Check that the host you are calling matches the tenant the token was issued for. The same token against the wrong host produces 401, not 403.
+    Check that the host you are calling matches the tenant the token was issued for. A JWT or OAuth token against the wrong host produces `401`, not `403`. A wrong or revoked Api-Token produces `404` instead (see [Authentication](/api-reference/concepts/authentication)).
   </Accordion>
 
   <Accordion title="I want one integration to serve many tenants">
-    Generate one Api-Token per tenant (each from an admin user in that tenant) and route by hostname server-side. There is no "super-token" that crosses tenants.
+    Generate one Api-Token per tenant (each created by an administrator of that tenant) and route by hostname server-side. There is no "super-token" that crosses tenants.
   </Accordion>
 
-  <Accordion title="The tenant's admin changed the custom domain — my integration broke">
-    Switch to the `*.orgo.space` default subdomain. It is permanent and never changes.
+  <Accordion title="The tenant's administrator changed the custom domain and my integration broke">
+    Switch to the `*.orgo.space` default subdomain. It does not change when the custom domain does.
   </Accordion>
 
   <Accordion title="Can I look up a tenant's host programmatically?">
-    Yes — `GET /api/v1/tenant-host/{slug}` returns the current canonical host for a tenant slug. This endpoint is public (no auth needed).
+    Yes. Both lookups are public (no authentication needed) and return the tenant's public profile as JSON-LD, including its `slug` and `appHost`:
+
+    - `GET /api/v1/tenant-slug/{slug}` finds a tenant by its slug, for example `acme`.
+    - `GET /api/v1/tenant-host/{host}` finds a tenant by a host it is served on, for example `acme.orgo.space`.
+
+    An unknown value returns `404`.
   </Accordion>
 </AccordionGroup>
 
@@ -123,5 +136,5 @@ Webhook payloads carry a top-level `tenant_id` field so a single receiver subscr
 
 ## Related
 
-- [Authentication](/api-reference/concepts/authentication) — how tokens carry tenant scope
-- [Errors](/api-reference/concepts/errors) — what each tenant-mismatch error looks like
+- [Authentication](/api-reference/concepts/authentication): how tokens carry tenant scope
+- [Errors](/api-reference/concepts/errors): what each tenant-mismatch error looks like

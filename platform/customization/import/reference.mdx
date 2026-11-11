@@ -19,9 +19,9 @@ Every type below has the same parts.
 
 - **Fields.** What you can map. **Field** is the name the wizard shows in its destination list; **Column** is the canonical name Orgo uses internally and in the example file. Your own spreadsheet headers do not have to match either one: you point each column at a field yourself while mapping.
 - **Required.** What the mapping must cover before **Start import** unlocks. Every group has to be satisfied, and inside a group any one alternative is enough.
-- **Already exists.** How Orgo decides a row describes a record it already has. **A match is skipped, not updated.** Only [Modify Users](#modify-users) and [Modify Contacts](#modify-contacts) change records that are already there. Re-uploading a corrected sheet through any other type changes nothing for the rows that match.
-- **Custom fields.** Whether this type can write to custom fields. Only the four people types can; for every other type the field list below is the whole vocabulary, and a column that is not on it can only be skipped.
-- **Example file.** The **Example CSV** link on that type's card, a small file with the canonical headers.
+- **Already exists.** How Orgo decides a row describes a record it already has. **A match is skipped, not updated.** Only [Modify Users](#modify-users) and [Modify Contacts](#modify-contacts) change records that are already there, and so do [Users](#users) and [Contacts](#contacts) when you set **Members that already exist** to **Update the mapped fields** on the mapping screen. Re-uploading a corrected sheet through any other type changes nothing for the rows that match.
+- **Custom fields.** Whether this type can write to custom fields. Only the four people types can (and Forms writes to the questions of its form); for every other type the field list below is the whole vocabulary, and a column that is not on it can only be skipped.
+- **Example file.** The **Example CSV** link on that type's card: a file carrying the canonical headers for every column of the type, with a few demonstration rows. The same file is served by `GET /imports/template/{type}` for anyone working through the API.
 
 ---
 
@@ -29,8 +29,8 @@ Every type below has the same parts.
 
 | Type | Creates | Updates existing records | Custom fields |
 |---|---|---|---|
-| [Users](#users) | Members | No | Yes |
-| [Contacts](#contacts) | Contacts | No | Yes |
+| [Users](#users) | Members | Only if set to update existing | Yes |
+| [Contacts](#contacts) | Contacts | Only if set to update existing | Yes |
 | [Modify Users](#modify-users) | Nothing, except a contact for a row that matches no member | Yes, members | Yes |
 | [Modify Contacts](#modify-contacts) | Nothing, except a contact for a row that matches nobody | Yes, contacts | Yes |
 | [Product Payments](#product-payments) | Payments, plus the payer, product and price tier a payment needs | No | No |
@@ -44,9 +44,11 @@ Every type below has the same parts.
 | [Company Members](#company-members) | Company memberships | No | No |
 | [List members](#list-members) | List memberships, plus a contact when nobody matches | No | No |
 | [Events](#events) | Events | No | No |
+| [Event Attendance](#event-attendance) | Attendance records, plus the attendee (as a contact) and a draft event when a row names ones that do not exist | No | No |
 | [Badge Types](#badge-types) | Badge categories | No | No |
 | [Badges](#badges) | Badges | No | No |
 | [Badge Assignments](#badge-assignments) | Badge awards | No | No |
+| [Forms](#forms) | Responses to one of your forms, plus the form and its questions if the import declares them | No | Questions of the form |
 
 <Note>
 Order matters when you run several types: each one can name records the earlier ones created, so chapters before members, products before price tiers, price tiers before payments. The import page lists the types in a workable order already.
@@ -63,33 +65,42 @@ Creates member accounts.
 | Email | `email` | Email address. Also how Orgo tells whether the person is already a member. |
 | First name | `first_name` | Given name. |
 | Last name | `last_name` | Family name. |
-| Phone number | `phone_number` | Phone number. |
+| Phone number | `phone_number` | Phone number. Write it with the country code (`+40 721 000 111`): a number without one is read as a Romanian number, whichever country your organisation is in. A number that is not valid is left empty, with a warning. |
 | Birth date | `birth_date` | Date of birth. |
-| Gender | `gender` | Gender. Only the first character is kept. |
+| Gender | `gender` | Use `f`, `m` or `n`. Only the first character of the cell is kept. |
 | Address | `address` | Street address. |
 | Postal code | `postal_code` | Postcode or ZIP. |
-| Town of residence | `town_residence` | Town they live in, matched against the town list by name. |
+| Town of residence | `town_residence` | Town they live in. When the row has a postal code Orgo knows, the code fixes the state and county and the written name picks the town inside them. Otherwise the name is matched against the town list, inside your organisation's country. A town it cannot find is left empty, with a warning. |
 | Website | `website` | Personal website. |
 | Company name | `company_name` | Employer name as free text on the member, not a link to a company record. |
 | Profession headline | `profession_headline` | Job title or headline text. |
+| Current organisation | `profession_organisation` | The organisation they work for, as text. |
+| Role at organisation | `profession_organisation_role` | Their role there. |
+| Organisation website | `profession_organisation_website` | That organisation's website. |
+| Industry | `profession_industry` | The industry they work in, by name. It must be one of the industries your organisation uses; any other value is left empty, with a warning. |
 | Member ID | `member_id` | Membership card number. |
 | Full member | `is_full_member` | Yes or no: a full member rather than a trial or associate one. |
-| Status | `status` | Member status. Only values on the allowed status list are accepted. |
-| Member type legacy ID | `user_type_legacy_id` | Their membership type, matched by legacy id or by name. |
-| Chapter legacy ID | `local_center_legacy_id` | Their chapter, by legacy id or by chapter name. |
+| Status | `status` | Member status: `ACTIVE`, `INACTIVE`, `UNCONFIRMED_EMAIL`, `UNAPPROVED`, `WAITING_LIST`, `SUSPENDED`, `EXCLUDED`, `DELETED` or `AWAITING_REFERRAL`. Anything else imports as active, with a warning. |
+| Member type | `user_type_legacy_id` | Their membership type, matched by legacy id or by name. |
+| Chapter | `local_center` | Their chapter, by name. |
+| Chapter legacy ID | `local_center_legacy_id` | Their chapter, by the id it had in the old system. Wins if you map both chapter columns. |
 | Date created | `date_created` | The date the record should say the person was created. |
 | Date joined | `date_joined` | The date they joined. |
 | Date joined as full member | `date_joined_full_member` | The date they became a full member. |
 | Newsletter subscribed | `is_newsletter_subscribed` | Yes or no. Left blank, the stored value stays as it is. |
 | Tags | `tags` | Comma separated tag names. A tag that does not exist yet is created. |
-| Fee price legacy ID | `fee_tenant_product_price_legacy_id` | Legacy id of the price tier that sets their membership fee. |
+| Fee price tier name | `fee_tenant_product_price` | The membership fee tier that sets their fee, by name. |
+| Fee price legacy ID | `fee_tenant_product_price_legacy_id` | The same tier by legacy id. Wins if you map both. A tier it cannot find is left empty, with a warning. |
+| Roles to assign | `role` | Organisational roles to give them, separated by commas. Each must already exist under Roles; a name that does not exist fails the row, rather than importing the member without it. |
 | Legacy ID | `user_legacy_id` | The person's id in the system you are migrating from. |
 
-The wizard shows these as one flat list rather than in groups.
+The wizard lists these under five headings: **Identity**, **Contact**, **Membership**, **Profession** and **Roles**.
+
+**Chapter.** The `local_center` column is read: a chapter is found by its legacy id first, then by its name (capitals ignored). A chapter that does not exist is not created; the member is imported without one and the row carries the warning **Chapter "X" not found, left empty**. On organisations in the US that assign chapters by state, a member who ends up with a town but no chapter from the file is placed in the chapter of the town's state, so a misspelled chapter name falls back to the state chapter and warns. Members created into a chapter get that chapter's follow and local fee.
 
 **Required:** `email`.
 
-**Already exists:** the email address, compared without regard to case. A row whose email already belongs to a member is skipped. A row with a blank or unusable email fails rather than creating a member. Map the legacy id as well and a member carrying that legacy id counts as a match too.
+**Already exists:** the email address, compared without regard to case. A row whose email already belongs to a member is skipped, and the legacy id from the file is recorded on that member if they had none, so later files can find them. A row with a blank or unusable email fails rather than creating a member. Map the legacy id as well and a member carrying that legacy id counts as a match too. With **Members that already exist** set to **Update the mapped fields**, a matched row is updated instead of skipped, field by field, exactly as in [Modify Users](#modify-users).
 
 **Custom fields:** yes.
 
@@ -107,13 +118,13 @@ Creates contacts: people you hold details for who do not have a member account.
 | Name | `name` | Full name in one field, not split into first and last. |
 | Phone | `phone` | Phone number. |
 | Birth date | `birth_date` | Date of birth. |
-| Gender | `gender` | Gender. |
+| Gender | `gender` | Use `f`, `m` or `n`. |
 | Address | `address` | Street address. |
 | Town | `town` | Town, matched by name. |
 | Country | `country` | Country, matched by two-letter code, three-letter code or name. |
 | Organisation | `organisation` | The organisation they belong to, as free text. |
-| Role | `role` | Their position or job title. |
-| Profession and role | `profession_organisation_role` | Their role inside that organisation. |
+| Role | `role` | Their role in that organisation. |
+| Job title | `profession_organisation_role` | Job title, on one line. |
 | Company name | `company_name` | Company name as free text. |
 | Company identifier | `company_identifier` | Company identifier, for example a Romanian CUI. |
 | Company address | `company_address` | Company address. |
@@ -126,13 +137,13 @@ Creates contacts: people you hold details for who do not have a member account.
 | Chapter legacy ID | `local_center_legacy_id` | Their chapter, by legacy id. |
 | Newsletter subscribed | `is_newsletter_subscribed` | Yes or no. Left blank, the stored value stays as it is. |
 | Tags | `tags` | Comma separated tag names. |
-| Legacy ID | `user_legacy_id` | If the email turns out to belong to a member, this legacy id is stamped onto that member instead of a contact being created. |
+| Legacy ID | `user_legacy_id` | The member this contact is the same person as, by the id that member had in the old system. If the email turns out to belong to a member, this legacy id is stamped onto that member instead of a contact being created. |
 
 The wizard shows these as one flat list rather than in groups.
 
 **Required:** `email`.
 
-**Already exists:** the email address, checked against both members and contacts. An email that already belongs to either is skipped.
+**Already exists:** the email address, checked against both members and contacts. An email that already belongs to either is skipped. With **Members that already exist** (the label is the same on a Contacts file) set to **Update the mapped fields**, a row that matches a contact is updated as in [Modify Contacts](#modify-contacts); a row that matches a member is still left alone.
 
 **Custom fields:** yes.
 
@@ -142,32 +153,37 @@ The wizard shows these as one flat list rather than in groups.
 
 ## Modify Users
 
-Updates members who are already in Orgo. One of the two types that change existing records.
+Updates members who are already in Orgo. One of the two types that change existing records (Users does the same when set to update existing people).
 
 | Field | Column | What it means |
 |---|---|---|
 | Email | `email` | Email address. A match key, and writable: put a new address here to change it. |
-| Phone number | `phone_number` | Phone number. A match key, and writable. |
+| Phone number | `phone_number` | Phone number, with the country code as on the Users type. A match key, and writable. |
 | Legacy ID | `user_legacy_id` | Their id in your old system. A match key, and writable. |
 | First name | `first_name` | Given name. |
 | Last name | `last_name` | Family name. |
 | Birth date | `birth_date` | Date of birth. |
-| Gender | `gender` | Gender. |
+| Gender | `gender` | `f`, `m` or `n`. Anything else is left unchanged, with a warning. |
 | Address | `address` | Street address. |
 | Postal code | `postal_code` | Postcode or ZIP. |
-| Town of residence | `town_residence` | Town they live in, matched by name. |
+| Town of residence | `town_residence` | Town they live in, read as on the Users type. |
 | Website | `website` | Personal website. |
 | Company name | `company_name` | Employer name as free text. |
 | Profession headline | `profession_headline` | Job title or headline text. |
+| Current organisation, Role at organisation, Organisation website | `profession_organisation`, `profession_organisation_role`, `profession_organisation_website` | Where they work, as text. |
+| Industry | `profession_industry` | By name; an industry your organisation does not use is left unchanged, with a warning. |
 | Member ID | `member_id` | Membership card number. |
 | Full member | `is_full_member` | Yes or no. |
-| Status | `status` | Member status. |
-| Newsletter subscribed | `is_newsletter_subscribed` | Yes or no. |
+| Status | `status` | Member status, as on the Users type. |
+| Newsletter subscribed | `is_newsletter_subscribed` | Yes or no. An explicit no unsubscribes. |
 | Date joined | `date_joined` | The date they joined. |
 | Date joined as full member | `date_joined_full_member` | The date they became a full member. |
 | Chapter | `local_center` | Their chapter, by name. |
 | Chapter legacy ID | `local_center_legacy_id` | Their chapter, by legacy id. Wins if you map both chapter columns. |
-| Member type legacy ID | `user_type_legacy_id` | Their membership type, by legacy id or name. |
+| Member type | `user_type_legacy_id` | Their membership type, by legacy id or name. |
+| Fee price tier name, Fee price legacy ID | `fee_tenant_product_price`, `fee_tenant_product_price_legacy_id` | The membership fee tier they move to. |
+| Tags | `tags` | Comma separated tag names, **added** to the member. Existing tags are never removed. |
+| Roles to assign | `role` | Organisational roles, **added** to the member when they do not hold them yet. Roles are never ended by an import. |
 
 **Required:** one group, three alternatives. Map `email`, or `user_legacy_id`, or `phone_number`.
 
@@ -176,8 +192,12 @@ Updates members who are already in Orgo. One of the two types that change existi
 **Custom fields:** yes.
 
 <Note>
-The wizard offers the full member field list here, but a modify run writes only the fields in the table above. Anything else you map, including `date_created`, `tags` and the fee price legacy id, is accepted and then goes unused. An empty cell writes nothing either, so a blank column cannot clear a value that is already stored.
+`date_created` is offered by the mapper but a modify run does not write it. An empty cell writes nothing, so a blank column cannot clear a value that is already stored. A value Orgo cannot use (an unknown chapter, a date it cannot read) leaves that one field unchanged and the row carries a warning.
 </Note>
+
+<Warning>
+A modify run that changes a member's chapter, or a town that moves them to a different state chapter, applies the same effects as a manual move: ordinary memberships at the old chapter end and the follows and local fee switch. Positions with permissions are not ended. See [Moving members between chapters](/platform/customization/import#moving-members-between-chapters).
+</Warning>
 
 **Example file:** `import_user_modify.csv`, from the **Example CSV** link on the **Modify Users** card.
 
@@ -193,13 +213,13 @@ Updates contacts who are already in Orgo. The second of the two types that chang
 | Phone | `phone` | Phone number. A match key, and writable. |
 | Name | `name` | Full name in one field. |
 | Birth date | `birth_date` | Date of birth. |
-| Gender | `gender` | Gender. |
+| Gender | `gender` | `f`, `m` or `n`. |
 | Address | `address` | Street address. |
 | Town | `town` | Town, matched by name. |
 | Country | `country` | Country, matched by two-letter code, three-letter code or name. |
 | Organisation | `organisation` | The organisation they belong to. |
-| Role | `role` | Their position or job title. |
-| Profession and role | `profession_organisation_role` | Their role inside that organisation. |
+| Role | `role` | Their role in that organisation. |
+| Job title | `profession_organisation_role` | Job title, on one line. |
 | Company name | `company_name` | Company name. |
 | Company identifier | `company_identifier` | Company identifier, for example a Romanian CUI. |
 | Company address | `company_address` | Company address. |
@@ -209,6 +229,7 @@ Updates contacts who are already in Orgo. The second of the two types that chang
 | Instagram | `instagram` | Instagram profile link. |
 | Status | `status` | Contact status. |
 | Newsletter subscribed | `is_newsletter_subscribed` | Yes or no. |
+| Tags | `tags` | Comma separated tag names, added to the contact. |
 | Chapter | `local_center` | Their chapter, by name. |
 | Chapter legacy ID | `local_center_legacy_id` | Their chapter, by legacy id. Wins if you map both chapter columns. |
 
@@ -219,7 +240,7 @@ Updates contacts who are already in Orgo. The second of the two types that chang
 **Custom fields:** yes.
 
 <Note>
-`tags` and the member legacy id are offered by the mapper but not written by a modify run. An empty cell writes nothing, so a blank column cannot clear a stored value.
+`tags` are added to the contact, never removed. The member legacy id is offered by the mapper but not written by a modify run. An empty cell writes nothing, so a blank column cannot clear a stored value.
 </Note>
 
 **Example file:** `import_contact_modify.csv`, from the **Example CSV** link on the **Modify Contacts** card.
@@ -235,16 +256,17 @@ Creates payment records, and the payer, product and price tier each payment need
 | Payer | Payer email | `payer_email` | The payer's email address. |
 | Payer | Payer name | `payer_name` | The payer's full name, used to create a contact when no member or contact matches. |
 | Payer | Payer organisation | `payer_organisation` | The payer's organisation, kept as extra detail on a contact created this way. |
+| Payer | Payer personal number | `payer_personal_number` | The payer's personal identification number. Finds the member or contact when the email matches nobody, and is kept (encrypted) on a contact created this way. Spaces are ignored; any other formatting must match what is stored. |
 | Payer | Legacy ID | `user_legacy_id` | The payer, by member legacy id. |
 | Product | Product name | `product_name` | The product or fee this pays for. Created if it does not exist. |
-| Product | Product type | `product_type` | The product category, used when the product has to be created. |
+| Product | Product type | `product_type` | `fee`, `donation` or `event`. Used only when the product has to be created. |
 | Product | Product legacy ID | `product_legacy_id` | The product, by legacy id. |
 | Price tier | Price tier name | `price_name` | The price tier. Created if it does not exist. |
 | Price tier | Price tier legacy ID | `product_price_legacy_id` | The price tier, by legacy id. |
-| Payment | Amount | `amount` | The amount paid. Numbers written the human way are understood. |
+| Payment | Amount | `amount` | The amount paid. Amounts are read the way people write them (`12,50`, `1.250,00`, `EUR 50`). |
 | Payment | Currency | `currency` | Currency code. Left out, your organisation's currency is used. |
-| Payment | Status | `status` | Payment status. Only values on the allowed list are accepted. |
-| Payment | Date created | `date_created` | The date of the payment. |
+| Payment | Status | `status` | `open`, `success`, `refunded`, `canceled` or `pending_accept`. Anything else fails the row. |
+| Payment | Date created | `date_created` | The date of the payment, read as midnight in your organisation's time zone. |
 | Payment | Period start | `period_start` | Start of the period the payment covers. |
 | Payment | Period end | `period_end` | End of that period. |
 | Payment | Comment | `comment_by_user` | A free text note on the payment. |
@@ -255,12 +277,14 @@ Creates payment records, and the payer, product and price tier each payment need
 
 | Group | Map at least |
 |---|---|
-| Payer | `user_legacy_id`, or `payer_email`, or `payer_name` |
+| Payer | `user_legacy_id`, or `payer_email`, or `payer_personal_number`, or `payer_name` |
 | Payment | `amount` **and** `status`, both |
 
 The **Product** and **Price tier** groups are optional: a payment with no product is treated as a donation, so a payments file without product columns validates and imports.
 
 **Already exists:** the payment legacy id when you map one. Without it, Orgo builds a fingerprint from the payer, product, price tier, amount, payment date and period, and a second row with the same fingerprint is skipped. That is what stops a re-run of the same file doubling every payment.
+
+When a payments run finishes, or is rolled back, Orgo recomputes every member's fee dates, since payments extend a membership.
 
 **Custom fields:** no.
 
@@ -275,7 +299,7 @@ Creates products and fees.
 | Group | Field | Column | What it means |
 |---|---|---|---|
 | Product | Name | `name` | Product or fee name. |
-| Product | Type | `type` | The category, for example a fee rather than a shop item. |
+| Product | Type | `type` | `fee`, `donation` or `event`. Anything else imports with no type. |
 | Product | Description | `description` | Description text. |
 | Product | Product legacy ID | `product_legacy_id` | The product, by legacy id. |
 | Billing | Subscription | `has_subscription` | Yes or no: it can be paid as a recurring subscription. |
@@ -434,7 +458,7 @@ Gives members their roles, optionally inside a unit, for a period of time.
 | Role | `role_legacy_id`, or `role_name` |
 | Period | `start_date` |
 
-The **Unit** group is offered but never required.
+The **Unit** group is offered but never required. A row that names no unit, for a role that belongs to a chapter, is placed in the member's own chapter (a parent-chapter role goes to the chapter above it). A member with no chapter to place it in fails the row with **Member is not part of any chapter**. A unit named in the file always wins.
 
 **Already exists:** the member, the role, the unit and the start date together. The same person can hold the same role twice as long as the start dates differ.
 
@@ -486,7 +510,7 @@ Links members to the companies they belong to.
 | Company | Company legacy ID | `company_legacy_id` | The company, by legacy id. |
 | Member | Email | `email` | The member, by email. |
 | Member | Legacy ID | `user_legacy_id` | The member, by legacy id. |
-| Membership | Role | `role` | Their role inside the company. |
+| Membership | Role | `role` | Their role inside the company: `PRIMARY`, `PRIMARY_CONTACT`, `FINANCIAL`, `FINANCIAL_REP`, `REPRESENTATIVE` or `REP`, several separated by commas. Empty means a plain member. |
 | Membership | Date created | `date_created` | When the membership started. |
 | Membership | Membership legacy ID | `company_user_legacy_id` | This membership row, by legacy id. |
 
@@ -497,7 +521,7 @@ Links members to the companies they belong to.
 | Company | `company_legacy_id`, or `company_name` |
 | Member | `user_legacy_id`, or `email` |
 
-**Already exists:** the company and the member together, among memberships that have not ended. Somebody already in the company is skipped.
+**Already exists:** the company and the member together, among memberships that have not ended. Somebody already in the company is skipped. An imported membership is the person's primary one, and a person has only one: a row for someone who is already the primary member of another company, in Orgo or earlier in the same file, is skipped with the note to add them as an associate from the company page.
 
 **Custom fields:** no.
 
@@ -559,6 +583,40 @@ Creates events.
 
 ---
 
+## Event Attendance
+
+Records who attended which event, one row per person per event.
+
+| Group | Field | Column | What it means |
+|---|---|---|---|
+| Event | Event name | `event_name` | The event, by name. |
+| Event | Event date | `event_datetime` | When the event starts. Together with the name it tells two events of the same name apart. |
+| Event | Chapter | `chapter` | The chapter that ran the event, by name. |
+| Event | Event legacy ID | `event_legacy_id` | The event, by the id it had in the old system. Takes precedence over the name. |
+| Attendee | Attendee email | `attendee_email` | Matched against members first, then contacts. |
+| Attendee | Attendee name | `attendee_name` | Used to create a contact when nobody matches. |
+| Attendee | Attendee organisation | `attendee_organisation` | Kept on a contact created this way. |
+| Attendee | Legacy ID | `user_legacy_id` | The attendee, by member legacy id. Takes precedence over the email. |
+| Attendance | Status | `status` | `attending`, `not_attending`, `maybe` or `attended`. Empty imports as attended; anything else fails the row. |
+| Attendance | Date created | `date_created` | The day the person registered. |
+
+**Required:** two things.
+
+| Group | Map at least |
+|---|---|
+| Event | `event_legacy_id`, or `event_name` **and** `chapter`, or `event_name` **and** `event_datetime` |
+| Attendee | `user_legacy_id`, or `attendee_email`, or `attendee_name` |
+
+**Already exists:** the event and the person together. Somebody already recorded at the event is skipped, and so is a repeat of the same person and event inside the file.
+
+**Custom fields:** no.
+
+Use the event legacy id when you have one: it names the event unambiguously. Naming events by name is covered in [Linking records](/platform/customization/import/linking-records#event-attendance), including why the spelling has to match exactly. A person with no email who is created from a name is created again on every run.
+
+**Example file:** `import_event_attendance.csv`, from the **Example CSV** link on the **Event Attendance** card.
+
+---
+
 ## Badge Types
 
 Creates the categories badges are filed under.
@@ -614,8 +672,8 @@ Awards badges to members.
 | Member | Legacy ID | `user_legacy_id` | The member, by legacy id. |
 | Badge | Badge | `badge_name` | The badge, by name. |
 | Badge | Badge legacy ID | `badge_legacy_id` | The badge, by legacy id. |
-| Award | Awarded on | `concluded_at` | The date of the award. |
-| Award | Status | `status` | Completed or pending. Words are accepted as well as 0 and 1, and a word Orgo does not recognise fails the row rather than guessing. |
+| Award | Awarded on | `concluded_at` | The date of the award. For a completed award it is also the date the award shows in the activity feed. |
+| Award | Status | `status` | Completed or pending. Empty counts as completed. Words such as `done`, `awarded`, `in progress` and `open` are accepted as well as 1 and 0, and a word Orgo does not recognise fails the row rather than guessing. |
 | Award | Points | `points_at_award` | Points scored at the time of the award. |
 | Award | Member comment | `comment_user` | The member's own comment. |
 | Award | Reviewer comment | `comment_master` | The assessor's comment. |
@@ -634,6 +692,30 @@ Awards badges to members.
 **Custom fields:** no.
 
 **Example file:** `import_badge_users.csv`, from the **Example CSV** link on the **Badge Assignments** card.
+
+---
+
+## Forms
+
+Loads the answers from a form export (a Google Forms or Typeform download, for example) as responses to one of your forms. It sits under **Standalone imports**, needs the Form Builder module, and does not depend on any other step. Each row becomes one response.
+
+Before you map, the card asks where the responses go: **Import responses into** a form you pick from the list, or **A new form**, which you name under **New form name** (pre-filled from the file name). The form is created when you press **Start import**.
+
+| Field | Column | What it means |
+|---|---|---|
+| Respondent email | `email` | Who answered. Matched against members first, then contacts; an address nobody has becomes a contact. Without it the response is anonymous. |
+| Respondent name | `name` | The name for a contact this import creates. |
+| Submitted at | `submitted_at` | When the response was sent. Without it, the response is dated when the import runs. |
+
+Every other column is a question of the form. In the mapping screen the destinations read **Respondent**, **Existing question**, **New question** and **Skip**: point a column at a question the form already has, or declare a new one, with the same types and value matching as profile custom fields ([Custom fields](/platform/customization/import/custom-fields)). New questions are added after the form's existing ones, in the order of the columns.
+
+**Required:** nothing. A file with no respondent columns imports anonymous responses.
+
+**Already exists:** nothing is checked, so running the same file twice records every response twice. The only rows skipped are those with no answers in them.
+
+**Rolling back** deletes the imported responses, removes the questions the import added if nothing else uses them, and deletes a form the import created if no responses remain.
+
+**Example file:** `import_form_responses.csv`, from the **Example CSV** link on the **Forms** card. There is no template download for Forms, because its columns are your own questions.
 
 ---
 

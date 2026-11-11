@@ -16,10 +16,12 @@ access problem, status is the first field to check.
 behave differently. **Replaces** the "archived" column in a spreadsheet that
 nothing actually enforces.
 
-The status field is on the **Permissions** tab of a member's edit page
-(**Members** → open a member → **Edit** → **Permissions**).
-
-<img src="/images/platform/users/statuses-dropdown.png" alt="Status field set to Active at the top of the Permissions tab of a member edit page, beside the Record the resignation of this member button" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+The status field is on the **Membership status** tab of a member's edit page
+(**Members** → open a member → **Edit** → **Membership status**). That tab also
+holds the member's chapter, user type, full-member date and the **Record the
+resignation of this member** shortcut. The status control itself appears for
+chapter HR managers over that member, and, when **Allow Local Admins to Modify User
+Permissions** is off, for organization-wide HR managers only.
 
 ---
 
@@ -65,6 +67,7 @@ sign in, they will be locked out.
 | Role assignments are end-dated | Any move away from Active end-dates every open role. The rows stay in the history with a closed date; they are not deleted |
 | They leave the member directory | The directory lists Active members by default, and a non-Active profile page is refused for everyone except an admin with HR access over their local group |
 | Moving back to Active restores the basics, not the roles | Their user-type role and local group follows come back; roles that the earlier change end-dated do not, so reassign them on the Roles tab |
+| A payment can reactivate an Inactive member | When a membership fee payment (or a donation, where donations count towards membership) pays an Inactive member's fee date into the future, they are switched back to Active automatically, with the usual welcome email. It does not happen if their resignation was approved |
 
 <Note>
 The date of the most recent change is stored on the member automatically, so
@@ -75,12 +78,15 @@ The date of the most recent change is stored on the member automatically, so
 
 ## Who can change a status
 
-Status is edited through the admin edit endpoint, which requires `HR_LOCAL` over
-that member's local group; `HR_TENANT` and `ADMIN_TENANT` cover every local
-group. Turning off **Allow Local Admins to Modify User Permissions**
-(**Settings** → **Users & Profiles** → **Configuration**) leaves only
-`HR_TENANT` and `ADMIN_TENANT`, and local admins are refused with "Only tenant
-administrators can modify user status."
+<img src="/images/platform/users/statuses-dropdown.png" alt="The status control on a member profile, open on the statuses the administrator may move the member to" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+Status is edited through the admin edit endpoint, which requires chapter HR
+manager rights over that member's local group; organization-wide HR managers and
+organization admins cover every local group. Turning off **Allow Local Admins to
+Modify User Permissions** (**Settings** → **Modules** → **Users & Profiles** →
+**Configuration**) leaves only organization-wide HR managers and organization
+admins, and local admins are refused with "Only tenant administrators can modify
+user status."
 
 Members have one self-service route: **Close account** on their **Settings &
 Privacy** → **Close account** page sets them to Inactive. See
@@ -99,7 +105,7 @@ else **Active**. Accounts created
 by an administrator use **Default Status for Admin-Created Users** instead,
 which offers Active, Inactive, Unapproved, Waiting list, Suspended and Excluded.
 
-These settings all live under **Settings** → **Users & Profiles** →
+These settings all live under **Settings** → **Modules** → **Users & Profiles** →
 **Configuration**:
 
 | Setting | What it does |
@@ -143,8 +149,8 @@ to contact support and an administrator changes the status by hand.
 ## Turning on the extra statuses
 
 Waiting list, Excluded, Unreachable, Helping hands and Contributor are off by
-default, switched on under **Settings** → **All Modules** → **Extra User
-Statuses** (`ADMIN_TENANT`). Suspended is on out of the box. Only the statuses
+default, switched on under **Settings** → **Modules** → **All Modules** → **Extra User
+Statuses** (Orgo administrators). Suspended is on out of the box. Only the statuses
 you switch on appear in the status dropdown and in the member directory's status
 filter.
 
@@ -208,8 +214,8 @@ ordering) and they do not apply to members. See
 
   <Accordion title="A local admin gets 'Only tenant administrators can modify user status'">
     That message comes from **Allow Local Admins to Modify User Permissions**
-    being off, under **Settings** → **Users & Profiles** → **Configuration**.
-    With it off, only `HR_TENANT` and `ADMIN_TENANT` can change any status,
+    being off, under **Settings** → **Modules** → **Users & Profiles** → **Configuration**.
+    With it off, only organization-wide HR managers and organization admins can change any status,
     including approving new registrations and parking someone on the waiting
     list.
 
@@ -217,7 +223,7 @@ ordering) and they do not apply to members. See
     is no middle setting that allows approvals but blocks other status changes.
 
     A different message ("Access Denied") usually means the admin lacks
-    `HR_LOCAL` over that member's local group, which is a separate check that
+    chapter HR rights over that member's local group, which is a separate check that
     applies even when the setting is on.
   </Accordion>
 
@@ -226,7 +232,7 @@ ordering) and they do not apply to members. See
 
     - Waiting list, Suspended, Excluded, Unreachable, Helping hands and
       Contributor each appear only when that status is enabled under
-      **Settings** → **All Modules** → **Extra User Statuses**. Suspended is on
+      **Settings** → **Modules** → **All Modules** → **Extra User Statuses**. Suspended is on
       out of the box, the rest are not.
     - **New request** appears only while **Manual Approval** is on.
     - Awaiting referral and Deleted are never offered: the referral programme
@@ -241,7 +247,7 @@ ordering) and they do not apply to members. See
     registration, and it is on by default. Reinstating a lapsed member,
     approving a New request and bulk-activating an imported list all trigger it.
 
-    Turn it off under **Settings** → **Users & Profiles** → **Configuration**
+    Turn it off under **Settings** → **Modules** → **Users & Profiles** → **Configuration**
     before a bulk reactivation, then turn it back on.
   </Accordion>
 

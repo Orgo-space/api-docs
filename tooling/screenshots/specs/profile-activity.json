@@ -7,11 +7,11 @@
     ],
     "tenant": "t187c",
     "route": "/user/209251?tab=activity",
-    "routeHint": "Members -> open a member -> Activity tab (the ?tab query selects it). The tab only renders for a viewer holding HR_LOCAL or FINANCIAL_LOCAL over that member, or ADMIN_TENANT (client/src/views/User/ShowContent.vue canReadProfileActivity), AND with users.hasProfileActivity on for the tenant - it is enabled on tenant 282 only. A plain member sees no tab at all. 209251 (Emma Dubois, Williamsburg) was chosen because her donation (24 Feb 2026) and her form submission (11 Feb 2026) sit close together, so today's notes and tag changes plus one donation and one form all fit above the fold in three day groups. The notes and the tag add/remove were created through the UI on 2026-08-07 as julian.sorensen.207128@example.org (see capture/seed-activity.mjs and capture/seed-tags.mjs); tag Leadership was added and tag Sports removed, so 209251 now carries Arts + Leadership.",
+    "routeHint": "Members -> open a member -> Activity tab (the ?tab query selects it). The tab only renders for a viewer holding HR_LOCAL or FINANCIAL_LOCAL over that member, or ADMIN_TENANT (client/src/views/User/ShowContent.vue canReadProfileActivity), AND with users.hasProfileActivity on for the tenant - it is enabled on tenant 282 only. A plain member sees no tab at all. 209251 (Emma Dubois, Williamsburg) was chosen because her donation (24 Feb 2026) and her form submission (11 Feb 2026) sit close together, so today's notes and tag changes plus one donation and one form all fit above the fold in three day groups. The notes and the tag add/remove were created through the UI on 2026-08-07 as julian.sorensen.207128@example.org (see capture/seed-activity.mjs and capture/seed-tags.mjs); tag Leadership was added and tag Sports removed, so 209251 now carries Arts + Leadership. UPDATE 2026-11-11: users.hasProfileActivity had been reset to false on tenant 282 (every capture with a selector inside the feed failed with a locator timeout). Re-enabled with JSON_SET on tenant.setting_features. Check it before any run in this area. UPDATED 2026-11-11: her donation was regenerated as 300 RON dated 2022, which both read wrong for a Virginia association and sat far below the 40-row first page of the feed. The 90 leftover RON payments in this tenant were converted to dollars (300 RON became 60 usd) and this one was moved to 2026-11-03 so it sits beside the notes, which is the point of the capture. The feed writes the amount as a formatted sum, 'Donated $60', not 'Donated 60 usd', which is why the wait kept missing on an image that was correct. Verified by eye on 2026-11-11: the tab shows the notes composer, the filter chips and three day groups, so the image is current; only the wait was wrong.",
     "actions": [
       "wait 2000"
     ],
-    "waitFor": "text=Donated 50 usd",
+    "waitFor": "text=Donated $60",
     "viewport": "wide",
     "alt": "Activity tab on a member profile with the note composer at the top and the activity feed below it, showing tag, note, donation and form entries grouped by day",
     "status": "new",
@@ -25,7 +25,7 @@
     ],
     "tenant": "t187c",
     "route": "/user/209251?tab=activity",
-    "routeHint": "Activity tab -> click a note row in the feed. A note row is clickable only when its meta carries text (ProfileTimeline.isNoteClickable), and the row label is the action name ('Called'/'Emailed') when the note has one, otherwise 'Note added'. Click the label span, not text=Called: the composer's Action <select> also contains an option reading 'Called' and sits earlier in the DOM, so a bare text match hits the option instead. Edit and Delete only render for the note's author or ADMIN_TENANT (canManageSelectedNote), mirroring the note PATCH/DELETE security expression - capture as the author.",
+    "routeHint": "Activity tab -> click a note row in the feed. A note row is clickable only when its meta carries text (ProfileTimeline.isNoteClickable), and the row label is the action name ('Called'/'Emailed') when the note has one, otherwise 'Note added'. Click the label span, not text=Called: the composer's Action <select> also contains an option reading 'Called' and sits earlier in the DOM, so a bare text match hits the option instead. Edit and Delete only render for the note's author or ADMIN_TENANT (canManageSelectedNote), mirroring the note PATCH/DELETE security expression - capture as the author. 2026-11-11 recapture: with users.hasProfileActivity back on (see profile-activity-tab) the selectors resolved, but the notes were gone: user_note had 0 rows after the data reset, so no row labelled Called existed and the click timed out. Seeded as the admin author: INSERT INTO user_note (uuid,text,action,date_created,date_updated,user_id,author_id,tenant_id) VALUES (lower(hex(random_bytes(13))),'Phoned Emma about the committee vacancy. She is interested and will confirm after the next chapter meeting.','called',now(),now(),209251,207128,282), (lower(hex(random_bytes(13))),'Renewal paperwork is complete. Membership committee has no outstanding questions, so nothing further is needed before the next review.',NULL,date_sub(now(),interval 1 hour),date_sub(now(),interval 1 hour),209251,207128,282). No selector changed. The reset also put user 207128 logo back to demo_f, so the author avatar rendered blank again (see notes); re-applied UPDATE user SET logo=\"demo__https://randomuser.me/api/portraits/women/28.jpg\" WHERE id=207128 AND logo=\"demo_f\".",
     "actions": [
       "click .timeline-label-text:text-is(\"Called\")",
       "wait 1500"
@@ -45,7 +45,7 @@
     ],
     "tenant": "t187c",
     "route": "/tenants/modules/users",
-    "routeHint": "Settings (gear) -> Modules -> Users & Profiles -> Configuration, Profile Settings section, last row. /settings is not a route and 404s. The switch is users.hasProfileActivity, which defaults to false: it gates the Activity tab AND closes the /user_notes, /contact_notes, /timeline and /timeline-actors endpoints server-side (ProfileActivityFeature). It is on for tenant 282 only - do not switch it on anywhere else.",
+    "routeHint": "Settings (gear) -> Modules -> Users & Profiles -> Configuration, Profile Settings section, last row. /settings is not a route and 404s. The switch is users.hasProfileActivity, which defaults to false: it gates the Activity tab AND closes the /user_notes, /contact_notes, /timeline and /timeline-actors endpoints server-side (ProfileActivityFeature). It is on for tenant 282 only - do not switch it on anywhere else. UPDATE 2026-11-11: re-enabled after it was found reset to false.",
     "actions": [
       "scrollto text=Enable Profile Notes & Activity",
       "wait 1500"
@@ -100,18 +100,18 @@
     "id": "contact-activity-panel",
     "image": "/images/platform/users/contact-activity-panel.png",
     "usedOn": [
-      "platform/contacts.mdx"
+      "platform/users/profile-activity.mdx"
     ],
     "tenant": "t187c",
     "route": "/contacts/show/23852",
-    "routeHint": "Contacts -> open a contact. A contact record has no tabs, so the Notes composer and the Activity panel are stacked cards in the left column rather than a tab (client/src/views/Contact/ShowContent.vue), which is the point of this capture. Both are gated by the same canReadProfileActivity computed as the member profile. They sit below the details, status and tags cards, so scroll them into view. 23852 (Hugo Vargas) carries three notes from different authors and one donation.",
+    "routeHint": "Contacts -> open a contact. A contact record has no tabs, so the Notes composer and the Activity panel are stacked cards in the left column rather than a tab (client/src/views/Contact/ShowContent.vue), which is the point of this capture. Both are gated by the same canReadProfileActivity computed as the member profile. They sit below the details, status and tags cards, so scroll them into view. 23852 (Hugo Vargas) carries three notes from different authors and one donation. 2026-11-11: the three notes seeded for this contact were written with capitalised actions (Met, Called, Emailed) and all three rendered as 'Emailed'. ProfileTimeline.vue:412 reads the action as lowercase and treats anything that is not 'called' as an email, and the composer only offers 'called' and 'emailed'. They are now called, emailed and no action, which reads as Called, Emailed and Note added.",
     "actions": [
       "scrollto .profile-timeline",
       "wait 1500"
     ],
     "waitFor": "[data-test=\"timeline-day\"]",
     "viewport": "wide",
-    "alt": "Contact record with the Notes composer and the Activity panel stacked in the left column, the feed showing note and donation entries",
+    "alt": "A contact record with Tags, Notes and Activity as stacked cards in the left column: the Notes card holds the composer with its Action select, and the Activity card lists a call, an email, a plain note and a donation, each under its own date",
     "status": "new",
     "notes": "Scroll to the timeline, not to the Notes card: scrollIntoViewIfNeeded on the taller element parks its bottom at the viewport bottom, which leaves the Notes card above it in frame. Scrolling to the Notes card instead pins that card to the bottom and pushes the whole Activity panel below the fold, which is exactly what this capture must not do."
   },
@@ -123,7 +123,7 @@
     ],
     "tenant": "t187c",
     "route": "/user/209251?tab=activity",
-    "routeHint": "Activity tab -> open a note -> Edit. Edit mode swaps the note text for a textarea and adds the Action select (—, Called, Emailed), with Cancel and Save replacing Edit and Delete. The Action control is a native <select> (Buefy b-select): its open dropdown is drawn by the browser outside the page, so Playwright cannot photograph it and this capture shows the control focused and closed instead. Do not fake it by setting size= on the select.",
+    "routeHint": "Activity tab -> open a note -> Edit. Edit mode swaps the note text for a textarea and adds the Action select (—, Called, Emailed), with Cancel and Save replacing Edit and Delete. The Action control is a native <select> (Buefy b-select): its open dropdown is drawn by the browser outside the page, so Playwright cannot photograph it and this capture shows the control focused and closed instead. Do not fake it by setting size= on the select. 2026-11-11 recapture: with users.hasProfileActivity back on (see profile-activity-tab) the selectors resolved, but the notes were gone: user_note had 0 rows after the data reset, so no row labelled Called existed and the click timed out. Seeded as the admin author: INSERT INTO user_note (uuid,text,action,date_created,date_updated,user_id,author_id,tenant_id) VALUES (lower(hex(random_bytes(13))),'Phoned Emma about the committee vacancy. She is interested and will confirm after the next chapter meeting.','called',now(),now(),209251,207128,282), (lower(hex(random_bytes(13))),'Renewal paperwork is complete. Membership committee has no outstanding questions, so nothing further is needed before the next review.',NULL,date_sub(now(),interval 1 hour),date_sub(now(),interval 1 hour),209251,207128,282). No selector changed.",
     "actions": [
       "click .timeline-label-text:text-is(\"Called\")",
       "wait 1200",

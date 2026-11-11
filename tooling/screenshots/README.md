@@ -382,6 +382,76 @@ missing titles exit non-zero; nav gaps and dashes are reported only.
 `qa-images.mjs` sorts the captures from the last run by compressed size per megapixel and prints
 anything under the threshold. It is a triage aid for a 270-image run, nothing more.
 
+`diagnose.mjs` answers "why did that action not run". It replays a spec's actions in order
+against the real app, stops at the first one that does not resolve, and prints the selector, how
+many nodes it matched, the URL the app actually settled on and the button, tab and menu labels on
+screen. It takes no screenshot and writes nothing, so it is safe to run against anything:
+
+```bash
+node capture/diagnose.mjs <area> <id>
+ORGO_ONLY_LIST=<file> node capture/diagnose.mjs     # a list of "area/id" lines
+```
+
+Two cautions. It waits six seconds after `domcontentloaded` and then looks, which is less patience
+than the runner gives a `waitFor`, so a settings page that loads its data late can be reported as a
+miss when the capture would have been fine. And its on-screen label list only collects buttons,
+tabs, menu items and headings: a placeholder is an attribute rather than text, which is its own
+trap, because a `waitFor` written as `text=Search emails` can never match a search box whose
+placeholder reads "Search emails".
+
+`run.mjs` takes `ORGO_ONLY_LIST=<file>` too, which narrows a run to those specs without rewriting
+anybody's status. That is how a re-run targets the specs that failed.
+
+### Images with no page
+
+The reverse also happens: a spec captures an image that no documentation page uses. As of
+2026-11-11 seven do, all in `specs/chapter-leader.json`. They are a coherent set showing what a
+chapter officer sees, which is why they were built, and two of them are now used (the sidebar
+comparison on the permissions page and the chapter member list in the worked example on the
+members page). The rest are kept because the set is worth having when the permissions
+documentation needs a picture, not because anything references them. Check this the same way as
+above, in reverse: a spec's `image` that appears on none of its `usedOn` pages.
+
+### Uploading a file
+
+Some screens do not exist until a file has been uploaded: the import wizard's mapping sheet, its
+column settings panel and its value map are all behind a CSV. The `upload` verb puts one in:
+
+```
+upload <css selector of the file input> | <file name>
+```
+
+The file name is resolved inside `fixtures/` and may not contain a path, so a spec cannot reach
+outside the pipeline. The fixtures are committed, which is what makes those captures
+reproducible: `members-with-custom-fields.csv` is built so that three of its six columns match
+system fields, one matches the tenant's existing T-Shirt Size dropdown and two would become new
+fields, and `payments-with-references.csv` so that the match summary shows one of each outcome,
+including two rows whose product is named only by a legacy id that matches nothing and therefore
+stays unmatched.
+
+Two things to know. The file input is hidden inside a Buefy `b-upload`, so target the input
+itself, scoped to its step by the step's own title:
+`.import-step:has(.import-step__title:text-is("Users")) input[type="file"]`. Do not anchor on the
+`data-testid` of the download button, which master deletes along with the button.
+
+And **opening the mapping screen writes an import draft** that nothing removes. Left behind it
+does two things, the second much worse than the first: it adds a line to Import History, and once
+it reaches `mapping` status the step's button changes from **Map columns** to **Continue
+mapping**, so a spec clicking the first label finds nothing and photographs the import page
+instead of the screen it wanted. Run `node capture/clean-import-drafts.mjs` before and after, one
+spec at a time; it deletes only `preflight`, `queued`, `processing` and `mapping` rows, never a
+completed or rolled-back import, and is gated on the marker table like everything else here that
+writes.
+
+### Images that no spec maintains
+
+One image used on a documentation page is written by no spec, so no run can refresh it (counted
+2026-11-11): the Orgo support conversation, which is a chat with Orgo's own support rather than a
+screen of the product. Everything else is covered, including the four mid-wizard import screens
+that used to be impossible to reach: see **Uploading a file** below. To regenerate the list,
+compare the `src="/images/..."` references in `platform/**/*.mdx` against the `image` field of
+every spec: anything in the first set and not the second is unmaintained.
+
 `merge-nav.mjs` merges pages found on disk into `docs.json` navigation using an explicit placement
 table, so that concurrent authors never edit `docs.json` and conflict. It rewrites `docs.json`:
 run it deliberately, and extend the table when you add a page.

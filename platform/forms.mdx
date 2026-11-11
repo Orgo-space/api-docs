@@ -17,7 +17,9 @@ organisation: a satisfaction survey, an interest poll, a call for volunteers, a
 sign-up sheet for an activity.
 
 **Replaces** Google Forms or Typeform for members and the public. It has no
-conditional logic, no file-upload questions, and no payment collection.
+file-upload questions and no payment collection. A question can be shown only
+when an earlier answer calls for it, and an answer can be saved straight onto the
+respondent's member or contact record.
 
 <img src="/images/platform/forms/forms-list.png" alt="Forms list showing status filter pills and a grid of form cards with field counts and Published, Draft and Closed status tags" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
 
@@ -26,25 +28,17 @@ conditional logic, no file-upload questions, and no payment collection.
 ## Turning it on and who can use it
 
 Enable the module at **Settings** → **Modules** → **Form Builder** →
-**Enable Form Builder Module**, which requires `ADMIN_TENANT`.
+**Enable Form Builder Module**, which only organization admins can do.
 
-Opening the Forms area requires `ADMIN_TENANT` or `HR_TENANT`. Creating a form
-requires `HR_TENANT`, `EVENT_TENANT` or `COMMUNICATION_TENANT`; editing or
-deleting one requires one of those three, or that you own it. `ADMIN_TENANT`
-covers everything on this page.
+The Forms area opens for organization admins, HR managers, communications
+managers and organization-wide event managers. Creating a form takes one of the
+same three non-admin roles, and so does editing or deleting someone else's form;
+you can always edit or delete your own. Organization admins can do everything on
+this page.
 
 A form you create belongs to you: its statistics, responses, and publish action
-are open to you as its owner, and to anyone holding `ADMIN_TENANT`,
-`COMMUNICATION_TENANT`, or `EVENT_TENANT`.
-
-<Warning>
-The **Forms** entry in the **Management** section of the sidebar is currently
-shown to holders of `COMMUNICATION_TENANT` or `EVENT_TENANT`, but the page
-itself only admits `ADMIN_TENANT` or `HR_TENANT`. If the link is visible and
-clicking it sends you to the login screen, that is this mismatch, not a broken
-session. Ask for `HR_TENANT`, or reorder the menu to hide the entry until it is
-resolved.
-</Warning>
+are open to you as its owner, and to organization admins, communications
+managers and organization-wide event managers.
 
 ---
 
@@ -56,7 +50,8 @@ holds the title respondents see and an optional rich-text description. Add
 questions with the **+** button on the right, each with a title, an optional
 description shown under it, a type, and a **Required** toggle. **Add text**
 inserts a rich-text block that displays instructions between questions and
-collects no answer. Drag a question by the handle at the top of its card to
+collects no answer. **Add database field** adds a question that is already
+connected to a member field (see below). Drag a question by the handle at the top of its card to
 reorder. **Save** keeps the form as a draft; **Publish** saves everything and
 opens the form to responses.
 
@@ -79,12 +74,100 @@ another, and never appear on the
 | **True / False** | A switch |
 | **Date** | A calendar date |
 
-There is no file-upload question and no conditional or branching logic. Every
-respondent sees every question in the order you set. For a file, collect it
+Three more types appear only where they apply. **Local center** (a chapter
+picker) is offered when your organisation uses local centers, **Profession
+industry** when the professions module is on, and **Gender** always. They exist
+so the answer can be saved onto the matching profile field.
+
+There is no file-upload question. Questions appear in the order you set. For a file, collect it
 through a [custom field](/platform/users/custom-fields) on the profile or
 registration form, or ask for a link to it in a short-answer question.
 
 <img src="/images/platform/forms/form-builder-questions.png" alt="Form builder Questions tab with the header card, a multiple choice question expanded for editing beside collapsed ones, and the floating add-question toolbar" style={{ width: "100%", borderRadius: "8px", border: "1px solid var(--border-color)", marginBottom: "1rem" }} />
+
+### Showing a question only for certain answers
+
+Open a question and switch on **Show only if**. Pick an earlier question on the
+same form, then tick the answers (**is any of**) that should reveal this one.
+The question you depend on has to sit above it and be a dropdown, multiple
+choice, checkboxes or true/false question. Respondents who do not pick one of
+those answers never see the question: it is not required of them, and anything
+sent for it is discarded. If you later drag the parent question below its
+dependent, delete it, or change it to a type with no fixed answers, the rule is
+cleared and Orgo tells you. On the **Summary** view such a question carries a
+**Conditional** tag and shows how many submissions it was shown to.
+
+### Saving answers onto the member or contact record
+
+An answer can update the respondent's own record, not only sit on the form.
+There are two ways to set that up.
+
+- **Add database field** (the floating toolbar) offers two groups. **Your
+  database fields** are your organisation's own profile fields (custom fields):
+  the question uses that field directly, and its name and options are managed in
+  the database field settings. Admin-only and encrypted fields, files and text
+  blocks are not offered. **Built-in profile fields** creates an ordinary
+  question of the right type, already pointed at that property.
+- On any ordinary question, the **Save the answer to the profile** switch picks
+  a destination from a list built for that question type. Destinations are
+  matched to the type: a text question (**Short answer** or **Paragraph**) can
+  fill the text properties below, a date question can fill **Date of birth**,
+  and only the matching picker can fill **Local center**, **Gender** or
+  **Profession industry**. A text question can also fill a text, paragraph or
+  other same-type custom field from your database fields. A date question never
+  fills a text column.
+
+Built-in destinations: **Local center**, **First Name**, **Middle name**, **Last
+Name**, **Phone number**, **Address**, **Town**, **Postal code**, **Country**,
+**Twitter**, **LinkedIn**, **Instagram**, **Bluesky**, **Facebook**,
+**Website**, **Signal**, **Telegram**, **TikTok**, **Current organization**,
+**Current role**, **Profession industry**, **Gender** and **Date of birth**.
+The built-in picker lists **Local center** only when local centers are on, and
+the two profession entries only when the professions module is on.
+
+Some destinations exist for members only and some for contacts only, because
+the two records have different columns. When the respondent is a record that has
+no such column, the answer stays on the submission and nothing is copied:
+
+| Destination | Member | Contact |
+|---|---|---|
+| Postal code, Facebook, Website, Signal, Telegram, TikTok, Profession industry | Saved | Not saved |
+| Country | Not saved | Saved |
+| First Name, Last Name | Saved to the first and last name | Spliced into the contact's single name |
+| Everything else in the list | Saved | Saved |
+
+Rules for what is written:
+
+- **Only a proven submitter is written to.** The copy happens straight away when
+  the respondent is signed in as themselves, or when this submission just
+  created the contact. For everyone else, it waits until they open the
+  confirmation link in the email. An anonymous submission has no record, so
+  nothing is copied.
+- **A blank answer never wipes a field.** An unanswered question, or one the
+  respondent was not shown, leaves the record as it is. A filled answer replaces
+  what is on file.
+- **A member's chapter is only ever filled, never moved.** If the member already
+  has a chapter, a **Local center** answer is ignored, because changing a
+  chapter ends the member's roles there.
+- **A value the destination refuses is skipped.** A name that does not look like
+  a name, for instance, loses that one copy and the rest of the submission
+  stands. The answer is still on the response for you to read.
+- **Choice answers are matched by their label.** When a choice question fills a
+  dropdown, multiple choice or checkboxes database field, the option text has
+  to match (ignoring capitals). An option the destination does not offer is
+  dropped. The builder warns you when the lists differ.
+- **A deleted destination stops copying.** If the database field was deleted
+  after you linked it, the question still records answers but no longer copies
+  them. Changing a question to a type its destination cannot take clears the
+  link.
+
+A small tag on the question in the builder shows when it saves to the profile.
+When a signed-in member opens the form, those questions open filled with what
+is already on file, so a "check your details" form changes only what they
+correct. Questions already filled in are not overwritten by the prefill. A form
+that maps a **First Name** or **Last Name** question hides the built-in name
+boxes that unknown respondents would otherwise see, so people are not asked
+twice.
 
 ---
 
@@ -97,6 +180,7 @@ The **Settings** tab holds who may answer and when.
 | **Only registered users** | Only an email that matches an existing member account is accepted. Anyone else is refused. |
 | **Anyone with email verification** | An email is required. A known member or contact is accepted straight away; an unknown address creates a new contact and the response stays pending until the confirmation link is clicked. |
 | **Anyone (Anonymous)** | No email asked. Responses are stored with no submitter and the submitter columns disappear from the responses table. |
+| **Offer newsletter subscription** | Only for **Anyone with email verification** forms. People who are not members see an unchecked box to subscribe to your newsletter; members manage that from their profile. On by default. |
 | **Limit to one submission per device** | A second attempt from the same device shows the thank-you page instead of the form. |
 | **Schedule auto-close** | A date and time after which the form reports itself closed and stops showing the questions. |
 | **Thank You Custom Message** | Rich-text page shown after a successful submission, in place of the default "Thank you!" screen. |
@@ -135,7 +219,9 @@ responses.
 ## Reading the responses
 
 The **Responses** tab counts confirmed responses, and flags separately how many
-are still pending an email confirmation. It offers three views.
+are still pending an email confirmation. It offers three views, plus **Import
+responses**, which takes an export of answers (from Google Forms, for example)
+and lets you map each column to a question of this form or create a new one.
 
 - **Summary** draws a chart per choice question and lists the text answers
   grouped by identical value, each with who submitted it and when.
@@ -163,7 +249,8 @@ On a form set to **Anyone with email verification**, an email that matches a
 member is linked to that member, an email that matches an existing contact is
 linked to that contact, and an unknown email creates a new
 [contact](/platform/contacts) with the first and last name given on the form,
-marked as coming from a form.
+marked as coming from a form. A signed-in member submitting with their own email
+is confirmed at once, with no email.
 
 Unless the respondent is signed in as the owner of that email, the response is
 held as pending and a confirmation email goes out. Clicking the link inside
@@ -172,6 +259,11 @@ respondent on the thank-you page. **The link is valid for 24 hours**; after that
 the form has to be submitted again. Pending responses are counted separately and
 are excluded from the charts, the table, and the export until they are confirmed,
 which is the usual reason a response someone swears they sent is not visible.
+Questions that save to the profile follow the same rule: nothing is copied until
+the submitter is confirmed.
+
+If two contacts are later merged, their form responses are kept on the merged
+contact.
 
 ---
 
@@ -196,20 +288,23 @@ profile-based builders. If it belongs to one question you asked once, use Forms.
 <AccordionGroup>
   <Accordion title="Why can I open the Forms area but not the responses on a colleague's form?">
     The Responses tab, the statistics, the recalculate button and the **Publish**
-    action all check the same thing: that you created the form, or that you hold
-    `ADMIN_TENANT`, `COMMUNICATION_TENANT`, or `EVENT_TENANT`. `HR_TENANT` is not
-    on that list, and it does not imply any of the three.
+    action all check the same thing: that you created the form, or that you are
+    an organization admin, a communications manager or an organization-wide event
+    manager. HR managers are not on that list, and the role does not imply any of
+    the three.
 
-    Worked example: two colleagues both hold `HR_TENANT`. Both reach `/forms`,
-    both create and publish their own forms, and neither can open the other's
-    Responses tab, because for each of them the other's form fails every branch
-    of the check. The requests are refused rather than returning an empty table.
+    Worked example: two colleagues are both HR managers. Both reach the Forms
+    area, both create and publish their own forms, and neither can open the
+    other's Responses tab, because for each of them the other's form fails every
+    branch of the check. The requests are refused rather than returning an empty
+    table.
 
-    Fixes, in order of preference: give the people who read results
-    `COMMUNICATION_TENANT` or `EVENT_TENANT`, keep one shared account as the
-    owner of forms the whole team reads, or ask the owner to send the CSV.
+    Fixes, in order of preference: give the people who read results the
+    communications manager or organization-wide event manager role, keep one
+    shared account as the owner of forms the whole team reads, or ask the owner to
+    send the CSV.
 
-    Note the asymmetry: `HR_TENANT` can edit and delete a colleague's form, but
+    Note the asymmetry: an HR manager can edit and delete a colleague's form, but
     not read its answers. Reading results is deliberately the narrower right.
   </Accordion>
 
@@ -303,4 +398,4 @@ profile-based builders. If it belongs to one question you asked once, use Forms.
 - [Custom Fields](/platform/users/custom-fields) for fields that live on member profiles
 - [Registration Form](/platform/users/registration-form) for collecting data at sign-up
 - [Event Registration Forms](/platform/events/registration-forms) for questions asked at booking
-- [Permissions](/platform/permissions) for the permission names used above
+- [Permissions](/platform/permissions) for what each role unlocks

@@ -23,10 +23,16 @@ Passes (in order):
     8. Inject components.securitySchemes from enrichment-data/security.yaml
     9. Apply default `security:` to every operation; mark public paths anonymous
    10. Inject tag descriptions from enrichment-data/tags.yaml
-   11. Stamp `x-orgo-postprocessed: <ISO timestamp>` in info for traceability
+   11. Synthesize request/response examples (hand-curated overrides win)
+   12. Repair hand-declared operations whose requestBody has no `content` and
+       whose parameters have `schema: []`; both are invalid under OpenAPI 3.1
+       and Mintlify rejects the whole file on either one
+   13. Inject x-codeSamples (curl + JS + PHP) from enrichment-data
+   14. Inject the `webhooks:` block and per-event schemas
+   15. Stamp `x-orgo-postprocessed: <ISO timestamp>` in info for traceability
 
   Size reduction (new)
-   12. Drop `application/ld+json` and `multipart/form-data` content variants
+   16. Drop `application/ld+json` and `multipart/form-data` content variants
        and any schema left unreferenced, so endpoint pages stay small enough
        that agents do not truncate them
 
@@ -315,41 +321,7 @@ for name, description in tag_descriptions.items():
 spec["tags"] = existing_tags
 
 
-# ─── Pass 11b: repair hand-declared operations that omit their schemas ───────
-#
-# The website endpoints are declared by hand in
-# api/src/OpenApi/WebsiteOpenApiFactory.php, which calls `new RequestBody(...)`
-# and `new Parameter($name, $in, $description, $required)` without reaching the
-# schema argument. API Platform then serialises a `requestBody` with no
-# `content` and parameters whose `schema` is the constructor default `[]`.
-# Both are invalid under OpenAPI 3.1 - `content` is required on a Request Body
-# Object, and a Schema Object must be an object or a boolean, never an array.
-# Mintlify's parser rejects the whole file on either one: the build fails with
-# "Failed to fetch OpenAPI file for anchor or tab" and not one page of the site
-# deploys, which took a 493-path bisection to find. Repair both here so the
-# spec stays valid whatever the generator emits.
-
-bodies_repaired = 0
-param_schemas_repaired = 0
-for path_item in (spec.get("paths") or {}).values():
-    if not isinstance(path_item, dict):
-        continue
-    for op in path_item.values():
-        if not isinstance(op, dict):
-            continue
-        rb = op.get("requestBody")
-        if isinstance(rb, dict) and not rb.get("content"):
-            rb["content"] = {"application/json": {"schema": {"type": "object"}}}
-            bodies_repaired += 1
-        for param in (op.get("parameters") or []):
-            # A path or query value arrives as text; string is both correct on
-            # the wire and the type Mintlify renders a plain input for.
-            if isinstance(param, dict) and not isinstance(param.get("schema"), (dict, bool)):
-                param["schema"] = {"type": "string"}
-                param_schemas_repaired += 1
-
-
-# ─── Pass 12: synthesize request/response examples ───────────────────────────
+# ─── Pass 11: synthesize request/response examples ───────────────────────────
 #
 # For every operation, walk the schema of each request body content-type and
 # each 2xx response content-type, synthesize a JSON example, and inject it on
@@ -416,7 +388,11 @@ for path_url, methods in (spec.get("paths") or {}).items():
                 continue
 
             example = synthesize_for(schema_block, for_write=True)
-            if example is not None:
+            # An empty object or list is not an example. A free-form body
+            # (`{"type": "object"}` with no properties) synthesizes to `{}`,
+            # which only prefills the playground with an empty body and hides
+            # the real shape the operation's description spells out.
+            if example not in (None, {}, []):
                 inject_example(content_block, example)
                 example_stats["synth_req"] += 1
 
@@ -449,10 +425,48 @@ for path_url, methods in (spec.get("paths") or {}).items():
                     continue
 
                 example = synthesize_for(schema_block, for_write=False)
-                if example is not None:
+                if example not in (None, {}, []):
                     inject_example(content_block, example)
                     example_stats["synth_resp"] += 1
 
+
+# ─── Pass 12: repair hand-declared operations that omit their schemas ───────
+#
+# The website endpoints are declared by hand in
+# api/src/OpenApi/WebsiteOpenApiFactory.php, which calls `new RequestBody(...)`
+# and `new Parameter($name, $in, $description, $required)` without reaching the
+# schema argument. API Platform then serialises a `requestBody` with no
+# `content` and parameters whose `schema` is the constructor default `[]`.
+# Both are invalid under OpenAPI 3.1 - `content` is required on a Request Body
+# Object, and a Schema Object must be an object or a boolean, never an array.
+# Mintlify's parser rejects the whole file on either one: the build fails with
+# "Failed to fetch OpenAPI file for anchor or tab" and not one page of the site
+# deploys, which took a 493-path bisection to find. Repair both here so the
+# spec stays valid whatever the generator emits.
+#
+# This runs after pass 11 on purpose. Repaired first, a free-form
+# `{"type": "object"}` body synthesizes to the example `{}`, which prefills the
+# playground with an empty object and is worse than no example: the operation's
+# description already carries the real body shape.
+
+bodies_repaired = 0
+param_schemas_repaired = 0
+for path_item in (spec.get("paths") or {}).values():
+    if not isinstance(path_item, dict):
+        continue
+    for op in path_item.values():
+        if not isinstance(op, dict):
+            continue
+        rb = op.get("requestBody")
+        if isinstance(rb, dict) and not rb.get("content"):
+            rb["content"] = {"application/json": {"schema": {"type": "object"}}}
+            bodies_repaired += 1
+        for param in (op.get("parameters") or []):
+            # A path or query value arrives as text; string is both correct on
+            # the wire and the type Mintlify renders a plain input for.
+            if isinstance(param, dict) and not isinstance(param.get("schema"), (dict, bool)):
+                param["schema"] = {"type": "string"}
+                param_schemas_repaired += 1
 
 # ─── Pass 13: x-codeSamples ──────────────────────────────────────────────────
 #
@@ -640,12 +654,12 @@ if webhooks_block:
     spec["webhooks"] = webhooks_block
 
 
-# ─── Pass 11: traceability stamp ─────────────────────────────────────────────
+# ─── Pass 15: traceability stamp ─────────────────────────────────────────────
 
 info["x-orgo-postprocessed"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
 
 
-# ─── Pass 12: prune redundant content-type variants ──────────────────────────
+# ─── Pass 16: prune redundant content-type variants ──────────────────────────
 #
 # API Platform emits every operation three times over: application/json,
 # application/ld+json and multipart/form-data, each with its own generated
